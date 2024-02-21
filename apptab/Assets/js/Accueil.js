@@ -380,7 +380,6 @@ $('[data-action="ChargerJs"]').click(function () {
             formData.append("devise", false);
         }
 
-
         $.ajax({
             type: "POST",
             url: Origin + '/Home/getelementjsBR',
@@ -430,10 +429,7 @@ $('[data-action="ChargerJs"]').click(function () {
                     });
                     $('.afb160').empty();
                     $('.afb160').html(content);
-
                 }
-
-
             },
             error: function () {
                 alert("Problème de connexion. ");
@@ -442,7 +438,6 @@ $('[data-action="ChargerJs"]').click(function () {
 
         $('.afb160').empty()
     }
-
 });
 
 $('[data-action="GetElementChecked"]').click(function () {
@@ -482,7 +477,6 @@ $('[data-action="GetElementChecked"]').click(function () {
             $.each(listid, (k, v) => {
                 $(`[compteG-id="${v}"]`).remove();
             });
-           
         },
         error: function () {
             alert("Problème de connexion. ");

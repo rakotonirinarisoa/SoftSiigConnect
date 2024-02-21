@@ -53,7 +53,6 @@ function GetListCompG() {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -87,7 +86,6 @@ function GetListCompG() {
 
 function FillAUXI() {
     var list = ListCompteG.filter(x => x.COGE == $(`[compG-list]`).val()).pop();
-    console.log(list);
     let code = `<option value="Tous"> Tous</option> `;
     $.each(list.AUXI, function (k, v) {
         code += `
@@ -168,7 +166,6 @@ function GetListCodeJournal() {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -213,8 +210,7 @@ $(document).on("click", "[data-target]", function () {
 
         $(`[data-type="switch_tab"]`).each(function (i) {
             if ($(this).hasClass('active')) {
-
-                console.log($(this));
+                
                 $(this).removeClass('active');
                 $(`#${$(this).attr("data-target")}`).hide();
             }
@@ -279,7 +275,6 @@ $('[data-action="ChargerJs"]').click(function () {
             processData: false,
             success: function (result) {
                 var Datas = JSON.parse(result);
-                console.log(Datas.data);
 
                 if (Datas.type == "error") {
                     alert(Datas.msg);
@@ -349,7 +344,6 @@ $('[data-action="ChargerJs"]').click(function () {
             processData: false,
             success: function (result) {
                 var Datas = JSON.parse(result);
-                console.log(Datas);
 
                 if (Datas.type == "error") {
                     alert(Datas.msg);
@@ -463,7 +457,6 @@ $('[data-action="GetElementChecked"]').click(function () {
     });
 
     let formData = new FormData();
-    console.log(list);
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
@@ -491,7 +484,6 @@ $('[data-action="GetElementChecked"]').click(function () {
             var Datas = JSON.parse(result);
             reglementresult = ``;
             reglementresult = Datas.data;
-            console.log(reglementresult);
             $.each(listid, (k, v) => {
                 $(`[compteG-id="${v}"]`).remove();
             });
@@ -554,7 +546,6 @@ $('[data-action="GetAnomalieListes"]').click(function () {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             ListResultAnomalie = "";
             contentAnomalies = ``;

@@ -36,7 +36,6 @@
     <!-- jQuery -->
     <script src="~/Assets/admlte/plugins/jquery/jquery.min.js"></script>
     <script src="~/Assets/admlte/plugins/sweetalert2/sweetalert2.all.min.js"></script>
-    <script src="~/Assets/microsoft/signalr/dist/browser/signalr.js"></script>
     <script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
     <script src="~/Assets/js/script.js"></script>
 
@@ -108,78 +107,81 @@
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
 
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">
-                        <li class="nav-item menu-open">
-                            <hr />
-                            <a class="nav-link active" style="background-color: darkblue">
-                                <p>
-                                    PARAMETRAGES
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
-
-                    @if ((Session["userSession"] as apptab.SI_USERS).ROLE == (int)apptab.Role.SAdministrateur)
+                    @if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
                     {
-                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block" id="menu-accordeon">
-                            <li class="nav-item SuperAd" data-io>
-                                <a class="nav-link">
-                                    <i class="nav-icon fas fa-user-secret"></i>
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">
+                            <li class="nav-item menu-open">
+                                <hr />
+                                <a class="nav-link active" style="background-color: darkblue">
                                     <p>
-                                        Super-Admin
+                                        PARAMETRAGES
                                     </p>
                                 </a>
-                                <ul style="list-style-type: none; display:block" class="nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                                    <li class="nav-item" @*id="MANDA"*@>
-                                        <a href="../SuperAdmin/MenuCreate" class="nav-link">
-                                            <i class="nav-icon fas fa-window-maximize"></i>
-                                            <p>
-                                                Paramétrage menus
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="../SuperAdmin/ProjetList" class="nav-link">
-                                            <i class="nav-icon fas fa-id-card"></i>
-                                            <p>
-                                                Gestion PROJETS
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="../SuperAdmin/SOAList" class="nav-link">
-                                            <i class="nav-icon fas fa-id-card-alt" s></i>
-                                            <p>
-                                                Gestion SOA
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="../SuperAdmin/PROSOAList" class="nav-link">
-                                            <i class="nav-icon nav-icon fas fa-link"></i>
-                                            <p>
-                                                PROJETS-SOA
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="../SuperAdmin/SuperAdminMaPList" class="nav-link">
-                                            <i class="nav-icon fas fa-user-cog"></i>
-                                            <p>
-                                                Mappages
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="../Parametre/MotifCreate" class="nav-link">
-                                            <i class="nav-icon fas fa-question"></i>
-                                            <p>
-                                                Motifs de rejet
-                                            </p>
-                                        </a>
-                                    </li>
-                                </ul>
                             </li>
+                        </ul>
+
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block" id="menu-accordeon">
+                            @if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur)
+                            {
+                                <li class="nav-item SuperAd" data-io>
+                                    <a class="nav-link">
+                                        <i class="nav-icon fas fa-user-secret"></i>
+                                        <p>
+                                            Super-Admin
+                                        </p>
+                                    </a>
+                                    <ul style="list-style-type: none; display:block" class="nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                                        <li class="nav-item" @*id="MANDA"*@>
+                                            <a href="../SuperAdmin/MenuCreate" class="nav-link">
+                                                <i class="nav-icon fas fa-window-maximize"></i>
+                                                <p>
+                                                    Paramétrage menus
+                                                </p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="../SuperAdmin/ProjetList" class="nav-link">
+                                                <i class="nav-icon fas fa-id-card"></i>
+                                                <p>
+                                                    Gestion PROJETS
+                                                </p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="../SuperAdmin/SOAList" class="nav-link">
+                                                <i class="nav-icon fas fa-id-card-alt" s></i>
+                                                <p>
+                                                    Gestion SOA
+                                                </p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="../SuperAdmin/PROSOAList" class="nav-link">
+                                                <i class="nav-icon nav-icon fas fa-link"></i>
+                                                <p>
+                                                    PROJETS-SOA
+                                                </p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="../SuperAdmin/SuperAdminMaPList" class="nav-link">
+                                                <i class="nav-icon fas fa-user-cog"></i>
+                                                <p>
+                                                    Mappages
+                                                </p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="../Parametre/MotifCreate" class="nav-link">
+                                                <i class="nav-icon fas fa-question"></i>
+                                                <p>
+                                                    Motifs de rejet
+                                                </p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
 
                             <li class="nav-item SuperAd" data-io>
                                 <a class="nav-link">
@@ -264,10 +266,7 @@
                                 </ul>
                             </li>
                         </ul>
-                    }
 
-                    @if ((Session["userSession"] as apptab.SI_USERS).ROLE == (int)apptab.Role.SAdministrateur)
-                    {
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">
 
                             <li class="nav-item" data-io>
@@ -445,14 +444,6 @@
                                 </p>
                             </a>
                         </li>
-                        @*<li class="nav-item">
-                            <a href="../Etat/EtatMandatP" class="nav-link">
-                                <i class="nav-icon fas fa-file-archive"></i>
-                                <p>
-                                    Mandats
-                                </p>
-                            </a>
-                        </li>*@
                     </ul>
 
                     <hr />

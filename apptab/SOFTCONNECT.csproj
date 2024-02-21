@@ -2199,8 +2199,6 @@
     <Content Include="Assets\js\Privilege.js" />
     <Content Include="Assets\js\User.js" />
     <Content Include="Assets\js\utils.js" />
-    <Content Include="Assets\microsoft\signalr\dist\browser\signalr.js" />
-    <Content Include="Assets\microsoft\signalr\dist\browser\signalr.min.js" />
     <Content Include="Assets\otherCSS\buttons.dataTables.min.css" />
     <Content Include="Assets\otherCSS\colReorder.dataTables.min.css" />
     <Content Include="Assets\otherCSS\responsive.dataTables.min.css" />

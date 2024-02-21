@@ -37,7 +37,6 @@ $('#get-user-password-btn').on('click', () => {
         
         success: function (result) {
             const res = JSON.parse(result);
-            console.log(result);
             if (res.type === 'error') {
                 p.css({ 'color': 'red' });
                 p.text('Identifiants incorrects!');

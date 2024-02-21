@@ -33,7 +33,6 @@ function GetFSOA() {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             $('#Soa').val(Datas.data);
             if (Datas.type == "error") {
@@ -80,7 +79,6 @@ $(`[data-action="UpdateFSOAJS"]`).click(function () {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);

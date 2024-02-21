@@ -3,6 +3,12 @@
     overflow-y: hidden;
 }
 
+.tbodyDiv {
+    overflow: auto;
+    /*overflow-x: auto;*/
+    max-height: 75vh
+}
+
 .login-page {
     /*background: center url('../img/bg.jpg') */
     background-color: #fff;

@@ -74,7 +74,6 @@ async function GetListProjet() {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -97,7 +96,6 @@ async function GetListProjet() {
 
         },
         error: function (e) {
-            console.log(e);
             alert("Problème de connexion. ");
         }
     });
@@ -125,7 +123,6 @@ $('#proj').on('change', async () => {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -302,7 +299,6 @@ async function GetListMANDATP() {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -438,7 +434,6 @@ $('[data-action="SearchPROJET"]').click(async function () {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -534,7 +529,6 @@ function deleteUser(id) {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "success") {
                 alert(Datas.msg);
