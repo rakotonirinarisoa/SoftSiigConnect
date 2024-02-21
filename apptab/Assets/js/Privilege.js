@@ -29,7 +29,6 @@ function GetListUser() {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert("eeee" + Datas.msg);
@@ -42,9 +41,7 @@ function GetListUser() {
             }
 
             $(`[data-id="ubody"]`).text("");
-
-
-
+            
             var code = ``;
             $.each(Datas.data, function (k, v) {
 

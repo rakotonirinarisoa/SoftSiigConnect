@@ -31,7 +31,6 @@ function GetListRole() {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -78,7 +77,6 @@ function GetListProjet() {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -102,7 +100,6 @@ function GetListProjet() {
             GetUsers();
         },
         error: function (e) {
-            console.log(e);
             alert("Problème de connexion. ");
         }
     })
@@ -127,7 +124,6 @@ function GetUsers() {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);

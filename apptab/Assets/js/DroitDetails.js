@@ -34,7 +34,6 @@ function GetListUser() {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -66,7 +65,6 @@ function GetListUser() {
 
         },
         error: function (e) {
-            console.log(e);
             alert("Problème de connexion. ");
         }
     })//.done(function (/*x*/) {
@@ -131,7 +129,6 @@ function GetDB(instanceID, id) {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -185,7 +182,6 @@ function GetUsers() {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -207,7 +203,6 @@ function GetUsers() {
         }
     }).done(function (x) {
         var Datas = JSON.parse(x);
-        console.log(Datas)
         let instanceID = $(`[data-id="Instance-list"]`).val();
 
         GetDB(instanceID, Datas.data.id)

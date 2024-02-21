@@ -3,7 +3,6 @@ let Origin;
 
 $(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
-    console.log(User);
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
 
@@ -33,7 +32,6 @@ function GetListProjet() {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -56,7 +54,6 @@ function GetListProjet() {
 
         },
         error: function (e) {
-            console.log(e);
             alert("Problème de connexion. ");
         }
     })
@@ -79,7 +76,6 @@ function GetListSOA() {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -102,7 +98,6 @@ function GetListSOA() {
 
         },
         error: function (e) {
-            console.log(e);
             alert("Problème de connexion. ");
         }
     })
@@ -175,7 +170,6 @@ function GetListSociete() {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -237,7 +231,6 @@ function deletePROSOA(id) {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
             alert(Datas.msg);
             $(`[data-projetid="${id}"]`).remove();
             

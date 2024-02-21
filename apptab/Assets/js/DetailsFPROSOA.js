@@ -61,7 +61,6 @@ function GetListProjet(id) {
 
         },
         error: function (e) {
-            console.log(e);
             alert("Problème de connexion. ");
         }
     })
@@ -86,7 +85,6 @@ function GetListFPROSOA(id) {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -114,7 +112,6 @@ function GetListFPROSOA(id) {
 
         },
         error: function (e) {
-            console.log(e);
             alert("Problème de connexion. ");
         }
     })
@@ -187,7 +184,6 @@ function GetListSociete() {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -249,8 +245,6 @@ function deletePROSOA(id) {
         processData: false,
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
-            alert(Datas.msg);
             $(`[data-PROJETId="${id}"]`).remove();
         },
         error: function () {
