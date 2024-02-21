@@ -31,6 +31,7 @@ $(document).ready(() => {
     
     //GetUR();
     GetListCodeJournal();
+    LoadValidate();
     //GetListCompG();
 });
 
@@ -63,7 +64,7 @@ function GetListCompG() {
                 window.location = window.location.origin;
                 return;
             }
-            let code = `<option value = "Tous" > Tous</option> `;
+            let code = ``;
             let codeAuxi = ``;
             ListCompteG = Datas.data;
             
@@ -403,6 +404,56 @@ $('[data-action="ChargerJs"]').click(function () {
     }
 
 });
+
+function LoadValidate() {
+    
+    let formData = new FormData();
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/LoadValidateEcriture',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (result) {
+            var Datas = JSON.parse(result);
+            reglementresult = ``;
+            reglementresult = Datas.data;
+            console.log(reglementresult);
+            $.each(reglementresult, function (k, v) {
+
+                validate += `
+                        <tr compteG-id="${v.IDREGLEMENT}">
+                        </td ><td>${v.IDREGLEMENT}</td>
+                        <td>${v.dateOrdre}</td>
+                        <td>${v.NoPiece}</td>
+                        <td>${v.Compte}</td>
+                        <td>${v.Libelle}</td>
+                        <td>${v.Montant}</td>
+                        <td>${v.MontantDevise}</td>
+                        <td>${v.Mon}</td>
+                        <td>${v.Rang}</td>
+                        <td>${v.Poste}</td>
+                        <td>${v.FinancementCategorie}</td>
+                        <td>${v.Commune}</td>
+                        <td>${v.Plan6}</td>
+                        <td>${v.Journal}</td>
+                        <td>${v.Marche}</td>
+                        <td>${v.Status}</td>
+                </tr>`;
+
+            }),
+                $('#afb').html(validate);
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
 
 $('[data-action="GetElementChecked"]').click(function () {
     let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");

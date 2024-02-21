@@ -667,7 +667,7 @@ $('[data-action="GetElementChecked"]').click(function () {
     //tokony io no antsoina
     $.ajax({
         type: "POST",
-        url: Origin + '/Home/GetAcceptecritureF',
+        url: Origin + '/Home/ValidationsEcrituresF',
         data: formData,
         cache: false,
         contentType: false,

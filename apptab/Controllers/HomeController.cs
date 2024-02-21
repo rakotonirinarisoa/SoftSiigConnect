@@ -738,6 +738,17 @@ namespace apptab.Controllers
                 
         }
         //END ETAT = 1
+        [HttpPost]
+        public JsonResult LoadValidateEcriture(SI_USERS suser)
+        {
+            AFB160 aFB160 = new AFB160();
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            var val = db.OPA_VALIDATIONS.Where(a=> a.DATESEND != null && a.IDPROJET == exist.IDPROJET && a.ETAT == 2).ToList();
+
+            return Json(JsonConvert.SerializeObject(new { type = "Success", msg = "Connexion avec success. " , data = val}, settings));
+        }
         public JsonResult CancelEcriture(int id, string motif, string commentaire, SI_USERS suser)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
