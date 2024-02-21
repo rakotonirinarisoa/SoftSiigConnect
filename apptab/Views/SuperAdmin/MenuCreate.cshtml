@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewBag.Title = "Paramétrage des intitulés des menus";
+    ViewData["Controller"] = "Paramétrage des intitulés des menus";
+    /*Layout = "~/Views/Shared/_Layout.cshtml";*/
+}
+
+<h5>Traitements</h5>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Traitement des mandats</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaV0">
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Traitement des mandats (INITIATION)</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaV">
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Traitement des mandats (VALIDATION)</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaS">
+    </div>
+</div>
+
+<h5>Paiements</h5>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Traitement des paiements (INITIATION)</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaPe">
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Traitement des paiements (ENVOI POUR VALIDATION)</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaPv">
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Traitement des paiements (VALIDATION)</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaPp">
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Traitement des paiements (BON POUR PAIEMENT)</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaPb">
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="mb-3 col">
+        <div class="btn btn-flat bg-gradient-olive col-12" data-action="UpdateUser">
+            <i class="fa fa-save"></i> Enregistrer
+        </div>
+    </div>
+</div>
+
+<!-- Droit.js -->
+<script src="~/Assets/js/MenuInt.js"></script>
+
+

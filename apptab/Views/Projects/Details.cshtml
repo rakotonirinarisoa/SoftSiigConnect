@@ -1,0 +1,74 @@
+﻿<input type="hidden" id="id_" value="@ViewData["Id"]" />
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Intitulé</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="title" value="@ViewData["Title"]" autofocus />
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="mb-3 col">
+        <div class="btn btn-flat bg-gradient-olive col-12" data-action="update-project">
+            <i class="fa fa-save"></i> Enregistrer
+        </div>
+    </div>
+</div>
+
+<script defer type="module">
+    const urlOrigin = "https://localhost:44334";
+
+    let user;
+
+    let originalTitle;
+
+    $(document).ready(() => {
+        user = JSON.parse(sessionStorage.getItem('user'));
+
+        if (!user) {
+            window.location = User.origin;
+        }
+
+        originalTitle = $('#title').val();
+    });
+
+    function successfulRedirect() {
+        alert("Modification avec succès!");
+
+        window.location = urlOrigin + '/SuperAdmin/ProjetList';
+    }
+
+    $('[data-action="update-project"]').on('click', () => {
+        const title = $('#title').val();
+
+        if (title === originalTitle) {
+            successfulRedirect();
+
+            return;
+        }
+
+        const payload = {
+            login: user.LOGIN,
+            password: user.PWD,
+            id: $('#id_').val(),
+            title
+        }
+
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: urlOrigin + '/Projects/Update',
+            contentType: 'application/json',
+            datatype: 'json',
+            data: JSON.stringify({ ...payload }),
+            success: function () {
+                successfulRedirect();
+            },
+            Error: function (_, e) {
+                alert(e);
+            }
+        });
+    });
+</script>

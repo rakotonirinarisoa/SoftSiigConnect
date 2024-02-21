@@ -1,0 +1,138 @@
+﻿@{
+    ViewBag.Title = "SOFT - SIIGFP CONNECT";
+    ViewData["Controller"] = "SOFT - SIIGFP CONNECT";
+    /*Layout = "~/Views/Shared/_Layout.cshtml";*/
+}
+
+@*<script src="~/Assets/js/InfoMandat.js"></script>*@
+
+@*<link rel="stylesheet" href="~/Scripts/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />*@
+
+<!--<link href="~/Assets/otherCSS/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="~/Assets/otherCSS/responsive.dataTables.min.css" rel="stylesheet" />
+<link href="~/Assets/otherCSS/buttons.dataTables.min.css" rel="stylesheet" />
+<link href="~/Assets/otherCSS/colReorder.dataTables.min.css" rel="stylesheet" />
+
+<script src="~/Assets/otherJs/jquery-3.7.0.js"></script>
+<script src="~/Assets/otherJs/jquery.dataTables.min.js"></script>
+<script src="~/Assets/otherJs/dataTables.responsive.min.js"></script>
+<script src="~/Assets/otherJs/dataTables.buttons.min.js"></script>
+<script src="~/Assets/otherJs/buttons.colVis.min.js"></script>
+<script src="~/Assets/otherJs/dataTables.colReorder.min.js"></script>-->
+
+@*<script src="~/Assets/admlte/plugins/datatables/jquery.dataTables.js"></script>
+    <script src="~/Assets/admlte/plugins/datatables/jquery.dataTables.min.js"></script>*@
+
+<!--<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">PROJET</span>
+        </div>
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="proj" data-id="proj-list" disabled="@((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Autre)">
+        </select>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Date début</span>
+        </div>
+        <input type="date" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="dateD">
+    </div>
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Date fin</span>
+        </div>
+        <input type="date" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="dateF">
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Etat</span>
+        </div>
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="stat" data-id="stat-list">
+            <option value="0">Tous</option>
+            <option value="1">Attente validation</option>
+            <option value="2">Validée</option>
+            <option value="3">Annulée</option>
+            <option value="4">Traitée SIIGFP</option>
+        </select>
+    </div>
+</div>
+
+<div class="form-row mb-3">
+    <div class="input-group mb-3 col">
+        <div class="btn btn-flat bg-gradient-success col-12" data-action="SearchPROJET">
+            <i class="fa fa-search"></i> Filtrer
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive mb-3"--> @*style="max-height: calc(600px - 0.6rem * 2 );"*@ <!--tab="ordsec">
+    <table class="table table-hover table-striped table-bordered " display responsive nowrap" width="100%" id="tableRFR">
+        <thead style="position:sticky">
+            <tr class="thead-accueil1" style="white-space: nowrap;">-->
+                @*<td style="text-align:right">
+                        <input type="checkbox" />
+                    </td>*@
+                <!--<td style="font-weight:bold; text-align:center">Référence mandat</td>
+                <td style="font-weight: bold; text-align: center">Objet</td>
+                <td style="font-weight: bold; text-align: center">Titulaire</td>
+                <td style="font-weight: bold; text-align: center">Date mandat</td>
+                <td style="font-weight: bold; text-align: center">Compte bénéficiaire</td>
+                <td style="font-weight: bold; text-align: center">PCOP</td>
+                <td style="font-weight: bold; text-align: center">Montant</td>
+                <td style="font-weight: bold; text-align: center">Date DEF</td>
+                <td style="font-weight: bold; text-align: center">Date TEF</td>
+                <td style="font-weight: bold; text-align: center">Date BE</td>
+                <td style="font-weight: bold; text-align: center">Etat</td>
+                <td style="font-weight: bold; text-align: center"></td>
+                <td style="font-weight: bold; text-align: center"></td>
+            </tr>
+        </thead>
+        <tbody class="traitementPROJET">
+        </tbody>
+    </table>
+</div>-->
+
+@*<script>
+        new DataTable('#tableRFR', {
+            buttons: ['colvis'],
+            dom: 'Bfrtip',
+            fixedHeader: true
+        });
+    </script>*@
+
+<!-- Droit.js -->
+<!--<script src="~/Assets/js/InfoMandat.js"></script>
+<script src="~/Assets/js/utils.js"></script>
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="password-modal">
+    <div class="modal-dialog modal-fullscreen-sm-down" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title w-100">Pièces justificatives</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover table-striped table-bordered" id="TBDMODAL">
+                    <thead style="position:sticky">
+                        <tr class="thead-green" style="white-space: nowrap;">
+                            <td style="font-weight:bold; text-align:center">Type</td>
+                            <td style="font-weight: bold; text-align: center">Numéro</td>
+                            <td style="font-weight: bold; text-align: center">Nombre exemplaire</td>
+                            <td style="font-weight: bold; text-align: center">Date</td>
+                            <td style="font-weight: bold; text-align: center">Montant</td>
+                        </tr>
+                    </thead>
+                    <tbody class="afb160MODAL"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Assets/js/TraitmandatModal.js"></script>-->

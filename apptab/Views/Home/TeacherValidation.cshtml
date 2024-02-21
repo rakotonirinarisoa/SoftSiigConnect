@@ -1,0 +1,180 @@
+﻿
+@{
+    ViewBag.Title = "TeacherValidation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@{
+    ViewBag.Title = "PaiementValidation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <div class="form-row">
+        <div class="input-group mb-3 col-sm-12 col-md-6">
+            <div class="input-group-prepend">
+                <span class="input-group-text text-bold" id="inputGroup-sizing-default">Code Journal</span>
+            </div>
+            <select class="form-control col combobox" id="commercial" codej-list>
+            </select>
+            <div class="input-group-append">
+                <label class="input-group-text text-bold" id="inputGroup-sizing-default">
+                    <input type="checkbox" class="form-check" style="margin-right:5px" /> En devise
+                </label>
+            </div>
+        </div>
+        <div class="input-group mb-3 col-sm-12 col-md-6">
+            <div class="input-group-prepend">
+                <span class="input-group-text text-bold" id="inputGroup-sizing-default">Libellé</span>
+            </div>
+            <input type="text" class="form-control" value="" readonly codej-libelle />
+        </div>
+    </div>
+    <div tab="autre">
+        <div class="form-row">
+            <div class="input-group mb-3 col-sm-6 col-md-4 col">
+                <div class="input-group-prepend">
+                    <span class="input-group-text text-bold" id="inputGroup-sizing-default">Période du</span>
+                </div>
+                <input type="date" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Pdu">
+            </div>
+            <div class="input-group mb-3 col-sm-6 col-md-4 col">
+                <div class="input-group-prepend">
+                    <span class="input-group-text text-bold" id="inputGroup-sizing-default">au</span>
+                </div>
+                <input type="date" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Pau">
+            </div>
+            <div class="input-group mb-3 col col-sm-12 col-md-4">
+                <div class="input-group-prepend">
+                    <span class="input-group-text text-bold" id="inputGroup-sizing-default">Date paiement</span>
+                </div>
+                <input type="date" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Pay">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="input-group mb-3 col-sm-12 col-md-4">
+                <div class="input-group-prepend">
+                    <span class="input-group-text text-bold" id="inputGroup-sizing-default">Compte-général</span>
+                </div>
+                <select class="form-control col combobox" id="comptaG" compG-list>
+                </select>
+            </div>
+            <div class="input-group mb-3 col-sm-12 col-md-4 col">
+                <div class="input-group-prepend">
+                    <span class="input-group-text text-bold" id="inputGroup-sizing-default">AUXI</span>
+                </div>
+                <select class="form-control col combobox" id="auxi" AUXI-list>
+                </select>
+
+            </div>
+            <div class="input-group mb-3 col-sm-12 col-md-4 col">
+                <div class="input-group-prepend">
+                    <span class="input-group-text text-bold" id="inputGroup-sizing-default">ETAT</span>
+                </div>
+                <select class="form-control col combobox" id="etat" ETAT-list>
+                </select>
+            </div>
+            <div class="input-group mb-3 col-sm-12 col-md-4">
+                <div class="input-group-prepend">
+                    <span class="input-group-text text-bold" id="inputGroup-sizing-default">Nom</span>
+                </div>
+                <input type="text" class="form-control" value="" readonly compte-name />
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-row mb-3">
+        <div class="input-group mb-3 col">
+            <div class="mb-3 col ">
+                <div class="btn btn-flat bg-gradient-green col-12" data-action="ChargerJs">
+                    <i class="fa fa-upload"></i> Générer
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="table-responsive mb-3 OPF" style="max-height:400px" tab="autre">
+    <table class="table table-hover table-striped fAFB160">
+        <thead style="position:sticky">
+            <tr class="thead-accueil1" style="white-space: nowrap;">
+                <td style="text-align:right">
+                    <input type="checkbox" class="Checkall" />
+                </td>
+                <td style="font-weight: bold; text-align:center" width="5px">N°</td>
+                <td style="font-weight:bold; text-align:center" width="">Date n°ordre</td>
+                <td style="font-weight: bold; text-align: center" width="">N° Pièce</td>
+                <td style="font-weight: bold; text-align: center" width="">Compte</td>
+                <td style="font-weight: bold; text-align: center" width="">Libellé</td>
+                <td style="font-weight: bold; text-align: center" width="">Débit</td>
+                <td style="font-weight: bold; text-align: center" width="">Crédit</td>
+                <td style="font-weight: bold; text-align: center" width="">Montant devise</td>
+                <td style="font-weight: bold; text-align: center" width="">Mon.</td>
+                <td style="font-weight: bold; text-align: center" width="">Rang</td>
+                <td style="font-weight: bold; text-align: center" width="">Financement catégorie</td>
+                <td style="font-weight: bold; text-align: center" width="">Commune</td>
+                <td style="font-weight: bold; text-align: center" width="">Plan6</td>
+                <td style="font-weight: bold; text-align: center" width="">Journal</td>
+                <td style="font-weight: bold; text-align: center" width="">Marché</td>
+                <td style="font-weight: bold; text-align: center" width="">Etat</td>
+                <td style="font-weight: bold; text-align: center" width="">Rejeter</td>
+            </tr>
+        </thead>
+        <tbody class="afb160"></tbody>
+
+    </table>
+</div>
+<div class="form-row mb-3">
+    <div class="input-group mb-3">
+        <div class="mb-3 col">
+            <div class="btn btn-flat bg-gradient-red col-12" data-action="GetElementChecked">
+                <i class="fa fa-upload"></i> Envoi pour validation
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="F-modal" data-id="">
+    <div class="modal-dialog modal-xl" role="document" @*style="width:fit-content"*@>
+        <div class="modal-content" @*style="width:fit-content"*@>
+            <div class="modal-header">
+                <h3 class="modal-title w-100">Rejet du mandat</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="input-group mb-3 col">
+                        <div class="input-group-prepend custom-label">
+                            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Motif</span>
+                        </div>
+                        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Motif" data-id="MOTIF-list">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group mb-3 col">
+                        <div class="input-group-prepend custom-label">
+                            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Commentaire</span>
+                        </div>
+                        <textarea class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Commentaire"></textarea>
+                    </div>
+                </div>
+                <div class="form-row mb-3">
+                    <div class="input-group mb-3 col">
+                        <div class="btn btn-flat bg-gradient-red col-12 custom-fixed-btn" data-action="ANNULMANDAT" onclick="AcceptRefuser()">
+                            <i class="fa fa-times"></i> Rejeter le mandat
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Assets/js/TeacherValidations.js"></script>
+
