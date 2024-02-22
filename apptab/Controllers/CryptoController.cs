@@ -10,7 +10,6 @@ using apptab.Data.Entities;
 using System.Data.Entity;
 using Microsoft.Build.Framework.XamlTypes;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using apptab;
 
 namespace apptab.Controllers
 {
@@ -39,7 +38,12 @@ namespace apptab.Controllers
 
             try
             {
-                int crpt = exist.IDPROJET.Value;
+                int crpt = 0;
+                if (suser.IDPROJET == null)
+                    crpt = exist.IDPROJET.Value;
+                else
+                    crpt = suser.IDPROJET.Value;
+
                 var crpto = db.OPA_CRYPTO.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
                 if (crpto != null)
                 {
@@ -57,14 +61,14 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateCrypto(SI_USERS suser, OPA_CRYPTO param)
+        public JsonResult UpdateCrypto(SI_USERS suser, OPA_CRYPTO param, int iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             try
             {
-                int IdS = exist.IDPROJET.Value;
+                int IdS = iProjet;
                 var SExist = db.OPA_CRYPTO.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null);
 
                 if (SExist != null)

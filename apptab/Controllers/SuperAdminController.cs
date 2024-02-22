@@ -800,7 +800,12 @@ namespace apptab.Controllers
 
             try
             {
-                int crpt = exist.IDPROJET.Value;
+                int crpt = 0;
+                if (suser.IDPROJET == null)
+                    crpt = exist.IDPROJET.Value;
+                else
+                    crpt = suser.IDPROJET.Value;
+
                 var crpto = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
                 if (crpto != null)
                 {
@@ -818,7 +823,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateMail(SI_USERS suser, SI_MAIL param)
+        public JsonResult UpdateMail(SI_USERS suser, SI_MAIL param, int iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -841,7 +846,7 @@ namespace apptab.Controllers
 
             try
             {
-                int IdS = exist.IDPROJET.Value;
+                int IdS = iProjet;
                 var SExist = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null);
 
                 if (SExist != null)
@@ -945,7 +950,12 @@ namespace apptab.Controllers
 
             try
             {
-                int crpt = exist.IDPROJET.Value;
+                int crpt = 0;
+                if (suser.IDPROJET == null)
+                    crpt = exist.IDPROJET.Value;
+                else
+                    crpt = suser.IDPROJET.Value;
+
                 var crpto = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
                 if (crpto != null)
                 {
@@ -963,14 +973,14 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateDelais(SI_USERS suser, SI_DELAISTRAITEMENT param)
+        public JsonResult UpdateDelais(SI_USERS suser, SI_DELAISTRAITEMENT param, int iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             try
             {
-                int IdS = exist.IDPROJET.Value;
+                int IdS = iProjet;
                 var SExist = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null);
 
                 if (SExist != null)
