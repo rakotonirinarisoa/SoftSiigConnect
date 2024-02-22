@@ -37,7 +37,7 @@
     function successfulRedirect() {
         alert("Modification avec succès!");
 
-        window.location = urlOrigin + '/SuperAdmin/ProjetList';
+        window.location = urlOrigin + '/Projects/AllProjects';
     }
 
     $('[data-action="update-project"]').on('click', () => {
@@ -59,7 +59,7 @@
         $.ajax({
             type: 'POST',
             async: true,
-            url: urlOrigin + '/Projects/Update',
+            url: urlOrigin + '/Projects/UpdateProject',
             contentType: 'application/json',
             datatype: 'json',
             data: JSON.stringify({ ...payload }),
