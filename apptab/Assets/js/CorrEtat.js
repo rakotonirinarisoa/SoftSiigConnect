@@ -7,14 +7,21 @@ $(document).ready(() => {
     Origin = User.origin;
 
     $(`[data-id="username"]`).text(User.LOGIN);
-    GetUsers();
+    GetListProjet();
+    GetUsers(undefined);
 });
 
 let urlOrigin = Origin;
 //let urlOrigin = "http://softwell.cloud/OPAVI";
-function GetUsers() {
+function GetUsers(id) {
     let formData = new FormData();
-    
+
+    if (!id) {
+        formData.append("suser.IDPROJET", User.IDPROJET);
+    } else {
+        formData.append("suser.IDPROJET", id);
+    }
+
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
@@ -32,6 +39,9 @@ function GetUsers() {
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
+                $("#defC").val("");
+                $("#tefC").val("");
+                $("#beC").val("");
                 return;
             }
             if (Datas.type == "login") {
@@ -44,6 +54,10 @@ function GetUsers() {
             $("#tefC").val(Datas.data.TEF);
             $("#beC").val(Datas.data.BE);
 
+            if (Datas.data.IDPROJET != 0)
+                $("#proj").val(`${Datas.data.IDPROJET}`);
+            else
+                $("#proj").val("");
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -51,12 +65,23 @@ function GetUsers() {
     });
 }
 
+$('#proj').on('change', () => {
+    const id = $('#proj').val();
+    GetUsers(id);
+});
+
 $(`[data-action="UpdateUser"]`).click(function () {
     let defC = $("#defC").val();
     let tefC = $("#tefC").val();
     let beC = $("#beC").val();
     if (!defC || !tefC || !beC) {
         alert("Veuillez renseigner les informations sur la correspondance des états. ");
+        return;
+    }
+
+    let pr = $("#proj").val();
+    if (!pr) {
+        alert("Veuillez sélectionner au moins un projet. ");
         return;
     }
 
@@ -70,6 +95,8 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("param.DEF", $(`#defC`).val());
     formData.append("param.TEF", $(`#tefC`).val());
     formData.append("param.BE", $(`#beC`).val());
+
+    formData.append("iProjet", $("#proj").val());
 
     $.ajax({
         type: "POST",
@@ -96,3 +123,54 @@ $(`[data-action="UpdateUser"]`).click(function () {
         },
     });
 });
+
+function GetListProjet() {
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Parametre/GetAllPROJET',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+
+            $(`[data-id="proj-list"]`).text("");
+            var code = ``;
+            //let i = 0;
+            let pr = ``;
+            $.each(Datas.data, function (k, v) {
+                code += `
+                    <option value="${v.ID}">${v.PROJET}</option>
+                `;
+                //pr = v.PROJET;
+                //i++;
+            });
+
+            $(`[data-id="proj-list"]`).append(code);
+
+            //if (i == 1)
+            //    $("#proj").val([...pr]).change();
+        },
+        error: function (e) {
+            alert("Problème de connexion. ");
+        }
+    })
+}

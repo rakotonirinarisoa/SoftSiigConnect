@@ -42,6 +42,7 @@ namespace apptab.Controllers
 
             try
             {
+                //int crpt = exist.IDPROJET.Value;
                 int crpt = 0;
                 if (suser.IDPROJET == null)
                     crpt = exist.IDPROJET.Value;
