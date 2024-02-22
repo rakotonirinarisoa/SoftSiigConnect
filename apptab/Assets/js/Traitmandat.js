@@ -170,7 +170,8 @@ $('[data-action="GenereR"]').click(async function () {
                                 return `
                                     <input type="checkbox" name="checkprod" compteg-ischecked class="chk" onchange="checkdel('${data}')" />
                                 `;
-                            }
+                            },
+                            orderable: false
                         },
                         { data: 'soa' },
                         { data: 'projet' },
@@ -224,8 +225,14 @@ $('[data-action="GenereR"]').click(async function () {
                             className: 'elerfr'
                         }
                     ],
-                    colReorder: true,
-                    deferRender: true
+                    colReorder: {
+                        enable: true,
+                        fixedColumnsLeft: 1
+                    },
+                    deferRender: true,
+                    initComplete: function() {
+                        $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
+                    }
                 });
             }
         },
