@@ -131,7 +131,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> UpdateProjectgit(ProjectToUpdate projectToUpdate)
+        public async Task<JsonResult> UpdateProject(ProjectToUpdate projectToUpdate)
         {
             var currentUser = await _db.SI_USERS.FirstOrDefaultAsync(u => u.LOGIN == projectToUpdate.Login && u.PWD == projectToUpdate.Password && u.DELETIONDATE == null);
 

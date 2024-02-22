@@ -233,8 +233,10 @@
     <Compile Include="Models\HSI_PARAMETAT.cs" />
     <Compile Include="Models\HSI_PROCEDURE.cs" />
     <Compile Include="Models\HSI_PROGRAMME.cs" />
+    <Compile Include="Models\HSI_PROJETS.cs" />
     <Compile Include="Models\HSI_PROSOA.cs" />
     <Compile Include="Models\HSI_SOAS.cs" />
+    <Compile Include="Models\HSI_USERS.cs" />
     <Compile Include="Models\MCOMPTA.cs" />
     <Compile Include="Models\MOP.cs" />
     <Compile Include="Models\OPA_ANOMALIE.cs" />
@@ -4505,7 +4507,6 @@
     <Content Include="Views\User\Create.cshtml" />
     <Content Include="Views\Admin\AdminMaPUserList.cshtml" />
     <Content Include="Views\Admin\AdminMaPUserCreate.cshtml" />
-    <Content Include="Views\SuperAdmin\SuperAdmin.cshtml" />
     <Content Include="Views\SuperAdmin\SuperAdminMaPList.cshtml" />
     <Content Include="Views\SuperAdmin\SuperAdminMaPCreate.cshtml" />
     <Content Include="Views\Crypto\CryptoCreate.cshtml" />
@@ -4531,7 +4532,7 @@
     <Content Include="Views\Parametre\ProgCreate.cshtml" />
     <Content Include="Views\Parametre\ActCreate.cshtml" />
     <Content Include="Views\Etat\InfoProCreate.cshtml" />
-    <Content Include="Views\Projects\Details.cshtml" />
+    <Content Include="Views\Projects\ProjectDetails.cshtml" />
     <Content Include="Views\SuperAdmin\SuperAdminDetailFPROSOA.cshtml" />
     <Content Include="Views\SuperAdmin\SuperAdminDetailFSOA.cshtml" />
     <Content Include="Views\SuperAdmin\MailCreate.cshtml" />
@@ -4558,6 +4559,8 @@
     <Content Include="Views\Privilege\List.cshtml" />
     <Content Include="Views\Traitement\TraitementORDSECOTHER.cshtml" />
     <Content Include="Views\Parametre\TypeECreate.cshtml" />
+    <Content Include="Views\Projects\AllProjects.cshtml" />
+    <Content Include="Views\Projects\NewProject.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
