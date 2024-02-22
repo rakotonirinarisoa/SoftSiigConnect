@@ -46,6 +46,14 @@ function GetUsers() {
             $("#ParaPv").val(Datas.data.MP2);
             $("#ParaPp").val(Datas.data.MP3);
             $("#ParaPb").val(Datas.data.MP4);
+
+            $("#Md0").val(Datas.data.MD0);
+            $("#Md1").val(Datas.data.MD1);
+            $("#Md2").val(Datas.data.MD2);
+
+            $("#Mop0").val(Datas.data.MOP0);
+            $("#Mop1").val(Datas.data.MOP1);
+            $("#Mop2").val(Datas.data.MOP2);
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -61,7 +69,16 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let ParaPv = $("#ParaPv").val();
     let ParaPp = $("#ParaPp").val();
     let ParaPb = $("#ParaPb").val();
-    if (!ParaV || !ParaS || !ParaPe || !ParaPv || !ParaPp || !ParaPb) {
+
+    let Md0 = $("#Md0").val();
+    let Md1 = $("#Md1").val();
+    let Md2 = $("#Md2").val();
+
+    let Mop0 = $("#Mop0").val();
+    let Mop1 = $("#Mop1").val();
+    let Mop2 = $("#Mop2").val();
+
+    if (!ParaV || !ParaS || !ParaPe || !ParaPv || !ParaPp || !ParaPb || !Md0 || !Md1 || !Md2 || !Mop0 || !Mop1 || !Mop2) {
         alert("Veuillez renseigner les intitulés des menus. ");
         return;
     }
@@ -80,6 +97,14 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("param.MP2", $(`#ParaPv`).val());
     formData.append("param.MP3", $(`#ParaPp`).val());
     formData.append("param.MP4", $(`#ParaPb`).val());
+
+    formData.append("param.MD0", $(`#Md0`).val());
+    formData.append("param.MD1", $(`#Md1`).val());
+    formData.append("param.MD2", $(`#Md2`).val());
+
+    formData.append("param.MOP0", $(`#Mop0`).val());
+    formData.append("param.MOP1", $(`#Mop1`).val());
+    formData.append("param.MOP2", $(`#Mop2`).val());
 
     $.ajax({
         type: "POST",

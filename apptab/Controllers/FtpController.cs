@@ -35,18 +35,14 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public ActionResult DetailsFtp(SI_USERS suser)
+        public ActionResult DetailsFtp(SI_USERS suser, int iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             try
             {
-                int crpt = 0;
-                if (suser.IDPROJET == null)
-                    crpt = exist.IDPROJET.Value;
-                else
-                    crpt = suser.IDPROJET.Value;
+                int crpt = iProjet;
 
                 var crpto = db.OPA_FTP.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
                 if (crpto != null)
