@@ -20,6 +20,10 @@ $(document).ready(() => {
     });
 });
 
+$('#proj').on('change', () => {
+    $('.afb160Paie').html('');
+});
+
 function GetListProjet() {
     let formData = new FormData();
 
@@ -573,6 +577,8 @@ $('[data-action="SaveV"]').click(function () {
 
     formData.append("DateDebut", $('#dateD').val());
     formData.append("DateFin", $('#dateF').val());
+
+    formData.append("iProjet", $("#proj").val());
 
     $.ajax({
         type: "POST",
