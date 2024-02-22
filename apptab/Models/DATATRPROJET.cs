@@ -25,5 +25,8 @@ namespace apptab
         public DateTime? DATEBE { get; set; }
         public string LIEN { get; set; }
         public DateTime? DATECREATION { get; set; }
+
+        public string SOA { get; set; }
+        public string PROJET { get; set; }
     }
 }

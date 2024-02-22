@@ -15,6 +15,7 @@ using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace apptab.Controllers
 {
@@ -39,33 +40,75 @@ namespace apptab.Controllers
 
         //GET ALL PROJET//
         [HttpPost]
-        public ActionResult GetAllPROJET()
+        public ActionResult GetAllPROJET(SI_USERS suser)
         {
-            var user = db.SI_PROJETS.Select(a => new
-            {
-                PROJET = a.PROJET,
-                ID = a.ID,
-                DELETIONDATE = a.DELETIONDATE,
-            }).Where(a => a.DELETIONDATE == null).ToList();
-
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
-        }
-
-        [HttpPost]
-        public ActionResult GetIsProjet(SI_USERS suser)
-        {
-            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            var isProjet = "";
-
-            if (db.SI_PROJETS.Any(a => a.ID == exist.IDPROJET && a.DELETIONDATE == null))
+            try
             {
-                isProjet = db.SI_PROJETS.FirstOrDefault(a => a.ID == exist.IDPROJET && a.DELETIONDATE == null).PROJET;
-            }
+                var test = db.SI_USERS.Where(x => x.LOGIN == exist.LOGIN && x.PWD == exist.PWD && x.DELETIONDATE == null).FirstOrDefault();
+                if (test.ROLE == (int)Role.SAdministrateur)
+                {
+                    var user = db.SI_PROJETS.Select(a => new
+                    {
+                        PROJET = a.PROJET,
+                        ID = a.ID,
+                        DELETIONDATE = a.DELETIONDATE,
+                    }).Where(a => a.DELETIONDATE == null).ToList();
 
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = isProjet }, settings));
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+                }
+                else
+                {
+                    if (test.IDPROJET != 0)
+                    {
+                        var user = db.SI_PROJETS.Select(a => new
+                        {
+                            PROJET = a.PROJET,
+                            ID = a.ID,
+                            DELETIONDATE = a.DELETIONDATE,
+                        }).Where(a => a.DELETIONDATE == null && a.ID == test.IDPROJET).ToList();
+
+                        return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+                    }
+                    else
+                    {
+                        var user = (from usr in db.SI_PROJETS
+                                    join prj in db.SI_MAPUSERPROJET on usr.ID equals prj.IDPROJET
+                                    where prj.IDUS == test.ID && usr.DELETIONDATE == null
+                                    select new
+                                    {
+                                        PROJET = usr.PROJET,
+                                        ID = usr.ID,
+                                        DELETIONDATE = usr.DELETIONDATE,
+                                    }).ToList();
+
+                        return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
         }
+
+        //[HttpPost]
+        //public ActionResult GetIsProjet(SI_USERS suser)
+        //{
+        //    var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+        //    if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+        //    var isProjet = "";
+
+        //    if (db.SI_PROJETS.Any(a => a.ID == exist.IDPROJET && a.DELETIONDATE == null))
+        //    {
+        //        isProjet = db.SI_PROJETS.FirstOrDefault(a => a.ID == exist.IDPROJET && a.DELETIONDATE == null).PROJET;
+        //    }
+
+        //    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = isProjet }, settings));
+        //}
 
         [HttpPost]
         public ActionResult DetailsInfoPro(SI_USERS suser)
@@ -111,7 +154,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> Generation(SI_USERS suser, DateTime DateDebut, DateTime DateFin)
+        public async Task<JsonResult> Generation(SI_USERS suser, DateTime DateDebut, DateTime DateFin, int iProjet)
         {
             var exist = await db.SI_USERS.FirstOrDefaultAsync(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Problème de connexion. " }, settings));
@@ -120,10 +163,7 @@ namespace apptab.Controllers
             {
                 SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
 
-                if (exist.IDPROJET == 0)
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vous n'êtes pas autorisés à effectuer cette opération. " }, settings));
-
-                int crpt = exist.IDPROJET.Value;
+                int crpt = iProjet;
                 //Check si le projet est mappé à une base de données TOM²PRO//
                 if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
@@ -195,6 +235,14 @@ namespace apptab.Controllers
                                     if (tom.RTIERS.Any(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE))
                                         titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE).NOM;
 
+                                    var soa = (from soas in db.SI_SOAS
+                                               join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                               where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                               select new
+                                               {
+                                                   soas.SOA
+                                               });
+
                                     list.Add(new DATATRPROJET
                                     {
                                         No = x.ID,
@@ -207,7 +255,9 @@ namespace apptab.Controllers
                                         PCOP = PCOP,
                                         DATEDEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF).DATECA,
                                         DATETEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF).DATECA,
-                                        DATEBE = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE).DATECA
+                                        DATEBE = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE).DATECA,
+                                        SOA = soa.FirstOrDefault().SOA,
+                                        PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
                                     });
                                 }
                             }
@@ -479,14 +529,14 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> ModalF(SI_USERS suser, string IdF)
+        public async Task<JsonResult> ModalF(SI_USERS suser, string IdF, int iProjet)
         {
             var exist = await db.SI_USERS.FirstOrDefaultAsync(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             try
             {
-                int crpt = exist.IDPROJET.Value;
+                int crpt = iProjet;
 
                 SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
@@ -519,14 +569,14 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> ModalD(SI_USERS suser, Guid IdF)
+        public async Task<JsonResult> ModalD(SI_USERS suser, Guid IdF, int iProjet)
         {
             var exist = await db.SI_USERS.FirstOrDefaultAsync(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             try
             {
-                int crpt = exist.IDPROJET.Value;
+                int crpt = iProjet;
 
                 SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
@@ -557,14 +607,14 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> ModalLIAS(SI_USERS suser, string IdF)
+        public async Task<JsonResult> ModalLIAS(SI_USERS suser, string IdF, int iProjet)
         {
             var exist = await db.SI_USERS.FirstOrDefaultAsync(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             try
             {
-                int crpt = exist.IDPROJET.Value;
+                int crpt = iProjet;
 
                 SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
@@ -608,7 +658,7 @@ namespace apptab.Controllers
 
 
         [HttpPost]
-        public JsonResult GetIsMotif(string IdF)
+        public JsonResult GetIsMotif()
         {
             try
             {
@@ -643,14 +693,14 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult AnnulationMandat(SI_USERS suser, Guid IdF, string Comm, string Motif)
+        public JsonResult AnnulationMandat(SI_USERS suser, Guid IdF, string Comm, string Motif, int iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             try
             {
-                int IdS = exist.IDPROJET.Value;
+                int IdS = iProjet;
 
                 if (db.SI_TRAITPROJET.FirstOrDefault(a => a.No == IdF) != null)
                 {

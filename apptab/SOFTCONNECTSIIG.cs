@@ -119,7 +119,6 @@ namespace apptab
             modelBuilder.Entity<OPA_VALIDATIONS>()
               .Property(e => e.Devise)
               .IsFixedLength();
-
         }
     }
 }

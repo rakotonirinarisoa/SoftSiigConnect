@@ -31,12 +31,12 @@ namespace apptab.Controllers
         public JsonResult FillTable(SI_USERS suser)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
-            ViewBag.Role = exist.ROLE;
+            //ViewBag.Role = exist.ROLE;
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             try
             {
-                var test = db.SI_USERS.Where(x => x.ROLE == exist.ROLE && x.IDPROJET == exist.IDPROJET && x.DELETIONDATE == null).FirstOrDefault();
+                var test = db.SI_USERS.Where(x => x.LOGIN == exist.LOGIN && x.PWD == exist.PWD && x.DELETIONDATE == null).FirstOrDefault();
                 if (test.ROLE == (int)Role.SAdministrateur)
                 {
                     var users = db.SI_USERS.Where(x => x.ROLE != Role.SAdministrateur).Select(a => new

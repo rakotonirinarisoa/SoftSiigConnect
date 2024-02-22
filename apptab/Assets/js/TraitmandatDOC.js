@@ -18,6 +18,7 @@ function modalD(id) {
     formData.append("suser.IDPROJET", User.IDPROJET);
 
     formData.append("IdF", clickedIdD);
+    formData.append("iProjet", $("#proj").val());
 
     $.ajax({
         type: "POST",
