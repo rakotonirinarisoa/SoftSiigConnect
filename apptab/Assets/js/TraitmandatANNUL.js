@@ -18,6 +18,7 @@ function modalREJET(id) {
     formData.append("suser.IDPROJET", User.IDPROJET);
 
     formData.append("IdF", clickedANN);
+    formData.append("iProjet", $("#proj").val());
 
     $.ajax({
         type: "POST",
@@ -79,6 +80,7 @@ $(`[data-action="ANNULMANDAT"]`).click(function () {
     formData.append("IdF", clickedANN);
     formData.append("Comm", $(`#Commentaire`).val());
     formData.append("Motif", user);
+    formData.append("iProjet", $("#proj").val());
 
     $.ajax({
         type: "POST",
@@ -94,6 +96,10 @@ $(`[data-action="ANNULMANDAT"]`).click(function () {
                 alert(Datas.msg);
                 return;
             }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+            }
             if (Datas.type == "success") {
                 alert(Datas.msg);
 
@@ -102,10 +108,6 @@ $(`[data-action="ANNULMANDAT"]`).click(function () {
                 $("#annuler-modal").modal("toggle");
                 
                 return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-                window.location = window.location.origin;
             }
         },
     });

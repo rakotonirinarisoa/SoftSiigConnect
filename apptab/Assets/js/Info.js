@@ -58,7 +58,10 @@ function GetUsers(id) {
             $("#prog").val(Datas.data.PROG);
             $("#act").val(Datas.data.ACT);
 
-            $("#proj").val(`${Datas.data.PROJ}`);
+            if (Datas.data.PROJ != 0)
+                $("#proj").val(`${Datas.data.PROJ}`);
+            else
+                $("#proj").val("");
         },
         error: function () {
             alert("Problème de connexion. ");

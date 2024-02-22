@@ -236,7 +236,6 @@
     <Compile Include="Models\HSI_PROSOA.cs" />
     <Compile Include="Models\HSI_SOAS.cs" />
     <Compile Include="Models\MCOMPTA.cs" />
-    <Compile Include="Models\Model1.cs" />
     <Compile Include="Models\MOP.cs" />
     <Compile Include="Models\OPA_ANOMALIE.cs" />
     <Compile Include="Models\OPA_ANOMALIEBR.cs" />
