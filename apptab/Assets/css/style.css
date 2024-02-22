@@ -420,3 +420,8 @@ li.active a {
     border-radius: 15px;
     padding: 1rem;
 }
+
+table.dataTable tbody td {
+    font-weight: bold !important;
+    text-align: center !important;
+}

@@ -12,17 +12,17 @@ $(document).ready(() => {
 
     GetListProjet();
 
-    GetListLOAD();//Partie ORDSEC
-    GetListLOADOTHER();//Partie ORDSEC
+    GetListLOAD(); //Partie ORDSEC
+    GetListLOADOTHER(); //Partie ORDSEC
 
     $(`[data-widget="pushmenu"]`).on('click', () => {
         $(`[data-action="SaveV"]`).toggleClass('custom-fixed-btn');
     });
 });
 
-$('#proj').on('change', () => {
-    $('.afb160Paie').html('');
-});
+//$('#proj').on('change', () => {
+//    $('.afb160Paie').html('');
+//});
 
 function GetListProjet() {
     let formData = new FormData();
@@ -132,54 +132,101 @@ $('[data-action="GenereR"]').click(async function () {
                 return;
             }
             if (Datas.type == "success") {
-                //window.location = window.location.origin;
-                ListResult = Datas.data
-                contentpaie = ``;
-                $.each(ListResult, function (k, v) {
-                    contentpaie += `
-                    <tr compteG-id="${v.No}" class="select-text">
-                        <td style="font-weight: bold; text-align:center">
-                            <input type="checkbox" name = "checkprod" compteg-ischecked class="chk" onchange = "checkdel('${v.No}')" />
-                        </td>
-                        <td style="font-weight: bold; text-align:center">${v.SOA}</td>
-                        <td style="font-weight: bold; text-align:center">${v.PROJET}</td>
-                        <td style="font-weight: bold; text-align:center">${v.REF}</td>
-                        <td style="font-weight: bold; text-align:center">${v.OBJ}</td>
-                        <td style="font-weight: bold; text-align:center">${v.TITUL}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATE)}</td>
-                        <td style="font-weight: bold; text-align:center">${v.COMPTE}</td>
-                        <td style="font-weight: bold; text-align:center">${v.PCOP}</td>
-                        <td style="font-weight: bold; text-align:center">${formatCurrency(String(v.MONT).replace(",", "."))}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATEDEF)}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATETEF)}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATEBE)}</td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center">
-                            <div onclick="modalD('${v.No}')"><i class="fa fa-tags fa-lg text-danger"></i></div>
-                        </td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center">
-                            <div onclick="modalF('${v.No}')"><i class="fa fa-tags fa-lg text-success"></i></div>
-                        </td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center">
-                            <div onclick="modalLIAS('${v.No}')"><i class="fa fa-tags fa-lg text-info"></i></div>
-                        </td>
-                    </tr>
-                    `
+                const data = [];
+
+                listResult = Datas.data
+
+                $.each(listResult, function (_, v) {
+                    data.push({
+                        id: v.No,
+                        soa: v.SOA,
+                        projet: v.PROJET,
+                        ref: v.REF,
+                        objet: v.OBJ,
+                        titulaire: v.TITUL,
+                        dateMandat: formatDate(v.DATE),
+                        compte: v.COMPTE,
+                        pcop: v.PCOP,
+                        montant: formatCurrency(String(v.MONT).replace(",", ".")),
+                        dateDEF: formatDate(v.DATEDEF),
+                        dateTEF: formatDate(v.DATETEF),
+                        dateBE: formatDate(v.DATEBE),
+                        imputation: '',
+                        piecesJustificatives: '',
+                        document: ''
+                    });
                 });
 
-                $('.afb160Paie').empty();
-                $('.afb160Paie').html(contentpaie);
+                if (table !== undefined) {
+                    table.destroy();
+                }
 
-                //new DataTable(`#TBD_PROJET`, {
-                //    //dom: 'Bfrtip',
-                //    //buttons: ['colvis'],
-                //    //colReorder: false,
-                    
-                //    responsive: true,
-                //    retrieve: true,
-                //    paging: true,
-                //    search: true
-                //    //destroy:true
-                //});
+                table = $('#TBD_PROJET').DataTable({
+                    data,
+                    columns: [
+                        {
+                            data: 'id',
+                            render: function (data, _, _, _) {
+                                return `
+                                    <input type="checkbox" name="checkprod" compteg-ischecked class="chk" onchange="checkdel('${data}')" />
+                                `;
+                            }
+                        },
+                        { data: 'soa' },
+                        { data: 'projet' },
+                        { data: 'ref' },
+                        { data: 'objet' },
+                        { data: 'titulaire' },
+                        { data: 'dateMandat' },
+                        { data: 'compte' },
+                        { data: 'pcop' },
+                        { data: 'montant' },
+                        { data: 'dateDEF' },
+                        { data: 'dateTEF' },
+                        { data: 'dateBE' },
+                        {
+                            data: 'imputation',
+                            render: function (_, _, row, _) {
+                                return `
+                                    <div onclick="modalD('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-danger"></i>
+                                    </div>
+                                `;
+                            }
+                        },
+                        {
+                            data: 'piecesJustificatives',
+                            render: function (_, _, row, _) {
+                                return `
+                                    <div onclick="modalF('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-danger"></i>
+                                    </div>
+                                `;
+                            }
+                        },
+                        {
+                            data: 'document',
+                            render: function (_, _, row, _) {
+                                return `
+                                    <div onclick="modalLIAS('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-danger"></i>
+                                    </div>
+                                `;
+                            }
+                        }
+                    ],
+                    createdRow: function (row, _, _) {
+                        $(row).addClass('select-text');
+                    },
+                    columnDefs: [
+                        {
+                            targets: [-3, -2, -1],
+                            className: 'elerfr'
+                        }
+                    ],
+                    colReorder: true,
+                    deferRender: true
+                });
             }
         },
         error: function () {
@@ -222,10 +269,9 @@ function GetListLOAD() {
                 return;
             }
             if (Datas.type == "success") {
-                //window.location = window.location.origin;
-                ListResult = Datas.data
+                listResult = Datas.data
                 contentpaie = ``;
-                $.each(ListResult, function (k, v) {
+                $.each(listResult, function (k, v) {
                     contentpaie += `
                    <tr compteG-id="${v.No}" class="select-text caret">
                         <td style="font-weight: bold; text-align:center">
@@ -310,10 +356,9 @@ function GetListLOADOTHER() {
                 return;
             }
             if (Datas.type == "success") {
-                //window.location = window.location.origin;
-                ListResult = Datas.data
+                listResult = Datas.data
                 contentpaie = ``;
-                $.each(ListResult, function (k, v) {
+                $.each(listResult, function (k, v) {
                     contentpaie += `
                    <tr compteG-id="${v.No}" class="select-text caret">
                         <td style="font-weight: bold; text-align:center">
@@ -403,10 +448,9 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                 return;
             }
             if (Datas.type == "success") {
-                //window.location = window.location.origin;
-                ListResult = Datas.data
+                listResult = Datas.data
                 contentpaie = ``;
-                $.each(ListResult, function (k, v) {
+                $.each(listResult, function (k, v) {
                     contentpaie += `
                    <tr compteG-id="${v.No}" class="select-text caret">
                         <td style="font-weight: bold; text-align:center">
@@ -496,10 +540,9 @@ $('[data-action="GenereSIIG"]').click(function () {
                 return;
             }
             if (Datas.type == "success") {
-                //window.location = window.location.origin;
-                ListResult = Datas.data
+                listResult = Datas.data
                 contentpaie = ``;
-                $.each(ListResult, function (k, v) {
+                $.each(listResult, function (k, v) {
                     contentpaie += `
                     <tr compteG-id="${v.No}" class="select-text">
                         <td style="font-weight: bold; text-align:center">
