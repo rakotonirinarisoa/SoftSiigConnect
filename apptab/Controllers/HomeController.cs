@@ -227,7 +227,7 @@ namespace apptab.Controllers
             }
             else
             {
-                var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser);
+                var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser, codeproject);
                 //var send = "";
                 if (intbasetype == 0)
                 {
