@@ -8,11 +8,6 @@ using System.Web.UI.WebControls;
 using System.Threading.Tasks;
 using apptab.Data.Entities;
 using System.Data.Entity;
-using apptab;
-using static apptab.OPA_ROLES;
-using static apptab.SI_ROLES;
-using System.Text.RegularExpressions;
-using System.Web;
 
 namespace SOFTCONNECT.Controllers
 {

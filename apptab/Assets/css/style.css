@@ -421,6 +421,10 @@ li.active a {
     padding: 1rem;
 }
 
+table.dataTable tbody td {
+    font-weight: bold !important;
+    text-align: center !important;
+}
 
 .type--A {
     --line_color: #555555;

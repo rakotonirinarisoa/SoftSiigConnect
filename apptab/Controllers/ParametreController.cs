@@ -1,6 +1,4 @@
-﻿using apptab.Data;
-using apptab;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Web.Mvc;
