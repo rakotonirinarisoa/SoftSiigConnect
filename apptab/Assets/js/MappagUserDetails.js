@@ -101,6 +101,7 @@ $(`[data-id="connex"]`).click(function () {
     formData.append("map.INSTANCE", inst);
     formData.append("map.CONNEXION", usr);
     formData.append("map.CONNEXPWD", psw);
+    formData.append("map.AUTH", auth); 
 
     $.ajax({
         type: "POST",
