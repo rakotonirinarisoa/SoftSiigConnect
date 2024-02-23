@@ -3,7 +3,13 @@
     ViewBag.Title = "PaiementValidation";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text text-bold" id="inputGroup-sizing-default">Projet</span>
+    </div>
+    <select class="form-control col combobox" id="Fproject" code-project>
+    </select>
+</div>
 <div>
     <div class="form-row">
         <div class="input-group mb-3 col-sm-12 col-md-6">
@@ -121,7 +127,7 @@
 <div class="form-row mb-3">
     <div class="input-group mb-3 ">
         <div class="mb-3 col ">
-            <div class="btn btn-flat bg-gradient-green col-12" data-action="GetElementChecked">
+            <div class="btn btn-flat bg-gradient-red col-12" data-action="GetElementChecked">
                 <i class="fa fa-upload"></i> Sauvegarder pour attente validation
             </div>
         </div>

@@ -24,18 +24,59 @@ $(document).ready(() => {
     Origin = User.origin;
 
     $(`[data-id="username"]`).text(User.LOGIN);
-
-    //$(`[tab="autre"]`).hide();
-
-    /*console.log($(`[tab="autre"]`).hide());*/
     
-    //GetUR();
+    GetAllProjectUser();
+});
+
+$(document).on("change", "[code-project]", () => {
     GetListCodeJournal();
     ChargeLoad();
-    //GetListCompG();
 });
+function GetAllProjectUser() {
+
+    let formData = new FormData();
+    let codeproject = $("#Fproject").val();
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
+    formData.append("codeproject", codeproject);
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/GetAllProjectUser',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (result) {
+            var Datas = JSON.parse(result);
+            reglementresult = ``;
+            reglementresult = Datas.data;
+            console.log(reglementresult);
+            let listproject = ``;
+            if (reglementresult.length) {
+                $.each(reglementresult, function (k, v) {
+                    listproject += `<option value="${v.ID}">${v.PROJET}</option>`;
+                })
+            } else {
+                listproject += `<option value="${reglementresult.ID}" selected>${reglementresult.PROJET}</option>`;
+            }
+
+            $("#Fproject").html(listproject);
+            GetListCodeJournal();
+            ChargeLoad();
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
 function ChargeLoad() {
     let formData = new FormData();
+
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
@@ -297,6 +338,10 @@ $(document).on("change", "[auxi-list]", () => {
 
 function GetListCodeJournal() {
     let formData = new FormData();
+
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);

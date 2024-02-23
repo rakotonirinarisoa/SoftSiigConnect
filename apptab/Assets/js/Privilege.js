@@ -490,7 +490,7 @@ function SavePRIV(id) {
 
     formData.append("privilege.MOP0", $(`input[name="droneMOP0${id}"]:checked`).val());
     formData.append("privilege.MOP1", $(`input[name="droneMOP1${id}"]:checked`).val());
-    formData.append("privilege.MOP1", $(`input[name="droneMOP1${id}"]:checked`).val());
+    formData.append("privilege.MOP2", $(`input[name="droneMOP2${id}"]:checked`).val());
 
     formData.append("privilege.TDB0", $(`input[name="droneTDB0${id}"]:checked`).val());
 
