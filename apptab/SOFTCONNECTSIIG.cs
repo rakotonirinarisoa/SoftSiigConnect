@@ -1,5 +1,4 @@
 ﻿using System.Data.Entity;
-using apptab;
 using apptab.Models;
 
 namespace apptab

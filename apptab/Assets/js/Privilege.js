@@ -9,7 +9,7 @@ $(document).ready(() => {
     $(`[data-id="username"]`).text(User.LOGIN);
     GetListUser();
 
-    $("#idTable").DataTable()
+    
 });
 
 function GetListUser() {

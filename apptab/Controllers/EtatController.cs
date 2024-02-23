@@ -1,16 +1,10 @@
-﻿using apptab.Data;
-using apptab.Data.Entities;
-using apptab;
-using Microsoft.Build.Framework.XamlTypes;
+﻿using apptab.Data.Entities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.DynamicData;
 using System.Web.Mvc;
 
 namespace apptab.Controllers
