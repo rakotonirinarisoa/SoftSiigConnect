@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace apptab.Extension
+﻿namespace apptab.Extension
 {
     public class AFB
     {

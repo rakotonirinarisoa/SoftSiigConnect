@@ -102,7 +102,7 @@
         <div class="input-group mb-3 col">
             <div class="mb-3 col ">
                 <div class="btn btn-flat bg-gradient-green col-12" data-action="ChargerJs">
-                    <i class="fa fa-upload"></i> Générer
+                    <i class="fa fa-download"></i> Générer
                 </div>
             </div>
         </div>
@@ -171,34 +171,34 @@
         </div>
         <div class="mb-3 col col-sm-12 col-md-2">
             <div class="btn btn-flat bg-gradient-green col-12" data-action="CreateTxt">
-                <i class="fa fa-file"></i> Créer fichier AFB
+                <i class="fa fa-download"></i> Créer fichier AFB
             </div>
         </div>
         <div class="mb-3 col col-sm-12 col-md-2">
-            <div class="btn btn-flat bg-gradient-green col-12" data-action="CreateTxtCrypter">
-                <i class="fa fa-file-archive"></i> Fichier AFB Crypter
+            <div class="btn btn-flat bg-gradient-success col-12" data-action="CreateTxtCrypter">
+                <i class="fa fa-file-archive"></i> Créer fichier AFB crypter
             </div>
         </div>
         <div class="mb-3 col col-sm-12 col-md-2">
-            <div class="btn btn-flat bg-gradient-green col-12" data-action="CreateTxtSend">
-                <i class="fa fa-file"></i> Send FTP AFB
+            <div class="btn btn-flat bg-gradient-primary col-12" data-action="CreateTxtSend">
+                <i class="fa fa-paper-plane"></i> Envoyer FTP fichier AFB
             </div>
         </div>
         <div class="mb-3 col col-sm-12 col-md-2">
-            <div class="btn btn-flat bg-gradient-green col-12" data-action="CreateTxtFTPCrypter">
-                <i class="fa fa-file-archive"></i> Send FTP AFB Crypter
+            <div class="btn btn-flat bg-gradient-primary col-12" data-action="CreateTxtFTPCrypter">
+                <i class="fa fa-paper-plane"></i> Envoyer FTP fichier AFB crypter
             </div>
         </div>
-        <div class="mb-3 col col-sm-12 col-md-2">
-            <div class="btn btn-flat bg-gradient-teal col-12" onclick="exportTableToExcel(TDB)">
-                <i class="fa fa-file-excel"></i> Excel
+        <div class="mb-3 col col-sm-12 col-md-4">
+            <div class="btn btn-flat bg-gradient-yellow col-12" onclick="exportTableToExcel(TDB)">
+                <i class="fa fa-file-excel"></i> Exporter
             </div>
         </div>
-        <div class="mb-3 col col-sm-12 col-md-2">
+        @*<div class="mb-3 col col-sm-12 col-md-2">
             <div class="btn btn-flat bg-gradient-red col-12">
-                <i class="fa fa-eraser"></i> Effacer
+                <i class="fa fa-times"></i> Effacer
             </div>
-        </div>
+        </div>*@
     </div>
 </div>
 
@@ -289,32 +289,6 @@
         </table>
     </div>
 
-    <div class="table-responsive mb-3" style="max-height:400px" tab="paie">
-        <table class="table table-hover table-striped" id="TBD_OPA">
-            <thead style="position:sticky">
-                <tr class="thead-accueil1" style="white-space: nowrap;">
-                    <td style="text-align:right">
-                        <input type="checkbox" />
-                    </td>
-                    <td style="font-weight: bold; text-align:center" width="5px">N°</td>
-                    <td style="font-weight:bold; text-align:center">Matricule</td>
-                    <td style="font-weight: bold; text-align: center">Nom</td>
-                    <td style="font-weight: bold; text-align: center">Mois</td>
-                    <td style="font-weight: bold; text-align: center">Année</td>
-                    <td style="font-weight: bold; text-align: center">Libellé</td>
-                    <td style="font-weight: bold; text-align: center">Montant</td>
-                    <td style="font-weight: bold; text-align: center">CIN</td>
-                    <td style="font-weight: bold; text-align: center">Banque</td>
-                    <td style="font-weight: bold; text-align: center">Code Banque</td>
-                    <td style="font-weight: bold; text-align: center">Guichet</td>
-                    <td style="font-weight: bold; text-align: center">Compte Banque</td>
-                    <td style="font-weight: bold; text-align: center">CleRIB</td>
-                </tr>
-            </thead>
-            <tbody class="afb160"></tbody>
-        </table>
-    </div>
-
     <div class="form-row mb-3">
         <div class="input-group mb-3 col-md-10">
         </div>
@@ -326,7 +300,3 @@
     </div>
 </div>
 <script src="~/Assets/js/FValidations.js"></script>
-
-
-
-

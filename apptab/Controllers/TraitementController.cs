@@ -1,23 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Drawing;
 using System.Linq;
-using System.Numerics;
-using System.Runtime;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using apptab.Data;
-using apptab.Data.Entities;
-using apptab;
-using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
-using System.Text.RegularExpressions;
-using System.Security.Cryptography;
-using static System.Net.Mime.MediaTypeNames;
 using System.Net.Mail;
-using static System.Net.WebRequestMethods;
 
 namespace apptab.Controllers
 {

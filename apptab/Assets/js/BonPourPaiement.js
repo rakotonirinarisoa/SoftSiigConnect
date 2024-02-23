@@ -224,8 +224,8 @@ function chargeLoad() {
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
-                        createdRow: function (row, _, _) {
-                            $(row).attr('compteG-id', row.id);
+                        createdRow: function (row, data, _) {
+                            $(row).attr('compteG-id', data.id);
                         },
                         columnDefs: [
                             {
@@ -387,7 +387,7 @@ function GetListCompG() {
                 alert(Datas.msg);
                 return;
             }
-            let code = `<option value = "Tous" > Tous</option> `;
+            let code = ``;
             let codeAuxi = ``;
             ListCompteG = Datas.data;
 

@@ -1,19 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using apptab;
 using Newtonsoft.Json;
-using System.Web.UI.WebControls;
-using System.Threading.Tasks;
-using apptab.Data.Entities;
-using System.Data.Entity;
-using Microsoft.Build.Framework.XamlTypes;
-using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Net;
-using static System.Net.WebRequestMethods;
-using apptab;
-using System.IO;
 
 namespace apptab.Controllers
 {

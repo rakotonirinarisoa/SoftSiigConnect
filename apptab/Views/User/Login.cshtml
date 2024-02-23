@@ -17,6 +17,9 @@
     <link rel="stylesheet" href="~/Assets/admlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="~/Assets/admlte/dist/css/adminlte.min.css">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap">
+
     <link href="~/Assets/css/style.css" rel="stylesheet" />
 </head>
 <body class="hold-transition login-page">
@@ -54,7 +57,13 @@
                         <div class="row">
                             <!-- /.col -->
                             <div class="col-12">
-                                <div class="btn bg-gradient-olive btn-block btn-flat" login_connect @*id="btnCon"*@>Se connecter</div>
+                                <div class="button type--B" login_connect style="cursor: pointer;"@*id="btnCon"*@>
+                                    <div class="button__line"></div>
+                                    <div class="button__line"></div>
+                                    <span class="button__text">Se connecter</span>
+                                    <div class="button__drow1"></div>
+                                    <div class="button__drow2"></div>
+                                </div>
                             </div>
                             <!-- /.col -->
                         </div>

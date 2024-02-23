@@ -133,7 +133,7 @@ function GetListCompG() {
             }
 
             let code = ``;
-            let codeAuxi = ``;
+
             ListCompteG = Datas.data;
 
             $.each(ListCompteG, function (k, v) {
@@ -207,12 +207,12 @@ function GetListCodeJournal() {
 }
 
 function GetAllProjectUser() {
-
     let formData = new FormData();
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
+    
     $.ajax({
         type: "POST",
         url: Origin + '/Home/GetAllProjectUser',
@@ -224,8 +224,9 @@ function GetAllProjectUser() {
             var Datas = JSON.parse(result);
             reglementresult = ``;
             reglementresult = Datas.data;
-            console.log(reglementresult);
+            
             let listproject = ``;
+
             if (reglementresult.length) {
                 $.each(reglementresult, function (k, v) {
                     listproject += `<option value="${v.ID}">${v.PROJET}</option>`;
@@ -237,7 +238,6 @@ function GetAllProjectUser() {
             $("#Fproject").html(listproject);
             GetTypeP();
             GetListCodeJournal();
-            //LoadValidate();
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -419,7 +419,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             plan: v.Plan6,
                             journal: v.Journal,
                             marche: v.Marche,
-                            status: v.Status
+                            status: v.Status === undefined ? '' : v.Status
                         });
                     });
 
@@ -449,7 +449,6 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'mon' },
                             { data: 'rang' },
                             { data: 'financementCategorie' },
-                            { data: 'montant' },
                             { data: 'commune' },
                             { data: 'plan' },
                             { data: 'journal' },
@@ -461,8 +460,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
-                        createdRow: function (row, _, _) {
-                            $(row).attr('compteG-id', row.id);
+                        createdRow: function (row, data, _) {
+                            $(row).attr('compteG-id', data.id);
                             $(row).addClass('select-text');
                         },
                         initComplete: function () {
@@ -543,7 +542,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             plan: v.Plan6,
                             journal: v.Journal,
                             marche: v.Marche,
-                            status: v.Status
+                            status: v.Status === undefined ? '' : v.Status
                         });
                     });
 
@@ -612,7 +611,6 @@ $('[data-action="GetElementChecked"]').click(function () {
     });
 
     let codeproject = $("#Fproject").val();
-
 
     let formData = new FormData();
 

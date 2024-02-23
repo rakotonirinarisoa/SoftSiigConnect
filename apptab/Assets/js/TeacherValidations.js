@@ -105,7 +105,7 @@ function ChargeLoad() {
                         data.push({
                             checkbox: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.DateOrdre,
+                            dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
@@ -126,6 +126,8 @@ function ChargeLoad() {
                     if (table !== undefined) {
                         table.destroy();
                     }
+
+                    console.log(data);
 
                     table = $('#TDB_OPA').DataTable({
                         data,
@@ -150,7 +152,7 @@ function ChargeLoad() {
                             { data: 'mon' },
                             { data: 'rang' },
                             { data: 'financementCategorie' },
-                            { data: 'montant' },
+                            { data: 'mon' },
                             { data: 'commune' },
                             { data: 'plan' },
                             { data: 'journal' },
@@ -159,10 +161,10 @@ function ChargeLoad() {
                                 data: 'rejeter',
                                 render: function (_, _, row, _) {
                                     return `
-                                            <div onclick="Refuser('${row.id}')">
-                                                <i class="fa fa-times fa-lg text-dark"</i>
-                                            </div>
-                                        `;
+                                        <div onclick="Refuser('${row.id}')">
+                                            <i class="fa fa-times fa-lg text-dark"</i>
+                                        </div>
+                                    `;
                                 }
                             }
                         ],
@@ -171,8 +173,8 @@ function ChargeLoad() {
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
-                        createdRow: function (row, _, _) {
-                            $(row).attr('compteG-id', row.id);
+                        createdRow: function (row, data, _) {
+                            $(row).attr('compteG-id', data.id);
                         },
                         columnDefs: [
                             {
@@ -651,7 +653,7 @@ $('[data-action="ChargerJs"]').click(function () {
                         data.push({
                             checkbox: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.DateOrdre,
+                            dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
@@ -696,7 +698,6 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'mon' },
                             { data: 'rang' },
                             { data: 'financementCategorie' },
-                            { data: 'montant' },
                             { data: 'commune' },
                             { data: 'plan' },
                             { data: 'journal' },
@@ -717,8 +718,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
-                        createdRow: function (row, _, _) {
-                            $(row).attr('compteG-id', row.id);
+                        createdRow: function (row, data, _) {
+                            $(row).attr('compteG-id', data.id);
                         },
                         columnDefs: [
                             {
@@ -779,7 +780,7 @@ $('[data-action="ChargerJs"]').click(function () {
                         data.push({
                             checkbox: '',
                             id: v.No,
-                            dateOrdre: v.DateOrdre,
+                            dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             debit: v.Debit,
@@ -834,8 +835,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
-                        createdRow: function (row, _, _) {
-                            $(row).attr('compteG-id', row.id);
+                        createdRow: function (row, data, _) {
+                            $(row).attr('compteG-id', data.id);
                             $(row).addClass('select-text');
                         },
                         initComplete: function () {

@@ -1,18 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime;
 using System.Threading.Tasks;
 using System;
 using System.Web.Mvc;
 using apptab.Extension;
-using apptab;
 using Aspose.Zip.Saving;
 using Aspose.Zip;
 using Newtonsoft.Json;
 using Renci.SshNet;
 using System.Net;
-using System.Collections;
 using apptab.Models;
 
 namespace apptab.Controllers
@@ -40,13 +37,16 @@ namespace apptab.Controllers
         {
             return View();
         }
-        public ActionResult TeacherValidation() {
+        public ActionResult TeacherValidation()
+        {
             return View();
         }
-        public ActionResult FValidation() {
+        public ActionResult FValidation()
+        {
             return View();
         }
-        public ActionResult BonPourPaiement() {
+        public ActionResult BonPourPaiement()
+        {
             return View();
         }
         [HttpPost]
@@ -70,7 +70,7 @@ namespace apptab.Controllers
                 {
                     basename = ii.TYPE.ToString();
                 }
-               
+
 
                 return basename;
             }
@@ -163,13 +163,12 @@ namespace apptab.Controllers
         [HttpPost]
         public ActionResult CreateZipFile(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName)
         {
-            StreamWriter sw = null;
             AFB160 aFB160 = new AFB160();
             var send = "";
             int PROJECTID = int.Parse(codeproject);
             var ps = db.SI_USERS.Where(x => x.LOGIN == suser.LOGIN /*&& x.IDPROJET == PROJECTID*/ && x.PWD == suser.PWD).Select(x => x.PWD).FirstOrDefault();
 
-            var pswftp = db.OPA_CRYPTO.Where( x=> x.IDPROJET == PROJECTID && x.IDUSER == suser.ID && x.DELETIONDATE != null).Select( x => x.CRYPTOPWD).FirstOrDefault();
+            var pswftp = db.OPA_CRYPTO.Where(x => x.IDPROJET == PROJECTID && x.IDUSER == suser.ID && x.DELETIONDATE != null).Select(x => x.CRYPTOPWD).FirstOrDefault();
             if (baseName == "1")
             {
                 var pathfile = aFB160.CreateTOMPAIEAFB160(devise, codeJ, suser, codeproject);
@@ -227,7 +226,7 @@ namespace apptab.Controllers
             }
             else
             {
-                var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser);
+                var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser, codeproject);
                 //var send = "";
                 if (intbasetype == 0)
                 {
@@ -292,7 +291,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult getelementjs(int ChoixBase,string codeproject, string journal, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP,/* int mois, int annee, string matr1, string matr2, DateTime datePaie,*/ SI_USERS suser)
+        public JsonResult getelementjs(int ChoixBase, string codeproject, string journal, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP,/* int mois, int annee, string matr1, string matr2, DateTime datePaie,*/ SI_USERS suser)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -306,12 +305,12 @@ namespace apptab.Controllers
             AFB160 afb160 = new AFB160();
             //var hst = db.OPA_HISTORIQUE.Select(x => x.NUMENREG.ToString()).ToArray();
             var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4).Select(x => x.IDREGLEMENT.ToString()).ToArray();
-            var list = afb160.getListEcritureCompta(journal,PROJECTID, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => !hstSiig.Contains(x.No.ToString())).ToList();
+            var list = afb160.getListEcritureCompta(journal, PROJECTID, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => !hstSiig.Contains(x.No.ToString())).ToList();
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list }, settings));
 
         }
         [HttpPost]
-        public JsonResult getelementjsBR(int ChoixBase,string codeproject, string journal, DateTime datein, bool devise, DateTime dateout, string comptaG, string auxi, string auxi1, string etat, DateTime dateP,/* int mois, int annee, string matr1, string matr2, DateTime datePaie,*/ SI_USERS suser)
+        public JsonResult getelementjsBR(int ChoixBase, string codeproject, string journal, DateTime datein, bool devise, DateTime dateout, string comptaG, string auxi, string auxi1, string etat, DateTime dateP,/* int mois, int annee, string matr1, string matr2, DateTime datePaie,*/ SI_USERS suser)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -342,7 +341,7 @@ namespace apptab.Controllers
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            var basename = GetTypeP(suser,codeproject);
+            var basename = GetTypeP(suser, codeproject);
             if (basename == null)
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez Parametrer le Types D'ecriture avant toutes Opérations." }, settings));
@@ -369,7 +368,7 @@ namespace apptab.Controllers
             {
                 crpt = exist.IDPROJET.Value;
             }
-            
+
             //Check si le projet est mappé à une base de données TOM²PRO//
             if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
@@ -377,7 +376,8 @@ namespace apptab.Controllers
             SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
-            var JournalVM = __db.RJL1.Select(x => new {
+            var JournalVM = __db.RJL1.Select(x => new
+            {
                 CODE = x.CODE,
                 LIBELLE = x.LIBELLE
             }).ToList();
@@ -398,9 +398,9 @@ namespace apptab.Controllers
             int baseId = 0;
             if (basename != "")
             {
-                 baseId = int.Parse(basename);
+                baseId = int.Parse(basename);
             }
-            
+
             var CompteG = __db.MCOMPTA.Where(a => a.COGE.StartsWith("4")).GroupBy(x => x.COGE).Select(x => new
             {
                 COGE = x.Key,
@@ -420,10 +420,11 @@ namespace apptab.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = CompteG }, settings));
             }
-            
+
         }
+
         [HttpPost]
-        public JsonResult GetCheckedCompte(string baseName,string codeproject, DateTime datein, DateTime dateout, string comptaG, string auxi, DateTime dateP, string listCompte, string journal, string etat, bool devise, SI_USERS suser)
+        public JsonResult GetCheckedCompte(string baseName, string codeproject, DateTime datein, DateTime dateout, string comptaG, string auxi, DateTime dateP, string listCompte, string journal, string etat, bool devise, SI_USERS suser)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -466,7 +467,7 @@ namespace apptab.Controllers
             //    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès.", data = listReg }, settings));
             //}
             #endregion
-            
+
             OPA_VALIDATIONS avalider = new OPA_VALIDATIONS();
             if (basename == "2")
             {
@@ -542,17 +543,17 @@ namespace apptab.Controllers
         }
         //Envoye Validations
         [HttpPost]
-        public JsonResult GetElementAvaliderLoad(SI_USERS suser , string codeproject)
+        public JsonResult GetElementAvaliderLoad(SI_USERS suser, string codeproject)
         {
             AFB160 aFB160 = new AFB160();
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            
+
             var basename = GetTypeP(suser, codeproject);
             int PROJECTID = int.Parse(codeproject);
-            if (basename =="")
+            if (basename == "")
             {
-                return Json( JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez Parametrer le Types D'ecriture avant toutes Opérations." }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez Parametrer le Types D'ecriture avant toutes Opérations." }, settings));
             }
             if (basename == "2")
             {
@@ -563,7 +564,7 @@ namespace apptab.Controllers
             }
             else
             {
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == suser.IDPROJET && ecriture.ETAT == 0 ).ToList();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == suser.IDPROJET && ecriture.ETAT == 0).ToList();
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = avalider }, settings));
             }
@@ -571,7 +572,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetElementValiderF(string listCompte , SI_USERS suser , string codeproject)
+        public JsonResult GetElementValiderF(string listCompte, SI_USERS suser, string codeproject)
         {
             AFB160 aFB160 = new AFB160();
             if (codeproject == "")
@@ -589,7 +590,7 @@ namespace apptab.Controllers
             }
             List<string> list = listCompte.Split(',').ToList();
             List<string> numBR = listCompte.Split(',').ToList();
-            var AvaliderList = db.OPA_VALIDATIONS.Where(a=>list.Contains(a.IDREGLEMENT.ToString()) && a.ETAT == 0);
+            var AvaliderList = db.OPA_VALIDATIONS.Where(a => list.Contains(a.IDREGLEMENT.ToString()) && a.ETAT == 0);
             OPA_VALIDATIONS avalider = new OPA_VALIDATIONS();
 
             if (basename == "2")
@@ -602,11 +603,11 @@ namespace apptab.Controllers
                 {
                     aFB160.SaveValideSelectEcritureBR(numBR, item.Journal, item.ETAT.ToString(), devise, suser);
                 }
-                
+
             }
             foreach (var item in list)
             {
-                int b  = int.Parse(item);
+                int b = int.Parse(item);
                 avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == b && a.ETAT == 0).FirstOrDefault();
                 if (avalider != null)
                 {
@@ -628,7 +629,7 @@ namespace apptab.Controllers
         }
         //ETAT = 1
         [HttpPost]
-        public JsonResult GetAcceptecriture(string ChoixBase,string codeproject, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP, string journal, string etat, bool devise, SI_USERS suser)
+        public JsonResult GetAcceptecriture(string ChoixBase, string codeproject, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP, string journal, string etat, bool devise, SI_USERS suser)
         {
             AFB160 aFB160 = new AFB160();
             int PROJECTID = int.Parse(codeproject);
@@ -638,7 +639,7 @@ namespace apptab.Controllers
             var basename = GetTypeP(suser, codeproject);
             if (basename == "2")
             {
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 1 && ecriture.ComptaG == comptaG  && ecriture.auxi == auxi && ecriture.Journal == journal).ToList();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 1 && ecriture.ComptaG == comptaG && ecriture.auxi == auxi && ecriture.Journal == journal).ToList();
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = avalider }, settings));
             }
@@ -650,7 +651,7 @@ namespace apptab.Controllers
             }
         }
         [HttpPost]
-        public JsonResult GetAcceptecritureLoad(SI_USERS suser ,string codeproject)
+        public JsonResult GetAcceptecritureLoad(SI_USERS suser, string codeproject)
         {
             AFB160 aFB160 = new AFB160();
             int PROJECTID = int.Parse(codeproject);
@@ -684,7 +685,7 @@ namespace apptab.Controllers
             List<string> list = listCompte.Split(',').ToList();
             List<string> numBR = listCompte.Split(',').ToList();
             OPA_VALIDATIONS avalider = new OPA_VALIDATIONS();
-            
+
             foreach (var item in list)
             {
                 int b = int.Parse(item);
@@ -715,13 +716,13 @@ namespace apptab.Controllers
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = "" }, settings));
         }
         [HttpPost]
-        public JsonResult EnvoyeValidatioF(string ChoixBase ,string codeproject, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP, string journal, string etat, bool devise, SI_USERS suser)
+        public JsonResult EnvoyeValidatioF(string ChoixBase, string codeproject, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP, string journal, string etat, bool devise, SI_USERS suser)
         {
             AFB160 aFB160 = new AFB160();
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-           // var basename = GetTypeP(suser, exist.IDPROJET.ToString());
+            // var basename = GetTypeP(suser, exist.IDPROJET.ToString());
 
             int PROJECTID = int.Parse(codeproject);
             if (ChoixBase == "2")
@@ -765,7 +766,7 @@ namespace apptab.Controllers
             {
                 listRegBR = aFB160.getREGLEMENTBR(suser);
             }
-            
+
             OPA_VALIDATIONS avalider = new OPA_VALIDATIONS();
             foreach (var item in list)
             {
@@ -778,7 +779,7 @@ namespace apptab.Controllers
                         avalider.IDREGLEMENT = b;
                         avalider.ETAT = 2;
                         avalider.DATEVAL = DateTime.Now.Date;
-                        avalider.DATESEND =  DateTime.Now.Date;
+                        avalider.DATESEND = DateTime.Now.Date;
                         avalider.IDPROJET = PROJECTID;
                         avalider.DateIn = avalider.DateIn;
                         avalider.DateOut = avalider.DateOut;
@@ -815,17 +816,17 @@ namespace apptab.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = listRegBR__ }, settings));
             }
-                
+
         }
         //END ETAT = 1
         [HttpPost]
-        public JsonResult LoadValidateEcriture(SI_USERS suser , string codeproject)
+        public JsonResult LoadValidateEcriture(SI_USERS suser, string codeproject)
         {
             AFB160 aFB160 = new AFB160();
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
             int PROJECTID = int.Parse(codeproject);
-            var val = db.OPA_VALIDATIONS.Where(a=> a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2).ToList();
+            var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2).ToList();
 
             return Json(JsonConvert.SerializeObject(new { type = "Success", msg = "Connexion avec success. ", data = val }, settings));
         }
@@ -861,9 +862,8 @@ namespace apptab.Controllers
                 {
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Motif ET COMMENTAIRE OBLIGATOIR.", data = "" }, settings));
                 }
-
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = "" }, settings));
             }
+
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = "" }, settings));
         }
         public JsonResult GetCheckedComptePaie(string baseName, int mois, int annee, string listCompte, string matriculeD, string matriculeF, bool devise, DateTime dateP, string journal, SI_USERS suser)
@@ -924,7 +924,7 @@ namespace apptab.Controllers
             }
             else
             {
-                var project = db.SI_PROJETS.Where(a=>a.ID ==  exist.IDPROJET).Select(a=> new
+                var project = db.SI_PROJETS.Where(a => a.ID == exist.IDPROJET).Select(a => new
                 {
                     ID = a.ID,
                     PROJET = a.PROJET,
@@ -983,7 +983,7 @@ namespace apptab.Controllers
 
                 throw new OutOfMemoryException();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
             finally

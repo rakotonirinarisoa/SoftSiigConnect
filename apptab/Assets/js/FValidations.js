@@ -344,8 +344,8 @@ function LoadValidate() {
                     fixedColumnsLeft: 1
                 },
                 deferRender: true,
-                createdRow: function (row, _, _) {
-                    $(row).attr('compteG-id', row.id);
+                createdRow: function (row, data, _) {
+                    $(row).attr('compteG-id', data.id);
                 },
                 initComplete: function () {
                     $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
@@ -573,8 +573,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
-                        createdRow: function (row, _, _) {
-                            $(row).attr('compteG-id', row.id);
+                        createdRow: function (row, data, _) {
+                            $(row).attr('compteG-id', data.id);
                         },
                         initComplete: function () {
                             $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
@@ -675,8 +675,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
-                        createdRow: function (row, _, _) {
-                            $(row).attr('compteG-id', row.id);
+                        createdRow: function (row, data, _) {
+                            $(row).attr('compteG-id', data.id);
                         },
                         initComplete: function () {
                             $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
@@ -780,8 +780,8 @@ $('[data-action="GetElementChecked"]').click(function () {
                         // fixedColumnsLeft: 1
                     },
                     deferRender: true,
-                    createdRow: function (row, _, _) {
-                        $(row).attr('compteG-id', row.id);
+                    createdRow: function (row, data, _) {
+                        $(row).attr('compteG-id', data.id);
                     },
                     // initComplete: function () {
                     //     $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
@@ -828,11 +828,11 @@ $('[data-action="GetAnomalieListes"]').click(function () {
             }
             if (Datas.type == "success") {
                 ListResultAnomalie = Datas.data;
-                $.each(ListResultAnomalie, function (_, v) {
-                    contentAnomalies += `<tr compteG-id="${v.No}">
+                $.each(ListResultAnomalie, function (k, v) {
+                    contentAnomalies += `<tr compteG-id="${v.IDREGLEMENT}">
                         <td>
                             <input type="checkbox" name = "checkprod" compteg-ischecked/>
-                        </td><td>${v.No}</td>
+                        </td><td>${v.IDREGLEMENT}</td>
                         <td>${v.DateOrdre}</td>
                         <td>${v.NoPiece}</td>
                         <td>${v.Compte}</td>

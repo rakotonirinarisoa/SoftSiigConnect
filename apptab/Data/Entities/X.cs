@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using apptab;
 
 namespace apptab.Data.Entities
 {

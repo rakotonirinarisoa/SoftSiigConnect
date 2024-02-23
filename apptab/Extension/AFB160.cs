@@ -1,14 +1,7 @@
-﻿using apptab;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Configuration.Provider;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Web;
-using System.Windows.Forms;
 
 namespace apptab.Extension
 {
@@ -45,7 +38,7 @@ namespace apptab.Extension
                 i = (int)incr.INCREMENTATION;
                 y = (int)incr.INCRORDREVIR;
             }
-            catch (Exception ee) { }
+            catch (Exception) { }
             y++;
             texteAFB160 += "0302";
             texteAFB160 += this.formaterTexte(21, "                        ");
@@ -156,7 +149,7 @@ namespace apptab.Extension
                 pbase.INCRORDREVIR = y;
                 db.SaveChanges();
             }
-            catch (Exception ee) { }
+            catch (Exception) { }
 
             /*********             * 0802       *********/
             decimal? montant = 0;
@@ -193,9 +186,9 @@ namespace apptab.Extension
             //    }
             //}
             return new AFB() { Fichier = texteAFB160, Chemin = fileName };
-           
+
         }
-        public AFB CreateTOMPAIEAFB160(bool devise, string codeJ, SI_USERS user,string codeproject)
+        public AFB CreateTOMPAIEAFB160(bool devise, string codeJ, SI_USERS user, string codeproject)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -225,7 +218,7 @@ namespace apptab.Extension
                 i = (int)incr.INCREMENTATION;
                 y = (int)incr.INCRORDREVIR;
             }
-            catch (Exception ee) { }
+            catch (Exception) { }
             y++;
             texteAFB160 += "0302";
             texteAFB160 += this.formaterTexte(21, "                        ");
@@ -352,7 +345,7 @@ namespace apptab.Extension
                 pbase.INCRORDREVIR = y;
                 db.SaveChanges();
             }
-            catch (Exception ee) { }
+            catch (Exception) { }
 
             /*********             * 0802       *********/
             decimal? montant = 0;
@@ -395,10 +388,8 @@ namespace apptab.Extension
                                                                           //	}
                                                                           //}
         }
-        public AFB CreateBRAFB160(bool devise, string codeJ, SI_USERS user , string codeproject)
+        public AFB CreateBRAFB160(bool devise, string codeJ, SI_USERS user, string codeproject)
         {
-
-            string s = "";
             int PROJECTID = int.Parse(codeproject);
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SI_USERS usr = (from u in db.SI_USERS
@@ -452,7 +443,7 @@ namespace apptab.Extension
                     db.SaveChanges();
                 }
             }
-            catch (Exception ee) { }
+            catch (Exception) { }
             y++;
             texteAFB160 += "0302";
             texteAFB160 += this.formaterTexte(21, "                        ");
@@ -567,7 +558,7 @@ namespace apptab.Extension
                 pbase.INCRORDREVIR = y;
                 db.SaveChanges();
             }
-            catch (Exception ee) { }
+            catch (Exception) { }
 
             /********              0802       *********/
             decimal? montant = 0;
@@ -624,7 +615,7 @@ namespace apptab.Extension
             result = result.Replace(':', '_');
             return result.ToUpper();
         }
-        public void SaveValideSelectEcriture(List<string> listReg, bool devise, SI_USERS user,string codeproject)
+        public void SaveValideSelectEcriture(List<string> listReg, bool devise, SI_USERS user, string codeproject)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -695,7 +686,7 @@ namespace apptab.Extension
                             db.OPA_ANOMALIE.Add(panomalie);
                             db.SaveChanges();
                         }
-                        catch (Exception ee) { }
+                        catch (Exception) { }
                     }
                     else
                     {
@@ -730,7 +721,7 @@ namespace apptab.Extension
                             db.OPA_REGLEMENT.Add(preg);
                             db.SaveChanges();
                         }
-                        catch (Exception eee)
+                        catch (Exception)
                         {
                         }
                     }
@@ -738,7 +729,7 @@ namespace apptab.Extension
                     #endregion
                     //test = true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     //test = false;
                 }
@@ -964,7 +955,7 @@ namespace apptab.Extension
                 string cle = compteRIB.Substring(21, 2);
                 compteBQ.Add(cle);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //compteRIB = compteRIB.Replace(" ", "");
                 string codebq = null;
@@ -1009,7 +1000,7 @@ namespace apptab.Extension
                 tdonneur1.BASE = projet.BASE;
                 tdonneur1.APPLICATION = "COMPTA";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 donordre.ID = 1;
                 donordre.CODE_J = djournal.CODE;
@@ -1027,7 +1018,7 @@ namespace apptab.Extension
                 db.SaveChanges();
                 test = true;
             }
-            catch (Exception ee)
+            catch (Exception)
             {
                 test = false;
             }
@@ -1064,7 +1055,7 @@ namespace apptab.Extension
                 tdonneur1.BASE = projet.BASE;
                 tdonneur1.APPLICATION = "PAIE";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //donordre.ID = 1;
                 var id = db.OPA_DONNEURORDRE.Select(x => x.ID).OrderByDescending(x => x).FirstOrDefault();
@@ -1085,7 +1076,7 @@ namespace apptab.Extension
                 db.SaveChanges();
                 test = true;
             }
-            catch (Exception ee)
+            catch (Exception)
             {
                 test = false;
             }
@@ -1122,7 +1113,7 @@ namespace apptab.Extension
                 tdonneur1.BASE = couperText(100, projet.BASE);
                 tdonneur1.APPLICATION = "BR";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 var id = db.OPA_DONNEURORDRE.Select(x => x.ID).OrderByDescending(x => x).FirstOrDefault();
                 donordre.ID = id + 1;
@@ -1142,14 +1133,14 @@ namespace apptab.Extension
                 db.SaveChanges();
                 test = true;
             }
-            catch (Exception ee)
+            catch (Exception)
             {
                 test = false;
             }
 
             return test;
         }
-        public List<DataListTompro> getListEcritureCompta(string journal,int PROJECTID, DateTime dateD, DateTime dateF, string compteG, string auxi, string auxi1, DateTime dateP, SI_USERS user)
+        public List<DataListTompro> getListEcritureCompta(string journal, int PROJECTID, DateTime dateD, DateTime dateF, string compteG, string auxi, string auxi1, DateTime dateP, SI_USERS user)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -1159,10 +1150,6 @@ namespace apptab.Extension
             RJL1 djournal = (from jrnl in tom.RJL1
                              where jrnl.CODE == journal
                              select jrnl).Single();
-
-
-            string nombase = "";
-
 
             if (djournal.RIB != null && djournal.RIB != "")
             {
@@ -1255,7 +1242,7 @@ namespace apptab.Extension
                                             });
                                         }
                                     }
-                                    catch (Exception ee) { }
+                                    catch (Exception) { }
                                 }
                             }
                             else
@@ -1312,7 +1299,7 @@ namespace apptab.Extension
                                         });
                                     }
                                 }
-                                catch (Exception ee) { }
+                                catch (Exception) { }
                             }
 
                         }
@@ -1382,7 +1369,7 @@ namespace apptab.Extension
                                     });
                                 }
                             }
-                            catch (Exception ee) { }
+                            catch (Exception) { }
 
                         }
                     }
@@ -1455,7 +1442,7 @@ namespace apptab.Extension
                                 }
 
                             }
-                            catch (Exception ee) { }
+                            catch (Exception) { }
                         }
                     }
                     else
@@ -1530,7 +1517,7 @@ namespace apptab.Extension
                                     });
                                 }
                             }
-                            catch (Exception ee) { }
+                            catch (Exception) { }
 
                         }
                     }
@@ -1557,7 +1544,7 @@ namespace apptab.Extension
             RJL1 djournal = (from jrnl in tom.RJL1
                              where jrnl.CODE == journal
                              select jrnl).SingleOrDefault();
-            string nombase = "";
+
             if (djournal.RIB != null && djournal.RIB != "")
             {
                 #region Chargement liste écriture
@@ -1716,7 +1703,7 @@ namespace apptab.Extension
             RJL1 djournal = (from jrnl in tom.RJL1
                              where jrnl.CODE == journal
                              select jrnl).Single();//Miova table FOP
-            string nombase = "";
+
             List<string> DjournalFop = tom.FOP.Where(x => x.JOURNAL == journal && (x.ETAPE1USER == etat || x.ETAPE2USER == etat || x.ETAPE3USER == etat || x.ETAPE4USER == etat || x.ETAPE5USER == etat || x.ETAPE6USER == etat || x.ETAPE7USER == etat || x.ETAPE8USER == etat || x.ETAPE9USER == etat || x.ETAPE10USER == etat)).Select(x => x.NUMEROOP).ToList();
 
             List<MOP> lNoOPS = new List<MOP>();
@@ -1763,7 +1750,7 @@ namespace apptab.Extension
                                 });
 
                             }
-                            catch (Exception ee) { }
+                            catch (Exception) { }
 
 
                         }
@@ -1804,7 +1791,7 @@ namespace apptab.Extension
                                 });
 
                             }
-                            catch (Exception ee) { }
+                            catch (Exception) { }
                         }
                     }
                 }
@@ -1844,7 +1831,7 @@ namespace apptab.Extension
                                 });
 
                             }
-                            catch (Exception ee) { }
+                            catch (Exception) { }
 
 
                         }
@@ -1891,7 +1878,7 @@ namespace apptab.Extension
 
 
                             }
-                            catch (Exception ee) { }
+                            catch (Exception) { }
                         }
                     }
                 }
@@ -1928,7 +1915,7 @@ namespace apptab.Extension
                 db.SaveChanges();
                 test = true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 test = false;
             }
@@ -1953,7 +1940,7 @@ namespace apptab.Extension
                     db.SaveChanges();
                     test = true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     test = false;
                 }
@@ -2020,7 +2007,7 @@ namespace apptab.Extension
             {
                 n = str.Length;
             }
-            catch (Exception ex) { }
+            catch (Exception) { }
             if (n < x)
             {
                 int y = x - n;
@@ -2049,7 +2036,7 @@ namespace apptab.Extension
                 }
 
             }
-            catch (Exception ex) { }
+            catch (Exception) { }
             if (n < x)
             {
                 int y = x - n;
@@ -2077,7 +2064,7 @@ namespace apptab.Extension
                 }
 
             }
-            catch (Exception ex) { }
+            catch (Exception) { }
 
             if (n > x)
             {
@@ -2168,7 +2155,7 @@ namespace apptab.Extension
                             db.OPA_ANOMALIEBR.Add(panomalie);
                             db.SaveChanges();
                         }
-                        catch (Exception ee) { }
+                        catch (Exception) { }
                     }
                     else
                     {
@@ -2203,14 +2190,14 @@ namespace apptab.Extension
                             db.OPA_REGLEMENTBR.Add(preg);
                             db.SaveChanges();
                         }
-                        catch (Exception eee)
+                        catch (Exception)
                         {
                         }
                     }
                     #endregion
                     //test = true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     //test = false;
                 }
@@ -2325,7 +2312,7 @@ namespace apptab.Extension
                             db.OPA_ANOMALIE.Add(panomalie);
                             db.SaveChanges();
                         }
-                        catch (Exception ee) { }
+                        catch (Exception) { }
                     }
                     else
                     {
@@ -2358,14 +2345,14 @@ namespace apptab.Extension
                             db.OPA_REGLEMENT.Add(preg);
                             db.SaveChanges();
                         }
-                        catch (Exception eee)
+                        catch (Exception)
                         {
                         }
                     }
                     #endregion
                     //test = true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     //test = false;
                 }

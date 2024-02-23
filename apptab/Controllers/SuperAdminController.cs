@@ -1,5 +1,4 @@
-﻿using apptab;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -8,10 +7,6 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Threading.Tasks;
 using System.Data.Entity;
-using System.Text.RegularExpressions;
-using System.Security.Cryptography;
-using Newtonsoft.Json.Schema;
-using apptab.Data;
 using apptab.Models;
 
 namespace apptab.Controllers
