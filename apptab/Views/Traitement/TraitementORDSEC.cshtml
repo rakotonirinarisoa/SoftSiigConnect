@@ -1,7 +1,6 @@
 ﻿@{
     ViewBag.Title = "MANDATS à valider par ORDSEC";
     ViewData["Controller"] = "MANDATS à valider par ORDSEC";
-    /*Layout = "~/Views/Shared/_Layout.cshtml";*/
 }
 
 <link href="~/Assets/otherCSS/jquery.dataTables.min.css" rel="stylesheet" />
@@ -93,10 +92,6 @@
         </div>
     </div>*@
 
-<script src="~/Assets/js/Traitmandat.js"></script>
-<script src="~/Assets/js/utils.js"></script>
-
-
 <<div class="modal fade" tabindex="-1" role="dialog" id="password-modal">
     <div class="modal-dialog modal-xl" role="document" @*style="width:fit-content"*@>
         <div class="modal-content" @*style="width:fit-content"*@>
@@ -125,8 +120,6 @@
     </div>
 </div>
 
-<script src="~/Assets/js/TraitmandatModal.js"></script>
-
 <div class="modal fade" tabindex="-1" role="dialog" id="imputation-modal">
     <div class="modal-dialog modal-xl" role="document" @*style="width:fit-content"*@>
         <div class="modal-content" @*style="width:fit-content"*@>
@@ -153,8 +146,6 @@
     </div>
 </div>
 
-<script src="~/Assets/js/TraitmandatDOC.js"></script>
-
 <div class="modal fade" tabindex="-1" role="dialog" id="document-modal">
     <div class="modal-dialog modal-xl" role="document" @*style="width:fit-content"*@>
         <div class="modal-content" @*style="width:fit-content"*@>
@@ -178,9 +169,6 @@
         </div>
     </div>
 </div>
-
-<script src="~/Assets/js/TraitmandatLIAS.js"></script>
-
 
 <div class="modal fade" tabindex="-1" role="dialog" id="annuler-modal">
     <div class="modal-dialog modal-xl" role="document" @*style="width:fit-content"*@>
@@ -221,4 +209,9 @@
     </div>
 </div>
 
+<script src="~/Assets/js/traitements.ordesec.js"></script>
+<script src="~/Assets/js/utils.js"></script>
+<script src="~/Assets/js/TraitmandatDOC.js"></script>
+<script src="~/Assets/js/TraitmandatLIAS.js"></script>
 <script src="~/Assets/js/TraitmandatANNUL.js"></script>
+<script src="~/Assets/js/TraitmandatModal.js"></script>
