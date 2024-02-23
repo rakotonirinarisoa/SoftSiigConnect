@@ -35,7 +35,7 @@ namespace apptab.Controllers
 
         [HttpPost]
         //public async DetailsInfoPro(SI_USERS suser)
-        public async Task<ActionResult> DetailsInfoPro(SI_USERS suser)
+        public async Task<ActionResult> DetailsInfoPro(SI_USERS suser, int iProjet)
         {
             var exist = await db.SI_USERS.FirstOrDefaultAsync(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -43,11 +43,7 @@ namespace apptab.Controllers
             try
             {
                 //int crpt = exist.IDPROJET.Value;
-                int crpt = 0;
-                if (suser.IDPROJET == null)
-                    crpt = exist.IDPROJET.Value;
-                else
-                    crpt = suser.IDPROJET.Value;
+                int crpt = iProjet;
 
                 var fina = "";
                 if (db.SI_FINANCEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null) != null)

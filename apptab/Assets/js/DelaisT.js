@@ -7,24 +7,18 @@ $(document).ready(() => {
     Origin = User.origin;
     $(`[data-id="username"]`).text(User.LOGIN);
     GetListProjet();
-    GetUsers(undefined);
 });
 
 //let urlOrigin = Origin;
 //let urlOrigin = "http://softwell.cloud/OPAVI";
-function GetUsers(id) {
+function GetUsers() {
     let formData = new FormData();
 
-    if (!id) {
-        formData.append("suser.IDPROJET", User.IDPROJET);
-    } else {
-        formData.append("suser.IDPROJET", id);
-    }
+    formData.append("iProjet", $("#proj").val());
     
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDPROJET", User.IDPROJET);
 
     $.ajax({
         type: "POST",
@@ -177,8 +171,7 @@ function GetListProjet() {
 
             $(`[data-id="proj-list"]`).append(code);
 
-            //if (i == 1)
-            //    $("#proj").val([...pr]).change();
+            GetUsers();
         },
         error: function (e) {
             alert("Problème de connexion. ");

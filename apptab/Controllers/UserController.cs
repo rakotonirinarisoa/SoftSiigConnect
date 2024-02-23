@@ -490,6 +490,14 @@ namespace SOFTCONNECT.Controllers
                     Session["MP2"] = isMenu.MP2;
                     Session["MP3"] = isMenu.MP3;
                     Session["MP4"] = isMenu.MP4;
+
+                    Session["MD0"] = isMenu.MD0;
+                    Session["MD1"] = isMenu.MD1;
+                    Session["MD2"] = isMenu.MD2;
+
+                    Session["MOP0"] = isMenu.MOP0;
+                    Session["MOP1"] = isMenu.MOP1;
+                    Session["MOP2"] = isMenu.MOP2;
                 }
 
                 if (db.SI_GEDLIEN.Any())

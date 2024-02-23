@@ -12,17 +12,22 @@ $(document).ready(() => {
 
     GetListProjet();
 
-    GetListLOAD(); //Partie ORDSEC
-    GetListLOADOTHER(); //Partie ORDSEC
+    /*GetListLOAD();*///Partie ORDSEC
+    /*GetListLOADOTHER();*///Partie ORDSEC
 
     $(`[data-widget="pushmenu"]`).on('click', () => {
         $(`[data-action="SaveV"]`).toggleClass('custom-fixed-btn');
     });
 });
 
-//$('#proj').on('change', () => {
-//    $('.afb160Paie').html('');
-//});
+$('#proj').on('change', () => {
+    $('.afb160Paie').html('');
+    $('.traitementORDSEC').html('');
+    $('.traitementORDSECOTHER').html('');
+
+    GetListLOAD();
+    GetListLOADOTHER();
+});
 
 function GetListProjet() {
     let formData = new FormData();
@@ -66,15 +71,14 @@ function GetListProjet() {
 
             $(`[data-id="proj-list"]`).append(code);
 
-            //if (i == 1)
-            //    $("#proj").val([...pr]).change();
+            GetListLOAD();
+            GetListLOADOTHER();
         },
         error: function (e) {
             alert("Problème de connexion. ");
         }
     })
 }
-
 
 //GENERER//
 $('[data-action="GenereR"]').click(async function () {
@@ -249,11 +253,19 @@ function checkdel(id) {
 //SIIGLOAD//
 function GetListLOAD() {
     let formData = new FormData();
+    
     //alert(baseName);
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDPROJET", User.IDSOCIETE);
+
+    //if (!id) {
+    //    formData.append("suser.IDPROJET", User.IDPROJET);
+    //} else {
+    //    formData.append("suser.IDPROJET", id);
+    //}
+
+    formData.append("iProjet", $("#proj").val());
 
     $.ajax({
         type: "POST",
@@ -284,6 +296,8 @@ function GetListLOAD() {
                         <td style="font-weight: bold; text-align:center">
                             <input type="checkbox" name = "checkprod" compteg-ischecked  onchange = "checkdel()"/>
                         </td>
+                        <td style="font-weight: bold; text-align:center">${v.SOA}</td>
+                        <td style="font-weight: bold; text-align:center">${v.PROJET}</td>
                         <td style="font-weight: bold; text-align:center">${v.REF}</td>
                         <td style="font-weight: bold; text-align:center">${v.OBJ}</td>
                         <td style="font-weight: bold; text-align:center">${v.TITUL}</td>
@@ -342,6 +356,8 @@ function GetListLOADOTHER() {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDSOCIETE);
 
+    formData.append("iProjet", $("#proj").val());
+
     $.ajax({
         type: "POST",
         url: Origin + '/Traitement/GenerationSIIGLOADOTHER',
@@ -371,6 +387,8 @@ function GetListLOADOTHER() {
                         <td style="font-weight: bold; text-align:center">
                             <input type="checkbox" name = "checkprod" compteg-ischecked  onchange = "checkdel()"/>
                         </td>
+                        <td style="font-weight: bold; text-align:center">${v.SOA}</td>
+                        <td style="font-weight: bold; text-align:center">${v.PROJET}</td>
                         <td style="font-weight: bold; text-align:center">${v.REF}</td>
                         <td style="font-weight: bold; text-align:center">${v.OBJ}</td>
                         <td style="font-weight: bold; text-align:center">${v.TITUL}</td>
@@ -434,6 +452,8 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
     formData.append("DateDebut", $('#dateD').val());
     formData.append("DateFin", $('#dateF').val());
 
+    formData.append("iProjet", $("#proj").val());
+
     $.ajax({
         type: "POST",
         url: Origin + '/Traitement/GenerationSIIGOTHER',
@@ -463,6 +483,8 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                         <td style="font-weight: bold; text-align:center">
                             <input type="checkbox" name = "checkprod" compteg-ischecked  onchange = "checkdel()"/>
                         </td>
+                        <td style="font-weight: bold; text-align:center">${v.SOA}</td>
+                        <td style="font-weight: bold; text-align:center">${v.PROJET}</td>
                         <td style="font-weight: bold; text-align:center">${v.REF}</td>
                         <td style="font-weight: bold; text-align:center">${v.OBJ}</td>
                         <td style="font-weight: bold; text-align:center">${v.TITUL}</td>
@@ -516,6 +538,12 @@ $('[data-action="GenereSIIG"]').click(function () {
         return;
     }
 
+    let pr = $("#proj").val();
+    if (!pr) {
+        alert("Veuillez sélectionner au moins un projet. ");
+        return;
+    }
+
     let formData = new FormData();
     //alert(baseName);
     formData.append("suser.LOGIN", User.LOGIN);
@@ -525,6 +553,8 @@ $('[data-action="GenereSIIG"]').click(function () {
 
     formData.append("DateDebut", $('#dateD').val());
     formData.append("DateFin", $('#dateF').val());
+
+    formData.append("iProjet", $("#proj").val());
 
     $.ajax({
         type: "POST",
@@ -555,6 +585,8 @@ $('[data-action="GenereSIIG"]').click(function () {
                         <td style="font-weight: bold; text-align:center">
                             <input type="checkbox" name = "checkprod" compteg-ischecked  onchange = "checkdel()"/>
                         </td>
+                        <td style="font-weight: bold; text-align:center">${v.SOA}</td>
+                        <td style="font-weight: bold; text-align:center">${v.PROJET}</td>
                         <td style="font-weight: bold; text-align:center">${v.REF}</td>
                         <td style="font-weight: bold; text-align:center">${v.OBJ}</td>
                         <td style="font-weight: bold; text-align:center">${v.TITUL}</td>
@@ -676,8 +708,7 @@ $('[data-action="SaveSIIG"]').click(function () {
 
     formData.append("listCompte", list);
 
-    //formData.append("DateDebut", $('#dateD').val());
-    //formData.append("DateFin", $('#dateF').val());
+    formData.append("iProjet", $("#proj").val());
 
     $.ajax({
         type: "POST",
