@@ -616,10 +616,10 @@ $('[data-action="GetAnomalieListes"]').click(function () {
                 //window.location = window.location.origin;
                 ListResultAnomalie = Datas.data;
                 $.each(ListResultAnomalie, function (k, v) {
-                    contentAnomalies += `<tr compteG-id="${v.No}">
+                    contentAnomalies += `<tr compteG-id="${v.IDREGLEMENT}">
                         <td>
                             <input type="checkbox" name = "checkprod" compteg-ischecked/>
-                        </td><td>${v.No}</td>
+                        </td><td>${v.IDREGLEMENT}</td>
                         <td>${v.DateOrdre}</td>
                         <td>${v.NoPiece}</td>
                         <td>${v.Compte}</td>
