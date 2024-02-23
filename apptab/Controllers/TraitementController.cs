@@ -16,6 +16,8 @@ using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using System.Security.Cryptography;
 using static System.Net.Mime.MediaTypeNames;
+using System.Net.Mail;
+using static System.Net.WebRequestMethods;
 
 namespace apptab.Controllers
 {
@@ -408,13 +410,17 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
+            int countTraitement = 0;
+            int crpt = iProjet;
+            var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
+
+            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt).FirstOrDefault().PROJET;
+
             var listCompteS = listCompte.Split(',');
             foreach (var SAV in listCompteS)
             {
                 try
                 {
-                    int crpt = iProjet;
-
                     SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
                     SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
                     SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -479,16 +485,56 @@ namespace apptab.Controllers
 
                             db.SI_TRAITPROJET.Add(newT);
                             db.SaveChanges();
-
-
-                            //SEND MAIL ALERT et NOTIFICATION//
                         }
                     }
+                    countTraitement++;
                 }
                 catch (Exception e)
                 {
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
                 }
+            }
+
+            //SEND MAIL ALERT et NOTIFICATION//
+            string MailAdresse = "serviceinfo@softwell.mg";
+            string mdpMail = "09eYpçç0601";
+
+            using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
+            {
+                SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
+                smtp.UseDefaultCredentials = true;
+
+                mail.From = new MailAddress(MailAdresse);
+
+                mail.To.Add(MailAdresse);
+                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).MAILTE != null)
+                {
+                    string[] separators = { ";" };
+
+                    var Tomail = mail;
+                    if (Tomail != null)
+                    {
+                        string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).MAILTE;
+                        string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                        foreach (var mailto in mailListe)
+                        {
+                            mail.To.Add(mailto);
+                        }
+                    }
+                }
+
+                mail.Subject = "Attente validation pièces du projet " + ProjetIntitule;
+                mail.IsBodyHtml = true;
+                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " pièces en attente de validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
+                    "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+
+                smtp.Port = 587;
+                smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
+                smtp.EnableSsl = true;
+
+                try { smtp.Send(mail); }
+                catch (Exception) { }
             }
 
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = "" }, settings));
@@ -500,13 +546,17 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
+            int countTraitement = 0;
+            int crpt = iProjet;
+            var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
+
+            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt).FirstOrDefault().PROJET;
+
             var listCompteS = listCompte.Split(',');
             foreach (var SAV in listCompteS)
             {
                 try
                 {
-                    int crpt = iProjet;
-
                     SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
                     SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
                     SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -525,12 +575,56 @@ namespace apptab.Controllers
                         isModified.DATEANNUL = null;
                         isModified.IDUSERVALIDATE = exist.ID;
                         db.SaveChanges();
+
+                        countTraitement++;
                     }
                 }
                 catch (Exception e)
                 {
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
                 }
+            }
+
+            //SEND MAIL ALERT et NOTIFICATION//
+            string MailAdresse = "serviceinfo@softwell.mg";
+            string mdpMail = "09eYpçç0601";
+
+            using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
+            {
+                SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
+                smtp.UseDefaultCredentials = true;
+
+                mail.From = new MailAddress(MailAdresse);
+
+                mail.To.Add(MailAdresse);
+                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).MAILTV != null)
+                {
+                    string[] separators = { ";" };
+
+                    var Tomail = mail;
+                    if (Tomail != null)
+                    {
+                        string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).MAILTV;
+                        string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                        foreach (var mailto in mailListe)
+                        {
+                            mail.To.Add(mailto);
+                        }
+                    }
+                }
+
+                mail.Subject = "Validation pièces du projet " + ProjetIntitule;
+                mail.IsBodyHtml = true;
+                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " pièces validées pour le compte du projet " + ProjetIntitule + " et en attente du traitement de SiigFP.<br/><br>" +
+                    "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+
+                smtp.Port = 587;
+                smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
+                smtp.EnableSsl = true;
+
+                try { smtp.Send(mail); }
+                catch (Exception) { }
             }
 
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = "" }, settings));
