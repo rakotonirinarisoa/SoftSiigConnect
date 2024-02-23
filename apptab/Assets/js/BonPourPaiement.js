@@ -157,7 +157,7 @@ function chargeLoad() {
                         data.push({
                             checkbox: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.DateOrdre,
+                            dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
@@ -173,7 +173,6 @@ function chargeLoad() {
                             marche: v.Marche,
                             rejeter: ''
                         });
-
                     });
 
                     if (table !== undefined) {
@@ -203,7 +202,6 @@ function chargeLoad() {
                             { data: 'mon' },
                             { data: 'rang' },
                             { data: 'financementCategorie' },
-                            { data: 'montant' },
                             { data: 'commune' },
                             { data: 'plan' },
                             { data: 'journal' },
@@ -266,33 +264,89 @@ function chargeLoad() {
                 }
                 if (Datas.type == "success") {
                     listResult = Datas.data;
-                    content = ``;
-                    $.each(listResult, function (_, v) {
-                        content += `
-                    <tr compteG-id="${v.IDREGLEMENT}">
-                        <td>
-                            <input type="checkbox" name = "checkprod" compteg-ischecked onchange = "checkdel()"/>
-                        </td><td>${v.IDREGLEMENT}</td>
-                        <td>${v.dateOrdre}</td>
-                        <td>${v.NoPiece}</td>
-                        <td>${v.Compte}</td>
-                        <td>${v.Libelle}</td>
-                        <td>${v.Montant}</td>
-                        <td>${v.MontantDevise}</td>
-                        <td>${v.Mon}</td>
-                        <td>${v.Rang}</td>
-                        <td>${v.Poste}</td>
-                        <td>${v.FinancementCategorie}</td>
-                        <td>${v.Commune}</td>
-                        <td>${v.Plan6}</td>
-                        <td>${v.Journal}</td>
-                        <td>${v.Marche}</td>
-                        <td>${v.Status}</td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center" ><div onclick="Refuser('${v.IDREGLEMENT}')"><i class="fa fa-times fa-lg text-dark"</i></div></td>
-                    </tr>`
 
+                    const data = [];
+
+                    $.each(listResult, function (_, v) {
+                        data.push({
+                            checkbox: '',
+                            id: v.IDREGLEMENT,
+                            dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
+                            noPiece: v.NoPiece,
+                            compte: v.Compte,
+                            libelle: v.Libelle,
+                            montant: v.Montant,
+                            montantDevise: v.MontantDevise,
+                            mon: v.Mon,
+                            rang: v.Rang,
+                            financementCategorie: v.FinancementCategorie,
+                            commune: v.Commune,
+                            plan: v.Plan6,
+                            journal: v.Journal,
+                            marche: v.Marche,
+                            rejeter: ''
+                        });
                     });
-                    $('.afb160').html(content);
+
+                    if (table !== undefined) {
+                        table.destroy();
+                    }
+
+                    table = $('#TDB_OPA').DataTable({
+                        data,
+                        columns: [
+                            {
+                                data: 'checkbox',
+                                render: function () {
+                                    return `
+                                        <input type="checkbox" name="checkprod" compteg-ischecked onchange="checkdel()" />
+                                    `;
+                                },
+                                orderable: false
+                            },
+                            { data: 'id' },
+                            { data: 'dateOrdre' },
+                            { data: 'noPiece' },
+                            { data: 'compte' },
+                            { data: 'libelle' },
+                            { data: 'montant' },
+                            { data: 'montantDevise' },
+                            { data: 'mon' },
+                            { data: 'rang' },
+                            { data: 'financementCategorie' },
+                            { data: 'commune' },
+                            { data: 'plan' },
+                            { data: 'journal' },
+                            { data: 'marche' },
+                            {
+                                data: 'rejeter',
+                                render: function (_, _, row, _) {
+                                    return `
+                                        <div onclick="Refuser('${row.id}')">
+                                            <i class="fa fa-times fa-lg text-dark"</i>
+                                        </div>
+                                    `;
+                                }
+                            }
+                        ],
+                        colReorder: {
+                            enable: true,
+                            fixedColumnsLeft: 1
+                        },
+                        deferRender: true,
+                        createdRow: function (row, data, _) {
+                            $(row).attr('compteG-id', data.id);
+                        },
+                        columnDefs: [
+                            {
+                                targets: [-1],
+                                className: 'elerfr'
+                            }
+                        ],
+                        initComplete: function () {
+                            $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
+                        }
+                    });
                 }
             },
             error: function () {
@@ -615,38 +669,93 @@ $('[data-action="ChargerJs"]').click(function () {
                     return;
                 }
                 if (Datas.type == "success") {
-                    listResult = Datas.data
-                    content = ``;
+                    listResult = Datas.data;
+
+                    const data = [];
+
                     $.each(listResult, function (k, v) {
-                        content += `
-                    <tr compteG-id="${v.IDREGLEMENT}">
-                        <td>
-                            <input type="checkbox" name = "checkprod" compteg-ischecked onchange = "checkdel()"/>
-                        </td>
-                        <td>${v.IDREGLEMENT}</td>
-                        <td>${v.dateOrdre}</td>
-                        <td>${v.NoPiece}</td>
-                        <td>${v.Compte}</td>
-                        <td>${v.Libelle}</td>
-                        <td>${v.Debit}</td>
-                        <td>${v.Credit}</td>
-                        <td>${v.MontantDevise}</td>
-                        <td>${v.Mon}</td>
-                        <td>${v.Rang}</td>
-                        <td>${v.FinancementCategorie}</td>
-                        <td>${v.Commune}</td>
-                        <td>${v.Plan6}</td>
-                        <td>${v.Journal}</td>
-                        <td>${v.Marche}</td>
-                         <td class="elerfr" style="font-weight: bold; text-align:center" ><div onclick="Refuser('${v.IDREGLEMENT}')"><i class="fa fa-times fa-lg text-dark"</i></div></td>
-                    </tr>`
-
+                        data.push({
+                            checkbox: '',
+                            id: v.IDREGLEMENT,
+                            dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
+                            noPiece: v.NoPiece,
+                            compte: v.Compte,
+                            libelle: v.Libelle,
+                            debit: v.Debit,
+                            credit: v.Credit,
+                            montantDevise: v.MontantDevise,
+                            mon: v.Mon,
+                            rang: v.Rang,
+                            financementCategorie: v.FinancementCategorie,
+                            commune: v.Commune,
+                            plan: v.Plan6,
+                            journal: v.Journal,
+                            marche: v.Marche,
+                            rejeter: ''
+                        });
                     });
-                    $('.afb160').html('');
-                    $('.afb160').html(content);
+
+                    if (table !== undefined) {
+                        table.destroy();
+                    }
+
+                    table = $('#TDB_OPA').DataTable({
+                        data,
+                        columns: [
+                            {
+                                data: 'checkbox',
+                                render: function () {
+                                    return `
+                                        <input type="checkbox" name="checkprod" compteg-ischecked onchange="checkdel()" />
+                                    `;
+                                },
+                                orderable: false
+                            },
+                            { data: 'id' },
+                            { data: 'dateOrdre' },
+                            { data: 'noPiece' },
+                            { data: 'compte' },
+                            { data: 'libelle' },
+                            { data: 'debit' },
+                            { data: 'credit' },
+                            { data: 'montantDevise' },
+                            { data: 'mon' },
+                            { data: 'rang' },
+                            { data: 'financementCategorie' },
+                            { data: 'commune' },
+                            { data: 'plan' },
+                            { data: 'journal' },
+                            { data: 'marche' },
+                            {
+                                data: 'rejeter',
+                                render: function (_, _, row, _) {
+                                    return `
+                                        <div onclick="Refuser('${row.id}')">
+                                            <i class="fa fa-times fa-lg text-dark"</i>
+                                        </div>
+                                    `;
+                                }
+                            }
+                        ],
+                        colReorder: {
+                            enable: true,
+                            fixedColumnsLeft: 1
+                        },
+                        deferRender: true,
+                        createdRow: function (row, data, _) {
+                            $(row).attr('compteG-id', data.id);
+                        },
+                        columnDefs: [
+                            {
+                                targets: [-1],
+                                className: 'elerfr'
+                            }
+                        ],
+                        initComplete: function () {
+                            $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
+                        }
+                    });
                 }
-
-
             },
             error: function () {
                 alert("Problème de connexion. ");
@@ -688,43 +797,92 @@ $('[data-action="ChargerJs"]').click(function () {
                     listResult = Datas.data
                     content = ``;
                     $.each(listResult, function (k, v) {
-                        content += `
-                    <tr compteG-id="${v.IDREGLEMENT}">
-                        <td>
-                            <input type="checkbox" name = "checkprod" compteg-ischecked onchange = "checkdel()"/>
-                        </td><td>${v.IDREGLEMENT}</td>
-                        <td>${v.dateOrdre}</td>
-                        <td>${v.NoPiece}</td>
-                        <td>${v.Compte}</td>
-                        <td>${v.Libelle}</td>
-                        <td>${v.Montant}</td>
-                        <td>${v.MontantDevise}</td>
-                        <td>${v.Mon}</td>
-                        <td>${v.Rang}</td>
-                        <td>${v.Poste}</td>
-                        <td>${v.FinancementCategorie}</td>
-                        <td>${v.Commune}</td>
-                        <td>${v.Plan6}</td>
-                        <td>${v.Journal}</td>
-                        <td>${v.Marche}</td>
-                        <td>${v.Status}</td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center" ><div onclick="Refuser('${v.IDREGLEMENT}')"><i class="fa fa-times fa-lg text-dark"</i></div></td>
-                    </tr>`
-
+                        data.push({
+                            checkbox: '',
+                            id: v.IDREGLEMENT,
+                            dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
+                            noPiece: v.NoPiece,
+                            compte: v.Compte,
+                            libelle: v.Libelle,
+                            montant: v.Montant,
+                            montantDevise: v.MontantDevise,
+                            mon: v.Mon,
+                            rang: v.Rang,
+                            financementCategorie: v.FinancementCategorie,
+                            commune: v.Commune,
+                            plan: v.Plan6,
+                            journal: v.Journal,
+                            marche: v.Marche,
+                            rejeter: ''
+                        });
                     });
-                    $('.afb160').html(content);
 
+                    if (table !== undefined) {
+                        table.destroy();
+                    }
+
+                    table = $('#TDB_OPA').DataTable({
+                        data,
+                        columns: [
+                            {
+                                data: 'checkbox',
+                                render: function () {
+                                    return `
+                                        <input type="checkbox" name="checkprod" compteg-ischecked onchange="checkdel()" />
+                                    `;
+                                },
+                                orderable: false
+                            },
+                            { data: 'id' },
+                            { data: 'dateOrdre' },
+                            { data: 'noPiece' },
+                            { data: 'compte' },
+                            { data: 'libelle' },
+                            { data: 'montant' },
+                            { data: 'montantDevise' },
+                            { data: 'mon' },
+                            { data: 'rang' },
+                            { data: 'financementCategorie' },
+                            { data: 'commune' },
+                            { data: 'plan' },
+                            { data: 'journal' },
+                            { data: 'marche' },
+                            {
+                                data: 'rejeter',
+                                render: function (_, _, row, _) {
+                                    return `
+                                        <div onclick="Refuser('${row.id}')">
+                                            <i class="fa fa-times fa-lg text-dark"</i>
+                                        </div>
+                                    `;
+                                }
+                            }
+                        ],
+                        colReorder: {
+                            enable: true,
+                            fixedColumnsLeft: 1
+                        },
+                        deferRender: true,
+                        createdRow: function (row, data, _) {
+                            $(row).attr('compteG-id', data.id);
+                        },
+                        columnDefs: [
+                            {
+                                targets: [-1],
+                                className: 'elerfr'
+                            }
+                        ],
+                        initComplete: function () {
+                            $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
+                        }
+                    });
                 }
-
-
             },
             error: function () {
                 alert("Problème de connexion. ");
             }
         });
-
     }
-
 });
 
 $('[data-action="GetElementChecked"]').click(function () {

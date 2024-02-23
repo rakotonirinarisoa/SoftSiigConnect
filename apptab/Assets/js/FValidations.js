@@ -298,11 +298,10 @@ function LoadValidate() {
                 data.push({
                     void: '',
                     id: v.IDREGLEMENT,
-                    dateOrdre: v.DateOrdre,
+                    dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
                     noPiece: v.NoPiece,
                     compte: v.Compte,
                     libelle: v.Libelle,
-                    montant: v.Montant,
                     montantDevise: v.MontantDevise,
                     mon: v.Mon,
                     rang: v.Rang,
@@ -311,7 +310,7 @@ function LoadValidate() {
                     plan: v.Plan6,
                     journal: v.Journal,
                     marche: v.Marche,
-                    status: v.Status
+                    status: v.Status === undefined ? '' : v.Status
                 });
             });
 
@@ -327,12 +326,10 @@ function LoadValidate() {
                     { data: 'noPiece' },
                     { data: 'compte' },
                     { data: 'libelle' },
-                    { data: 'montant' },
                     { data: 'montantDevise' },
                     { data: 'mon' },
                     { data: 'rang' },
                     { data: 'financementCategorie' },
-                    { data: 'montant' },
                     { data: 'commune' },
                     { data: 'plan' },
                     { data: 'journal' },
@@ -523,7 +520,7 @@ $('[data-action="ChargerJs"]').click(function () {
                         data.push({
                             checkbox: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.DateOrdre,
+                            dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
@@ -629,11 +626,10 @@ $('[data-action="ChargerJs"]').click(function () {
                         data.push({
                             void: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.DateOrdre,
+                            dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
-                            montant: v.Montant,
                             montantDevise: v.MontantDevise,
                             mon: v.Mon,
                             rang: v.Rang,
@@ -642,7 +638,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             plan: v.Plan6,
                             journal: v.Journal,
                             marche: v.Marche,
-                            status: v.Status
+                            status: v.Status === undefined ? '' : v.Status
                         });
                     });
         
@@ -658,12 +654,10 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'noPiece' },
                             { data: 'compte' },
                             { data: 'libelle' },
-                            { data: 'montant' },
                             { data: 'montantDevise' },
                             { data: 'mon' },
                             { data: 'rang' },
                             { data: 'financementCategorie' },
-                            { data: 'montant' },
                             { data: 'commune' },
                             { data: 'plan' },
                             { data: 'journal' },
@@ -740,7 +734,6 @@ $('[data-action="GetElementChecked"]').click(function () {
                                 noPiece: v.NoPiece,
                                 compte: v.Compte,
                                 libelle: v.Libelle,
-                                montant: v.Montant,
                                 montantDevise: v.MontantDevise,
                                 mon: v.Mon,
                                 rang: v.Rang,
@@ -749,7 +742,7 @@ $('[data-action="GetElementChecked"]').click(function () {
                                 plan: v.Plan6,
                                 journal: v.Journal,
                                 marche: v.Marche,
-                                status: v.Status
+                                status: v.Status === undefined ? '' : v.Status
                             });
                         }
                     }
@@ -763,12 +756,10 @@ $('[data-action="GetElementChecked"]').click(function () {
                         { data: 'noPiece' },
                         { data: 'compte' },
                         { data: 'libelle' },
-                        { data: 'montant' },
                         { data: 'montantDevise' },
                         { data: 'mon' },
                         { data: 'rang' },
                         { data: 'financementCategorie' },
-                        { data: 'montant' },
                         { data: 'commune' },
                         { data: 'plan' },
                         { data: 'journal' },
