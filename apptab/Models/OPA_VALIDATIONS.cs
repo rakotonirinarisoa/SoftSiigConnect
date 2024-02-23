@@ -93,5 +93,13 @@ namespace apptab.Models
 
         [StringLength(10)]
         public string Devise { get; set; }
+
+        public int? IDUSCREA { get; set; }
+
+        public int? IDUSSEND { get; set; }
+
+        public int? IDUSVAL { get; set; }
+
+        public int? IDUSANNUL { get; set; }
     }
 }

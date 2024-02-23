@@ -31,13 +31,53 @@ $(document).ready(() => {
     //$(`[tab="autre"]`).hide();
 
     /*console.log($(`[tab="autre"]`).hide());*/
-    
-    GetTypeP();
+    GetAllProjectUser();
+    //GetTypeP();
     //GetUR();
-    GetListCodeJournal();
+    //GetListCodeJournal();
     //GetListCompG();
 });
+function GetAllProjectUser() {
 
+    let formData = new FormData();
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/GetAllProjectUser',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (result) {
+            var Datas = JSON.parse(result);
+            reglementresult = ``;
+            reglementresult = Datas.data;
+            console.log(reglementresult);
+            let listproject = ``;
+            if (reglementresult.length) {
+                $.each(reglementresult, function (k, v) {
+                    listproject += `<option value="${v.ID}">${v.PROJET}</option>`;
+                })
+            } else {
+                listproject += `<option value="${reglementresult.ID}" selected>${reglementresult.PROJET}</option>`;
+            }
+
+            $("#Fproject").html(listproject);
+            GetTypeP();
+            GetListCodeJournal();
+            //LoadValidate();
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
+$(document).on("change", "[code-project]", () => {
+    GetListCodeJournal();
+});
 function GetTypeP() {
     let formData = new FormData();
 
@@ -45,6 +85,10 @@ function GetTypeP() {
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDSOCIETE", User.IDSOCIETE);
+
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/GetTypeP',
@@ -189,6 +233,10 @@ $(document).on("change", "[auxi-list]", () => {
 
 function GetListCodeJournal() {
     let formData = new FormData();
+
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
@@ -284,9 +332,12 @@ $('.Checkall').change(function () {
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
+//==============================================================================================ChargeJs===================================================================================
 $('[data-action="ChargerJs"]').click(function () {
     let formData = new FormData();
-    //alert(baseName);
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
@@ -370,15 +421,21 @@ $('[data-action="ChargerJs"]').click(function () {
         formData.append("dateout", $('#Pau').val());
         formData.append("journal", $('#commercial').val());
         formData.append("comptaG", $('#comptaG').val());
+
         formData.append("auxi", $('#auxi').val());
         formData.append("auxi1", $('#auxi').val());
         formData.append("dateP", $('#Pay').val());
         formData.append("etat", $('#etat').val());
+
+        let codeproject = $("#Fproject").val();
+        formData.append("codeproject", codeproject);
+
         if ($('#ChkDevise').prop("checked") == true) {
             formData.append("devise", true);
         } else {
             formData.append("devise", false);
         }
+        
 
         $.ajax({
             type: "POST",
@@ -447,6 +504,9 @@ $('[data-action="GetElementChecked"]').click(function () {
         list.push($(v).attr("compteG-id"));
     });
 
+    let codeproject = $("#Fproject").val();
+    
+
     let formData = new FormData();
 
     formData.append("suser.LOGIN", User.LOGIN);
@@ -454,6 +514,7 @@ $('[data-action="GetElementChecked"]').click(function () {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
     formData.append("listCompte", list);
+    formData.append("codeproject", codeproject);
     //formData.append("baseName", baseName);
     formData.append("journal", $('#commercial').val());
     formData.append("devise", false);
@@ -590,7 +651,7 @@ function getelementTXT(a) {
     });
 }
 //$(`[tab="autre"]`).hide();
-
+var baseName = "2";
 $(`[name="options"]`).on("change", (k, v) => {
     
     var baseId = $(k.target).attr("data-id");

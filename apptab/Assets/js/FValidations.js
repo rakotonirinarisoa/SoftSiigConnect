@@ -28,10 +28,10 @@ $(document).ready(() => {
     //$(`[tab="autre"]`).hide();
 
     /*console.log($(`[tab="autre"]`).hide());*/
-    
+
     //GetUR();
-    GetListCodeJournal();
-    LoadValidate();
+    GetAllProjectUser();
+    
     //GetListCompG();
 });
 
@@ -145,6 +145,10 @@ $(document).on("change", "[compG-list]", () => {
     FillAUXI();
     FillCompteName();
 });
+$(document).on("change", "[code-project]", () => {
+    GetListCodeJournal();
+    LoadValidate();
+});
 
 $(document).on("change", "[auxi-list]", () => {
     FillCompteName();
@@ -152,11 +156,14 @@ $(document).on("change", "[auxi-list]", () => {
 
 function GetListCodeJournal() {
     let formData = new FormData();
+    let codeproject = $("#Fproject").val();
+    //alert(codeproject);
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDSOCIETE);
-
+    formData.append("codeproject", codeproject);
+    
     $.ajax({
         type: "POST",
         url: Origin + '/Home/GetCODEJournal',
@@ -249,11 +256,14 @@ function checkdel(id) {
 
 $('[data-action="ChargerJs"]').click(function () {
     let formData = new FormData();
+    let codeproject = $("#Fproject").val();
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
     formData.append("ChoixBase", baseName);
+
+    formData.append("codeproject", codeproject);
     if (baseName == 2) {
         //compta
         formData.append("datein", $('#Pdu').val());
@@ -398,14 +408,56 @@ $('[data-action="ChargerJs"]').click(function () {
     }
 
 });
-
-function LoadValidate() {
+function GetAllProjectUser() {
     
     let formData = new FormData();
+    let codeproject = $("#Fproject").val();
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
+     formData.append("codeproject", codeproject);
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/GetAllProjectUser',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (result) {
+            var Datas = JSON.parse(result);
+            reglementresult = ``;
+            reglementresult = Datas.data;
+            console.log(reglementresult);
+            let listproject = ``;
+            if (reglementresult.length) {
+                $.each(reglementresult, function (k, v) {
+                    listproject += `<option value="${v.ID}">${v.PROJET}</option>`;
+                })
+            } else {
+                listproject += `<option value="${reglementresult.ID}" selected>${reglementresult.PROJET}</option>`;
+            }
+           
+            $("#Fproject").html(listproject);
+            GetListCodeJournal();
+            LoadValidate();
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
+function LoadValidate() {
+    
+    let formData = new FormData();
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
+    formData.append("suser.IDPROJET", User.IDPROJET);
+   
     $.ajax({
         type: "POST",
         url: Origin + '/Home/LoadValidateEcriture',
@@ -416,8 +468,10 @@ function LoadValidate() {
         success: function (result) {
             var Datas = JSON.parse(result);
             reglementresult = ``;
+            validate = ``;
             reglementresult = Datas.data;
             console.log(reglementresult);
+            $('#afb').html('');
             $.each(reglementresult, function (k, v) {
 
                 validate += `

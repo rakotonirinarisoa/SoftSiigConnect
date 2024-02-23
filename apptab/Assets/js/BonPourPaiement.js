@@ -24,17 +24,51 @@ $(document).ready(() => {
     Origin = User.origin;
 
     $(`[data-id="username"]`).text(User.LOGIN);
+    GetAllProjectUser();
 
-    //$(`[tab="autre"]`).hide();
-
-    /*console.log($(`[tab="autre"]`).hide());*/
-    
-    //GetUR();
+});
+$(document).on("change", "[code-project]", () => {
     GetListCodeJournal();
     chargeLoad();
-    //GetListCompG();
 });
+function GetAllProjectUser() {
 
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/GetAllProjectUser',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (result) {
+            var Datas = JSON.parse(result);
+            reglementresult = ``;
+            reglementresult = Datas.data;
+            console.log(reglementresult);
+            let listproject = ``;
+            if (reglementresult.length) {
+                $.each(reglementresult, function (k, v) {
+                    listproject += `<option value="${v.ID}">${v.PROJET}</option>`;
+                })
+            } else {
+                listproject += `<option value="${reglementresult.ID}" selected>${reglementresult.PROJET}</option>`;
+            }
+
+            $("#Fproject").html(listproject);
+            GetListCodeJournal();
+            chargeLoad();
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
 function GetListCompG() {
     let formData = new FormData();
 
@@ -153,6 +187,10 @@ $(document).on("change", "[auxi-list]", () => {
 
 function GetListCodeJournal() {
     let formData = new FormData();
+
+    let codeproject = $("#Fproject").val();
+
+    formData.append("codeproject", codeproject);
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
@@ -242,6 +280,10 @@ function chargeLoad() {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
     formData.append("ChoixBase", baseName);
+
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
     if (baseName == 2) {
         //compta
        
@@ -266,7 +308,8 @@ function chargeLoad() {
                 }
                 if (Datas.type == "success") {
                     //window.location = window.location.origin;
-                    ListResult = Datas.data
+                    content = ``;
+                    ListResult = Datas.data;
                     $.each(ListResult, function (k, v) {
                         content += `
                     <tr compteG-id="${v.IDREGLEMENT}">
@@ -292,7 +335,7 @@ function chargeLoad() {
                     </tr>`
 
                     });
-                    $('.afb160').empty();
+                    $('.afb160').html(``);
                     $('.afb160').html(content);
                 }
             },
@@ -326,7 +369,7 @@ function chargeLoad() {
                 }
                 if (Datas.type == "success") {
                     //window.location = window.location.origin;
-                    ListResult = Datas.data
+                    ListResult = Datas.data;
                     content = ``;
                     $.each(ListResult, function (k, v) {
                         content += `
@@ -368,6 +411,10 @@ function chargeLoad() {
 }
 $('[data-action="ChargerJs"]').click(function () {
     let formData = new FormData();
+    let codeproject = $("#Fproject").val();
+
+    formData.append("codeproject", codeproject);
+
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
@@ -525,8 +572,6 @@ function Refuser(id) {
     $('#F-modal').modal('toggle');
     $('#F-modal').attr("data-id", id);
     modalREJET(id);
-    
-
 }
 function modalREJET(id) {
 
@@ -637,6 +682,9 @@ $('[data-action="GetElementChecked"]').click(function () {
 
     let formData = new FormData();
     let listid = list.splice(',');
+
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
 
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
