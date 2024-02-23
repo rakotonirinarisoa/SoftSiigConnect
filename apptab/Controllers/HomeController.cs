@@ -550,6 +550,7 @@ namespace apptab.Controllers
             
             var basename = GetTypeP(suser, codeproject);
             int PROJECTID = int.Parse(codeproject);
+
             if (basename =="")
             {
                 return Json( JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez Parametrer le Types D'ecriture avant toutes Opérations." }, settings));
@@ -557,6 +558,7 @@ namespace apptab.Controllers
             if (basename == "2")
             {
                 var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0).ToList();
+
                 //var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == suser.IDPROJET && ecriture.ETAT == 0).ToList();
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = avalider }, settings));
@@ -888,7 +890,6 @@ namespace apptab.Controllers
 
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = ex.Message, data = ex.Message }, settings));
             }
-
 
         }
         public JsonResult GetAnomalieBack(SI_USERS suser, string baseName)
