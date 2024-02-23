@@ -35,14 +35,15 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public ActionResult DetailsFtp(SI_USERS suser)
+        public ActionResult DetailsFtp(SI_USERS suser, int iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             try
             {
-                int crpt = exist.IDPROJET.Value;
+                int crpt = iProjet;
+
                 var crpto = db.OPA_FTP.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
                 if (crpto != null)
                 {
@@ -60,7 +61,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateFtp(SI_USERS suser, OPA_FTP param)
+        public JsonResult UpdateFtp(SI_USERS suser, OPA_FTP param, int iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -75,7 +76,7 @@ namespace apptab.Controllers
 
             try
             {
-                int IdS = exist.IDPROJET.Value;
+                int IdS = iProjet;
                 var SExist = db.OPA_FTP.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null);
 
                 try

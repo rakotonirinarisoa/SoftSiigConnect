@@ -1,5 +1,4 @@
-﻿/// <reference path="mappaguserdetails.js" />
-let User;
+﻿let User;
 let Origin;
 
 $(document).ready(() => {

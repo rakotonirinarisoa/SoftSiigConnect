@@ -182,6 +182,7 @@
     <Compile Include="Controllers\CryptoController.cs" />
     <Compile Include="Controllers\EtatController.cs" />
     <Compile Include="Controllers\FtpController.cs" />
+    <Compile Include="Controllers\GetCountTDBController.cs" />
     <Compile Include="Controllers\GetFileFController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ParametreController.cs" />
@@ -215,6 +216,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\COUNTTDB.cs" />
     <Compile Include="Models\DATATRPROJET.cs" />
     <Compile Include="Models\FCOMPTA.cs" />
     <Compile Include="Models\FOP.cs" />
@@ -233,8 +235,10 @@
     <Compile Include="Models\HSI_PARAMETAT.cs" />
     <Compile Include="Models\HSI_PROCEDURE.cs" />
     <Compile Include="Models\HSI_PROGRAMME.cs" />
+    <Compile Include="Models\HSI_PROJETS.cs" />
     <Compile Include="Models\HSI_PROSOA.cs" />
     <Compile Include="Models\HSI_SOAS.cs" />
+    <Compile Include="Models\HSI_USERS.cs" />
     <Compile Include="Models\MCOMPTA.cs" />
     <Compile Include="Models\MOP.cs" />
     <Compile Include="Models\OPA_ANOMALIE.cs" />
@@ -2145,6 +2149,7 @@
     <Content Include="Assets\img\df.png" />
     <Content Include="Assets\img\logo-soft.png" />
     <Content Include="Assets\img\LogoS.png" />
+    <Content Include="Assets\js\AACUL.js" />
     <Content Include="Assets\js\BonPourPaiement.js" />
     <Content Include="Assets\js\FValidations.js" />
     <Content Include="Assets\js\TypeC.js" />
@@ -4505,7 +4510,6 @@
     <Content Include="Views\User\Create.cshtml" />
     <Content Include="Views\Admin\AdminMaPUserList.cshtml" />
     <Content Include="Views\Admin\AdminMaPUserCreate.cshtml" />
-    <Content Include="Views\SuperAdmin\SuperAdmin.cshtml" />
     <Content Include="Views\SuperAdmin\SuperAdminMaPList.cshtml" />
     <Content Include="Views\SuperAdmin\SuperAdminMaPCreate.cshtml" />
     <Content Include="Views\Crypto\CryptoCreate.cshtml" />
@@ -4531,7 +4535,7 @@
     <Content Include="Views\Parametre\ProgCreate.cshtml" />
     <Content Include="Views\Parametre\ActCreate.cshtml" />
     <Content Include="Views\Etat\InfoProCreate.cshtml" />
-    <Content Include="Views\Projects\Details.cshtml" />
+    <Content Include="Views\Projects\ProjectDetails.cshtml" />
     <Content Include="Views\SuperAdmin\SuperAdminDetailFPROSOA.cshtml" />
     <Content Include="Views\SuperAdmin\SuperAdminDetailFSOA.cshtml" />
     <Content Include="Views\SuperAdmin\MailCreate.cshtml" />
@@ -4558,11 +4562,14 @@
     <Content Include="Views\Privilege\List.cshtml" />
     <Content Include="Views\Traitement\TraitementORDSECOTHER.cshtml" />
     <Content Include="Views\Parametre\TypeECreate.cshtml" />
+    <Content Include="Views\Projects\AllProjects.cshtml" />
+    <Content Include="Views\Projects\NewProject.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Assets\admlte\dist\img\credit\" />
     <Folder Include="Assets\admlte\dist\js\" />
+    <Folder Include="Views\GetCountTDB\" />
     <Folder Include="Views\GetFileF\" />
   </ItemGroup>
   <ItemGroup>

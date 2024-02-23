@@ -21,7 +21,7 @@ function GetListSociete() {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/SuperAdmin/FillTable',
+        url: Origin + '/Projects/GetAllProjects',
         data: formData,
         cache: false,
         contentType: false,
@@ -99,7 +99,7 @@ $(`[data-action="AddnewSociete"]`).click(function () {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/SuperAdmin/AddSociete',
+        url: Origin + '/Projects/AddProject',
         data: formData,
         cache: false,
         contentType: false,
@@ -127,7 +127,7 @@ $(`[data-action="AddnewSociete"]`).click(function () {
 });
 
 function updateProject(id) {
-    window.location = Origin + "/Projects/Details?id=" + id;
+    window.location = Origin + "/Projects/ProjectDetails?id=" + id;
 }
 
 function deleteProject(id) {
@@ -141,7 +141,7 @@ function deleteProject(id) {
 
     $.ajax({
         type: 'POST',
-        url: Origin + '/Projects/Delete',
+        url: Origin + '/Projects/DeleteProject',
         data: formData,
         cache: false,
         contentType: false,

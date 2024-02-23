@@ -10,29 +10,36 @@ $(document).ready(() => {
 
     $(`[data-id="username"]`).text(User.LOGIN);
 
-    //GetListProjet();
-    //GetUsers(undefined);
-    
-    IsProjet();
+    GetListProjet();
 
-    GetListLOAD();//Partie ORDSEC
-    GetListLOADOTHER();//Partie ORDSEC
+    /*GetListLOAD();*///Partie ORDSEC
+    /*GetListLOADOTHER();*///Partie ORDSEC
 
     $(`[data-widget="pushmenu"]`).on('click', () => {
         $(`[data-action="SaveV"]`).toggleClass('custom-fixed-btn');
     });
 });
 
-function IsProjet() {
+$('#proj').on('change', () => {
+    $('.afb160Paie').html('');
+    $('.traitementORDSEC').html('');
+    $('.traitementORDSECOTHER').html('');
+
+    GetListLOAD();
+    GetListLOADOTHER();
+});
+
+function GetListProjet() {
     let formData = new FormData();
 
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
 
     $.ajax({
         type: "POST",
-        url: Origin + '/Traitement/GetIsProjet',
+        url: Origin + '/Traitement/GetAllPROJET',
         data: formData,
         cache: false,
         contentType: false,
@@ -50,108 +57,28 @@ function IsProjet() {
                 return;
             }
 
-            $("#proj").val(`${Datas.data}`);
+            $(`[data-id="proj-list"]`).text("");
+            var code = ``;
+            //let i = 0;
+            let pr = ``;
+            $.each(Datas.data, function (k, v) {
+                code += `
+                    <option value="${v.ID}">${v.PROJET}</option>
+                `;
+                //pr = v.PROJET;
+                //i++;
+            });
+
+            $(`[data-id="proj-list"]`).append(code);
+
+            GetListLOAD();
+            GetListLOADOTHER();
         },
-        error: function () {
+        error: function (e) {
             alert("Problème de connexion. ");
         }
-    });
+    })
 }
-
-//function GetUsers(id) {
-//    let formData = new FormData();
-
-//    formData.append("suser.LOGIN", User.LOGIN);
-//    formData.append("suser.PWD", User.PWD);
-//    formData.append("suser.ROLE", User.ROLE);
-
-//    if (!id) {
-//        formData.append("suser.IDPROJET", User.IDPROJET);
-//    } else {
-//        formData.append("suser.IDPROJET", id);
-//    }
-
-//    $.ajax({
-//        type: "POST",
-//        url: Origin + '/Traitement/DetailsInfoPro',
-//        data: formData,
-//        cache: false,
-//        contentType: false,
-//        processData: false,
-//        success: function (result) {
-//            var Datas = JSON.parse(result);
-
-//            if (Datas.type == "error") {
-//                alert(Datas.msg);
-//                return;
-//            }
-//            if (Datas.type == "login") {
-//                alert(Datas.msg);
-//                window.location = window.location.origin;
-//                return;
-//            }
-
-//            $("#proj").val(`${Datas.data.PROJ}`);
-//        },
-//        error: function () {
-//            alert("Problème de connexion. ");
-//        }
-//    });
-//}
-
-//let urlOrigin = "http://softwell.cloud/OPAVI";
-//function GetListProjet() {
-//    let formData = new FormData();
-
-//    formData.append("suser.LOGIN", User.LOGIN);
-//    formData.append("suser.PWD", User.PWD);
-//    formData.append("suser.ROLE", User.ROLE);
-//    formData.append("suser.IDPROJET", User.IDPROJET);
-
-//    $.ajax({
-//        type: "POST",
-//        url: Origin + '/Traitement/GetAllPROJET',
-//        data: formData,
-//        cache: false,
-//        contentType: false,
-//        processData: false,
-//        success: function (result) {
-//            var Datas = JSON.parse(result);
-//            console.log(Datas);
-
-//            if (Datas.type == "error") {
-//                alert(Datas.msg);
-//                return;
-//            }
-//            if (Datas.type == "login") {
-//                alert(Datas.msg);
-//                window.location = window.location.origin;
-//                return;
-//            }
-
-//            $(`[data-id="proj-list"]`).text("");
-//            var code = ``;
-//            $.each(Datas.data, function (k, v) {
-//                code += `
-//                    <option value="${v.ID}">${v.PROJET}</option>
-//                `;
-//            });
-//            $(`[data-id="proj-list"]`).append(code);
-
-//        },
-//        error: function (e) {
-//            console.log(e);
-//            alert("Problème de connexion. ");
-//        }
-//    })
-//}
-
-//$('#proj').on('change', () => {
-//    const id = $('#proj').val();
-
-//    GetUsers(id);
-//});
-
 
 //GENERER//
 $('[data-action="GenereR"]').click(async function () {
@@ -159,6 +86,12 @@ $('[data-action="GenereR"]').click(async function () {
     let df = $("#dateF").val();
     if (!dd || !df) {
         alert("Veuillez renseigner les dates afin de générer les mandats. ");
+        return;
+    }
+
+    let pr = $("#proj").val();
+    if (!pr) {
+        alert("Veuillez sélectionner au moins un projet. ");
         return;
     }
 
@@ -171,6 +104,8 @@ $('[data-action="GenereR"]').click(async function () {
 
     formData.append("DateDebut", $('#dateD').val());
     formData.append("DateFin", $('#dateF').val());
+
+    formData.append("iProjet", $("#proj").val());
 
     $.ajax({
         type: "POST",
@@ -210,6 +145,8 @@ $('[data-action="GenereR"]').click(async function () {
                         <td style="font-weight: bold; text-align:center">
                             <input type="checkbox" name = "checkprod" compteg-ischecked class="chk" onchange = "checkdel('${v.No}')" />
                         </td>
+                        <td style="font-weight: bold; text-align:center">${v.SOA}</td>
+                        <td style="font-weight: bold; text-align:center">${v.PROJET}</td>
                         <td style="font-weight: bold; text-align:center">${v.REF}</td>
                         <td style="font-weight: bold; text-align:center">${v.OBJ}</td>
                         <td style="font-weight: bold; text-align:center">${v.TITUL}</td>
@@ -262,11 +199,19 @@ function checkdel(id) {
 //SIIGLOAD//
 function GetListLOAD() {
     let formData = new FormData();
+    
     //alert(baseName);
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDPROJET", User.IDSOCIETE);
+
+    //if (!id) {
+    //    formData.append("suser.IDPROJET", User.IDPROJET);
+    //} else {
+    //    formData.append("suser.IDPROJET", id);
+    //}
+
+    formData.append("iProjet", $("#proj").val());
 
     $.ajax({
         type: "POST",
@@ -298,6 +243,8 @@ function GetListLOAD() {
                         <td style="font-weight: bold; text-align:center">
                             <input type="checkbox" name = "checkprod" compteg-ischecked  onchange = "checkdel()"/>
                         </td>
+                        <td style="font-weight: bold; text-align:center">${v.SOA}</td>
+                        <td style="font-weight: bold; text-align:center">${v.PROJET}</td>
                         <td style="font-weight: bold; text-align:center">${v.REF}</td>
                         <td style="font-weight: bold; text-align:center">${v.OBJ}</td>
                         <td style="font-weight: bold; text-align:center">${v.TITUL}</td>
@@ -356,6 +303,8 @@ function GetListLOADOTHER() {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDSOCIETE);
 
+    formData.append("iProjet", $("#proj").val());
+
     $.ajax({
         type: "POST",
         url: Origin + '/Traitement/GenerationSIIGLOADOTHER',
@@ -386,6 +335,8 @@ function GetListLOADOTHER() {
                         <td style="font-weight: bold; text-align:center">
                             <input type="checkbox" name = "checkprod" compteg-ischecked  onchange = "checkdel()"/>
                         </td>
+                        <td style="font-weight: bold; text-align:center">${v.SOA}</td>
+                        <td style="font-weight: bold; text-align:center">${v.PROJET}</td>
                         <td style="font-weight: bold; text-align:center">${v.REF}</td>
                         <td style="font-weight: bold; text-align:center">${v.OBJ}</td>
                         <td style="font-weight: bold; text-align:center">${v.TITUL}</td>
@@ -449,6 +400,8 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
     formData.append("DateDebut", $('#dateD').val());
     formData.append("DateFin", $('#dateF').val());
 
+    formData.append("iProjet", $("#proj").val());
+
     $.ajax({
         type: "POST",
         url: Origin + '/Traitement/GenerationSIIGOTHER',
@@ -479,6 +432,8 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                         <td style="font-weight: bold; text-align:center">
                             <input type="checkbox" name = "checkprod" compteg-ischecked  onchange = "checkdel()"/>
                         </td>
+                        <td style="font-weight: bold; text-align:center">${v.SOA}</td>
+                        <td style="font-weight: bold; text-align:center">${v.PROJET}</td>
                         <td style="font-weight: bold; text-align:center">${v.REF}</td>
                         <td style="font-weight: bold; text-align:center">${v.OBJ}</td>
                         <td style="font-weight: bold; text-align:center">${v.TITUL}</td>
@@ -532,6 +487,12 @@ $('[data-action="GenereSIIG"]').click(function () {
         return;
     }
 
+    let pr = $("#proj").val();
+    if (!pr) {
+        alert("Veuillez sélectionner au moins un projet. ");
+        return;
+    }
+
     let formData = new FormData();
     //alert(baseName);
     formData.append("suser.LOGIN", User.LOGIN);
@@ -541,6 +502,8 @@ $('[data-action="GenereSIIG"]').click(function () {
 
     formData.append("DateDebut", $('#dateD').val());
     formData.append("DateFin", $('#dateF').val());
+
+    formData.append("iProjet", $("#proj").val());
 
     $.ajax({
         type: "POST",
@@ -572,6 +535,8 @@ $('[data-action="GenereSIIG"]').click(function () {
                         <td style="font-weight: bold; text-align:center">
                             <input type="checkbox" name = "checkprod" compteg-ischecked  onchange = "checkdel()"/>
                         </td>
+                        <td style="font-weight: bold; text-align:center">${v.SOA}</td>
+                        <td style="font-weight: bold; text-align:center">${v.PROJET}</td>
                         <td style="font-weight: bold; text-align:center">${v.REF}</td>
                         <td style="font-weight: bold; text-align:center">${v.OBJ}</td>
                         <td style="font-weight: bold; text-align:center">${v.TITUL}</td>
@@ -645,6 +610,8 @@ $('[data-action="SaveV"]').click(function () {
     formData.append("DateDebut", $('#dateD').val());
     formData.append("DateFin", $('#dateF').val());
 
+    formData.append("iProjet", $("#proj").val());
+
     $.ajax({
         type: "POST",
         url: Origin + '/Traitement/GetCheckedEcritureF',
@@ -691,8 +658,7 @@ $('[data-action="SaveSIIG"]').click(function () {
 
     formData.append("listCompte", list);
 
-    //formData.append("DateDebut", $('#dateD').val());
-    //formData.append("DateFin", $('#dateF').val());
+    formData.append("iProjet", $("#proj").val());
 
     $.ajax({
         type: "POST",

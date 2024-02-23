@@ -793,14 +793,15 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public ActionResult DetailsMail(SI_USERS suser)
+        public ActionResult DetailsMail(SI_USERS suser, int iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             try
             {
-                int crpt = exist.IDPROJET.Value;
+                int crpt = iProjet;
+
                 var crpto = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
                 if (crpto != null)
                 {
@@ -818,7 +819,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateMail(SI_USERS suser, SI_MAIL param)
+        public JsonResult UpdateMail(SI_USERS suser, SI_MAIL param, int iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -841,7 +842,7 @@ namespace apptab.Controllers
 
             try
             {
-                int IdS = exist.IDPROJET.Value;
+                int IdS = iProjet;
                 var SExist = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null);
 
                 if (SExist != null)
@@ -938,14 +939,15 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public ActionResult DetailsDelais(SI_USERS suser)
+        public ActionResult DetailsDelais(SI_USERS suser, int iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             try
             {
-                int crpt = exist.IDPROJET.Value;
+                int crpt = iProjet;
+
                 var crpto = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
                 if (crpto != null)
                 {
@@ -963,14 +965,14 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateDelais(SI_USERS suser, SI_DELAISTRAITEMENT param)
+        public JsonResult UpdateDelais(SI_USERS suser, SI_DELAISTRAITEMENT param, int iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             try
             {
-                int IdS = exist.IDPROJET.Value;
+                int IdS = iProjet;
                 var SExist = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null);
 
                 if (SExist != null)
@@ -1104,6 +1106,8 @@ namespace apptab.Controllers
                 if (SExist != null)
                 {
                     if (SExist.MT0 != param.MT0 || SExist.MT1 != param.MT1 || SExist.MT2 != param.MT2
+                        || SExist.MD0 != param.MD0 || SExist.MD1 != param.MD1 || SExist.MD2 != param.MD2
+                        || SExist.MOP0 != param.MOP0 || SExist.MOP1 != param.MOP1 || SExist.MOP2 != param.MOP2
                         || SExist.MP1 != param.MP1 || SExist.MP2 != param.MP2 || SExist.MP3 != param.MP3 || SExist.MP4 != param.MP4)
                     {
                         SExist.MT0 = param.MT0;
@@ -1113,6 +1117,14 @@ namespace apptab.Controllers
                         SExist.MP2 = param.MP2;
                         SExist.MP3 = param.MP3;
                         SExist.MP4 = param.MP4;
+
+                        SExist.MD0 = param.MD0;
+                        SExist.MD1 = param.MD1;
+                        SExist.MD2 = param.MD2;
+
+                        SExist.MOP0 = param.MOP0;
+                        SExist.MOP1 = param.MOP1;
+                        SExist.MOP2 = param.MOP2;
 
                         db.SaveChanges();
                     }
@@ -1130,6 +1142,15 @@ namespace apptab.Controllers
                         MP2 = param.MP2,
                         MP3 = param.MP3,
                         MP4 = param.MP4,
+
+                        MD0 = param.MD0,
+                        MD1 = param.MD1,
+                        MD2 = param.MD2,
+
+                        MOP0 = param.MOP0,
+                        MOP1 = param.MOP1,
+                        MOP2 = param.MOP2,
+
                         CREATIONDATE = DateTime.Now
                     };
 
