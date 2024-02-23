@@ -737,6 +737,9 @@ $('[data-action="GetElementChecked"]').click(function () {
     formData.append("etat", etat);
     formData.append("listCompte", listid);
 
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/GetElementValiderF',

@@ -649,6 +649,9 @@ $('[data-action="GetAnomalieListes"]').click(function () {
 
 function getelementTXT(a) {
     let formData = new FormData();
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.ID", User.ID);
     formData.append("suser.PWD", User.PWD);
@@ -658,6 +661,7 @@ function getelementTXT(a) {
     formData.append("codeJ", $('#commercial').val());
     formData.append("devise", false);
     formData.append("intbasetype", a);
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/CreateZipFile',

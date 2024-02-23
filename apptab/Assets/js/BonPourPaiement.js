@@ -686,6 +686,7 @@ $('[data-action="GetElementChecked"]').click(function () {
     let codeproject = $("#Fproject").val();
     formData.append("codeproject", codeproject);
 
+    
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
@@ -709,6 +710,8 @@ $('[data-action="GetElementChecked"]').click(function () {
     formData.append("devise", false);
     formData.append("etat", etat);
     formData.append("listCompte", listid);
+    formData.append("baseName", baseName);
+    alert(baseName);
 
    
     //ValidationsEcrituresF
