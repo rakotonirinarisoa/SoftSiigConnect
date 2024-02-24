@@ -2161,7 +2161,6 @@
     <Content Include="Assets\js\Crypto.js" />
     <Content Include="Assets\js\DetailCrypto.js" />
     <Content Include="Assets\js\FValidations.js" />
-    <Content Include="Assets\js\javascript.js" />
     <Content Include="Assets\js\CorrEtat.js" />
     <Content Include="Assets\js\DetailsFPROSOA.js" />
     <Content Include="Assets\js\DetailsFSoaUpdate.js" />
