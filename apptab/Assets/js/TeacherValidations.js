@@ -98,27 +98,27 @@ function ChargeLoad() {
                 }
                 if (Datas.type == "success") {
                     listResult = Datas.data;
-
+                    console.log(listResult);
                     const data = [];
 
                     $.each(listResult, function (k, v) {
                         data.push({
                             checkbox: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
+                            dateOrdre: v.dateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
                             debit: v.Debit,
-                            credit: v.Credit,
-                            montantDevise: v.MontantDevise,
-                            mon: v.Mon,
-                            rang: v.Rang,
-                            financementCategorie: v.FinancementCategorie,
-                            commune: v.Commune,
-                            plan: v.Plan6,
+                            credit: v.credit === undefined ? 'NULL' : v.credit,
+                            montantDevise: v.montantDevise === undefined ? 'NULL' : v.montantDevise,
+                            mon: v.Mon === null ? 'NULL' : v.Mon,
+                            rang: v.Rang === null ? 'NULL' : v.Rang,
+                            financementCategorie: v.FinancementCategorie === " " ? 'NULL' : v.FinancementCategorie,
+                            commune: v.Commune === null ? 'NULL' : v.Commune,
+                            plan: v.Plan6 === null ? 'NULL' : v.Plan6,
                             journal: v.Journal,
-                            marche: v.Marche,
+                            marche: v.Marche === null ? 'NULL' : v.Marche,
                             rejeter: ''
                         });
                     });
@@ -152,7 +152,6 @@ function ChargeLoad() {
                             { data: 'mon' },
                             { data: 'rang' },
                             { data: 'financementCategorie' },
-                            { data: 'mon' },
                             { data: 'commune' },
                             { data: 'plan' },
                             { data: 'journal' },
@@ -162,7 +161,7 @@ function ChargeLoad() {
                                 render: function (_, _, row, _) {
                                     return `
                                         <div onclick="Refuser('${row.id}')">
-                                            <i class="fa fa-times fa-lg text-dark"</i>
+                                            <i class="fa fa-times fa-lg text-dark"></i>
                                         </div>
                                     `;
                                 }
@@ -606,6 +605,9 @@ $('[data-action="ChargerJs"]').click(function () {
     formData.append("suser.IDPROJET", User.IDPROJET);
     formData.append("ChoixBase", baseName);
 
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
     let datein = $('#Pdu').val();
     let dateout = $('#Pau').val();
     let journal = $('#commercial').val();
@@ -647,26 +649,27 @@ $('[data-action="ChargerJs"]').click(function () {
                 if (Datas.type == "success") {
                     listResult = Datas.data;
 
+                    console.log(listResult);
                     const data = [];
 
                     $.each(listResult, function (_, v) {
                         data.push({
                             checkbox: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
+                            dateOrdre: v.dateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
                             debit: v.Debit,
-                            credit: v.Credit,
-                            montantDevise: v.MontantDevise,
-                            mon: v.Mon,
-                            rang: v.Rang,
-                            financementCategorie: v.FinancementCategorie,
-                            commune: v.Commune,
-                            plan: v.Plan6,
+                            credit: v.credit === undefined ? 'NULL' : v.credit,
+                            montantDevise: v.montantDevise === undefined ? 'NULL' : v.montantDevise,
+                            mon: v.Mon === null ? 'NULL' : v.Mon,
+                            rang: v.Rang === null ? 'NULL' : v.Rang,
+                            financementCategorie: v.FinancementCategorie === " " ? 'NULL' : v.FinancementCategorie,
+                            commune: v.Commune === null ? 'NULL' : v.Commune,
+                            plan: v.Plan6 === null ? 'NULL' : v.Plan6,
                             journal: v.Journal,
-                            marche: v.Marche,
+                            marche: v.Marche === null ? 'NULL' : v.Marche,
                             rejeter: ''
                         });
                     });
@@ -707,7 +710,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 render: function (_, _, row, _) {
                                     return `
                                         <div onclick="Refuser('${row.id}')">
-                                            <i class="fa fa-times fa-lg text-dark"</i>
+                                            <i class="fa fa-times fa-lg text-dark"></i>
                                         </div>
                                     `;
                                 }
@@ -779,21 +782,22 @@ $('[data-action="ChargerJs"]').click(function () {
                     $.each(listResult, function (_, v) {
                         data.push({
                             checkbox: '',
-                            id: v.No,
-                            dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
+                            id: v.IDREGLEMENT,
+                            dateOrdre: v.dateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
+                            libelle: v.Libelle,
                             debit: v.Debit,
-                            credit: v.Credit,
-                            montantDevise: v.MontantDevise,
-                            mon: v.Mon,
-                            rang: v.Rang,
-                            financementCategorie: v.FinancementCategorie,
-                            commune: v.Commune,
-                            plan: v.Plan6,
+                            credit: v.credit === undefined ? 'NULL' : v.credit,
+                            montantDevise: v.montantDevise === undefined ? 'NULL' : v.montantDevise,
+                            mon: v.Mon === null ? 'NULL' : v.Mon,
+                            rang: v.Rang === null ? 'NULL' : v.Rang,
+                            financementCategorie: v.FinancementCategorie === " " ? 'NULL' : v.FinancementCategorie,
+                            commune: v.Commune === null ? 'NULL' : v.Commune,
+                            plan: v.Plan6 === null ? 'NULL' : v.Plan6,
                             journal: v.Journal,
-                            marche: v.Marche,
-                            status: v.Status
+                            marche: v.Marche === null ? 'NULL' : v.Marche,
+                            rejeter: ''
                         });
                     });
 
@@ -828,7 +832,16 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'plan' },
                             { data: 'journal' },
                             { data: 'marche' },
-                            { data: 'status' }
+                            {
+                                data: 'rejeter',
+                                render: function (_, _, row, _) {
+                                    return `
+                                        <div onclick="Refuser('${row.id}')">
+                                            <i class="fa fa-times fa-lg text-dark"></i>
+                                        </div>
+                                    `;
+                                }
+                            }
                         ],
                         colReorder: {
                             enable: true,

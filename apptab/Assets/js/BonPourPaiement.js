@@ -157,20 +157,20 @@ function chargeLoad() {
                         data.push({
                             checkbox: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
+                            dateOrdre: v.dateOrdre === undefined ? '' : v.dateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
                             debit: v.Debit,
                             credit: v.Credit,
                             montantDevise: v.MontantDevise,
-                            mon: v.Mon,
-                            rang: v.Rang,
-                            financementCategorie: v.FinancementCategorie,
-                            commune: v.Commune,
-                            plan: v.Plan6,
+                            mon: v.Mon === null ? 'NULL' : v.Mon,
+                            rang: v.Rang === null ? 'NULL' : v.Rang,
+                            financementCategorie: v.FinancementCategorie === " " ? 'NULL ' :v.FinancementCategorie,
+                            commune: v.Commune === null ?'NULL' : v.Commune ,
+                            plan: v.Plan6 === null ? 'NULL':v.Plan6,
                             journal: v.Journal,
-                            marche: v.Marche,
+                            marche: v.Marche === null ? 'NULL' : v.Marche,
                             rejeter: ''
                         });
                     });
@@ -211,7 +211,7 @@ function chargeLoad() {
                                 render: function (_, _, row, _) {
                                     return `
                                         <div onclick="Refuser('${row.id}')">
-                                            <i class="fa fa-times fa-lg text-dark"</i>
+                                            <i class="fa fa-times fa-lg text-dark"></i>
                                         </div>
                                     `;
                                 }
@@ -271,19 +271,20 @@ function chargeLoad() {
                         data.push({
                             checkbox: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
+                            dateOrdre: v.dateOrdre === undefined ? '' : v.dateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
-                            montant: v.Montant,
+                            debit: v.Debit,
+                            credit: v.Credit,
                             montantDevise: v.MontantDevise,
-                            mon: v.Mon,
-                            rang: v.Rang,
-                            financementCategorie: v.FinancementCategorie,
-                            commune: v.Commune,
-                            plan: v.Plan6,
+                            mon: v.Mon === null ? 'NULL' : v.Mon,
+                            rang: v.Rang === null ? 'NULL' : v.Rang,
+                            financementCategorie: v.FinancementCategorie === " " ? 'NULL ' : v.FinancementCategorie,
+                            commune: v.Commune === null ? 'NULL' : v.Commune,
+                            plan: v.Plan6 === null ? 'NULL' : v.Plan6,
                             journal: v.Journal,
-                            marche: v.Marche,
+                            marche: v.Marche === null ? 'NULL' : v.Marche,
                             rejeter: ''
                         });
                     });
@@ -323,7 +324,7 @@ function chargeLoad() {
                                 render: function (_, _, row, _) {
                                     return `
                                         <div onclick="Refuser('${row.id}')">
-                                            <i class="fa fa-times fa-lg text-dark"</i>
+                                            <i class="fa fa-times fa-lg text-dark"></i>
                                         </div>
                                     `;
                                 }
@@ -677,20 +678,20 @@ $('[data-action="ChargerJs"]').click(function () {
                         data.push({
                             checkbox: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
+                            dateOrdre: v.dateOrdre === undefined ? '' : v.dateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
                             debit: v.Debit,
                             credit: v.Credit,
                             montantDevise: v.MontantDevise,
-                            mon: v.Mon,
-                            rang: v.Rang,
-                            financementCategorie: v.FinancementCategorie,
-                            commune: v.Commune,
-                            plan: v.Plan6,
+                            mon: v.Mon === null ? 'NULL' : v.Mon,
+                            rang: v.Rang === null ? 'NULL' : v.Rang,
+                            financementCategorie: v.FinancementCategorie === " " ? 'NULL ' : v.FinancementCategorie,
+                            commune: v.Commune === null ? 'NULL' : v.Commune,
+                            plan: v.Plan6 === null ? 'NULL' : v.Plan6,
                             journal: v.Journal,
-                            marche: v.Marche,
+                            marche: v.Marche === null ? 'NULL' : v.Marche,
                             rejeter: ''
                         });
                     });
@@ -731,7 +732,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 render: function (_, _, row, _) {
                                     return `
                                         <div onclick="Refuser('${row.id}')">
-                                            <i class="fa fa-times fa-lg text-dark"</i>
+                                            <i class="fa fa-times fa-lg text-dark"></i>
                                         </div>
                                     `;
                                 }
@@ -800,19 +801,20 @@ $('[data-action="ChargerJs"]').click(function () {
                         data.push({
                             checkbox: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
+                            dateOrdre: v.dateOrdre === undefined ? '' : v.dateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
-                            montant: v.Montant,
+                            debit: v.Debit,
+                            credit: v.Credit,
                             montantDevise: v.MontantDevise,
-                            mon: v.Mon,
-                            rang: v.Rang,
-                            financementCategorie: v.FinancementCategorie,
-                            commune: v.Commune,
-                            plan: v.Plan6,
+                            mon: v.Mon === null ? 'NULL' : v.Mon,
+                            rang: v.Rang === null ? 'NULL' : v.Rang,
+                            financementCategorie: v.FinancementCategorie === " " ? 'NULL ' : v.FinancementCategorie,
+                            commune: v.Commune === null ? 'NULL' : v.Commune,
+                            plan: v.Plan6 === null ? 'NULL' : v.Plan6,
                             journal: v.Journal,
-                            marche: v.Marche,
+                            marche: v.Marche === null ? 'NULL' : v.Marche,
                             rejeter: ''
                         });
                     });
@@ -852,7 +854,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 render: function (_, _, row, _) {
                                     return `
                                         <div onclick="Refuser('${row.id}')">
-                                            <i class="fa fa-times fa-lg text-dark"</i>
+                                            <i class="fa fa-times fa-lg text-dark"></i>
                                         </div>
                                     `;
                                 }
