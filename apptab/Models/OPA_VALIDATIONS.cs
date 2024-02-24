@@ -1,4 +1,4 @@
-namespace apptab.Models
+﻿namespace apptab.Models
 {
     using System;
     using System.ComponentModel.DataAnnotations;
@@ -99,5 +99,7 @@ namespace apptab.Models
         public int? IDUSVAL { get; set; }
 
         public int? IDUSANNUL { get; set; }
+        [NotMapped]
+        public bool? isLATE { get; set; }
     }
 }

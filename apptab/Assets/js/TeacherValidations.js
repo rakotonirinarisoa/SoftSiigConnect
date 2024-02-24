@@ -119,7 +119,8 @@ function ChargeLoad() {
                             plan: v.Plan6 === null ? 'NULL' : v.Plan6,
                             journal: v.Journal,
                             marche: v.Marche === null ? 'NULL' : v.Marche,
-                            rejeter: ''
+                            rejeter: '',
+                            isLATE : v.isLATE
                         });
                     });
 
@@ -174,6 +175,11 @@ function ChargeLoad() {
                         deferRender: true,
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
+
+                            $(row).addClass('select-text');
+                            if (data.isLATE) {
+                                $(row).attr('style', "background-color: #FF7F7F !important;");
+                            }
                         },
                         columnDefs: [
                             {
@@ -670,7 +676,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             plan: v.Plan6 === null ? 'NULL' : v.Plan6,
                             journal: v.Journal,
                             marche: v.Marche === null ? 'NULL' : v.Marche,
-                            rejeter: ''
+                            rejeter: '',
+                            isLATE: v.isLATE
                         });
                     });
 
@@ -723,6 +730,11 @@ $('[data-action="ChargerJs"]').click(function () {
                         deferRender: true,
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
+
+                            $(row).addClass('select-text');
+                            if (data.isLATE) {
+                                $(row).attr('style', "background-color: #FF7F7F !important;");
+                            }
                         },
                         columnDefs: [
                             {

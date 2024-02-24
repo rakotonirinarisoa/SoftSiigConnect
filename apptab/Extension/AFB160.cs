@@ -1393,9 +1393,10 @@ namespace apptab.Extension
                                       select rjl).Single();*/
                             try
                             {
-                                var reglement = (from mcpt in tom.MCOMPTA
-                                                 where mcpt.NORD == nord.Key && mcpt.COGE == djournal.COMPTEASSOCIE && mcpt.EVIREMENT == null
-                                                 select mcpt).Single();
+                                //var reglement = (from mcpt in tom.MCOMPTA
+                                //                 where mcpt.NORD == nord.Key && mcpt.COGE == djournal.COMPTEASSOCIE && mcpt.EVIREMENT == null
+                                //                 select mcpt).SingleOrDefault();
+                                var reglement = tom.MCOMPTA.Where( x => x.NORD == nord.Key && x.COGE == djournal.COMPTEASSOCIE).FirstOrDefault();
                                 if (reglement.S == "D")
                                 {
                                     list.Add(new DataListTompro()
