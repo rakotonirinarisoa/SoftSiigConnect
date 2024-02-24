@@ -388,7 +388,6 @@ function exportTableToExcel(tableID, filename = 'RAS') {
             downloadLink.click();
         }
     }
-
 }
 
 $(document).ready(() => {
