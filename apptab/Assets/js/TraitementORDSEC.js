@@ -111,6 +111,8 @@ function GetListLOAD() {
             if (Datas.type == "error") {
                 alert(Datas.msg);
 
+                emptyTable();
+
                 return;
             }
             if (Datas.type == "login") {
@@ -543,3 +545,103 @@ $('[data-action="SaveSIIG"]').click(function () {
         }
     });
 });
+
+function emptyTable() {
+    const data = [];
+
+    if (table !== undefined) {
+        table.destroy();
+    }
+
+    table = $('#TBD_PROJET_ORDSEC').DataTable({
+        data,
+        columns: [
+            {
+                data: 'id',
+                render: function (data, _, _, _) {
+                    return `
+                                    <input type="checkbox" name="checkprod" compteg-ischecked class="chk" onchange="checkdel('${data}')" />
+                                `;
+                },
+                orderable: false
+            },
+            { data: 'soa' },
+            { data: 'projet' },
+            { data: 'ref' },
+            { data: 'objet' },
+            { data: 'titulaire' },
+            { data: 'dateMandat' },
+            { data: 'compte' },
+            { data: 'pcop' },
+            { data: 'montant' },
+            { data: 'dateDEF' },
+            { data: 'dateTEF' },
+            { data: 'dateBE' },
+            { data: 'utilisateur' },
+            { data: 'dateGeneration' },
+            {
+                data: 'imputation',
+                render: function (_, _, row, _) {
+                    return `
+                                    <div onclick="modalD('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-danger elerfr"></i>
+                                    </div>
+                                `;
+                }
+            },
+            {
+                data: 'piecesJustificatives',
+                render: function (_, _, row, _) {
+                    return `
+                                    <div onclick="modalF('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-success elerfr"></i>
+                                    </div>
+                                `;
+                }
+            },
+            {
+                data: 'document',
+                render: function (_, _, row, _) {
+                    return `
+                                    <div onclick="modalLIAS('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-info elerfr"></i>
+                                    </div>
+                                `;
+                }
+            },
+            {
+                data: 'rejeter',
+                render: function (_, _, row, _) {
+                    return `
+                                    <div onclick="modalREJET('${row.id}')">
+                                        <i class="fa fa-times fa-lg text-dark elerfr"></i>
+                                    </div>
+                                `;
+                }
+            }
+        ],
+        createdRow: function (row, data, _) {
+            $(row).attr('compteG-id', data.id);
+            $(row).addClass('select-text');
+
+            if (data.isLATE) {
+                $(row).attr('style', "background-color: #FF7F7F !important;");
+            }
+        },
+        columnDefs: [
+            {
+                targets: [-4, -3, -2, -1]
+            }
+        ],
+        colReorder: {
+            enable: true,
+            fixedColumnsLeft: 1
+        },
+        deferRender: true,
+        dom: 'Bfrtip',
+        buttons: ['colvis'],
+        initComplete: function () {
+            $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
+        }
+    });
+}

@@ -17,34 +17,35 @@ function exportTableToExcel(tableID, filename = 'RAS') {
 
     const tableSelect = document.getElementById(tableID);
 
-    const tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-
-    alert("OK");
+    // Create a new Blob with the correct encoding
+    const blob = new Blob(['\ufeff', tableSelect.outerHTML], { type: dataType });
 
     // Specify file name
     filename = filename ? filename + '.xls' : 'excel_data.xls;';
 
-    if (confirm("Voulez-vous le télécharger ?")) {
+    if (confirm("Voulez-vous le tÃ©lÃ©charger ?")) {
         if (navigator.msSaveOrOpenBlob) {
-            const blob = new Blob(['\ufeff', tableHTML], {
-                type: dataType
-            });
-
+            // For Internet Explorer
             navigator.msSaveOrOpenBlob(blob, filename);
         } else {
+            // For other browsers
             // Create download link element
             downloadLink = document.createElement("a");
 
-            document.body.appendChild(downloadLink);
-
-            // Create a link to the file
-            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+            // Create a link to the blob
+            downloadLink.href = URL.createObjectURL(blob);
 
             // Setting the file name
             downloadLink.download = filename;
 
-            //triggering the function
+            // Append the link to the body
+            document.body.appendChild(downloadLink);
+
+            // Trigger the click event
             downloadLink.click();
+
+            // Remove the link from the body
+            document.body.removeChild(downloadLink);
         }
     }
 }

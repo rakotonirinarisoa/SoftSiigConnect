@@ -624,6 +624,7 @@ function AcceptRefuser() {
     });
 
 }
+//==============================================================================================Ready===================================================================================
 
 $(document).ready(() => {
 
@@ -683,6 +684,7 @@ $('.Checkall').change(function () {
     }
 
 });
+//==============================================================================================ChargeJs===================================================================================
 
 $('[data-action="ChargerJs"]').click(function () {
     let formData = new FormData();
@@ -966,6 +968,7 @@ $('[data-action="ChargerJs"]').click(function () {
         });
     }
 });
+//==============================================================================================Checked===================================================================================
 
 $('[data-action="GetElementChecked"]').click(function () {
     let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
@@ -1039,80 +1042,6 @@ $('[data-action="GetElementChecked"]').click(function () {
 
 });
 
-$('[data-action="GetAnomalieListes"]').click(function () {
-
-    let formData = new FormData();
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
-    formData.append("baseName", baseName);
-
-    $.ajax({
-        type: "POST",
-        url: Origin + '/Home/GetAnomalieBack',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        beforeSend: function () {
-            loader.removeClass('display-none');
-        },
-        complete: function () {
-            loader.addClass('display-none');
-        },
-        success: function (result) {
-            var Datas = JSON.parse(result);
-
-            listResultAnomalie = "";
-            contentAnomalies = ``;
-            if (Datas.type == "error") {
-                alert(Datas.msg);
-
-                return;
-            }
-
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-
-                return;
-            }
-
-            if (Datas.type == "success") {
-                listResultAnomalie = Datas.data;
-                $.each(listResultAnomalie, function (k, v) {
-                    contentAnomalies += `<tr compteG-id="${v.No}">
-                        <td>
-                            <input type="checkbox" name = "checkprod" compteg-ischecked/>
-                        </td><td>${v.No}</td>
-                        <td>${v.DateOrdre}</td>
-                        <td>${v.NoPiece}</td>
-                        <td>${v.Compte}</td>
-                        <td>${v.Libelle}</td>
-                        <td>${v.Debit}</td>
-                        <td>${v.Credit}</td>
-                        <td>${v.MontantDevise}</td>
-                        <td>${v.Mon}</td>
-                        <td>${v.Rang}</td>
-                        <td>${v.FinancementCategorie}</td>
-                        <td>${v.Commune}</td>
-                        <td>${v.Plan6}</td>
-                        <td>${v.Journal}</td>
-                        <td>${v.Marche}</td>
-                    </tr>`
-
-                });
-
-                $('.anomalieslist').html(contentAnomalies);
-            }
-        },
-        error: function () {
-            alert("Problème de connexion. ");
-        }
-    });
-})
-
-//$(`[tab="autre"]`).hide();
 var baseName = "2";
 
 $(`[name="options"]`).on("change", (k, v) => {
