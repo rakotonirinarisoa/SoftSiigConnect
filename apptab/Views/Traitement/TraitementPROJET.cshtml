@@ -4,6 +4,9 @@
     /*Layout = "~/Views/Shared/_Layout.cshtml";*/
 }
 
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
 <div class="form-row">
     <div class="input-group mb-3 col">
         <div class="input-group-prepend custom-label">
@@ -72,14 +75,14 @@
         </div>
     </div>
     <div class="input-group mb-3 col">
-        <div class="btn btn-flat bg-gradient-yellow col-12" onclick="exportTableToExcel(TBD_PROJET)">
+        <div class="btn btn-flat bg-gradient-yellow col-12" id="btn-export-excel">
             <i class="fa fa-file-excel"></i> Exporter
         </div>
     </div>
 </div>
 
 <script src="~/Assets/js/Traitmandat.js"></script>
-<script src="~/Assets/js/utils.js"></script>
+<script src="~/Assets/js/utils.js" charset="utf-8"></script>
 
 
 <div class="modal fade" tabindex="-1" role="dialog" id="password-modal">
@@ -165,10 +168,3 @@
 </div>
 
 <script src="~/Assets/js/TraitmandatLIAS.js"></script>
-
-@*<script>
-    $("#proj").select2({
-        tags: true,
-        tokenSeparators: [',', ' ']
-    });
-</script>*@

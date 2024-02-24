@@ -664,7 +664,7 @@ $('[data-action="SaveSIIG"]').click(function () {
         },
         success: function (result) {
             var Datas = JSON.parse(result);
-            alert(Datas.msg);
+
             $.each(CheckList, (k, v) => {
                 list.push($(v).remove());
             });
@@ -673,4 +673,8 @@ $('[data-action="SaveSIIG"]').click(function () {
             alert("Problème de connexion. ");
         }
     });
+});
+
+$('#btn-export-excel').on('click', () => {
+    exportTableToExcel('TBD_PROJET');
 });
