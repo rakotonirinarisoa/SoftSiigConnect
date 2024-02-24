@@ -135,7 +135,8 @@ function GetListLOAD() {
                         imputation: '',
                         piecesJustificatives: '',
                         document: '',
-                        rejeter: ''
+                        rejeter: '',
+                        isLATE: v.isLATE
                     });
                 });
 
@@ -213,6 +214,10 @@ function GetListLOAD() {
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
                         $(row).addClass('select-text');
+
+                        if (data.isLATE) {
+                            $(row).attr('style', "background-color: #FF7F7F !important;");
+                        }
                     },
                     columnDefs: [
                         {

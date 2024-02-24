@@ -191,6 +191,7 @@
     <Compile Include="Controllers\SuperAdminController.cs" />
     <Compile Include="Controllers\TraitementController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Data\Addbuss.cs" />
     <Compile Include="Data\Entities\ProjectDetails.cs" />
     <Compile Include="Data\Entities\X.cs" />
     <Compile Include="Data\Cipher.cs" />
