@@ -403,22 +403,42 @@ $('[data-action="ChargerJs"]').click(function () {
                     const data = [];
 
                     $.each(listResult, function (_, v) {
+                        //data.push({
+                        //    checkbox: '',
+                        //    id: v.No ,
+                        //    dateOrdre: v.DateOrdre === '' ? '0' : v.DateOrdre,
+                        //    noPiece: v.NoPiece === '' ? '1' : v.NoPiece,
+                        //    compte: v.Compte === '' ? '1' : v.Compte,
+                        //    debit: v.Debit === undefined ? '' : v.Debit,
+                        //    credit: v.Credit === undefined ? '' : v.Credit,
+                        //    montantDevise: v.MontantDevise === '' ? '0000' : v.MontantDevise,
+                        //    mon: v.Mon === undefined ? '' : v.Mon,
+                        //    rang: v.Rang === undefined ? '' :  v.Rang,
+                        //    financementCategorie: v.FinancementCategorie === undefined ? '' : v.FinancementCategorie,
+                        //    commune: v.Commune === undefined ? '' : v.Commune,
+                        //    plan: v.Plan6 === undefined ? '' : v.Plan6 ,
+                        //    journal: v.Journal === undefined ? '' : v.Journal,
+                        //    marche: v.Marche === undefined ? '' : v.Marche,
+                        //    status: v.Status === undefined ? '' : v.Status
+                        //});
+
                         data.push({
                             checkbox: '',
                             id: v.No,
-                            dateOrdre: v.DateOrdre,
-                            noPiece: v.NoPiece,
-                            compte: v.Compte,
-                            debit: v.Debit,
-                            credit: v.Credit,
-                            montantDevise: v.MontantDevise,
-                            mon: v.Mon,
-                            rang: v.Rang,
-                            financementCategorie: v.FinancementCategorie,
-                            commune: v.Commune,
-                            plan: v.Plan6,
-                            journal: v.Journal,
-                            marche: v.Marche,
+                            dateOrdre: v.DateOrdre === '' ? '0' : v.DateOrdre,
+                            noPiece: v.NoPiece === '' ? '1' : v.NoPiece,
+                            compte: v.Compte === '' ? '1' : v.Compte,
+                            debit: v.Debit === undefined ? '' : v.Debit,
+                            credit: v.Credit === undefined ? '' : v.Credit,
+                            montantDevise: v.MontantDevise === '' ? '0000' : v.MontantDevise,
+                            mon: v.Mon === undefined ? '' : v.Mon,
+                            rang: v.Rang === undefined ? '' : v.Rang,
+                            poste: v.Poste === undefined ? '' : v.Poste,
+                            financementCategorie: v.FinancementCategorie === undefined ? '' : v.FinancementCategorie,
+                            commune: 'gg',
+                            plan: v.Plan6 === undefined ? '' : v.Plan6,
+                            journal: v.Journal === undefined ? '' : v.Journal,
+                            marche: v.Marche === undefined ? '' : v.Marche,
                             status: v.Status === undefined ? '' : v.Status
                         });
                     });
