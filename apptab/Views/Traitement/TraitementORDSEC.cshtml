@@ -28,15 +28,10 @@
     </div>
 </div>
 
-<div class="form-row mb-3">
+<div class="form-row">
     <div class="input-group mb-3 col">
         <div class="btn btn-flat bg-gradient-success col-12" data-action="GenereSIIG">
             <i class="fa fa-download"></i> Générer
-        </div>
-    </div>
-    <div class="input-group mb-3 col">
-        <div class="btn btn-flat bg-gradient-red col-12 custom-fixed-btn" data-action="SaveSIIG">
-            <i class="fa fa-check-double"></i> Enregistrer et envoyer vers SIIGFP
         </div>
     </div>
 </div>
@@ -72,13 +67,18 @@
     </table>
 </div>
 
-@*<div class="form-row mb-3">
-        <div class="input-group mb-3 col">
-            <div class="btn btn-flat bg-gradient-red col-12 custom-fixed-btn" data-action="SaveSIIG">
-                <i class="fa fa-check-double"></i> Enregistrer et envoyer vers SIIGFP
-            </div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="btn btn-flat bg-gradient-red col-12 custom-fixed-btn" data-action="SaveSIIG">
+            <i class="fa fa-check-double"></i> Enregistrer et envoyer vers SIIGFP
         </div>
-    </div>*@
+    </div>
+    <div class="input-group mb-3 col">
+        <div class="btn btn-flat bg-gradient-yellow col-12" onclick="exportTableToExcel(TBD_PROJET_ORDSEC)">
+            <i class="fa fa-file-excel"></i> Exporter
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="password-modal">
     <div class="modal-dialog modal-xl" role="document" @*style="width:fit-content"*@>
