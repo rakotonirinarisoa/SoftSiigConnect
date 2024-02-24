@@ -405,3 +405,7 @@ function emptyTableTRM() {
         }
     });
 }
+
+$('#btn-export-excel').on('click', () => {
+    exportTableToExcel('TBD_PROJET_MANDAT');
+});
