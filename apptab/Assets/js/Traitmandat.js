@@ -216,9 +216,11 @@ $('[data-action="GenereR"]').click(async function () {
                             }
                         }
                     ],
-                    createdRow: function (row, _, _) {
+                    createdRow: function (row, data, _) {
+                        $(row).attr('compteG-id', data.id);
                         $(row).addClass('select-text');
                     },
+
                     columnDefs: [
                         {
                             targets: [-3, -2, -1]
@@ -360,7 +362,8 @@ function GetListLOADOTHER() {
                             }
                         } 
                     ],
-                    createdRow: function (row, _, _) {
+                    createdRow: function (row, data, _) {
+                        $(row).attr('compteG-id', data.id);
                         $(row).addClass('select-text');
                     },
                     columnDefs: [
@@ -514,7 +517,8 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                             }
                         }
                     ],
-                    createdRow: function (row, _, _) {
+                    createdRow: function (row, data, _) {
+                        $(row).attr('compteG-id', data.id);
                         $(row).addClass('select-text');
                     },
                     columnDefs: [
