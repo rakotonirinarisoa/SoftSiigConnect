@@ -32,6 +32,12 @@ function GetListUser() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -68,8 +74,6 @@ function GetListUser() {
             alert("Problème de connexion. ");
         }
     })//.done(function (/*x*/) {
-    //    //alert("");
-    //    //console.log(x); return
     //    $.ajax({
     //        type: "POST",
     //        url: urlOrigin + '/Admin/GetAllUser',
@@ -77,9 +81,14 @@ function GetListUser() {
     //        cache: false,
     //        contentType: false,
     //        processData: false,
+                // beforeSend: function () {
+                //     loader.removeClass('display-none');
+                // },
+                // complete: function () {
+                //     loader.addClass('display-none');
+                // },
     //        success: function (result) {
     //            var Datas = JSON.parse(result);
-    //            console.log(Datas);
 
     //            if (Datas.type == "error") {
     //                alert(Datas.msg);
@@ -127,6 +136,12 @@ function GetDB(instanceID, id) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -180,6 +195,12 @@ function GetUsers() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -247,6 +268,12 @@ $(`[data-action="UpdateUser"]`).click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 

@@ -1,5 +1,6 @@
 ﻿let User;
 let Origin;
+
 $(document).ready(() => {
 
     User = JSON.parse(sessionStorage.getItem("user"));
@@ -26,6 +27,12 @@ function GetCountTDB() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 

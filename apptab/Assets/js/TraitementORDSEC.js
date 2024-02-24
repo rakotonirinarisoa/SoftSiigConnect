@@ -1,6 +1,7 @@
 ﻿let User;
 let Origin;
 let compteur = 1;
+
 let table = undefined;
 
 $(document).ready(() => {
@@ -40,6 +41,12 @@ function GetListProjet() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -92,11 +99,19 @@ function GetListLOAD() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
+
+                emptyTable();
 
                 return;
             }
@@ -112,8 +127,6 @@ function GetListLOAD() {
                 listResult = Datas.data
 
                 const data = [];
-
-                console.log(listResult);
 
                 $.each(listResult, function (_, v) {
                     data.push({
@@ -276,9 +289,14 @@ $('[data-action="GenereSIIG"]').click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -293,8 +311,6 @@ $('[data-action="GenereSIIG"]').click(function () {
                 listResult = Datas.data
 
                 const data = [];
-
-                console.log(listResult);
 
                 $.each(listResult, function (_, v) {
                     data.push({
@@ -426,7 +442,7 @@ $('[data-action="GenereSIIG"]').click(function () {
 
 $('[data-action="SaveV"]').click(function () {
     let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
-    
+
     let list = [];
     $.each(CheckList, (k, v) => {
         list.push($(v).attr("compteG-id"));
@@ -436,7 +452,7 @@ $('[data-action="SaveV"]').click(function () {
         alert("Veuillez sélectionner au moins un mandat afin de l'enregistrer et l'envoyer pour validation. ");
         return;
     }
-    
+
     let formData = new FormData();
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
@@ -457,6 +473,12 @@ $('[data-action="SaveV"]').click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             alert(Datas.msg);
@@ -505,6 +527,12 @@ $('[data-action="SaveSIIG"]').click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             alert(Datas.msg);
@@ -517,3 +545,103 @@ $('[data-action="SaveSIIG"]').click(function () {
         }
     });
 });
+
+function emptyTable() {
+    const data = [];
+
+    if (table !== undefined) {
+        table.destroy();
+    }
+
+    table = $('#TBD_PROJET_ORDSEC').DataTable({
+        data,
+        columns: [
+            {
+                data: 'id',
+                render: function (data, _, _, _) {
+                    return `
+                                    <input type="checkbox" name="checkprod" compteg-ischecked class="chk" onchange="checkdel('${data}')" />
+                                `;
+                },
+                orderable: false
+            },
+            { data: 'soa' },
+            { data: 'projet' },
+            { data: 'ref' },
+            { data: 'objet' },
+            { data: 'titulaire' },
+            { data: 'dateMandat' },
+            { data: 'compte' },
+            { data: 'pcop' },
+            { data: 'montant' },
+            { data: 'dateDEF' },
+            { data: 'dateTEF' },
+            { data: 'dateBE' },
+            { data: 'utilisateur' },
+            { data: 'dateGeneration' },
+            {
+                data: 'imputation',
+                render: function (_, _, row, _) {
+                    return `
+                                    <div onclick="modalD('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-danger elerfr"></i>
+                                    </div>
+                                `;
+                }
+            },
+            {
+                data: 'piecesJustificatives',
+                render: function (_, _, row, _) {
+                    return `
+                                    <div onclick="modalF('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-success elerfr"></i>
+                                    </div>
+                                `;
+                }
+            },
+            {
+                data: 'document',
+                render: function (_, _, row, _) {
+                    return `
+                                    <div onclick="modalLIAS('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-info elerfr"></i>
+                                    </div>
+                                `;
+                }
+            },
+            {
+                data: 'rejeter',
+                render: function (_, _, row, _) {
+                    return `
+                                    <div onclick="modalREJET('${row.id}')">
+                                        <i class="fa fa-times fa-lg text-dark elerfr"></i>
+                                    </div>
+                                `;
+                }
+            }
+        ],
+        createdRow: function (row, data, _) {
+            $(row).attr('compteG-id', data.id);
+            $(row).addClass('select-text');
+
+            if (data.isLATE) {
+                $(row).attr('style', "background-color: #FF7F7F !important;");
+            }
+        },
+        columnDefs: [
+            {
+                targets: [-4, -3, -2, -1]
+            }
+        ],
+        colReorder: {
+            enable: true,
+            fixedColumnsLeft: 1
+        },
+        deferRender: true,
+        dom: 'Bfrtip',
+        buttons: ['colvis'],
+        initComplete: function () {
+            $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
+        }
+    });
+}

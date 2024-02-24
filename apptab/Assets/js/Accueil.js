@@ -44,6 +44,12 @@ function GetTypeP() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             baseName = Datas;
@@ -78,6 +84,12 @@ function GetEtat() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             listEtat = Datas.data
@@ -119,6 +131,12 @@ function GetListCompG() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -172,6 +190,12 @@ function GetListCodeJournal() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -212,7 +236,7 @@ function GetAllProjectUser() {
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
-    
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/GetAllProjectUser',
@@ -220,11 +244,17 @@ function GetAllProjectUser() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             reglementresult = ``;
             reglementresult = Datas.data;
-            
+
             let listproject = ``;
 
             if (reglementresult.length) {
@@ -270,7 +300,7 @@ $(document).ready(() => {
     Origin = User.origin;
 
     $(`[data-id="username"]`).text(User.LOGIN);
-    
+
     GetAllProjectUser();
 });
 
@@ -358,6 +388,12 @@ $('[data-action="ChargerJs"]').click(function () {
             cache: false,
             contentType: false,
             processData: false,
+            beforeSend: function () {
+                loader.removeClass('display-none');
+            },
+            complete: function () {
+                loader.addClass('display-none');
+            },
             success: function (result) {
                 var Datas = JSON.parse(result);
 
@@ -376,12 +412,11 @@ $('[data-action="ChargerJs"]').click(function () {
 
                 if (Datas.type == "success") {
                     listResult = Datas.data;
-                    console.log(listResult)
 
                     const data = [];
 
                     $.each(listResult, function (_, v) {
-                       
+
                         data.push({
                             checkbox: '',
                             id: v.No,
@@ -395,7 +430,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             mon: v.Mon === null ? 'NULL' : v.Mon,
                             rang: v.Rang === null ? 'NULL' : v.Rang,
                             financementCategorie: v.FinancementCategorie === null ? 'NULL' : v.FinancementCategorie,
-                            commune: v.Commune ===null ? 'NULL' :v.Commune,
+                            commune: v.Commune === null ? 'NULL' : v.Commune,
                             plan: v.Plan6 === null ? 'NULL' : v.Plan6,
                             journal: v.Journal === null ? 'NULL' : v.Journal,
                             marche: v.Marche === null ? 'NULL' : v.Marche,
@@ -481,6 +516,12 @@ $('[data-action="ChargerJs"]').click(function () {
             cache: false,
             contentType: false,
             processData: false,
+            beforeSend: function () {
+                loader.removeClass('display-none');
+            },
+            complete: function () {
+                loader.addClass('display-none');
+            },
             success: function (result) {
                 var Datas = JSON.parse(result);
 
@@ -611,6 +652,7 @@ $('[data-action="GetElementChecked"]').click(function () {
     formData.append("auxi1", $('#auxi').val());
     formData.append("dateP", $('#Pay').val());
     formData.append("etat", $('#etat').val());
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/GetCheckedCompte',
@@ -618,6 +660,12 @@ $('[data-action="GetElementChecked"]').click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             $.each(listid, (k, v) => {
@@ -631,7 +679,6 @@ $('[data-action="GetElementChecked"]').click(function () {
 
 });
 
-//$(`[tab="autre"]`).hide();
 var baseName = "2";
 
 $(`[name="options"]`).on("change", (k, v) => {
