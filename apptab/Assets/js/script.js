@@ -29,21 +29,32 @@ function GetUR() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            /*console.log(Datas)*/
+
             if (Datas.type == "error") {
                 alert(Datas.msg);
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-                window.location = window.location.origin;
+
                 return;
             }
 
-            if(Datas.data)
-                $(`[data-io]`).css("display","none");
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+
+                window.location = window.location.origin;
+
+                return;
+            }
+
+            if (Datas.data) {
+                $(`[data-io]`).css("display", "none");
+            }
         },
         error: function () {
             alert("Problème de connexion. ");

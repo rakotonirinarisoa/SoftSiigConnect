@@ -38,6 +38,12 @@ function GetEtat() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             listEtat = Datas.data
@@ -81,6 +87,12 @@ function GetListCompG() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -96,7 +108,7 @@ function GetListCompG() {
             let code = ``;
             let codeAuxi = ``;
             ListCompteG = Datas.data;
-            
+
             $.each(ListCompteG, function (_, v) {
                 code += `
                     <option value="${v.COGE}">${v.COGE}</option>
@@ -141,7 +153,7 @@ function GetListCodeJournal() {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDSOCIETE);
     formData.append("codeproject", codeproject);
-    
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/GetCODEJournal',
@@ -149,6 +161,12 @@ function GetListCodeJournal() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -205,6 +223,12 @@ function getelementTXT(a) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             alert(Datas.data)
@@ -227,14 +251,15 @@ function getelementTXT(a) {
 }
 
 function GetAllProjectUser() {
-    
+
     let formData = new FormData();
     let codeproject = $("#Fproject").val();
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
-     formData.append("codeproject", codeproject);
+    formData.append("codeproject", codeproject);
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/GetAllProjectUser',
@@ -242,12 +267,21 @@ function GetAllProjectUser() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
+
             reglementresult = ``;
+
             reglementresult = Datas.data;
-            console.log(reglementresult);
+
             let listproject = ``;
+
             if (reglementresult.length) {
                 $.each(reglementresult, function (k, v) {
                     listproject += `<option value="${v.ID}">${v.PROJET}</option>`;
@@ -255,7 +289,7 @@ function GetAllProjectUser() {
             } else {
                 listproject += `<option value="${reglementresult.ID}" selected>${reglementresult.PROJET}</option>`;
             }
-           
+
             $("#Fproject").html(listproject);
             GetListCodeJournal();
             LoadValidate();
@@ -267,7 +301,7 @@ function GetAllProjectUser() {
 }
 
 function LoadValidate() {
-    
+
     let formData = new FormData();
     let codeproject = $("#Fproject").val();
     formData.append("codeproject", codeproject);
@@ -276,7 +310,7 @@ function LoadValidate() {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
     formData.append("suser.IDPROJET", User.IDPROJET);
-   
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/LoadValidateEcriture',
@@ -284,6 +318,12 @@ function LoadValidate() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             reglementresult = ``;
@@ -341,7 +381,7 @@ function LoadValidate() {
                 createdRow: function (row, data, _) {
                     $(row).attr('compteG-id', data.id);
                 },
-               
+
             });
         },
         error: function () {
@@ -350,14 +390,19 @@ function LoadValidate() {
     });
 }
 
-function exportTableToExcel(tableID, filename = 'RAS') {
-    var downloadLink;
-    var dataType = 'application/vnd.ms-excel';
-    var tableSelect = document.getElementById(tableID);
-    console.log(tableSelect);
-    console.log(tableID);
-    var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+function exportTableToExcel(filename = 'RAS') {
+    let downloadLink;
+
+    const dataType = 'application/vnd.ms-excel';
+
+    const tableID = 'TDB';
+
+    const tableSelect = document.getElementById(tableID);
+
+    const tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
     alert("OK");
+
     // Specify file name
     filename = filename ? filename + '.xls' : 'excel_data.xls';
 
@@ -365,11 +410,12 @@ function exportTableToExcel(tableID, filename = 'RAS') {
     downloadLink = document.createElement("a");
 
     document.body.appendChild(downloadLink);
-    if (confirm("Télécharger") == true) {
+    if (confirm("Voulez-vous le télécharger ?")) {
         if (navigator.msSaveOrOpenBlob) {
-            var blob = new Blob(['\ufeff', tableHTML], {
+            const blob = new Blob(['\ufeff', tableHTML], {
                 type: dataType
             });
+
             navigator.msSaveOrOpenBlob(blob, filename);
         } else {
             // Create a link to the file
@@ -382,7 +428,6 @@ function exportTableToExcel(tableID, filename = 'RAS') {
             downloadLink.click();
         }
     }
-
 }
 
 $(document).ready(() => {
@@ -394,11 +439,9 @@ $(document).ready(() => {
 
     //$(`[tab="autre"]`).hide();
 
-    /*console.log($(`[tab="autre"]`).hide());*/
-
     //GetUR();
     GetAllProjectUser();
-    
+
     //GetListCompG();
 });
 
@@ -429,7 +472,7 @@ $(document).on("click", "[data-target]", function () {
 
         $(`[data-type="switch_tab"]`).each(function (i) {
             if ($(this).hasClass('active')) {
-                
+
                 $(this).removeClass('active');
                 $(`#${$(this).attr("data-target")}`).hide();
             }
@@ -488,7 +531,7 @@ $('[data-action="ChargerJs"]').click(function () {
         formData.append("dateP", $('#Pay').val());
         formData.append("devise", false);
         formData.append("etat", $('#etat').val());
-        
+
         $.ajax({
             type: "POST",
             url: Origin + '/Home/EnvoyeValidatioF',
@@ -496,6 +539,12 @@ $('[data-action="ChargerJs"]').click(function () {
             cache: false,
             contentType: false,
             processData: false,
+            beforeSend: function () {
+                loader.removeClass('display-none');
+            },
+            complete: function () {
+                loader.addClass('display-none');
+            },
             success: function (result) {
                 var Datas = JSON.parse(result);
 
@@ -505,13 +554,13 @@ $('[data-action="ChargerJs"]').click(function () {
                 }
                 if (Datas.type == "login") {
                     alert(Datas.msg);
-    
+
                     return;
                 }
                 if (Datas.type == "success") {
                     ListResult = ``;
                     ListResult = Datas.data;
-                    console.log(ListResult);
+
                     const data = [];
 
                     $.each(ListResult, function (_, v) {
@@ -590,6 +639,12 @@ $('[data-action="ChargerJs"]').click(function () {
             cache: false,
             contentType: false,
             processData: false,
+            beforeSend: function () {
+                loader.removeClass('display-none');
+            },
+            complete: function () {
+                loader.addClass('display-none');
+            },
             success: function (result) {
                 var Datas = JSON.parse(result);
 
@@ -599,7 +654,7 @@ $('[data-action="ChargerJs"]').click(function () {
                 }
                 if (Datas.type == "login") {
                     alert(Datas.msg);
-    
+
                     return;
                 }
                 if (Datas.type == "success") {
@@ -627,7 +682,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             marche: v.Marche === null ? 'NULL' : v.Marche,
                         });
                     });
-        
+
                     if (table !== undefined) {
                         table.destroy();
                     }
@@ -695,6 +750,7 @@ $('[data-action="GetElementChecked"]').click(function () {
     formData.append("auxi1", $('#auxi').val());
     formData.append("dateP", $('#Pay').val());
     formData.append("etat", $('#etat').val());
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/ValidationsEcrituresF',
@@ -702,6 +758,12 @@ $('[data-action="GetElementChecked"]').click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             reglementresult = ``;
@@ -709,7 +771,7 @@ $('[data-action="GetElementChecked"]').click(function () {
             $.each(listid, (_, v) => {
                 $(`[compteG-id="${v}"]`).remove();
             });
-            
+
             $.each(listid, function (_, x) {
                 $.each(reglementresult, function (_, v) {
                     if (v != null) {
@@ -770,7 +832,7 @@ $('[data-action="GetElementChecked"]').click(function () {
             alert("Problème de connexion. ");
         }
     });
-  
+
 });
 
 $('[data-action="GetAnomalieListes"]').click(function () {
@@ -789,6 +851,12 @@ $('[data-action="GetAnomalieListes"]').click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 

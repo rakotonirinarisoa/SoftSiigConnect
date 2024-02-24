@@ -9,15 +9,15 @@ $(document).ready(() => {
     $(`[data-id="username"]`).text(User.LOGIN);
     GetListUser();
 
-    $(`[data-id="auth-list"]`).change(function(k,v){
+    $(`[data-id="auth-list"]`).change(function (k, v) {
         let val = $(this).val();
-        if(val == "0"){
+        if (val == "0") {
             $("#Connex").prop("disabled", true);
             $("#MDP").prop("disabled", true);
             $("#Connex").val("");
             $("#MDP").val("");
-        }else{
-            
+        } else {
+
             $("#Connex").prop("disabled", false);
             $("#MDP").prop("disabled", false);
         }
@@ -44,6 +44,12 @@ function GetListUser() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -80,17 +86,17 @@ $(`[data-id="connex"]`).click(function () {
 
     $("#base-container").hide();
 
-    if(!inst){
+    if (!inst) {
         alert("Veuillez renseigner l'instance. ");
         return;
     }
-    if($(`[data-id="auth-list"]`).val() == "1"){
-        if(!usr && !psw){
+    if ($(`[data-id="auth-list"]`).val() == "1") {
+        if (!usr && !psw) {
             alert("Veuillez renseigner les champs. ");
             return;
         }
     }
-    
+
     let formData = new FormData();
 
     formData.append("suser.LOGIN", User.LOGIN);
@@ -101,7 +107,7 @@ $(`[data-id="connex"]`).click(function () {
     formData.append("map.INSTANCE", inst);
     formData.append("map.CONNEXION", usr);
     formData.append("map.CONNEXPWD", psw);
-    formData.append("map.AUTH", auth); 
+    formData.append("map.AUTH", auth);
 
     $.ajax({
         type: "POST",
@@ -110,6 +116,12 @@ $(`[data-id="connex"]`).click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -167,6 +179,12 @@ function GetBASE(id) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -216,6 +234,12 @@ function GetMAPP() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -250,7 +274,7 @@ function GetMAPP() {
         error: function () {
             alert("Problème de connexion. ");
         }
-    }).done(function(result){
+    }).done(function (result) {
         var Datas = JSON.parse(result);
         GetBASE(Datas.data.BASED);
     });
@@ -285,6 +309,12 @@ $(`[data-action="UpdateMAPP"]`).click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 

@@ -26,7 +26,7 @@ $('#get-user-password-btn').on('click', () => {
         password: passwordInput.val(),
         userId: clickedId
     };
-    
+
     $.ajax({
         type: 'POST',
         async: true,
@@ -34,7 +34,12 @@ $('#get-user-password-btn').on('click', () => {
         contentType: 'application/json',
         datatype: 'json',
         data: JSON.stringify({ ...payload }),
-        
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             const res = JSON.parse(result);
             if (res.type === 'error') {

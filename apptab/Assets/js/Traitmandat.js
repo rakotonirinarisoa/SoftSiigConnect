@@ -1,6 +1,7 @@
 ﻿let User;
 let Origin;
 let compteur = 1;
+
 let table = undefined;
 
 $(document).ready(() => {
@@ -40,6 +41,12 @@ function GetListProjet() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -111,6 +118,12 @@ $('[data-action="GenereR"]').click(async function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -263,9 +276,14 @@ function GetListLOADOTHER() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -360,7 +378,7 @@ function GetListLOADOTHER() {
                                     </div>
                                 `;
                             }
-                        } 
+                        }
                     ],
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
@@ -418,6 +436,12 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -547,7 +571,7 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
 
 $('[data-action="SaveV"]').click(function () {
     let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
-    
+
     let list = [];
     $.each(CheckList, (k, v) => {
         list.push($(v).attr("compteG-id"));
@@ -557,7 +581,7 @@ $('[data-action="SaveV"]').click(function () {
         alert("Veuillez sélectionner au moins un mandat afin de l'enregistrer et l'envoyer pour validation. ");
         return;
     }
-    
+
     let formData = new FormData();
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
@@ -578,6 +602,12 @@ $('[data-action="SaveV"]').click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             alert(Datas.msg);
@@ -626,6 +656,12 @@ $('[data-action="SaveSIIG"]').click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             alert(Datas.msg);

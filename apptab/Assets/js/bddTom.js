@@ -32,6 +32,12 @@ function GetListInstance() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -62,7 +68,7 @@ function GetListInstance() {
             $(`input[data-id="${Datas.data.actual.TYPE}"`).click()
         },
         error: function (e) {
-            alert("Problème de connexion. ");
+            alert("Problï¿½me de connexion. ");
         }
     }).done(function (x) {
         GetDB($(`#Instance`).val(), true);
@@ -78,8 +84,8 @@ function GetDB(id, test) {
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
-
     formData.append("instance", id);
+
     $.ajax({
         type: "POST",
         url: urlOrigin + '/DBaseTOM/GetBase',
@@ -87,6 +93,12 @@ function GetDB(id, test) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -112,7 +124,7 @@ function GetDB(id, test) {
                 $(`#DataBase`).val(Datas.data.mydb);
         },
         error: function (e) {
-            alert("Problème de connexion. ");
+            alert("Problï¿½me de connexion. ");
         }
     });
 }
@@ -135,6 +147,12 @@ $("#save").click(() => {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -148,11 +166,11 @@ $("#save").click(() => {
                 return;
             }
 
-            alert("Enregistrement avec succès");
+            alert("Enregistrement avec succï¿½s");
             window.location.reload();
         },
         error: function (e) {
-            alert("Problème de connexion.");
+            alert("Problï¿½me de connexion.");
         }
     });
 });

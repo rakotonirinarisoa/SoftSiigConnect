@@ -38,6 +38,12 @@ function GetEtat() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             listEtat = Datas.data
@@ -83,9 +89,14 @@ function ChargeLoad() {
             cache: false,
             contentType: false,
             processData: false,
+            beforeSend: function () {
+                loader.removeClass('display-none');
+            },
+            complete: function () {
+                loader.addClass('display-none');
+            },
             success: function (result) {
                 var Datas = JSON.parse(result);
-                console.log(Datas.data);
 
                 if (Datas.type == "error") {
                     alert(Datas.msg);
@@ -98,7 +109,7 @@ function ChargeLoad() {
                 }
                 if (Datas.type == "success") {
                     listResult = Datas.data;
-                    console.log(listResult);
+
                     const data = [];
 
                     $.each(listResult, function (k, v) {
@@ -126,8 +137,6 @@ function ChargeLoad() {
                     if (table !== undefined) {
                         table.destroy();
                     }
-
-                    console.log(data);
 
                     table = $('#TDB_OPA').DataTable({
                         data,
@@ -211,9 +220,14 @@ function ChargeLoad() {
             cache: false,
             contentType: false,
             processData: false,
+            beforeSend: function () {
+                loader.removeClass('display-none');
+            },
+            complete: function () {
+                loader.addClass('display-none');
+            },
             success: function (result) {
                 var Datas = JSON.parse(result);
-                console.log(Datas);
 
                 if (Datas.type == "error") {
                     alert(Datas.msg);
@@ -283,9 +297,14 @@ function GetListCodeJournal() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -327,6 +346,7 @@ function GetAllProjectUser() {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
     formData.append("codeproject", codeproject);
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/GetAllProjectUser',
@@ -334,12 +354,19 @@ function GetAllProjectUser() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             reglementresult = ``;
             reglementresult = Datas.data;
-            console.log(reglementresult);
+
             let listproject = ``;
+
             if (reglementresult.length) {
                 $.each(reglementresult, function (k, v) {
                     listproject += `<option value="${v.ID}">${v.PROJET}</option>`;
@@ -360,7 +387,7 @@ function GetAllProjectUser() {
 
 function FillAUXI() {
     var list = ListCompteG.filter(x => x.COGE == $(`[compG-list]`).val()).pop();
-    console.log(list);
+
     let code = `<option value="Tous"> Tous</option> `;
     $.each(list.AUXI, function (k, v) {
         code += `
@@ -393,9 +420,14 @@ function GetListCompG() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -448,9 +480,14 @@ function modalREJET(id) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -510,9 +547,14 @@ function AcceptRefuser() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             listResultAnomalie = "";
             contentAnomalies = ``;
@@ -575,9 +617,8 @@ $(document).on("click", "[data-target]", function () {
 
         $(`[data-type="switch_tab"]`).each(function (i) {
             if ($(this).hasClass('active')) {
-
-                console.log($(this));
                 $(this).removeClass('active');
+
                 $(`#${$(this).attr("data-target")}`).hide();
             }
         });
@@ -616,17 +657,17 @@ $('[data-action="ChargerJs"]').click(function () {
     let dateP = $('#Pay').val();
     let etat = $('#etat').val();
     if (baseName == 2) {
-       // compta
-        formData.append("datein", !datein ? '' : datein );
+        // compta
+        formData.append("datein", !datein ? '' : datein);
         formData.append("dateout", !dateout ? '' : dateout);
         formData.append("journal", !journal ? '' : journal);
         formData.append("comptaG", !comptaG ? '' : comptaG)
-        formData.append("auxi",!auxi ? '' : auxi );
+        formData.append("auxi", !auxi ? '' : auxi);
         formData.append("auxi1", !auxi ? '' : auxi);
         formData.append("dateP", !dateP ? '' : dateP);
         formData.append("devise", false);
         formData.append("etat", !etat ? '' : etat);
-        
+
         $.ajax({
             type: "POST",
             url: Origin + '/Home/GetElementAvalider',
@@ -634,6 +675,12 @@ $('[data-action="ChargerJs"]').click(function () {
             cache: false,
             contentType: false,
             processData: false,
+            beforeSend: function () {
+                loader.removeClass('display-none');
+            },
+            complete: function () {
+                loader.addClass('display-none');
+            },
             success: function (result) {
                 var Datas = JSON.parse(result);
 
@@ -649,7 +696,6 @@ $('[data-action="ChargerJs"]').click(function () {
                 if (Datas.type == "success") {
                     listResult = Datas.data;
 
-                    console.log(listResult);
                     const data = [];
 
                     $.each(listResult, function (_, v) {
@@ -760,9 +806,14 @@ $('[data-action="ChargerJs"]').click(function () {
             cache: false,
             contentType: false,
             processData: false,
+            beforeSend: function () {
+                loader.removeClass('display-none');
+            },
+            complete: function () {
+                loader.addClass('display-none');
+            },
             success: function (result) {
                 var Datas = JSON.parse(result);
-                console.log(Datas);
 
                 if (Datas.type == "error") {
                     alert(Datas.msg);
@@ -873,7 +924,7 @@ $('[data-action="GetElementChecked"]').click(function () {
     });
 
     let formData = new FormData();
-    console.log(list);
+
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
@@ -894,11 +945,11 @@ $('[data-action="GetElementChecked"]').click(function () {
     let listid = list.splice(',');
 
     formData.append("datein", datein);
-    formData.append("dateout",dateout);
-    formData.append("journal",journal);
+    formData.append("dateout", dateout);
+    formData.append("journal", journal);
     formData.append("comptaG", comptaG)
-    formData.append("auxi",auxi);
-    formData.append("auxi1",auxi);
+    formData.append("auxi", auxi);
+    formData.append("auxi1", auxi);
     formData.append("dateP", dateP);
     formData.append("devise", false);
     formData.append("etat", etat);
@@ -925,7 +976,7 @@ $('[data-action="GetElementChecked"]').click(function () {
             alert("Problème de connexion. ");
         }
     });
-  
+
 });
 
 $('[data-action="GetAnomalieListes"]').click(function () {
@@ -944,9 +995,14 @@ $('[data-action="GetAnomalieListes"]').click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             listResultAnomalie = "";
             contentAnomalies = ``;

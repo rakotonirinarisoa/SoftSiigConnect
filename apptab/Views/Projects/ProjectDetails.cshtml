@@ -5,7 +5,8 @@
         <div class="input-group-prepend custom-label">
             <span class="input-group-text text-bold" id="inputGroup-sizing-default">Intitulé</span>
         </div>
-        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="title" value="@ViewData["Title"]" autofocus />
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+            id="title" value="@ViewData["Title"]" autofocus />
     </div>
 </div>
 
@@ -63,6 +64,12 @@
             contentType: 'application/json',
             datatype: 'json',
             data: JSON.stringify({ ...payload }),
+            beforeSend: function () {
+                loader.removeClass('display-none');
+            },
+            complete: function () {
+                loader.addClass('display-none');
+            },
             success: function () {
                 successfulRedirect();
             },

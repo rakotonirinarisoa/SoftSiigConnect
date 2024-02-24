@@ -9,7 +9,7 @@ $(document).ready(() => {
     $(`[data-id="username"]`).text(User.LOGIN);
     GetListUser();
 
-    
+
 });
 
 function GetListUser() {
@@ -27,6 +27,12 @@ function GetListUser() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -41,7 +47,7 @@ function GetListUser() {
             }
 
             $(`[data-id="ubody"]`).text("");
-            
+
             var code = ``;
             $.each(Datas.data, function (k, v) {
 
@@ -478,7 +484,7 @@ function SavePRIV(id) {
     formData.append("privilege.MT0", $(`input[name="droneMT0${id}"]:checked`).val());
     formData.append("privilege.MT1", $(`input[name="droneMT1${id}"]:checked`).val());
     formData.append("privilege.MT2", $(`input[name="droneMT2${id}"]:checked`).val());
-    
+
     formData.append("privilege.MP1", $(`input[name="droneMP1${id}"]:checked`).val());
     formData.append("privilege.MP2", $(`input[name="droneMP2${id}"]:checked`).val());
     formData.append("privilege.MP3", $(`input[name="droneMP3${id}"]:checked`).val());
@@ -495,7 +501,7 @@ function SavePRIV(id) {
     formData.append("privilege.TDB0", $(`input[name="droneTDB0${id}"]:checked`).val());
 
     formData.append("privilege.GED", $(`input[name="droneGED${id}"]:checked`).val());
-    
+
     $.ajax({
         type: "POST",
         url: Origin + '/Privilege/AddPRIVILEGE',
@@ -503,6 +509,12 @@ function SavePRIV(id) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -521,6 +533,3 @@ function SavePRIV(id) {
         },
     });
 }
-
-
-
