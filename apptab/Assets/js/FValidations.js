@@ -182,6 +182,7 @@ function GetListCodeJournal() {
         GetListCompG();
     });
 }
+//==============================================================================================Get text===================================================================================
 
 function getelementTXT(a) {
     let formData = new FormData();
@@ -225,6 +226,7 @@ function getelementTXT(a) {
         }
     });
 }
+//==============================================================================================Get All Project===================================================================================
 
 function GetAllProjectUser() {
     
@@ -265,6 +267,7 @@ function GetAllProjectUser() {
         }
     });
 }
+//==============================================================================================Load Page===================================================================================
 
 function LoadValidate() {
     
@@ -355,6 +358,7 @@ function LoadValidate() {
         }
     });
 }
+//==============================================================================================Export EXCEL===================================================================================
 
 function exportTableToExcel(tableID, filename = 'RAS') {
     var downloadLink;
@@ -396,15 +400,8 @@ $(document).ready(() => {
     Origin = User.origin;
 
     $(`[data-id="username"]`).text(User.LOGIN);
-
-    //$(`[tab="autre"]`).hide();
-
-    /*console.log($(`[tab="autre"]`).hide());*/
-
-    //GetUR();
-    GetAllProjectUser();
     
-    //GetListCompG();
+    GetAllProjectUser();
 });
 
 $(document).on("change", "[compG-list]", () => {
@@ -471,6 +468,7 @@ $('.Checkall').change(function () {
         $('[compteg-ischecked]').prop("checked", false);
     }
 });
+//==============================================================================================ChargeJs===================================================================================
 
 $('[data-action="ChargerJs"]').click(function () {
     let formData = new FormData();
@@ -687,6 +685,7 @@ $('[data-action="ChargerJs"]').click(function () {
         });
     }
 });
+//==============================================================================================Checked===================================================================================
 
 $('[data-action="GetElementChecked"]').click(function () {
     let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
@@ -789,6 +788,7 @@ $('[data-action="GetElementChecked"]').click(function () {
     });
   
 });
+//==============================================================================================Anomalie===================================================================================
 
 $('[data-action="GetAnomalieListes"]').click(function () {
 

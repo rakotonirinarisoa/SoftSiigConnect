@@ -270,15 +270,8 @@ $(document).ready(() => {
     Origin = User.origin;
 
     $(`[data-id="username"]`).text(User.LOGIN);
-
-    //$(`[tab="autre"]`).hide();
-
-    /*console.log($(`[tab="autre"]`).hide());*/
+    
     GetAllProjectUser();
-    //GetTypeP();
-    //GetUR();
-    //GetListCodeJournal();
-    //GetListCompG();
 });
 
 $(document).on("change", "[code-project]", () => {
@@ -318,22 +311,6 @@ $(document).on("click", "[data-target]", function () {
 
     }
 });
-
-$(`[data-action="CreateTxt"]`).click(function () {
-    getelementTXT(0);
-})
-
-$(`[data-action="CreateTxtCrypter"]`).click(function () {
-    getelementTXT(1);
-})
-
-$(`[data-action="CreateTxtSend"]`).click(function () {
-    getelementTXT(2);
-})
-
-$(`[data-action="CreateTxtFTPCrypter"]`).click(function () {
-    getelementTXT(3);
-})
 
 $('.Checkall').change(function () {
 
@@ -604,6 +581,7 @@ $('[data-action="ChargerJs"]').click(function () {
         $('.afb160').empty()
     }
 });
+//==============================================================================================CHECK===================================================================================
 
 $('[data-action="GetElementChecked"]').click(function () {
     let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
@@ -652,115 +630,6 @@ $('[data-action="GetElementChecked"]').click(function () {
     });
 
 });
-
-$('[data-action="GetAnomalieListes"]').click(function () {
-
-    let formData = new FormData();
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
-    formData.append("baseName", baseName);
-
-    $.ajax({
-        type: "POST",
-        url: Origin + '/Home/GetAnomalieBack',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (result) {
-            var Datas = JSON.parse(result);
-
-            listResultAnomalie = "";
-            contentAnomalies = ``;
-
-            if (Datas.type == "error") {
-                alert(Datas.msg);
-
-                return;
-            }
-
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-
-                return;
-            }
-
-            if (Datas.type == "success") {
-                listResultAnomalie = Datas.data;
-
-                $.each(listResultAnomalie, function (_, v) {
-                    contentAnomalies += `<tr compteG-id="${v.No}">
-                        <td>
-                            <input type="checkbox" name = "checkprod" compteg-ischecked/>
-                        </td><td>${v.No}</td>
-                        <td>${v.DateOrdre}</td>
-                        <td>${v.NoPiece}</td>
-                        <td>${v.Compte}</td>
-                        <td>${v.Libelle}</td>
-                        <td>${v.Debit}</td>
-                        <td>${v.Credit}</td>
-                        <td>${v.MontantDevise}</td>
-                        <td>${v.Mon}</td>
-                        <td>${v.Rang}</td>
-                        <td>${v.FinancementCategorie}</td>
-                        <td>${v.Commune}</td>
-                        <td>${v.Plan6}</td>
-                        <td>${v.Journal}</td>
-                        <td>${v.Marche}</td>
-                    </tr>`
-
-                });
-
-                $('.anomalieslist').html(contentAnomalies);
-            }
-        },
-        error: function () {
-            alert("Problème de connexion. ");
-        }
-    });
-})
-
-function getelementTXT(a) {
-
-    let formData = new FormData();
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.ID", User.ID);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
-    formData.append("baseName", baseName);
-    formData.append("codeJ", $('#commercial').val());
-    formData.append("devise", false);
-    formData.append("intbasetype", a);
-    $.ajax({
-        type: "POST",
-        url: Origin + '/Home/CreateZipFile',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (result) {
-            var Datas = JSON.parse(result);
-            alert(Datas.data)
-            if (Datas.type == "error") {
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-                window.location = window.location.origin;
-                return;
-            }
-
-            window.location = '/Home/GetFile?file=' + Datas.data;
-
-        },
-        error: function () {
-            alert("Problème de connexion. ");
-        }
-    });
-}
 
 //$(`[tab="autre"]`).hide();
 var baseName = "2";
