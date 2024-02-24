@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using System.Net.Mail;
+using Extensions.DateTime;
+using System.Data.Entity.Infrastructure;
 
 namespace apptab.Controllers
 {
@@ -340,7 +342,9 @@ namespace apptab.Controllers
             {
                 int crpt = iProjet;
 
-                SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
+                int retarDate = 0;
+                if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null))
+                    retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELTV.Value;
 
                 //Check si le projet est mappé à une base de données TOM²PRO//
                 if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
@@ -350,6 +354,7 @@ namespace apptab.Controllers
                 SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
                 List<DATATRPROJET> list = new List<DATATRPROJET>();
+                //List<DATATRPROJET> listORDER = new List<DATATRPROJET>();
 
                 if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 0) != null)
                 {
@@ -362,6 +367,10 @@ namespace apptab.Controllers
                                    {
                                        soas.SOA
                                    });
+
+                        bool isLate = false;
+                        if (x.DATECRE.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                            isLate = true;
 
                         list.Add(new DATATRPROJET
                         {
@@ -379,12 +388,14 @@ namespace apptab.Controllers
                             LIEN = db.SI_USERS.FirstOrDefault(a => a.ID == x.IDUSERCREATE).LOGIN,
                             DATECREATION = x.DATECRE.Value.Date,
                             SOA = soa.FirstOrDefault().SOA,
-                            PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                            PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                            isLATE = isLate
                         });
                     }
+                    //listORDER = list.OrderByDescending(a => a.isLATE).ToList();
                 }
 
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list.OrderByDescending(a => a.isLATE).ToList() }, settings));
             }
             catch (Exception e)
             {
