@@ -1,5 +1,5 @@
 function formatCurrency(amount) {
-    return new Intl.NumberFormat("fr-FR").format(amount).replace(',', '.');
+    return new Intl.NumberFormat("fr-FR").format(amount);
 }
 
 function formatDate(date) {

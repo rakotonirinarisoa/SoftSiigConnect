@@ -3,151 +3,27 @@ let Origin;
 let compteur = 1;
 let table = undefined;
 
+$(document).ready(() => {
+    User = JSON.parse(sessionStorage.getItem("user"));
+    if (User == null || User === "undefined") window.location = User.origin;
+    Origin = User.origin;
+
+    $(`[data-id="username"]`).text(User.LOGIN);
+
+    GetListProjet();
+
+    $(`[data-widget="pushmenu"]`).on('click', () => {
+        $(`[data-action="SaveV"]`).toggleClass('custom-fixed-btn');
+    });
+});
+
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
 
-function GetListLOADOTHER() {
-    let formData = new FormData();
-
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDPROJET", User.IDSOCIETE);
-
-    formData.append("iProjet", $("#proj").val());
-
-    $.ajax({
-        type: "POST",
-        url: Origin + '/Traitement/GenerationSIIGLOADOTHER',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (result) {
-            var Datas = JSON.parse(result);
-            console.log(Datas);
-
-            if (Datas.type == "error") {
-                alert(Datas.msg);
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-                window.location = window.location.origin;
-                return;
-            }
-
-            if (Datas.type == "success") {
-                listResult = Datas.data;
-
-                const data = [];
-
-                $.each(listResult, function (k, v) {
-                    data.push({
-                        id: v.No,
-                        soa: v.SOA,
-                        projet: v.PROJET,
-                        ref: v.REF,
-                        objet: v.OBJ,
-                        titulaire: v.TITUL,
-                        dateMandat: formatDate(v.DATE),
-                        compte: v.COMPTE,
-                        pcop: v.PCOP,
-                        montant: formatCurrency(String(v.MONT)),
-                        dateDEF: formatDate(v.DATEDEF),
-                        dateTEF: formatDate(v.DATETEF),
-                        dateBE: formatDate(v.DATEBE),
-                        imputation: '',
-                        piecesJustificatives: '',
-                        document: ''
-                    });
-                });
-
-                if (table !== undefined) {
-                    table.destroy();
-                }
-
-                table = $('#TBD_PROJET').DataTable({
-                    data,
-                    columns: [
-                        {
-                            data: 'id',
-                            render: function (data, _, _, _) {
-                                return `
-                                    <input type="checkbox" name="checkprod" compteg-ischecked class="chk" onchange="checkdel('${data}')" />
-                                `;
-                            },
-                            orderable: false
-                        },
-                        { data: 'soa' },
-                        { data: 'projet' },
-                        { data: 'ref' },
-                        { data: 'objet' },
-                        { data: 'titulaire' },
-                        { data: 'dateMandat' },
-                        { data: 'compte' },
-                        { data: 'pcop' },
-                        { data: 'montant' },
-                        { data: 'dateDEF' },
-                        { data: 'dateTEF' },
-                        { data: 'dateBE' },
-                        {
-                            data: 'imputation',
-                            render: function (_, _, row, _) {
-                                return `
-                                    <div onclick="modalD('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-danger"></i>
-                                    </div>
-                                `;
-                            }
-                        },
-                        {
-                            data: 'piecesJustificatives',
-                            render: function (_, _, row, _) {
-                                return `
-                                    <div onclick="modalF('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-danger"></i>
-                                    </div>
-                                `;
-                            }
-                        },
-                        {
-                            data: 'document',
-                            render: function (_, _, row, _) {
-                                return `
-                                    <div onclick="modalLIAS('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-danger"></i>
-                                    </div>
-                                `;
-                            }
-                        } 
-                    ],
-                    createdRow: function (row, _, _) {
-                        $(row).addClass('select-text');
-                    },
-                    columnDefs: [
-                        {
-                            targets: [-3, -2, -1],
-                            className: 'elerfr'
-                        }
-                    ],
-                    colReorder: {
-                        enable: true,
-                        fixedColumnsLeft: 1
-                    },
-                    deferRender: true,
-                    initComplete: function () {
-                        $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
-                    }
-                });
-            }
-        },
-        error: function () {
-            alert("Problème de connexion. ");
-        }
-    });
-}
+$('#proj').on('change', () => {
+    GetListLOADOTHER();
+});
 
 function GetListProjet() {
     let formData = new FormData();
@@ -200,27 +76,316 @@ function GetListProjet() {
     })
 }
 
-$(document).ready(() => {
-    User = JSON.parse(sessionStorage.getItem("user"));
-    if (User == null || User === "undefined") window.location = User.origin;
-    Origin = User.origin;
+//GENERER//
+$('[data-action="GenereR"]').click(async function () {
+    let dd = $("#dateD").val();
+    let df = $("#dateF").val();
+    if (!dd || !df) {
+        alert("Veuillez renseigner les dates afin de générer les mandats. ");
+        return;
+    }
 
-    $(`[data-id="username"]`).text(User.LOGIN);
+    let pr = $("#proj").val();
+    if (!pr) {
+        alert("Veuillez sélectionner au moins un projet. ");
+        return;
+    }
 
-    GetListProjet();
+    let formData = new FormData();
+    //alert(baseName);
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDSOCIETE);
 
-    $(`[data-widget="pushmenu"]`).on('click', () => {
-        $(`[data-action="SaveV"]`).toggleClass('custom-fixed-btn');
+    formData.append("DateDebut", $('#dateD').val());
+    formData.append("DateFin", $('#dateF').val());
+
+    formData.append("iProjet", $("#proj").val());
+
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: Origin + '/Traitement/Generation',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "PEtat") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "Prese") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+            if (Datas.type == "success") {
+                listResult = Datas.data;
+
+                const data = [];
+
+                $.each(listResult, function (k, v) {
+                    data.push({
+                        id: v.No,
+                        soa: v.SOA,
+                        projet: v.PROJET,
+                        ref: v.REF,
+                        objet: v.OBJ,
+                        titulaire: v.TITUL,
+                        dateMandat: formatDate(v.DATE),
+                        compte: v.COMPTE,
+                        pcop: v.PCOP,
+                        montant: formatCurrency(String(v.MONT).replace(",", ".")),
+                        dateDEF: formatDate(v.DATEDEF),
+                        dateTEF: formatDate(v.DATETEF),
+                        dateBE: formatDate(v.DATEBE),
+                        imputation: '',
+                        piecesJustificatives: '',
+                        document: ''
+                    });
+                });
+
+                if (table !== undefined) {
+                    table.destroy();
+                }
+
+                table = $('#TBD_PROJET').DataTable({
+                    data,
+                    columns: [
+                        {
+                            data: 'id',
+                            render: function (data, _, _, _) {
+                                return `
+                                    <input type="checkbox" name="checkprod" compteg-ischecked class="chk" onchange="checkdel('${data}')" />
+                                `;
+                            },
+                            orderable: false
+                        },
+                        { data: 'soa' },
+                        { data: 'projet' },
+                        { data: 'ref' },
+                        { data: 'objet' },
+                        { data: 'titulaire' },
+                        { data: 'dateMandat' },
+                        { data: 'compte' },
+                        { data: 'pcop' },
+                        { data: 'montant' },
+                        { data: 'dateDEF' },
+                        { data: 'dateTEF' },
+                        { data: 'dateBE' },
+                        {
+                            data: 'imputation',
+                            render: function (_, _, row, _) {
+                                return `
+                                    <div onclick="modalD('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-danger"></i>
+                                    </div>
+                                `;
+                            }
+                        },
+                        {
+                            data: 'piecesJustificatives',
+                            render: function (_, _, row, _) {
+                                return `
+                                    <div onclick="modalF('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-success"></i>
+                                    </div>
+                                `;
+                            }
+                        },
+                        {
+                            data: 'document',
+                            render: function (_, _, row, _) {
+                                return `
+                                    <div onclick="modalLIAS('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-info"></i>
+                                    </div>
+                                `;
+                            }
+                        }
+                    ],
+                    createdRow: function (row, _, _) {
+                        $(row).addClass('select-text');
+                    },
+                    columnDefs: [
+                        {
+                            targets: [-3, -2, -1]
+                        }
+                    ],
+                    colReorder: {
+                        enable: true,
+                        fixedColumnsLeft: 1
+                    },
+                    deferRender: true,
+                    dom: 'Bfrtip',
+                    buttons: ['colvis'],
+                    initComplete: function () {
+                        $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
+                    }
+                });
+            }
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
     });
 });
 
-$('#proj').on('change', () => {
-    $('.afb160Paie').html('');
-    $('.traitementORDSEC').html('');
-    $('.traitementORDSECOTHER').html('');
 
-    GetListLOADOTHER();
-});
+function GetListLOADOTHER() {
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDSOCIETE);
+
+    formData.append("iProjet", $("#proj").val());
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Traitement/GenerationSIIGLOADOTHER',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (result) {
+            var Datas = JSON.parse(result);
+            console.log(Datas);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+
+            if (Datas.type == "success") {
+                listResult = Datas.data;
+
+                const data = [];
+
+                $.each(listResult, function (k, v) {
+                    data.push({
+                        id: v.No,
+                        soa: v.SOA,
+                        projet: v.PROJET,
+                        ref: v.REF,
+                        objet: v.OBJ,
+                        titulaire: v.TITUL,
+                        dateMandat: formatDate(v.DATE),
+                        compte: v.COMPTE,
+                        pcop: v.PCOP,
+                        montant: formatCurrency(String(v.MONT).replace(",", ".")),
+                        dateDEF: formatDate(v.DATEDEF),
+                        dateTEF: formatDate(v.DATETEF),
+                        dateBE: formatDate(v.DATEBE),
+                        imputation: '',
+                        piecesJustificatives: '',
+                        document: ''
+                    });
+                });
+
+                if (table !== undefined) {
+                    table.destroy();
+                }
+
+                table = $('#TBD_PROJET_OTHER').DataTable({
+                    data,
+                    columns: [
+                        {
+                            data: 'id',
+                            render: function (data, _, _, _) {
+                                return `
+                                    <input type="checkbox" name="checkprod" compteg-ischecked class="chk" onchange="checkdel('${data}')" />
+                                `;
+                            },
+                            orderable: false
+                        },
+                        { data: 'soa' },
+                        { data: 'projet' },
+                        { data: 'ref' },
+                        { data: 'objet' },
+                        { data: 'titulaire' },
+                        { data: 'dateMandat' },
+                        { data: 'compte' },
+                        { data: 'pcop' },
+                        { data: 'montant' },
+                        { data: 'dateDEF' },
+                        { data: 'dateTEF' },
+                        { data: 'dateBE' },
+                        {
+                            data: 'imputation',
+                            render: function (_, _, row, _) {
+                                return `
+                                    <div onclick="modalD('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-danger"></i>
+                                    </div>
+                                `;
+                            }
+                        },
+                        {
+                            data: 'piecesJustificatives',
+                            render: function (_, _, row, _) {
+                                return `
+                                    <div onclick="modalF('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-success"></i>
+                                    </div>
+                                `;
+                            }
+                        },
+                        {
+                            data: 'document',
+                            render: function (_, _, row, _) {
+                                return `
+                                    <div onclick="modalLIAS('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-info"></i>
+                                    </div>
+                                `;
+                            }
+                        } 
+                    ],
+                    createdRow: function (row, _, _) {
+                        $(row).addClass('select-text');
+                    },
+                    columnDefs: [
+                        {
+                            targets: [-3, -2, -1]
+                        }
+                    ],
+                    colReorder: {
+                        enable: true,
+                        fixedColumnsLeft: 1
+                    },
+                    deferRender: true,
+                    dom: 'Bfrtip',
+                    buttons: ['colvis'],
+                    initComplete: function () {
+                        $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
+                    }
+                });
+            }
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
 
 $('[data-action="GenereSIIGOTHER"]').click(function () {
     let dd = $("#dateD").val();
@@ -280,7 +445,7 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                         dateMandat: formatDate(v.DATE),
                         compte: v.COMPTE,
                         pcop: v.PCOP,
-                        montant: formatCurrency(String(v.MONT)),
+                        montant: formatCurrency(String(v.MONT).replace(",", ".")),
                         dateDEF: formatDate(v.DATEDEF),
                         dateTEF: formatDate(v.DATETEF),
                         dateBE: formatDate(v.DATEBE),
@@ -294,7 +459,7 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                     table.destroy();
                 }
 
-                table = $('#TBD_PROJET').DataTable({
+                table = $('#TBD_PROJET_OTHER').DataTable({
                     data,
                     columns: [
                         {
@@ -333,7 +498,7 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                             render: function (_, _, row, _) {
                                 return `
                                     <div onclick="modalF('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-danger"></i>
+                                        <i class="fa fa-tags fa-lg text-success"></i>
                                     </div>
                                 `;
                             }
@@ -343,7 +508,7 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                             render: function (_, _, row, _) {
                                 return `
                                     <div onclick="modalLIAS('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-danger"></i>
+                                        <i class="fa fa-tags fa-lg text-info"></i>
                                     </div>
                                 `;
                             }
@@ -354,8 +519,7 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                     },
                     columnDefs: [
                         {
-                            targets: [-3, -2, -1],
-                            className: 'elerfr'
+                            targets: [-3, -2, -1]
                         }
                     ],
                     colReorder: {
@@ -363,6 +527,8 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                         fixedColumnsLeft: 1
                     },
                     deferRender: true,
+                    dom: 'Bfrtip',
+                    buttons: ['colvis'],
                     initComplete: function () {
                         $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
                     }
