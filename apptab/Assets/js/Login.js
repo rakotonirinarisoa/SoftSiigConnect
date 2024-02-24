@@ -1,9 +1,6 @@
 ﻿const urlOrigin = window.location.href;
-//let urlOrigin = "http://softwell.cloud/OPAVI";
 
-$(document).ready(() => {
-    //GetFileUrlOrgF();
-});
+const loader = $('#loader');
 
 function GetFileUrlOrgF() {
     let formData = new FormData();
