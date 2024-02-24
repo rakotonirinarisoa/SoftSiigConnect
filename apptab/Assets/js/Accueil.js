@@ -399,47 +399,29 @@ $('[data-action="ChargerJs"]').click(function () {
 
                 if (Datas.type == "success") {
                     listResult = Datas.data;
+                    console.log(listResult)
 
                     const data = [];
 
                     $.each(listResult, function (_, v) {
-                        //data.push({
-                        //    checkbox: '',
-                        //    id: v.No ,
-                        //    dateOrdre: v.DateOrdre === '' ? '0' : v.DateOrdre,
-                        //    noPiece: v.NoPiece === '' ? '1' : v.NoPiece,
-                        //    compte: v.Compte === '' ? '1' : v.Compte,
-                        //    debit: v.Debit === undefined ? '' : v.Debit,
-                        //    credit: v.Credit === undefined ? '' : v.Credit,
-                        //    montantDevise: v.MontantDevise === '' ? '0000' : v.MontantDevise,
-                        //    mon: v.Mon === undefined ? '' : v.Mon,
-                        //    rang: v.Rang === undefined ? '' :  v.Rang,
-                        //    financementCategorie: v.FinancementCategorie === undefined ? '' : v.FinancementCategorie,
-                        //    commune: v.Commune === undefined ? '' : v.Commune,
-                        //    plan: v.Plan6 === undefined ? '' : v.Plan6 ,
-                        //    journal: v.Journal === undefined ? '' : v.Journal,
-                        //    marche: v.Marche === undefined ? '' : v.Marche,
-                        //    status: v.Status === undefined ? '' : v.Status
-                        //});
-
+                       
                         data.push({
                             checkbox: '',
                             id: v.No,
-                            dateOrdre: v.DateOrdre === '' ? '0' : v.DateOrdre,
-                            noPiece: v.NoPiece === '' ? '1' : v.NoPiece,
-                            compte: v.Compte === '' ? '1' : v.Compte,
-                            debit: v.Debit === undefined ? '' : v.Debit,
-                            credit: v.Credit === undefined ? '' : v.Credit,
-                            montantDevise: v.MontantDevise === '' ? '0000' : v.MontantDevise,
-                            mon: v.Mon === undefined ? '' : v.Mon,
-                            rang: v.Rang === undefined ? '' : v.Rang,
-                            poste: v.Poste === undefined ? '' : v.Poste,
-                            financementCategorie: v.FinancementCategorie === undefined ? '' : v.FinancementCategorie,
-                            commune: 'gg',
-                            plan: v.Plan6 === undefined ? '' : v.Plan6,
-                            journal: v.Journal === undefined ? '' : v.Journal,
-                            marche: v.Marche === undefined ? '' : v.Marche,
-                            status: v.Status === undefined ? '' : v.Status
+                            dateOrdre: v.DateOrdre === null ? 'NULL' : v.DateOrdre,
+                            noPiece: v.NoPiece === null ? 'NULL' : v.NoPiece,
+                            compte: v.Compte === null ? 'NULL' : v.Compte,
+                            libelle: v.Libelle === null ? 'NULL' : v.Libelle,
+                            debit: v.Debit === null ? 'NULL' : v.Debit,
+                            credit: v.Credit === null ? 'NULL' : v.Credit,
+                            montantDevise: v.MontantDevise === null ? 'NULL' : v.MontantDevise,
+                            mon: v.Mon === null ? 'NULL' : v.Mon,
+                            rang: v.Rang === null ? 'NULL' : v.Rang,
+                            financementCategorie: v.FinancementCategorie === null ? 'NULL' : v.FinancementCategorie,
+                            commune: v.Commune ===null ? 'NULL' :v.Commune,
+                            plan: v.Plan6 === null ? 'NULL' : v.Plan6,
+                            journal: v.Journal === null ? 'NULL' : v.Journal,
+                            marche: v.Marche === null ? 'NULL' : v.Marche,
                         });
                     });
 
@@ -463,6 +445,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'dateOrdre' },
                             { data: 'noPiece' },
                             { data: 'compte' },
+                            { data: 'libelle' },
                             { data: 'debit' },
                             { data: 'credit' },
                             { data: 'montantDevise' },
@@ -472,8 +455,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'commune' },
                             { data: 'plan' },
                             { data: 'journal' },
-                            { data: 'marche' },
-                            { data: 'status' }
+                            { data: 'marche' }
                         ],
                         colReorder: {
                             enable: true,
