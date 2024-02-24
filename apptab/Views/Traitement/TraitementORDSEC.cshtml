@@ -3,6 +3,8 @@
     ViewData["Controller"] = "MANDATS à valider par ORDSEC";
 }
 
+<meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8">
+
 <div class="form-row">
     <div class="input-group mb-3 col">
         <div class="input-group-prepend custom-label">
@@ -74,12 +76,10 @@
         </div>
     </div>
     <div class="input-group mb-3 col">
-        <div class="btn btn-flat bg-gradient-yellow col-12" onclick="exportTableToExcel(TBD_PROJET_ORDSEC)">
+        <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TBD_PROJET_ORDSEC', 'MANDATS EN ATTENTE VALIDATION')">
             <i class="fa fa-file-excel"></i> Exporter
         </div>
     </div>
-    <button onclick="tablesToExcel(['TBD_PROJET_ORDSEC'], ['Sheet1'], 'export.xls', 'Excel')" class="btn btn-success">Export to Excel</button>
-    <input type="button" onclick="tableToExcel('TBD_PROJET_ORDSEC', 'W3C Example Table')" value="Export to Excel">
 </div>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="password-modal">
