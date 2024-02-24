@@ -403,7 +403,8 @@ li.active a {
 }
 
 .os-padding {
-    bottom: 8%;
+    bottom: 17%;
+    /*top: 1%*/
 }
 
 .login-page {
