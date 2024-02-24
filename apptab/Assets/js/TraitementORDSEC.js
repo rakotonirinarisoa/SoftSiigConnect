@@ -210,7 +210,8 @@ function GetListLOAD() {
                             }
                         }
                     ],
-                    createdRow: function (row, _, _) {
+                    createdRow: function (row, data, _) {
+                        $(row).attr('compteG-id', data.id);
                         $(row).addClass('select-text');
                     },
                     columnDefs: [
@@ -385,7 +386,8 @@ $('[data-action="GenereSIIG"]').click(function () {
                             }
                         }
                     ],
-                    createdRow: function (row, _, _) {
+                    createdRow: function (row, data, _) {
+                        $(row).attr('compteG-id', data.id);
                         $(row).addClass('select-text');
                     },
                     columnDefs: [
