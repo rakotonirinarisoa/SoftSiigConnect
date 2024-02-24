@@ -137,7 +137,7 @@ function GetListLOAD() {
                         dateMandat: formatDate(v.DATE),
                         compte: v.COMPTE,
                         pcop: v.PCOP,
-                        montant: formatCurrency(String(v.MONT)),
+                        montant: formatCurrency(String(v.MONT).replace(",", ".")),
                         dateDEF: formatDate(v.DATEDEF),
                         dateTEF: formatDate(v.DATETEF),
                         dateBE: formatDate(v.DATEBE),
@@ -186,7 +186,7 @@ function GetListLOAD() {
                             render: function (_, _, row, _) {
                                 return `
                                     <div onclick="modalD('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-danger"></i>
+                                        <i class="fa fa-tags fa-lg text-danger elerfr"></i>
                                     </div>
                                 `;
                             }
@@ -196,7 +196,7 @@ function GetListLOAD() {
                             render: function (_, _, row, _) {
                                 return `
                                     <div onclick="modalF('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-success"></i>
+                                        <i class="fa fa-tags fa-lg text-success elerfr"></i>
                                     </div>
                                 `;
                             }
@@ -206,7 +206,7 @@ function GetListLOAD() {
                             render: function (_, _, row, _) {
                                 return `
                                     <div onclick="modalLIAS('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-info"></i>
+                                        <i class="fa fa-tags fa-lg text-info elerfr"></i>
                                     </div>
                                 `;
                             }
@@ -216,7 +216,7 @@ function GetListLOAD() {
                             render: function (_, _, row, _) {
                                 return `
                                     <div onclick="modalREJET('${row.id}')">
-                                        <i class="fa fa-times fa-lg text-dark"></i>
+                                        <i class="fa fa-times fa-lg text-dark elerfr"></i>
                                     </div>
                                 `;
                             }
@@ -321,7 +321,7 @@ $('[data-action="GenereSIIG"]').click(function () {
                         dateMandat: formatDate(v.DATE),
                         compte: v.COMPTE,
                         pcop: v.PCOP,
-                        montant: formatCurrency(String(v.MONT)),
+                        montant: formatCurrency(String(v.MONT).replace(",", ".")),
                         dateDEF: formatDate(v.DATEDEF),
                         dateTEF: formatDate(v.DATETEF),
                         dateBE: formatDate(v.DATEBE),
@@ -330,7 +330,8 @@ $('[data-action="GenereSIIG"]').click(function () {
                         imputation: '',
                         piecesJustificatives: '',
                         document: '',
-                        rejeter: ''
+                        rejeter: '',
+                        isLATE: v.isLATE
                     });
                 });
 
@@ -369,7 +370,7 @@ $('[data-action="GenereSIIG"]').click(function () {
                             render: function (_, _, row, _) {
                                 return `
                                     <div onclick="modalD('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-danger"></i>
+                                        <i class="fa fa-tags fa-lg text-danger elerfr"></i>
                                     </div>
                                 `;
                             }
@@ -379,7 +380,7 @@ $('[data-action="GenereSIIG"]').click(function () {
                             render: function (_, _, row, _) {
                                 return `
                                     <div onclick="modalF('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-success"></i>
+                                        <i class="fa fa-tags fa-lg text-success elerfr"></i>
                                     </div>
                                 `;
                             }
@@ -389,7 +390,7 @@ $('[data-action="GenereSIIG"]').click(function () {
                             render: function (_, _, row, _) {
                                 return `
                                     <div onclick="modalLIAS('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-info"></i>
+                                        <i class="fa fa-tags fa-lg text-info elerfr"></i>
                                     </div>
                                 `;
                             }
@@ -399,7 +400,7 @@ $('[data-action="GenereSIIG"]').click(function () {
                             render: function (_, _, row, _) {
                                 return `
                                     <div onclick="modalREJET('${row.id}')">
-                                        <i class="fa fa-times fa-lg text-dark"></i>
+                                        <i class="fa fa-times fa-lg text-dark elerfr"></i>
                                     </div>
                                 `;
                             }
@@ -408,6 +409,10 @@ $('[data-action="GenereSIIG"]').click(function () {
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
                         $(row).addClass('select-text');
+
+                        if (data.isLATE) {
+                            $(row).attr('style', "background-color: #FF7F7F !important;");
+                        }
                     },
                     columnDefs: [
                         {

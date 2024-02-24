@@ -203,7 +203,7 @@ $('[data-action="GenereR"]').click(async function () {
                             render: function (_, _, row, _) {
                                 return `
                                     <div onclick="modalD('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-danger"></i>
+                                        <i class="fa fa-tags fa-lg text-danger elerfr"></i>
                                     </div>
                                 `;
                             }
@@ -213,7 +213,7 @@ $('[data-action="GenereR"]').click(async function () {
                             render: function (_, _, row, _) {
                                 return `
                                     <div onclick="modalF('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-success"></i>
+                                        <i class="fa fa-tags fa-lg text-success elerfr"></i>
                                     </div>
                                 `;
                             }
@@ -223,7 +223,7 @@ $('[data-action="GenereR"]').click(async function () {
                             render: function (_, _, row, _) {
                                 return `
                                     <div onclick="modalLIAS('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-info"></i>
+                                        <i class="fa fa-tags fa-lg text-info elerfr"></i>
                                     </div>
                                 `;
                             }
@@ -354,7 +354,7 @@ function GetListLOADOTHER() {
                             render: function (_, _, row, _) {
                                 return `
                                     <div onclick="modalD('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-danger"></i>
+                                        <i class="fa fa-tags fa-lg text-danger elerfr"></i>
                                     </div>
                                 `;
                             }
@@ -364,7 +364,7 @@ function GetListLOADOTHER() {
                             render: function (_, _, row, _) {
                                 return `
                                     <div onclick="modalF('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-success"></i>
+                                        <i class="fa fa-tags fa-lg text-success elerfr"></i>
                                     </div>
                                 `;
                             }
@@ -374,7 +374,7 @@ function GetListLOADOTHER() {
                             render: function (_, _, row, _) {
                                 return `
                                     <div onclick="modalLIAS('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-info"></i>
+                                        <i class="fa fa-tags fa-lg text-info elerfr"></i>
                                     </div>
                                 `;
                             }
@@ -515,7 +515,7 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                             render: function (_, _, row, _) {
                                 return `
                                     <div onclick="modalD('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-danger"></i>
+                                        <i class="fa fa-tags fa-lg text-danger elerfr"></i>
                                     </div>
                                 `;
                             }
@@ -525,7 +525,7 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                             render: function (_, _, row, _) {
                                 return `
                                     <div onclick="modalF('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-success"></i>
+                                        <i class="fa fa-tags fa-lg text-success elerfr"></i>
                                     </div>
                                 `;
                             }
@@ -535,7 +535,7 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                             render: function (_, _, row, _) {
                                 return `
                                     <div onclick="modalLIAS('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-info"></i>
+                                        <i class="fa fa-tags fa-lg text-info elerfr"></i>
                                     </div>
                                 `;
                             }

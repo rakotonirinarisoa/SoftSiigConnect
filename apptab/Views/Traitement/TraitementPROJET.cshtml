@@ -29,15 +29,10 @@
     </div>
 </div>
 
-<div class="form-row mb-3">
+<div class="form-row">
     <div class="input-group mb-3 col">
         <div class="btn btn-flat bg-gradient-success col-12" data-action="GenereR">
             <i class="fa fa-download"></i> Générer
-        </div>
-    </div>
-    <div class="input-group mb-3 col">
-        <div class="btn btn-flat bg-gradient-red col-12" data-action="SaveV">
-            <i class="fa fa-check-double"></i> Enregistrer et envoyer pour validation
         </div>
     </div>
 </div>
@@ -70,13 +65,18 @@
     </table>
 </div>
 
-@*<div class="form-row mb-3 alignment-bottom">
-        <div class="input-group mb-3 col">
-            <div class="btn btn-flat bg-gradient-red col-12 custom-fixed-btn" data-action="SaveV">
-                <i class="fa fa-check-double"></i> Enregistrer et envoyer pour validation
-            </div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="btn btn-flat bg-gradient-red col-12" data-action="SaveV">
+            <i class="fa fa-check-double"></i> Enregistrer et envoyer pour validation
         </div>
-    </div>*@
+    </div>
+    <div class="input-group mb-3 col">
+        <div class="btn btn-flat bg-gradient-yellow col-12" onclick="exportTableToExcel(TBD_PROJET)">
+            <i class="fa fa-file-excel"></i> Exporter
+        </div>
+    </div>
+</div>
 
 <script src="~/Assets/js/Traitmandat.js"></script>
 <script src="~/Assets/js/utils.js"></script>

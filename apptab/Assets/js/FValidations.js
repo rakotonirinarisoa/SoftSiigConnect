@@ -350,6 +350,7 @@ function LoadValidate() {
                     plan: v.Plan6 === null ? 'NULL' : v.Plan6,
                     journal: v.Journal,
                     marche: v.Marche === null ? 'NULL' : v.Marche,
+                    isLATE: v.isLATE
                 });
             });
             if (table !== undefined) {
@@ -380,6 +381,11 @@ function LoadValidate() {
                 deferRender: true,
                 createdRow: function (row, data, _) {
                     $(row).attr('compteG-id', data.id);
+
+                    $(row).addClass('select-text');
+                    if (data.isLATE) {
+                        $(row).attr('style', "background-color: #FF7F7F !important;");
+                    }
                 },
 
             });
@@ -580,6 +586,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             plan: v.Plan6 === null ? 'NULL' : v.Plan6,
                             journal: v.Journal,
                             marche: v.Marche === null ? 'NULL' : v.Marche,
+                            isLATE: v.isLATE
                         });
                     });
                     if (table !== undefined) {
@@ -610,6 +617,11 @@ $('[data-action="ChargerJs"]').click(function () {
                         deferRender: true,
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
+
+                            $(row).addClass('select-text');
+                            if (data.isLATE) {
+                                $(row).attr('style', "background-color: #FF7F7F !important;");
+                            }
                         },
                     });
                 }
@@ -680,6 +692,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             plan: v.Plan6 === null ? 'NULL' : v.Plan6,
                             journal: v.Journal,
                             marche: v.Marche === null ? 'NULL' : v.Marche,
+                            isLATE: v.isLATE
                         });
                     });
 
@@ -712,6 +725,11 @@ $('[data-action="ChargerJs"]').click(function () {
                         deferRender: true,
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
+
+                            $(row).addClass('select-text');
+                            if (data.isLATE) {
+                                $(row).attr('style', "background-color: #FF7F7F !important;");
+                            }
                         },
                         initComplete: function () {
                             $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
