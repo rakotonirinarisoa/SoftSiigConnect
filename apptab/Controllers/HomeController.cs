@@ -571,6 +571,7 @@ namespace apptab.Controllers
             }
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès.", data = "" }, settings));
         }
+        //=========================================================================================TeacherValidation======================================================================
         [HttpPost]
         public JsonResult GetElementAvalider(string ChoixBase,string codeproject, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP, string journal, string etat, bool devise, SI_USERS suser)
         {
@@ -647,6 +648,7 @@ namespace apptab.Controllers
 
         }
         //Envoye Validations
+        //=========================================================================================TeacherValidation======================================================================
         [HttpPost]
         public JsonResult GetElementAvaliderLoad(SI_USERS suser, string codeproject)
         {
@@ -811,6 +813,8 @@ namespace apptab.Controllers
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = "" }, settings));
         }
         //ETAT = 1
+        //=========================================================================================TeacherValidation======================================================================
+
         [HttpPost]
         public JsonResult GetAcceptecriture(string ChoixBase, string codeproject, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP, string journal, string etat, bool devise, SI_USERS suser)
         {
@@ -1007,6 +1011,8 @@ namespace apptab.Controllers
             }
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = "" }, settings));
         }
+        //======================================================================================================EnvoyerValidations===============================================================
+
         [HttpPost]
         public JsonResult EnvoyeValidatioF(string ChoixBase, string codeproject, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP, string journal, string etat, bool devise, SI_USERS suser)
         {
@@ -1061,6 +1067,8 @@ namespace apptab.Controllers
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = avalider }, settings));
             }
         }
+        //======================================================================================================ValidationsEcrituresF===============================================================
+
         [HttpPost]
         public JsonResult ValidationsEcrituresF(string baseName, string codeproject, string listCompte, SI_USERS suser)
         {
@@ -1189,6 +1197,7 @@ namespace apptab.Controllers
 
         }
         //END ETAT = 1
+        //======================================================================================================Fvalidations===============================================================
         [HttpPost]
         public JsonResult LoadValidateEcriture(SI_USERS suser, string codeproject)
         {
@@ -1230,6 +1239,8 @@ namespace apptab.Controllers
             }
             return Json(JsonConvert.SerializeObject(new { type = "Success", msg = "Connexion avec success. ", data = list }, settings));
         }
+        //======================================================================================================Cancel===============================================================
+
         public JsonResult CancelEcriture(int id, string motif, string commentaire, SI_USERS suser)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
@@ -1290,6 +1301,7 @@ namespace apptab.Controllers
             }
 
         }
+        //======================================================================================================GetAnomalieBack===============================================================
         public JsonResult GetAnomalieBack(SI_USERS suser, string baseName)
         {
             AFB160 Afb = new AFB160();
@@ -1307,6 +1319,7 @@ namespace apptab.Controllers
             }
 
         }
+        //======================================================================================================GetAllProjectUser===============================================================
         public JsonResult GetAllProjectUser(SI_USERS suser)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
@@ -1332,6 +1345,8 @@ namespace apptab.Controllers
             }
 
         }
+        //======================================================================================================FTP===============================================================
+
         public void SENDFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE)
         {
             DateTime now = DateTime.Now;
