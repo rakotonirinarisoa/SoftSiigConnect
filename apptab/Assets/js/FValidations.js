@@ -289,43 +289,42 @@ function LoadValidate() {
             reglementresult = ``;
             validate = ``;
             reglementresult = Datas.data;
-            console.log(reglementresult);
             $('#afb').html('');
 
             const data = [];
 
             $.each(reglementresult, function (_, v) {
                 data.push({
-                    void: '',
                     id: v.IDREGLEMENT,
-                    dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
+                    dateOrdre: v.dateOrdre === undefined ? '' : v.dateOrdre,
                     noPiece: v.NoPiece,
                     compte: v.Compte,
                     libelle: v.Libelle,
-                    montantDevise: v.MontantDevise,
-                    mon: v.Mon,
-                    rang: v.Rang,
-                    financementCategorie: v.FinancementCategorie,
-                    commune: v.Commune,
-                    plan: v.Plan6,
+                    debit: v.Debit,
+                    credit: v.Credit,
+                    montantDevise: v.MontantDevise === 0 ? 'NULL' : v.montantDevise,
+                    mon: v.Mon === null ? 'NULL' : v.Mon,
+                    rang: v.Rang === null ? 'NULL' : v.Rang,
+                    financementCategorie: v.FinancementCategorie === " " ? 'NULL ' : v.FinancementCategorie,
+                    commune: v.Commune === null ? 'NULL' : v.Commune,
+                    plan: v.Plan6 === null ? 'NULL' : v.Plan6,
                     journal: v.Journal,
-                    marche: v.Marche,
-                    status: v.Status === undefined ? '' : v.Status
+                    marche: v.Marche === null ? 'NULL' : v.Marche,
                 });
             });
-
+            if (table !== undefined) {
+                table.destroy();
+            }
             table = $('#TDB').DataTable({
                 data,
                 columns: [
-                    {
-                        data: 'void',
-                        orderable: false
-                    },
                     { data: 'id' },
                     { data: 'dateOrdre' },
                     { data: 'noPiece' },
                     { data: 'compte' },
                     { data: 'libelle' },
+                    { data: 'debit' },
+                    { data: 'credit' },
                     { data: 'montantDevise' },
                     { data: 'mon' },
                     { data: 'rang' },
@@ -334,19 +333,15 @@ function LoadValidate() {
                     { data: 'plan' },
                     { data: 'journal' },
                     { data: 'marche' },
-                    { data: 'status' }
                 ],
                 colReorder: {
                     enable: true,
-                    fixedColumnsLeft: 1
                 },
                 deferRender: true,
                 createdRow: function (row, data, _) {
                     $(row).attr('compteG-id', data.id);
                 },
-                initComplete: function () {
-                    $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
-                }
+               
             });
         },
         error: function () {
@@ -359,8 +354,10 @@ function exportTableToExcel(tableID, filename = 'RAS') {
     var downloadLink;
     var dataType = 'application/vnd.ms-excel';
     var tableSelect = document.getElementById(tableID);
+    console.log(tableSelect);
+    console.log(tableID);
     var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-
+    alert("OK");
     // Specify file name
     filename = filename ? filename + '.xls' : 'excel_data.xls';
 
@@ -512,43 +509,36 @@ $('[data-action="ChargerJs"]').click(function () {
                     return;
                 }
                 if (Datas.type == "success") {
+                    ListResult = ``;
                     ListResult = Datas.data;
-
+                    console.log(ListResult);
                     const data = [];
 
                     $.each(ListResult, function (_, v) {
                         data.push({
-                            checkbox: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
+                            dateOrdre: v.dateOrdre === undefined ? '' : v.dateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
                             debit: v.Debit,
                             credit: v.Credit,
-                            montantDevise: v.MontantDevise,
-                            mon: v.Mon,
-                            rang: v.Rang,
-                            financementCategorie: v.FinancementCategorie,
-                            commune: v.Commune,
-                            plan: v.Plan6,
+                            montantDevise: v.MontantDevise === 0 ? 'NULL' : v.montantDevise,
+                            mon: v.Mon === null ? 'NULL' : v.Mon,
+                            rang: v.Rang === null ? 'NULL' : v.Rang,
+                            financementCategorie: v.FinancementCategorie === ' ' ? 'NULL ' : v.FinancementCategorie,
+                            commune: v.Commune === null ? 'NULL' : v.Commune,
+                            plan: v.Plan6 === null ? 'NULL' : v.Plan6,
                             journal: v.Journal,
-                            marche: v.Marche
+                            marche: v.Marche === null ? 'NULL' : v.Marche,
                         });
                     });
-
-                    table = $('#TBD_OPA').DataTable({
+                    if (table !== undefined) {
+                        table.destroy();
+                    }
+                    table = $('#TDB').DataTable({
                         data,
                         columns: [
-                            {
-                                data: 'checkbox',
-                                render: function () {
-                                    return `
-                                        <input type="checkbox" name="checkprod" compteg-ischecked onchange="checkdel()"/>
-                                    `;
-                                },
-                                orderable: false
-                            },
                             { data: 'id' },
                             { data: 'dateOrdre' },
                             { data: 'noPiece' },
@@ -559,23 +549,19 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'montantDevise' },
                             { data: 'mon' },
                             { data: 'rang' },
-                            { data: 'financementCategorie' },
                             { data: 'commune' },
+                            { data: 'financementCategorie' },
                             { data: 'plan' },
                             { data: 'journal' },
-                            { data: 'marche' }
+                            { data: 'marche' },
                         ],
                         colReorder: {
                             enable: true,
-                            fixedColumnsLeft: 1
                         },
                         deferRender: true,
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
                         },
-                        initComplete: function () {
-                            $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
-                        }
                     });
                 }
             },
@@ -624,45 +610,45 @@ $('[data-action="ChargerJs"]').click(function () {
 
                     $.each(ListResult, function (_, v) {
                         data.push({
-                            void: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
+                            dateOrdre: v.dateOrdre === undefined ? '' : v.dateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
-                            montantDevise: v.MontantDevise,
-                            mon: v.Mon,
-                            rang: v.Rang,
-                            financementCategorie: v.FinancementCategorie,
-                            commune: v.Commune,
-                            plan: v.Plan6,
+                            debit: v.Debit,
+                            credit: v.Credit,
+                            montantDevise: v.MontantDevise === 0 ? 'NULL' : v.montantDevise,
+                            mon: v.Mon === null ? 'NULL' : v.Mon,
+                            rang: v.Rang === null ? 'NULL' : v.Rang,
+                            financementCategorie: v.FinancementCategorie === " " ? 'NULL ' : v.FinancementCategorie,
+                            commune: v.Commune === null ? 'NULL' : v.Commune,
+                            plan: v.Plan6 === null ? 'NULL' : v.Plan6,
                             journal: v.Journal,
-                            marche: v.Marche,
-                            status: v.Status === undefined ? '' : v.Status
+                            marche: v.Marche === null ? 'NULL' : v.Marche,
                         });
                     });
         
+                    if (table !== undefined) {
+                        table.destroy();
+                    }
                     table = $('#TDB').DataTable({
                         data,
                         columns: [
-                            {
-                                data: 'void',
-                                orderable: false
-                            },
                             { data: 'id' },
                             { data: 'dateOrdre' },
                             { data: 'noPiece' },
                             { data: 'compte' },
                             { data: 'libelle' },
+                            { data: 'debit' },
+                            { data: 'credit' },
                             { data: 'montantDevise' },
                             { data: 'mon' },
                             { data: 'rang' },
-                            { data: 'financementCategorie' },
                             { data: 'commune' },
+                            { data: 'financementCategorie' },
                             { data: 'plan' },
                             { data: 'journal' },
                             { data: 'marche' },
-                            { data: 'status' }
                         ],
                         colReorder: {
                             enable: true,
