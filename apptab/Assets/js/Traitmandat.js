@@ -74,6 +74,8 @@ function GetListProjet() {
             });
             
             $(`[data-id="proj-listMANDAT"]`).append(code);
+
+            emptyTableTRM();
         },
         error: function (e) {
             alert("Problème de connexion. ");

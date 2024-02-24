@@ -2155,6 +2155,7 @@
     <Content Include="Assets\js\BonPourPaiement.js" />
     <Content Include="Assets\js\FValidations.js" />
     <Content Include="Assets\js\TraitementORDSEC.js" />
+    <Content Include="Assets\js\TraitmandatO.js" />
     <Content Include="Assets\js\TypeC.js" />
     <Content Include="Assets\js\TeacherValidations.js" />
     <Content Include="Assets\js\Crypto.js" />
