@@ -174,6 +174,10 @@ namespace SOFTCONNECT.Controllers
 
                         if (user.ROLE == Role.Administrateur || user.ROLE == Role.Autre)
                         {
+                            int TestProjetRole = 0;
+                            if (!int.TryParse(listProjet, out TestProjetRole))
+                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vous ne pouvez pas affecter plusieurs projets à ce type d'utilisateur. " }, settings));
+
                             var newUser = new SI_USERS()
                             {
                                 LOGIN = user.LOGIN,
@@ -272,6 +276,10 @@ namespace SOFTCONNECT.Controllers
                     {
                         if (user.ROLE == Role.Administrateur || user.ROLE == Role.Autre)
                         {
+                            int TestProjetRole = 0;
+                            if (!int.TryParse(listProjet, out TestProjetRole))
+                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vous ne pouvez pas affecter plusieurs projets à ce type d'utilisateur. " }, settings));
+
                             userExist.LOGIN = user.LOGIN;
                             userExist.PWD = user.PWD;
                             userExist.IDPROJET = int.Parse(listProjet);
