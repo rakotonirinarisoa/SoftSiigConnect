@@ -19,7 +19,7 @@
 </div>
 
 <script defer type="module">
-    const urlOrigin = "https://localhost:44334";
+    let urlOrigin;
 
     let user;
 
@@ -31,6 +31,8 @@
         if (!user) {
             window.location = User.origin;
         }
+
+        urlOrigin = user.origin;
 
         originalTitle = $('#title').val();
     });
