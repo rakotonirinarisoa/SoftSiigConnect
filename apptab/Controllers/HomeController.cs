@@ -1311,26 +1311,54 @@ namespace apptab.Controllers
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            //var basename = GetTypeP(suser);
-            if (exist.IDPROJET == 0)
-            {
-                var allproject = db.SI_MAPUSERPROJET.Where(a => a.IDUS == exist.ID).Join(db.SI_PROJETS, projet => projet.IDPROJET, map => map.ID, (projet, map) => new
-                {
-                    ID = projet.IDPROJET,
-                    PROJET = map.PROJET,
-                }).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès.", data = allproject }, settings));
-            }
-            else
-            {
-                var project = db.SI_PROJETS.Where(a => a.ID == exist.IDPROJET).Select(a => new
-                {
-                    ID = a.ID,
-                    PROJET = a.PROJET,
-                }).FirstOrDefault();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès.", data = project }, settings));
-            }
 
+            try
+            {
+                var test = db.SI_USERS.Where(x => x.LOGIN == exist.LOGIN && x.PWD == exist.PWD && x.DELETIONDATE == null).FirstOrDefault();
+                if (test.ROLE == (int)Role.SAdministrateur)
+                {
+                    var user = db.SI_PROJETS.Select(a => new
+                    {
+                        PROJET = a.PROJET,
+                        ID = a.ID,
+                        DELETIONDATE = a.DELETIONDATE,
+                    }).Where(a => a.DELETIONDATE == null).ToList();
+
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+                }
+                else
+                {
+                    if (test.IDPROJET != 0)
+                    {
+                        var user = db.SI_PROJETS.Select(a => new
+                        {
+                            PROJET = a.PROJET,
+                            ID = a.ID,
+                            DELETIONDATE = a.DELETIONDATE,
+                        }).Where(a => a.DELETIONDATE == null && a.ID == test.IDPROJET).ToList();
+
+                        return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+                    }
+                    else
+                    {
+                        var user = (from usr in db.SI_PROJETS
+                                    join prj in db.SI_MAPUSERPROJET on usr.ID equals prj.IDPROJET
+                                    where prj.IDUS == test.ID && usr.DELETIONDATE == null
+                                    select new
+                                    {
+                                        PROJET = usr.PROJET,
+                                        ID = usr.ID,
+                                        DELETIONDATE = usr.DELETIONDATE,
+                                    }).ToList();
+
+                        return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
         }
         public void SENDFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE)
         {
