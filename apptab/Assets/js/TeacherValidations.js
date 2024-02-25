@@ -109,7 +109,7 @@ function ChargeLoad() {
                             plan: v.Plan6 === null ? '' : v.Plan6,
                             journal: v.Journal,
                             marche: v.Marche === null ? '' : v.Marche,
-                            rejeter: '',
+                            //rejeter: '',
                             isLATE : v.isLATE
                         });
                     });
@@ -145,16 +145,16 @@ function ChargeLoad() {
                             { data: 'plan' },
                             { data: 'journal' },
                             { data: 'marche' },
-                            {
-                                data: 'rejeter',
-                                render: function (_, _, row, _) {
-                                    return `
-                                        <div onclick="Refuser('${row.id}')">
-                                            <i class="fa fa-times fa-lg text-dark"></i>
-                                        </div>
-                                    `;
-                                }
-                            }
+                            //{
+                            //    data: 'rejeter',
+                            //    render: function (_, _, row, _) {
+                            //        return `
+                            //            <div onclick="Refuser('${row.id}')">
+                            //                <i class="fa fa-times fa-lg text-dark"></i>
+                            //            </div>
+                            //        `;
+                            //    }
+                            //}
                         ],
                         colReorder: {
                             enable: true,
@@ -701,7 +701,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             plan: v.Plan6 === null ? '' : v.Plan6,
                             journal: v.Journal,
                             marche: v.Marche === null ? '' : v.Marche,
-                            rejeter: '',
+                            //rejeter: '',
                             isLATE: v.isLATE
                         });
                     });
@@ -737,16 +737,16 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'plan' },
                             { data: 'journal' },
                             { data: 'marche' },
-                            {
-                                data: 'rejeter',
-                                render: function (_, _, row, _) {
-                                    return `
-                                        <div onclick="Refuser('${row.id}')">
-                                            <i class="fa fa-times fa-lg text-dark"></i>
-                                        </div>
-                                    `;
-                                }
-                            }
+                            //{
+                            //    data: 'rejeter',
+                            //    render: function (_, _, row, _) {
+                            //        return `
+                            //            <div onclick="Refuser('${row.id}')">
+                            //                <i class="fa fa-times fa-lg text-dark"></i>
+                            //            </div>
+                            //        `;
+                            //    }
+                            //}
                         ],
                         colReorder: {
                             enable: true,
@@ -839,7 +839,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             plan: v.Plan6 === null ? '' : v.Plan6,
                             journal: v.Journal,
                             marche: v.Marche === null ? '' : v.Marche,
-                            rejeter: ''
+                            isLATE: v.isLATE
+                            //rejeter: ''
                         });
                     });
 
@@ -874,16 +875,16 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'plan' },
                             { data: 'journal' },
                             { data: 'marche' },
-                            {
-                                data: 'rejeter',
-                                render: function (_, _, row, _) {
-                                    return `
-                                        <div onclick="Refuser('${row.id}')">
-                                            <i class="fa fa-times fa-lg text-dark"></i>
-                                        </div>
-                                    `;
-                                }
-                            }
+                            //{
+                            //    data: 'rejeter',
+                            //    render: function (_, _, row, _) {
+                            //        return `
+                            //            <div onclick="Refuser('${row.id}')">
+                            //                <i class="fa fa-times fa-lg text-dark"></i>
+                            //            </div>
+                            //        `;
+                            //    }
+                            //}
                         ],
                         colReorder: {
                             enable: true,
@@ -893,6 +894,9 @@ $('[data-action="ChargerJs"]').click(function () {
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
                             $(row).addClass('select-text');
+                            if (data.isLATE) {
+                                $(row).attr('style', "background-color: #FF7F7F !important;");
+                            }
                         },
                         initComplete: function () {
                             $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
