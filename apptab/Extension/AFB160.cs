@@ -1103,7 +1103,7 @@ namespace apptab.Extension
             dordre = projet.SIGLE + projet.NOM;
             try
             {
-                tdonneur1.CODE_J = djournal.CODE;
+                //tdonneur1.CODE_J = djournal.CODE;
                 tdonneur1.DATE_PAIEMENT = dateP;
                 tdonneur1.DONNEUR_ORDRE = couperText(24, dordre.Replace(" ", ""));
                 tdonneur1.CODE_GUICHET = couperText(5, djournal.GUICHET);
