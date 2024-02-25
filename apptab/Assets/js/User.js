@@ -8,8 +8,6 @@ $(document).ready(() => {
 
     $(`[data-id="username"]`).text(User.LOGIN);
     GetListUser();
-
-
 });
 
 function GetListUser() {
