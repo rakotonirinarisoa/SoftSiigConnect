@@ -1,4 +1,5 @@
 ﻿const urlOrigin = window.location.href;
+
 let User;
 let Origin;
 
@@ -7,13 +8,13 @@ let clickedId;
 let ListCodeJournal;
 let ListCompteG;
 
-var content;
+let content;
 let validate;
 
 let listResult;
 let listResultAnomalie;
 let contentAnomalies;
-var rdv
+let rdv;
 let contentpaie;
 let listResultpaie;
 let reglementresult;

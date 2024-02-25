@@ -6,7 +6,6 @@
     $(`[data-id="username"]`).text(User.LOGIN);
     GetListProjet();
 });
-//let urlOrigin = "http://softwell.cloud/OPAVI";
 function GetUsers() {
     let formData = new FormData();
 

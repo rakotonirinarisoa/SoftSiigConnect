@@ -9,8 +9,7 @@
     GetListProjet(getUrlParameter("PROSOAID"));
     GetListFPROSOA(getUrlParameter("PROSOAID"));
 });
-//let urlOrigin = Origin;
-//let urlOrigin = "http://softwell.cloud/OPAVI";
+
 function GetListProjet(id) {
     let formData = new FormData();
 

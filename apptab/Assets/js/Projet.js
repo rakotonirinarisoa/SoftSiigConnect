@@ -7,7 +7,6 @@
     GetListSociete();
 });
 
-////let urlOrigin = "http://softwell.cloud/OPAVI";
 function GetListSociete() {
     let formData = new FormData();
 

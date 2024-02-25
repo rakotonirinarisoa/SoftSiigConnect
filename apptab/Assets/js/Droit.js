@@ -6,8 +6,7 @@
     $(`[data-id="username"]`).text(User.LOGIN);
     GetListDroit();
 });
-//let urlOrigin = Origin;
-//let urlOrigin = "http://softwell.cloud/OPAVI";
+
 function GetListDroit() {
     let formData = new FormData();
 

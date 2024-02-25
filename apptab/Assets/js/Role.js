@@ -8,7 +8,6 @@
     GetListProjet();
 });
 
-//let urlOrigin = "http://softwell.cloud/OPAVI";
 function GetListRole() {
     let formData = new FormData();
 

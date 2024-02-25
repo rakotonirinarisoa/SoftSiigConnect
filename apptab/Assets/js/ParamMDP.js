@@ -7,8 +7,6 @@
     GetUsers();
 });
 
-//let urlOrigin = "http://softwell.cloud/OPAVI";
-
 function GetUsers() {
     let formData = new FormData();
 

@@ -12,8 +12,6 @@ $(document).ready(() => {
     });
 });
 
-let urlOrigin = Origin;
-//let urlOrigin = "http://softwell.cloud/OPAVI";
 function GetListInstance() {
     let formData = new FormData();
 

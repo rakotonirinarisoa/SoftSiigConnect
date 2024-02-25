@@ -9,8 +9,6 @@
     await GetUsers(undefined);
     await GetListMANDATP();
 });
-//let urlOrigin = Origin;
-//let urlOrigin = "http://softwell.cloud/OPAVI";
 async function GetUsers(id) {
     let formData = new FormData();
 

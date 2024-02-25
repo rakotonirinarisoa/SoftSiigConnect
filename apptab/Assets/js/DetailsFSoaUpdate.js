@@ -6,8 +6,6 @@
 
     GetFSOA();
 });
-//let urlOrigin = Origin;
-//let urlOrigin = "http://softwell.cloud/OPAVI";
 
 function GetFSOA() {
     let formData = new FormData();

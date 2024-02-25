@@ -10,7 +10,6 @@
     GetListSOA();
 });
 
-//let urlOrigin = "http://softwell.cloud/OPAVI";
 function GetListProjet() {
     let formData = new FormData();
 

@@ -200,5 +200,3 @@ $(`[name="options"]`).on("change", (k, v) => {
         $(`[tab="paie"]`).hide();
     }
 });
-
-//let urlOrigin = "http://softwell.cloud/OPAVI";
