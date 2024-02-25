@@ -58,18 +58,19 @@ namespace apptab.Controllers
         public string GetTypeP(SI_USERS suser, string codeproject)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            int PROJECTid = int.Parse(codeproject);
             if (exist == null) return "";
 
             if (exist.IDPROJET != 0)
             {
-                var basename = db.SI_TYPECRITURE.FirstOrDefault(a => a.IDUSER == exist.ID && a.IDPROJET == exist.IDPROJET).TYPE;
+                var basename = db.SI_TYPECRITURE.FirstOrDefault(a => a.IDPROJET == PROJECTid).TYPE;
                 return basename.ToString();
             }
             else
             {
                 //var mapuser = db.SI_MAPUSERPROJET.Where(a => a.IDUS == exist.ID).ToList();
                 int PROJECTID = int.Parse(codeproject);
-                var ii = db.SI_TYPECRITURE.FirstOrDefault(a => a.IDUSER == exist.ID && a.IDPROJET == PROJECTID);
+                var ii = db.SI_TYPECRITURE.FirstOrDefault(a => a.IDPROJET == PROJECTID);
                 var basename = "";
                 if (ii != null)
                 {
@@ -1241,15 +1242,17 @@ namespace apptab.Controllers
         }
         //======================================================================================================Cancel===============================================================
 
-        public JsonResult CancelEcriture(int id, string motif, string commentaire, SI_USERS suser)
+        public JsonResult CancelEcriture(int id, string motif, string commentaire, SI_USERS suser,string codeproject)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            var cancel = db.OPA_VALIDATIONS.Where(x => x.IDREGLEMENT == id).FirstOrDefault();
+
+            int PROJECTID = int.Parse(codeproject);
+            var cancel = db.OPA_VALIDATIONS.Where(x => x.IDREGLEMENT == id && x.IDPROJET == PROJECTID).FirstOrDefault();
             //OPA_HCANCEL Hcancel = new OPA_HCANCEL();
             if (cancel != null)
             {
-                if (motif != "" && commentaire != "")
+                if (motif != "")
                 {
                     cancel.ETAT = 4;
                     cancel.MOTIF = motif;

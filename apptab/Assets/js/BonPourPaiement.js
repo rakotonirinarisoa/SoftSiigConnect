@@ -531,7 +531,7 @@ function modalREJET(id) {
 
             $.each(listResult, function (_, v) {
                 code += `
-                    <option value="${v.REF}" id="${k}">${v.REF}</option>
+                    <option value="${v.REF}" id="${v.ID}">${v.REF}</option>
                 `;
             });
 
@@ -556,6 +556,8 @@ function AcceptRefuser() {
     let motif = $("#Motif").val();
     let commentaire = $("#Commentaire").val();
 
+  
+
     let formData = new FormData();
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
@@ -565,6 +567,9 @@ function AcceptRefuser() {
     formData.append("id", id);
     formData.append("motif", motif);
     formData.append("commentaire", commentaire);
+
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
 
     $.ajax({
         type: "POST",
