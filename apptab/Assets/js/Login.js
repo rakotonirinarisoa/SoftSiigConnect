@@ -1,4 +1,4 @@
-﻿const urlOrigin = window.location.href + '/softconnectsiig';
+﻿const urlOrigin = window.location.href;
 
 const loader = $('#loader');
 
