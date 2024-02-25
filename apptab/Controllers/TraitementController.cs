@@ -283,7 +283,7 @@ namespace apptab.Controllers
                     retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELTV.Value;
 
                 //Check si le projet est mappé à une base de données TOM²PRO//
-                if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
+                if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
 
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
@@ -353,7 +353,7 @@ namespace apptab.Controllers
                     retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELTV.Value;
 
                 //Check si le projet est mappé à une base de données TOM²PRO//
-                if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
+                if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
 
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
@@ -419,7 +419,7 @@ namespace apptab.Controllers
             int crpt = iProjet;
             var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
 
-            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt).FirstOrDefault().PROJET;
+            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET;
 
             var listCompteS = listCompte.Split(',');
             foreach (var SAV in listCompteS)
@@ -433,9 +433,9 @@ namespace apptab.Controllers
                     List<DATATRPROJET> list = new List<DATATRPROJET>();
 
                     Guid elem = Guid.Parse(SAV);
-                    if (db.SI_TRAITPROJET.FirstOrDefault(a => a.No == elem && a.ETAT == 2) != null)
+                    if (db.SI_TRAITPROJET.FirstOrDefault(a => a.No == elem && a.ETAT == 2 && a.IDPROJET == crpt) != null)
                     {
-                        var ismod = db.SI_TRAITPROJET.FirstOrDefault(a => a.No == elem);
+                        var ismod = db.SI_TRAITPROJET.FirstOrDefault(a => a.No == elem && a.IDPROJET == crpt);
                         ismod.ETAT = 0;
                         ismod.DATECRE = DateTime.Now;
                         ismod.DATEANNUL = null;
@@ -554,7 +554,7 @@ namespace apptab.Controllers
             int crpt = iProjet;
             var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
 
-            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt).FirstOrDefault().PROJET;
+            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET;
 
             var listCompteS = listCompte.Split(',');
             foreach (var SAV in listCompteS)
@@ -806,9 +806,9 @@ namespace apptab.Controllers
             {
                 int IdS = iProjet;
 
-                if (db.SI_TRAITPROJET.FirstOrDefault(a => a.No == IdF) != null)
+                if (db.SI_TRAITPROJET.FirstOrDefault(a => a.No == IdF && a.IDPROJET == IdS) != null)
                 {
-                    var ismod = db.SI_TRAITPROJET.FirstOrDefault(a => a.No == IdF);
+                    var ismod = db.SI_TRAITPROJET.FirstOrDefault(a => a.No == IdF && a.IDPROJET == IdS);
                     ismod.ETAT = 2;
                     //ismod.DATECRE = DateTime.Now;
                     ismod.DATEANNUL = DateTime.Now;
@@ -921,7 +921,7 @@ namespace apptab.Controllers
                             //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
                             if (canBeDEF == false || canBeTEF == false || canBeBE == false)
                             {
-                                if (!db.SI_TRAITPROJET.Any(a => a.No == x.ID) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2))
+                                if (!db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.IDPROJET == crpt) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt))
                                 {
                                     var titulaire = "";
                                     if (tom.RTIERS.Any(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE))
