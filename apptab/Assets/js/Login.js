@@ -1,5 +1,31 @@
 ﻿const urlOrigin = window.location.href;
 
+let User;
+let Origin;
+
+let clickedId;
+
+let ListCodeJournal;
+let ListCompteG;
+
+let content;
+let validate;
+
+let listResult;
+let listResultAnomalie;
+let contentAnomalies;
+let rdv;
+let contentpaie;
+let listResultpaie;
+let reglementresult;
+
+let listEtat;
+let etaCode;
+
+var baseName;
+
+let table = undefined;
+
 const loader = $('#loader');
 
 function GetFileUrlOrgF() {

@@ -4,8 +4,6 @@ $(document).ready(() => {
     });
 });
 
-let clickedId;
-
 function modalF(id) {
 
     clickedId = id;

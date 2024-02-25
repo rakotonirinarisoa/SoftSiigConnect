@@ -1,7 +1,4 @@
-﻿let User;
-let Origin;
-
-$(document).ready(() => {
+﻿$(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
@@ -9,8 +6,7 @@ $(document).ready(() => {
     $(`[data-id="username"]`).text(User.LOGIN);
     GetListDroit();
 });
-//let urlOrigin = Origin;
-//let urlOrigin = "http://softwell.cloud/OPAVI";
+
 function GetListDroit() {
     let formData = new FormData();
 

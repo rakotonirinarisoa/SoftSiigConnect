@@ -1,7 +1,4 @@
-﻿let User;
-let Origin;
-
-$(document).ready(() => {
+﻿$(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
@@ -13,7 +10,6 @@ $(document).ready(() => {
     GetListSOA();
 });
 
-//let urlOrigin = "http://softwell.cloud/OPAVI";
 function GetListProjet() {
     let formData = new FormData();
 

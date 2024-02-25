@@ -1,7 +1,4 @@
-﻿let User;
-let Origin;
-
-$(document).ready(async () => {
+﻿$(document).ready(async () => {
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
@@ -12,8 +9,6 @@ $(document).ready(async () => {
     await GetUsers(undefined);
     await GetListMANDATP();
 });
-//let urlOrigin = Origin;
-//let urlOrigin = "http://softwell.cloud/OPAVI";
 async function GetUsers(id) {
     let formData = new FormData();
 
