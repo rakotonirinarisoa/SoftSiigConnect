@@ -10,8 +10,6 @@ $(document).ready(() => {
     GetListSociete();
 });
 
-
-////let urlOrigin = "http://softwell.cloud/OPAVI";
 function GetListSociete() {
     let formData = new FormData();
 
@@ -156,8 +154,10 @@ function deleteSoa(id) {
                 alert(Datas.msg);
                 window.location = window.location.origin;
                 return;
+            } if (Datas.type == "success") {
+                alert(Datas.msg);
             }
-
+          
             $(`[data-societeId="${id}"]`).remove();
         },
         error: function () {
