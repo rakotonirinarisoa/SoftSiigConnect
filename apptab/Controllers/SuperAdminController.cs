@@ -563,17 +563,17 @@ namespace apptab.Controllers
                 var ProjSoa = db.SI_PROSOA.Where(F_ProjetSoa => F_ProjetSoa.IDSOA == IDSOA && F_ProjetSoa.DELETIONDATE == null).Select(F_ProjetSoa => F_ProjetSoa.IDSOA).ToList();
                 if (SOA != null)
                 {
-                    //db.SI_SOAS.Remove(SOA);
                     SOA.DELETIONDATE = DateTime.Now;
                     if (ProjSoa != null)
                     {
                         foreach (var p in ProjSoa)
                         {
-                            var F_del = db.SI_PROSOA.Where(F_remSoa => F_remSoa.IDSOA == p).FirstOrDefault();
+                            var F_del = db.SI_PROSOA.Where(F_remSoa => F_remSoa.IDSOA == p && F_remSoa.DELETIONDATE == null).FirstOrDefault();
                             F_del.DELETIONDATE = DateTime.Now;
-                            //db.SI_PROSOA.Remove(F_del);
+                            db.SaveChanges();
                         }
                     }
+
                     var Hsoas = new HSI_SOAS()
                     {
                         IDPARENT = SOA.ID,
