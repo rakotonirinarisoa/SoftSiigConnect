@@ -1,4 +1,5 @@
-﻿function checkdel(id) {
+﻿var table = undefined;
+function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
 
@@ -277,6 +278,7 @@ $(document).ready(() => {
 
     $(`[data-id="username"]`).text(User.LOGIN);
 
+    
     GetAllProjectUser();
 });
 

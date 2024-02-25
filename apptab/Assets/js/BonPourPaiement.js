@@ -1,4 +1,5 @@
-﻿function checkdel(id) {
+﻿var table = undefined;
+function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
 
@@ -157,9 +158,9 @@ function chargeLoad() {
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
-                            debit: v.Debit,
-                            credit: v.Credit,
-                            montantDevise: v.MontantDevise,
+                            debit: v.Debit === undefined ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
+                            credit: v.Credit === undefined ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
+                            montantDevise: v.MontantDevise === undefined ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                             mon: v.Mon === null ? '' : v.Mon,
                             rang: v.Rang === null ? '' : v.Rang,
                             financementCategorie: v.FinancementCategorie === " " ? ' ' : v.FinancementCategorie,
