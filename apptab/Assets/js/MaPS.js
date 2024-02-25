@@ -110,6 +110,7 @@ function deleteMAPP(id) {
                 return;
             }
 
+            alert(Datas.msg);
             $(`[data-userId="${id}"]`).remove();
         },
         error: function () {
