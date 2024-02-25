@@ -643,7 +643,7 @@ $('.Checkall').change(function () {
     }
 
 });
-
+//===============================================================================================================ChargeJs===============================================================
 $('[data-action="ChargerJs"]').click(function () {
     let formData = new FormData();
     formData.append("suser.LOGIN", User.LOGIN);
@@ -712,16 +712,16 @@ $('[data-action="ChargerJs"]').click(function () {
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
-                            debit: v.Debit,
-                            credit: v.credit === undefined ? 'NULL' : v.credit,
-                            montantDevise: v.montantDevise === undefined ? 'NULL' : v.montantDevise,
-                            mon: v.Mon === null ? 'NULL' : v.Mon,
-                            rang: v.Rang === null ? 'NULL' : v.Rang,
-                            financementCategorie: v.FinancementCategorie === " " ? 'NULL' : v.FinancementCategorie,
-                            commune: v.Commune === null ? 'NULL' : v.Commune,
-                            plan: v.Plan6 === null ? 'NULL' : v.Plan6,
+                            debit: v.Debit === undefined ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
+                            credit: v.credit === undefined ? '' : formatCurrency(String(v.credit).replace(",", ".")),
+                            montantDevise: v.montantDevise === undefined ? '' : v.montantDevise,
+                            mon: v.Mon === null ? '' : v.Mon,
+                            rang: v.Rang === null ? '' : v.Rang,
+                            financementCategorie: v.FinancementCategorie === " " ? '' : v.FinancementCategorie,
+                            commune: v.Commune === null ? '' : v.Commune,
+                            plan: v.Plan6 === null ? '' : v.Plan6,
                             journal: v.Journal,
-                            marche: v.Marche === null ? 'NULL' : v.Marche,
+                            marche: v.Marche === null ? '' : v.Marche,
                             rejeter: '',
                             isLATE: v.isLATE
                         });
@@ -850,16 +850,16 @@ $('[data-action="ChargerJs"]').click(function () {
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
-                            debit: v.Debit,
-                            credit: v.credit === undefined ? 'NULL' : v.credit,
-                            montantDevise: v.montantDevise === undefined ? 'NULL' : v.montantDevise,
-                            mon: v.Mon === null ? 'NULL' : v.Mon,
-                            rang: v.Rang === null ? 'NULL' : v.Rang,
-                            financementCategorie: v.FinancementCategorie === " " ? 'NULL' : v.FinancementCategorie,
-                            commune: v.Commune === null ? 'NULL' : v.Commune,
-                            plan: v.Plan6 === null ? 'NULL' : v.Plan6,
+                            debit: v.Debit === undefined ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
+                            credit: v.credit === undefined ? '' : formatCurrency(String(v.credit).replace(",", ".")),
+                            montantDevise: v.montantDevise === undefined ? '' : formatCurrency(String(v.montantDevise).replace(",", ".")),
+                            mon: v.Mon === null ? '' : v.Mon,
+                            rang: v.Rang === null ? '' : v.Rang,
+                            financementCategorie: v.FinancementCategorie === " " ? '' : v.FinancementCategorie,
+                            commune: v.Commune === null ? '' : v.Commune,
+                            plan: v.Plan6 === null ? '' : v.Plan6,
                             journal: v.Journal,
-                            marche: v.Marche === null ? 'NULL' : v.Marche,
+                            marche: v.Marche === null ? '' : v.Marche,
                             rejeter: ''
                         });
                     });
