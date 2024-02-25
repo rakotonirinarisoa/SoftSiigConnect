@@ -1,7 +1,4 @@
-﻿let Origin;
-
-function disconnect() {
-    Origin = User.origin;
+﻿function disconnect() {
     sessionStorage.setItem("user", null);
-    window.location = Origin;
+    window.location = window.location.origin;
 }
