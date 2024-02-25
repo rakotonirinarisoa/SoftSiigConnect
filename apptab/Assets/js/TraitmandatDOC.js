@@ -63,7 +63,7 @@ function modalD(id) {
             }
         },
         error: function () {
-            alert("Probl�me de connexion. ");
+            alert("Problème de connexion. ");
         }
     });
 

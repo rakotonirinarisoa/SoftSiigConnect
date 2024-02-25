@@ -18,7 +18,7 @@ function modalLIAS(id) {
     formData.append("suser.IDPROJET", User.IDPROJET);
 
     formData.append("IdF", clickedIdDL);
-    formData.append("iProjet", $("#proj").val());
+    formData.append("iProjet", $("#projMANDAT").val());
 
     $.ajax({
         type: "POST",
