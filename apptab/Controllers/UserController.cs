@@ -430,6 +430,10 @@ namespace SOFTCONNECT.Controllers
                         }
                     }
                 }
+                else
+                {
+                    proj.Add(user.IDPROJET.Value);
+                }
 
                 if (user != null)
                 {
