@@ -2156,6 +2156,9 @@
     <Content Include="Assets\js\FValidations.js" />
     <Content Include="Assets\js\ProjectsDetails.js" />
     <Content Include="Assets\js\TraitementORDSEC.js" />
+    <Content Include="Assets\js\TraitmandatDOCT.js" />
+    <Content Include="Assets\js\TraitmandatLIAST.js" />
+    <Content Include="Assets\js\TraitmandatModalT.js" />
     <Content Include="Assets\js\TraitmandatO.js" />
     <Content Include="Assets\js\TypeC.js" />
     <Content Include="Assets\js\TeacherValidations.js" />

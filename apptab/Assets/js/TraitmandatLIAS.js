@@ -69,7 +69,7 @@ function modalLIAS(id) {
             }
         },
         error: function () {
-            alert("Probl�me de connexion. ");
+            alert("Problème de connexion. ");
         }
     });
 
