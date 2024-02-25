@@ -1,11 +1,4 @@
-﻿let User;
-let Origin;
-let ListResult;
-let contentpaie;
-let content;
-let ListResultBr;
-
-$(document).ready(() => {
+﻿$(document).ready(() => {
 
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;

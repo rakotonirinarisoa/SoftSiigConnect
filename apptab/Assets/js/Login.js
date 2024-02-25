@@ -1,4 +1,29 @@
 ﻿const urlOrigin = window.location.href;
+let User;
+let Origin;
+
+let clickedId;
+
+let ListCodeJournal;
+let ListCompteG;
+
+var content;
+let validate;
+
+let listResult;
+let listResultAnomalie;
+let contentAnomalies;
+var rdv
+let contentpaie;
+let listResultpaie;
+let reglementresult;
+
+let listEtat;
+let etaCode;
+
+var baseName;
+
+let table = undefined;
 
 const loader = $('#loader');
 

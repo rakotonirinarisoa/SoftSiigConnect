@@ -1,10 +1,6 @@
-let clickedId;
-
 const loginNameInput = $('#login-name');
 const passwordInput = $('#password');
-
 const p = $('#user-password');
-
 const closeButton = $('#close-btn');
 
 function showPassword(id) {

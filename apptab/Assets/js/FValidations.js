@@ -1,26 +1,4 @@
-﻿let User;
-let Origin;
-
-let ListCodeJournal;
-let ListCompteG;
-
-var content;
-let validate;
-
-let ListResult;
-let ListResultAnomalie;
-let contentAnomalies;
-var rdv
-let contentpaie;
-let ListResultpaie;
-let reglementresult;
-
-let listEtat;
-let etaCode;
-
-let table = undefined;
-
-function checkdel(id) {
+﻿function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
 
