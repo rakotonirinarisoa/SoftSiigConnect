@@ -584,7 +584,7 @@ namespace apptab.Controllers
                     };
                     db.HSI_SOAS.Add(Hsoas);
                     db.SaveChanges();
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Suppression avec succès. " }, settings));
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Suppression avec succès." }, settings));
                 }
                 else
                 {
