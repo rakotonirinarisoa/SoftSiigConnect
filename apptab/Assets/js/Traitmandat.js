@@ -48,14 +48,11 @@ function GetListProjet() {
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
-
                 return;
             }
             if (Datas.type == "login") {
                 alert(Datas.msg);
-
                 window.location = window.location.origin;
-
                 return;
             }
             
@@ -125,14 +122,17 @@ $('[data-action="GenereR"]').click(async function () {
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
+                emptyTableTRM();
                 return;
             }
             if (Datas.type == "PEtat") {
                 alert(Datas.msg);
+                emptyTableTRM();
                 return;
             }
             if (Datas.type == "Prese") {
                 alert(Datas.msg);
+                emptyTableTRM();
                 return;
             }
             if (Datas.type == "login") {

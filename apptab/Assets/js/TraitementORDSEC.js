@@ -106,9 +106,7 @@ function GetListLOAD() {
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
-
                 emptyTable();
-
                 return;
             }
             if (Datas.type == "login") {
@@ -120,10 +118,12 @@ function GetListLOAD() {
             }
             if (Datas.type == "PEtat") {
                 alert(Datas.msg);
+                emptyTable();
                 return;
             }
             if (Datas.type == "Prese") {
                 alert(Datas.msg);
+                emptyTable();
                 return;
             }
             if (Datas.type == "success") {
@@ -303,6 +303,7 @@ $('[data-action="GenereSIIG"]').click(function () {
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
+                emptyTable();
                 return;
             }
             if (Datas.type == "login") {
@@ -312,10 +313,12 @@ $('[data-action="GenereSIIG"]').click(function () {
             }
             if (Datas.type == "PEtat") {
                 alert(Datas.msg);
+                emptyTable();
                 return;
             }
             if (Datas.type == "Prese") {
                 alert(Datas.msg);
+                emptyTable();
                 return;
             }
             if (Datas.type == "success") {
