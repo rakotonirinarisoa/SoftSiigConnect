@@ -118,7 +118,14 @@ function GetListLOAD() {
 
                 return;
             }
-
+            if (Datas.type == "PEtat") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "Prese") {
+                alert(Datas.msg);
+                return;
+            }
             if (Datas.type == "success") {
                 listResult = Datas.data
 
@@ -301,6 +308,14 @@ $('[data-action="GenereSIIG"]').click(function () {
             if (Datas.type == "login") {
                 alert(Datas.msg);
                 window.location = window.location.origin;
+                return;
+            }
+            if (Datas.type == "PEtat") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "Prese") {
+                alert(Datas.msg);
                 return;
             }
             if (Datas.type == "success") {

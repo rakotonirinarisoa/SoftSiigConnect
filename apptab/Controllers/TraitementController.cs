@@ -291,6 +291,17 @@ namespace apptab.Controllers
 
                 List<DATATRPROJET> list = new List<DATATRPROJET>();
 
+                //Check si la correspondance des états est OK//
+                var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                if (numCaEtapAPP == null) return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
+                //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
+                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEF) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état DEF n'est pas paramétré sur TOM²PRO. " }, settings));
+                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEF) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état TEF n'est pas paramétré sur TOM²PRO. " }, settings));
+                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
+
                 if (db.SI_TRAITPROJET.Any(a => a.IDPROJET == crpt && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 0))
                 {
                     foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 0).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
@@ -360,7 +371,17 @@ namespace apptab.Controllers
                 SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
                 List<DATATRPROJET> list = new List<DATATRPROJET>();
-                //List<DATATRPROJET> listORDER = new List<DATATRPROJET>();
+
+                //Check si la correspondance des états est OK//
+                var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                if (numCaEtapAPP == null) return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
+                //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
+                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEF) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état DEF n'est pas paramétré sur TOM²PRO. " }, settings));
+                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEF) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état TEF n'est pas paramétré sur TOM²PRO. " }, settings));
+                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
 
                 if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 0) != null)
                 {
@@ -857,6 +878,7 @@ namespace apptab.Controllers
                 //Check si le projet est mappé à une base de données TOM²PRO//
                 if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
+
 
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
                 SOFTCONNECTOM tom = new SOFTCONNECTOM();

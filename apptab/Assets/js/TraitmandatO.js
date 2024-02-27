@@ -115,7 +115,14 @@ function GetListLOADOTHER() {
                 window.location = window.location.origin;
                 return;
             }
-
+            if (Datas.type == "PEtat") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "Prese") {
+                alert(Datas.msg);
+                return;
+            }
             if (Datas.type == "success") {
                 listResult = Datas.data;
 
@@ -275,6 +282,14 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                 alert(Datas.msg);
                 window.location = window.location.origin;
 
+                return;
+            }
+            if (Datas.type == "PEtat") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "Prese") {
+                alert(Datas.msg);
                 return;
             }
             if (Datas.type == "success") {
