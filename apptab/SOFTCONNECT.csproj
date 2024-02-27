@@ -179,6 +179,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BordTraitementController.cs" />
     <Compile Include="Controllers\CryptoController.cs" />
     <Compile Include="Controllers\EtatController.cs" />
     <Compile Include="Controllers\FtpController.cs" />
@@ -218,6 +219,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\COUNTTDB.cs" />
+    <Compile Include="Models\TxLISTETRAIT.cs" />
     <Compile Include="Models\DATATRPROJET.cs" />
     <Compile Include="Models\FCOMPTA.cs" />
     <Compile Include="Models\FOP.cs" />
@@ -2155,9 +2157,13 @@
     <Content Include="Assets\js\BonPourPaiement.js" />
     <Content Include="Assets\js\FValidations.js" />
     <Content Include="Assets\js\ProjectsDetails.js" />
+    <Content Include="Assets\js\BordListeEngaPaie.js" />
     <Content Include="Assets\js\TraitementORDSEC.js" />
+    <Content Include="Assets\js\TDBDOC.js" />
     <Content Include="Assets\js\TraitmandatDOCT.js" />
+    <Content Include="Assets\js\TDBLIAS.js" />
     <Content Include="Assets\js\TraitmandatLIAST.js" />
+    <Content Include="Assets\js\TDBModal.js" />
     <Content Include="Assets\js\TraitmandatModalT.js" />
     <Content Include="Assets\js\TraitmandatO.js" />
     <Content Include="Assets\js\TypeC.js" />
@@ -4571,6 +4577,7 @@
     <Content Include="Views\Parametre\TypeECreate.cshtml" />
     <Content Include="Views\Projects\AllProjects.cshtml" />
     <Content Include="Views\Projects\NewProject.cshtml" />
+    <Content Include="Views\BordTraitement\BordListeEngaPaie.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

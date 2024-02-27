@@ -6,7 +6,7 @@ $(document).ready(() => {
     Origin = User.origin;
 
     $(`[data-id="username"]`).text(User.LOGIN);
-    
+
     GetListProjet();
 
     $(`[data-widget="pushmenu"]`).on('click', () => {
@@ -14,13 +14,13 @@ $(document).ready(() => {
     });
 });
 
+$('#proj').on('change', () => {
+    emptyTable();
+});
+
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
-
-$('#projMANDAT').on('change', () => {
-    emptyTableTRM();
-});
 
 function GetListProjet() {
     let formData = new FormData();
@@ -32,7 +32,7 @@ function GetListProjet() {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/Traitement/GetAllPROJET',
+        url: Origin + '/BordTraitement/GetAllPROJET',
         data: formData,
         cache: false,
         contentType: false,
@@ -55,20 +55,18 @@ function GetListProjet() {
                 window.location = window.location.origin;
                 return;
             }
-            
-            $(`[data-id="proj-listMANDAT"]`).text("");
 
+            $(`[data-id="proj-list"]`).text("");
             var code = ``;
-
-            $.each(Datas.data, function (k, v) {
+            $.each(Datas.data.List, function (k, v) {
                 code += `
                     <option value="${v.ID}">${v.PROJET}</option>
                 `;
             });
-            
-            $(`[data-id="proj-listMANDAT"]`).append(code);
 
-            emptyTableTRM();
+            $(`[data-id="proj-list"]`).append(code);
+
+            $("#proj").val([...Datas.data.PROJET]).trigger('change');
         },
         error: function (e) {
             alert("Problème de connexion. ");
@@ -76,23 +74,45 @@ function GetListProjet() {
     })
 }
 
-//GENERER//
-$('[data-action="GenereR"]').click(async function () {
+$('.Checkall').change(function () {
+
+    if ($('.Checkall').prop("checked") == true) {
+
+        $('[compteg-ischecked]').prop("checked", true);
+    } else {
+        $('[compteg-ischecked]').prop("checked", false);
+    }
+
+});
+
+function emptyTable() {
+    const data = [];
+
+    if (table !== undefined) {
+        table.destroy();
+    }
+
+    table = $('#TBD_PROJET_ORDSEC').DataTable({
+        data
+    });
+}
+
+$('[data-action="GenereLISTE"]').click(function () {
     let dd = $("#dateD").val();
     let df = $("#dateF").val();
     if (!dd || !df) {
-        alert("Veuillez renseigner les dates afin de générer les mandats. ");
+        alert("Veuillez renseigner les dates afin de générer la liste. ");
         return;
     }
 
-    let pr = $("#projMANDAT").val();
+    let pr = $("#proj").val();
     if (!pr) {
         alert("Veuillez sélectionner au moins un projet. ");
         return;
     }
 
     let formData = new FormData();
-    //alert(baseName);
+
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
@@ -101,12 +121,11 @@ $('[data-action="GenereR"]').click(async function () {
     formData.append("DateDebut", $('#dateD').val());
     formData.append("DateFin", $('#dateF').val());
 
-    formData.append("iProjet", $("#projMANDAT").val());
+    formData.append("listProjet", $("#proj").val());
 
     $.ajax({
         type: "POST",
-        async: true,
-        url: Origin + '/Traitement/Generation',
+        url: Origin + '/BordTraitement/GenereLISTE',
         data: formData,
         cache: false,
         contentType: false,
@@ -122,17 +141,7 @@ $('[data-action="GenereR"]').click(async function () {
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
-                emptyTableTRM();
-                return;
-            }
-            if (Datas.type == "PEtat") {
-                alert(Datas.msg);
-                emptyTableTRM();
-                return;
-            }
-            if (Datas.type == "Prese") {
-                alert(Datas.msg);
-                emptyTableTRM();
+                emptyTable();
                 return;
             }
             if (Datas.type == "login") {
@@ -140,29 +149,37 @@ $('[data-action="GenereR"]').click(async function () {
                 window.location = window.location.origin;
                 return;
             }
+            if (Datas.type == "PEtat") {
+                alert(Datas.msg);
+                emptyTable();
+                return;
+            }
+            if (Datas.type == "Prese") {
+                alert(Datas.msg);
+                emptyTable();
+                return;
+            }
             if (Datas.type == "success") {
-                listResult = Datas.data;
+                listResult = Datas.data
 
                 const data = [];
 
-                $.each(listResult, function (k, v) {
+                $.each(listResult, function (_, v) {
                     data.push({
                         id: v.No,
                         soa: v.SOA,
                         projet: v.PROJET,
                         ref: v.REF,
-                        objet: v.OBJ,
-                        titulaire: v.TITUL,
-                        dateMandat: formatDate(v.DATE),
-                        compte: v.COMPTE,
-                        pcop: v.PCOP,
-                        montant: formatCurrency(String(v.MONT).replace(",", ".")),
-                        dateDEF: formatDate(v.DATEDEF),
-                        dateTEF: formatDate(v.DATETEF),
-                        dateBE: formatDate(v.DATEBE),
+                        benef: v.BENEF,
+                        DATENGAGEMENT: formatDate(v.DATENGAGEMENT),
+                        MONTENGAGEMENT: formatCurrency(String(v.MONTENGAGEMENT).replace(",", ".")),
+                        DATEPAIE: formatDate(v.DATEPAIE),
+                        MONTPAIE: formatCurrency(String(v.MONTPAIE).replace(",", ".")),
                         imputation: '',
                         piecesJustificatives: '',
-                        document: ''
+                        document: '',
+                        rejeter: '',
+                        isLATE: v.isLATE
                     });
                 });
 
@@ -170,7 +187,7 @@ $('[data-action="GenereR"]').click(async function () {
                     table.destroy();
                 }
 
-                table = $('#TBD_PROJET_MANDAT').DataTable({
+                table = $('#TBD_PROJET_ORDSEC').DataTable({
                     data,
                     columns: [
                         {
@@ -185,20 +202,16 @@ $('[data-action="GenereR"]').click(async function () {
                         { data: 'soa' },
                         { data: 'projet' },
                         { data: 'ref' },
-                        { data: 'objet' },
-                        { data: 'titulaire' },
-                        { data: 'dateMandat' },
-                        { data: 'compte' },
-                        { data: 'pcop' },
-                        { data: 'montant' },
-                        { data: 'dateDEF' },
-                        { data: 'dateTEF' },
-                        { data: 'dateBE' },
+                        { data: 'benef' },
+                        { data: 'DATENGAGEMENT' },
+                        { data: 'MONTENGAGEMENT' },
+                        { data: 'DATEPAIE' },
+                        { data: 'MONTPAIE' },
                         {
                             data: 'imputation',
                             render: function (_, _, row, _) {
                                 return `
-                                    <div onclick="modalD('${row.id}')">
+                                    <div onclick="modalD('${row.id}','${row.projet}')">
                                         <i class="fa fa-tags fa-lg text-danger elerfr"></i>
                                     </div>
                                 `;
@@ -208,7 +221,7 @@ $('[data-action="GenereR"]').click(async function () {
                             data: 'piecesJustificatives',
                             render: function (_, _, row, _) {
                                 return `
-                                    <div onclick="modalF('${row.id}')">
+                                    <div onclick="modalF('${row.id}','${row.projet}')">
                                         <i class="fa fa-tags fa-lg text-success elerfr"></i>
                                     </div>
                                 `;
@@ -218,7 +231,7 @@ $('[data-action="GenereR"]').click(async function () {
                             data: 'document',
                             render: function (_, _, row, _) {
                                 return `
-                                    <div onclick="modalLIAS('${row.id}')">
+                                    <div onclick="modalLIAS('${row.id}','${row.projet}')">
                                         <i class="fa fa-tags fa-lg text-info elerfr"></i>
                                     </div>
                                 `;
@@ -228,11 +241,14 @@ $('[data-action="GenereR"]').click(async function () {
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
                         $(row).addClass('select-text');
-                    },
 
+                        if (data.isLATE) {
+                            $(row).attr('style', "background-color: #FF7F7F !important;");
+                        }
+                    },
                     columnDefs: [
                         {
-                            targets: [-3, -2, -1]
+                            targets: [-4, -3, -2, -1]
                         }
                     ],
                     colReorder: {
@@ -252,83 +268,4 @@ $('[data-action="GenereR"]').click(async function () {
             alert("Problème de connexion. ");
         }
     });
-});
-
-$('[data-action="SaveV"]').click(function () {
-    let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
-
-    let list = [];
-    $.each(CheckList, (k, v) => {
-        list.push($(v).attr("compteG-id"));
-    });
-
-    if (list.length == 0) {
-        alert("Veuillez sélectionner au moins un mandat afin de l'enregistrer et l'envoyer pour validation. ");
-        return;
-    }
-
-    let formData = new FormData();
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDPROJET", User.IDSOCIETE);
-
-    formData.append("listCompte", list);
-
-    formData.append("DateDebut", $('#dateD').val());
-    formData.append("DateFin", $('#dateF').val());
-
-    formData.append("iProjet", $("#projMANDAT").val());
-
-    $.ajax({
-        type: "POST",
-        url: Origin + '/Traitement/GetCheckedEcritureF',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        beforeSend: function () {
-            loader.removeClass('display-none');
-        },
-        complete: function () {
-            loader.addClass('display-none');
-        },
-        success: function (result) {
-            var Datas = JSON.parse(result);
-            alert(Datas.msg);
-            $.each(CheckList, (k, v) => {
-                list.push($(v).remove());
-            });
-        },
-        error: function () {
-            alert("Problème de connexion. ");
-        }
-    });
-});
-
-$('.Checkall').change(function () {
-
-    if ($('.Checkall').prop("checked") == true) {
-
-        $('[compteg-ischecked]').prop("checked", true);
-    } else {
-        $('[compteg-ischecked]').prop("checked", false);
-    }
-
-});
-
-function emptyTableTRM() {
-    const data = [];
-
-    if (table !== undefined) {
-        table.destroy();
-    }
-
-    table = $('#TBD_PROJET_MANDAT').DataTable({
-        data
-    });
-}
-
-$('#btn-export-excel').on('click', () => {
-    exportTableToExcel('TBD_PROJET_MANDAT');
 });
