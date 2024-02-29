@@ -24,5 +24,11 @@ namespace apptab
         public DateTime? DATEVALORDSEC { get; set; }
         public DateTime? DATESENDSIIG { get; set; }
         public DateTime? DATESIIGFP { get; set; }
+
+
+        public string AGENTREJETE { get; set; }
+        public DateTime? DATEREJETE { get; set; }
+        public string MOTIF { get; set; }
+        public string COMMENTAIRE { get; set; }
     }
 }

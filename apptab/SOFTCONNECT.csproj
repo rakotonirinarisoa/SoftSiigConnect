@@ -2155,6 +2155,7 @@
     <Content Include="Assets\img\LogoS.png" />
     <Content Include="Assets\js\AACUL.js" />
     <Content Include="Assets\js\BonPourPaiement.js" />
+    <Content Include="Assets\js\BordEngaREJETE.js" />
     <Content Include="Assets\js\BordStatutEnga.js" />
     <Content Include="Assets\js\FValidations.js" />
     <Content Include="Assets\js\ProjectsDetails.js" />
@@ -4582,6 +4583,7 @@
     <Content Include="Views\BordTraitement\BordListeEngaPaie.cshtml" />
     <Content Include="Views\BordTraitement\StatutEngagements.cshtml" />
     <Content Include="Views\Traitement\TraitementSENDSIIGFP.cshtml" />
+    <Content Include="Views\BordTraitement\EngagementsREJETE.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
