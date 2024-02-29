@@ -514,6 +514,9 @@ namespace SOFTCONNECT.Controllers
                     Session["GED"] = isMenu.LIEN;
                 }
 
+                test.LASTCONNEXTION = DateTime.Now;
+                db.SaveChanges();
+
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", Data = new { test.ROLE, test.IDPROJET } }, settings));
             }
             catch (Exception ex)

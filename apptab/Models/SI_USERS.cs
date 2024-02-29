@@ -25,6 +25,7 @@
 
         [Column(TypeName = "smalldatetime")]
         public DateTime? CREATIONDATE { get; set; }
+        public DateTime? LASTCONNEXTION { get; set; }
 
     }
 }
