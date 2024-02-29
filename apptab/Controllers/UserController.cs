@@ -490,6 +490,7 @@ namespace SOFTCONNECT.Controllers
                 if (db.SI_MENU.Any())
                 {
                     var isMenu = db.SI_MENU.FirstOrDefault();
+                    Session["MTNON"] = isMenu.MTNON;
                     Session["MT0"] = isMenu.MT0;
                     Session["MT1"] = isMenu.MT1;
                     Session["MT2"] = isMenu.MT2;

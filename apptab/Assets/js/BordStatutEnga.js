@@ -125,7 +125,7 @@ $('[data-action="GenereLISTE"]').click(function () {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/BordTraitement/GenereLISTE',
+        url: Origin + '/BordTraitement/GenereSTATLISTE',
         data: formData,
         cache: false,
         contentType: false,
@@ -171,14 +171,15 @@ $('[data-action="GenereLISTE"]').click(function () {
                         projet: v.PROJET,
                         ref: v.REF,
                         benef: v.BENEF,
-                        DATENGAGEMENT: formatDate(v.DATENGAGEMENT),
                         MONTENGAGEMENT: formatCurrency(String(v.MONTENGAGEMENT).replace(",", ".")),
-                        DATEPAIE: formatDate(v.DATEPAIE),
-                        MONTPAIE: formatCurrency(String(v.MONTPAIE).replace(",", ".")),
+                        DATETRANSFERTRAF: formatDate(v.DATETRANSFERTRAF),
+                        DATEVALORDSEC: formatDate(v.DATEVALORDSEC),
+                        DATESENDSIIG: formatDate(v.DATESENDSIIG),
+                        DATESIIGFP: formatDate(v.DATESIIGFP),
+                        
                         //imputation: '',
                         //piecesJustificatives: '',
-                        //document: '',
-                        /*rejeter: '',*/
+                        //document: ''
                         /*isLATE: v.isLATE*/
                     });
                 });
@@ -203,10 +204,11 @@ $('[data-action="GenereLISTE"]').click(function () {
                         { data: 'projet' },
                         { data: 'ref' },
                         { data: 'benef' },
-                        { data: 'DATENGAGEMENT' },
                         { data: 'MONTENGAGEMENT' },
-                        { data: 'DATEPAIE' },
-                        { data: 'MONTPAIE' },
+                        { data: 'DATETRANSFERTRAF' },
+                        { data: 'DATEVALORDSEC' },
+                        { data: 'DATESENDSIIG' },
+                        { data: 'DATESIIGFP' },
                         //{
                         //    data: 'imputation',
                         //    render: function (_, _, row, _) {

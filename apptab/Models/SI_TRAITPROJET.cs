@@ -1,6 +1,7 @@
 ﻿namespace apptab
 {
     using System;
+    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
     public partial class SI_TRAITPROJET
@@ -31,6 +32,9 @@
         public DateTime? DATEVALIDATION { get; set; }
 
         [Column(TypeName = "smalldatetime")]
+        public DateTime? DATENVOISIIGFP { get; set; }
+
+        [Column(TypeName = "smalldatetime")]
         public DateTime? DATESIIG { get; set; }
 
         [Column(TypeName = "smalldatetime")]
@@ -51,5 +55,13 @@
 
         public int? IDUSERCREATE { get; set; }
         public int? IDUSERVALIDATE { get; set; }
+        public int? IDUSERENVOISIIGFP { get; set; }
+
+        [StringLength(50)]
+        public string NDEFSIIG { get; set; }
+        [StringLength(50)]
+        public string NTEFSIIG { get; set; }
+        [StringLength(50)]
+        public string NBESIIG { get; set; }
     }
 }

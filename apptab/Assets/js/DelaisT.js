@@ -35,6 +35,7 @@ function GetUsers() {
                 alert(Datas.msg);
                 $("#ParaV").val("");
                 $("#ParaS").val("");
+                $("#ParaSiig").val("");
                 $("#ParaPe").val("");
                 $("#ParaPv").val("");
                 $("#ParaPp").val("");
@@ -49,6 +50,7 @@ function GetUsers() {
 
             $("#ParaV").val(Datas.data.DELTV);
             $("#ParaS").val(Datas.data.DELSIIGFP);
+            $("#ParaSiig").val(Datas.data.DELENVOISIIGFP);
             $("#ParaPe").val(Datas.data.DELPE);
             $("#ParaPv").val(Datas.data.DELPV);
             $("#ParaPp").val(Datas.data.DELPP);
@@ -73,11 +75,12 @@ $('#proj').on('change', () => {
 $(`[data-action="UpdateUser"]`).click(function () {
     let ParaV = $("#ParaV").val();
     let ParaS = $("#ParaS").val();
+    let ParaSiig = $("#ParaSiig").val();
     let ParaPe = $("#ParaPe").val();
     let ParaPv = $("#ParaPv").val();
     let ParaPp = $("#ParaPp").val();
     let ParaPb = $("#ParaPb").val();
-    if (!ParaV || !ParaS || !ParaPe || !ParaPv || !ParaPp || !ParaPb) {
+    if (!ParaV || !ParaS || !ParaSiig || !ParaPe || !ParaPv || !ParaPp || !ParaPb) {
         alert("Veuillez renseigner les délais de traitement. ");
         return;
     }
@@ -97,6 +100,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
 
     formData.append("param.DELTV", $(`#ParaV`).val());
     formData.append("param.DELSIIGFP", $(`#ParaS`).val());
+    formData.append("param.DELENVOISIIGFP", $(`#ParaSiig`).val());
     formData.append("param.DELPE", $(`#ParaPe`).val());
     formData.append("param.DELPV", $(`#ParaPv`).val());
     formData.append("param.DELPP", $(`#ParaPp`).val());

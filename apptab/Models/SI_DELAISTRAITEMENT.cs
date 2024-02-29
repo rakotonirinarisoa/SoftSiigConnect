@@ -1,4 +1,4 @@
-namespace apptab
+﻿namespace apptab
 {
     using System;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -13,6 +13,8 @@ namespace apptab
         public DateTime? DELETIONDATE { get; set; }
 
         public int? DELTV { get; set; }
+
+        public int? DELENVOISIIGFP { get; set; }
 
         public int? DELSIIGFP { get; set; }
 

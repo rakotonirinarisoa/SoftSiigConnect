@@ -18,5 +18,11 @@ namespace apptab
         public string SOA { get; set; }
         public string PROJET { get; set; }
         public bool? isLATE { get; set; }
+
+
+        public DateTime? DATETRANSFERTRAF { get; set; }
+        public DateTime? DATEVALORDSEC { get; set; }
+        public DateTime? DATESENDSIIG { get; set; }
+        public DateTime? DATESIIGFP { get; set; }
     }
 }

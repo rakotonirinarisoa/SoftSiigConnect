@@ -375,7 +375,7 @@
                             <a href="../Traitement/TraitementORDSECOTHER" class="nav-link">
                                 <i class="nav-icon fas fa-list-ol"></i>
                                 <p>
-                                    @Session["MT0"]
+                                    @Session["MTNON"]
                                 </p>
                             </a>
                         </li>
@@ -383,12 +383,20 @@
                             <a href="../Traitement/TraitementPROJET" class="nav-link">
                                 <i class="nav-icon fas fa-list-ol"></i>
                                 <p>
-                                    @Session["MT1"]
+                                    @Session["MT0"]
                                 </p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="../Traitement/TraitementORDSEC" class="nav-link">
+                                <i class="nav-icon fas fa-list-ol"></i>
+                                <p>
+                                    @Session["MT1"]
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../Traitement/TraitementSENDSIIGFP" class="nav-link">
                                 <i class="nav-icon fas fa-list-ol"></i>
                                 <p>
                                     @Session["MT2"]
@@ -501,6 +509,14 @@
                                 <i class="nav-icon fas fa-file-alt"></i>
                                 <p>
                                     Liste des engagements et paiements
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../BordTraitement/StatutEngagements" class="nav-link">
+                                <i class="nav-icon fas fa-file-alt"></i>
+                                <p>
+                                    Statut des engagements
                                 </p>
                             </a>
                         </li>

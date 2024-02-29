@@ -54,6 +54,7 @@ namespace apptab.Controllers
                         MT0 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT0 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT0 : 0,
                         MT1 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT1 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT1 : 0,
                         MT2 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT2 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT2 : 0,
+                        MTNON = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MTNON != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MTNON : 0,
 
                         MP1 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MP1 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MP1 : 0,
                         MP2 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MP2 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MP2 : 0,
@@ -97,6 +98,7 @@ namespace apptab.Controllers
                         MT0 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT0 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT0 : 0,
                         MT1 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT1 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT1 : 0,
                         MT2 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT2 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT2 : 0,
+                        MTNON = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MTNON != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MTNON : 0,
 
                         MP1 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MP1 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MP1 : 0,
                         MP2 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MP2 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MP2 : 0,
@@ -156,6 +158,7 @@ namespace apptab.Controllers
                 MT0 = privilege.MT0,
                 MT1 = privilege.MT1,
                 MT2 = privilege.MT2,
+                MTNON = privilege.MTNON,
 
                 MP1 = privilege.MP1,
                 MP2 = privilege.MP2,
