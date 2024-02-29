@@ -89,9 +89,9 @@ function GetListUser() {
                 if (v.MENUPAR8 == 2) MENUPAR8A = "checked";
 
                 let MTNONN = "", MTNONR = "", MTNONA = "";
-                if (v.MTNON == 0) MT0N = "checked";
-                if (v.MTNON == 1) MT0R = "checked";
-                if (v.MTNON == 2) MT0A = "checked";
+                if (v.MTNON == 0) MTNONN = "checked";
+                if (v.MTNON == 1) MTNONR = "checked";
+                if (v.MTNON == 2) MTNONA = "checked";
 
                 let MT0N = "", MT0R = "", MT0A = "";
                 if (v.MT0 == 0) MT0N = "checked";

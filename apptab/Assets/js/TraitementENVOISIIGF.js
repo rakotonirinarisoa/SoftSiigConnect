@@ -151,8 +151,8 @@ function GetListLOAD() {
                         imputation: '',
                         piecesJustificatives: '',
                         document: '',
-                        rejeter: '',
-                        isLATE: v.isLATE
+                        //rejeter: '',
+                        //isLATE: v.isLATE
                     });
                 });
 
@@ -216,24 +216,24 @@ function GetListLOAD() {
                                 `;
                             }
                         },
-                        {
-                            data: 'rejeter',
-                            render: function (_, _, row, _) {
-                                return `
-                                    <div onclick="modalREJET('${row.id}')">
-                                        <i class="fa fa-times fa-lg text-dark elerfr"></i>
-                                    </div>
-                                `;
-                            }
-                        }
+                        //{
+                        //    data: 'rejeter',
+                        //    render: function (_, _, row, _) {
+                        //        return `
+                        //            <div onclick="modalREJET('${row.id}')">
+                        //                <i class="fa fa-times fa-lg text-dark elerfr"></i>
+                        //            </div>
+                        //        `;
+                        //    }
+                        //}
                     ],
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
                         $(row).addClass('select-text');
 
-                        if (data.isLATE) {
-                            $(row).attr('style', "background-color: #FF7F7F !important;");
-                        }
+                        //if (data.isLATE) {
+                        //    $(row).attr('style', "background-color: #FF7F7F !important;");
+                        //}
                     },
                     columnDefs: [
                         {
@@ -346,8 +346,8 @@ $('[data-action="GenereSIIG"]').click(function () {
                         imputation: '',
                         piecesJustificatives: '',
                         document: '',
-                        rejeter: '',
-                        isLATE: v.isLATE
+                        //rejeter: '',
+                        //isLATE: v.isLATE
                     });
                 });
 
@@ -411,24 +411,24 @@ $('[data-action="GenereSIIG"]').click(function () {
                                 `;
                             }
                         },
-                        {
-                            data: 'rejeter',
-                            render: function (_, _, row, _) {
-                                return `
-                                    <div onclick="modalREJET('${row.id}')">
-                                        <i class="fa fa-times fa-lg text-dark elerfr"></i>
-                                    </div>
-                                `;
-                            }
-                        }
+                        //{
+                        //    data: 'rejeter',
+                        //    render: function (_, _, row, _) {
+                        //        return `
+                        //            <div onclick="modalREJET('${row.id}')">
+                        //                <i class="fa fa-times fa-lg text-dark elerfr"></i>
+                        //            </div>
+                        //        `;
+                        //    }
+                        //}
                     ],
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
                         $(row).addClass('select-text');
 
-                        if (data.isLATE) {
-                            $(row).attr('style', "background-color: #FF7F7F !important;");
-                        }
+                        //if (data.isLATE) {
+                        //    $(row).attr('style', "background-color: #FF7F7F !important;");
+                        //}
                     },
                     columnDefs: [
                         {
