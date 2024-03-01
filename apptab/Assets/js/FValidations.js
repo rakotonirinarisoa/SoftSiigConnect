@@ -213,13 +213,13 @@ function getelementTXT(a) {
         complete: function () {
             loader.addClass('display-none');
         },
-        success: function (result, filename, contentType) {
-            console.log(filename);
+        success: function (result) {
+            console.log(result);
             let blobUrl = URL.createObjectURL(result);
 
             let a = document.createElement("a");
             a.href = blobUrl;
-            a.download = documentName;
+            a.download = "ss";
             document.body.appendChild(a);
             a.click();
 

@@ -160,8 +160,7 @@ namespace apptab.Controllers
                 sw.Close();
                 byte[] source = System.IO.File.ReadAllBytes(pth + pathchemin + ".txt");
                 string s = "application/txt";
-                return File(source, System.Net.Mime.MediaTypeNames.Application.Octet, pathchemin);
-                
+                return File(source, System.Net.Mime.MediaTypeNames.Application.Octet, pathfiles);
             }
             catch (Exception ex)
             {
@@ -324,7 +323,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult getelementjs(int ChoixBase, string codeproject, string journal, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP,/* int mois, int annee, string matr1, string matr2, DateTime datePaie,*/ SI_USERS suser)
+        public JsonResult Getelementjs(int ChoixBase, string codeproject, string journal, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP,/* int mois, int annee, string matr1, string matr2, DateTime datePaie,*/ SI_USERS suser)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
