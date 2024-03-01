@@ -145,6 +145,29 @@ namespace apptab.Controllers
             }
 
         }
+        public FileResult CreateFileAFBtXt(string pathchemin, string pathfiles)
+        {
+            try
+            {
+                string pth = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\";
+                if (!Directory.Exists(pth))
+                {
+                    Directory.CreateDirectory(pth);
+                }
+                StreamWriter sw = null;
+                sw = new StreamWriter(pth + pathchemin + ".txt");
+                sw.Write(pathfiles);
+                sw.Close();
+                byte[] source = System.IO.File.ReadAllBytes(pth + pathchemin + ".txt");
+                string s = "application/txt";
+                return File(source, System.Net.Mime.MediaTypeNames.Application.Octet, pathchemin);
+                
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
         public string CreateAFBTXTArch(string pathchemin, string pathfiles, string psw)
         {
             string pth = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\";
@@ -175,12 +198,14 @@ namespace apptab.Controllers
             var ps = db.SI_USERS.Where(x => x.LOGIN == suser.LOGIN /*&& x.IDPROJET == PROJECTID*/ && x.PWD == suser.PWD).Select(x => x.PWD).FirstOrDefault();
 
             var pswftp = db.OPA_CRYPTO.Where(x => x.IDPROJET == PROJECTID && x.IDUSER == suser.ID && x.DELETIONDATE != null).Select(x => x.CRYPTOPWD).FirstOrDefault();
+            // pathfile = aFB160.CreateTOMPAIEAFB160(devise, codeJ, suser, codeproject);
+            
             if (baseName == "1")
             {
                 var pathfile = aFB160.CreateTOMPAIEAFB160(devise, codeJ, suser, codeproject);
                 if (intbasetype == 0)
                 {
-                    send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
+                    return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                 }
                 else if (intbasetype == 1)
                 {
@@ -208,7 +233,8 @@ namespace apptab.Controllers
                 var pathfile = aFB160.CreateTOMPROAFB160(devise, codeJ, suser, codeproject);
                 if (intbasetype == 0)
                 {
-                    send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
+                    //send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
+                    return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                 }
                 else if (intbasetype == 1)
                 {
@@ -236,7 +262,8 @@ namespace apptab.Controllers
                 //var send = "";
                 if (intbasetype == 0)
                 {
-                    send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
+                    //send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
+                   return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                 }
                 else if (intbasetype == 1)
                 {
@@ -1242,7 +1269,7 @@ namespace apptab.Controllers
         }
         //======================================================================================================Cancel===============================================================
 
-        public JsonResult CancelEcriture(int id, string motif, string commentaire, SI_USERS suser,string codeproject)
+        public JsonResult CancelEcriture(int id, string motif, string commentaire, SI_USERS suser, string codeproject)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));

@@ -202,6 +202,10 @@ function getelementTXT(a) {
         data: formData,
         cache: false,
         contentType: false,
+        datatype: 'json',
+        xhrFields: {
+            responseType: 'blob'
+        },
         processData: false,
         beforeSend: function () {
             loader.removeClass('display-none');
@@ -209,17 +213,15 @@ function getelementTXT(a) {
         complete: function () {
             loader.addClass('display-none');
         },
-        success: function (result) {
-            var Datas = JSON.parse(result);
-            alert(Datas.data)
-            if (Datas.type == "error") {
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
+        success: function (result, filename, contentType) {
+            console.log(filename);
+            let blobUrl = URL.createObjectURL(result);
 
-                return;
-            }
+            let a = document.createElement("a");
+            a.href = blobUrl;
+            a.download = documentName;
+            document.body.appendChild(a);
+            a.click();
 
             window.location = '/Home/GetFile?file=' + Datas.data;
 
