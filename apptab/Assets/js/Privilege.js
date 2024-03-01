@@ -88,6 +88,11 @@ function GetListUser() {
                 if (v.MENUPAR8 == 1) MENUPAR8R = "checked";
                 if (v.MENUPAR8 == 2) MENUPAR8A = "checked";
 
+                let MTNONN = "", MTNONR = "", MTNONA = "";
+                if (v.MTNON == 0) MTNONN = "checked";
+                if (v.MTNON == 1) MTNONR = "checked";
+                if (v.MTNON == 2) MTNONA = "checked";
+
                 let MT0N = "", MT0R = "", MT0A = "";
                 if (v.MT0 == 0) MT0N = "checked";
                 if (v.MT0 == 1) MT0R = "checked";
@@ -262,6 +267,18 @@ function GetListUser() {
                             </div></br>
                             <div class="form-check form-check-inline">
                                 <input type="radio" id="writeMENUPAR8${v.ID}" name="droneMENUPAR8${v.ID}" value="2" ${MENUPAR8A}/><label class="ml-1" for="writeMENUPAR8${v.ID}" style="font-weight:normal">All</label>
+                            </div>
+                        </td>
+
+                        <td text-align:center>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="noneMTNON${v.ID}" name="droneMTNON${v.ID}" value="0" ${MTNONN}/><label class="ml-1" for="noneMTNON${v.ID}" style="font-weight:normal">None</label>
+                            </div></br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="readMTNON${v.ID}" name="droneMTNON${v.ID}" value="1" ${MTNONR}/><label class="ml-1" for="readMTNON${v.ID}" style="font-weight:normal">Read</label>
+                            </div></br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="writeMTNON${v.ID}" name="droneMTNON${v.ID}" value="2" ${MTNONA}/><label class="ml-1" for="writeMTNON${v.ID}" style="font-weight:normal">All</label>
                             </div>
                         </td>
 
@@ -478,6 +495,7 @@ function SavePRIV(id) {
     formData.append("privilege.MENUPAR7", $(`input[name="droneMENUPAR7${id}"]:checked`).val());
     formData.append("privilege.MENUPAR8", $(`input[name="droneMENUPAR8${id}"]:checked`).val());
 
+    formData.append("privilege.MTNON", $(`input[name="droneMTNON${id}"]:checked`).val());
     formData.append("privilege.MT0", $(`input[name="droneMT0${id}"]:checked`).val());
     formData.append("privilege.MT1", $(`input[name="droneMT1${id}"]:checked`).val());
     formData.append("privilege.MT2", $(`input[name="droneMT2${id}"]:checked`).val());

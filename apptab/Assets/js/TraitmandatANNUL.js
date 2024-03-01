@@ -71,7 +71,7 @@ function modalREJET(id) {
 $(`[data-action="ANNULMANDAT"]`).click(function () {
     let user = $("#Motif").val();
     if (!user) {
-        alert("Veuillez renseigner le motf du rejet avant l'annulation du mandat. ");
+        alert("Veuillez renseigner le motif du rejet avant l'annulation du mandat. ");
         return;
     }
 

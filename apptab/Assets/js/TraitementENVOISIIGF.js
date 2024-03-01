@@ -6,7 +6,7 @@ $(document).ready(() => {
     Origin = User.origin;
 
     $(`[data-id="username"]`).text(User.LOGIN);
-    
+
     GetListProjet();
 
     $(`[data-widget="pushmenu"]`).on('click', () => {
@@ -14,13 +14,13 @@ $(document).ready(() => {
     });
 });
 
+$('#proj').on('change', () => {
+    GetListLOAD();
+});
+
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
-
-$('#proj').on('change', () => {
-    GetListLOADOTHER();
-});
 
 function GetListProjet() {
     let formData = new FormData();
@@ -70,8 +70,8 @@ function GetListProjet() {
             });
 
             $(`[data-id="proj-list"]`).append(code);
-            
-            GetListLOADOTHER();
+
+            GetListLOAD();
         },
         error: function (e) {
             alert("Problème de connexion. ");
@@ -79,19 +79,18 @@ function GetListProjet() {
     })
 }
 
-function GetListLOADOTHER() {
+function GetListLOAD() {
     let formData = new FormData();
 
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDPROJET", User.IDSOCIETE);
 
     formData.append("iProjet", $("#proj").val());
 
     $.ajax({
         type: "POST",
-        url: Origin + '/Traitement/GenerationSIIGLOADOTHER',
+        url: Origin + '/Traitement/GenerationSIIGLOADSEND',
         data: formData,
         cache: false,
         contentType: false,
@@ -112,7 +111,9 @@ function GetListLOADOTHER() {
             }
             if (Datas.type == "login") {
                 alert(Datas.msg);
+
                 window.location = window.location.origin;
+
                 return;
             }
             if (Datas.type == "PEtat") {
@@ -126,11 +127,11 @@ function GetListLOADOTHER() {
                 return;
             }
             if (Datas.type == "success") {
-                listResult = Datas.data;
+                listResult = Datas.data
 
                 const data = [];
 
-                $.each(listResult, function (k, v) {
+                $.each(listResult, function (_, v) {
                     data.push({
                         id: v.No,
                         soa: v.SOA,
@@ -145,9 +146,13 @@ function GetListLOADOTHER() {
                         dateDEF: formatDate(v.DATEDEF),
                         dateTEF: formatDate(v.DATETEF),
                         dateBE: formatDate(v.DATEBE),
+                        utilisateur: v.LIEN,
+                        dateGeneration: formatDate(v.DATECREATION),
                         imputation: '',
                         piecesJustificatives: '',
-                        document: ''
+                        document: '',
+                        //rejeter: '',
+                        //isLATE: v.isLATE
                     });
                 });
 
@@ -155,7 +160,7 @@ function GetListLOADOTHER() {
                     table.destroy();
                 }
 
-                table = $('#TBD_PROJET_OTHER').DataTable({
+                table = $('#TBD_PROJET_ORDSEC').DataTable({
                     data,
                     columns: [
                         {
@@ -179,6 +184,8 @@ function GetListLOADOTHER() {
                         { data: 'dateDEF' },
                         { data: 'dateTEF' },
                         { data: 'dateBE' },
+                        { data: 'utilisateur' },
+                        { data: 'dateGeneration' },
                         {
                             data: 'imputation',
                             render: function (_, _, row, _) {
@@ -208,15 +215,29 @@ function GetListLOADOTHER() {
                                     </div>
                                 `;
                             }
-                        }
+                        },
+                        //{
+                        //    data: 'rejeter',
+                        //    render: function (_, _, row, _) {
+                        //        return `
+                        //            <div onclick="modalREJET('${row.id}')">
+                        //                <i class="fa fa-times fa-lg text-dark elerfr"></i>
+                        //            </div>
+                        //        `;
+                        //    }
+                        //}
                     ],
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
                         $(row).addClass('select-text');
+
+                        //if (data.isLATE) {
+                        //    $(row).attr('style', "background-color: #FF7F7F !important;");
+                        //}
                     },
                     columnDefs: [
                         {
-                            targets: [-3, -2, -1]
+                            targets: [-4, -3, -2, -1]
                         }
                     ],
                     colReorder: {
@@ -238,12 +259,17 @@ function GetListLOADOTHER() {
     });
 }
 
-$('[data-action="GenereSIIGOTHER"]').click(function () {
+$('[data-action="GenereSIIG"]').click(function () {
     let dd = $("#dateD").val();
     let df = $("#dateF").val();
     if (!dd || !df) {
         alert("Veuillez renseigner les dates afin de générer les mandats. ");
+        return;
+    }
 
+    let pr = $("#proj").val();
+    if (!pr) {
+        alert("Veuillez sélectionner au moins un projet. ");
         return;
     }
 
@@ -261,7 +287,7 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/Traitement/GenerationSIIGOTHER',
+        url: Origin + '/Traitement/GenerationSIIGENVOI',
         data: formData,
         cache: false,
         contentType: false,
@@ -283,7 +309,6 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
             if (Datas.type == "login") {
                 alert(Datas.msg);
                 window.location = window.location.origin;
-
                 return;
             }
             if (Datas.type == "PEtat") {
@@ -297,11 +322,11 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                 return;
             }
             if (Datas.type == "success") {
-                listResult = Datas.data;
+                listResult = Datas.data
 
                 const data = [];
 
-                $.each(listResult, function (k, v) {
+                $.each(listResult, function (_, v) {
                     data.push({
                         id: v.No,
                         soa: v.SOA,
@@ -316,9 +341,13 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                         dateDEF: formatDate(v.DATEDEF),
                         dateTEF: formatDate(v.DATETEF),
                         dateBE: formatDate(v.DATEBE),
+                        utilisateur: v.LIEN,
+                        dateGeneration: formatDate(v.DATECREATION),
                         imputation: '',
                         piecesJustificatives: '',
-                        document: ''
+                        document: '',
+                        //rejeter: '',
+                        //isLATE: v.isLATE
                     });
                 });
 
@@ -326,7 +355,7 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                     table.destroy();
                 }
 
-                table = $('#TBD_PROJET_OTHER').DataTable({
+                table = $('#TBD_PROJET_ORDSEC').DataTable({
                     data,
                     columns: [
                         {
@@ -350,6 +379,8 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                         { data: 'dateDEF' },
                         { data: 'dateTEF' },
                         { data: 'dateBE' },
+                        { data: 'utilisateur' },
+                        { data: 'dateGeneration' },
                         {
                             data: 'imputation',
                             render: function (_, _, row, _) {
@@ -379,15 +410,29 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                                     </div>
                                 `;
                             }
-                        }
+                        },
+                        //{
+                        //    data: 'rejeter',
+                        //    render: function (_, _, row, _) {
+                        //        return `
+                        //            <div onclick="modalREJET('${row.id}')">
+                        //                <i class="fa fa-times fa-lg text-dark elerfr"></i>
+                        //            </div>
+                        //        `;
+                        //    }
+                        //}
                     ],
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
                         $(row).addClass('select-text');
+
+                        //if (data.isLATE) {
+                        //    $(row).attr('style', "background-color: #FF7F7F !important;");
+                        //}
                     },
                     columnDefs: [
                         {
-                            targets: [-3, -2, -1]
+                            targets: [-4, -3, -2, -1]
                         }
                     ],
                     colReorder: {
@@ -420,15 +465,57 @@ $('.Checkall').change(function () {
 
 });
 
+$('[data-action="SaveSIIG"]').click(function () {
+    let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
+    let list = [];
+    $.each(CheckList, (k, v) => {
+        list.push($(v).attr("compteG-id"));
+    });
+
+    let formData = new FormData();
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDSOCIETE);
+
+    formData.append("listCompte", list);
+
+    formData.append("iProjet", $("#proj").val());
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Traitement/GetCheckedEcritureORDSECSEND',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+            alert(Datas.msg);
+            $.each(CheckList, (k, v) => {
+                list.push($(v).remove());
+            });
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+});
 
 function emptyTable() {
     const data = [];
-    
+
     if (table !== undefined) {
         table.destroy();
     }
 
-    table = $('#TBD_PROJET_OTHER').DataTable({
+    table = $('#TBD_PROJET_ORDSEC').DataTable({
         data
     });
 }

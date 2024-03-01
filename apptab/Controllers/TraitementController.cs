@@ -26,7 +26,7 @@ namespace apptab.Controllers
         //Traitement mandats PROJET//
         public ActionResult TraitementPROJET()
         {
-            ViewBag.Controller = "Traitement MANDATS par PROJET";
+            ViewBag.Controller = "Tris des engagements par le RAF";
 
             return View();
         }
@@ -263,7 +263,7 @@ namespace apptab.Controllers
         //Traitement mandats ORDSEC//
         public ActionResult TraitementORDSEC()
         {
-            ViewBag.Controller = "MANDATS à valider par ORDSEC";
+            ViewBag.Controller = "Validation des engagements par ORDESEC";
 
             return View();
         }
@@ -283,13 +283,24 @@ namespace apptab.Controllers
                     retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELTV.Value;
 
                 //Check si le projet est mappé à une base de données TOM²PRO//
-                if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
+                if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
 
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
                 SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
                 List<DATATRPROJET> list = new List<DATATRPROJET>();
+
+                //Check si la correspondance des états est OK//
+                var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                if (numCaEtapAPP == null) return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
+                //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
+                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEF) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état DEF n'est pas paramétré sur TOM²PRO. " }, settings));
+                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEF) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état TEF n'est pas paramétré sur TOM²PRO. " }, settings));
+                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
 
                 if (db.SI_TRAITPROJET.Any(a => a.IDPROJET == crpt && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 0))
                 {
@@ -353,14 +364,24 @@ namespace apptab.Controllers
                     retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELTV.Value;
 
                 //Check si le projet est mappé à une base de données TOM²PRO//
-                if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
+                if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
 
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
                 SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
                 List<DATATRPROJET> list = new List<DATATRPROJET>();
-                //List<DATATRPROJET> listORDER = new List<DATATRPROJET>();
+
+                //Check si la correspondance des états est OK//
+                var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                if (numCaEtapAPP == null) return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
+                //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
+                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEF) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état DEF n'est pas paramétré sur TOM²PRO. " }, settings));
+                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEF) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état TEF n'est pas paramétré sur TOM²PRO. " }, settings));
+                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
 
                 if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 0) != null)
                 {
@@ -419,7 +440,7 @@ namespace apptab.Controllers
             int crpt = iProjet;
             var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
 
-            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt).FirstOrDefault().PROJET;
+            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET;
 
             var listCompteS = listCompte.Split(',');
             foreach (var SAV in listCompteS)
@@ -433,9 +454,9 @@ namespace apptab.Controllers
                     List<DATATRPROJET> list = new List<DATATRPROJET>();
 
                     Guid elem = Guid.Parse(SAV);
-                    if (db.SI_TRAITPROJET.FirstOrDefault(a => a.No == elem && a.ETAT == 2) != null)
+                    if (db.SI_TRAITPROJET.FirstOrDefault(a => a.No == elem && a.ETAT == 2 && a.IDPROJET == crpt) != null)
                     {
-                        var ismod = db.SI_TRAITPROJET.FirstOrDefault(a => a.No == elem);
+                        var ismod = db.SI_TRAITPROJET.FirstOrDefault(a => a.No == elem && a.IDPROJET == crpt);
                         ismod.ETAT = 0;
                         ismod.DATECRE = DateTime.Now;
                         ismod.DATEANNUL = null;
@@ -554,7 +575,7 @@ namespace apptab.Controllers
             int crpt = iProjet;
             var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
 
-            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt).FirstOrDefault().PROJET;
+            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET;
 
             var listCompteS = listCompte.Split(',');
             foreach (var SAV in listCompteS)
@@ -569,9 +590,6 @@ namespace apptab.Controllers
                     Guid isSAV = Guid.Parse(SAV);
                     if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.No == isSAV) != null)
                     {
-                        //SEND SIIGFP//
-
-
                         var isModified = db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.No == isSAV);
                         isModified.ETAT = 1;
                         isModified.DATEVALIDATION = DateTime.Now;
@@ -619,7 +637,7 @@ namespace apptab.Controllers
 
                 mail.Subject = "Validation pièces du projet " + ProjetIntitule;
                 mail.IsBodyHtml = true;
-                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " pièces validées pour le compte du projet " + ProjetIntitule + " et en attente du traitement de SiigFP.<br/><br>" +
+                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " pièces validées pour le compte du projet " + ProjetIntitule + " et en attente de transfert vers SIIGFP.<br/><br>" +
                     "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
 
                 smtp.Port = 587;
@@ -650,7 +668,7 @@ namespace apptab.Controllers
 
                 if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF) != null)
                 {
-                    foreach (var x in tom.TP_MPIECES_JUSTIFICATIVES.Where(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE != "DEF" && a.TYPEPIECE != "TEF" && a.TYPEPIECE != "BE").ToList())
+                    foreach (var x in tom.TP_MPIECES_JUSTIFICATIVES.Where(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE != "DEF" && a.TYPEPIECE != "TEF" && a.TYPEPIECE != "BE").OrderBy(a => a.RANG).ToList())
                     {
                         var idFGuid = Guid.Parse(IdF);
                         DateTime dpj = tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == idFGuid).FirstOrDefault().DATELIQUIDATION.Value;
@@ -806,9 +824,9 @@ namespace apptab.Controllers
             {
                 int IdS = iProjet;
 
-                if (db.SI_TRAITPROJET.FirstOrDefault(a => a.No == IdF) != null)
+                if (db.SI_TRAITPROJET.FirstOrDefault(a => a.No == IdF && a.IDPROJET == IdS) != null)
                 {
-                    var ismod = db.SI_TRAITPROJET.FirstOrDefault(a => a.No == IdF);
+                    var ismod = db.SI_TRAITPROJET.FirstOrDefault(a => a.No == IdF && a.IDPROJET == IdS);
                     ismod.ETAT = 2;
                     //ismod.DATECRE = DateTime.Now;
                     ismod.DATEANNUL = DateTime.Now;
@@ -839,7 +857,7 @@ namespace apptab.Controllers
         //Traitement mandats ORDSECOTHER//
         public ActionResult TraitementORDSECOTHER()
         {
-            ViewBag.Controller = "Traitement MANDATS";
+            ViewBag.Controller = "Dépenses initiées";
 
             return View();
         }
@@ -857,6 +875,7 @@ namespace apptab.Controllers
                 //Check si le projet est mappé à une base de données TOM²PRO//
                 if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
+
 
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
                 SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -921,7 +940,7 @@ namespace apptab.Controllers
                             //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
                             if (canBeDEF == false || canBeTEF == false || canBeBE == false)
                             {
-                                if (!db.SI_TRAITPROJET.Any(a => a.No == x.ID) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2))
+                                if (!db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.IDPROJET == crpt) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt))
                                 {
                                     var titulaire = "";
                                     if (tom.RTIERS.Any(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE))
@@ -1101,6 +1120,263 @@ namespace apptab.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
             }
+        }
+
+        //GENERATION SIIGLOAD SEND//
+        [HttpPost]
+        public JsonResult GenerationSIIGLOADSEND(SI_USERS suser, int iProjet)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                int crpt = iProjet;
+
+                int retarDate = 0;
+                if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null))
+                    retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELENVOISIIGFP.Value;
+
+                //Check si le projet est mappé à une base de données TOM²PRO//
+                if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
+
+                SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
+                List<DATATRPROJET> list = new List<DATATRPROJET>();
+
+                //Check si la correspondance des états est OK//
+                var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                if (numCaEtapAPP == null) return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
+                //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
+                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEF) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état DEF n'est pas paramétré sur TOM²PRO. " }, settings));
+                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEF) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état TEF n'est pas paramétré sur TOM²PRO. " }, settings));
+                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
+
+                if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 1) != null)
+                {
+                    foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT == 1).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                    {
+                        var soa = (from soas in db.SI_SOAS
+                                   join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                   where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                   select new
+                                   {
+                                       soas.SOA
+                                   });
+
+                        bool isLate = false;
+                        if (x.DATEVALIDATION.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                            isLate = true;
+
+                        list.Add(new DATATRPROJET
+                        {
+                            No = x.No,
+                            REF = x.REF,
+                            OBJ = x.OBJ,
+                            TITUL = x.TITUL,
+                            MONT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                            COMPTE = x.COMPTE,
+                            DATE = x.DATEMANDAT.Value.Date,
+                            PCOP = x.PCOP,
+                            DATEDEF = x.DATEDEF.Value.Date,
+                            DATETEF = x.DATETEF.Value.Date,
+                            DATEBE = x.DATEBE.Value.Date,
+                            LIEN = db.SI_USERS.FirstOrDefault(a => a.ID == x.IDUSERVALIDATE).LOGIN,
+                            DATECREATION = x.DATEVALIDATION.Value.Date,
+                            SOA = soa.FirstOrDefault().SOA,
+                            PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                            isLATE = isLate
+                        });
+                    }
+                    //listORDER = list.OrderByDescending(a => a.isLATE).ToList();
+                }
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list.OrderByDescending(a => a.isLATE).ToList() }, settings));
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
+
+        public ActionResult TraitementSENDSIIGFP()
+        {
+            ViewBag.Controller = "Transfert SIIGFP";
+
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult GenerationSIIGENVOI(SI_USERS suser, DateTime DateDebut, DateTime DateFin, int iProjet)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                int crpt = iProjet;
+
+                int retarDate = 0;
+                if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null))
+                    retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELENVOISIIGFP.Value;
+
+                //Check si le projet est mappé à une base de données TOM²PRO//
+                if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
+
+                SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
+                List<DATATRPROJET> list = new List<DATATRPROJET>();
+
+                //Check si la correspondance des états est OK//
+                var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                if (numCaEtapAPP == null) return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
+                //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
+                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEF) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état DEF n'est pas paramétré sur TOM²PRO. " }, settings));
+                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEF) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état TEF n'est pas paramétré sur TOM²PRO. " }, settings));
+                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
+
+                if (db.SI_TRAITPROJET.Any(a => a.IDPROJET == crpt && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1))
+                {
+                    foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                    {
+                        var soa = (from soas in db.SI_SOAS
+                                   join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                   where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                   select new
+                                   {
+                                       soas.SOA
+                                   });
+
+                        bool isLate = false;
+                        if (x.DATEVALIDATION.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                            isLate = true;
+
+                        list.Add(new DATATRPROJET
+                        {
+                            No = x.No,
+                            REF = x.REF,
+                            OBJ = x.OBJ,
+                            TITUL = x.TITUL,
+                            MONT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                            COMPTE = x.COMPTE,
+                            DATE = x.DATEMANDAT.Value.Date,
+                            PCOP = x.PCOP,
+                            DATEDEF = x.DATEDEF.Value.Date,
+                            DATETEF = x.DATETEF.Value.Date,
+                            DATEBE = x.DATEBE.Value.Date,
+                            LIEN = db.SI_USERS.FirstOrDefault(a => a.ID == x.IDUSERVALIDATE).LOGIN,
+                            DATECREATION = x.DATEVALIDATION.Value.Date,
+                            SOA = soa.FirstOrDefault().SOA,
+                            PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                            isLATE = isLate
+                        });
+                    }
+                }
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list.OrderByDescending(a => a.isLATE).ToList() }, settings));
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
+
+        [HttpPost]
+        public JsonResult GetCheckedEcritureORDSECSEND(SI_USERS suser, string listCompte, int iProjet)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            int countTraitement = 0;
+            int crpt = iProjet;
+            var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
+
+            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET;
+
+            var listCompteS = listCompte.Split(',');
+            foreach (var SAV in listCompteS)
+            {
+                try
+                {
+                    SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                    SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
+                    List<DATATRPROJET> list = new List<DATATRPROJET>();
+
+                    Guid isSAV = Guid.Parse(SAV);
+                    if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.No == isSAV) != null)
+                    {
+                        //SEND SIIGFP//
+
+
+                        var isModified = db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.No == isSAV);
+                        isModified.ETAT = 3;
+                        isModified.DATENVOISIIGFP = DateTime.Now;
+                        isModified.IDUSERENVOISIIGFP = exist.ID;
+                        db.SaveChanges();
+
+                        countTraitement++;
+                    }
+                }
+                catch (Exception e)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+                }
+            }
+
+            //SEND MAIL ALERT et NOTIFICATION//
+            string MailAdresse = "serviceinfo@softwell.mg";
+            string mdpMail = "09eYpçç0601";
+
+            using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
+            {
+                SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
+                smtp.UseDefaultCredentials = true;
+
+                mail.From = new MailAddress(MailAdresse);
+
+                mail.To.Add(MailAdresse);
+                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).MAILSIIG != null)
+                {
+                    string[] separators = { ";" };
+
+                    var Tomail = mail;
+                    if (Tomail != null)
+                    {
+                        string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).MAILSIIG;
+                        string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                        foreach (var mailto in mailListe)
+                        {
+                            mail.To.Add(mailto);
+                        }
+                    }
+                }
+
+                mail.Subject = "Validation pièces du projet " + ProjetIntitule;
+                mail.IsBodyHtml = true;
+                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " pièces transférées pour le compte du projet " + ProjetIntitule + " et en attente du traitement de SIIGFP.<br/><br>" +
+                    "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+
+                smtp.Port = 587;
+                smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
+                smtp.EnableSsl = true;
+
+                try { smtp.Send(mail); }
+                catch (Exception) { }
+            }
+
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = "" }, settings));
         }
     }
 }

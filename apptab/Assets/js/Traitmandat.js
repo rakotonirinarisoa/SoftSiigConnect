@@ -48,14 +48,11 @@ function GetListProjet() {
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
-
                 return;
             }
             if (Datas.type == "login") {
                 alert(Datas.msg);
-
                 window.location = window.location.origin;
-
                 return;
             }
             
@@ -125,14 +122,17 @@ $('[data-action="GenereR"]').click(async function () {
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
+                emptyTableTRM();
                 return;
             }
             if (Datas.type == "PEtat") {
                 alert(Datas.msg);
+                emptyTableTRM();
                 return;
             }
             if (Datas.type == "Prese") {
                 alert(Datas.msg);
+                emptyTableTRM();
                 return;
             }
             if (Datas.type == "login") {
@@ -325,80 +325,7 @@ function emptyTableTRM() {
     }
 
     table = $('#TBD_PROJET_MANDAT').DataTable({
-        data,
-        columns: [
-            {
-                data: 'id',
-                render: function (data, _, _, _) {
-                    return `
-                                    <input type="checkbox" name="checkprod" compteg-ischecked class="chk" onchange="checkdel('${data}')" />
-                                `;
-                },
-                orderable: false
-            },
-            { data: 'soa' },
-            { data: 'projet' },
-            { data: 'ref' },
-            { data: 'objet' },
-            { data: 'titulaire' },
-            { data: 'dateMandat' },
-            { data: 'compte' },
-            { data: 'pcop' },
-            { data: 'montant' },
-            { data: 'dateDEF' },
-            { data: 'dateTEF' },
-            { data: 'dateBE' },
-            {
-                data: 'imputation',
-                render: function (_, _, row, _) {
-                    return `
-                                    <div onclick="modalD('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-danger elerfr"></i>
-                                    </div>
-                                `;
-                }
-            },
-            {
-                data: 'piecesJustificatives',
-                render: function (_, _, row, _) {
-                    return `
-                                    <div onclick="modalF('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-success elerfr"></i>
-                                    </div>
-                                `;
-                }
-            },
-            {
-                data: 'document',
-                render: function (_, _, row, _) {
-                    return `
-                                    <div onclick="modalLIAS('${row.id}')">
-                                        <i class="fa fa-tags fa-lg text-info elerfr"></i>
-                                    </div>
-                                `;
-                }
-            }
-        ],
-        createdRow: function (row, data, _) {
-            $(row).attr('compteG-id', data.id);
-            $(row).addClass('select-text');
-        },
-
-        columnDefs: [
-            {
-                targets: [-3, -2, -1]
-            }
-        ],
-        colReorder: {
-            enable: true,
-            fixedColumnsLeft: 1
-        },
-        deferRender: true,
-        dom: 'Bfrtip',
-        buttons: ['colvis'],
-        initComplete: function () {
-            $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
-        }
+        data
     });
 }
 

@@ -174,6 +174,10 @@ namespace SOFTCONNECT.Controllers
 
                         if (user.ROLE == Role.Administrateur || user.ROLE == Role.Autre)
                         {
+                            int TestProjetRole = 0;
+                            if (!int.TryParse(listProjet, out TestProjetRole))
+                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vous ne pouvez pas affecter plusieurs projets à ce type d'utilisateur. " }, settings));
+
                             var newUser = new SI_USERS()
                             {
                                 LOGIN = user.LOGIN,
@@ -272,6 +276,10 @@ namespace SOFTCONNECT.Controllers
                     {
                         if (user.ROLE == Role.Administrateur || user.ROLE == Role.Autre)
                         {
+                            int TestProjetRole = 0;
+                            if (!int.TryParse(listProjet, out TestProjetRole))
+                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vous ne pouvez pas affecter plusieurs projets à ce type d'utilisateur. " }, settings));
+
                             userExist.LOGIN = user.LOGIN;
                             userExist.PWD = user.PWD;
                             userExist.IDPROJET = int.Parse(listProjet);
@@ -430,6 +438,10 @@ namespace SOFTCONNECT.Controllers
                         }
                     }
                 }
+                else
+                {
+                    proj.Add(user.IDPROJET.Value);
+                }
 
                 if (user != null)
                 {
@@ -478,6 +490,7 @@ namespace SOFTCONNECT.Controllers
                 if (db.SI_MENU.Any())
                 {
                     var isMenu = db.SI_MENU.FirstOrDefault();
+                    Session["MTNON"] = isMenu.MTNON;
                     Session["MT0"] = isMenu.MT0;
                     Session["MT1"] = isMenu.MT1;
                     Session["MT2"] = isMenu.MT2;
@@ -500,6 +513,9 @@ namespace SOFTCONNECT.Controllers
                     var isMenu = db.SI_GEDLIEN.FirstOrDefault();
                     Session["GED"] = isMenu.LIEN;
                 }
+
+                test.LASTCONNEXTION = DateTime.Now;
+                db.SaveChanges();
 
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", Data = new { test.ROLE, test.IDPROJET } }, settings));
             }

@@ -35,6 +35,7 @@ function GetUsers() {
                 alert(Datas.msg);
                 $("#ParaT").val("");
                 $("#ParaV").val("");
+                $("#ParaSiig").val("");
                 $("#ParaPi").val("");
                 $("#ParaPe").val("");
                 $("#ParaPv").val("");
@@ -49,6 +50,7 @@ function GetUsers() {
 
             $("#ParaT").val(Datas.data.MAILTE);
             $("#ParaV").val(Datas.data.MAILTV);
+            $("#ParaSiig").val(Datas.data.MAILSIIG);
             $("#ParaPi").val(Datas.data.MAILPI);
             $("#ParaPe").val(Datas.data.MAILPE);
             $("#ParaPv").val(Datas.data.MAILPV);
@@ -74,12 +76,13 @@ $('#proj').on('change', () => {
 $(`[data-action="UpdateUser"]`).click(function () {
     let ParaT = $("#ParaT").val();
     let ParaV = $("#ParaV").val();
+    let ParaSiig = $("#ParaSiig").val();
     let ParaPi = $("#ParaPi").val();
     let ParaPe = $("#ParaPe").val();
     let ParaPv = $("#ParaPv").val();
     let ParaPp = $("#ParaPp").val();
     //let ParaPb = $("#ParaPb").val();
-    if (!ParaT || !ParaV || !ParaPi || !ParaPe || !ParaPv || !ParaPp /*|| !ParaPb*/) {
+    if (!ParaT || !ParaV || !ParaSiig || !ParaPi || !ParaPe || !ParaPv || !ParaPp /*|| !ParaPb*/) {
         alert("Veuillez renseigner les mails. ");
         return;
     }
@@ -99,6 +102,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
 
     formData.append("param.MAILTE", $(`#ParaT`).val());
     formData.append("param.MAILTV", $(`#ParaV`).val());
+    formData.append("param.MAILSIIG", $(`#ParaSiig`).val());
     formData.append("param.MAILPI", $(`#ParaPi`).val());
     formData.append("param.MAILPE", $(`#ParaPe`).val());
     formData.append("param.MAILPV", $(`#ParaPv`).val());

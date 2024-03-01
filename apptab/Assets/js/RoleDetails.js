@@ -152,7 +152,7 @@ function GetUsers() {
 
             $("#Role").val(`${Datas.data.ROLE}`);
 
-            $("#PROJET").val([...Datas.data.PROJET]).change();
+            $("#PROJET").val([...Datas.data.PROJET]).trigger('change');
         },
         error: function () {
             alert("Problème de connexion. ");
