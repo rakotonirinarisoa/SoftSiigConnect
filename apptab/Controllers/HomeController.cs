@@ -11,10 +11,7 @@ using Newtonsoft.Json;
 using Renci.SshNet;
 using System.Net;
 using apptab.Models;
-using apptab.Data.Entities;
 using Extensions.DateTime;
-using System.Collections;
-using Microsoft.Ajax.Utilities;
 using System.Net.Mail;
 
 namespace apptab.Controllers

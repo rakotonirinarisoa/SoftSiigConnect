@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using Extensions.DateTime;
+using apptab.Data.Entities;
 using Newtonsoft.Json;
 
 namespace apptab.Controllers
@@ -517,6 +515,59 @@ namespace apptab.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
             }
+        }
+
+        public ActionResult DelaisTraitementEngagements()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> TraitementEngagements(SI_USERS suser)
+        {
+            var user = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
+
+            if (user == null)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            }
+
+            var projectsWithEngagements = await (
+                from engagement in db.SI_ENGAGEMENT
+                join project in db.SI_PROJETS on engagement.IDPROJET equals project.ID
+                select new
+                {
+                    PROJECTID = (int)project.ID,
+                    SOA = project.PROJET,
+                    NUM_ENGAGEMENT = engagement.CODE
+                }
+            ).ToListAsync();
+
+            var result = new List<TraitementsEngagements>();
+
+            for (int i = 0; i < projectsWithEngagements.Count; i += 1)
+            {
+                var projectId = projectsWithEngagements[i].PROJECTID;
+
+                var traitementsProjets = await db.SI_TRAITPROJET.Where(traitementProjet => traitementProjet.IDPROJET == projectId).ToListAsync();
+
+                for (int j = 0; j < traitementsProjets.Count; j += 1)
+                {
+                    result.Add(new TraitementsEngagements
+                    {
+                        SOA = projectsWithEngagements[i].SOA,
+                        NUM_ENGAGEMENT = projectsWithEngagements[i].NUM_ENGAGEMENT,
+                        BENEFICIAIRE = traitementsProjets[j].TITUL,
+                        MONTENGAGEMENT = Data.Cipher.Decrypt(traitementsProjets[j].MONT, "Oppenheimer").ToString(),
+                        DATETRANSFERTRAF = traitementsProjets[j].DATECRE,
+                        DATEVALORDSEC = traitementsProjets[j].DATEVALIDATION,
+                        DATESENDSIIG = traitementsProjets[j].DATENVOISIIGFP,
+                        DATESIIGFP = traitementsProjets[j].DATESIIG
+                    });
+                }
+            }
+
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = result }, settings));
         }
     }
 }
