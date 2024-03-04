@@ -1,138 +1,92 @@
 let dataTable;
 
-let data;
+let list = [];
 
 const NUMBER_OF_ROWS = 5;
 
-function convertData(result) {
-    const res = [];
+function parseList(array) {
+    const result = [];
 
-    for (let i = 0; i < result.length; i += 1) {
-        for (let j = 0; j < NUMBER_OF_ROWS; j += 1) {
-            switch (j) {
-                case 0:
-                    res.push({
-                        soa: result[i].SOA,
-                        num: result[i].NUM_ENGAGEMENT,
-                        etape: 'Transfert et Validation RAF',
-                        beneficiaire: result[i].BENEFICIAIRE,
-                        montant: result[i].MONTENGAGEMENT,
-                        agent: '',
-                        dateTraitement: result[i].DATETRANSFERTRAF === undefined ? '' : result[i].DATETRANSFERTRAF,
-                        dureeTraitement: ''
-                    });
+    let stepNumber = 0;
+    let rowNumber = 0;
 
-                    break;
-                case 1:
-                    res.push({
-                        soa: result[i].SOA,
-                        num: result[i].NUM_ENGAGEMENT,
-                        etape: 'Validation ORDESEC',
-                        beneficiaire: result[i].BENEFICIAIRE,
-                        montant: result[i].MONTENGAGEMENT,
-                        agent: '',
-                        dateTraitement: result[i].DATEVALORDSEC === undefined ? '' : result[i].DATEVALORDSEC,
-                        dureeTraitement: ''
-                    });
+    let previousSOA = '';
 
-                    break;
-                case 2:
-                    res.push({
-                        soa: result[i].SOA,
-                        num: result[i].NUM_ENGAGEMENT,
-                        etape: 'Transféré SIIGFP',
-                        beneficiaire: result[i].BENEFICIAIRE,
-                        montant: result[i].MONTENGAGEMENT,
-                        agent: '',
-                        dateTraitement: result[i].DATESENDSIIG === undefined ? '' : result[i].DATESENDSIIG,
-                        dureeTraitement: ''
-                    });
+    for (let i = 0; i < array.length; i += 1) {
+        if (array[i].SOA === previousSOA) {
+            stepNumber += 1;
+        } else {
+            stepNumber = 0;
+        }
 
-                    break;
-                case 3:
-                    res.push({
-                        soa: result[i].SOA,
-                        num: result[i].NUM_ENGAGEMENT,
-                        etape: 'Intégré SIIGFP',
-                        beneficiaire: result[i].BENEFICIAIRE,
-                        montant: result[i].MONTENGAGEMENT,
-                        agent: '',
-                        dateTraitement: result[i].DATENGAGEMENT === undefined ? '' : result[i].DATENGAGEMENT,
-                        dureeTraitement: ''
-                    });
+        rowNumber = 0;
 
-                    break;
-                default:
-                    res.push({
-                        soa: result[i].SOA,
-                        num: result[i].NUM_ENGAGEMENT,
-                        etape: '',
-                        beneficiaire: result[i].BENEFICIAIRE,
-                        montant: result[i].MONTENGAGEMENT === undefined ? '' : result[i].MONTENGAGEMENT,
-                        agent: '',
-                        dateTraitement: '',
-                        dureeTraitement: ''
-                    });
+        for (let j = 0; j < array[i].TraitementsEngagementsDetails.length; j += 1) {
+            for (let k = 0; k < NUMBER_OF_ROWS; k += 1) {
+                let etape = '';
+                let dateTraitement = ''; 
+                let montant = formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
+                let agent = '';
+
+                switch (k) {
+                    case 0:
+                        etape = 'Transfert et Validation RAF';
+                        dateTraitement = array[i].TraitementsEngagementsDetails[j].DATETRANSFERTRAF === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATETRANSFERTRAF);
+
+                        break;
+                    case 1:
+                        etape = 'Validation ORDESEC';
+                        dateTraitement = array[i].TraitementsEngagementsDetails[j].DATEVALORDSEC === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATEVALORDSEC);
+
+                        break;
+                    case 2:
+                        etape = 'Transféré SIIGFP';
+                        dateTraitement = array[i].TraitementsEngagementsDetails[j].DATESENDSIIG === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATESENDSIIG);
+
+                        break;
+                    case 3:
+                        etape = 'Intégré SIIGFP';
+                        dateTraitement = array[i].TraitementsEngagementsDetails[j].DATENGAGEMENT === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATENGAGEMENT);
+
+                        break;
+                    default:
+                        etape = '';
+                        dateTraitement = '';
+                        montant = '';
+
+                        break;
+                }
+
+                result.push({
+                    stepNumber,
+                    rowNumber,
+                    soa: array[i].SOA,
+                    num: array[i].NUM_ENGAGEMENT,
+                    etape,
+                    beneficiaire: array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE,
+                    montant,
+                    agent,
+                    dateTraitement,
+                    dureeTraitement: ''
+                });
+
+                rowNumber += 1;
             }
         }
+
+        previousSOA = array[i].SOA;
     }
 
-    console.log(res);
-}
-
-async function getTraitementEngagements() {
-    const payload = {
-        LOGIN: User.LOGIN,
-        PWD: User.PWD
-    }
-
-    $.ajax({
-        type: 'POST',
-        url: Origin + `/BordTraitement/TraitementEngagements`,
-        contentType: 'application/json',
-        datatype: 'json',
-        data: JSON.stringify({ ...payload }),
-        beforeSend: function () {
-            loader.removeClass('display-none');
-        },
-        complete: function () {
-            loader.addClass('display-none');
-        },
-        success: function (res) {
-            const { data } = JSON.parse(res);
-
-            convertData(data);
-        },
-        Error: function (_, e) {
-            alert(e);
-        }
-    });
+    list = result;
 }
 
 function setDataTable() {
-    data = [
-        { id: 0, soa: 'PROJET 1', num: 'M0001', etape: 'Transfert et Validation RAF', beneficiaire: '', montant: '', agent: '', dateTraitement: '', dureeTraitement: '' },
-        { id: 1, soa: 'PROJET 1', num: 'M0001', etape: 'Transféré SIIGFP', beneficiaire: '', montant: '', agent: '', dateTraitement: '', dureeTraitement: '' },
-        { id: 2, soa: 'PROJET 1', num: 'M0001', etape: 'Intégré SIIGFP', beneficiaire: '', montant: '', agent: '', dateTraitement: '', dureeTraitement: '' },
-        { id: 3, soa: 'PROJET 1', num: 'M0001', etape: '12', beneficiaire: '', montant: 'Durée totale', agent: '', dateTraitement: '', dureeTraitement: '0' },
-
-        { id: 4, soa: 'PROJET 2', num: 'M0002', etape: 'Transfert et Validation RAF', beneficiaire: '', montant: '', agent: '', dateTraitement: '', dureeTraitement: '' },
-        { id: 5, soa: 'PROJET 2', num: 'M0002', etape: 'Transféré SIIGFP', beneficiaire: '', montant: '', agent: '', dateTraitement: '', dureeTraitement: '' },
-        { id: 6, soa: 'PROJET 2', num: 'M0002', etape: 'Intégré SIIGFP', beneficiaire: '', montant: '', agent: '', dateTraitement: '', dureeTraitement: '' },
-        { id: 7, soa: 'PROJET 2', num: 'M0002', etape: '12', beneficiaire: '', etape: '', montant: 'Durée totale', agent: '', dateTraitement: '', dureeTraitement: '' },
-
-        { id: 8, soa: 'PROJET 3', num: 'M0003', etape: 'Transfert et Validation RAF', beneficiaire: '', montant: '', agent: '', dateTraitement: '', dureeTraitement: '' },
-        { id: 9, soa: 'PROJET 3', num: 'M0003', etape: 'Transféré SIIGFP', beneficiaire: '', montant: '', agent: '', dateTraitement: '', dureeTraitement: '' },
-        { id: 10, soa: 'PROJET 3', num: 'M0003', etape: 'Intégré SIIGFP', beneficiaire: '', montant: '', agent: '', dateTraitement: '', dureeTraitement: '' },
-        { id: 11, soa: 'PROJET 3', num: 'M0003', etape: '12', beneficiaire: '', montant: 'Durée totale', agent: '', dateTraitement: '', dureeTraitement: '0' }
-    ];
-
     if (dataTable !== undefined) {
         dataTable.destroy();
     }
 
     dataTable = $('#dashboard').DataTable({
-        data,
+        data: list,
         columns: [
             {
                 data: 'soa'
@@ -166,12 +120,16 @@ function setDataTable() {
         rowsGroup: [0, 1],
         order: [['desc']],
         createdRow: function (row, data, _) {
-            if (data.id % NUMBER_OF_ROWS !== 0) {
+            if (data.stepNumber !== 0 || data.rowNumber !== 0) {
                 $('td:eq(0)', row).addClass('delete-td');
                 $('td:eq(1)', row).addClass('delete-td');
             }
 
-            if (data.id % NUMBER_OF_ROWS === NUMBER_OF_ROWS - 1) {
+            if (data.stepNumber !== 0 && data.rowNumber === 0) {
+                $('td:eq(1)', row).removeClass('delete-td');
+            }
+
+            if (data.rowNumber === NUMBER_OF_ROWS - 1) {
                 $('td:eq(3)', row).attr('colspan', 4).css({ 'text-align': 'center' });
                 $('td:eq(3)', row).text('Durée totale');
 
@@ -181,6 +139,37 @@ function setDataTable() {
                 $('td:eq(6)', row).text('').css({ 'display': 'none' });
                 $('td:eq(7)', row).text('').css({ 'display': 'none' });
             }
+        }
+    });
+}
+
+async function getTraitementEngagements() {
+    const payload = {
+        LOGIN: User.LOGIN,
+        PWD: User.PWD
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: Origin + `/BordTraitement/TraitementEngagements`,
+        contentType: 'application/json',
+        datatype: 'json',
+        data: JSON.stringify({ ...payload }),
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            const { data } = JSON.parse(result);
+
+            parseList(data);
+
+            setDataTable();
+        },
+        Error: function (_, e) {
+            alert(e);
         }
     });
 }

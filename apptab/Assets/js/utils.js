@@ -9,7 +9,7 @@ function formatDate(date) {
 
     return dayjs(date).format('DD/MM/YYYY');
 }
-//======================================================================================================EXCEL=================================================================================
+
 function tableToExcel(tableId, name, callback = undefined) {
     let table;
 

@@ -543,7 +543,7 @@ namespace apptab.Controllers
                 }
             ).ToListAsync();
 
-            var result = new List<TraitementsEngagements>();
+            var result = new List<TraitementEngagement>();
 
             for (int i = 0; i < projectsWithEngagements.Count; i += 1)
             {
@@ -551,12 +551,17 @@ namespace apptab.Controllers
 
                 var traitementsProjets = await db.SI_TRAITPROJET.Where(traitementProjet => traitementProjet.IDPROJET == projectId).ToListAsync();
 
+                result.Add(new TraitementEngagement
+                {
+                    SOA = projectsWithEngagements[i].SOA,
+                    NUM_ENGAGEMENT = projectsWithEngagements[i].NUM_ENGAGEMENT,
+                    TraitementsEngagementsDetails = new List<TraitementEngagementDetails>()
+                });
+
                 for (int j = 0; j < traitementsProjets.Count; j += 1)
                 {
-                    result.Add(new TraitementsEngagements
+                    result[i].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
                     {
-                        SOA = projectsWithEngagements[i].SOA,
-                        NUM_ENGAGEMENT = projectsWithEngagements[i].NUM_ENGAGEMENT,
                         BENEFICIAIRE = traitementsProjets[j].TITUL,
                         MONTENGAGEMENT = Data.Cipher.Decrypt(traitementsProjets[j].MONT, "Oppenheimer").ToString(),
                         DATETRANSFERTRAF = traitementsProjets[j].DATECRE,
