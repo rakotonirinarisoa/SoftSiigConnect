@@ -179,9 +179,11 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BordTraitementController.cs" />
     <Compile Include="Controllers\CryptoController.cs" />
     <Compile Include="Controllers\EtatController.cs" />
     <Compile Include="Controllers\FtpController.cs" />
+    <Compile Include="Controllers\GetCountTDBController.cs" />
     <Compile Include="Controllers\GetFileFController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ParametreController.cs" />
@@ -190,7 +192,9 @@
     <Compile Include="Controllers\SuperAdminController.cs" />
     <Compile Include="Controllers\TraitementController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Data\Addbuss.cs" />
     <Compile Include="Data\Entities\ProjectDetails.cs" />
+    <Compile Include="Data\Entities\TraitementsEngagements.cs" />
     <Compile Include="Data\Entities\X.cs" />
     <Compile Include="Data\Cipher.cs" />
     <Compile Include="Extension\AFB.cs" />
@@ -215,6 +219,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\COUNTTDB.cs" />
+    <Compile Include="Models\TxLISTETRAIT.cs" />
     <Compile Include="Models\DATATRPROJET.cs" />
     <Compile Include="Models\FCOMPTA.cs" />
     <Compile Include="Models\FOP.cs" />
@@ -233,10 +239,11 @@
     <Compile Include="Models\HSI_PARAMETAT.cs" />
     <Compile Include="Models\HSI_PROCEDURE.cs" />
     <Compile Include="Models\HSI_PROGRAMME.cs" />
+    <Compile Include="Models\HSI_PROJETS.cs" />
     <Compile Include="Models\HSI_PROSOA.cs" />
     <Compile Include="Models\HSI_SOAS.cs" />
+    <Compile Include="Models\HSI_USERS.cs" />
     <Compile Include="Models\MCOMPTA.cs" />
-    <Compile Include="Models\Model1.cs" />
     <Compile Include="Models\MOP.cs" />
     <Compile Include="Models\OPA_ANOMALIE.cs" />
     <Compile Include="Models\OPA_ANOMALIEBR.cs" />
@@ -2138,6 +2145,8 @@
     <Content Include="Assets\admlte\plugins\uplot\uPlot.iife.js" />
     <Content Include="Assets\admlte\plugins\uplot\uPlot.iife.min.js" />
     <Content Include="Assets\admlte\plugins\uplot\uPlot.min.css" />
+    <Content Include="Assets\css\loader.css" />
+    <Content Include="Assets\js\delaisTraitementEngagements.js" />
     <Content Include="Assets\icons\chevron-down.svg" />
     <Content Include="Assets\icons\chevron-right.svg" />
     <Content Include="Assets\icons\eye.svg" />
@@ -2146,14 +2155,27 @@
     <Content Include="Assets\img\df.png" />
     <Content Include="Assets\img\logo-soft.png" />
     <Content Include="Assets\img\LogoS.png" />
+    <Content Include="Assets\js\AACUL.js" />
     <Content Include="Assets\js\BonPourPaiement.js" />
+    <Content Include="Assets\js\BordEngaREJETE.js" />
+    <Content Include="Assets\js\BordStatutEnga.js" />
     <Content Include="Assets\js\FValidations.js" />
+    <Content Include="Assets\js\ProjectsDetails.js" />
+    <Content Include="Assets\js\BordListeEngaPaie.js" />
+    <Content Include="Assets\js\TraitementENVOISIIGF.js" />
+    <Content Include="Assets\js\TraitementORDSEC.js" />
+    <Content Include="Assets\js\TDBDOC.js" />
+    <Content Include="Assets\js\TraitmandatDOCT.js" />
+    <Content Include="Assets\js\TDBLIAS.js" />
+    <Content Include="Assets\js\TraitmandatLIAST.js" />
+    <Content Include="Assets\js\TDBModal.js" />
+    <Content Include="Assets\js\TraitmandatModalT.js" />
+    <Content Include="Assets\js\TraitmandatO.js" />
     <Content Include="Assets\js\TypeC.js" />
     <Content Include="Assets\js\TeacherValidations.js" />
     <Content Include="Assets\js\Crypto.js" />
     <Content Include="Assets\js\DetailCrypto.js" />
     <Content Include="Assets\js\FValidations.js" />
-    <Content Include="Assets\js\javascript.js" />
     <Content Include="Assets\js\CorrEtat.js" />
     <Content Include="Assets\js\DetailsFPROSOA.js" />
     <Content Include="Assets\js\DetailsFSoaUpdate.js" />
@@ -2199,16 +2221,18 @@
     <Content Include="Assets\js\Privilege.js" />
     <Content Include="Assets\js\User.js" />
     <Content Include="Assets\js\utils.js" />
-    <Content Include="Assets\microsoft\signalr\dist\browser\signalr.js" />
-    <Content Include="Assets\microsoft\signalr\dist\browser\signalr.min.js" />
     <Content Include="Assets\otherCSS\buttons.dataTables.min.css" />
     <Content Include="Assets\otherCSS\colReorder.dataTables.min.css" />
+    <Content Include="Assets\otherCSS\datatables.min.css" />
     <Content Include="Assets\otherCSS\responsive.dataTables.min.css" />
     <Content Include="Assets\otherCSS\jquery.dataTables.min.css" />
+    <Content Include="Assets\otherJs\bootstrap.bundle.min.js" />
     <Content Include="Assets\otherJs\buttons.colVis.min.js" />
     <Content Include="Assets\otherJs\dataTables.buttons.min.js" />
     <Content Include="Assets\otherJs\dataTables.colReorder.min.js" />
+    <Content Include="Assets\otherJs\datatables.min.js" />
     <Content Include="Assets\otherJs\dataTables.responsive.min.js" />
+    <Content Include="Assets\otherJs\dataTables.rowsGroup.js" />
     <Content Include="Assets\otherJs\jquery-3.7.0.js" />
     <Content Include="Assets\otherJs\jquery.dataTables.min.js" />
     <Content Include="Content\bootstrap-grid.css" />
@@ -4508,7 +4532,6 @@
     <Content Include="Views\User\Create.cshtml" />
     <Content Include="Views\Admin\AdminMaPUserList.cshtml" />
     <Content Include="Views\Admin\AdminMaPUserCreate.cshtml" />
-    <Content Include="Views\SuperAdmin\SuperAdmin.cshtml" />
     <Content Include="Views\SuperAdmin\SuperAdminMaPList.cshtml" />
     <Content Include="Views\SuperAdmin\SuperAdminMaPCreate.cshtml" />
     <Content Include="Views\Crypto\CryptoCreate.cshtml" />
@@ -4534,7 +4557,7 @@
     <Content Include="Views\Parametre\ProgCreate.cshtml" />
     <Content Include="Views\Parametre\ActCreate.cshtml" />
     <Content Include="Views\Etat\InfoProCreate.cshtml" />
-    <Content Include="Views\Projects\Details.cshtml" />
+    <Content Include="Views\Projects\ProjectDetails.cshtml" />
     <Content Include="Views\SuperAdmin\SuperAdminDetailFPROSOA.cshtml" />
     <Content Include="Views\SuperAdmin\SuperAdminDetailFSOA.cshtml" />
     <Content Include="Views\SuperAdmin\MailCreate.cshtml" />
@@ -4561,11 +4584,19 @@
     <Content Include="Views\Privilege\List.cshtml" />
     <Content Include="Views\Traitement\TraitementORDSECOTHER.cshtml" />
     <Content Include="Views\Parametre\TypeECreate.cshtml" />
+    <Content Include="Views\Projects\AllProjects.cshtml" />
+    <Content Include="Views\Projects\NewProject.cshtml" />
+    <Content Include="Views\BordTraitement\BordListeEngaPaie.cshtml" />
+    <Content Include="Views\BordTraitement\StatutEngagements.cshtml" />
+    <Content Include="Views\Traitement\TraitementSENDSIIGFP.cshtml" />
+    <Content Include="Views\BordTraitement\EngagementsREJETE.cshtml" />
+    <Content Include="Views\BordTraitement\DelaisTraitementEngagements.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Assets\admlte\dist\img\credit\" />
     <Folder Include="Assets\admlte\dist\js\" />
+    <Folder Include="Views\GetCountTDB\" />
     <Folder Include="Views\GetFileF\" />
   </ItemGroup>
   <ItemGroup>
