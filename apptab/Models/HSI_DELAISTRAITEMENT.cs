@@ -1,10 +1,7 @@
-namespace apptab
+﻿namespace apptab
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     public partial class HSI_DELAISTRAITEMENT
     {
@@ -16,6 +13,8 @@ namespace apptab
         public DateTime? DELETIONDATE { get; set; }
 
         public int? DELTV { get; set; }
+
+        public int? DELENVOISIIGFP { get; set; }
 
         public int? DELSIIGFP { get; set; }
 

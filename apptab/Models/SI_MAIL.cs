@@ -1,10 +1,7 @@
-namespace apptab
+﻿namespace apptab
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     public partial class SI_MAIL
     {
@@ -18,6 +15,7 @@ namespace apptab
         public string MAILTE { get; set; }
 
         public string MAILTV { get; set; }
+        public string MAILSIIG { get; set; }
 
         public string MAILPI { get; set; }
 

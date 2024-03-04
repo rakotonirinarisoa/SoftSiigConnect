@@ -1,102 +1,8 @@
-﻿let User;
-let Origin;
-
-let ListCodeJournal;
-let ListCompteG;
-
-var content;
-let validate;
-
-let ListResult;
-let ListResultAnomalie;
-let contentAnomalies;
-var rdv
-let contentpaie;
-let ListResultpaie;
-let reglementresult;
-
-let listEtat;
-let etaCode;
-$(document).ready(() => {
-
-    User = JSON.parse(sessionStorage.getItem("user"));
-    if (User == null || User === "undefined") window.location = User.origin;
-    Origin = User.origin;
-
-    $(`[data-id="username"]`).text(User.LOGIN);
-
-    //$(`[tab="autre"]`).hide();
-
-    /*console.log($(`[tab="autre"]`).hide());*/
-    
-    //GetUR();
-    GetListCodeJournal();
-    chargeLoad();
-    //GetListCompG();
-});
-
-function GetListCompG() {
-    let formData = new FormData();
-
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
-    formData.append("baseName", baseName);
-
-    $.ajax({
-        type: "POST",
-        url: Origin + '/Home/GetCompteG',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (result) {
-            var Datas = JSON.parse(result);
-
-            if (Datas.type == "error") {
-                alert(Datas.msg);
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-                window.location = window.location.origin;
-                return;
-            }
-            let code = `<option value = "Tous" > Tous</option> `;
-            let codeAuxi = ``;
-            ListCompteG = Datas.data;
-            
-            $.each(ListCompteG, function (k, v) {
-                code += `
-                    <option value="${v.COGE}">${v.COGE}</option>
-                `;
-            });
-            $(`[compG-list]`).html('');
-            $(`[compG-list]`).append(code);
-
-            FillAUXI();
-            FillCompteName();
-        },
-        error: function () {
-            alert("Problème de connexion. ");
-        }
-    });
+﻿var table = undefined;
+function checkdel(id) {
+    $('.Checkall').prop("checked", false);
 }
 
-function FillAUXI() {
-    var list = ListCompteG.filter(x => x.COGE == $(`[compG-list]`).val()).pop();
-
-    let code = `<option value="Tous"> Tous</option> `;
-    $.each(list.AUXI, function (k, v) {
-        code += `
-                    <option value="${v}">${v}</option>
-                `;
-    });
-
-    $(`[auxi-list]`).html('');
-    $(`[auxi-list]`).html(code);
-}
 function GetEtat() {
     let formData = new FormData();
     formData.append("suser.LOGIN", User.LOGIN);
@@ -111,6 +17,12 @@ function GetEtat() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             listEtat = Datas.data
@@ -119,7 +31,6 @@ function GetEtat() {
             }
             if (Datas.type == "login") {
                 alert(Datas.msg);
-                window.location = window.location.origin;
                 return;
             }
             etaCode = `<option value = "Tous" > Tous</option> `;
@@ -137,22 +48,13 @@ function GetEtat() {
         }
     });
 }
-function FillCompteName() {
-    var nom = $(`[compG-list]`).val() + " " + $(`[auxi-list]`).val();
-    $(`[compte-name`).val(nom);
-}
-
-$(document).on("change", "[compG-list]", () => {
-    FillAUXI();
-    FillCompteName();
-});
-
-$(document).on("change", "[auxi-list]", () => {
-    FillCompteName();
-});
 
 function GetListCodeJournal() {
     let formData = new FormData();
+
+    let codeproject = $("#Fproject").val();
+
+    formData.append("codeproject", codeproject);
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
@@ -165,6 +67,12 @@ function GetListCodeJournal() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -174,7 +82,6 @@ function GetListCodeJournal() {
             }
             if (Datas.type == "login") {
                 alert(Datas.msg);
-                window.location = window.location.origin;
                 return;
             }
 
@@ -198,43 +105,7 @@ function GetListCodeJournal() {
         GetListCompG();
     });
 }
-$(document).on("change", "[codej-list]", () => {
-    var code = ListCodeJournal.filter(function (e) { return e.CODE == $(`[codej-list]`).val(); })[0];
-    $(`[codej-libelle]`).val(code.LIBELLE);
-});
 
-$(document).on("click", "[data-target]", function () {
-    let me = $(this).closest("[data-target]");
-    if ($(me).attr("data-type") == "switch_tab") {
-        let target = $(`#${$(me).attr("data-target")}`);
-
-
-        $(`[data-type="switch_tab"]`).each(function (i) {
-            if ($(this).hasClass('active')) {
-                
-                $(this).removeClass('active');
-                $(`#${$(this).attr("data-target")}`).hide();
-            }
-        });
-        $(me).addClass("active");
-        $(target).show();
-    }
-});
-
-$('.Checkall').change(function () {
-
-    if ($('.Checkall').prop("checked") == true) {
-
-        $('[compteg-ischecked]').prop("checked", true);
-    } else {
-        $('[compteg-ischecked]').prop("checked", false);
-    }
-
-});
-function checkdel(id) {
-    $('.Checkall').prop("checked", false);
-}
-//GetAcceptecritureLoad
 function chargeLoad() {
     let formData = new FormData();
     formData.append("suser.LOGIN", User.LOGIN);
@@ -242,9 +113,13 @@ function chargeLoad() {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
     formData.append("ChoixBase", baseName);
+
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
     if (baseName == 2) {
         //compta
-       
+
         $.ajax({
             type: "POST",
             url: Origin + '/Home/GetAcceptecritureLoad',
@@ -252,6 +127,12 @@ function chargeLoad() {
             cache: false,
             contentType: false,
             processData: false,
+            beforeSend: function () {
+                loader.removeClass('display-none');
+            },
+            complete: function () {
+                loader.addClass('display-none');
+            },
             success: function (result) {
                 var Datas = JSON.parse(result);
 
@@ -261,39 +142,102 @@ function chargeLoad() {
                 }
                 if (Datas.type == "login") {
                     alert(Datas.msg);
-                    window.location = window.location.origin;
                     return;
                 }
                 if (Datas.type == "success") {
-                    //window.location = window.location.origin;
-                    ListResult = Datas.data
-                    $.each(ListResult, function (k, v) {
-                        content += `
-                    <tr compteG-id="${v.IDREGLEMENT}">
-                        <td>
-                            <input type="checkbox" name = "checkprod" compteg-ischecked onchange = "checkdel()"/>
-                        </td><td>${v.IDREGLEMENT}</td>
-                        <td>${v.dateOrdre}</td>
-                        <td>${v.NoPiece}</td>
-                        <td>${v.Compte}</td>
-                        <td>${v.Libelle}</td>
-                        <td>${v.Debit}</td>
-                        <td>${v.Credit}</td>
-                        <td>${v.MontantDevise}</td>
-                        <td>${v.Mon}</td>
-                        <td>${v.Rang}</td>
-                        <td>${v.FinancementCategorie}</td>
-                        <td>${v.Commune}</td>
-                        <td>${v.Plan6}</td>
-                        <td>${v.Journal}</td>
-                        <td>${v.Marche}</td>
-                        <td></td>
-                         <td class="elerfr" style="font-weight: bold; text-align:center" ><div onclick="Refuser('${v.IDREGLEMENT}')"><i class="fa fa-times fa-lg text-dark"</i></div></td>
-                    </tr>`
+                    content = ``;
+                    listResult = Datas.data;
 
+                    const data = [];
+
+                    $.each(listResult, function (_, v) {
+                        data.push({
+                            checkbox: '',
+                            id: v.IDREGLEMENT,
+                            dateOrdre: v.dateOrdre === undefined ? '' : v.dateOrdre,
+                            noPiece: v.NoPiece,
+                            compte: v.Compte,
+                            libelle: v.Libelle,
+                            debit: v.Debit === undefined ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
+                            credit: v.Credit === undefined ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
+                            montantDevise: v.MontantDevise === undefined ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
+                            mon: v.Mon === null ? '' : v.Mon,
+                            rang: v.Rang === null ? '' : v.Rang,
+                            financementCategorie: v.FinancementCategorie === " " ? ' ' : v.FinancementCategorie,
+                            commune: v.Commune === null ? '' : v.Commune,
+                            plan: v.Plan6 === null ? '' : v.Plan6,
+                            journal: v.Journal,
+                            marche: v.Marche === null ? '' : v.Marche,
+                            rejeter: '',
+                            isLATE : v.isLATE
+                        });
                     });
-                    $('.afb160').empty();
-                    $('.afb160').html(content);
+
+                    if (table !== undefined) {
+                        table.destroy();
+                    }
+
+                    table = $('#TDB_OPA').DataTable({
+                        data,
+                        columns: [
+                            {
+                                data: 'checkbox',
+                                render: function () {
+                                    return `
+                                        <input type="checkbox" name="checkprod" compteg-ischecked onchange="checkdel()" />
+                                    `;
+                                },
+                                orderable: false
+                            },
+                            { data: 'id' },
+                            { data: 'dateOrdre' },
+                            { data: 'noPiece' },
+                            { data: 'compte' },
+                            { data: 'libelle' },
+                            { data: 'debit' },
+                            { data: 'credit' },
+                            { data: 'montantDevise' },
+                            { data: 'mon' },
+                            { data: 'rang' },
+                            { data: 'financementCategorie' },
+                            { data: 'commune' },
+                            { data: 'plan' },
+                            { data: 'journal' },
+                            { data: 'marche' },
+                            {
+                                data: 'rejeter',
+                                render: function (_, _, row, _) {
+                                    return `
+                                        <div onclick="Refuser('${row.id}')">
+                                            <i class="fa fa-times fa-lg text-dark"></i>
+                                        </div>
+                                    `;
+                                }
+                            }
+                        ],
+                        colReorder: {
+                            enable: true,
+                            fixedColumnsLeft: 1
+                        },
+                        deferRender: true,
+                        createdRow: function (row, data, _) {
+                            $(row).attr('compteG-id', data.id);
+
+                            $(row).addClass('select-text');
+                            if (data.isLATE) {
+                                $(row).attr('style', "background-color: #FF7F7F !important;");
+                            }
+                        },
+                        columnDefs: [
+                            {
+                                targets: [-1],
+                                className: 'elerfr'
+                            }
+                        ],
+                        initComplete: function () {
+                            $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
+                        }
+                    });
                 }
             },
             error: function () {
@@ -303,8 +247,6 @@ function chargeLoad() {
 
     } else {
         //BR
-      
-
         $.ajax({
             type: "POST",
             url: Origin + '/Home/GetAcceptecriture',
@@ -312,6 +254,12 @@ function chargeLoad() {
             cache: false,
             contentType: false,
             processData: false,
+            beforeSend: function () {
+                loader.removeClass('display-none');
+            },
+            complete: function () {
+                loader.addClass('display-none');
+            },
             success: function (result) {
                 var Datas = JSON.parse(result);
 
@@ -321,41 +269,94 @@ function chargeLoad() {
                 }
                 if (Datas.type == "login") {
                     alert(Datas.msg);
-                    window.location = window.location.origin;
                     return;
                 }
                 if (Datas.type == "success") {
-                    //window.location = window.location.origin;
-                    ListResult = Datas.data
-                    content = ``;
-                    $.each(ListResult, function (k, v) {
-                        content += `
-                    <tr compteG-id="${v.IDREGLEMENT}">
-                        <td>
-                            <input type="checkbox" name = "checkprod" compteg-ischecked onchange = "checkdel()"/>
-                        </td><td>${v.IDREGLEMENT}</td>
-                        <td>${v.dateOrdre}</td>
-                        <td>${v.NoPiece}</td>
-                        <td>${v.Compte}</td>
-                        <td>${v.Libelle}</td>
-                        <td>${v.Montant}</td>
-                        <td>${v.MontantDevise}</td>
-                        <td>${v.Mon}</td>
-                        <td>${v.Rang}</td>
-                        <td>${v.Poste}</td>
-                        <td>${v.FinancementCategorie}</td>
-                        <td>${v.Commune}</td>
-                        <td>${v.Plan6}</td>
-                        <td>${v.Journal}</td>
-                        <td>${v.Marche}</td>
-                        <td>${v.Status}</td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center" ><div onclick="Refuser('${v.IDREGLEMENT}')"><i class="fa fa-times fa-lg text-dark"</i></div></td>
-                    </tr>`
+                    listResult = Datas.data;
 
+                    const data = [];
+
+                    $.each(listResult, function (_, v) {
+                        data.push({
+                            checkbox: '',
+                            id: v.IDREGLEMENT,
+                            dateOrdre: v.dateOrdre === undefined ? '' : v.dateOrdre,
+                            noPiece: v.NoPiece,
+                            compte: v.Compte,
+                            libelle: v.Libelle,
+                            debit: v.Debit,
+                            credit: v.Credit,
+                            montantDevise: v.MontantDevise,
+                            mon: v.Mon === null ? '' : v.Mon,
+                            rang: v.Rang === null ? '' : v.Rang,
+                            financementCategorie: v.FinancementCategorie === " " ? ' ' : v.FinancementCategorie,
+                            commune: v.Commune === null ? '' : v.Commune,
+                            plan: v.Plan6 === null ? '' : v.Plan6,
+                            journal: v.Journal,
+                            marche: v.Marche === null ? '' : v.Marche,
+                            rejeter: ''
+                        });
                     });
-                    $('.afb160').empty();
-                    $('.afb160').html(content);
 
+                    if (table !== undefined) {
+                        table.destroy();
+                    }
+
+                    table = $('#TDB_OPA').DataTable({
+                        data,
+                        columns: [
+                            {
+                                data: 'checkbox',
+                                render: function () {
+                                    return `
+                                        <input type="checkbox" name="checkprod" compteg-ischecked onchange="checkdel()" />
+                                    `;
+                                },
+                                orderable: false
+                            },
+                            { data: 'id' },
+                            { data: 'dateOrdre' },
+                            { data: 'noPiece' },
+                            { data: 'compte' },
+                            { data: 'libelle' },
+                            { data: 'montant' },
+                            { data: 'montantDevise' },
+                            { data: 'mon' },
+                            { data: 'rang' },
+                            { data: 'financementCategorie' },
+                            { data: 'commune' },
+                            { data: 'plan' },
+                            { data: 'journal' },
+                            { data: 'marche' },
+                            {
+                                data: 'rejeter',
+                                render: function (_, _, row, _) {
+                                    return `
+                                        <div onclick="Refuser('${row.id}')">
+                                            <i class="fa fa-times fa-lg text-dark"></i>
+                                        </div>
+                                    `;
+                                }
+                            }
+                        ],
+                        colReorder: {
+                            enable: true,
+                            fixedColumnsLeft: 1
+                        },
+                        deferRender: true,
+                        createdRow: function (row, data, _) {
+                            $(row).attr('compteG-id', data.id);
+                        },
+                        columnDefs: [
+                            {
+                                targets: [-1],
+                                className: 'elerfr'
+                            }
+                        ],
+                        initComplete: function () {
+                            $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
+                        }
+                    });
                 }
             },
             error: function () {
@@ -363,171 +364,128 @@ function chargeLoad() {
             }
         });
 
-        $('.afb160').empty()
     }
 }
-$('[data-action="ChargerJs"]').click(function () {
+
+function GetAllProjectUser() {
     let formData = new FormData();
+
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
-    formData.append("ChoixBase", baseName);
-    if (baseName == 2) {
-        //compta
-        formData.append("datein", $('#Pdu').val());
-        formData.append("dateout", $('#Pau').val());
-        formData.append("journal", $('#commercial').val());
-        formData.append("comptaG", $('#comptaG').val());
-        formData.append("auxi", $('#auxi').val());
-        formData.append("auxi1", $('#auxi').val());
-        formData.append("dateP", $('#Pay').val());
-        formData.append("devise", false);
-        formData.append("etat", $('#etat').val());
-        
-        $.ajax({
-            type: "POST",
-            url: Origin + '/Home/GetAcceptecriture',
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (result) {
-                var Datas = JSON.parse(result);
-                $('.afb160').html('');
-                if (Datas.type == "error") {
-                    alert(Datas.msg);
-                    return;
-                }
-                if (Datas.type == "login") {
-                    alert(Datas.msg);
-                    window.location = window.location.origin;
-                    return;
-                }
-                if (Datas.type == "success") {
-                    //window.location = window.location.origin;
-                    ListResult = Datas.data
-                    content = ``;
-                    $.each(ListResult, function (k, v) {
-                        content += `
-                    <tr compteG-id="${v.IDREGLEMENT}">
-                        <td>
-                            <input type="checkbox" name = "checkprod" compteg-ischecked onchange = "checkdel()"/>
-                        </td>
-                        <td>${v.IDREGLEMENT}</td>
-                        <td>${v.dateOrdre}</td>
-                        <td>${v.NoPiece}</td>
-                        <td>${v.Compte}</td>
-                        <td>${v.Libelle}</td>
-                        <td>${v.Debit}</td>
-                        <td>${v.Credit}</td>
-                        <td>${v.MontantDevise}</td>
-                        <td>${v.Mon}</td>
-                        <td>${v.Rang}</td>
-                        <td>${v.FinancementCategorie}</td>
-                        <td>${v.Commune}</td>
-                        <td>${v.Plan6}</td>
-                        <td>${v.Journal}</td>
-                        <td>${v.Marche}</td>
-                         <td class="elerfr" style="font-weight: bold; text-align:center" ><div onclick="Refuser('${v.IDREGLEMENT}')"><i class="fa fa-times fa-lg text-dark"</i></div></td>
-                    </tr>`
 
-                    });
-                    $('.afb160').html('');
-                    $('.afb160').html(content);
-                }
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/GetAllProjectUser',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+            reglementresult = ``;
+            reglementresult = Datas.data;
 
-
-            },
-            error: function () {
-                alert("Problème de connexion. ");
+            let listproject = ``;
+            
+            if (reglementresult.length) {
+                $.each(reglementresult, function (_, v) {
+                    listproject += `<option value="${v.ID}">${v.PROJET}</option>`;
+                })
+            } else {
+                listproject += `<option value="${reglementresult.ID}" selected>${reglementresult.PROJET}</option>`;
             }
-        });
 
-    } else {
-        //BR
-        formData.append("datein", $('#Pdu').val());
-        formData.append("dateout", $('#Pau').val());
-        formData.append("journal", $('#commercial').val());
-        formData.append("comptaG", $('#comptaG').val());
-        formData.append("auxi", $('#auxi').val());
-        formData.append("auxi1", $('#auxi').val());
-        formData.append("dateP", $('#Pay').val());
-        formData.append("etat", $('#etat').val());
-        formData.append("devise", false);
-
-
-        $.ajax({
-            type: "POST",
-            url: Origin + '/Home/GetAcceptecriture',
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (result) {
-                var Datas = JSON.parse(result);
-
-                if (Datas.type == "error") {
-                    alert(Datas.msg);
-                    return;
-                }
-                if (Datas.type == "login") {
-                    alert(Datas.msg);
-                    window.location = window.location.origin;
-                    return;
-                }
-                if (Datas.type == "success") {
-                    //window.location = window.location.origin;
-                    ListResult = Datas.data
-                    content = ``;
-                    $.each(ListResult, function (k, v) {
-                        content += `
-                    <tr compteG-id="${v.IDREGLEMENT}">
-                        <td>
-                            <input type="checkbox" name = "checkprod" compteg-ischecked onchange = "checkdel()"/>
-                        </td><td>${v.IDREGLEMENT}</td>
-                        <td>${v.dateOrdre}</td>
-                        <td>${v.NoPiece}</td>
-                        <td>${v.Compte}</td>
-                        <td>${v.Libelle}</td>
-                        <td>${v.Montant}</td>
-                        <td>${v.MontantDevise}</td>
-                        <td>${v.Mon}</td>
-                        <td>${v.Rang}</td>
-                        <td>${v.Poste}</td>
-                        <td>${v.FinancementCategorie}</td>
-                        <td>${v.Commune}</td>
-                        <td>${v.Plan6}</td>
-                        <td>${v.Journal}</td>
-                        <td>${v.Marche}</td>
-                        <td>${v.Status}</td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center" ><div onclick="Refuser('${v.IDREGLEMENT}')"><i class="fa fa-times fa-lg text-dark"</i></div></td>
-                    </tr>`
-
-                    });
-                    $('.afb160').empty();
-                    $('.afb160').html(content);
-
-                }
-
-
-            },
-            error: function () {
-                alert("Problème de connexion. ");
-            }
-        });
-
-        $('.afb160').empty()
-    }
-
-});
-function Refuser(id) {
-    $('#F-modal').modal('toggle');
-    $('#F-modal').attr("data-id", id);
-    modalREJET(id);
-    
-
+            $("#Fproject").html(listproject);
+            GetListCodeJournal();
+            chargeLoad();
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
 }
+
+function FillAUXI() {
+    var list = ListCompteG.filter(x => x.COGE == $(`[compG-list]`).val()).pop();
+
+    let code = `<option value="Tous"> Tous</option> `;
+    $.each(list.AUXI, function (_, v) {
+        code += `
+            <option value="${v}">${v}</option>
+        `;
+    });
+
+    $(`[auxi-list]`).html('');
+    $(`[auxi-list]`).html(code);
+}
+
+function FillCompteName() {
+    var nom = $(`[compG-list]`).val() + " " + $(`[auxi-list]`).val();
+    $(`[compte-name`).val(nom);
+}
+
+function GetListCompG() {
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
+    formData.append("baseName", baseName);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/GetCompteG',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                return;
+            }
+            let code = ``;
+            let codeAuxi = ``;
+            ListCompteG = Datas.data;
+
+            $.each(ListCompteG, function (_, v) {
+                code += `
+                    <option value="${v.COGE}">${v.COGE}</option>
+                `;
+            });
+            $(`[compG-list]`).html('');
+            $(`[compG-list]`).append(code);
+
+            FillAUXI();
+            FillCompteName();
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
+
 function modalREJET(id) {
 
     clickedANN = id;
@@ -548,6 +506,12 @@ function modalREJET(id) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -557,17 +521,17 @@ function modalREJET(id) {
             }
             if (Datas.type == "login") {
                 alert(Datas.msg);
-                window.location = window.location.origin;
                 return;
             }
 
             $(`[data-id="MOTIF-list"]`).text("");
 
             var code = ``;
-            ListResult = Datas.data
-            $.each(ListResult, function (k, v) {
+            listResult = Datas.data;
+
+            $.each(listResult, function (_, v) {
                 code += `
-                    <option value="${v.REF}" id="${k}">${v.REF}</option>
+                    <option value="${v.REF}" id="${v.ID}">${v.REF}</option>
                 `;
             });
 
@@ -580,10 +544,19 @@ function modalREJET(id) {
 
     $('#annuler-modal').modal('toggle');
 }
+
+function Refuser(id) {
+    $('#F-modal').modal('toggle');
+    $('#F-modal').attr("data-id", id);
+    modalREJET(id);
+}
+
 function AcceptRefuser() {
     const id = $('#F-modal').attr("data-id");
     let motif = $("#Motif").val();
     let commentaire = $("#Commentaire").val();
+
+  
 
     let formData = new FormData();
     formData.append("suser.LOGIN", User.LOGIN);
@@ -595,6 +568,9 @@ function AcceptRefuser() {
     formData.append("motif", motif);
     formData.append("commentaire", commentaire);
 
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/CancelEcriture',
@@ -602,10 +578,16 @@ function AcceptRefuser() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
-            ListResultAnomalie = "";
+            listResultAnomalie = "";
             contentAnomalies = ``;
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -617,7 +599,6 @@ function AcceptRefuser() {
             }
             if (Datas.type == "login") {
                 alert(Datas.msg);
-                window.location = window.location.origin;
                 return;
             }
         },
@@ -627,6 +608,351 @@ function AcceptRefuser() {
     });
 
 }
+//==============================================================================================Ready===================================================================================
+
+$(document).ready(() => {
+
+    User = JSON.parse(sessionStorage.getItem("user"));
+    if (User == null || User === "undefined") window.location = User.origin;
+    Origin = User.origin;
+
+    $(`[data-id="username"]`).text(User.LOGIN);
+    GetAllProjectUser();
+
+});
+
+$(document).on("change", "[code-project]", () => {
+    GetListCodeJournal();
+    chargeLoad();
+});
+
+$(document).on("change", "[compG-list]", () => {
+    FillAUXI();
+    FillCompteName();
+});
+
+$(document).on("change", "[auxi-list]", () => {
+    FillCompteName();
+});
+
+$(document).on("change", "[codej-list]", () => {
+    var code = ListCodeJournal.filter(function (e) { return e.CODE == $(`[codej-list]`).val(); })[0];
+    $(`[codej-libelle]`).val(code.LIBELLE);
+});
+
+$(document).on("click", "[data-target]", function () {
+    let me = $(this).closest("[data-target]");
+    if ($(me).attr("data-type") == "switch_tab") {
+        let target = $(`#${$(me).attr("data-target")}`);
+
+
+        $(`[data-type="switch_tab"]`).each(function (i) {
+            if ($(this).hasClass('active')) {
+
+                $(this).removeClass('active');
+                $(`#${$(this).attr("data-target")}`).hide();
+            }
+        });
+        $(me).addClass("active");
+        $(target).show();
+    }
+});
+
+$('.Checkall').change(function () {
+
+    if ($('.Checkall').prop("checked") == true) {
+
+        $('[compteg-ischecked]').prop("checked", true);
+    } else {
+        $('[compteg-ischecked]').prop("checked", false);
+    }
+
+});
+//==============================================================================================ChargeJs===================================================================================
+
+$('[data-action="ChargerJs"]').click(function () {
+    let formData = new FormData();
+    let codeproject = $("#Fproject").val();
+
+    formData.append("codeproject", codeproject);
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
+    formData.append("ChoixBase", baseName);
+    if (baseName == 2) {
+        //compta
+        formData.append("datein", $('#Pdu').val());
+        formData.append("dateout", $('#Pau').val());
+        formData.append("journal", $('#commercial').val());
+        formData.append("comptaG", $('#comptaG').val());
+        formData.append("auxi", $('#auxi').val());
+        formData.append("auxi1", $('#auxi').val());
+        formData.append("dateP", $('#Pay').val());
+        formData.append("devise", false);
+        formData.append("etat", $('#etat').val());
+
+        $.ajax({
+            type: "POST",
+            url: Origin + '/Home/GetAcceptecriture',
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+                loader.removeClass('display-none');
+            },
+            complete: function () {
+                loader.addClass('display-none');
+            },
+            success: function (result) {
+                var Datas = JSON.parse(result);
+                $('.afb160').html('');
+                if (Datas.type == "error") {
+                    alert(Datas.msg);
+                    return;
+                }
+                if (Datas.type == "login") {
+                    alert(Datas.msg);
+                    return;
+                }
+                if (Datas.type == "success") {
+                    listResult = Datas.data;
+
+                    const data = [];
+
+                    $.each(listResult, function (k, v) {
+                        data.push({
+                            checkbox: '',
+                            id: v.IDREGLEMENT,
+                            dateOrdre: v.dateOrdre === undefined ? '' : v.dateOrdre,
+                            noPiece: v.NoPiece,
+                            compte: v.Compte,
+                            libelle: v.Libelle,
+                            debit: v.Debit,
+                            credit: v.Credit,
+                            montantDevise: v.MontantDevise,
+                            mon: v.Mon === null ? '' : v.Mon,
+                            rang: v.Rang === null ? '' : v.Rang,
+                            financementCategorie: v.FinancementCategorie === " " ? ' ' : v.FinancementCategorie,
+                            commune: v.Commune === null ? '' : v.Commune,
+                            plan: v.Plan6 === null ? '' : v.Plan6,
+                            journal: v.Journal,
+                            marche: v.Marche === null ? '' : v.Marche,
+                            rejeter: '',
+                            isLATE: v.isLATE
+                        });
+                    });
+
+                    if (table !== undefined) {
+                        table.destroy();
+                    }
+
+                    table = $('#TDB_OPA').DataTable({
+                        data,
+                        columns: [
+                            {
+                                data: 'checkbox',
+                                render: function () {
+                                    return `
+                                        <input type="checkbox" name="checkprod" compteg-ischecked onchange="checkdel()" />
+                                    `;
+                                },
+                                orderable: false
+                            },
+                            { data: 'id' },
+                            { data: 'dateOrdre' },
+                            { data: 'noPiece' },
+                            { data: 'compte' },
+                            { data: 'libelle' },
+                            { data: 'debit' },
+                            { data: 'credit' },
+                            { data: 'montantDevise' },
+                            { data: 'mon' },
+                            { data: 'rang' },
+                            { data: 'financementCategorie' },
+                            { data: 'commune' },
+                            { data: 'plan' },
+                            { data: 'journal' },
+                            { data: 'marche' },
+                            {
+                                data: 'rejeter',
+                                render: function (_, _, row, _) {
+                                    return `
+                                        <div onclick="Refuser('${row.id}')">
+                                            <i class="fa fa-times fa-lg text-dark"></i>
+                                        </div>
+                                    `;
+                                }
+                            }
+                        ],
+                        colReorder: {
+                            enable: true,
+                            fixedColumnsLeft: 1
+                        },
+                        deferRender: true,
+                        createdRow: function (row, data, _) {
+                            $(row).attr('compteG-id', data.id);
+
+                            $(row).addClass('select-text');
+                            if (data.isLATE) {
+                                $(row).attr('style', "background-color: #FF7F7F !important;");
+                            }
+                        },
+                        columnDefs: [
+                            {
+                                targets: [-1],
+                                className: 'elerfr'
+                            }
+                        ],
+                        initComplete: function () {
+                            $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
+                        }
+                    });
+                }
+            },
+            error: function () {
+                alert("Problème de connexion. ");
+            }
+        });
+
+    } else {
+        //BR
+        formData.append("datein", $('#Pdu').val());
+        formData.append("dateout", $('#Pau').val());
+        formData.append("journal", $('#commercial').val());
+        formData.append("comptaG", $('#comptaG').val());
+        formData.append("auxi", $('#auxi').val());
+        formData.append("auxi1", $('#auxi').val());
+        formData.append("dateP", $('#Pay').val());
+        formData.append("etat", $('#etat').val());
+        formData.append("devise", false);
+
+
+        $.ajax({
+            type: "POST",
+            url: Origin + '/Home/GetAcceptecriture',
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+                loader.removeClass('display-none');
+            },
+            complete: function () {
+                loader.addClass('display-none');
+            },
+            success: function (result) {
+                var Datas = JSON.parse(result);
+
+                if (Datas.type == "error") {
+                    alert(Datas.msg);
+                    return;
+                }
+                if (Datas.type == "login") {
+                    alert(Datas.msg);
+                    return;
+                }
+                if (Datas.type == "success") {
+                    listResult = Datas.data
+                    content = ``;
+                    $.each(listResult, function (k, v) {
+                        data.push({
+                            checkbox: '',
+                            id: v.IDREGLEMENT,
+                            dateOrdre: v.dateOrdre === undefined ? '' : v.dateOrdre,
+                            noPiece: v.NoPiece,
+                            compte: v.Compte,
+                            libelle: v.Libelle,
+                            debit: v.Debit === undefined ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
+                            credit: v.Credit === undefined ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
+                            montantDevise: v.MontantDevise === undefined ? '' :formatCurrency(String(v.MontantDevise).replace(",", ".")),
+                            mon: v.Mon === null ? '' : v.Mon,
+                            rang: v.Rang === null ? '' : v.Rang,
+                            financementCategorie: v.FinancementCategorie === " " ? ' ' : v.FinancementCategorie,
+                            commune: v.Commune === null ? '' : v.Commune,
+                            plan: v.Plan6 === null ? '' : v.Plan6,
+                            journal: v.Journal,
+                            marche: v.Marche === null ? '' : v.Marche,
+                            rejeter: '',
+                            isLATE: v.isLATE
+                        });
+                    });
+
+                    if (table !== undefined) {
+                        table.destroy();
+                    }
+
+                    table = $('#TDB_OPA').DataTable({
+                        data,
+                        columns: [
+                            {
+                                data: 'checkbox',
+                                render: function () {
+                                    return `
+                                        <input type="checkbox" name="checkprod" compteg-ischecked onchange="checkdel()" />
+                                    `;
+                                },
+                                orderable: false
+                            },
+                            { data: 'id' },
+                            { data: 'dateOrdre' },
+                            { data: 'noPiece' },
+                            { data: 'compte' },
+                            { data: 'libelle' },
+                            { data: 'montant' },
+                            { data: 'montantDevise' },
+                            { data: 'mon' },
+                            { data: 'rang' },
+                            { data: 'financementCategorie' },
+                            { data: 'commune' },
+                            { data: 'plan' },
+                            { data: 'journal' },
+                            { data: 'marche' },
+                            {
+                                data: 'rejeter',
+                                render: function (_, _, row, _) {
+                                    return `
+                                        <div onclick="Refuser('${row.id}')">
+                                            <i class="fa fa-times fa-lg text-dark"></i>
+                                        </div>
+                                    `;
+                                }
+                            }
+                        ],
+                        colReorder: {
+                            enable: true,
+                            fixedColumnsLeft: 1
+                        },
+                        deferRender: true,
+                        createdRow: function (row, data, _) {
+                            $(row).attr('compteG-id', data.id);
+
+                            $(row).addClass('select-text');
+                            if (data.isLATE) {
+                                $(row).attr('style', "background-color: #FF7F7F !important;");
+                            }
+                        },
+                        columnDefs: [
+                            {
+                                targets: [-1],
+                                className: 'elerfr'
+                            }
+                        ],
+                        initComplete: function () {
+                            $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
+                        }
+                    });
+                }
+            },
+            error: function () {
+                alert("Problème de connexion. ");
+            }
+        });
+    }
+});
+//==============================================================================================Checked===================================================================================
 
 $('[data-action="GetElementChecked"]').click(function () {
     let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
@@ -637,6 +963,10 @@ $('[data-action="GetElementChecked"]').click(function () {
 
     let formData = new FormData();
     let listid = list.splice(',');
+
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
 
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
@@ -661,17 +991,25 @@ $('[data-action="GetElementChecked"]').click(function () {
     formData.append("devise", false);
     formData.append("etat", etat);
     formData.append("listCompte", listid);
+    formData.append("baseName", baseName);
+    alert(baseName);
 
-   
+
     //ValidationsEcrituresF
     //tokony io no antsoina
     $.ajax({
         type: "POST",
-        url: Origin + '/Home/GetAcceptecritureF',
+        url: Origin + '/Home/ValidationsEcrituresF',
         data: formData,
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             reglementresult = ``;
@@ -679,83 +1017,17 @@ $('[data-action="GetElementChecked"]').click(function () {
             $.each(listid, (k, v) => {
                 $(`[compteG-id="${v}"]`).remove();
             });
-           
+
         },
         error: function () {
             alert("Problème de connexion. ");
         }
     });
-  
+
 });
 
-$('[data-action="GetAnomalieListes"]').click(function () {
-
-    let formData = new FormData();
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
-    formData.append("baseName", baseName);
-
-    $.ajax({
-        type: "POST",
-        url: Origin + '/Home/GetAnomalieBack',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (result) {
-            var Datas = JSON.parse(result);
-
-            ListResultAnomalie = "";
-            contentAnomalies = ``;
-            if (Datas.type == "error") {
-                alert(Datas.msg);
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-                window.location = window.location.origin;
-                return;
-            }
-            if (Datas.type == "success") {
-                //window.location = window.location.origin;
-                ListResultAnomalie = Datas.data;
-                $.each(ListResultAnomalie, function (k, v) {
-                    contentAnomalies += `<tr compteG-id="${v.No}">
-                        <td>
-                            <input type="checkbox" name = "checkprod" compteg-ischecked/>
-                        </td><td>${v.No}</td>
-                        <td>${v.DateOrdre}</td>
-                        <td>${v.NoPiece}</td>
-                        <td>${v.Compte}</td>
-                        <td>${v.Libelle}</td>
-                        <td>${v.Debit}</td>
-                        <td>${v.Credit}</td>
-                        <td>${v.MontantDevise}</td>
-                        <td>${v.Mon}</td>
-                        <td>${v.Rang}</td>
-                        <td>${v.FinancementCategorie}</td>
-                        <td>${v.Commune}</td>
-                        <td>${v.Plan6}</td>
-                        <td>${v.Journal}</td>
-                        <td>${v.Marche}</td>
-                    </tr>`
-
-                });
-                $('.anomalieslist').html(contentAnomalies);
-            }
-
-        },
-        error: function () {
-            alert("Problème de connexion. ");
-        }
-    });
-})
-
-
-//$(`[tab="autre"]`).hide();
 var baseName = "2";
+
 $(`[name="options"]`).on("change", (k, v) => {
 
     var baseId = $(k.target).attr("data-id");
@@ -767,12 +1039,7 @@ $(`[name="options"]`).on("change", (k, v) => {
     } else {
         $(`[tab="autre"]`).show();
         $(`[tab="paie"]`).hide();
-        $('.afb160').empty();
         $('#afb').empty();
         //GetListCodeJournal();
     }
-
 });
-
-let urlOrigin = Origin;
-//let urlOrigin = "http://softwell.cloud/OPAVI";

@@ -1,16 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using apptab;
 using Newtonsoft.Json;
-using System.Web.UI.WebControls;
-using System.Threading.Tasks;
-using apptab.Data.Entities;
-using System.Data.Entity;
-using Microsoft.Build.Framework.XamlTypes;
-using System.Data.Entity.ModelConfiguration.Conventions;
-using apptab;
 
 namespace apptab.Controllers
 {
@@ -32,14 +23,15 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public ActionResult DetailsCrypto(SI_USERS suser)
+        public ActionResult DetailsCrypto(SI_USERS suser, int iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             try
             {
-                int crpt = exist.IDPROJET.Value;
+                int crpt = iProjet;
+
                 var crpto = db.OPA_CRYPTO.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
                 if (crpto != null)
                 {
@@ -57,14 +49,14 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateCrypto(SI_USERS suser, OPA_CRYPTO param)
+        public JsonResult UpdateCrypto(SI_USERS suser, OPA_CRYPTO param, int iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             try
             {
-                int IdS = exist.IDPROJET.Value;
+                int IdS = iProjet;
                 var SExist = db.OPA_CRYPTO.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null);
 
                 if (SExist != null)

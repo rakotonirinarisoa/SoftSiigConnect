@@ -1,42 +1,7 @@
-﻿let User;
-let Origin;
-
-let ListCodeJournal;
-let ListCompteG;
-
-var content;
-let validate;
-
-let ListResult;
-let ListResultAnomalie;
-let contentAnomalies;
-var rdv
-let contentpaie;
-let ListResultpaie;
-let reglementresult;
-
-let listEtat;
-let etaCode;
-
-var baseName;
-
-$(document).ready(() => {
-
-    User = JSON.parse(sessionStorage.getItem("user"));
-    if (User == null || User === "undefined") window.location = User.origin;
-    Origin = User.origin;
-
-    $(`[data-id="username"]`).text(User.LOGIN);
-
-    //$(`[tab="autre"]`).hide();
-
-    /*console.log($(`[tab="autre"]`).hide());*/
-    
-    GetTypeP();
-    //GetUR();
-    GetListCodeJournal();
-    //GetListCompG();
-});
+﻿var table = undefined;
+function checkdel(id) {
+    $('.Checkall').prop("checked", false);
+}
 
 function GetTypeP() {
     let formData = new FormData();
@@ -45,6 +10,10 @@ function GetTypeP() {
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDSOCIETE", User.IDSOCIETE);
+
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/GetTypeP',
@@ -52,6 +21,12 @@ function GetTypeP() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             baseName = Datas;
@@ -72,69 +47,6 @@ function GetTypeP() {
     });
 };
 
-function GetListCompG() {
-    let formData = new FormData();
-
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
-    //formData.append("baseName", id);
-
-    $.ajax({
-        type: "POST",
-        url: Origin + '/Home/GetCompteG',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (result) {
-            var Datas = JSON.parse(result);
-
-            if (Datas.type == "error") {
-                alert(Datas.msg);
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-                window.location = window.location.origin;
-                return;
-            }
-
-            let code = ``;
-            let codeAuxi = ``;
-            ListCompteG = Datas.data;
-            
-            $.each(ListCompteG, function (k, v) {
-                code += `
-                    <option value="${v.COGE}">${v.COGE}</option>
-                `;
-            });
-            $(`[compG-list]`).html('');
-            $(`[compG-list]`).append(code);
-
-            FillAUXI();
-            FillCompteName();
-        },
-        error: function () {
-            alert("Problème de connexion. ");
-        }
-    });
-}
-
-function FillAUXI() {
-    var list = ListCompteG.filter(x => x.COGE == $(`[compG-list]`).val()).pop();
-
-    let code = `<option value="Tous"> Tous</option> `;
-    $.each(list.AUXI, function (k, v) {
-        code += `
-                    <option value="${v}">${v}</option>
-                `;
-    });
-
-    $(`[auxi-list]`).html('');
-    $(`[auxi-list]`).html(code);
-}
 function GetEtat() {
     let formData = new FormData();
     formData.append("suser.LOGIN", User.LOGIN);
@@ -149,6 +61,12 @@ function GetEtat() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             listEtat = Datas.data
@@ -173,22 +91,69 @@ function GetEtat() {
         }
     });
 }
-function FillCompteName() {
-    var nom = $(`[compG-list]`).val() + " " + $(`[auxi-list]`).val();
-    $(`[compte-name`).val(nom);
+
+function GetListCompG() {
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
+    //formData.append("baseName", id);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/GetCompteG',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+
+            let code = ``;
+
+            ListCompteG = Datas.data;
+
+            $.each(ListCompteG, function (k, v) {
+                code += `
+                    <option value="${v.COGE}">${v.COGE}</option>
+                `;
+            });
+            $(`[compG-list]`).html('');
+            $(`[compG-list]`).append(code);
+
+            FillAUXI();
+            FillCompteName();
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
 }
-
-$(document).on("change", "[compG-list]", () => {
-    FillAUXI();
-    FillCompteName();
-});
-
-$(document).on("change", "[auxi-list]", () => {
-    FillCompteName();
-});
 
 function GetListCodeJournal() {
     let formData = new FormData();
+
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
@@ -202,6 +167,12 @@ function GetListCodeJournal() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -214,7 +185,7 @@ function GetListCodeJournal() {
                 //window.location = window.location.origin;
                 return;
             }
-            
+
             let code = ``;
             ListCodeJournal = Datas.data;
 
@@ -235,6 +206,95 @@ function GetListCodeJournal() {
         GetListCompG();
     });
 }
+
+function GetAllProjectUser() {
+    let formData = new FormData();
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/GetAllProjectUser',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+            reglementresult = ``;
+            reglementresult = Datas.data;
+
+            let listproject = ``;
+
+            if (reglementresult.length) {
+                $.each(reglementresult, function (k, v) {
+                    listproject += `<option value="${v.ID}">${v.PROJET}</option>`;
+                })
+            } else {
+                listproject += `<option value="${reglementresult.ID}" selected>${reglementresult.PROJET}</option>`;
+            }
+
+            $("#Fproject").html(listproject);
+            GetTypeP();
+            GetListCodeJournal();
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
+
+function FillAUXI() {
+    var list = ListCompteG.filter(x => x.COGE == $(`[compG-list]`).val()).pop();
+
+    let code = `<option value="Tous"> Tous</option> `;
+    $.each(list.AUXI, function (k, v) {
+        code += `
+                    <option value="${v}">${v}</option>
+                `;
+    });
+
+    $(`[auxi-list]`).html('');
+    $(`[auxi-list]`).html(code);
+}
+
+function FillCompteName() {
+    var nom = $(`[compG-list]`).val() + " " + $(`[auxi-list]`).val();
+    $(`[compte-name`).val(nom);
+}
+
+$(document).ready(() => {
+    User = JSON.parse(sessionStorage.getItem("user"));
+    if (User == null || User === "undefined") window.location = User.origin;
+    Origin = User.origin;
+
+    $(`[data-id="username"]`).text(User.LOGIN);
+
+    
+    GetAllProjectUser();
+});
+
+$(document).on("change", "[code-project]", () => {
+    GetListCodeJournal();
+});
+
+$(document).on("change", "[compG-list]", () => {
+    FillAUXI();
+    FillCompteName();
+});
+
+$(document).on("change", "[auxi-list]", () => {
+    FillCompteName();
+});
+
 $(document).on("change", "[codej-list]", () => {
     var code = ListCodeJournal.filter(function (e) { return e.CODE == $(`[codej-list]`).val(); })[0];
     $(`[codej-libelle]`).val(code.LIBELLE);
@@ -248,7 +308,7 @@ $(document).on("click", "[data-target]", function () {
 
         $(`[data-type="switch_tab"]`).each(function (i) {
             if ($(this).hasClass('active')) {
-                
+
                 $(this).removeClass('active');
                 $(`#${$(this).attr("data-target")}`).hide();
             }
@@ -259,18 +319,7 @@ $(document).on("click", "[data-target]", function () {
 
     }
 });
-$(`[data-action="CreateTxt"]`).click(function () {
-    getelementTXT(0);
-})
-$(`[data-action="CreateTxtCrypter"]`).click(function () {
-    getelementTXT(1);
-})
-$(`[data-action="CreateTxtSend"]`).click(function () {
-    getelementTXT(2);
-})
-$(`[data-action="CreateTxtFTPCrypter"]`).click(function () {
-    getelementTXT(3);
-})
+
 $('.Checkall').change(function () {
 
     if ($('.Checkall').prop("checked") == true) {
@@ -281,19 +330,21 @@ $('.Checkall').change(function () {
     }
 
 });
-function checkdel(id) {
-    $('.Checkall').prop("checked", false);
-}
+
+//==============================================================================================ChargeJs===================================================================================
+
 $('[data-action="ChargerJs"]').click(function () {
     let formData = new FormData();
-    //alert(baseName);
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDSOCIETE", User.IDSOCIETE);
     formData.append("ChoixBase", baseName);
+
     if (baseName == 2) {
-        //compta
         formData.append("datein", $('#Pdu').val());
         formData.append("dateout", $('#Pau').val());
         formData.append("journal", $('#commercial').val());
@@ -301,13 +352,13 @@ $('[data-action="ChargerJs"]').click(function () {
         formData.append("auxi", $('#auxi').val());
         formData.append("auxi1", $('#auxi').val());
         formData.append("dateP", $('#Pay').val());
-        
+
         if ($('#ChkDevise').prop("checked") == true) {
             formData.append("devise", true);
         } else {
             formData.append("devise", false);
         }
-        
+
         $.ajax({
             type: "POST",
             url: Origin + '/Home/getelementjs',
@@ -315,71 +366,126 @@ $('[data-action="ChargerJs"]').click(function () {
             cache: false,
             contentType: false,
             processData: false,
+            beforeSend: function () {
+                loader.removeClass('display-none');
+            },
+            complete: function () {
+                loader.addClass('display-none');
+            },
             success: function (result) {
                 var Datas = JSON.parse(result);
 
                 if (Datas.type == "error") {
                     alert(Datas.msg);
+
                     return;
                 }
+
                 if (Datas.type == "login") {
                     alert(Datas.msg);
                     window.location = window.location.origin;
+
                     return;
                 }
+
                 if (Datas.type == "success") {
-                    //window.location = window.location.origin;
-                    ListResult = Datas.data
-                    $.each(ListResult, function (k, v) {
-                        content += `
-                    <tr compteG-id="${v.No}">
-                        <td>
-                            <input type="checkbox" name = "checkprod" compteg-ischecked onchange = "checkdel()"/>
-                        </td><td>${v.No}</td>
-                        <td>${v.DateOrdre}</td>
-                        <td>${v.NoPiece}</td>
-                        <td>${v.Compte}</td>
-                        <td>${v.Libelle}</td>
-                        <td>${v.Debit}</td>
-                        <td>${v.Credit}</td>
-                        <td>${v.MontantDevise}</td>
-                        <td>${v.Mon}</td>
-                        <td>${v.Rang}</td>
-                        <td>${v.FinancementCategorie}</td>
-                        <td>${v.Commune}</td>
-                        <td>${v.Plan6}</td>
-                        <td>${v.Journal}</td>
-                        <td>${v.Marche}</td>
-                    </tr>`
+                    listResult = Datas.data;
 
+                    const data = [];
+
+                    $.each(listResult, function (_, v) {
+
+                        data.push({
+                            checkbox: '',
+                            id: v.No,
+                            dateOrdre: v.DateOrdre === null ? '' : v.DateOrdre,
+                            noPiece: v.NoPiece === null ? '' : v.NoPiece,
+                            compte: v.Compte === null ? '' : v.Compte,
+                            libelle: v.Libelle === null ? '' : v.Libelle,
+                            debit: v.Debit === null ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
+                            credit: v.Credit === null ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
+                            montantDevise: v.MontantDevise === null ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
+                            mon: v.Mon === null ? '' : v.Mon,
+                            rang: v.Rang === null ? '' : v.Rang,
+                            financementCategorie: v.FinancementCategorie === null ? '' : v.FinancementCategorie,
+                            commune: v.Commune === null ? '' : v.Commune,
+                            plan: v.Plan6 === null ? '' : v.Plan6,
+                            journal: v.Journal === null ? '' : v.Journal,
+                            marche: v.Marche === null ? '' : v.Marche,
+                        });
                     });
-                    $('.afb160').empty();
-                    $('.afb160').html(content);
+
+                    if (table !== undefined) {
+                        table.destroy();
+                    }
+
+                    table = $('#TDB_OPA').DataTable({
+                        data,
+                        columns: [
+                            {
+                                data: 'checkbox',
+                                render: function () {
+                                    return `
+                                        <input type="checkbox" name="checkprod" compteg-ischecked onchange="checkdel()" />
+                                    `;
+                                },
+                                orderable: false
+                            },
+                            { data: 'id' },
+                            { data: 'dateOrdre' },
+                            { data: 'noPiece' },
+                            { data: 'compte' },
+                            { data: 'libelle' },
+                            { data: 'debit' },
+                            { data: 'credit' },
+                            { data: 'montantDevise' },
+                            { data: 'mon' },
+                            { data: 'rang' },
+                            { data: 'financementCategorie' },
+                            { data: 'commune' },
+                            { data: 'plan' },
+                            { data: 'journal' },
+                            { data: 'marche' }
+                        ],
+                        colReorder: {
+                            enable: true,
+                            fixedColumnsLeft: 1
+                        },
+                        deferRender: true,
+                        createdRow: function (row, data, _) {
+                            $(row).attr('compteG-id', data.id);
+                            $(row).addClass('select-text');
+                        },
+                        initComplete: function () {
+                            $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
+                        }
+                    });
                 }
-
-
             },
             error: function () {
                 alert("Problème de connexion. ");
             }
         });
-
     } else {
         //BR
         formData.append("datein", $('#Pdu').val());
         formData.append("dateout", $('#Pau').val());
         formData.append("journal", $('#commercial').val());
         formData.append("comptaG", $('#comptaG').val());
+
         formData.append("auxi", $('#auxi').val());
         formData.append("auxi1", $('#auxi').val());
         formData.append("dateP", $('#Pay').val());
         formData.append("etat", $('#etat').val());
+
+        let codeproject = $("#Fproject").val();
+        formData.append("codeproject", codeproject);
+
         if ($('#ChkDevise').prop("checked") == true) {
             formData.append("devise", true);
         } else {
             formData.append("devise", false);
         }
-
 
         $.ajax({
             type: "POST",
@@ -388,52 +494,103 @@ $('[data-action="ChargerJs"]').click(function () {
             cache: false,
             contentType: false,
             processData: false,
+            beforeSend: function () {
+                loader.removeClass('display-none');
+            },
+            complete: function () {
+                loader.addClass('display-none');
+            },
             success: function (result) {
                 var Datas = JSON.parse(result);
 
                 if (Datas.type == "error") {
                     alert(Datas.msg);
+
                     return;
                 }
+
                 if (Datas.type == "login") {
                     alert(Datas.msg);
                     window.location = window.location.origin;
+
                     return;
                 }
+
                 if (Datas.type == "success") {
-                    //window.location = window.location.origin;
-                    ListResult = Datas.data
+                    listResult = Datas.data
                     content = ``;
-                    $.each(ListResult, function (k, v) {
-                        content += `
-                    <tr compteG-id="${v.No}">
-                        <td>
-                            <input type="checkbox" name = "checkprod" compteg-ischecked onchange = "checkdel()"/>
-                        </td><td>${v.No}</td>
-                        <td>${v.Date}</td>
-                        <td>${v.NoPiece}</td>
-                        <td>${v.Compte}</td>
-                        <td>${v.Libelle}</td>
-                        <td>${v.Montant}</td>
-                        <td>${v.MontantDevise}</td>
-                        <td>${v.Mon}</td>
-                        <td>${v.Rang}</td>
-                        <td>${v.Poste}</td>
-                        <td>${v.FinancementCategorie}</td>
-                        <td>${v.Commune}</td>
-                        <td>${v.Plan6}</td>
-                        <td>${v.Journal}</td>
-                        <td>${v.Marche}</td>
-                        <td>${v.Status}</td>
-                    </tr>`
 
+                    const data = [];
+
+                    $.each(listResult, function (_, v) {
+                        data.push({
+                            checkbox: '',
+                            id: v.No,
+                            dateOrdre: v.DateOrdre === null ? '' : v.DateOrdre,
+                            noPiece: v.NoPiece === null ? '' : v.NoPiece,
+                            compte: v.Compte === null ? '' : v.Compte,
+                            libelle: v.Libelle === null ? '' : v.Libelle,
+                            debit: v.Debit === null ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
+                            credit: v.Credit === null ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
+                            montantDevise: v.MontantDevise === null ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
+                            mon: v.Mon === null ? '' : v.Mon,
+                            rang: v.Rang === null ? '' : v.Rang,
+                            financementCategorie: v.FinancementCategorie === null ? '' : v.FinancementCategorie,
+                            commune: v.Commune === null ? '' : v.Commune,
+                            plan: v.Plan6 === null ? '' : v.Plan6,
+                            journal: v.Journal === null ? '' : v.Journal,
+                            marche: v.Marche === null ? '' : v.Marche,
+                        });
                     });
-                    $('.afb160').empty();
-                    $('.afb160').html(content);
 
+                    if (table !== undefined) {
+                        table.destroy();
+                    }
+
+                    table = $('#TDB_OPA').DataTable({
+                        data,
+                        columns: [
+                            {
+                                data: 'checkbox',
+                                render: function () {
+                                    return `
+                                        <input type="checkbox" name="checkprod" compteg-ischecked onchange="checkdel()" />
+                                    `;
+                                },
+                                orderable: false
+                            },
+                            { data: 'id' },
+                            { data: 'date' },
+                            { data: 'noPiece' },
+                            { data: 'compte' },
+                            { data: 'libelle' },
+                            { data: 'debit' },
+                            { data: 'credit' },
+                            { data: 'montantDevise' },
+                            { data: 'mon' },
+                            { data: 'rang' },
+                            { data: 'poste' },
+                            { data: 'financementCategorie' },
+                            { data: 'commune' },
+                            { data: 'plan' },
+                            { data: 'journal' },
+                            { data: 'marche' },
+                            { data: 'status' }
+                        ],
+                        colReorder: {
+                            enable: true,
+                            fixedColumnsLeft: 1
+                        },
+                        deferRender: true,
+                        createdRow: function (row, _, _) {
+                            $(row).attr('compteG-id', row.id);
+                            $(row).addClass('select-text');
+                        },
+                        initComplete: function () {
+                            $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
+                        }
+                    });
                 }
-
-
             },
             error: function () {
                 alert("Problème de connexion. ");
@@ -442,8 +599,8 @@ $('[data-action="ChargerJs"]').click(function () {
 
         $('.afb160').empty()
     }
-
 });
+//==============================================================================================CHECK===================================================================================
 
 $('[data-action="GetElementChecked"]').click(function () {
     let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
@@ -452,6 +609,8 @@ $('[data-action="GetElementChecked"]').click(function () {
         list.push($(v).attr("compteG-id"));
     });
 
+    let codeproject = $("#Fproject").val();
+
     let formData = new FormData();
 
     formData.append("suser.LOGIN", User.LOGIN);
@@ -459,6 +618,7 @@ $('[data-action="GetElementChecked"]').click(function () {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
     formData.append("listCompte", list);
+    formData.append("codeproject", codeproject);
     //formData.append("baseName", baseName);
     formData.append("journal", $('#commercial').val());
     formData.append("devise", false);
@@ -470,6 +630,7 @@ $('[data-action="GetElementChecked"]').click(function () {
     formData.append("auxi1", $('#auxi').val());
     formData.append("dateP", $('#Pay').val());
     formData.append("etat", $('#etat').val());
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/GetCheckedCompte',
@@ -477,140 +638,38 @@ $('[data-action="GetElementChecked"]').click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             $.each(listid, (k, v) => {
                 $(`[compteG-id="${v}"]`).remove();
             });
-           
         },
         error: function () {
             alert("Problème de connexion. ");
         }
     });
-  
+
 });
 
-$('[data-action="GetAnomalieListes"]').click(function () {
-
-    let formData = new FormData();
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
-    formData.append("baseName", baseName);
-
-    $.ajax({
-        type: "POST",
-        url: Origin + '/Home/GetAnomalieBack',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (result) {
-            var Datas = JSON.parse(result);
-
-            ListResultAnomalie = "";
-            contentAnomalies = ``;
-            if (Datas.type == "error") {
-                alert(Datas.msg);
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-                window.location = window.location.origin;
-                return;
-            }
-            if (Datas.type == "success") {
-                //window.location = window.location.origin;
-                ListResultAnomalie = Datas.data;
-                $.each(ListResultAnomalie, function (k, v) {
-                    contentAnomalies += `<tr compteG-id="${v.No}">
-                        <td>
-                            <input type="checkbox" name = "checkprod" compteg-ischecked/>
-                        </td><td>${v.No}</td>
-                        <td>${v.DateOrdre}</td>
-                        <td>${v.NoPiece}</td>
-                        <td>${v.Compte}</td>
-                        <td>${v.Libelle}</td>
-                        <td>${v.Debit}</td>
-                        <td>${v.Credit}</td>
-                        <td>${v.MontantDevise}</td>
-                        <td>${v.Mon}</td>
-                        <td>${v.Rang}</td>
-                        <td>${v.FinancementCategorie}</td>
-                        <td>${v.Commune}</td>
-                        <td>${v.Plan6}</td>
-                        <td>${v.Journal}</td>
-                        <td>${v.Marche}</td>
-                    </tr>`
-
-                });
-                $('.anomalieslist').html(contentAnomalies);
-            }
-
-        },
-        error: function () {
-            alert("Problème de connexion. ");
-        }
-    });
-})
-
-function getelementTXT(a) {
-   
-    let formData = new FormData();
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.ID", User.ID);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
-    formData.append("baseName", baseName);
-    formData.append("codeJ", $('#commercial').val());
-    formData.append("devise", false);
-    formData.append("intbasetype", a);
-    $.ajax({
-        type: "POST",
-        url: Origin + '/Home/CreateZipFile',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (result) {
-            var Datas = JSON.parse(result);
-            alert(Datas.data)
-            if (Datas.type == "error") {
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-                window.location = window.location.origin;
-                return;
-            }
-
-            window.location = '/Home/GetFile?file=' + Datas.data;
-
-        },
-        error: function () {
-            alert("Problème de connexion. ");
-        }
-    });
-}
-//$(`[tab="autre"]`).hide();
+var baseName = "2";
 
 $(`[name="options"]`).on("change", (k, v) => {
-    
     var baseId = $(k.target).attr("data-id");
     if (baseId == 0) {
         baseName = "2"
     } else {
         baseName = baseId;
     }
-    alert(baseName)
+
     $(`[tab="autre"]`).show();
     $('.afb160').empty();
     $('#afb').empty();
+
     GetListCodeJournal(baseName);
 });
-
-let urlOrigin = Origin;
-//let urlOrigin = "http://softwell.cloud/OPAVI";

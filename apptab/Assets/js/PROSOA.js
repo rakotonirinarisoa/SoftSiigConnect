@@ -1,9 +1,5 @@
-﻿let User;
-let Origin;
-
-$(document).ready(() => {
+﻿$(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
-    console.log(User);
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
 
@@ -14,7 +10,6 @@ $(document).ready(() => {
     GetListSOA();
 });
 
-//let urlOrigin = "http://softwell.cloud/OPAVI";
 function GetListProjet() {
     let formData = new FormData();
 
@@ -31,9 +26,14 @@ function GetListProjet() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -56,7 +56,6 @@ function GetListProjet() {
 
         },
         error: function (e) {
-            console.log(e);
             alert("Problème de connexion. ");
         }
     })
@@ -77,9 +76,14 @@ function GetListSOA() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -102,7 +106,6 @@ function GetListSOA() {
 
         },
         error: function (e) {
-            console.log(e);
             alert("Problème de connexion. ");
         }
     })
@@ -138,6 +141,12 @@ $(`[data-action="AddnewSociete"]`).click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -173,9 +182,14 @@ function GetListSociete() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -235,12 +249,17 @@ function deletePROSOA(id) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
             alert(Datas.msg);
             $(`[data-projetid="${id}"]`).remove();
-            
+
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -278,6 +297,12 @@ $(`[data-action="UpdateFPROSOA"]`).click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 

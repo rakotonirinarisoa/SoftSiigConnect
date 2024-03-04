@@ -1,7 +1,4 @@
-﻿let User;
-let Origin;
-
-$(document).ready(() => {
+﻿$(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
@@ -10,15 +7,15 @@ $(document).ready(() => {
 
     GetListUser();
 
-    $(`[data-id="auth-list"]`).change(function(k,v){
+    $(`[data-id="auth-list"]`).change(function (k, v) {
         let val = $(this).val();
-        if(val == "0"){
+        if (val == "0") {
             $("#Connex").prop("disabled", true);
             $("#MDP").prop("disabled", true);
             $("#Connex").val("");
             $("#MDP").val("");
-        }else{
-            
+        } else {
+
             $("#Connex").prop("disabled", false);
             $("#MDP").prop("disabled", false);
         }
@@ -26,8 +23,7 @@ $(document).ready(() => {
 
     $("#base-container").hide();
 });
-//let urlOrigin = Origin;
-//let urlOrigin = "http://softwell.cloud/OPAVI";
+
 function GetListUser() {
     let formData = new FormData();
 
@@ -43,9 +39,14 @@ function GetListUser() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -68,7 +69,6 @@ function GetListUser() {
 
         },
         error: function (e) {
-            console.log(e);
             alert("Problème de connexion. ");
         }
     })
@@ -82,12 +82,12 @@ $(`[data-id="connex"]`).click(function () {
 
     $("#base-container").hide();
 
-    if(!inst){
+    if (!inst) {
         alert("Veuillez renseigner l'instance. ");
         return;
     }
-    if($(`[data-id="auth-list"]`).val() == "1"){
-        if(!usr && !psw){
+    if ($(`[data-id="auth-list"]`).val() == "1") {
+        if (!usr && !psw) {
             alert("Veuillez renseigner les champs. ");
             return;
         }
@@ -96,7 +96,7 @@ $(`[data-id="connex"]`).click(function () {
     if ($(`[data-id="auth-list"]`).val() != null) {
         auth = $(`[data-id="auth-list"]`).val();
     }
-    
+
     let formData = new FormData();
 
     formData.append("suser.LOGIN", User.LOGIN);
@@ -107,7 +107,7 @@ $(`[data-id="connex"]`).click(function () {
     formData.append("map.INSTANCE", inst);
     formData.append("map.CONNEXION", usr);
     formData.append("map.CONNEXPWD", psw);
-    formData.append("map.AUTH", auth); 
+    formData.append("map.AUTH", auth);
 
     $.ajax({
         type: "POST",
@@ -116,6 +116,12 @@ $(`[data-id="connex"]`).click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -169,6 +175,12 @@ $(`[data-action="AddnewUser"]`).click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 

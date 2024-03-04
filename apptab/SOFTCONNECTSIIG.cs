@@ -1,5 +1,4 @@
 ﻿using System.Data.Entity;
-using apptab;
 using apptab.Models;
 
 namespace apptab
@@ -63,6 +62,8 @@ namespace apptab
         public virtual DbSet<HSI_MISSION> HSI_MISSION { get; set; }
         public virtual DbSet<HSI_PROCEDURE> HSI_PROCEDURE { get; set; }
         public virtual DbSet<HSI_PROGRAMME> HSI_PROGRAMME { get; set; }
+        public virtual DbSet<HSI_PROJETS> HSI_PROJETS { get; set; }
+        public virtual DbSet<HSI_USERS> HSI_USERS { get; set; }
         public virtual DbSet<HOPA_CRYPTO> HOPA_CRYPTO { get; set; }
         public virtual DbSet<HOPA_FTP> HOPA_FTP { get; set; }
         public virtual DbSet<HSI_DELAISTRAITEMENT> HSI_DELAISTRAITEMENT { get; set; }
@@ -119,7 +120,6 @@ namespace apptab
             modelBuilder.Entity<OPA_VALIDATIONS>()
               .Property(e => e.Devise)
               .IsFixedLength();
-
         }
     }
 }

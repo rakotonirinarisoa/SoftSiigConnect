@@ -1,7 +1,4 @@
-﻿let User;
-let Origin;
-
-$(document).ready(() => {
+﻿$(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
@@ -9,8 +6,6 @@ $(document).ready(() => {
     $(`[data-id="username"]`).text(User.LOGIN);
     GetUsers();
 });
-//let urlOrigin = Origin;
-//let urlOrigin = "http://softwell.cloud/OPAVI";
 
 function GetUsers() {
     let formData = new FormData();
@@ -29,9 +24,14 @@ function GetUsers() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -54,7 +54,7 @@ function GetUsers() {
 $(`[data-action="UpdateUser"]`).click(function () {
     let newpwd = $(`#MDPN`).val();
     let newpwdConf = $(`#MDPC`).val();
-    if(newpwd != newpwdConf){
+    if (newpwd != newpwdConf) {
         alert("Les mots de passe ne correspondent pas. ");
         return;
     }
@@ -74,7 +74,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
 
     formData.append("user.CRYPTPWD", $(`#MDPN`).val());
     /*formData.append("MDPA", $(`#MDPA`).val());*/
-    
+
     $.ajax({
         type: "POST",
         url: Origin + '/Crypto/UpdateCRT',
@@ -82,6 +82,12 @@ $(`[data-action="UpdateUser"]`).click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 

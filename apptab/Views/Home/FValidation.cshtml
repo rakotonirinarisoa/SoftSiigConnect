@@ -4,17 +4,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-@{
-    ViewBag.Title = "TeacherValidation";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-
-@{
-    ViewBag.Title = "PaiementValidation";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+<div class="input-group mb-3">
+    <div class="input-group-prepend">
+        <span class="input-group-text text-bold" id="inputGroup-sizing-default">Projet</span>
+    </div>
+    <select class="form-control col combobox" id="Fproject" code-project>
+    </select>
+</div>
 
 <div>
     <div class="form-row">
@@ -90,57 +89,19 @@
             </div>
         </div>
     </div>
-    
+
     <div class="form-row mb-3">
         <div class="input-group mb-3 col">
             <div class="mb-3 col ">
                 <div class="btn btn-flat bg-gradient-green col-12" data-action="ChargerJs">
-                    <i class="fa fa-upload"></i> Générer
+                    <i class="fa fa-download"></i> Générer
                 </div>
             </div>
         </div>
 
     </div>
 </div>
-<div class="table-responsive mb-3 OPF" style="max-height:400px" tab="autre">
-    <table class="table table-hover table-striped fAFB160">
-        <thead style="position:sticky">
-            <tr class="thead-accueil1" style="white-space: nowrap;">
-                <td style="text-align:right">
-                    <input type="checkbox" class="Checkall" />
-                </td>
-                <td style="font-weight: bold; text-align:center" width="5px">N°</td>
-                <td style="font-weight:bold; text-align:center" width="">Date n°ordre</td>
-                <td style="font-weight: bold; text-align: center" width="">N° Pièce</td>
-                <td style="font-weight: bold; text-align: center" width="">Compte</td>
-                <td style="font-weight: bold; text-align: center" width="">Libellé</td>
-                <td style="font-weight: bold; text-align: center" width="">Débit</td>
-                <td style="font-weight: bold; text-align: center" width="">Crédit</td>
-                <td style="font-weight: bold; text-align: center" width="">Montant devise</td>
-                <td style="font-weight: bold; text-align: center" width="">Mon.</td>
-                <td style="font-weight: bold; text-align: center" width="">Rang</td>
-                <td style="font-weight: bold; text-align: center" width="">Financement catégorie</td>
-                <td style="font-weight: bold; text-align: center" width="">Commune</td>
-                <td style="font-weight: bold; text-align: center" width="">Plan6</td>
-                <td style="font-weight: bold; text-align: center" width="">Journal</td>
-                <td style="font-weight: bold; text-align: center" width="">Marché</td>
-                <td style="font-weight: bold; text-align: center" width="">Etat</td>
-            </tr>
-        </thead>
-        <tbody class="afb160"></tbody>
 
-    </table>
-</div>
-<div class="form-row mb-3">
-    <div class="input-group mb-3 ">
-        <div class="mb-3 col ">
-            <div class="btn btn-flat bg-gradient-blue col-12" data-action="GetElementChecked">
-                <i class="fa fa-upload"></i> Validation
-            </div>
-        </div>
-    </div>
-    
-</div>
 <ul class="nav nav-tabs">
     <li class="nav-item">
         <div class="nav-link active" data-type="switch_tab" data-target="tfacture">Factures sélectionnées</div>
@@ -161,25 +122,23 @@
             <thead style="position:sticky">
                 <tr class="thead-accueil1" style="white-space: nowrap;">
                     <td style="font-weight: bold; text-align:center" width="5px">N°</td>
-                    <td style="font-weight:bold; text-align:center" width="">Date n°ordre</td>
-                    <td style="font-weight: bold; text-align: center" width="">N° Pièce</td>
-                    <td style="font-weight: bold; text-align: center" width="">Compte</td>
-                    <td style="font-weight: bold; text-align: center" width="">Libellé</td>
-                    <td style="font-weight: bold; text-align: center" width="">Débit</td>
-                    <td style="font-weight: bold; text-align: center" width="">Crédit</td>
-                    <td style="font-weight: bold; text-align: center" width="">Montant devise</td>
-                    <td style="font-weight: bold; text-align: center" width="">Mon.</td>
-                    <td style="font-weight: bold; text-align: center" width="">Rang</td>
-                    <td style="font-weight: bold; text-align: center" width="">Financement catégorie</td>
-                    <td style="font-weight: bold; text-align: center" width="">Commune</td>
-                    <td style="font-weight: bold; text-align: center" width="">Plan6</td>
-                    <td style="font-weight: bold; text-align: center" width="">Journal</td>
-                    <td style="font-weight: bold; text-align: center" width="">Marché</td>
-                    <td style="font-weight: bold; text-align: center" width="">Etat</td>
+                    <td style="font-weight:bold; text-align:center">Date n°ordre</td>
+                    <td style="font-weight: bold; text-align: center">N° Pièce</td>
+                    <td style="font-weight: bold; text-align: center">Compte</td>
+                    <td style="font-weight: bold; text-align: center">Libellé</td>
+                    <td style="font-weight: bold; text-align: center">Débit</td>
+                    <td style="font-weight: bold; text-align: center">Crédit</td>
+                    <td style="font-weight: bold; text-align: center">Montant devise</td>
+                    <td style="font-weight: bold; text-align: center">Mon.</td>
+                    <td style="font-weight: bold; text-align: center">Rang</td>
+                    <td style="font-weight: bold; text-align: center">Financement catégorie</td>
+                    <td style="font-weight: bold; text-align: center">Commune</td>
+                    <td style="font-weight: bold; text-align: center">Plan6</td>
+                    <td style="font-weight: bold; text-align: center">Journal</td>
+                    <td style="font-weight: bold; text-align: center">Marché</td>
                 </tr>
             </thead>
-            <tbody id="afb"></tbody>
-
+            <tbody></tbody>
         </table>
     </div>
 
@@ -203,34 +162,35 @@
         </div>
         <div class="mb-3 col col-sm-12 col-md-2">
             <div class="btn btn-flat bg-gradient-green col-12" data-action="CreateTxt">
-                <i class="fa fa-file"></i> Créer fichier AFB
+                <i class="fa fa-download"></i> Créer fichier AFB
             </div>
         </div>
         <div class="mb-3 col col-sm-12 col-md-2">
-            <div class="btn btn-flat bg-gradient-green col-12" data-action="CreateTxtCrypter">
-                <i class="fa fa-file-archive"></i> Fichier AFB Crypter
+            <div class="btn btn-flat bg-gradient-success col-12" data-action="CreateTxtCrypter">
+                <i class="fa fa-file-archive"></i> Créer fichier AFB crypter
             </div>
         </div>
         <div class="mb-3 col col-sm-12 col-md-2">
-            <div class="btn btn-flat bg-gradient-green col-12" data-action="CreateTxtSend">
-                <i class="fa fa-file"></i> Send FTP AFB
+            <div class="btn btn-flat bg-gradient-primary col-12" data-action="CreateTxtSend">
+                <i class="fa fa-paper-plane"></i> Envoyer FTP fichier AFB
             </div>
         </div>
         <div class="mb-3 col col-sm-12 col-md-2">
-            <div class="btn btn-flat bg-gradient-green col-12" data-action="CreateTxtFTPCrypter">
-                <i class="fa fa-file-archive"></i> Send FTP AFB Crypter
+            <div class="btn btn-flat bg-gradient-primary col-12" data-action="CreateTxtFTPCrypter">
+                <i class="fa fa-paper-plane"></i> Envoyer FTP fichier AFB crypter
             </div>
         </div>
-        <div class="mb-3 col col-sm-12 col-md-2">
-            <div class="btn btn-flat bg-gradient-teal col-12" onclick="exportTableToExcel(TDB)">
-                <i class="fa fa-file-excel"></i> Excel
+        <div class="mb-3 col col-sm-12 col-md-4">
+            <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TDB', 'PAIEMENTS VALIDER')">
+                <i class="fa fa-file-excel"></i> Exporter
             </div>
         </div>
-        <div class="mb-3 col col-sm-12 col-md-2">
-            <div class="btn btn-flat bg-gradient-red col-12">
-                <i class="fa fa-eraser"></i> Effacer
-            </div>
-        </div>
+
+        @*<div class="mb-3 col col-sm-12 col-md-2">
+                <div class="btn btn-flat bg-gradient-red col-12">
+                    <i class="fa fa-times"></i> Effacer
+                </div>
+            </div>*@
     </div>
 </div>
 
@@ -292,27 +252,27 @@
 
 <div id="tanomalie" data-type="tab" style="display:none">
     <div class="table-responsive mb-3" style="max-height:400px" tab="autre">
-        <table class="table table-hover table-striped">
+        <table class="table table-hover table-striped" id="TDB_ANO">
             <thead style="position:sticky">
                 <tr class="thead-accueil1" style="white-space: nowrap;">
                     <td style="text-align:right">
                         <input type="checkbox" />
                     </td>
                     <td style="font-weight: bold; text-align:center" width="5px">N°</td>
-                    <td style="font-weight:bold; text-align:center" width="">Date n°ordre</td>
-                    <td style="font-weight: bold; text-align: center" width="">N° Pièce</td>
-                    <td style="font-weight: bold; text-align: center" width="">Compte</td>
-                    <td style="font-weight: bold; text-align: center" width="">Libellé</td>
-                    <td style="font-weight: bold; text-align: center" width="">Débit</td>
-                    <td style="font-weight: bold; text-align: center" width="">Crédit</td>
-                    <td style="font-weight: bold; text-align: center" width="">Montant devise</td>
-                    <td style="font-weight: bold; text-align: center" width="">Mon.</td>
-                    <td style="font-weight: bold; text-align: center" width="">Rang</td>
-                    <td style="font-weight: bold; text-align: center" width="">Financement catégorie</td>
-                    <td style="font-weight: bold; text-align: center" width="">Commune</td>
-                    <td style="font-weight: bold; text-align: center" width="">Plan6</td>
-                    <td style="font-weight: bold; text-align: center" width="">Journal</td>
-                    <td style="font-weight: bold; text-align: center" width="">Marché</td>
+                    <td style="font-weight:bold; text-align:center">Date n°ordre</td>
+                    <td style="font-weight: bold; text-align: center">N° Pièce</td>
+                    <td style="font-weight: bold; text-align: center">Compte</td>
+                    <td style="font-weight: bold; text-align: center">Libellé</td>
+                    <td style="font-weight: bold; text-align: center">Débit</td>
+                    <td style="font-weight: bold; text-align: center">Crédit</td>
+                    <td style="font-weight: bold; text-align: center">Montant devise</td>
+                    <td style="font-weight: bold; text-align: center">Mon.</td>
+                    <td style="font-weight: bold; text-align: center">Rang</td>
+                    <td style="font-weight: bold; text-align: center">Financement catégorie</td>
+                    <td style="font-weight: bold; text-align: center">Commune</td>
+                    <td style="font-weight: bold; text-align: center">Plan6</td>
+                    <td style="font-weight: bold; text-align: center">Journal</td>
+                    <td style="font-weight: bold; text-align: center">Marché</td>
                 </tr>
             </thead>
             <tbody class="anomalieslist">
@@ -321,45 +281,15 @@
         </table>
     </div>
 
-    <div class="table-responsive mb-3" style="max-height:400px" tab="paie">
-        <table class="table table-hover table-striped">
-            <thead style="position:sticky">
-                <tr class="thead-accueil1" style="white-space: nowrap;">
-                    <td style="text-align:right">
-                        <input type="checkbox" />
-                    </td>
-                    <td style="font-weight: bold; text-align:center" width="5px">N°</td>
-                    <td style="font-weight:bold; text-align:center" width="">Matricule</td>
-                    <td style="font-weight: bold; text-align: center" width="">Nom</td>
-                    <td style="font-weight: bold; text-align: center" width="">Mois</td>
-                    <td style="font-weight: bold; text-align: center" width="">Année</td>
-                    <td style="font-weight: bold; text-align: center" width="">Libellé</td>
-                    <td style="font-weight: bold; text-align: center" width="">Montant</td>
-                    <td style="font-weight: bold; text-align: center" width="">CIN</td>
-                    <td style="font-weight: bold; text-align: center" width="">Banque</td>
-                    <td style="font-weight: bold; text-align: center" width="">Code Banque</td>
-                    <td style="font-weight: bold; text-align: center" width="">Guichet</td>
-                    <td style="font-weight: bold; text-align: center" width="">Compte Banque</td>
-                    <td style="font-weight: bold; text-align: center" width="">CleRIB</td>
-                </tr>
-            </thead>
-            <tbody class="afb160"></tbody>
-
-        </table>
-    </div>
-
     <div class="form-row mb-3">
         <div class="input-group mb-3 col-md-10">
         </div>
-        <div class="mb-3 col col-sm-12 col-md-2">
-            <div class="btn btn-flat bg-gradient-teal col-12">
-                <i class="fa fa-file-excel"></i> Excel
+        <div class="mb-3 col col-sm-12 col-md-4">
+            <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TDB_ANO', 'PAIEMENTS VALIDER')">
+                <i class="fa fa-file-excel"></i> Exporter
             </div>
         </div>
     </div>
 </div>
-<script src="~/Assets/js/FValidations.js"></script>
-
-
-
-
+<script src="~/Assets/js/FValidations.js" asp-append-version="true" ></script>
+<script src="~/Assets/js/utils.js" asp-append-version="true" ></script>

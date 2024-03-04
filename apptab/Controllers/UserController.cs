@@ -8,11 +8,6 @@ using System.Web.UI.WebControls;
 using System.Threading.Tasks;
 using apptab.Data.Entities;
 using System.Data.Entity;
-using apptab;
-using static apptab.OPA_ROLES;
-using static apptab.SI_ROLES;
-using System.Text.RegularExpressions;
-using System.Web;
 
 namespace SOFTCONNECT.Controllers
 {
@@ -179,6 +174,10 @@ namespace SOFTCONNECT.Controllers
 
                         if (user.ROLE == Role.Administrateur || user.ROLE == Role.Autre)
                         {
+                            int TestProjetRole = 0;
+                            if (!int.TryParse(listProjet, out TestProjetRole))
+                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vous ne pouvez pas affecter plusieurs projets à ce type d'utilisateur. " }, settings));
+
                             var newUser = new SI_USERS()
                             {
                                 LOGIN = user.LOGIN,
@@ -277,6 +276,10 @@ namespace SOFTCONNECT.Controllers
                     {
                         if (user.ROLE == Role.Administrateur || user.ROLE == Role.Autre)
                         {
+                            int TestProjetRole = 0;
+                            if (!int.TryParse(listProjet, out TestProjetRole))
+                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vous ne pouvez pas affecter plusieurs projets à ce type d'utilisateur. " }, settings));
+
                             userExist.LOGIN = user.LOGIN;
                             userExist.PWD = user.PWD;
                             userExist.IDPROJET = int.Parse(listProjet);
@@ -435,6 +438,10 @@ namespace SOFTCONNECT.Controllers
                         }
                     }
                 }
+                else
+                {
+                    proj.Add(user.IDPROJET.Value);
+                }
 
                 if (user != null)
                 {
@@ -465,8 +472,15 @@ namespace SOFTCONNECT.Controllers
                 if (test == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vérifiez vos identifiants. " }, settings));
 
                 if (test.ROLE != Role.SAdministrateur && test.ROLE != Role.Organe_de_Suivi && test.ROLE != Role.Agent_Comptable)
-                    if (String.IsNullOrEmpty(test.IDPROJET.ToString()) || !db.SI_PROJETS.Any(a => a.ID == test.IDPROJET && a.DELETIONDATE == null))
-                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vous n'êtes pas rattaché à un projet actif. " }, settings));
+                {
+                    if (test.IDPROJET != 0)
+                    {
+                        if (String.IsNullOrEmpty(test.IDPROJET.ToString()) || !db.SI_PROJETS.Any(a => a.ID == test.IDPROJET && a.DELETIONDATE == null))
+                        {
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vous n'êtes pas rattaché à un projet actif. " }, settings));
+                        }
+                    }
+                }
 
                 Session["userSession"] = test;
 
@@ -476,6 +490,7 @@ namespace SOFTCONNECT.Controllers
                 if (db.SI_MENU.Any())
                 {
                     var isMenu = db.SI_MENU.FirstOrDefault();
+                    Session["MTNON"] = isMenu.MTNON;
                     Session["MT0"] = isMenu.MT0;
                     Session["MT1"] = isMenu.MT1;
                     Session["MT2"] = isMenu.MT2;
@@ -483,6 +498,14 @@ namespace SOFTCONNECT.Controllers
                     Session["MP2"] = isMenu.MP2;
                     Session["MP3"] = isMenu.MP3;
                     Session["MP4"] = isMenu.MP4;
+
+                    Session["MD0"] = isMenu.MD0;
+                    Session["MD1"] = isMenu.MD1;
+                    Session["MD2"] = isMenu.MD2;
+
+                    Session["MOP0"] = isMenu.MOP0;
+                    Session["MOP1"] = isMenu.MOP1;
+                    Session["MOP2"] = isMenu.MOP2;
                 }
 
                 if (db.SI_GEDLIEN.Any())
@@ -490,6 +513,9 @@ namespace SOFTCONNECT.Controllers
                     var isMenu = db.SI_GEDLIEN.FirstOrDefault();
                     Session["GED"] = isMenu.LIEN;
                 }
+
+                test.LASTCONNEXTION = DateTime.Now;
+                db.SaveChanges();
 
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", Data = new { test.ROLE, test.IDPROJET } }, settings));
             }

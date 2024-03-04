@@ -1,31 +1,25 @@
-﻿using apptab;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Configuration.Provider;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Web;
-using System.Windows.Forms;
 
 namespace apptab.Extension
 {
     public class AFB160
     {
-        public AFB CreateTOMPROAFB160(bool devise, string codeJ, SI_USERS user)
+        public AFB CreateTOMPROAFB160(bool devise, string codeJ, SI_USERS user, string codeproject)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
             string texteAFB160 = "";
             OPA_HISTORIQUE historique;
-            var Fuser = db.SI_USERS.Where(x => x.LOGIN == user.LOGIN && x.IDPROJET == user.IDPROJET).FirstOrDefault();
+            int PROJECTID = int.Parse(codeproject);
+            var Fuser = db.SI_USERS.Where(x => x.LOGIN == user.LOGIN && x.PWD == user.PWD).FirstOrDefault();
 
             /*********             * 0302       * *******/
 
             var donneurOrde = (from dordre in db.OPA_DONNEURORDRE
-                               where dordre.IDSOCIETE == user.IDPROJET && dordre.APPLICATION == "COMPTA"
+                               where dordre.IDSOCIETE == PROJECTID && dordre.APPLICATION == "COMPTA"
                                select dordre).FirstOrDefault();
             /***********************NOM de fichier************************/
             string nom2 = (from nom in tom.RPROJET
@@ -39,12 +33,12 @@ namespace apptab.Extension
             try
             {
                 var incr = (from incrmentation in db.OPA_BASE
-                            where incrmentation.IDSOCIETE == user.IDPROJET
+                            where incrmentation.IDSOCIETE == PROJECTID
                             select incrmentation).First();
                 i = (int)incr.INCREMENTATION;
                 y = (int)incr.INCRORDREVIR;
             }
-            catch (Exception ee) { }
+            catch (Exception) { }
             y++;
             texteAFB160 += "0302";
             texteAFB160 += this.formaterTexte(21, "                        ");
@@ -61,7 +55,7 @@ namespace apptab.Extension
             texteAFB160 += "\r\n";
             /*********             * 0602       * *******/
             var beneficiaires = (from dordre in db.OPA_REGLEMENT
-                                 where dordre.IDSOCIETE == user.IDPROJET && dordre.APPLICATION == "TOMPRO"
+                                 where dordre.IDSOCIETE == PROJECTID && dordre.APPLICATION == "TOMPRO"
                                  select dordre).ToList();
 
             foreach (var bnfcr in beneficiaires)
@@ -111,7 +105,7 @@ namespace apptab.Extension
                     historique.DATEAFB = DateTime.Now;
                     historique.IDUSER = Fuser.ID;
                     historique.AFB = fileName;
-                    historique.IDSOCIETE = user.IDPROJET;
+                    historique.IDSOCIETE = PROJECTID;
                 }
                 else
                 {
@@ -133,7 +127,7 @@ namespace apptab.Extension
                     historique.DATEAFB = DateTime.Now;
                     historique.IDUSER = Fuser.ID;
                     historique.AFB = fileName;
-                    historique.IDSOCIETE = user.IDPROJET;
+                    historique.IDSOCIETE = PROJECTID;
                 }
                 db.OPA_HISTORIQUE.Add(historique);
                 db.SaveChanges();
@@ -149,19 +143,19 @@ namespace apptab.Extension
             try
             {
                 OPA_BASE pbase = (from pb in db.OPA_BASE
-                                  where pb.IDSOCIETE == user.IDPROJET
+                                  where pb.IDSOCIETE == PROJECTID
                                   select pb).First();
                 pbase.INCREMENTATION = i;
                 pbase.INCRORDREVIR = y;
                 db.SaveChanges();
             }
-            catch (Exception ee) { }
+            catch (Exception) { }
 
             /*********             * 0802       *********/
             decimal? montant = 0;
 
             var nums = (from ecrt in db.OPA_REGLEMENT
-                        where ecrt.IDSOCIETE == user.IDPROJET && ecrt.APPLICATION == "TOMPRO"
+                        where ecrt.IDSOCIETE == PROJECTID && ecrt.APPLICATION == "TOMPRO"
                         select ecrt).ToList();
             foreach (var num in nums)
             {
@@ -182,24 +176,26 @@ namespace apptab.Extension
             texteAFB160 += this.formaterTexte(98, "                        ");
             texteAFB160 += this.formaterChiffre(16, montant.ToString());
             texteAFB160 += this.formaterTexte(42, " ");
+            //using (var sfd = new SaveFileDialog())
+            //{
+            //    sfd.Filter = "Fichiers txt (*.txt)|*.txt";
+            //    sfd.FileName = fileName;
+            //    if (sfd.ShowDialog() == DialogResult.OK)
+            //    {
+            //        File.WriteAllText(sfd.FileName, texteAFB160, Encoding.Default);
+            //    }
+            //}
             return new AFB() { Fichier = texteAFB160, Chemin = fileName };
-            using (var sfd = new SaveFileDialog())
-            {
-                sfd.Filter = "Fichiers txt (*.txt)|*.txt";
-                sfd.FileName = fileName;
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    File.WriteAllText(sfd.FileName, texteAFB160, Encoding.Default);
-                }
-            }
+
         }
-        public AFB CreateTOMPAIEAFB160(bool devise, string codeJ, SI_USERS user)
+        public AFB CreateTOMPAIEAFB160(bool devise, string codeJ, SI_USERS user, string codeproject)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
+            int PROJECTID = int.Parse(codeproject);
             string texteAFB160 = "";
             OPA_HISTORIQUE historique;
-            var Fuser = db.SI_USERS.Where(x => x.LOGIN == user.LOGIN && x.IDPROJET == user.IDPROJET).FirstOrDefault();
+            var Fuser = db.SI_USERS.Where(x => x.LOGIN == user.LOGIN && x.PWD == user.PWD).FirstOrDefault();
             /*********             * 0302       * *******/
 
             var donneurOrde = (from dordre in db.OPA_DONNEURORDRE
@@ -222,7 +218,7 @@ namespace apptab.Extension
                 i = (int)incr.INCREMENTATION;
                 y = (int)incr.INCRORDREVIR;
             }
-            catch (Exception ee) { }
+            catch (Exception) { }
             y++;
             texteAFB160 += "0302";
             texteAFB160 += this.formaterTexte(21, "                        ");
@@ -349,7 +345,7 @@ namespace apptab.Extension
                 pbase.INCRORDREVIR = y;
                 db.SaveChanges();
             }
-            catch (Exception ee) { }
+            catch (Exception) { }
 
             /*********             * 0802       *********/
             decimal? montant = 0;
@@ -392,10 +388,9 @@ namespace apptab.Extension
                                                                           //	}
                                                                           //}
         }
-        public AFB CreateBRAFB160(bool devise, string codeJ, SI_USERS user)
+        public AFB CreateBRAFB160(bool devise, string codeJ, SI_USERS user, string codeproject)
         {
-
-            string s = "";
+            int PROJECTID = int.Parse(codeproject);
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SI_USERS usr = (from u in db.SI_USERS
                             where u.LOGIN == user.LOGIN
@@ -419,7 +414,7 @@ namespace apptab.Extension
             /********              0302        ******/
 
             var donneurOrde = (from dordre in db.OPA_DONNEURORDRE
-                               where dordre.IDSOCIETE == user.IDPROJET && dordre.APPLICATION == "BR"
+                               where dordre.IDSOCIETE == PROJECTID && dordre.APPLICATION == "BR"
                                select dordre).FirstOrDefault();
             /***********************NOM de fichier************************/
             string nom2 = (from nom in tom.RPROJET
@@ -433,7 +428,7 @@ namespace apptab.Extension
             try
             {
                 var incr = (from incrmentation in db.OPA_BASE
-                            where incrmentation.IDSOCIETE == user.IDPROJET
+                            where incrmentation.IDSOCIETE == PROJECTID
                             select incrmentation).FirstOrDefault();
                 if (incr != null)
                 {
@@ -448,7 +443,7 @@ namespace apptab.Extension
                     db.SaveChanges();
                 }
             }
-            catch (Exception ee) { }
+            catch (Exception) { }
             y++;
             texteAFB160 += "0302";
             texteAFB160 += this.formaterTexte(21, "                        ");
@@ -465,7 +460,7 @@ namespace apptab.Extension
             texteAFB160 += "\r\n";
             /********              0602        ******/
             var beneficiaires = (from dordre in db.OPA_REGLEMENTBR
-                                 where dordre.IDSOCIETE == user.IDPROJET && dordre.APPLICATION == "BR"
+                                 where dordre.IDSOCIETE == PROJECTID && dordre.APPLICATION == "BR"
                                  select dordre).ToList();
 
             foreach (var bnfcr in beneficiaires)
@@ -519,7 +514,7 @@ namespace apptab.Extension
                     historique.DATEAFB = DateTime.Now;
                     historique.IDUSER = usr.ID;
                     historique.AFB = fileName;
-                    historique.IDSOCIETE = user.IDPROJET;
+                    historique.IDSOCIETE = PROJECTID;
                 }
                 else
                 {
@@ -541,7 +536,7 @@ namespace apptab.Extension
                     historique.DATEAFB = DateTime.Now;
                     historique.IDUSER = usr.ID;
                     historique.AFB = fileName;
-                    historique.IDSOCIETE = user.IDPROJET;
+                    historique.IDSOCIETE = PROJECTID;
                 }
                 db.OPA_HISTORIQUEBR.Add(historique);
                 db.SaveChanges();
@@ -557,19 +552,19 @@ namespace apptab.Extension
             try
             {
                 OPA_BASE pbase = (from pb in db.OPA_BASE
-                                  where pb.IDSOCIETE == user.IDPROJET
+                                  where pb.IDSOCIETE == PROJECTID
                                   select pb).First();
                 pbase.INCREMENTATION = i;
                 pbase.INCRORDREVIR = y;
                 db.SaveChanges();
             }
-            catch (Exception ee) { }
+            catch (Exception) { }
 
             /********              0802       *********/
             decimal? montant = 0;
 
             var nums = (from ecrt in db.OPA_REGLEMENTBR
-                        where ecrt.IDSOCIETE == user.IDPROJET && ecrt.APPLICATION == "BR"
+                        where ecrt.IDSOCIETE == PROJECTID && ecrt.APPLICATION == "BR"
                         select ecrt).ToList();
             foreach (var num in nums)
             {
@@ -620,12 +615,13 @@ namespace apptab.Extension
             result = result.Replace(':', '_');
             return result.ToUpper();
         }
-        public void SaveValideSelectEcriture(List<string> listReg, bool devise, SI_USERS user)
+        public void SaveValideSelectEcriture(List<string> listReg, bool devise, SI_USERS user, string codeproject)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
             //bool test = false;
             List<int> supprLignes = new List<int>();
+            int PROJECTID = int.Parse(codeproject);
             foreach (string row in listReg)
             {
 
@@ -682,7 +678,7 @@ namespace apptab.Extension
                     {
                         OPA_ANOMALIE panomalie = new OPA_ANOMALIE();
                         panomalie.NUM = ecriture.NUM;
-                        panomalie.IDSOCIETE = user.IDPROJET;
+                        panomalie.IDSOCIETE = PROJECTID;
                         panomalie.LIBELLE = ecriture.LIBELLE;
 
                         try
@@ -690,7 +686,7 @@ namespace apptab.Extension
                             db.OPA_ANOMALIE.Add(panomalie);
                             db.SaveChanges();
                         }
-                        catch (Exception ee) { }
+                        catch (Exception) { }
                     }
                     else
                     {
@@ -718,14 +714,14 @@ namespace apptab.Extension
                         preg.DOM2 = beneficiaire.DOM2;
                         preg.CATEGORIE = ecriture.CATEGORIE;
                         preg.APPLICATION = "TOMPRO";
-                        preg.IDSOCIETE = user.IDPROJET;
+                        preg.IDSOCIETE = PROJECTID;
 
                         try
                         {
                             db.OPA_REGLEMENT.Add(preg);
                             db.SaveChanges();
                         }
-                        catch (Exception eee)
+                        catch (Exception)
                         {
                         }
                     }
@@ -733,7 +729,7 @@ namespace apptab.Extension
                     #endregion
                     //test = true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     //test = false;
                 }
@@ -959,7 +955,7 @@ namespace apptab.Extension
                 string cle = compteRIB.Substring(21, 2);
                 compteBQ.Add(cle);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //compteRIB = compteRIB.Replace(" ", "");
                 string codebq = null;
@@ -975,14 +971,14 @@ namespace apptab.Extension
 
             return compteBQ;
         }
-        public bool saveDonneurOrdre(SI_USERS user, RJL1 djournal, DateTime dateP)// mila modifiena BR ET COMPTA
+        public bool saveDonneurOrdre(SI_USERS user, RJL1 djournal, DateTime dateP, int PROJECTID)// mila modifiena BR ET COMPTA
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
             bool test = false;
             OPA_DONNEURORDRE donordre = new OPA_DONNEURORDRE();
             var tdonneur1 = (from dord in db.OPA_DONNEURORDRE
-                             where dord.IDSOCIETE == user.IDPROJET
+                             where dord.IDSOCIETE == PROJECTID
                              select dord).FirstOrDefault();
             var projet = (from prjt in tom.RPROJET
                           select new
@@ -1004,11 +1000,11 @@ namespace apptab.Extension
                 tdonneur1.BASE = projet.BASE;
                 tdonneur1.APPLICATION = "COMPTA";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 donordre.ID = 1;
                 donordre.CODE_J = djournal.CODE;
-                donordre.IDSOCIETE = user.IDPROJET;
+                donordre.IDSOCIETE = PROJECTID;
                 donordre.DATE_PAIEMENT = dateP;
                 donordre.DONNEUR_ORDRE = couperText(24, dordre);
                 donordre.CODE_GUICHET = couperText(5, djournal.GUICHET);
@@ -1022,7 +1018,7 @@ namespace apptab.Extension
                 db.SaveChanges();
                 test = true;
             }
-            catch (Exception ee)
+            catch (Exception)
             {
                 test = false;
             }
@@ -1059,7 +1055,7 @@ namespace apptab.Extension
                 tdonneur1.BASE = projet.BASE;
                 tdonneur1.APPLICATION = "PAIE";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //donordre.ID = 1;
                 var id = db.OPA_DONNEURORDRE.Select(x => x.ID).OrderByDescending(x => x).FirstOrDefault();
@@ -1080,7 +1076,7 @@ namespace apptab.Extension
                 db.SaveChanges();
                 test = true;
             }
-            catch (Exception ee)
+            catch (Exception)
             {
                 test = false;
             }
@@ -1107,7 +1103,7 @@ namespace apptab.Extension
             dordre = projet.SIGLE + projet.NOM;
             try
             {
-                tdonneur1.CODE_J = djournal.CODE;
+                //tdonneur1.CODE_J = djournal.CODE;
                 tdonneur1.DATE_PAIEMENT = dateP;
                 tdonneur1.DONNEUR_ORDRE = couperText(24, dordre.Replace(" ", ""));
                 tdonneur1.CODE_GUICHET = couperText(5, djournal.GUICHET);
@@ -1117,7 +1113,7 @@ namespace apptab.Extension
                 tdonneur1.BASE = couperText(100, projet.BASE);
                 tdonneur1.APPLICATION = "BR";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 var id = db.OPA_DONNEURORDRE.Select(x => x.ID).OrderByDescending(x => x).FirstOrDefault();
                 donordre.ID = id + 1;
@@ -1137,14 +1133,14 @@ namespace apptab.Extension
                 db.SaveChanges();
                 test = true;
             }
-            catch (Exception ee)
+            catch (Exception)
             {
                 test = false;
             }
 
             return test;
         }
-        public List<DataListTompro> getListEcritureCompta(string journal, DateTime dateD, DateTime dateF, string compteG, string auxi, string auxi1, DateTime dateP, SI_USERS user)
+        public List<DataListTompro> getListEcritureCompta(string journal, int PROJECTID, DateTime dateD, DateTime dateF, string compteG, string auxi, string auxi1, DateTime dateP, SI_USERS user)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -1154,10 +1150,6 @@ namespace apptab.Extension
             RJL1 djournal = (from jrnl in tom.RJL1
                              where jrnl.CODE == journal
                              select jrnl).Single();
-
-
-            string nombase = "";
-
 
             if (djournal.RIB != null && djournal.RIB != "")
             {
@@ -1250,7 +1242,7 @@ namespace apptab.Extension
                                             });
                                         }
                                     }
-                                    catch (Exception ee) { }
+                                    catch (Exception) { }
                                 }
                             }
                             else
@@ -1307,7 +1299,7 @@ namespace apptab.Extension
                                         });
                                     }
                                 }
-                                catch (Exception ee) { }
+                                catch (Exception) { }
                             }
 
                         }
@@ -1377,7 +1369,7 @@ namespace apptab.Extension
                                     });
                                 }
                             }
-                            catch (Exception ee) { }
+                            catch (Exception) { }
 
                         }
                     }
@@ -1401,9 +1393,10 @@ namespace apptab.Extension
                                       select rjl).Single();*/
                             try
                             {
-                                var reglement = (from mcpt in tom.MCOMPTA
-                                                 where mcpt.NORD == nord.Key && mcpt.COGE == djournal.COMPTEASSOCIE && mcpt.EVIREMENT == null
-                                                 select mcpt).Single();
+                                //var reglement = (from mcpt in tom.MCOMPTA
+                                //                 where mcpt.NORD == nord.Key && mcpt.COGE == djournal.COMPTEASSOCIE && mcpt.EVIREMENT == null
+                                //                 select mcpt).SingleOrDefault();
+                                var reglement = tom.MCOMPTA.Where( x => x.NORD == nord.Key && x.COGE == djournal.COMPTEASSOCIE).FirstOrDefault();
                                 if (reglement.S == "D")
                                 {
                                     list.Add(new DataListTompro()
@@ -1450,7 +1443,7 @@ namespace apptab.Extension
                                 }
 
                             }
-                            catch (Exception ee) { }
+                            catch (Exception) { }
                         }
                     }
                     else
@@ -1525,7 +1518,7 @@ namespace apptab.Extension
                                     });
                                 }
                             }
-                            catch (Exception ee) { }
+                            catch (Exception) { }
 
                         }
                     }
@@ -1533,7 +1526,7 @@ namespace apptab.Extension
                 }
                 #endregion
                 #region Enregistrement donneur d'ordre
-                bool test = saveDonneurOrdre(user, djournal, dateP);
+                bool test = saveDonneurOrdre(user, djournal, dateP, PROJECTID);
                 #endregion
                 /*var afficheDOrdre = (from dord in db.OPA_DONNEURORDRE
                                      where dord.IDSOCIETE == user.IDSOCIETE
@@ -1552,7 +1545,7 @@ namespace apptab.Extension
             RJL1 djournal = (from jrnl in tom.RJL1
                              where jrnl.CODE == journal
                              select jrnl).SingleOrDefault();
-            string nombase = "";
+
             if (djournal.RIB != null && djournal.RIB != "")
             {
                 #region Chargement liste écriture
@@ -1711,7 +1704,7 @@ namespace apptab.Extension
             RJL1 djournal = (from jrnl in tom.RJL1
                              where jrnl.CODE == journal
                              select jrnl).Single();//Miova table FOP
-            string nombase = "";
+
             List<string> DjournalFop = tom.FOP.Where(x => x.JOURNAL == journal && (x.ETAPE1USER == etat || x.ETAPE2USER == etat || x.ETAPE3USER == etat || x.ETAPE4USER == etat || x.ETAPE5USER == etat || x.ETAPE6USER == etat || x.ETAPE7USER == etat || x.ETAPE8USER == etat || x.ETAPE9USER == etat || x.ETAPE10USER == etat)).Select(x => x.NUMEROOP).ToList();
 
             List<MOP> lNoOPS = new List<MOP>();
@@ -1758,7 +1751,7 @@ namespace apptab.Extension
                                 });
 
                             }
-                            catch (Exception ee) { }
+                            catch (Exception) { }
 
 
                         }
@@ -1799,7 +1792,7 @@ namespace apptab.Extension
                                 });
 
                             }
-                            catch (Exception ee) { }
+                            catch (Exception) { }
                         }
                     }
                 }
@@ -1839,7 +1832,7 @@ namespace apptab.Extension
                                 });
 
                             }
-                            catch (Exception ee) { }
+                            catch (Exception) { }
 
 
                         }
@@ -1886,7 +1879,7 @@ namespace apptab.Extension
 
 
                             }
-                            catch (Exception ee) { }
+                            catch (Exception) { }
                         }
                     }
                 }
@@ -1923,7 +1916,7 @@ namespace apptab.Extension
                 db.SaveChanges();
                 test = true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 test = false;
             }
@@ -1948,7 +1941,7 @@ namespace apptab.Extension
                     db.SaveChanges();
                     test = true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     test = false;
                 }
@@ -2015,7 +2008,7 @@ namespace apptab.Extension
             {
                 n = str.Length;
             }
-            catch (Exception ex) { }
+            catch (Exception) { }
             if (n < x)
             {
                 int y = x - n;
@@ -2044,7 +2037,7 @@ namespace apptab.Extension
                 }
 
             }
-            catch (Exception ex) { }
+            catch (Exception) { }
             if (n < x)
             {
                 int y = x - n;
@@ -2072,7 +2065,7 @@ namespace apptab.Extension
                 }
 
             }
-            catch (Exception ex) { }
+            catch (Exception) { }
 
             if (n > x)
             {
@@ -2163,7 +2156,7 @@ namespace apptab.Extension
                             db.OPA_ANOMALIEBR.Add(panomalie);
                             db.SaveChanges();
                         }
-                        catch (Exception ee) { }
+                        catch (Exception) { }
                     }
                     else
                     {
@@ -2198,14 +2191,14 @@ namespace apptab.Extension
                             db.OPA_REGLEMENTBR.Add(preg);
                             db.SaveChanges();
                         }
-                        catch (Exception eee)
+                        catch (Exception)
                         {
                         }
                     }
                     #endregion
                     //test = true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     //test = false;
                 }
@@ -2320,7 +2313,7 @@ namespace apptab.Extension
                             db.OPA_ANOMALIE.Add(panomalie);
                             db.SaveChanges();
                         }
-                        catch (Exception ee) { }
+                        catch (Exception) { }
                     }
                     else
                     {
@@ -2353,14 +2346,14 @@ namespace apptab.Extension
                             db.OPA_REGLEMENT.Add(preg);
                             db.SaveChanges();
                         }
-                        catch (Exception eee)
+                        catch (Exception)
                         {
                         }
                     }
                     #endregion
                     //test = true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     //test = false;
                 }

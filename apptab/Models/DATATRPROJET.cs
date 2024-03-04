@@ -3,9 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace apptab
 {
@@ -25,5 +22,9 @@ namespace apptab
         public DateTime? DATEBE { get; set; }
         public string LIEN { get; set; }
         public DateTime? DATECREATION { get; set; }
+
+        public string SOA { get; set; }
+        public string PROJET { get; set; }
+        public bool? isLATE { get; set; }
     }
 }

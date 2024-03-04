@@ -1,15 +1,10 @@
-﻿let User;
-let Origin;
-
-$(document).ready(() => {
+﻿$(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
 
     $(`[data-id="username"]`).text(User.LOGIN);
     GetListUser();
-
-    $("#idTable").DataTable()
 });
 
 function GetListUser() {
@@ -27,9 +22,14 @@ function GetListUser() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert("eeee" + Datas.msg);
@@ -85,7 +85,7 @@ function GetListUser() {
                 //    </tr >
                 //`;
                 //}
-                        
+
             });
 
             $(`[data-id="ubody"]`).append(code);
@@ -114,9 +114,14 @@ function deleteUser(id) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -142,6 +147,3 @@ function deleteUser(id) {
 function DetailUpdateUser(id) {
     window.location = Origin + "/User/DetailsUser?UserId=" + id;
 }
-
-
-

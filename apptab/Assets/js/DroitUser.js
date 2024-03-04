@@ -1,7 +1,4 @@
-﻿let User;
-let Origin;
-
-$(document).ready(() => {
+﻿$(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
@@ -12,12 +9,9 @@ $(document).ready(() => {
 
     $(`[data-id="Instance-list"]`).change(function (k, v) {
         GetDB($(this).val());
-        //console.log(k);
-        //console.log($(this).val());
     });
 });
-//let urlOrigin = Origin;
-//let urlOrigin = "http://softwell.cloud/OPAVI";
+
 function GetListUser() {
     let formData = new FormData();
 
@@ -33,9 +27,14 @@ function GetListUser() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -67,7 +66,6 @@ function GetListUser() {
 
         },
         error: function (e) {
-            console.log(e);
             alert("Problème de connexion. ");
         }
     }).done(function () {
@@ -75,8 +73,6 @@ function GetListUser() {
 
         GetDB(instanceID);
     })//.done(function (/*x*/) {
-    //    //alert("");
-    //    //console.log(x); return
     //    $.ajax({
     //        type: "POST",
     //        url: urlOrigin + '/Admin/GetAllUser',
@@ -84,9 +80,14 @@ function GetListUser() {
     //        cache: false,
     //        contentType: false,
     //        processData: false,
+    // beforeSend: function () {
+    //     loader.removeClass('display-none');
+    // },
+    // complete: function () {
+    //     loader.addClass('display-none');
+    // },
     //        success: function (result) {
     //            var Datas = JSON.parse(result);
-    //            console.log(Datas);
 
     //            if (Datas.type == "error") {
     //                alert(Datas.msg);
@@ -134,9 +135,14 @@ function GetDB(instanceID) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -192,7 +198,7 @@ $(`[data-action="AddnewMapp"]`).click(function () {
 
     formData.append("droit.IDUSER", $(`#User`).val());
     formData.append("droit.IDMAPPAGE", $(`#DataBase`).val());
-    
+
     $.ajax({
         type: "POST",
         url: Origin + '/Admin/AdminMaPUserCreate',
@@ -200,6 +206,12 @@ $(`[data-action="AddnewMapp"]`).click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
