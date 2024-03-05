@@ -724,10 +724,6 @@ table.dataTable tbody td {
     margin-bottom: 64px;
 }
 
-/*.select2-dropdown {
-    background: red;
-}*/
-
 .select2-selection__choice {
     background-color: steelblue !important;
 }
