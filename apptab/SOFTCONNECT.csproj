@@ -2228,6 +2228,7 @@
     <Content Include="Assets\otherCSS\datatables.min.css" />
     <Content Include="Assets\otherCSS\responsive.dataTables.min.css" />
     <Content Include="Assets\otherCSS\jquery.dataTables.min.css" />
+    <Content Include="Assets\otherCSS\rowGroup.bootstrap5.min.css" />
     <Content Include="Assets\otherJs\bootstrap.bundle.min.js" />
     <Content Include="Assets\otherJs\buttons.colVis.min.js" />
     <Content Include="Assets\otherJs\dataTables.buttons.min.js" />

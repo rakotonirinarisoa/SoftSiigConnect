@@ -595,6 +595,8 @@ namespace apptab.Controllers
 
             var result = new List<TraitementEngagement>();
 
+            var lastIndex = -1;
+
             for (int i = 0; i < iProjectsId.Count; i += 1)
             {
                 int projectId = iProjectsId[i];
@@ -614,7 +616,14 @@ namespace apptab.Controllers
                     continue;
                 }
 
-                var traitprojets = await db.SI_TRAITPROJET.Where(a => a.IDPROJET == projectId && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToListAsync();
+                var traitprojets = await db.SI_TRAITPROJET.Where(a => a.IDPROJET == projectId && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToListAsync();
+
+                if (traitprojets.Count == 0)
+                {
+                    continue;
+                }
+
+                lastIndex += 1;
 
                 result.Add(new TraitementEngagement
                 {
@@ -624,10 +633,9 @@ namespace apptab.Controllers
 
                 for (int j = 0; j < traitprojets.Count; j += 1)
                 {
-                    result[i].NUM_ENGAGEMENT = traitprojets[j].REF;
-
-                    result[i].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
+                    result[lastIndex].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
                     {
+                        NUM_ENGAGEMENT = traitprojets[j].REF,
                         BENEFICIAIRE = traitprojets[j].TITUL,
                         MONTENGAGEMENT = Data.Cipher.Decrypt(traitprojets[j].MONT, "Oppenheimer").ToString(),
                         DATETRANSFERTRAF = traitprojets[j].DATECRE,
@@ -638,7 +646,10 @@ namespace apptab.Controllers
                         SENDSIIGAGENT = await GetAgent(traitprojets[j].IDUSERENVOISIIGFP),
                         DATESIIGFP = traitprojets[j].DATESIIG,
                         SIIGFPAGENT = "",
-                        DUREETRAITEMENT = Utils.Date.GetDifference((DateTime)traitprojets[j].DATECRE, (DateTime)traitprojets[j].DATEBE)
+                        DUREETRAITEMENTTRANSFERTRAF = Utils.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
+                        DUREETRAITEMENTVALORDSEC = Utils.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE),
+                        DUREETRAITEMENTSENDSIIG = Utils.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION),
+                        DUREETRAITEMENTSIIGFP = Utils.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP)
                     });
                 }
             }

@@ -7,25 +7,19 @@ const NUMBER_OF_ROWS = 5;
 function parseList(array) {
     const result = [];
 
-    let stepNumber = 0;
     let rowNumber = 0;
 
-    let previousSOA = '';
-
     for (let i = 0; i < array.length; i += 1) {
-        if (array[i].SOA === previousSOA) {
-            stepNumber += 1;
-        } else {
-            stepNumber = 0;
-        }
-
         rowNumber = 0;
 
         for (let j = 0; j < array[i].TraitementsEngagementsDetails.length; j += 1) {
+            let total = 0;
+
             for (let k = 0; k < NUMBER_OF_ROWS; k += 1) {
                 let etape = '';
+                let beneficiaire = '';
                 let dateTraitement = '';
-                let montant = formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
+                let montant = '';
                 let agent = '';
                 let dureeTraitement = '';
 
@@ -33,48 +27,56 @@ function parseList(array) {
                     case 0:
                         etape = 'Transfert et Validation RAF';
                         dateTraitement = array[i].TraitementsEngagementsDetails[j].DATETRANSFERTRAF === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATETRANSFERTRAF);
-                        agent = array[i].TraitementsEngagementsDetails[j].TRANSFERTRAFAGENT;
-                        dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENT;
+                        beneficiaire = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
+                        montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
+                        agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].TRANSFERTRAFAGENT;
+                        dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTTRANSFERTRAF;
+
+                        total += Number(dureeTraitement);
 
                         break;
                     case 1:
                         etape = 'Validation ORDESEC';
                         dateTraitement = array[i].TraitementsEngagementsDetails[j].DATEVALORDSEC === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATEVALORDSEC);
-                        agent = array[i].TraitementsEngagementsDetails[j].VALORDSECAGENT;
-                        dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENT;
+                        beneficiaire = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
+                        montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
+                        agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].VALORDSECAGENT;
+                        dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTVALORDSEC;
+
+                        total += Number(dureeTraitement);
 
                         break;
                     case 2:
                         etape = 'Transféré SIIGFP';
                         dateTraitement = array[i].TraitementsEngagementsDetails[j].DATESENDSIIG === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATESENDSIIG);
-                        agent = array[i].TraitementsEngagementsDetails[j].SENDSIIGAGENT;
-                        dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENT;
+                        beneficiaire = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
+                        montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
+                        agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].SENDSIIGAGENT;
+                        dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTSENDSIIG;
+
+                        total += Number(dureeTraitement);
 
                         break;
                     case 3:
                         etape = 'Intégré SIIGFP';
                         dateTraitement = array[i].TraitementsEngagementsDetails[j].DATENGAGEMENT === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATENGAGEMENT);
-                        agent = array[i].TraitementsEngagementsDetails[j].SIIGFPAGENT;
-                        dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENT;
+                        beneficiaire = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
+                        montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
+                        agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].SIIGFPAGENT;
+                        dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTSIIGFP;
+                        total += Number(dureeTraitement);
 
                         break;
                     default:
-                        etape = '';
-                        dateTraitement = '';
-                        montant = '';
-                        agent = '';
-                        dureeTraitement = '';
-
                         break;
                 }
 
                 result.push({
-                    stepNumber,
                     rowNumber,
                     soa: array[i].SOA,
-                    num: array[i].NUM_ENGAGEMENT,
+                    num: array[i].TraitementsEngagementsDetails[j].NUM_ENGAGEMENT,
                     etape,
-                    beneficiaire: array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE,
+                    beneficiaire,
                     montant,
                     agent,
                     dateTraitement,
@@ -83,9 +85,9 @@ function parseList(array) {
 
                 rowNumber += 1;
             }
-        }
 
-        previousSOA = array[i].SOA;
+            result[(i + j + 1) * NUMBER_OF_ROWS - 1].dureeTraitement = total;
+        }
     }
 
     list = result;
@@ -131,13 +133,9 @@ function setDataTable() {
         rowsGroup: [0, 1],
         order: [['desc']],
         createdRow: function (row, data, _) {
-            if (data.stepNumber !== 0 || data.rowNumber !== 0) {
+            if (data.rowNumber !== 0) {
                 $('td:eq(0)', row).addClass('delete-td');
                 $('td:eq(1)', row).addClass('delete-td');
-            }
-
-            if (data.stepNumber !== 0 && data.rowNumber === 0) {
-                $('td:eq(1)', row).removeClass('delete-td');
             }
 
             if (data.rowNumber % NUMBER_OF_ROWS === NUMBER_OF_ROWS - 1) {
@@ -209,6 +207,8 @@ $('[data-action="GenereLISTE"]').click(async function () {
             }
 
             const { data } = res;
+
+            console.log(data);
 
             parseList(data);
 
@@ -323,6 +323,9 @@ function emptyTable() {
     }
 
     table = $('#dashboard').DataTable({
-        data
+        data,
+        paging: false,
+        ordering: false,
+        colReorder: false
     });
 }

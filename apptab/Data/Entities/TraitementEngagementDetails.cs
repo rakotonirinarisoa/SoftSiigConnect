@@ -4,6 +4,7 @@ namespace apptab.Data.Entities
 {
     public class TraitementEngagementDetails
     {
+        public string NUM_ENGAGEMENT { get; set; }
         public string BENEFICIAIRE { get; set; }
         public string MONTENGAGEMENT { get; set; }
         public DateTime? DATENGAGEMENT { get; set; }
@@ -17,6 +18,9 @@ namespace apptab.Data.Entities
         public string SENDSIIGAGENT { get; set; }
         public DateTime? DATESIIGFP { get; set; }
         public string SIIGFPAGENT { get; set; }
-        public double DUREETRAITEMENT { get; set; }
+        public double DUREETRAITEMENTTRANSFERTRAF { get; set; }
+        public double DUREETRAITEMENTVALORDSEC { get; set; }
+        public double DUREETRAITEMENTSENDSIIG { get; set; }
+        public double DUREETRAITEMENTSIIGFP { get; set; }
     }
 }
