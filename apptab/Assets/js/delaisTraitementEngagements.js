@@ -24,35 +24,46 @@ function parseList(array) {
         for (let j = 0; j < array[i].TraitementsEngagementsDetails.length; j += 1) {
             for (let k = 0; k < NUMBER_OF_ROWS; k += 1) {
                 let etape = '';
-                let dateTraitement = ''; 
+                let dateTraitement = '';
                 let montant = formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
                 let agent = '';
+                let dureeTraitement = '';
 
                 switch (k) {
                     case 0:
                         etape = 'Transfert et Validation RAF';
                         dateTraitement = array[i].TraitementsEngagementsDetails[j].DATETRANSFERTRAF === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATETRANSFERTRAF);
+                        agent = array[i].TraitementsEngagementsDetails[j].TRANSFERTRAFAGENT;
+                        dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENT;
 
                         break;
                     case 1:
                         etape = 'Validation ORDESEC';
                         dateTraitement = array[i].TraitementsEngagementsDetails[j].DATEVALORDSEC === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATEVALORDSEC);
+                        agent = array[i].TraitementsEngagementsDetails[j].VALORDSECAGENT;
+                        dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENT;
 
                         break;
                     case 2:
                         etape = 'Transféré SIIGFP';
                         dateTraitement = array[i].TraitementsEngagementsDetails[j].DATESENDSIIG === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATESENDSIIG);
+                        agent = array[i].TraitementsEngagementsDetails[j].SENDSIIGAGENT;
+                        dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENT;
 
                         break;
                     case 3:
                         etape = 'Intégré SIIGFP';
                         dateTraitement = array[i].TraitementsEngagementsDetails[j].DATENGAGEMENT === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATENGAGEMENT);
+                        agent = array[i].TraitementsEngagementsDetails[j].SIIGFPAGENT;
+                        dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENT;
 
                         break;
                     default:
                         etape = '';
                         dateTraitement = '';
                         montant = '';
+                        agent = '';
+                        dureeTraitement = '';
 
                         break;
                 }
@@ -67,7 +78,7 @@ function parseList(array) {
                     montant,
                     agent,
                     dateTraitement,
-                    dureeTraitement: ''
+                    dureeTraitement
                 });
 
                 rowNumber += 1;
@@ -129,7 +140,7 @@ function setDataTable() {
                 $('td:eq(1)', row).removeClass('delete-td');
             }
 
-            if (data.rowNumber === NUMBER_OF_ROWS - 1) {
+            if (data.rowNumber % NUMBER_OF_ROWS === NUMBER_OF_ROWS - 1) {
                 $('td:eq(3)', row).attr('colspan', 4).css({ 'text-align': 'center' });
                 $('td:eq(3)', row).text('Durée totale');
 
@@ -144,20 +155,24 @@ function setDataTable() {
 }
 
 $('[data-action="GenereLISTE"]').click(async function () {
-    let dd = $("#dateD").val();
-    let df = $("#dateF").val();
+    const dd = $("#dateD").val();
+    const df = $("#dateF").val();
+
     if (!dd || !df) {
-        alert("Veuillez renseigner les dates afin de générer la liste. ");
+        alert("Veuillez renseigner les dates afin de générer la liste.");
+
         return;
     }
 
-    let pr = $("#proj").val();
+    const pr = $("#proj").val();
+
     if (!pr) {
-        alert("Veuillez sélectionner au moins un projet. ");
+        alert("Veuillez sélectionner au moins un projet.");
+
         return;
     }
 
-    let formData = new FormData();
+    const formData = new FormData();
 
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
@@ -183,7 +198,17 @@ $('[data-action="GenereLISTE"]').click(async function () {
             loader.addClass('display-none');
         },
         success: function (result) {
-            const { data } = JSON.parse(result);
+            const res = JSON.parse(result);
+
+            const { type, msg } = res;
+
+            if (type === 'error' || type === 'PEtat' || type === 'Prese') {
+                alert(msg);
+
+                return;
+            }
+
+            const { data } = res;
 
             parseList(data);
 
@@ -210,9 +235,6 @@ $(document).ready(async () => {
     });
 
     GetListProjet();
-
-    /*await getTraitementEngagements();*/
-    /*setDataTable();*/
 });
 
 $('#export-excel-btn').on('click', () => {
@@ -255,11 +277,14 @@ function GetListProjet() {
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
+
                 return;
             }
             if (Datas.type == "login") {
                 alert(Datas.msg);
+
                 window.location = window.location.origin;
+
                 return;
             }
 
@@ -282,14 +307,12 @@ function GetListProjet() {
 }
 
 $('.Checkall').change(function () {
-
     if ($('.Checkall').prop("checked") == true) {
 
         $('[compteg-ischecked]').prop("checked", true);
     } else {
         $('[compteg-ischecked]').prop("checked", false);
     }
-
 });
 
 function emptyTable() {

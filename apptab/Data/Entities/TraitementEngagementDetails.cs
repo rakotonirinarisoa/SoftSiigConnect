@@ -10,8 +10,13 @@ namespace apptab.Data.Entities
         public string MONTPAIE { get; set; }
         public DateTime? DATEPAIE { get; set; }
         public DateTime? DATETRANSFERTRAF { get; set; }
+        public string TRANSFERTRAFAGENT { get; set; }
         public DateTime? DATEVALORDSEC { get; set; }
+        public string VALORDSECAGENT { get; set; }
         public DateTime? DATESENDSIIG { get; set; }
+        public string SENDSIIGAGENT { get; set; }
         public DateTime? DATESIIGFP { get; set; }
+        public string SIIGFPAGENT { get; set; }
+        public double DUREETRAITEMENT { get; set; }
     }
 }
