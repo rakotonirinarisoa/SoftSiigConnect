@@ -230,7 +230,7 @@ namespace apptab.Controllers
 
         //Genere liste des engagements et paiements//
         [HttpPost]
-        public JsonResult GenereLISTE(SI_USERS suser, string listProjet)
+        public JsonResult GenereLISTE(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -271,9 +271,9 @@ namespace apptab.Controllers
                         if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                             return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
 
-                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 3/* && a.ETAT == 1*/) != null)
+                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 3 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
                         {
-                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT != 3/* && a.ETAT == 1*/).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT != 3 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -323,7 +323,7 @@ namespace apptab.Controllers
 
         //Genere Statut des engagements//
         [HttpPost]
-        public JsonResult GenereSTATLISTE(SI_USERS suser, string listProjet)
+        public JsonResult GenereSTATLISTE(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -364,9 +364,9 @@ namespace apptab.Controllers
                         if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                             return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
 
-                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 3/* && a.ETAT == 1*/) != null)
+                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 3 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
                         {
-                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT != 3/* && a.ETAT == 1*/).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT != 3 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -420,7 +420,7 @@ namespace apptab.Controllers
 
         //Genere Liste Engagements rejetés//
         [HttpPost]
-        public JsonResult GenereREJETE(SI_USERS suser, string listProjet)
+        public JsonResult GenereREJETE(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -461,9 +461,9 @@ namespace apptab.Controllers
                         if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                             return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
 
-                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 2) != null)
+                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
                         {
-                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT == 2).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -523,7 +523,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> GenereDelaisTraitementEngagements(SI_USERS suser, string listProjet)
+        public async Task<JsonResult> GenereDelaisTraitementEngagements(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
         {
             var user = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
 
