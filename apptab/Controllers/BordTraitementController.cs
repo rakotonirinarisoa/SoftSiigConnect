@@ -523,7 +523,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> TraitementEngagements(SI_USERS suser)
+        public async Task<JsonResult> GenereDelaisTraitementEngagements(SI_USERS suser, string listProjet)
         {
             var user = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
 

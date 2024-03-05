@@ -1,4 +1,4 @@
-let dataTable;
+var table = undefined;
 
 let list = [];
 
@@ -81,11 +81,11 @@ function parseList(array) {
 }
 
 function setDataTable() {
-    if (dataTable !== undefined) {
-        dataTable.destroy();
+    if (table !== undefined) {
+        table.destroy();
     }
 
-    dataTable = $('#dashboard').DataTable({
+    table = $('#dashboard').DataTable({
         data: list,
         columns: [
             {
@@ -143,18 +143,39 @@ function setDataTable() {
     });
 }
 
-async function getTraitementEngagements() {
-    const payload = {
-        LOGIN: User.LOGIN,
-        PWD: User.PWD
+$('[data-action="GenereLISTE"]').click(async function () {
+    let dd = $("#dateD").val();
+    let df = $("#dateF").val();
+    if (!dd || !df) {
+        alert("Veuillez renseigner les dates afin de générer la liste. ");
+        return;
     }
+
+    let pr = $("#proj").val();
+    if (!pr) {
+        alert("Veuillez sélectionner au moins un projet. ");
+        return;
+    }
+
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDSOCIETE);
+
+    formData.append("DateDebut", $('#dateD').val());
+    formData.append("DateFin", $('#dateF').val());
+
+    formData.append("listProjet", $("#proj").val());
 
     $.ajax({
         type: 'POST',
-        url: Origin + `/BordTraitement/TraitementEngagements`,
-        contentType: 'application/json',
-        datatype: 'json',
-        data: JSON.stringify({ ...payload }),
+        url: Origin + `/BordTraitement/GenereDelaisTraitementEngagements`,
+        contentType: false,
+        data: formData,
+        cache: false,
+        processData: false,
         beforeSend: function () {
             loader.removeClass('display-none');
         },
@@ -172,22 +193,26 @@ async function getTraitementEngagements() {
             alert(e);
         }
     });
-}
+});
 
 $(document).ready(async () => {
     User = JSON.parse(sessionStorage.getItem("user"));
 
-    if (User === undefined) {
-        window.location = User.origin;
-    }
+    User = JSON.parse(sessionStorage.getItem("user"));
+    if (User == null || User === "undefined") window.location = User.origin;
 
     Origin = User.origin;
 
     $(`[data-id="username"]`).text(User.LOGIN);
 
-    await getTraitementEngagements();
+    $(`[data-widget="pushmenu"]`).on('click', () => {
+        $(`[data-action="SaveV"]`).toggleClass('custom-fixed-btn');
+    });
 
-    setDataTable();
+    GetListProjet();
+
+    /*await getTraitementEngagements();*/
+    /*setDataTable();*/
 });
 
 $('#export-excel-btn').on('click', () => {
@@ -195,3 +220,86 @@ $('#export-excel-btn').on('click', () => {
 
     tableToExcel('dashboard', 'e2fkj', setDataTable);
 });
+
+$('#proj').on('change', () => {
+    emptyTable();
+});
+
+function checkdel(id) {
+    $('.Checkall').prop("checked", false);
+}
+
+function GetListProjet() {
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/BordTraitement/GetAllPROJET',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+
+            $(`[data-id="proj-list"]`).text("");
+            var code = ``;
+            $.each(Datas.data.List, function (k, v) {
+                code += `
+                    <option value="${v.ID}">${v.PROJET}</option>
+                `;
+            });
+
+            $(`[data-id="proj-list"]`).append(code);
+
+            $("#proj").val([...Datas.data.PROJET]).trigger('change');
+        },
+        error: function (e) {
+            alert("Problème de connexion. ");
+        }
+    })
+}
+
+$('.Checkall').change(function () {
+
+    if ($('.Checkall').prop("checked") == true) {
+
+        $('[compteg-ischecked]').prop("checked", true);
+    } else {
+        $('[compteg-ischecked]').prop("checked", false);
+    }
+
+});
+
+function emptyTable() {
+    const data = [];
+
+    if (table !== undefined) {
+        table.destroy();
+    }
+
+    table = $('#dashboard').DataTable({
+        data
+    });
+}

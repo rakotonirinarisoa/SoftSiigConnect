@@ -3,6 +3,42 @@
     ViewData["Controller"] = "Suvi des délais de traitement des engagements";
 }
 
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">PROJET</span>
+        </div>
+        <select class="form-control selectTOO" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="proj" data-id="proj-list" multiple="multiple">
+        </select>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Date début</span>
+        </div>
+        <input type="date" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="dateD">
+    </div>
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Date fin</span>
+        </div>
+        <input type="date" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="dateF">
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="btn btn-flat bg-gradient-success col-12" data-action="GenereLISTE">
+            <i class="fa fa-download"></i> Générer
+        </div>
+    </div>
+</div>
+
 <div class="table-responsive mb-3">
     <table id="dashboard" class="table table-hover table-striped table-bordered" display responsive nowrap" width="100%">
         <thead style="position:sticky">
@@ -31,3 +67,13 @@
 
 <script src="~/Assets/js/utils.js"></script>
 <script src="~/Assets/js/delaisTraitementEngagements.js"></script>
+
+<script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
+<script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
+
+<script>
+    $("#proj").select2({
+        tags: true,
+        tokenSeparators: [',', ' ']
+    })
+</script>
