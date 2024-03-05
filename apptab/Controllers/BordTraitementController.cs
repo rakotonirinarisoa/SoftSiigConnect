@@ -271,9 +271,9 @@ namespace apptab.Controllers
                         if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                             return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
 
-                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 3 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
+                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
                         {
-                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT != 3 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -364,9 +364,9 @@ namespace apptab.Controllers
                         if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                             return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
 
-                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 3 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
+                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
                         {
-                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT != 3 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
