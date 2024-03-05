@@ -220,6 +220,23 @@ namespace apptab.Controllers
             }
         }
 
+        private async Task<string> GetAgent(int? userId)
+        {
+            if (userId == null)
+            {
+                return "";
+            }
+
+            var agent = await db.SI_USERS.Where(user => user.ID == userId && user.DELETIONDATE == null).Select(user => user.LOGIN).FirstOrDefaultAsync();
+
+            if (agent == null)
+            {
+                return "";
+            }
+
+            return agent;
+        }
+
         //Liste des engagements et paiements//
         public ActionResult BordListeEngaPaie()
         {
@@ -273,7 +290,7 @@ namespace apptab.Controllers
 
                         if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
                         {
-                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -366,7 +383,7 @@ namespace apptab.Controllers
 
                         if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
                         {
-                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -420,7 +437,7 @@ namespace apptab.Controllers
 
         //Genere Liste Engagements rejetés//
         [HttpPost]
-        public JsonResult GenereREJETE(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
+        public async Task<JsonResult> GenereREJETE(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -463,7 +480,7 @@ namespace apptab.Controllers
 
                         if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
                         {
-                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -495,7 +512,7 @@ namespace apptab.Controllers
                                     REF = x.REF,
                                     BENEF = x.TITUL,
                                     MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
-                                    AGENTREJETE = db.SI_USERS.FirstOrDefault(a => a.ID == isRejet.IDUSER).LOGIN,
+                                    AGENTREJETE = await GetAgent(isRejet.IDUSER),
                                     DATEREJETE = isRejet.DATEREJE.Value.Date,
                                     MOTIF = isRejet.MOTIF,
                                     COMMENTAIRE = !String.IsNullOrEmpty(isRejet.COMMENTAIRE) ? isRejet.COMMENTAIRE : "",
@@ -522,23 +539,6 @@ namespace apptab.Controllers
             return View();
         }
 
-        private async Task<string> GetAgent(int? userId)
-        {
-            if (userId == null)
-            {
-                return "";
-            }
-
-            var agent = await db.SI_USERS.Where(user => user.ID == userId).Select(user => user.LOGIN).FirstOrDefaultAsync();
-
-            if (agent == null)
-            {
-                return "";
-            }
-
-            return agent;
-        }
-
         [HttpPost]
         public async Task<JsonResult> GenereDelaisTraitementEngagements(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
         {
@@ -547,11 +547,6 @@ namespace apptab.Controllers
             if (user == null)
             {
                 return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            }
-
-            if (listProjet == null)
-            {
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = new List<object>() }, settings));
             }
 
             string[] separators = { "," };

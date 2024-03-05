@@ -2232,7 +2232,6 @@
     <Content Include="Assets\otherJs\buttons.colVis.min.js" />
     <Content Include="Assets\otherJs\dataTables.buttons.min.js" />
     <Content Include="Assets\otherJs\dataTables.colReorder.min.js" />
-    <Content Include="Assets\otherJs\datatables.min.js" />
     <Content Include="Assets\otherJs\dataTables.responsive.min.js" />
     <Content Include="Assets\otherJs\dataTables.rowsGroup.js" />
     <Content Include="Assets\otherJs\jquery-3.7.0.js" />
