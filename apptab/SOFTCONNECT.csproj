@@ -302,6 +302,7 @@
     <Compile Include="SOFTCONNECTOM.cs" />
     <Compile Include="SOFTCONNECTSIIG.cs" />
     <Compile Include="Models\TP_MPIECES_JUSTIFICATIVES.cs" />
+    <Compile Include="Utils\Date.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\admlte\dist\css\alt\adminlte.components.css" />

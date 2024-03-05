@@ -79,8 +79,13 @@ $(`[data-id="connex"]`).click(function () {
     let usr = $("#Connex").val();
     let psw = $("#MDP").val();
     let inst = $("#Instance").val();
+    let auth = "0";
 
     $("#base-container").hide();
+
+    if ($(`[data-id="auth-list"]`).val() != null) {
+        auth = $(`[data-id="auth-list"]`).val();
+    }
 
     if (!inst) {
         alert("Veuillez renseigner l'instance. ");
