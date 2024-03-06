@@ -83,6 +83,10 @@ $(`[data-id="connex"]`).click(function () {
 
     $("#base-container").hide();
 
+    if ($(`[data-id="auth-list"]`).val() != null) {
+        auth = $(`[data-id="auth-list"]`).val();
+    }
+
     if (!inst) {
         alert("Veuillez renseigner l'instance. ");
         return;

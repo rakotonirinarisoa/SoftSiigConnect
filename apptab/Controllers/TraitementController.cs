@@ -7,8 +7,6 @@ using System.Web.Mvc;
 using Newtonsoft.Json;
 using System.Net.Mail;
 using Extensions.DateTime;
-using System.Data.Entity.Infrastructure;
-using apptab.Data.Entities;
 
 namespace apptab.Controllers
 {

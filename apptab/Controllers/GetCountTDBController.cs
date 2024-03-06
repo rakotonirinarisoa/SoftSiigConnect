@@ -25,6 +25,8 @@ namespace apptab.Controllers
             {
                 var newElemH = new COUNTTDB()
                 {
+                    MandatI = 0,
+                    MandatTR = 0,
                     MandatT = 0,
                     MandatV = 0,
                     MandatA = 0,
@@ -50,6 +52,8 @@ namespace apptab.Controllers
                         MandatT = mandat.Where(a => a.ETAT == 0).Count(),
                         MandatV = mandat.Where(a => a.ETAT == 1).Count(),
                         MandatA = mandat.Where(a => a.ETAT == 2).Count(),
+                        //MandatI = mandat.Where(a => a.ETAT == 2).Count(),
+                        MandatTR = mandat.Where(a => a.ETAT == 3).Count(),
                         AvanceT = 0,
                         AvanceV = 0,
                         AvanceA = 0,
@@ -73,6 +77,8 @@ namespace apptab.Controllers
                             MandatT = mandat.Where(a => a.ETAT == 0).Count(),
                             MandatV = mandat.Where(a => a.ETAT == 1).Count(),
                             MandatA = mandat.Where(a => a.ETAT == 2).Count(),
+                            //MandatI = mandat.Where(a => a.ETAT == 2).Count(),
+                            MandatTR = mandat.Where(a => a.ETAT == 3).Count(),
                             AvanceT = 0,
                             AvanceV = 0,
                             AvanceA = 0,
@@ -106,6 +112,8 @@ namespace apptab.Controllers
                                 MandatT = mandat.Where(a => a.ETAT == 0).Count(),
                                 MandatV = mandat.Where(a => a.ETAT == 1).Count(),
                                 MandatA = mandat.Where(a => a.ETAT == 2).Count(),
+                                //MandatI = mandat.Where(a => a.ETAT == 2).Count(),
+                                MandatTR = mandat.Where(a => a.ETAT == 3).Count(),
                                 AvanceT = 0,
                                 AvanceV = 0,
                                 AvanceA = 0,

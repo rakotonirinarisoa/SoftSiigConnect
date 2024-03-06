@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using Extensions.DateTime;
+using apptab.Data.Entities;
 using Newtonsoft.Json;
 
 namespace apptab.Controllers
@@ -222,6 +220,23 @@ namespace apptab.Controllers
             }
         }
 
+        private async Task<string> GetAgent(int? userId)
+        {
+            if (userId == null)
+            {
+                return "";
+            }
+
+            var agent = await db.SI_USERS.Where(user => user.ID == userId && user.DELETIONDATE == null).Select(user => user.LOGIN).FirstOrDefaultAsync();
+
+            if (agent == null)
+            {
+                return "";
+            }
+
+            return agent;
+        }
+
         //Liste des engagements et paiements//
         public ActionResult BordListeEngaPaie()
         {
@@ -232,7 +247,7 @@ namespace apptab.Controllers
 
         //Genere liste des engagements et paiements//
         [HttpPost]
-        public JsonResult GenereLISTE(SI_USERS suser, string listProjet)
+        public JsonResult GenereLISTE(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -273,9 +288,9 @@ namespace apptab.Controllers
                         if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                             return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
 
-                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt/* && a.ETAT == 1*/) != null)
+                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
                         {
-                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt/* && a.ETAT == 1*/).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -325,7 +340,7 @@ namespace apptab.Controllers
 
         //Genere Statut des engagements//
         [HttpPost]
-        public JsonResult GenereSTATLISTE(SI_USERS suser, string listProjet)
+        public JsonResult GenereSTATLISTE(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -366,9 +381,9 @@ namespace apptab.Controllers
                         if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                             return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
 
-                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt/* && a.ETAT == 1*/) != null)
+                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
                         {
-                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt/* && a.ETAT == 1*/).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -422,7 +437,7 @@ namespace apptab.Controllers
 
         //Genere Liste Engagements rejetés//
         [HttpPost]
-        public JsonResult GenereREJETE(SI_USERS suser, string listProjet)
+        public async Task<JsonResult> GenereREJETE(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -463,9 +478,9 @@ namespace apptab.Controllers
                         if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                             return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
 
-                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 2) != null)
+                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
                         {
-                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT == 2).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -497,7 +512,7 @@ namespace apptab.Controllers
                                     REF = x.REF,
                                     BENEF = x.TITUL,
                                     MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
-                                    AGENTREJETE = db.SI_USERS.FirstOrDefault(a => a.ID == isRejet.IDUSER).LOGIN,
+                                    AGENTREJETE = await GetAgent(isRejet.IDUSER),
                                     DATEREJETE = isRejet.DATEREJE.Value.Date,
                                     MOTIF = isRejet.MOTIF,
                                     COMMENTAIRE = !String.IsNullOrEmpty(isRejet.COMMENTAIRE) ? isRejet.COMMENTAIRE : "",
@@ -517,6 +532,129 @@ namespace apptab.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
             }
+        }
+
+        public ActionResult DelaisTraitementEngagements()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GenereDelaisTraitementEngagements(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
+        {
+            var user = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
+
+            if (user == null)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            }
+
+            string[] separators = { "," };
+
+            var sProjectsId = listProjet.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            var iProjectsId = new List<int>();
+
+            for (int i = 0; i < sProjectsId.Count; i += 1)
+            {
+                int projectId = int.Parse(sProjectsId[i]);
+
+                if ((await db.SI_MAPPAGES.FirstOrDefaultAsync(a => a.IDPROJET == projectId && a.DELETIONDATE == null)) == null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
+                }
+
+                SOFTCONNECTOM.connex = new Data.Extension().GetCon(projectId);
+
+                var tom = new SOFTCONNECTOM();
+
+                var numCaEtapAPP = await db.SI_PARAMETAT.FirstOrDefaultAsync(a => a.IDPROJET == projectId && a.DELETIONDATE == null);
+
+                if (numCaEtapAPP == null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
+                }
+
+                if ((await tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefaultAsync(a => a.NUM == numCaEtapAPP.DEF)) == null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état DEF n'est pas paramétré sur TOM²PRO. " }, settings));
+                }
+
+                if ((await tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefaultAsync(a => a.NUM == numCaEtapAPP.TEF)) == null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état TEF n'est pas paramétré sur TOM²PRO. " }, settings));
+                }
+
+                if ((await tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefaultAsync(a => a.NUM == numCaEtapAPP.BE)) == null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
+                }
+
+                iProjectsId.Add(projectId);
+            }
+
+            var result = new List<TraitementEngagement>();
+
+            var lastIndex = -1;
+
+            for (int i = 0; i < iProjectsId.Count; i += 1)
+            {
+                int projectId = iProjectsId[i];
+
+                var s = await (
+                    from soa in db.SI_SOAS
+                    join prosoa in db.SI_PROSOA on soa.ID equals prosoa.IDSOA
+                    where prosoa.IDPROJET == projectId && prosoa.DELETIONDATE == null && soa.DELETIONDATE == null
+                    select new
+                    {
+                        soa.SOA
+                    }
+                ).FirstOrDefaultAsync();
+
+                if (s == null)
+                {
+                    continue;
+                }
+
+                var traitprojets = await db.SI_TRAITPROJET.Where(a => a.IDPROJET == projectId && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToListAsync();
+
+                if (traitprojets.Count == 0)
+                {
+                    continue;
+                }
+
+                lastIndex += 1;
+
+                result.Add(new TraitementEngagement
+                {
+                    SOA = s.SOA,
+                    TraitementsEngagementsDetails = new List<TraitementEngagementDetails>()
+                });
+
+                for (int j = 0; j < traitprojets.Count; j += 1)
+                {
+                    result[lastIndex].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
+                    {
+                        NUM_ENGAGEMENT = traitprojets[j].REF,
+                        BENEFICIAIRE = traitprojets[j].TITUL,
+                        MONTENGAGEMENT = Data.Cipher.Decrypt(traitprojets[j].MONT, "Oppenheimer").ToString(),
+                        DATETRANSFERTRAF = traitprojets[j].DATECRE,
+                        TRANSFERTRAFAGENT = await GetAgent(traitprojets[j].IDUSERCREATE),
+                        DATEVALORDSEC = traitprojets[j].DATEVALIDATION,
+                        VALORDSECAGENT = await GetAgent(traitprojets[j].IDUSERVALIDATE),
+                        DATESENDSIIG = traitprojets[j].DATENVOISIIGFP,
+                        SENDSIIGAGENT = await GetAgent(traitprojets[j].IDUSERENVOISIIGFP),
+                        DATESIIGFP = traitprojets[j].DATESIIG,
+                        SIIGFPAGENT = "",
+                        DUREETRAITEMENTTRANSFERTRAF = Utils.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
+                        DUREETRAITEMENTVALORDSEC = Utils.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE),
+                        DUREETRAITEMENTSENDSIIG = Utils.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION),
+                        DUREETRAITEMENTSIIGFP = Utils.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP)
+                    });
+                }
+            }
+
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = result }, settings));
         }
     }
 }

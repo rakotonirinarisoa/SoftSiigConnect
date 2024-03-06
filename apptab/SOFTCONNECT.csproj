@@ -194,6 +194,8 @@
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Data\Addbuss.cs" />
     <Compile Include="Data\Entities\ProjectDetails.cs" />
+    <Compile Include="Data\Entities\TraitementEngagementDetails.cs" />
+    <Compile Include="Data\Entities\TraitementEngagement.cs" />
     <Compile Include="Data\Entities\X.cs" />
     <Compile Include="Data\Cipher.cs" />
     <Compile Include="Extension\AFB.cs" />
@@ -300,6 +302,7 @@
     <Compile Include="SOFTCONNECTOM.cs" />
     <Compile Include="SOFTCONNECTSIIG.cs" />
     <Compile Include="Models\TP_MPIECES_JUSTIFICATIVES.cs" />
+    <Compile Include="Utils\Date.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\admlte\dist\css\alt\adminlte.components.css" />
@@ -2145,6 +2148,7 @@
     <Content Include="Assets\admlte\plugins\uplot\uPlot.iife.min.js" />
     <Content Include="Assets\admlte\plugins\uplot\uPlot.min.css" />
     <Content Include="Assets\css\loader.css" />
+    <Content Include="Assets\js\delaisTraitementEngagements.js" />
     <Content Include="Assets\icons\chevron-down.svg" />
     <Content Include="Assets\icons\chevron-right.svg" />
     <Content Include="Assets\icons\eye.svg" />
@@ -2221,12 +2225,16 @@
     <Content Include="Assets\js\utils.js" />
     <Content Include="Assets\otherCSS\buttons.dataTables.min.css" />
     <Content Include="Assets\otherCSS\colReorder.dataTables.min.css" />
+    <Content Include="Assets\otherCSS\datatables.min.css" />
     <Content Include="Assets\otherCSS\responsive.dataTables.min.css" />
     <Content Include="Assets\otherCSS\jquery.dataTables.min.css" />
+    <Content Include="Assets\otherCSS\rowGroup.bootstrap5.min.css" />
+    <Content Include="Assets\otherJs\bootstrap.bundle.min.js" />
     <Content Include="Assets\otherJs\buttons.colVis.min.js" />
     <Content Include="Assets\otherJs\dataTables.buttons.min.js" />
     <Content Include="Assets\otherJs\dataTables.colReorder.min.js" />
     <Content Include="Assets\otherJs\dataTables.responsive.min.js" />
+    <Content Include="Assets\otherJs\dataTables.rowsGroup.js" />
     <Content Include="Assets\otherJs\jquery-3.7.0.js" />
     <Content Include="Assets\otherJs\jquery.dataTables.min.js" />
     <Content Include="Content\bootstrap-grid.css" />
@@ -4584,6 +4592,7 @@
     <Content Include="Views\BordTraitement\StatutEngagements.cshtml" />
     <Content Include="Views\Traitement\TraitementSENDSIIGFP.cshtml" />
     <Content Include="Views\BordTraitement\EngagementsREJETE.cshtml" />
+    <Content Include="Views\BordTraitement\DelaisTraitementEngagements.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

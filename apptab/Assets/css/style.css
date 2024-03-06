@@ -723,3 +723,8 @@ table.dataTable tbody td {
 .button:not(:last-child) {
     margin-bottom: 64px;
 }
+
+.select2-selection__choice {
+    background-color: steelblue !important;
+}
+

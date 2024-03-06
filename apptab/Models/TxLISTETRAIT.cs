@@ -14,6 +14,8 @@ namespace apptab
         public string MONTENGAGEMENT { get; set; }
         public DateTime? DATENGAGEMENT { get; set; }
         public string MONTPAIE { get; set; }
+
+
         public DateTime? DATEPAIE { get; set; }
         public string SOA { get; set; }
         public string PROJET { get; set; }
@@ -30,5 +32,7 @@ namespace apptab
         public DateTime? DATEREJETE { get; set; }
         public string MOTIF { get; set; }
         public string COMMENTAIRE { get; set; }
+
+
     }
 }

@@ -17,5 +17,7 @@ namespace apptab
         public int? PaieV { get; set; }
         public int? PaieF { get; set; }
         public int? PaieA { get; set; }
+        public int? MandatI { get; set; }
+        public int? MandatTR { get; set; }
     }
 }
