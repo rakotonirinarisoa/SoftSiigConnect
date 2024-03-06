@@ -4,6 +4,7 @@ namespace apptab.Data.Entities
 {
     public class TraitementEngagementDetails
     {
+        //public string SOA { get; set; }
         public string NUM_ENGAGEMENT { get; set; }
         public string BENEFICIAIRE { get; set; }
         public string MONTENGAGEMENT { get; set; }
@@ -22,5 +23,15 @@ namespace apptab.Data.Entities
         public double DUREETRAITEMENTVALORDSEC { get; set; }
         public double DUREETRAITEMENTSENDSIIG { get; set; }
         public double DUREETRAITEMENTSIIGFP { get; set; }
+
+        public double DURPREVUTRANSFERT { get; set; }
+        public double DURPREVUVALIDATION { get; set; }
+        public double DURPREVUTRANSFSIIG { get; set; }
+        public double DURPREVUSIIG { get; set; }
+
+        public double DEPASTRANSFERT { get; set; }
+        public double DEPASVALIDATION { get; set; }
+        public double DEPASTRANSFSIIG { get; set; }
+        public double DEPASSIIG { get; set; }
     }
 }

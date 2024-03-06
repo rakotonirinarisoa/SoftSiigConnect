@@ -1,43 +1,3 @@
-/*! RowsGroup for DataTables v2.0.0
- * 2015-2016 Alexey Shildyakov ashl1future@gmail.com
- * 2016 Tibor Wekerle
- */
-
-/**
- * @summary     RowsGroup
- * @description Group rows by specified columns
- * @version     2.0.0
- * @file        dataTables.rowsGroup.js
- * @author      Alexey Shildyakov (ashl1future@gmail.com)
- * @contact     ashl1future@gmail.com
- * @copyright   Alexey Shildyakov
- * 
- * License      MIT - http://datatables.net/license/mit
- *
- * This feature plug-in for DataTables automatically merges columns cells
- * based on it's values equality. It supports multi-column row grouping
- * in according to the requested order with dependency from each previous 
- * requested columns. Now it supports ordering and searching. 
- * Please see the example.html for details.
- * 
- * Rows grouping in DataTables can be enabled by using any one of the following
- * options:
- *
- * * Setting the `rowsGroup` parameter in the DataTables initialisation
- *   to array which containes columns selectors
- *   (https://datatables.net/reference/type/column-selector) used for grouping. i.e.
- *    rowsGroup = [1, 'columnName:name', ]
- * * Setting the `rowsGroup` parameter in the DataTables defaults
- *   (thus causing all tables to have this feature) - i.e.
- *   `$.fn.dataTable.defaults.RowsGroup = [0]`.
- * * Creating a new instance: `new $.fn.dataTable.RowsGroup( table, columnsForGrouping );`
- *   where `table` is a DataTable's API instance and `columnsForGrouping` is the array
- *   described above.
- *
- * For more detailed information please see:
- *     
- */
-
 (function($){
 
 ShowedDataSelectorModifier = {
@@ -48,10 +8,6 @@ ShowedDataSelectorModifier = {
 
 GroupedColumnsOrderDir = 'asc';
 
-
-/*
- * columnsForGrouping: array of DTAPI:cell-selector for columns for which rows grouping is applied
- */
 var RowsGroup = function ( dt, columnsForGrouping )
 {
 	this.table = dt.table();
