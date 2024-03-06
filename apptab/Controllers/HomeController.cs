@@ -326,7 +326,7 @@ namespace apptab.Controllers
             public string Journal { get; set; }
             public string Marche { get; set; }
         }
-
+        //=========================================================================================================PaiementsValidations============================================================================
         [HttpPost]
         public JsonResult Getelementjs(int ChoixBase, string codeproject, string journal, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP,/* int mois, int annee, string matr1, string matr2, DateTime datePaie,*/ SI_USERS suser)
         {

@@ -60,8 +60,7 @@ function ChargeLoad() {
     formData.append("suser.IDPROJET", User.IDPROJET);
     formData.append("ChoixBase", baseName);
 
-    if (baseName == 2) {
-        $.ajax({
+          $.ajax({
             type: "POST",
             url: Origin + '/Home/GetElementAvaliderLoad',
             data: formData,
@@ -188,83 +187,6 @@ function ChargeLoad() {
                 alert("Problème de connexion. ");
             }
         });
-
-    } else {
-        //BR
-        formData.append("datein", $('#Pdu').val());
-        formData.append("dateout", $('#Pau').val());
-        formData.append("journal", $('#commercial').val());
-        formData.append("comptaG", $('#comptaG').val());
-        formData.append("auxi", $('#auxi').val());
-        formData.append("auxi1", $('#auxi').val());
-        formData.append("dateP", $('#Pay').val());
-        formData.append("etat", $('#etat').val());
-        formData.append("devise", false);
-
-        $.ajax({
-            type: "POST",
-            url: Origin + '/Home/GetElementAvalider',
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            beforeSend: function () {
-                loader.removeClass('display-none');
-            },
-            complete: function () {
-                loader.addClass('display-none');
-            },
-            success: function (result) {
-                var Datas = JSON.parse(result);
-
-                if (Datas.type == "error") {
-                    alert(Datas.msg);
-                    return;
-                }
-                if (Datas.type == "login") {
-                    alert(Datas.msg);
-                    window.location = window.location.origin;
-                    return;
-                }
-                if (Datas.type == "success") {
-                    listResult = Datas.data
-                    content = ``;
-
-                    $.each(listResult, function (k, v) {
-                        content += `
-                    <tr compteG-id="${v.No}">
-                        <td>
-                            <input type="checkbox" name = "checkprod" compteg-ischecked onchange = "checkdel()"/>
-                        </td><td>${v.No}</td>
-                        <td>${v.Date}</td>
-                        <td>${v.NoPiece}</td>
-                        <td>${v.Compte}</td>
-                        <td>${v.Libelle}</td>
-                        <td>${v.Montant}</td>
-                        <td>${v.MontantDevise}</td>
-                        <td>${v.Mon}</td>
-                        <td>${v.Rang}</td>
-                        <td>${v.Poste}</td>
-                        <td>${v.FinancementCategorie}</td>
-                        <td>${v.Commune}</td>
-                        <td>${v.Plan6}</td>
-                        <td>${v.Journal}</td>
-                        <td>${v.Marche}</td>
-                        <td>${v.Status}</td>
-                    </tr>`
-
-                    });
-                    $('.afb160').html(content);
-
-                }
-            },
-            error: function () {
-                alert("Problème de connexion. ");
-            }
-        });
-
-        $('.afb160').empty()
-    }
 }
 
 function GetListCodeJournal() {
