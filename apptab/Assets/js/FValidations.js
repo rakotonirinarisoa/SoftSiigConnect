@@ -180,7 +180,27 @@ function GetListCodeJournal() {
     });
 }
 //==============================================================================================Get text===================================================================================
-
+function GetFileNameAnarana() {
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/FileName',
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            console.log(result);
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
 function getelementTXT(a) {
     let formData = new FormData();
     let codeproject = $("#Fproject").val();
@@ -216,14 +236,14 @@ function getelementTXT(a) {
         success: function (result) {
             console.log(result);
             let blobUrl = URL.createObjectURL(result);
-
+            let anarana = GetFileNameAnarana();
             let a = document.createElement("a");
             a.href = blobUrl;
-            a.download = "ss";
+            a.download = anarana;
             document.body.appendChild(a);
             a.click();
 
-            window.location = '/Home/GetFile?file=' + Datas.data;
+            //window.location = '/Home/GetFile?file=' + Datas.data;
 
         },
         error: function () {

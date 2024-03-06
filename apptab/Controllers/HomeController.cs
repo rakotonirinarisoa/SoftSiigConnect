@@ -23,6 +23,7 @@ namespace apptab.Controllers
     {
         private readonly SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
         private readonly SOFTCONNECTOM __db = new SOFTCONNECTOM();
+        private string Anarana;
 
         JsonSerializerSettings settings = new JsonSerializerSettings
         {
@@ -150,16 +151,19 @@ namespace apptab.Controllers
             try
             {
                 string pth = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\";
+
                 if (!Directory.Exists(pth))
                 {
                     Directory.CreateDirectory(pth);
                 }
                 StreamWriter sw = null;
+
                 sw = new StreamWriter(pth + pathchemin + ".txt");
                 sw.Write(pathfiles);
                 sw.Close();
                 byte[] source = System.IO.File.ReadAllBytes(pth + pathchemin + ".txt");
                 string s = "application/txt";
+
                 return File(source, System.Net.Mime.MediaTypeNames.Application.Octet, pathfiles);
             }
             catch (Exception ex)
@@ -197,11 +201,10 @@ namespace apptab.Controllers
             var ps = db.SI_USERS.Where(x => x.LOGIN == suser.LOGIN /*&& x.IDPROJET == PROJECTID*/ && x.PWD == suser.PWD).Select(x => x.PWD).FirstOrDefault();
 
             var pswftp = db.OPA_CRYPTO.Where(x => x.IDPROJET == PROJECTID && x.IDUSER == suser.ID && x.DELETIONDATE != null).Select(x => x.CRYPTOPWD).FirstOrDefault();
-            // pathfile = aFB160.CreateTOMPAIEAFB160(devise, codeJ, suser, codeproject);
-            
             if (baseName == "1")
             {
                 var pathfile = aFB160.CreateTOMPAIEAFB160(devise, codeJ, suser, codeproject);
+
                 if (intbasetype == 0)
                 {
                     return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
@@ -232,6 +235,7 @@ namespace apptab.Controllers
                 var pathfile = aFB160.CreateTOMPROAFB160(devise, codeJ, suser, codeproject);
                 if (intbasetype == 0)
                 {
+                    Anarana = pathfile.Chemin;
                     //send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
                     return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                 }
@@ -282,6 +286,10 @@ namespace apptab.Controllers
                 }
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archive Success ", data = send }, settings));
             }
+        }
+        public JsonResult FileName()
+        {
+            return Json(JsonConvert.SerializeObject(new { Filename = Anarana }, settings));
         }
         public ActionResult GetFile(string file)
         {
