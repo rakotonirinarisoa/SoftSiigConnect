@@ -485,48 +485,50 @@
                                 </p>
                             </a>
                         </li>
-                        @*<li class="nav-item">
-                            <a href="../BordTraitement/BordListeEngaPaie" class="nav-link">
-                                <i class="nav-icon fas fa-file-alt"></i>
-                                <p>
-                                    Liste des engagements et paiements
-                                </p>
-                            </a>
-                        </li>*@
-                        <li class="nav-item">
-                            <a href="../BordTraitement/StatutEngagements" class="nav-link">
-                                <i class="nav-icon fas fa-file-alt"></i>
-                                <p>
-                                    Statut des engagements
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../BordTraitement/DelaisTraitementEngagements" class="nav-link">
-                                <i class="nav-icon fas fa-file-alt"></i>
-                                <p>
-                                    Délais de traitement des engagements
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../BordTraitement/SoufTraitement" class="nav-link">
-                                <i class="nav-icon fas fa-file-alt"></i>
-                                <p>
-                                    Traitements en souffrance (par rapport au délai moyen)
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../BordTraitement/EngagementsREJETE" class="nav-link">
-                                <i class="nav-icon fas fa-file-alt"></i>
-                                <p>
-                                    Engagements rejetés
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
-
+                        @if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur)
+                        {
+                            <li class="nav-item">
+                                <a href="../BordTraitement/BordListeEngaPaie" class="nav-link">
+                                    <i class="nav-icon fas fa-file-alt"></i>
+                                    <p>
+                                        Liste des engagements et paiements
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../BordTraitement/StatutEngagements" class="nav-link">
+                                    <i class="nav-icon fas fa-file-alt"></i>
+                                    <p>
+                                        Statut des engagements
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../BordTraitement/DelaisTraitementEngagements" class="nav-link">
+                                    <i class="nav-icon fas fa-file-alt"></i>
+                                    <p>
+                                        Délais de traitement des engagements
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../BordTraitement/SoufTraitement" class="nav-link">
+                                    <i class="nav-icon fas fa-file-alt"></i>
+                                    <p>
+                                        Traitements en souffrance (par rapport au délai moyen)
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../BordTraitement/EngagementsREJETE" class="nav-link">
+                                    <i class="nav-icon fas fa-file-alt"></i>
+                                    <p>
+                                        Engagements rejetés
+                                    </p>
+                                </a>
+                            </li>
+                        }
+                        </ul>
                     <hr />
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">
                         <li class="nav-item menu-open">
