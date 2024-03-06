@@ -4,6 +4,28 @@ let list = [];
 
 const NUMBER_OF_ROWS = 5;
 
+function setSum(array, startIndex, endIndex) {
+    let total = 0;
+
+    for (let i = startIndex; i <= endIndex; i += 1) {
+        total += Number(array[i].dureeTraitement);
+    }
+
+    array[endIndex + 1].dureeTraitement = total;
+}
+
+function calculateDuration(array) {
+    let pointer = 0;
+
+    for (let i = 0; i < array.length; i += 1) {
+        if (i % NUMBER_OF_ROWS === NUMBER_OF_ROWS - 1) {
+            setSum(array, pointer, i - 1);
+
+            pointer = i + 1;
+        }
+    }
+}
+
 function parseList(array) {
     const result = [];
 
@@ -13,8 +35,6 @@ function parseList(array) {
         rowNumber = 0;
 
         for (let j = 0; j < array[i].TraitementsEngagementsDetails.length; j += 1) {
-            let total = 0;
-
             for (let k = 0; k < NUMBER_OF_ROWS; k += 1) {
                 let etape = '';
                 let beneficiaire = '';
@@ -32,8 +52,6 @@ function parseList(array) {
                         agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].TRANSFERTRAFAGENT;
                         dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTTRANSFERTRAF;
 
-                        total += Number(dureeTraitement);
-
                         break;
                     case 1:
                         etape = 'Validation ORDESEC';
@@ -42,8 +60,6 @@ function parseList(array) {
                         montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
                         agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].VALORDSECAGENT;
                         dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTVALORDSEC;
-
-                        total += Number(dureeTraitement);
 
                         break;
                     case 2:
@@ -54,8 +70,6 @@ function parseList(array) {
                         agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].SENDSIIGAGENT;
                         dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTSENDSIIG;
 
-                        total += Number(dureeTraitement);
-
                         break;
                     case 3:
                         etape = 'Intégré SIIGFP';
@@ -64,7 +78,6 @@ function parseList(array) {
                         montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
                         agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].SIIGFPAGENT;
                         dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTSIIGFP;
-                        total += Number(dureeTraitement);
 
                         break;
                     default:
@@ -85,10 +98,10 @@ function parseList(array) {
 
                 rowNumber += 1;
             }
-
-            result[(i + j + 1) * NUMBER_OF_ROWS - 1].dureeTraitement = total;
         }
     }
+
+    calculateDuration(result);
 
     list = result;
 }
