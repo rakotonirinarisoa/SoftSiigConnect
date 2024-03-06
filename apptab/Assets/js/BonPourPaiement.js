@@ -215,11 +215,6 @@ function chargeLoad() {
                                 }
                             }
                         ],
-                        colReorder: {
-                            enable: true,
-                            fixedColumnsLeft: 1
-                        },
-                        deferRender: true,
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
 
@@ -234,6 +229,14 @@ function chargeLoad() {
                                 className: 'elerfr'
                             }
                         ],
+                        colReorder: {
+                            enable: true,
+                            fixedColumnsLeft: 1
+                        },
+                        deferRender: true,
+                        dom: 'Bfrtip',
+                        buttons: ['colvis'],
+                        
                         initComplete: function () {
                             $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
                         }

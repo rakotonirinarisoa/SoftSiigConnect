@@ -447,15 +447,23 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'journal' },
                             { data: 'marche' }
                         ],
+                        createdRow: function (row, data, _) {
+                            $(row).attr('compteG-id', data.id);
+                            $(row).addClass('select-text');
+                        },
+                        columnDefs: [
+                            {
+                                targets: [-1],
+                                className: 'elerfr'
+                            }
+                        ],
                         colReorder: {
                             enable: true,
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
-                        createdRow: function (row, data, _) {
-                            $(row).attr('compteG-id', data.id);
-                            $(row).addClass('select-text');
-                        },
+                        dom: 'Bfrtip',
+                        buttons: ['colvis'],
                         initComplete: function () {
                             $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
                         }
@@ -575,15 +583,23 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'journal' },
                             { data: 'marche' }
                         ],
+                        createdRow: function (row, _, _) {
+                            $(row).attr('compteG-id', row.id);
+                            $(row).addClass('select-text');
+                        },
+                        columnDefs: [
+                            {
+                                targets: [-1],
+                                className: 'elerfr'
+                            }
+                        ],
                         colReorder: {
                             enable: true,
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
-                        createdRow: function (row, _, _) {
-                            $(row).attr('compteG-id', row.id);
-                            $(row).addClass('select-text');
-                        },
+                        dom: 'Bfrtip',
+                        buttons: ['colvis'],
                         initComplete: function () {
                             $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
                         }
