@@ -12,6 +12,8 @@
         [Column(TypeName = "smalldatetime")]
         public DateTime? DELETIONDATE { get; set; }
 
+        public int? DELRAF { get; set; }
+
         public int? DELTV { get; set; }
 
         public int? DELENVOISIIGFP { get; set; }
