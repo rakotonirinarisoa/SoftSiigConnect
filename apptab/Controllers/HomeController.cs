@@ -20,6 +20,7 @@ namespace apptab.Controllers
     {
         private readonly SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
         private readonly SOFTCONNECTOM __db = new SOFTCONNECTOM();
+        private string Anarana;
 
         JsonSerializerSettings settings = new JsonSerializerSettings
         {
@@ -142,6 +143,31 @@ namespace apptab.Controllers
             }
 
         }
+        public FileResult CreateFileAFBtXt(string pathchemin, string pathfiles)
+        {
+            try
+            {
+                string pth = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\";
+
+                if (!Directory.Exists(pth))
+                {
+                    Directory.CreateDirectory(pth);
+                }
+                StreamWriter sw = null;
+
+                sw = new StreamWriter(pth + pathchemin + ".txt");
+                sw.Write(pathfiles);
+                sw.Close();
+                byte[] source = System.IO.File.ReadAllBytes(pth + pathchemin + ".txt");
+                string s = "application/txt";
+
+                return File(source, System.Net.Mime.MediaTypeNames.Application.Octet, pathfiles);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
         public string CreateAFBTXTArch(string pathchemin, string pathfiles, string psw)
         {
             string pth = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\";
@@ -175,9 +201,10 @@ namespace apptab.Controllers
             if (baseName == "1")
             {
                 var pathfile = aFB160.CreateTOMPAIEAFB160(devise, codeJ, suser, codeproject);
+
                 if (intbasetype == 0)
                 {
-                    send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
+                    return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                 }
                 else if (intbasetype == 1)
                 {
@@ -205,7 +232,9 @@ namespace apptab.Controllers
                 var pathfile = aFB160.CreateTOMPROAFB160(devise, codeJ, suser, codeproject);
                 if (intbasetype == 0)
                 {
-                    send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
+                    Anarana = pathfile.Chemin;
+                    //send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
+                    return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                 }
                 else if (intbasetype == 1)
                 {
@@ -233,7 +262,8 @@ namespace apptab.Controllers
                 //var send = "";
                 if (intbasetype == 0)
                 {
-                    send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
+                    //send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
+                   return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                 }
                 else if (intbasetype == 1)
                 {
@@ -253,6 +283,10 @@ namespace apptab.Controllers
                 }
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archive Success ", data = send }, settings));
             }
+        }
+        public JsonResult FileName()
+        {
+            return Json(JsonConvert.SerializeObject(new { Filename = Anarana }, settings));
         }
         public ActionResult GetFile(string file)
         {
@@ -294,7 +328,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult getelementjs(int ChoixBase, string codeproject, string journal, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP,/* int mois, int annee, string matr1, string matr2, DateTime datePaie,*/ SI_USERS suser)
+        public JsonResult Getelementjs(int ChoixBase, string codeproject, string journal, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP,/* int mois, int annee, string matr1, string matr2, DateTime datePaie,*/ SI_USERS suser)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -1239,7 +1273,7 @@ namespace apptab.Controllers
         }
         //======================================================================================================Cancel===============================================================
 
-        public JsonResult CancelEcriture(int id, string motif, string commentaire, SI_USERS suser,string codeproject)
+        public JsonResult CancelEcriture(int id, string motif, string commentaire, SI_USERS suser, string codeproject)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));

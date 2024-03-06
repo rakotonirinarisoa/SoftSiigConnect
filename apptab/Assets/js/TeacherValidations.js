@@ -751,11 +751,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             //    }
                             //}
                         ],
-                        colReorder: {
-                            enable: true,
-                            fixedColumnsLeft: 1
-                        },
-                        deferRender: true,
+                       
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
 
@@ -764,12 +760,21 @@ $('[data-action="ChargerJs"]').click(function () {
                                 $(row).attr('style', "background-color: #FF7F7F !important;");
                             }
                         },
+
                         columnDefs: [
                             {
                                 targets: [-1],
                                 className: 'elerfr'
                             }
                         ],
+                        colReorder: {
+                            enable: true,
+                            fixedColumnsLeft: 1
+                        },
+                        deferRender: true,
+                        dom: 'Bfrtip',
+                        buttons: ['colvis'],
+                        
                         initComplete: function () {
                             $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
                         }
@@ -889,11 +894,6 @@ $('[data-action="ChargerJs"]').click(function () {
                             //    }
                             //}
                         ],
-                        colReorder: {
-                            enable: true,
-                            fixedColumnsLeft: 1
-                        },
-                        deferRender: true,
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
                             $(row).addClass('select-text');
@@ -901,6 +901,19 @@ $('[data-action="ChargerJs"]').click(function () {
                                 $(row).attr('style', "background-color: #FF7F7F !important;");
                             }
                         },
+                        columnDefs: [
+                            {
+                                targets: [-1],
+                                className: 'elerfr'
+                            }
+                        ],
+                        colReorder: {
+                            enable: true,
+                            fixedColumnsLeft: 1
+                        },
+                        deferRender: true,
+                        dom: 'Bfrtip',
+                        buttons: ['colvis'],
                         initComplete: function () {
                             $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
                         }

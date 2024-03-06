@@ -180,7 +180,27 @@ function GetListCodeJournal() {
     });
 }
 //==============================================================================================Get text===================================================================================
-
+function GetFileNameAnarana() {
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/FileName',
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            console.log(result);
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
 function getelementTXT(a) {
     let formData = new FormData();
     let codeproject = $("#Fproject").val();
@@ -202,6 +222,10 @@ function getelementTXT(a) {
         data: formData,
         cache: false,
         contentType: false,
+        datatype: 'json',
+        xhrFields: {
+            responseType: 'blob'
+        },
         processData: false,
         beforeSend: function () {
             loader.removeClass('display-none');
@@ -210,18 +234,16 @@ function getelementTXT(a) {
             loader.addClass('display-none');
         },
         success: function (result) {
-            var Datas = JSON.parse(result);
-            alert(Datas.data)
-            if (Datas.type == "error") {
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
+            console.log(result);
+            let blobUrl = URL.createObjectURL(result);
+            let anarana = GetFileNameAnarana();
+            let a = document.createElement("a");
+            a.href = blobUrl;
+            a.download = anarana;
+            document.body.appendChild(a);
+            a.click();
 
-                return;
-            }
-
-            window.location = '/Home/GetFile?file=' + Datas.data;
+            //window.location = '/Home/GetFile?file=' + Datas.data;
 
         },
         error: function () {
@@ -357,10 +379,7 @@ function LoadValidate() {
                     { data: 'journal' },
                     { data: 'marche' },
                 ],
-                colReorder: {
-                    enable: true,
-                },
-                deferRender: true,
+               
                 createdRow: function (row, data, _) {
                     $(row).attr('compteG-id', data.id);
 
@@ -369,6 +388,19 @@ function LoadValidate() {
                         $(row).attr('style', "background-color: #FF7F7F !important;");
                     }
                 },
+                columnDefs: [
+                    {
+                        targets: [-1],
+                        className: 'elerfr'
+                    }
+                ],
+                colReorder: {
+                    enable: true,
+                    fixedColumnsLeft: 1
+                },
+                deferRender: true,
+                dom: 'Bfrtip',
+                buttons: ['colvis'],
 
             });
         },
@@ -590,10 +622,6 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'journal' },
                             { data: 'marche' },
                         ],
-                        colReorder: {
-                            enable: true,
-                        },
-                        deferRender: true,
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
 
@@ -602,6 +630,19 @@ $('[data-action="ChargerJs"]').click(function () {
                                 $(row).attr('style', "background-color: #FF7F7F !important;");
                             }
                         },
+                        columnDefs: [
+                            {
+                                targets: [-1],
+                                className: 'elerfr'
+                            }
+                        ],
+                        colReorder: {
+                            enable: true,
+                            fixedColumnsLeft: 1
+                        },
+                        deferRender: true,
+                        dom: 'Bfrtip',
+                        buttons: ['colvis'],
                     });
                 }
             },
@@ -697,11 +738,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'journal' },
                             { data: 'marche' },
                         ],
-                        colReorder: {
-                            enable: true,
-                            fixedColumnsLeft: 1
-                        },
-                        deferRender: true,
+                        
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
 
@@ -710,6 +747,19 @@ $('[data-action="ChargerJs"]').click(function () {
                                 $(row).attr('style', "background-color: #FF7F7F !important;");
                             }
                         },
+                        columnDefs: [
+                            {
+                                targets: [-1],
+                                className: 'elerfr'
+                            }
+                        ],
+                        colReorder: {
+                            enable: true,
+                            fixedColumnsLeft: 1
+                        },
+                        deferRender: true,
+                        dom: 'Bfrtip',
+                        buttons: ['colvis'],
                         initComplete: function () {
                             $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
                         }

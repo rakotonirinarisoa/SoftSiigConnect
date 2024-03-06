@@ -91,11 +91,17 @@ $(`[data-id="connex"]`).click(function () {
         alert("Veuillez renseigner l'instance. ");
         return;
     }
+
     if ($(`[data-id="auth-list"]`).val() == "1") {
         if (!usr && !psw) {
             alert("Veuillez renseigner les champs. ");
+
             return;
         }
+    }
+
+    if ($(`[data-id="auth-list"]`).val() != null) {
+        auth = $(`[data-id="auth-list"]`).val();
     }
 
     let formData = new FormData();
@@ -161,6 +167,7 @@ function GetBASE(id) {
         auth = $(`[data-id="auth-list"]`).val();
     }
 
+    console.log(auth);
     let formData = new FormData();
 
     formData.append("suser.LOGIN", User.LOGIN);

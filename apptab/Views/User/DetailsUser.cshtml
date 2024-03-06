@@ -5,6 +5,7 @@
     /*Layout = "~/Views/Shared/_Layout.cshtml";*/
 }
 
+
 <div class="form-row">
     <div class="input-group mb-3 col">
         <div class="input-group-prepend custom-label">
@@ -118,7 +119,8 @@
     });
 
     $("#PROJET").select2({
+        theme: 'bootstrap-5',
         tags: true,
         tokenSeparators: [',', ' ']
-    })
+    });
 </script>

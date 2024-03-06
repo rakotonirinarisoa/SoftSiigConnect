@@ -361,7 +361,7 @@ $('[data-action="ChargerJs"]').click(function () {
 
         $.ajax({
             type: "POST",
-            url: Origin + '/Home/getelementjs',
+            url: Origin + '/Home/Getelementjs',
             data: formData,
             cache: false,
             contentType: false,
@@ -397,7 +397,7 @@ $('[data-action="ChargerJs"]').click(function () {
 
                         data.push({
                             checkbox: '',
-                            id: v.No,
+                            id: v.No === undefined ? '' : v.No,
                             dateOrdre: v.DateOrdre === null ? '' : v.DateOrdre,
                             noPiece: v.NoPiece === null ? '' : v.NoPiece,
                             compte: v.Compte === null ? '' : v.Compte,
@@ -447,15 +447,23 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'journal' },
                             { data: 'marche' }
                         ],
+                        createdRow: function (row, data, _) {
+                            $(row).attr('compteG-id', data.id);
+                            $(row).addClass('select-text');
+                        },
+                        columnDefs: [
+                            {
+                                targets: [-1],
+                                className: 'elerfr'
+                            }
+                        ],
                         colReorder: {
                             enable: true,
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
-                        createdRow: function (row, data, _) {
-                            $(row).attr('compteG-id', data.id);
-                            $(row).addClass('select-text');
-                        },
+                        dom: 'Bfrtip',
+                        buttons: ['colvis'],
                         initComplete: function () {
                             $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
                         }
@@ -560,7 +568,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 orderable: false
                             },
                             { data: 'id' },
-                            { data: 'date' },
+                            { data: 'dateOrdre' },
                             { data: 'noPiece' },
                             { data: 'compte' },
                             { data: 'libelle' },
@@ -569,23 +577,29 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'montantDevise' },
                             { data: 'mon' },
                             { data: 'rang' },
-                            { data: 'poste' },
                             { data: 'financementCategorie' },
                             { data: 'commune' },
                             { data: 'plan' },
                             { data: 'journal' },
-                            { data: 'marche' },
-                            { data: 'status' }
+                            { data: 'marche' }
+                        ],
+                        createdRow: function (row, _, _) {
+                            $(row).attr('compteG-id', row.id);
+                            $(row).addClass('select-text');
+                        },
+                        columnDefs: [
+                            {
+                                targets: [-1],
+                                className: 'elerfr'
+                            }
                         ],
                         colReorder: {
                             enable: true,
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
-                        createdRow: function (row, _, _) {
-                            $(row).attr('compteG-id', row.id);
-                            $(row).addClass('select-text');
-                        },
+                        dom: 'Bfrtip',
+                        buttons: ['colvis'],
                         initComplete: function () {
                             $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
                         }
