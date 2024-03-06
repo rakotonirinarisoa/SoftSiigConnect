@@ -287,6 +287,11 @@ namespace apptab.Controllers
                             return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état TEF n'est pas paramétré sur TOM²PRO. " }, settings));
                         if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                             return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
+                    }
+
+                    foreach (var idP in lst)
+                    {
+                        int crpt = int.Parse(idP);
 
                         if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
                         {
@@ -380,6 +385,11 @@ namespace apptab.Controllers
                             return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état TEF n'est pas paramétré sur TOM²PRO. " }, settings));
                         if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                             return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
+                    }
+
+                    foreach (var idP in lst)
+                    {
+                        int crpt = int.Parse(idP);
 
                         if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
                         {
@@ -477,6 +487,11 @@ namespace apptab.Controllers
                             return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état TEF n'est pas paramétré sur TOM²PRO. " }, settings));
                         if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                             return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
+                    }
+
+                    foreach (var idP in lst)
+                    {
+                        int crpt = int.Parse(idP);
 
                         if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
                         {
@@ -512,10 +527,10 @@ namespace apptab.Controllers
                                     REF = x.REF,
                                     BENEF = x.TITUL,
                                     MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
-                                    AGENTREJETE = await GetAgent(isRejet.IDUSER),
-                                    DATEREJETE = isRejet.DATEREJE.Value.Date,
-                                    MOTIF = isRejet.MOTIF,
-                                    COMMENTAIRE = !String.IsNullOrEmpty(isRejet.COMMENTAIRE) ? isRejet.COMMENTAIRE : "",
+                                    AGENTREJETE = isRejet != null ? await GetAgent(isRejet.IDUSER) : "",
+                                    DATEREJETE = isRejet != null ? isRejet.DATEREJE : null,
+                                    MOTIF = isRejet != null ? isRejet.MOTIF : "",
+                                    COMMENTAIRE = isRejet != null ? isRejet.COMMENTAIRE : "",
 
                                     SOA = soa.FirstOrDefault().SOA,
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
@@ -650,6 +665,139 @@ namespace apptab.Controllers
                         DUREETRAITEMENTVALORDSEC = Utils.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE),
                         DUREETRAITEMENTSENDSIIG = Utils.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION),
                         DUREETRAITEMENTSIIGFP = Utils.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP)
+                    });
+                }
+            }
+
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = result }, settings));
+        }
+
+        public ActionResult SoufTraitement()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GenereSoufTraitement(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
+        {
+            var user = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
+
+            if (user == null)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            }
+
+            string[] separators = { "," };
+
+            var sProjectsId = listProjet.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            var iProjectsId = new List<int>();
+
+            for (int i = 0; i < sProjectsId.Count; i += 1)
+            {
+                int projectId = int.Parse(sProjectsId[i]);
+
+                if ((await db.SI_MAPPAGES.FirstOrDefaultAsync(a => a.IDPROJET == projectId && a.DELETIONDATE == null)) == null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
+                }
+
+                SOFTCONNECTOM.connex = new Data.Extension().GetCon(projectId);
+
+                var tom = new SOFTCONNECTOM();
+
+                var numCaEtapAPP = await db.SI_PARAMETAT.FirstOrDefaultAsync(a => a.IDPROJET == projectId && a.DELETIONDATE == null);
+
+                if (numCaEtapAPP == null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
+                }
+
+                if ((await tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefaultAsync(a => a.NUM == numCaEtapAPP.DEF)) == null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état DEF n'est pas paramétré sur TOM²PRO. " }, settings));
+                }
+
+                if ((await tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefaultAsync(a => a.NUM == numCaEtapAPP.TEF)) == null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état TEF n'est pas paramétré sur TOM²PRO. " }, settings));
+                }
+
+                if ((await tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefaultAsync(a => a.NUM == numCaEtapAPP.BE)) == null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
+                }
+
+                iProjectsId.Add(projectId);
+            }
+
+            var result = new List<TraitementEngagement>();
+
+            var lastIndex = -1;
+
+            for (int i = 0; i < iProjectsId.Count; i += 1)
+            {
+                int projectId = iProjectsId[i];
+
+                var s = await (
+                    from soa in db.SI_SOAS
+                    join prosoa in db.SI_PROSOA on soa.ID equals prosoa.IDSOA
+                    where prosoa.IDPROJET == projectId && prosoa.DELETIONDATE == null && soa.DELETIONDATE == null
+                    select new
+                    {
+                        soa.SOA
+                    }
+                ).FirstOrDefaultAsync();
+
+                if (s == null)
+                {
+                    continue;
+                }
+
+                var traitprojets = await db.SI_TRAITPROJET.Where(a => a.IDPROJET == projectId && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToListAsync();
+
+                if (traitprojets.Count == 0)
+                {
+                    continue;
+                }
+
+                lastIndex += 1;
+
+                result.Add(new TraitementEngagement
+                {
+                    SOA = s.SOA,
+                    TraitementsEngagementsDetails = new List<TraitementEngagementDetails>()
+                });
+
+                var durPrevu = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == projectId && a.DELETIONDATE == null);
+
+                for (int j = 0; j < traitprojets.Count; j += 1)
+                {
+                    result[lastIndex].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
+                    {
+                        NUM_ENGAGEMENT = traitprojets[j].REF,
+                        BENEFICIAIRE = traitprojets[j].TITUL,
+                        MONTENGAGEMENT = Data.Cipher.Decrypt(traitprojets[j].MONT, "Oppenheimer").ToString(),
+
+                        TRANSFERTRAFAGENT = await GetAgent(traitprojets[j].IDUSERCREATE),
+                        VALORDSECAGENT = await GetAgent(traitprojets[j].IDUSERVALIDATE),
+                        SENDSIIGAGENT = await GetAgent(traitprojets[j].IDUSERENVOISIIGFP),
+                        SIIGFPAGENT = "",
+
+                        DUREETRAITEMENTTRANSFERTRAF = Utils.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
+                        DUREETRAITEMENTVALORDSEC = Utils.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE),
+                        DUREETRAITEMENTSENDSIIG = Utils.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION),
+                        DUREETRAITEMENTSIIGFP = Utils.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP),
+
+                        DURPREVUTRANSFERT = 0,
+                        DURPREVUVALIDATION = durPrevu != null ? durPrevu.DELTV.Value : 0,
+                        DURPREVUTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value : 0,
+                        DURPREVUSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value : 0,
+
+                        DEPASTRANSFERT = 0 - Utils.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
+                        DEPASVALIDATION = durPrevu != null ? durPrevu.DELTV.Value - Utils.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE) : 0,
+                        DEPASTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value - Utils.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) : 0,
+                        DEPASSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value - Utils.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) : 0,
                     });
                 }
             }

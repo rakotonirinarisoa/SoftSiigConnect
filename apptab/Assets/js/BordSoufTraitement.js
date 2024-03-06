@@ -14,57 +14,73 @@ function parseList(array) {
 
         for (let j = 0; j < array[i].TraitementsEngagementsDetails.length; j += 1) {
             let total = 0;
+            let totalPREVU = 0;
+            let totalDEPASS = 0;
 
             for (let k = 0; k < NUMBER_OF_ROWS; k += 1) {
                 let etape = '';
                 let beneficiaire = '';
-                let dateTraitement = '';
                 let montant = '';
                 let agent = '';
                 let dureeTraitement = '';
+                let dureePrevu = '';
+                let depassement = '';
 
                 switch (k) {
                     case 0:
                         etape = 'Transfert et Validation RAF';
-                        dateTraitement = array[i].TraitementsEngagementsDetails[j].DATETRANSFERTRAF === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATETRANSFERTRAF);
-                        beneficiaire = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
-                        montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
-                        agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].TRANSFERTRAFAGENT;
                         dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTTRANSFERTRAF;
+                        beneficiaire = dureeTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
+                        montant = dureeTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
+                        agent = dureeTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].TRANSFERTRAFAGENT;
+                        dureePrevu = dureeTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].DURPREVUTRANSFERT;
+                        depassement = dureeTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].DEPASTRANSFERT;
 
                         total += Number(dureeTraitement);
+                        totalPREVU += Number(dureePrevu);
+                        totalDEPASS += Number(depassement);
 
                         break;
                     case 1:
                         etape = 'Validation ORDESEC';
-                        dateTraitement = array[i].TraitementsEngagementsDetails[j].DATEVALORDSEC === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATEVALORDSEC);
-                        beneficiaire = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
-                        montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
-                        agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].VALORDSECAGENT;
                         dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTVALORDSEC;
+                        beneficiaire = dureeTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
+                        montant = dureeTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
+                        agent = dureeTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].VALORDSECAGENT;
+                        dureePrevu = dureeTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].DURPREVUVALIDATION;
+                        depassement = dureeTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].DEPASVALIDATION;
 
                         total += Number(dureeTraitement);
+                        totalPREVU += Number(dureePrevu);
+                        totalDEPASS += Number(depassement);
 
                         break;
                     case 2:
                         etape = 'Transféré SIIGFP';
-                        dateTraitement = array[i].TraitementsEngagementsDetails[j].DATESENDSIIG === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATESENDSIIG);
-                        beneficiaire = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
-                        montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
-                        agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].SENDSIIGAGENT;
                         dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTSENDSIIG;
+                        beneficiaire = dureeTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
+                        montant = dureeTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
+                        agent = dureeTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].SENDSIIGAGENT;
+                        dureePrevu = dureeTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].DURPREVUTRANSFSIIG;
+                        depassement = dureeTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].DEPASTRANSFSIIG;
 
                         total += Number(dureeTraitement);
+                        totalPREVU += Number(dureePrevu);
+                        totalDEPASS += Number(depassement);
 
                         break;
                     case 3:
                         etape = 'Intégré SIIGFP';
-                        dateTraitement = array[i].TraitementsEngagementsDetails[j].DATENGAGEMENT === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATENGAGEMENT);
-                        beneficiaire = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
-                        montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
-                        agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].SIIGFPAGENT;
                         dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTSIIGFP;
+                        beneficiaire = dureeTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
+                        montant = dureeTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
+                        agent = dureeTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].SIIGFPAGENT;
+                        dureePrevu = dureeTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].DURPREVUSIIG;
+                        depassement = dureeTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].DEPASSIIG;
+
                         total += Number(dureeTraitement);
+                        totalPREVU += Number(dureePrevu);
+                        totalDEPASS += Number(depassement);
 
                         break;
                     default:
@@ -79,14 +95,17 @@ function parseList(array) {
                     beneficiaire,
                     montant,
                     agent,
-                    dateTraitement,
-                    dureeTraitement
+                    dureeTraitement,
+                    dureePrevu,
+                    depassement
                 });
 
                 rowNumber += 1;
             }
 
             result[(i + j + 1) * NUMBER_OF_ROWS - 1].dureeTraitement = total;
+            result[(i + j + 1) * NUMBER_OF_ROWS - 1].dureePrevu = totalPREVU;
+            result[(i + j + 1) * NUMBER_OF_ROWS - 1].depassement = totalDEPASS;
         }
     }
 
@@ -120,10 +139,13 @@ function setDataTable() {
                 data: 'agent'
             },
             {
-                data: 'dateTraitement'
+                data: 'dureeTraitement'
             },
             {
-                data: 'dureeTraitement'
+                data: 'dureePrevu'
+            },
+            {
+                data: 'depassement'
             }
         ],
         lengthChange: false,
@@ -139,14 +161,15 @@ function setDataTable() {
             }
 
             if (data.rowNumber % NUMBER_OF_ROWS === NUMBER_OF_ROWS - 1) {
-                $('td:eq(3)', row).attr('colspan', 4).css({ 'text-align': 'center' });
+                $('td:eq(3)', row).attr('colspan', 3).css({ 'text-align': 'center' });
                 $('td:eq(3)', row).text('Durée totale');
 
                 $('td:eq(4)', row).text(data.dureeTraitement);
+                $('td:eq(5)', row).text(data.dureePrevu);
+                $('td:eq(6)', row).text(data.depassement);
 
-                $('td:eq(5)', row).text('').css({ 'display': 'none' });
-                $('td:eq(6)', row).text('').css({ 'display': 'none' });
                 $('td:eq(7)', row).text('').css({ 'display': 'none' });
+                $('td:eq(8)', row).text('').css({ 'display': 'none' });
             }
         }
     });
@@ -184,7 +207,7 @@ $('[data-action="GenereLISTE"]').click(async function () {
 
     $.ajax({
         type: 'POST',
-        url: Origin + `/BordTraitement/GenereDelaisTraitementEngagements`,
+        url: Origin + `/BordTraitement/GenereSoufTraitement`,
         contentType: false,
         data: formData,
         cache: false,
@@ -238,7 +261,7 @@ $(document).ready(async () => {
 $('#export-excel-btn').on('click', () => {
     $(`td.delete-td`).remove();
 
-    tableToExcel('dashboard', 'DELAIS DE TRAITEMENT ENGAGEMENTS', setDataTable);
+    tableToExcel('dashboard', 'TRAITEMENT EN SOUFFRANCE', setDataTable);
 });
 
 $('#proj').on('change', () => {

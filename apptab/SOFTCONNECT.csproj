@@ -2148,6 +2148,7 @@
     <Content Include="Assets\admlte\plugins\uplot\uPlot.iife.min.js" />
     <Content Include="Assets\admlte\plugins\uplot\uPlot.min.css" />
     <Content Include="Assets\css\loader.css" />
+    <Content Include="Assets\js\BordSoufTraitement.js" />
     <Content Include="Assets\js\delaisTraitementEngagements.js" />
     <Content Include="Assets\icons\chevron-down.svg" />
     <Content Include="Assets\icons\chevron-right.svg" />
@@ -2224,19 +2225,10 @@
     <Content Include="Assets\js\User.js" />
     <Content Include="Assets\js\utils.js" />
     <Content Include="Assets\otherCSS\buttons.dataTables.min.css" />
-    <Content Include="Assets\otherCSS\colReorder.dataTables.min.css" />
     <Content Include="Assets\otherCSS\datatables.min.css" />
-    <Content Include="Assets\otherCSS\responsive.dataTables.min.css" />
-    <Content Include="Assets\otherCSS\jquery.dataTables.min.css" />
-    <Content Include="Assets\otherCSS\rowGroup.bootstrap5.min.css" />
-    <Content Include="Assets\otherJs\bootstrap.bundle.min.js" />
     <Content Include="Assets\otherJs\buttons.colVis.min.js" />
-    <Content Include="Assets\otherJs\dataTables.buttons.min.js" />
-    <Content Include="Assets\otherJs\dataTables.colReorder.min.js" />
-    <Content Include="Assets\otherJs\dataTables.responsive.min.js" />
     <Content Include="Assets\otherJs\dataTables.rowsGroup.js" />
     <Content Include="Assets\otherJs\jquery-3.7.0.js" />
-    <Content Include="Assets\otherJs\jquery.dataTables.min.js" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -4593,6 +4585,7 @@
     <Content Include="Views\Traitement\TraitementSENDSIIGFP.cshtml" />
     <Content Include="Views\BordTraitement\EngagementsREJETE.cshtml" />
     <Content Include="Views\BordTraitement\DelaisTraitementEngagements.cshtml" />
+    <Content Include="Views\BordTraitement\SoufTraitement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

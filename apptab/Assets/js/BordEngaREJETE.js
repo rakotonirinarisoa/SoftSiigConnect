@@ -248,7 +248,6 @@ $('[data-action="GenereLISTE"]').click(function () {
                         //if (data.isLATE) {
                         //    $(row).attr('style', "background-color: #FF7F7F !important;");
                         //}
-                        alert(data.COMMENTAIRE);
                     },
                     columnDefs: [
                         {

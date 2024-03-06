@@ -7,12 +7,13 @@
 
     <title>SOFT - SIIG CONNECT</title>
 
-    <!-- Google Font: Source Sans Pro -->
+    @*<!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">*@
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="~/Assets/admlte/plugins/fontawesome-free/css/all.min.css">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Tempusdominus Bootstrap 4 -->
     <link rel="stylesheet" href="~/Assets/admlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
     <!-- iCheck -->
@@ -43,10 +44,12 @@
     <script src="~/Assets/js/script.js" asp-append-version="true"></script>
 
     <link href="~/Assets/otherCSS/datatables.min.css" rel="stylesheet" />
+    <link href="~/Assets/otherCSS/buttons.dataTables.min.css" rel="stylesheet" />
 
     <script src="~/Assets/otherJs/jquery-3.7.0.js"></script>
     <script src="~/Assets/otherJs/datatables.min.js"></script>
     <script src="~/Assets/otherJs/dataTables.rowsGroup.js"></script>
+    <script src="~/Assets/otherJs/buttons.colVis.min.js"></script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div id="loader" class="lds-dual-ring display-none overlay"></div>
@@ -499,17 +502,26 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="../BordTraitement/EngagementsREJETE" class="nav-link">
-                                <i class="nav-icon fas fa-file-alt"></i>
-                                <p>
-                                    Liste des engagements rejetés
-                                </p>
-                            </a>
-                        </li><li class="nav-item">
                             <a href="../BordTraitement/DelaisTraitementEngagements" class="nav-link">
                                 <i class="nav-icon fas fa-file-alt"></i>
                                 <p>
-                                    Suvi des délais de traitement des engagements
+                                    Délais de traitement des engagements
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../BordTraitement/SoufTraitement" class="nav-link">
+                                <i class="nav-icon fas fa-file-alt"></i>
+                                <p>
+                                    Traitements en souffrance (par rapport au délai moyen)
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../BordTraitement/EngagementsREJETE" class="nav-link">
+                                <i class="nav-icon fas fa-file-alt"></i>
+                                <p>
+                                    Engagements rejetés
                                 </p>
                             </a>
                         </li>
