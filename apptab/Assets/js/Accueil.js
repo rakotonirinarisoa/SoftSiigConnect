@@ -534,7 +534,7 @@ $('[data-action="ChargerJs"]').click(function () {
                         data.push({
                             checkbox: '',
                             id: v.No,
-                            dateOrdre: v.DateOrdre === null ? '' : v.DateOrdre,
+                            date: v.Date === null ? '' : v.Date,
                             noPiece: v.NoPiece === null ? '' : v.NoPiece,
                             compte: v.Compte === null ? '' : v.Compte,
                             libelle: v.Libelle === null ? '' : v.Libelle,
@@ -568,7 +568,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 orderable: false
                             },
                             { data: 'id' },
-                            { data: 'dateOrdre' },
+                            { data: 'date' },
                             { data: 'noPiece' },
                             { data: 'compte' },
                             { data: 'libelle' },
@@ -583,8 +583,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'journal' },
                             { data: 'marche' }
                         ],
-                        createdRow: function (row, _, _) {
-                            $(row).attr('compteG-id', row.id);
+                        createdRow: function (row, data, _) {
+                            $(row).attr('compteG-id', data.id);
                             $(row).addClass('select-text');
                         },
                         columnDefs: [
@@ -622,7 +622,7 @@ $('[data-action="GetElementChecked"]').click(function () {
     $.each(CheckList, (k, v) => {
         list.push($(v).attr("compteG-id"));
     });
-
+    alert(list);
     let codeproject = $("#Fproject").val();
 
     let formData = new FormData();

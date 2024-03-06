@@ -1699,7 +1699,7 @@ namespace apptab.Extension
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
             List<DataListTomOP> list = new List<DataListTomOP>();
-            if (etat == "VERIFIES")
+            if (etat == "VERIFIES" || etat == "Tous")
                 etat = null;
             RJL1 djournal = (from jrnl in tom.RJL1
                              where jrnl.CODE == journal
@@ -1801,7 +1801,7 @@ namespace apptab.Extension
                     List<MOP> lOPCOGE = (from m in lNoOPS
                                          where m.COGEFOURNISSEUR == compteG
                                          select m).ToList();
-                    if (auxi == "")
+                    if (auxi == "" || auxi == "Tous")
                     {
 
                         foreach (var nord in lOPCOGE)
@@ -1809,7 +1809,7 @@ namespace apptab.Extension
                             try
                             {
                                 var reglement = (from mcpt in tom.MOP
-                                                 where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.COGE == djournal.COMPTEASSOCIE
+                                                 where mcpt.NUMEROOP == nord.NUMEROOP /*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
                                                  select mcpt).Single();
                                 list.Add(new DataListTomOP()
                                 {

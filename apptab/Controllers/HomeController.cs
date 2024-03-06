@@ -601,6 +601,95 @@ namespace apptab.Controllers
                     catch (Exception) { }
                 }
             }
+            else
+            {
+                string auxi1 = auxi;
+                AFB160 afb160 = new AFB160();
+                var hst = db.OPA_HISTORIQUE.Select(x => x.NUMENREG.ToString()).ToArray();
+                foreach (var h in list)
+                {
+                    var listA = afb160.getListEcritureBR(journal, datein, dateout,devise,comptaG, auxi, etat, dateP, suser).Where(x => x.No.ToString() == h).ToList();
+                    foreach (var item in listA)
+                    {
+                        avalider.IDREGLEMENT = Convert.ToDecimal(item.No);
+                        avalider.ETAT = 0;
+                        avalider.IDPROJET = PROJECTID;
+                        avalider.DateIn = datein;
+                        avalider.DateOut = dateout;
+                        avalider.ComptaG = comptaG;
+                        avalider.auxi = auxi;
+                        avalider.DateP = dateP;
+                        avalider.Journal = journal;
+                        avalider.dateOrdre = item.Date.ToString();
+                        avalider.NoPiece = item.NoPiece;
+                        avalider.Compte = item.Compte;
+                        avalider.Libelle = item.Libelle;
+                        avalider.MontantDevise = item.MontantDevise;
+                        avalider.Mon = item.Mon;
+                        avalider.Rang = item.Rang;
+                        avalider.Poste = item.Poste;
+                        avalider.FinancementCategorie = item.FinancementCategorie;
+                        avalider.Commune = item.Commune;
+                        avalider.Plan6 = item.Plan6;
+                        avalider.Marche = item.Marche;
+                        avalider.Statut = item.Status;
+                        avalider.DATECREA = DateTime.Now;
+                        avalider.IDUSCREA = exist.ID;
+                        try
+                        {
+                            db.OPA_VALIDATIONS.Add(avalider);
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                            throw;
+                        }
+                    }
+                    countTraitement++;
+                }
+                //SEND MAIL ALERT et NOTIFICATION//
+                string MailAdresse = "serviceinfo@softwell.mg";
+                string mdpMail = "09eYpçç0601";
+
+                using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
+                {
+                    SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
+                    smtp.UseDefaultCredentials = true;
+
+                    mail.From = new MailAddress(MailAdresse);
+
+                    mail.To.Add(MailAdresse);
+                    if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE != null)
+                    {
+                        string[] separators = { ";" };
+
+                        var Tomail = mail;
+                        if (Tomail != null)
+                        {
+                            string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE;
+                            string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                            foreach (var mailto in mailListe)
+                            {
+                                mail.To.Add(mailto);
+                            }
+                        }
+                    }
+
+                    mail.Subject = "Attente validation paiements du projet " + ProjetIntitule;
+                    mail.IsBodyHtml = true;
+                    mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " paiements en attente Validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
+                        "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+
+                    smtp.Port = 587;
+                    smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
+                    smtp.EnableSsl = true;
+
+                    try { smtp.Send(mail); }
+                    catch (Exception) { }
+                }
+            }
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès.", data = "" }, settings));
         }
         //=========================================================================================TeacherValidation======================================================================
@@ -733,9 +822,33 @@ namespace apptab.Controllers
             }
             else
             {
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == suser.IDPROJET && ecriture.ETAT == 0).ToList();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0).ToList();
+                foreach (var item in avalider)
+                {
+                    bool isLate = false;
+                    if (item.DATECREA.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                        isLate = true;
+                    list.Add(new OPA_VALIDATIONS
+                    {
+                        IDREGLEMENT = item.IDREGLEMENT,
+                        dateOrdre = item.dateOrdre,
+                        NoPiece = item.NoPiece,
+                        Compte = item.Compte,
+                        Journal = item.Journal,
+                        Credit = item.Credit,
+                        Debit = item.Debit,
+                        FinancementCategorie = item.FinancementCategorie,
+                        Mon = item.Mon,
+                        MontantDevise = item.MontantDevise,
+                        Rang = item.Rang,
+                        Plan6 = item.Plan6,
+                        Commune = item.Commune,
+                        Marche = item.Marche,
+                        isLATE = isLate,
+                    });
+                }
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = avalider }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = list }, settings));
             }
 
         }
