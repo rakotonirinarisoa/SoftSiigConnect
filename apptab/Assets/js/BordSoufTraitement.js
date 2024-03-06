@@ -13,10 +13,6 @@ function parseList(array) {
         rowNumber = 0;
 
         for (let j = 0; j < array[i].TraitementsEngagementsDetails.length; j += 1) {
-            let total = 0;
-            let totalPREVU = 0;
-            let totalDEPASS = 0;
-
             for (let k = 0; k < NUMBER_OF_ROWS; k += 1) {
                 let etape = '';
                 let beneficiaire = '';
@@ -40,10 +36,6 @@ function parseList(array) {
                         dureePrevu = array[i].TraitementsEngagementsDetails[j].DURPREVUTRANSFERT;
                         depassement = array[i].TraitementsEngagementsDetails[j].DEPASTRANSFERT;
 
-                        total += Number(dureeTraitement);
-                        totalPREVU += Number(dureePrevu);
-                        totalDEPASS += Number(depassement);
-
                         break;
                     case 1:
                         etape = 'Validation ORDESEC';
@@ -56,10 +48,6 @@ function parseList(array) {
                         agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].VALORDSECAGENT;
                         dureePrevu = array[i].TraitementsEngagementsDetails[j].DURPREVUVALIDATION;
                         depassement = array[i].TraitementsEngagementsDetails[j].DEPASVALIDATION;
-
-                        total += Number(dureeTraitement);
-                        totalPREVU += Number(dureePrevu);
-                        totalDEPASS += Number(depassement);
 
                         break;
                     case 2:
@@ -74,10 +62,6 @@ function parseList(array) {
                         dureePrevu = array[i].TraitementsEngagementsDetails[j].DURPREVUTRANSFSIIG;
                         depassement = array[i].TraitementsEngagementsDetails[j].DEPASTRANSFSIIG;
 
-                        total += Number(dureeTraitement);
-                        totalPREVU += Number(dureePrevu);
-                        totalDEPASS += Number(depassement);
-
                         break;
                     case 3:
                         etape = 'Intégré SIIGFP';
@@ -90,10 +74,6 @@ function parseList(array) {
                         agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].SIIGFPAGENT;
                         dureePrevu = array[i].TraitementsEngagementsDetails[j].DURPREVUSIIG;
                         depassement = array[i].TraitementsEngagementsDetails[j].DEPASSIIG;
-
-                        total += Number(dureeTraitement);
-                        totalPREVU += Number(dureePrevu);
-                        totalDEPASS += Number(depassement);
 
                         break;
                     default:
@@ -115,14 +95,40 @@ function parseList(array) {
 
                 rowNumber += 1;
             }
-
-            result[(i + j + 1) * NUMBER_OF_ROWS - 1].dureeTraitement = total;
-            result[(i + j + 1) * NUMBER_OF_ROWS - 1].dureePrevu = totalPREVU;
-            result[(i + j + 1) * NUMBER_OF_ROWS - 1].depassement = totalDEPASS;
         }
     }
 
+    calculateDuration(result);
+
     list = result;
+}
+
+function setSum(array, startIndex, endIndex) {
+    let total = 0;
+    let totalPREVU = 0;
+    let totalDEPASS = 0;
+
+    for (let i = startIndex; i <= endIndex; i += 1) {
+        total += Number(array[i].dureeTraitement);
+        totalPREVU += Number(array[i].dureePrevu);
+        totalDEPASS += Number(array[i].depassement);
+    }
+
+    array[endIndex + 1].dureeTraitement = total;
+    array[endIndex + 1].dureePrevu = totalPREVU;
+    array[endIndex + 1].depassement = totalDEPASS;
+}
+
+function calculateDuration(array) {
+    let pointer = 0;
+
+    for (let i = 0; i < array.length; i += 1) {
+        if (i % NUMBER_OF_ROWS === NUMBER_OF_ROWS - 1) {
+            setSum(array, pointer, i - 1);
+
+            pointer = i + 1;
+        }
+    }
 }
 
 function setDataTable() {
