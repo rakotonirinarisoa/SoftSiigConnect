@@ -779,6 +779,11 @@ namespace apptab.Controllers
                         BENEFICIAIRE = traitprojets[j].TITUL,
                         MONTENGAGEMENT = Data.Cipher.Decrypt(traitprojets[j].MONT, "Oppenheimer").ToString(),
 
+                        DATETRANSFERTRAF = traitprojets[j].DATECRE,
+                        DATEVALORDSEC = traitprojets[j].DATEVALIDATION,
+                        DATESENDSIIG = traitprojets[j].DATENVOISIIGFP,
+                        DATESIIGFP = traitprojets[j].DATESIIG,
+
                         TRANSFERTRAFAGENT = await GetAgent(traitprojets[j].IDUSERCREATE),
                         VALORDSECAGENT = await GetAgent(traitprojets[j].IDUSERVALIDATE),
                         SENDSIIGAGENT = await GetAgent(traitprojets[j].IDUSERENVOISIIGFP),
@@ -797,7 +802,7 @@ namespace apptab.Controllers
                         DEPASTRANSFERT = 0 - Utils.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
                         DEPASVALIDATION = durPrevu != null ? durPrevu.DELTV.Value - Utils.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE) : 0,
                         DEPASTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value - Utils.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) : 0,
-                        DEPASSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value - Utils.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) : 0,
+                        DEPASSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value - Utils.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) : 0
                     });
                 }
             }

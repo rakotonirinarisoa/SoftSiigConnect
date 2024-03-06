@@ -59,7 +59,7 @@ function parseList(array) {
                         break;
                     case 3:
                         etape = 'Intégré SIIGFP';
-                        dateTraitement = array[i].TraitementsEngagementsDetails[j].DATENGAGEMENT === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATENGAGEMENT);
+                        dateTraitement = array[i].TraitementsEngagementsDetails[j].DATESIIGFP === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATESIIGFP);
                         beneficiaire = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
                         montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
                         agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].SIIGFPAGENT;
@@ -129,6 +129,7 @@ function setDataTable() {
         lengthChange: false,
         paging: false,
         ordering: false,
+        info: false,
         colReorder: false,
         rowsGroup: [0, 1],
         order: [['desc']],
@@ -324,6 +325,7 @@ function emptyTable() {
         data,
         paging: false,
         ordering: false,
+        info: false,
         colReorder: false
     });
 }

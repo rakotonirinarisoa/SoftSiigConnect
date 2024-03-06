@@ -325,7 +325,14 @@ function emptyTableTRM() {
     }
 
     table = $('#TBD_PROJET_MANDAT').DataTable({
-        data
+        data,
+        colReorder: {
+            enable: true,
+            fixedColumnsLeft: 1
+        },
+        deferRender: true,
+        dom: 'Bfrtip',
+        buttons: ['colvis'],
     });
 }
 
