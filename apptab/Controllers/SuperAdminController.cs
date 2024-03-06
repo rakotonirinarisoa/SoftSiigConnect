@@ -991,6 +991,7 @@ namespace apptab.Controllers
                     if (SExist.DELTV != param.DELTV || SExist.DELSIIGFP != param.DELSIIGFP || SExist.DELENVOISIIGFP != param.DELENVOISIIGFP
                         || SExist.DELPE != param.DELPE || SExist.DELPV != param.DELPV || SExist.DELPP != param.DELPP || SExist.DELPB != param.DELPB)
                     {
+                        SExist.DELRAF = param.DELRAF;//Tris par le RAF
                         SExist.DELTV = param.DELTV;//Validation mandat
                         SExist.DELENVOISIIGFP = param.DELENVOISIIGFP;//Transfert SIIGFP
                         SExist.DELSIIGFP = param.DELSIIGFP;//Traitement SIIGFP
@@ -1010,6 +1011,7 @@ namespace apptab.Controllers
 
                         var newElemH = new HSI_DELAISTRAITEMENT()
                         {
+                            DELRAF = param.DELRAF,
                             DELTV = param.DELTV,
                             DELENVOISIIGFP = param.DELENVOISIIGFP,
                             DELSIIGFP = param.DELSIIGFP,
@@ -1032,6 +1034,7 @@ namespace apptab.Controllers
                 {
                     var newPara = new SI_DELAISTRAITEMENT()
                     {
+                        DELRAF = param.DELRAF,
                         DELTV = param.DELTV,
                         DELENVOISIIGFP = param.DELENVOISIIGFP,
                         DELSIIGFP = param.DELSIIGFP,
@@ -1051,6 +1054,7 @@ namespace apptab.Controllers
                     && a.DELPV == param.DELPV && a.DELPP == param.DELPP && a.DELPB == param.DELPB && a.DELETIONDATE == null);
                     var newElemH = new HSI_DELAISTRAITEMENT()
                     {
+                        DELRAF = param.DELRAF,
                         DELTV = isElemH.DELTV,
                         DELENVOISIIGFP = isElemH.DELENVOISIIGFP,
                         DELSIIGFP = isElemH.DELSIIGFP,

@@ -549,6 +549,7 @@ namespace apptab.Controllers
             }
         }
 
+        //Suivi des délais de traitement des engagements//
         public ActionResult DelaisTraitementEngagements()
         {
             return View();
@@ -672,6 +673,7 @@ namespace apptab.Controllers
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = result }, settings));
         }
 
+        //Liste des traitements en souffrance (par rapport au délai moyen)//
         public ActionResult SoufTraitement()
         {
             return View();
@@ -794,12 +796,12 @@ namespace apptab.Controllers
                         DUREETRAITEMENTSENDSIIG = Utils.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION),
                         DUREETRAITEMENTSIIGFP = Utils.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP),
 
-                        DURPREVUTRANSFERT = 0,
+                        DURPREVUTRANSFERT = durPrevu != null ? durPrevu.DELRAF.Value : 0,
                         DURPREVUVALIDATION = durPrevu != null ? durPrevu.DELTV.Value : 0,
                         DURPREVUTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value : 0,
                         DURPREVUSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value : 0,
 
-                        DEPASTRANSFERT = 0 - Utils.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
+                        DEPASTRANSFERT = durPrevu != null ? durPrevu.DELRAF.Value - Utils.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE) : 0,
                         DEPASVALIDATION = durPrevu != null ? durPrevu.DELTV.Value - Utils.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE) : 0,
                         DEPASTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value - Utils.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) : 0,
                         DEPASSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value - Utils.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) : 0
