@@ -28,6 +28,10 @@
 
         public string MAILPB { get; set; }
 
+        public string MAILREJET { get; set; }
+
+        public string MAILREJETPAIE { get; set; }
+
         public int? IDUSER { get; set; }
 
         [Column(TypeName = "smalldatetime")]

@@ -677,7 +677,7 @@ namespace apptab.Controllers
                             TITUL = x.NOMBRE.ToString(),
                             DATE = dpj,
                             MONT = Math.Round(x.MONTANT.Value, 2).ToString(),
-                            LIEN = x.LIEN
+                            LIEN = !String.IsNullOrEmpty(x.LIEN) ? x.LIEN : ""
                         });
                     }
                 }
@@ -822,6 +822,10 @@ namespace apptab.Controllers
             {
                 int IdS = iProjet;
 
+                var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
+
+                var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == IdS && a.DELETIONDATE == null).FirstOrDefault().PROJET;
+
                 if (db.SI_TRAITPROJET.FirstOrDefault(a => a.No == IdF && a.IDPROJET == IdS) != null)
                 {
                     var ismod = db.SI_TRAITPROJET.FirstOrDefault(a => a.No == IdF && a.IDPROJET == IdS);
@@ -843,6 +847,48 @@ namespace apptab.Controllers
                 };
                 db.SI_TRAITANNUL.Add(newElemH);
                 db.SaveChanges();
+
+                //SEND MAIL ALERT et NOTIFICATION//
+                string MailAdresse = "serviceinfo@softwell.mg";
+                string mdpMail = "09eYpçç0601";
+
+                using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
+                {
+                    SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
+                    smtp.UseDefaultCredentials = true;
+
+                    mail.From = new MailAddress(MailAdresse);
+
+                    mail.To.Add(MailAdresse);
+                    if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null).MAILTE != null)
+                    {
+                        string[] separators = { ";" };
+
+                        var Tomail = mail;
+                        if (Tomail != null)
+                        {
+                            string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null).MAILTE;
+                            string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                            foreach (var mailto in mailListe)
+                            {
+                                mail.To.Add(mailto);
+                            }
+                        }
+                    }
+
+                    mail.Subject = "Rejet pièce du projet " + ProjetIntitule;
+                    mail.IsBodyHtml = true;
+                    mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez une pièce rejetée pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
+                        "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+
+                    smtp.Port = 587;
+                    smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
+                    smtp.EnableSsl = true;
+
+                    try { smtp.Send(mail); }
+                    catch (Exception) { }
+                }
 
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Rejet avec succès. ", data = Comm }, settings));
             }

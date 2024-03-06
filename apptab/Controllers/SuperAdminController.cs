@@ -830,9 +830,12 @@ namespace apptab.Controllers
             bool MAILPE = new Data.Extension().TestMail(param.MAILPE);
             bool MAILPV = new Data.Extension().TestMail(param.MAILPV);
             bool MAILPP = new Data.Extension().TestMail(param.MAILPP);
+            bool MAILREJET = new Data.Extension().TestMail(param.MAILREJET);
+            bool MAILREJETPAIE = new Data.Extension().TestMail(param.MAILREJETPAIE);
             //bool MAILPB = new Extension().TestMail(param.MAILPB);
 
             if (MAILTE == false || MAILTV == false || MAILSIIG == false
+                || MAILREJET == false || MAILREJETPAIE == false
                 || MAILPI == false || MAILPE == false || MAILPV == false || MAILPP == false/* || MAILPB == false*/)
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'une des adresses mail renseignée n'est pas valide. " }, settings));
 
@@ -853,6 +856,8 @@ namespace apptab.Controllers
                         SExist.MAILPE = param.MAILPE;
                         SExist.MAILPV = param.MAILPV;
                         SExist.MAILPP = param.MAILPP;
+                        SExist.MAILREJET = param.MAILREJET;
+                        SExist.MAILREJETPAIE = param.MAILREJETPAIE;
 
                         db.SaveChanges();
 
@@ -872,6 +877,8 @@ namespace apptab.Controllers
                             MAILPE = param.MAILPE,
                             MAILPV = param.MAILPV,
                             MAILPP = param.MAILPP,
+                            MAILREJET = param.MAILREJET,
+                            MAILREJETPAIE = param.MAILREJETPAIE,
                             IDPROJET = IdS,
                             CREATIONDATE = DateTime.Now,
                             IDUSER = exist.ID,
@@ -894,6 +901,8 @@ namespace apptab.Controllers
                         MAILPE = param.MAILPE,
                         MAILPV = param.MAILPV,
                         MAILPP = param.MAILPP,
+                        MAILREJET = param.MAILREJET,
+                        MAILREJETPAIE = param.MAILREJETPAIE,
                         IDPROJET = IdS,
                         CREATIONDATE = DateTime.Now,
                         IDUSER = exist.ID
@@ -913,6 +922,8 @@ namespace apptab.Controllers
                         MAILPE = isElemH.MAILPE,
                         MAILPV = isElemH.MAILPV,
                         MAILPP = isElemH.MAILPP,
+                        MAILREJET = param.MAILREJET,
+                        MAILREJETPAIE = param.MAILREJETPAIE,
                         IDPROJET = IdS,
                         CREATIONDATE = isElemH.CREATIONDATE,
                         IDUSER = isElemH.IDUSER,
