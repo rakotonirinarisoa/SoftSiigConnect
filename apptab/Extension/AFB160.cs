@@ -396,10 +396,11 @@ namespace apptab.Extension
             SI_USERS usr = (from u in db.SI_USERS
                             where u.LOGIN == user.LOGIN
                             select u).FirstOrDefault();
-            SI_MAPPAGES dbt = (from d in db.OPA_DATABASE
-                               join m in db.SI_MAPPAGES on d.IDMAPPAGE equals m.ID
-                               where d.IDUSER == usr.ID
-                               select m).FirstOrDefault();
+            //SI_MAPPAGES dbt = (from d in db.OPA_DATABASE
+            //                   join m in db.SI_MAPPAGES on d.IDMAPPAGE equals m.ID
+            //                   where d.IDUSER == usr.ID
+            //                   select m).FirstOrDefault();
+            SI_MAPPAGES dbt = db.SI_MAPPAGES.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
             //string bds =(from b in db.OPA_DATABASE
             //             where )
 
@@ -2092,7 +2093,7 @@ namespace apptab.Extension
             string textdate = day + mounth + year;
             return this.couperText(5, textdate);
         }
-        public void SaveValideSelectEcritureBR(List<string> numBR, string journal, string etat, bool devise, SI_USERS user)
+        public void SaveValideSelectEcritureBR(List<string> numBR, string journal, string etat, bool devise, SI_USERS user,int PROJECTID)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -2108,7 +2109,7 @@ namespace apptab.Extension
                 try
                 {
                     var ecriture = (from mcpt in tom.MOP
-                                    where mcpt.NUMEROOP == row && mcpt.COGE == djournal.COMPTEASSOCIE
+                                    where mcpt.NUMEROOP == row /*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
                                     select new DataListTomOP()
                                     {
                                         No = mcpt.NUMEROOP,
@@ -2146,7 +2147,7 @@ namespace apptab.Extension
                     {
                         OPA_ANOMALIEBR panomalie = new OPA_ANOMALIEBR();
                         panomalie.NUM = ecriture.No;
-                        panomalie.IDSOCIETE = user.IDPROJET;
+                        panomalie.IDSOCIETE = PROJECTID;
 
                         try
                         {
@@ -2182,7 +2183,7 @@ namespace apptab.Extension
                         preg.DOM2 = beneficiaire.DOM2;
                         //preg.CATEGORIE = beneficiaire.CATEGORIE;
                         preg.APPLICATION = "BR";
-                        preg.IDSOCIETE = user.IDPROJET;
+                        preg.IDSOCIETE = PROJECTID;
                         try
                         {
                             db.OPA_REGLEMENTBR.Add(preg);
