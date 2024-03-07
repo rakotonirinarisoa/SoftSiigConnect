@@ -31,6 +31,15 @@ function GetTypeP() {
         success: function (result) {
             var Datas = JSON.parse(result);
             baseName = Datas;
+            if (baseName == 1) {
+                
+                $(`[code_Type]`).val('');
+                $(`[code_Type]`).val('BR');
+
+            } else {
+                $(`[code_Type]`).val('');
+                $(`[code_Type]`).val('COMPTA');
+            }
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -283,6 +292,7 @@ $(document).ready(() => {
 });
 
 $(document).on("change", "[code-project]", () => {
+    GetTypeP();
     GetListCodeJournal();
     emptyTable();
 });
@@ -316,7 +326,7 @@ $(document).on("change", "[auxi-list]", () => {
 
 $(document).on("change", "[codej-list]", () => {
     var code = ListCodeJournal.filter(function (e) { return e.CODE == $(`[codej-list]`).val(); })[0];
-    $(`[codej-libelle]`).val(code.LIBELLE);
+    //$(`[codej-libelle]`).val(code.LIBELLE);
 });
 
 $(document).on("click", "[data-target]", function () {
@@ -353,6 +363,7 @@ $('.Checkall').change(function () {
 //==============================================================================================ChargeJs===================================================================================
 
 $('[data-action="ChargerJs"]').click(function () {
+    
     let formData = new FormData();
     let codeproject = $("#Fproject").val();
     formData.append("codeproject", codeproject);
@@ -363,7 +374,7 @@ $('[data-action="ChargerJs"]').click(function () {
     formData.append("suser.IDSOCIETE", User.IDSOCIETE);
     formData.append("ChoixBase", baseName);
 
-    if (baseName == 2) {
+    if (baseName == "2") {
         formData.append("datein", $('#Pdu').val());
         formData.append("dateout", $('#Pau').val());
         formData.append("journal", $('#commercial').val());
@@ -499,7 +510,7 @@ $('[data-action="ChargerJs"]').click(function () {
         formData.append("dateout", $('#Pau').val());
         formData.append("journal", $('#commercial').val());
         formData.append("comptaG", $('#comptaG').val());
-
+        alert(baseName);
         formData.append("auxi", $('#auxi').val());
         formData.append("auxi1", $('#auxi').val());
         formData.append("dateP", $('#Pay').val());
