@@ -277,14 +277,32 @@ $(document).ready(() => {
     Origin = User.origin;
 
     $(`[data-id="username"]`).text(User.LOGIN);
-
-    
+    emptyTable();
     GetAllProjectUser();
 });
 
 $(document).on("change", "[code-project]", () => {
     GetListCodeJournal();
+    emptyTable();
 });
+function emptyTable() {
+    const data = [];
+
+    if (table !== undefined) {
+        table.destroy();
+    }
+
+    table = $('#TDB_OPA').DataTable({
+        data,
+        colReorder: {
+            enable: true,
+            fixedColumnsLeft: 1
+        },
+        deferRender: true,
+        dom: 'Bfrtip',
+        buttons: ['colvis'],
+    });
+}
 
 $(document).on("change", "[compG-list]", () => {
     FillAUXI();
@@ -673,17 +691,3 @@ $('[data-action="GetElementChecked"]').click(function () {
 
 var baseName = "2";
 
-$(`[name="options"]`).on("change", (k, v) => {
-    var baseId = $(k.target).attr("data-id");
-    if (baseId == 0) {
-        baseName = "2"
-    } else {
-        baseName = baseId;
-    }
-
-    $(`[tab="autre"]`).show();
-    $('.afb160').empty();
-    $('#afb').empty();
-
-    GetListCodeJournal(baseName);
-});
