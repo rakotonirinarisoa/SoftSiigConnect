@@ -745,6 +745,10 @@ namespace apptab.Controllers
                 {
                     int projectId = iProjectsId[i];
 
+                    var durPrevu = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == projectId && a.DELETIONDATE == null);
+                    if (durPrevu == null || durPrevu.DELRAF == null || durPrevu.DELTV == null || durPrevu.DELENVOISIIGFP == null || durPrevu.DELSIIGFP == null)
+                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le délais des traitements. " }, settings));
+
                     var s = await (
                         from soa in db.SI_SOAS
                         join prosoa in db.SI_PROSOA on soa.ID equals prosoa.IDSOA
@@ -774,8 +778,6 @@ namespace apptab.Controllers
                         SOA = s.SOA,
                         TraitementsEngagementsDetails = new List<TraitementEngagementDetails>()
                     });
-
-                    var durPrevu = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == projectId && a.DELETIONDATE == null);
 
                     for (int j = 0; j < traitprojets.Count; j += 1)
                     {
@@ -815,7 +817,7 @@ namespace apptab.Controllers
 
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = result }, settings));
             }
-            catch (Exception ex) { return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Problème de connexion. " }, settings)); }
+            catch (Exception) { return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Problème de connexion. " }, settings)); }
         }
     }
 }
