@@ -510,7 +510,6 @@ $('[data-action="ChargerJs"]').click(function () {
         formData.append("dateout", $('#Pau').val());
         formData.append("journal", $('#commercial').val());
         formData.append("comptaG", $('#comptaG').val());
-        alert(baseName);
         formData.append("auxi", $('#auxi').val());
         formData.append("auxi1", $('#auxi').val());
         formData.append("dateP", $('#Pay').val());
