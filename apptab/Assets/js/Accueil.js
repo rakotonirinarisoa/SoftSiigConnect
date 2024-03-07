@@ -278,14 +278,32 @@ $(document).ready(() => {
     Origin = User.origin;
 
     $(`[data-id="username"]`).text(User.LOGIN);
-
-    
+    emptyTable();
     GetAllProjectUser();
 });
 
 $(document).on("change", "[code-project]", () => {
     GetListCodeJournal();
+    emptyTable();
 });
+function emptyTable() {
+    const data = [];
+
+    if (table !== undefined) {
+        table.destroy();
+    }
+
+    table = $('#TDB_OPA').DataTable({
+        data,
+        colReorder: {
+            enable: true,
+            fixedColumnsLeft: 1
+        },
+        deferRender: true,
+        dom: 'Bfrtip',
+        buttons: ['colvis'],
+    });
+}
 
 $(document).on("change", "[compG-list]", () => {
     FillAUXI();
@@ -670,4 +688,11 @@ $('[data-action="GetElementChecked"]').click(function () {
         }
     });
 
+<<<<<<< HEAD
 });
+=======
+});
+
+var baseName = "2";
+
+>>>>>>> 36ebcd256bea297ddc88ade22ddac4af2a7984b3
