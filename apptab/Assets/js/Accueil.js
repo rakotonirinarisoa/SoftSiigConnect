@@ -697,5 +697,4 @@ $('[data-action="GetElementChecked"]').click(function () {
             alert("Problème de connexion. ");
         }
     });
-
 });
