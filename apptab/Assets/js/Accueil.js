@@ -1,4 +1,5 @@
 ﻿var table = undefined;
+var baseName = "2";
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
@@ -669,21 +670,4 @@ $('[data-action="GetElementChecked"]').click(function () {
         }
     });
 
-});
-
-var baseName = "2";
-
-$(`[name="options"]`).on("change", (k, v) => {
-    var baseId = $(k.target).attr("data-id");
-    if (baseId == 0) {
-        baseName = "2"
-    } else {
-        baseName = baseId;
-    }
-
-    $(`[tab="autre"]`).show();
-    $('.afb160').empty();
-    $('#afb').empty();
-
-    GetListCodeJournal(baseName);
 });
