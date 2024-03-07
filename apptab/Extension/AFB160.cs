@@ -392,6 +392,7 @@ namespace apptab.Extension
         {
             int PROJECTID = int.Parse(codeproject);
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
+            SOFTCONNECTOM tom = new SOFTCONNECTOM();
             SI_USERS usr = (from u in db.SI_USERS
                             where u.LOGIN == user.LOGIN
                             select u).FirstOrDefault();
@@ -399,12 +400,6 @@ namespace apptab.Extension
                                join m in db.SI_MAPPAGES on d.IDMAPPAGE equals m.ID
                                where d.IDUSER == usr.ID
                                select m).FirstOrDefault();
-
-            SOFTCONNECTOM.connex = "Data Source=" + dbt.INSTANCE + ";Initial Catalog=" + dbt.DBASE + ";User ID=" + dbt.CONNEXION + ";Password=" + dbt.CONNEXPWD + ";";
-            SOFTCONNECTOM tom = new SOFTCONNECTOM();
-            //OPAVITOMATE __db = new OPAVITOMATE();
-
-
             //string bds =(from b in db.OPA_DATABASE
             //             where )
 
@@ -413,12 +408,14 @@ namespace apptab.Extension
 
             /********              0302        ******/
 
-            var donneurOrde = (from dordre in db.OPA_DONNEURORDRE
-                               where dordre.IDSOCIETE == PROJECTID && dordre.APPLICATION == "BR"
-                               select dordre).FirstOrDefault();
-            /***********************NOM de fichier************************/
-            string nom2 = (from nom in tom.RPROJET
-                           select nom.NOM2).FirstOrDefault();
+            //var donneurOrde = (from dordre in db.OPA_DONNEURORDRE
+            //                   where dordre.IDSOCIETE == PROJECTID && dordre.APPLICATION == "BR"
+            //                   select dordre).FirstOrDefault();
+            var donneurOrde = db.OPA_DONNEURORDRE.Where(x => x.IDSOCIETE == PROJECTID && x.APPLICATION == "BR").FirstOrDefault();
+                /***********************NOM de fichier************************/
+           // string nom2 = (from nom in tom.RPROJET
+           //select nom.NOM2).FirstOrDefault();
+            string nom2 = tom.RPROJET.Select(x => x.NOM).FirstOrDefault();
             //string nom2 = "test test/test.test;";
             nom2 = this.traitementNomFichier(nom2);
             DateTime dateAFB = DateTime.Now;
@@ -439,7 +436,7 @@ namespace apptab.Extension
                 {
                     i = 0;
                     y = 0;
-                    db.OPA_BASE.Add(new OPA_BASE() { NOMBASE = dbt.DBASE, INCREMENTATION = i, INCRORDREVIR = y, IDSOCIETE = usr.IDPROJET });
+                    db.OPA_BASE.Add(new OPA_BASE() { NOMBASE = dbt.DBASE, INCREMENTATION = i, INCRORDREVIR = y, IDSOCIETE = PROJECTID });
                     db.SaveChanges();
                 }
             }
@@ -1083,14 +1080,14 @@ namespace apptab.Extension
 
             return test;
         }
-        public bool saveDonneurOrdreBR(SI_USERS user, RJL1 djournal, DateTime dateP)
+        public bool saveDonneurOrdreBR(SI_USERS user, RJL1 djournal, DateTime dateP, int PROJECTID)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
             bool test = true;
             OPA_DONNEURORDRE donordre = new OPA_DONNEURORDRE();
             var tdonneur1 = (from dord in db.OPA_DONNEURORDRE
-                             where dord.IDSOCIETE == user.IDPROJET && dord.APPLICATION == "BR"
+                             where dord.IDSOCIETE == PROJECTID && dord.APPLICATION == "BR"
                              select dord).FirstOrDefault();
             var projet = (from prjt in tom.RPROJET
                           select new
@@ -1118,7 +1115,7 @@ namespace apptab.Extension
                 var id = db.OPA_DONNEURORDRE.Select(x => x.ID).OrderByDescending(x => x).FirstOrDefault();
                 donordre.ID = id + 1;
                 donordre.CODE_J = djournal.CODE;
-                donordre.IDSOCIETE = user.IDPROJET;
+                donordre.IDSOCIETE = PROJECTID;
                 donordre.DATE_PAIEMENT = dateP;
                 donordre.DONNEUR_ORDRE = couperText(24, dordre);
                 donordre.CODE_GUICHET = couperText(5, djournal.GUICHET);
@@ -1694,7 +1691,7 @@ namespace apptab.Extension
             }
             return list;
         }
-        public List<DataListTomOP> getListEcritureBR(string journal, DateTime dateD, DateTime dateF, bool devise, string compteG, string auxi, string etat, DateTime dateP, SI_USERS user)
+        public List<DataListTomOP> getListEcritureBR(string journal, DateTime dateD, DateTime dateF, bool devise, string compteG, string auxi, string etat, DateTime dateP, SI_USERS user,int PROJECTID)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -1885,7 +1882,7 @@ namespace apptab.Extension
                 }
                 #endregion
                 #region Enregistrement donneur d'ordre
-                bool test = saveDonneurOrdreBR(user, djournal, dateP);
+                bool test = saveDonneurOrdreBR(user, djournal, dateP, PROJECTID);
                 #endregion
                 /*var afficheDOrdre = (from dord in db.OPA_DONNEURORDRE
                                      where dord.IDSOCIETE == user.IDSOCIETE

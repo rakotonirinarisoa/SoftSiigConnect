@@ -302,7 +302,7 @@ function chargeLoad() {
         //BR
         $.ajax({
             type: "POST",
-            url: Origin + '/Home/GetAcceptecriture',
+            url: Origin + '/Home/GetAcceptecritureLoad',
             data: formData,
             cache: false,
             contentType: false,
@@ -347,7 +347,8 @@ function chargeLoad() {
                             plan: v.Plan6 === null ? '' : v.Plan6,
                             journal: v.Journal,
                             marche: v.Marche === null ? '' : v.Marche,
-                            rejeter: ''
+                            rejeter: '',
+                            isLATE: v.isLATE
                         });
                     });
 
@@ -372,7 +373,8 @@ function chargeLoad() {
                             { data: 'noPiece' },
                             { data: 'compte' },
                             { data: 'libelle' },
-                            { data: 'montant' },
+                            { data: 'debit' },
+                            { data: 'credit' },
                             { data: 'montantDevise' },
                             { data: 'mon' },
                             { data: 'rang' },
@@ -918,20 +920,21 @@ $('[data-action="ChargerJs"]').click(function () {
                 if (Datas.type == "success") {
                     listResult = Datas.data
                     content = ``;
-                    $.each(listResult, function (k, v) {
+                    const data = [];
+                    $.each(listResult, function (_, v) {
                         data.push({
                             checkbox: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.dateOrdre === undefined ? '' : v.dateOrdre,
+                            dateOrdre: v.dateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
                             debit: v.Debit === undefined ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
-                            credit: v.Credit === undefined ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
-                            montantDevise: v.MontantDevise === undefined ? '' :formatCurrency(String(v.MontantDevise).replace(",", ".")),
+                            credit: v.credit === undefined ? '' : formatCurrency(String(v.credit).replace(",", ".")),
+                            montantDevise: v.montantDevise === undefined ? '' : formatCurrency(String(v.montantDevise).replace(",", ".")),
                             mon: v.Mon === null ? '' : v.Mon,
                             rang: v.Rang === null ? '' : v.Rang,
-                            financementCategorie: v.FinancementCategorie === " " ? ' ' : v.FinancementCategorie,
+                            financementCategorie: v.FinancementCategorie === " " ? '' : v.FinancementCategorie,
                             commune: v.Commune === null ? '' : v.Commune,
                             plan: v.Plan6 === null ? '' : v.Plan6,
                             journal: v.Journal,
@@ -962,7 +965,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'noPiece' },
                             { data: 'compte' },
                             { data: 'libelle' },
-                            { data: 'montant' },
+                            { data: 'debit' },
+                            { data: 'credit' },
                             { data: 'montantDevise' },
                             { data: 'mon' },
                             { data: 'rang' },
@@ -990,7 +994,6 @@ $('[data-action="ChargerJs"]').click(function () {
                                 $(row).attr('style', "background-color: #FF7F7F !important;");
                             }
                         },
-
                         columnDefs: [
                             {
                                 targets: [-1],
@@ -1003,7 +1006,7 @@ $('[data-action="ChargerJs"]').click(function () {
                         },
                         deferRender: true,
                         dom: 'Bfrtip',
-                        buttons: ['colvis'],                       
+                        buttons: ['colvis'],
                         initComplete: function () {
                             $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
                         }

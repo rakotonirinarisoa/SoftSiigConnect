@@ -1010,20 +1010,3 @@ $('[data-action="GetAnomalieListes"]').click(function () {
 
 var baseName = "2";
 
-$(`[name="options"]`).on("change", (_, v) => {
-    var baseId = $(k.target).attr("data-id");
-
-    baseName = baseId;
-
-    if (baseId == "1") {
-        $(`[tab="paie"]`).show();
-        $(`[tab="autre"]`).hide();
-        //GetListCodeJournal();
-    } else {
-        $(`[tab="autre"]`).show();
-        $(`[tab="paie"]`).hide();
-        $('#afb').empty();
-        //GetListCodeJournal();
-    }
-
-});
