@@ -4,23 +4,23 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-@{
-    ViewBag.Title = "TeacherValidation";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-
-@{
-    ViewBag.Title = "PaiementValidation";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-<div class="input-group mb-3">
-    <div class="input-group-prepend">
-        <span class="input-group-text text-bold" id="inputGroup-sizing-default">Projet</span>
+<div class="form-row">
+    <div class="input-group mb-3 col-sm-12 col-md-6">
+        <div class="input-group-prepend">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Projet</span>
+        </div>
+        <select class="form-control col combobox" id="Fproject" code-project>
+        </select>
     </div>
-    <select class="form-control col combobox" id="Fproject" code-project>
-    </select>
+    <div class="input-group mb-3 col-sm-12 col-md-6">
+        <div class="input-group-prepend">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Ecriture</span>
+        </div>
+        <input type="text" class="form-control" value="" readonly code_Type />
+    </div>
 </div>
 
 <div>
@@ -189,15 +189,16 @@
             </div>
         </div>
         <div class="mb-3 col col-sm-12 col-md-4">
-            <div class="btn btn-flat bg-gradient-yellow col-12" onclick="exportTableToExcel(TDB)">
+            <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TDB', 'PAIEMENTS VALIDER')">
                 <i class="fa fa-file-excel"></i> Exporter
             </div>
         </div>
+
         @*<div class="mb-3 col col-sm-12 col-md-2">
-            <div class="btn btn-flat bg-gradient-red col-12">
-                <i class="fa fa-times"></i> Effacer
-            </div>
-        </div>*@
+                <div class="btn btn-flat bg-gradient-red col-12">
+                    <i class="fa fa-times"></i> Effacer
+                </div>
+            </div>*@
     </div>
 </div>
 
@@ -259,7 +260,7 @@
 
 <div id="tanomalie" data-type="tab" style="display:none">
     <div class="table-responsive mb-3" style="max-height:400px" tab="autre">
-        <table class="table table-hover table-striped">
+        <table class="table table-hover table-striped" id="TDB_ANO">
             <thead style="position:sticky">
                 <tr class="thead-accueil1" style="white-space: nowrap;">
                     <td style="text-align:right">
@@ -291,11 +292,12 @@
     <div class="form-row mb-3">
         <div class="input-group mb-3 col-md-10">
         </div>
-        <div class="mb-3 col col-sm-12 col-md-2">
-            <div class="btn btn-flat bg-gradient-teal col-12">
-                <i class="fa fa-file-excel"></i> Excel
+        <div class="mb-3 col col-sm-12 col-md-4">
+            <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TDB_ANO', 'LISTE PAIEMENTS VALIDES')">
+                <i class="fa fa-file-excel"></i> Exporter
             </div>
         </div>
     </div>
 </div>
-<script src="~/Assets/js/FValidations.js"></script>
+<script src="~/Assets/js/FValidations.js" asp-append-version="true" ></script>
+<script src="~/Assets/js/utils.js" asp-append-version="true" ></script>

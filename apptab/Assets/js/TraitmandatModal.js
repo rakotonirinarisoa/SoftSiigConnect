@@ -4,8 +4,6 @@ $(document).ready(() => {
     });
 });
 
-let clickedId;
-
 function modalF(id) {
 
     clickedId = id;
@@ -27,9 +25,14 @@ function modalF(id) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -60,7 +63,7 @@ function modalF(id) {
             }
         },
         error: function () {
-            alert("Problème de connexion. ");
+            alert("ProblÃ¨me de connexion. ");
         }
     });
 

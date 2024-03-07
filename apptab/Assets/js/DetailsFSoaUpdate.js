@@ -1,7 +1,4 @@
-﻿let User;
-let Origin;
-
-$(document).ready(() => {
+﻿$(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
@@ -9,8 +6,6 @@ $(document).ready(() => {
 
     GetFSOA();
 });
-//let urlOrigin = Origin;
-//let urlOrigin = "http://softwell.cloud/OPAVI";
 
 function GetFSOA() {
     let formData = new FormData();
@@ -31,6 +26,12 @@ function GetFSOA() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -49,7 +50,7 @@ function GetFSOA() {
         error: function () {
             alert("Problème de connexion. ");
         }
-    }).done(function(result){
+    }).done(function (result) {
         var Datas = JSON.parse(result);
     });
 }
@@ -77,6 +78,12 @@ $(`[data-action="UpdateFSOAJS"]`).click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 

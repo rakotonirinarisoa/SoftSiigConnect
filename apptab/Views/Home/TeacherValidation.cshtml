@@ -4,18 +4,23 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-@{
-    ViewBag.Title = "PaiementValidation";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<div class="input-group mb-3 ">
-    <div class="input-group-prepend">
-        <span class="input-group-text text-bold" id="inputGroup-sizing-default">Projet</span>
+<div class="form-row">
+    <div class="input-group mb-3 col-sm-12 col-md-6">
+        <div class="input-group-prepend">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Projet</span>
+        </div>
+        <select class="form-control col combobox" id="Fproject" code-project>
+        </select>
     </div>
-    <select class="form-control col combobox" id="Fproject" code-project>
-    </select>
+    <div class="input-group mb-3 col-sm-12 col-md-6">
+        <div class="input-group-prepend">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Ecriture</span>
+        </div>
+        <input type="text" class="form-control" value="" readonly code_Type />
+    </div>
 </div>
 
 <div>
@@ -92,7 +97,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="form-row mb-3">
         <div class="input-group mb-3 col">
             <div class="mb-3 col ">
@@ -127,22 +132,29 @@
                 <td style="font-weight: bold; text-align: center">Plan6</td>
                 <td style="font-weight: bold; text-align: center">Journal</td>
                 <td style="font-weight: bold; text-align: center">Marché</td>
-                <td style="font-weight: bold; text-align: center">Rejeter</td>
+                @*<td style="font-weight: bold; text-align: center">Rejeter</td>*@
             </tr>
         </thead>
         <tbody class="afb160"></tbody>
 
     </table>
 </div>
-<div class="form-row mb-3">
-    <div class="input-group mb-3">
+<div class="form-row">
+    <div class="input-group mb-3 col">
         <div class="mb-3 col">
             <div class="btn btn-flat bg-gradient-red col-12" data-action="GetElementChecked">
                 <i class="fa fa-check-double"></i> Enregistrer et envoyer pour validation
             </div>
         </div>
     </div>
-    
+    <div class="input-group mb-3 col">
+        <div class="mb-3 col ">
+            <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TDB_OPA', 'LISTE PAIEMENTS EN ATTENTE VALIDATION')">
+                <i class="fa fa-file-excel"></i> Exporter
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="F-modal" data-id="">
@@ -184,4 +196,5 @@
     </div>
 </div>
 
-<script src="~/Assets/js/TeacherValidations.js"></script>
+<script src="~/Assets/js/TeacherValidations.js" asp-append-version="true" ></script>
+<script src="~/Assets/js/utils.js" asp-append-version="true" ></script>

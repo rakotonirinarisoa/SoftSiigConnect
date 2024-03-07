@@ -1,8 +1,33 @@
-﻿let urlOrigin = window.location.href;
-//let urlOrigin = "http://softwell.cloud/OPAVI";
-$(document).ready(() => {
-    //GetFileUrlOrgF();
-});
+﻿const urlOrigin = window.location.href;
+
+let User;
+let Origin;
+
+let clickedId;
+
+let ListCodeJournal;
+let ListCompteG;
+
+let content;
+let validate;
+
+let listResult;
+let listResultAnomalie;
+let contentAnomalies;
+let rdv;
+let contentpaie;
+let listResultpaie;
+let reglementresult;
+
+let listEtat;
+let etaCode;
+
+var baseName;
+
+let table = undefined;
+
+const loader = $('#loader');
+
 function GetFileUrlOrgF() {
     let formData = new FormData();
 
@@ -18,6 +43,12 @@ function GetFileUrlOrgF() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             //urlOrigin = Datas.data,
@@ -55,6 +86,12 @@ $(`[login_connect]`).click(() => {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 

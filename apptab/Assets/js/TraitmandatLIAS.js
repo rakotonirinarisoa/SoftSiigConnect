@@ -27,6 +27,12 @@ function modalLIAS(id) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -57,13 +63,13 @@ function modalLIAS(id) {
                                         <td style="font-weight: bold; text-align:center"><a href="${ListResult.TITUL}" target="_blank">${ListResult.TITUL}</a></td>
                                     </tr>`;
                 }
-                
+
                 $('.DOCMODAL').empty();
                 $('.DOCMODAL').html(contentpaie);
             }
         },
         error: function () {
-            alert("Problème de connexion. ");
+            alert("ProblÃ¨me de connexion. ");
         }
     });
 

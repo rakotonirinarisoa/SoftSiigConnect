@@ -18,9 +18,12 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="~/Assets/admlte/dist/css/adminlte.min.css">
     <link href="~/Assets/css/style.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Assets/css/loader.css" />
 </head>
+
 <body class="hold-transition login-page">
     <div id="loader" class="lds-dual-ring display-none overlay"></div>
+
     <div class="auth-login">
         <div class="login-box">
             <!-- /.login-logo -->
@@ -88,7 +91,7 @@
     <script src="~/Assets/admlte/dist/js/adminlte.min.js"></script>
 
     <!-- Login.js -->
-    <script src="~/Assets/js/Login.js"></script>
+    <script src="~/Assets/js/Login.js" asp-append-version="true"></script>
 
     @*<script type="text/javascript">
             function googleTranslateElementInit() {

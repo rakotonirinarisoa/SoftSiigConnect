@@ -392,19 +392,15 @@ namespace apptab.Extension
         {
             int PROJECTID = int.Parse(codeproject);
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
+            SOFTCONNECTOM tom = new SOFTCONNECTOM();
             SI_USERS usr = (from u in db.SI_USERS
                             where u.LOGIN == user.LOGIN
                             select u).FirstOrDefault();
-            SI_MAPPAGES dbt = (from d in db.OPA_DATABASE
-                               join m in db.SI_MAPPAGES on d.IDMAPPAGE equals m.ID
-                               where d.IDUSER == usr.ID
-                               select m).FirstOrDefault();
-
-            SOFTCONNECTOM.connex = "Data Source=" + dbt.INSTANCE + ";Initial Catalog=" + dbt.DBASE + ";User ID=" + dbt.CONNEXION + ";Password=" + dbt.CONNEXPWD + ";";
-            SOFTCONNECTOM tom = new SOFTCONNECTOM();
-            //OPAVITOMATE __db = new OPAVITOMATE();
-
-
+            //SI_MAPPAGES dbt = (from d in db.OPA_DATABASE
+            //                   join m in db.SI_MAPPAGES on d.IDMAPPAGE equals m.ID
+            //                   where d.IDUSER == usr.ID
+            //                   select m).FirstOrDefault();
+            SI_MAPPAGES dbt = db.SI_MAPPAGES.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
             //string bds =(from b in db.OPA_DATABASE
             //             where )
 
@@ -413,12 +409,14 @@ namespace apptab.Extension
 
             /********              0302        ******/
 
-            var donneurOrde = (from dordre in db.OPA_DONNEURORDRE
-                               where dordre.IDSOCIETE == PROJECTID && dordre.APPLICATION == "BR"
-                               select dordre).FirstOrDefault();
-            /***********************NOM de fichier************************/
-            string nom2 = (from nom in tom.RPROJET
-                           select nom.NOM2).FirstOrDefault();
+            //var donneurOrde = (from dordre in db.OPA_DONNEURORDRE
+            //                   where dordre.IDSOCIETE == PROJECTID && dordre.APPLICATION == "BR"
+            //                   select dordre).FirstOrDefault();
+            var donneurOrde = db.OPA_DONNEURORDRE.Where(x => x.IDSOCIETE == PROJECTID && x.APPLICATION == "BR").FirstOrDefault();
+                /***********************NOM de fichier************************/
+           // string nom2 = (from nom in tom.RPROJET
+           //select nom.NOM2).FirstOrDefault();
+            string nom2 = tom.RPROJET.Select(x => x.NOM).FirstOrDefault();
             //string nom2 = "test test/test.test;";
             nom2 = this.traitementNomFichier(nom2);
             DateTime dateAFB = DateTime.Now;
@@ -439,7 +437,7 @@ namespace apptab.Extension
                 {
                     i = 0;
                     y = 0;
-                    db.OPA_BASE.Add(new OPA_BASE() { NOMBASE = dbt.DBASE, INCREMENTATION = i, INCRORDREVIR = y, IDSOCIETE = usr.IDPROJET });
+                    db.OPA_BASE.Add(new OPA_BASE() { NOMBASE = dbt.DBASE, INCREMENTATION = i, INCRORDREVIR = y, IDSOCIETE = PROJECTID });
                     db.SaveChanges();
                 }
             }
@@ -1083,14 +1081,14 @@ namespace apptab.Extension
 
             return test;
         }
-        public bool saveDonneurOrdreBR(SI_USERS user, RJL1 djournal, DateTime dateP)
+        public bool saveDonneurOrdreBR(SI_USERS user, RJL1 djournal, DateTime dateP, int PROJECTID)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
             bool test = true;
             OPA_DONNEURORDRE donordre = new OPA_DONNEURORDRE();
             var tdonneur1 = (from dord in db.OPA_DONNEURORDRE
-                             where dord.IDSOCIETE == user.IDPROJET && dord.APPLICATION == "BR"
+                             where dord.IDSOCIETE == PROJECTID && dord.APPLICATION == "BR"
                              select dord).FirstOrDefault();
             var projet = (from prjt in tom.RPROJET
                           select new
@@ -1103,7 +1101,7 @@ namespace apptab.Extension
             dordre = projet.SIGLE + projet.NOM;
             try
             {
-                tdonneur1.CODE_J = djournal.CODE;
+                //tdonneur1.CODE_J = djournal.CODE;
                 tdonneur1.DATE_PAIEMENT = dateP;
                 tdonneur1.DONNEUR_ORDRE = couperText(24, dordre.Replace(" ", ""));
                 tdonneur1.CODE_GUICHET = couperText(5, djournal.GUICHET);
@@ -1118,7 +1116,7 @@ namespace apptab.Extension
                 var id = db.OPA_DONNEURORDRE.Select(x => x.ID).OrderByDescending(x => x).FirstOrDefault();
                 donordre.ID = id + 1;
                 donordre.CODE_J = djournal.CODE;
-                donordre.IDSOCIETE = user.IDPROJET;
+                donordre.IDSOCIETE = PROJECTID;
                 donordre.DATE_PAIEMENT = dateP;
                 donordre.DONNEUR_ORDRE = couperText(24, dordre);
                 donordre.CODE_GUICHET = couperText(5, djournal.GUICHET);
@@ -1393,9 +1391,10 @@ namespace apptab.Extension
                                       select rjl).Single();*/
                             try
                             {
-                                var reglement = (from mcpt in tom.MCOMPTA
-                                                 where mcpt.NORD == nord.Key && mcpt.COGE == djournal.COMPTEASSOCIE && mcpt.EVIREMENT == null
-                                                 select mcpt).Single();
+                                //var reglement = (from mcpt in tom.MCOMPTA
+                                //                 where mcpt.NORD == nord.Key && mcpt.COGE == djournal.COMPTEASSOCIE && mcpt.EVIREMENT == null
+                                //                 select mcpt).SingleOrDefault();
+                                var reglement = tom.MCOMPTA.Where( x => x.NORD == nord.Key && x.COGE == djournal.COMPTEASSOCIE).FirstOrDefault();
                                 if (reglement.S == "D")
                                 {
                                     list.Add(new DataListTompro()
@@ -1693,12 +1692,12 @@ namespace apptab.Extension
             }
             return list;
         }
-        public List<DataListTomOP> getListEcritureBR(string journal, DateTime dateD, DateTime dateF, bool devise, string compteG, string auxi, string etat, DateTime dateP, SI_USERS user)
+        public List<DataListTomOP> getListEcritureBR(string journal, DateTime dateD, DateTime dateF, bool devise, string compteG, string auxi, string etat, DateTime dateP, SI_USERS user,int PROJECTID)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
             List<DataListTomOP> list = new List<DataListTomOP>();
-            if (etat == "VERIFIES")
+            if (etat == "VERIFIES" || etat == "Tous")
                 etat = null;
             RJL1 djournal = (from jrnl in tom.RJL1
                              where jrnl.CODE == journal
@@ -1800,7 +1799,7 @@ namespace apptab.Extension
                     List<MOP> lOPCOGE = (from m in lNoOPS
                                          where m.COGEFOURNISSEUR == compteG
                                          select m).ToList();
-                    if (auxi == "")
+                    if (auxi == "" || auxi == "Tous")
                     {
 
                         foreach (var nord in lOPCOGE)
@@ -1808,7 +1807,7 @@ namespace apptab.Extension
                             try
                             {
                                 var reglement = (from mcpt in tom.MOP
-                                                 where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.COGE == djournal.COMPTEASSOCIE
+                                                 where mcpt.NUMEROOP == nord.NUMEROOP /*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
                                                  select mcpt).Single();
                                 list.Add(new DataListTomOP()
                                 {
@@ -1884,7 +1883,7 @@ namespace apptab.Extension
                 }
                 #endregion
                 #region Enregistrement donneur d'ordre
-                bool test = saveDonneurOrdreBR(user, djournal, dateP);
+                bool test = saveDonneurOrdreBR(user, djournal, dateP, PROJECTID);
                 #endregion
                 /*var afficheDOrdre = (from dord in db.OPA_DONNEURORDRE
                                      where dord.IDSOCIETE == user.IDSOCIETE
@@ -2094,7 +2093,7 @@ namespace apptab.Extension
             string textdate = day + mounth + year;
             return this.couperText(5, textdate);
         }
-        public void SaveValideSelectEcritureBR(List<string> numBR, string journal, string etat, bool devise, SI_USERS user)
+        public void SaveValideSelectEcritureBR(List<string> numBR, string journal, string etat, bool devise, SI_USERS user,int PROJECTID)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -2110,7 +2109,7 @@ namespace apptab.Extension
                 try
                 {
                     var ecriture = (from mcpt in tom.MOP
-                                    where mcpt.NUMEROOP == row && mcpt.COGE == djournal.COMPTEASSOCIE
+                                    where mcpt.NUMEROOP == row /*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
                                     select new DataListTomOP()
                                     {
                                         No = mcpt.NUMEROOP,
@@ -2148,7 +2147,7 @@ namespace apptab.Extension
                     {
                         OPA_ANOMALIEBR panomalie = new OPA_ANOMALIEBR();
                         panomalie.NUM = ecriture.No;
-                        panomalie.IDSOCIETE = user.IDPROJET;
+                        panomalie.IDSOCIETE = PROJECTID;
 
                         try
                         {
@@ -2184,7 +2183,7 @@ namespace apptab.Extension
                         preg.DOM2 = beneficiaire.DOM2;
                         //preg.CATEGORIE = beneficiaire.CATEGORIE;
                         preg.APPLICATION = "BR";
-                        preg.IDSOCIETE = user.IDPROJET;
+                        preg.IDSOCIETE = PROJECTID;
                         try
                         {
                             db.OPA_REGLEMENTBR.Add(preg);

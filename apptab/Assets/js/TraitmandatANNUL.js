@@ -27,9 +27,14 @@ function modalREJET(id) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -54,7 +59,7 @@ function modalREJET(id) {
             $(`[data-id="MOTIF-list"]`).append(code);
         },
         error: function () {
-            alert("Problème de connexion. ");
+            alert("Problï¿½me de connexion. ");
         }
     });
 
@@ -66,7 +71,7 @@ function modalREJET(id) {
 $(`[data-action="ANNULMANDAT"]`).click(function () {
     let user = $("#Motif").val();
     if (!user) {
-        alert("Veuillez renseigner le motf du rejet avant l'annulation du mandat. ");
+        alert("Veuillez renseigner le motif du rejet avant l'annulation du mandat. ");
         return;
     }
 
@@ -89,11 +94,18 @@ $(`[data-action="ANNULMANDAT"]`).click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
+                
                 return;
             }
             if (Datas.type == "login") {
@@ -104,9 +116,9 @@ $(`[data-action="ANNULMANDAT"]`).click(function () {
                 alert(Datas.msg);
 
                 $(`[compteG-id="${clickedANN}"]`).remove();
-                
+
                 $("#annuler-modal").modal("toggle");
-                
+
                 return;
             }
         },

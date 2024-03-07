@@ -1,14 +1,16 @@
-namespace apptab.Models
+﻿namespace apptab.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
 
     public partial class OPA_VALIDATIONS
     {
         public int ID { get; set; }
 
-        public decimal? IDREGLEMENT { get; set; }
+        public string IDREGLEMENT { get; set; }
 
         public int? ETAT { get; set; }
 
@@ -99,5 +101,8 @@ namespace apptab.Models
         public int? IDUSVAL { get; set; }
 
         public int? IDUSANNUL { get; set; }
+
+        [NotMapped]
+        public bool? isLATE { get; set; }
     }
 }

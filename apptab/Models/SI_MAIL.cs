@@ -1,4 +1,4 @@
-namespace apptab
+﻿namespace apptab
 {
     using System;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -15,6 +15,7 @@ namespace apptab
         public string MAILTE { get; set; }
 
         public string MAILTV { get; set; }
+        public string MAILSIIG { get; set; }
 
         public string MAILPI { get; set; }
 
@@ -25,6 +26,10 @@ namespace apptab
         public string MAILPP { get; set; }
 
         public string MAILPB { get; set; }
+
+        public string MAILREJET { get; set; }
+
+        public string MAILREJETPAIE { get; set; }
 
         public int? IDUSER { get; set; }
 

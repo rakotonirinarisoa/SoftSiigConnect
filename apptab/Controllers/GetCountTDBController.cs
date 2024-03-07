@@ -25,6 +25,8 @@ namespace apptab.Controllers
             {
                 var newElemH = new COUNTTDB()
                 {
+                    MandatI = 0,
+                    MandatTR = 0,
                     MandatT = 0,
                     MandatV = 0,
                     MandatA = 0,
@@ -41,6 +43,7 @@ namespace apptab.Controllers
                 var test = db.SI_USERS.Where(x => x.LOGIN == exist.LOGIN && x.PWD == exist.PWD && x.DELETIONDATE == null).FirstOrDefault();
 
                 var mandat = db.SI_TRAITPROJET.ToList();
+                var payement = db.OPA_VALIDATIONS.ToList();
 
                 if (test.ROLE == (int)Role.SAdministrateur)
                 {
@@ -49,14 +52,16 @@ namespace apptab.Controllers
                         MandatT = mandat.Where(a => a.ETAT == 0).Count(),
                         MandatV = mandat.Where(a => a.ETAT == 1).Count(),
                         MandatA = mandat.Where(a => a.ETAT == 2).Count(),
+                        //MandatI = mandat.Where(a => a.ETAT == 2).Count(),
+                        MandatTR = mandat.Where(a => a.ETAT == 3).Count(),
                         AvanceT = 0,
                         AvanceV = 0,
                         AvanceA = 0,
-                        PaieR = 0,
-                        PaieT = 0,
-                        PaieV = 0,
-                        PaieF = 0,
-                        PaieA = 0
+                        PaieR = payement.Where(a => a.ETAT == 0).Count(),
+                        PaieT = payement.Where(a => a.ETAT == 1).Count(),
+                        PaieV = payement.Where(a => a.ETAT == 2).Count(),
+                        PaieF = payement.Where(a => a.ETAT == 3).Count(),
+                        PaieA = payement.Where(a => a.ETAT == 4).Count()
                     };
 
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = newElemH }, settings));
@@ -66,20 +71,22 @@ namespace apptab.Controllers
                     if (test.IDPROJET != 0)
                     {
                         mandat = mandat.Where(a => a.IDPROJET == test.IDPROJET).ToList();
-
+                        payement = payement.Where(a => a.IDPROJET == test.IDPROJET).ToList() ;
                         newElemH = new COUNTTDB()
                         {
                             MandatT = mandat.Where(a => a.ETAT == 0).Count(),
                             MandatV = mandat.Where(a => a.ETAT == 1).Count(),
                             MandatA = mandat.Where(a => a.ETAT == 2).Count(),
+                            //MandatI = mandat.Where(a => a.ETAT == 2).Count(),
+                            MandatTR = mandat.Where(a => a.ETAT == 3).Count(),
                             AvanceT = 0,
                             AvanceV = 0,
                             AvanceA = 0,
-                            PaieR = 0,
-                            PaieT = 0,
-                            PaieV = 0,
-                            PaieF = 0,
-                            PaieA = 0
+                            PaieR = payement.Where(a => a.ETAT == 0).Count(),
+                            PaieT = payement.Where(a => a.ETAT == 1).Count(),
+                            PaieV = payement.Where(a => a.ETAT == 2).Count(),
+                            PaieF = payement.Where(a => a.ETAT == 3).Count(),
+                            PaieA = payement.Where(a => a.ETAT == 4).Count()
                         };
 
                         return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = newElemH }, settings));
@@ -99,20 +106,22 @@ namespace apptab.Controllers
                         foreach (var x in user)
                         {
                             mandat = mandat.Where(a => a.IDPROJET == x.ID).ToList();
-
+                            payement = payement.Where(a => a.IDPROJET == x.ID).ToList();
                             newElemH = new COUNTTDB()
                             {
                                 MandatT = mandat.Where(a => a.ETAT == 0).Count(),
                                 MandatV = mandat.Where(a => a.ETAT == 1).Count(),
                                 MandatA = mandat.Where(a => a.ETAT == 2).Count(),
+                                //MandatI = mandat.Where(a => a.ETAT == 2).Count(),
+                                MandatTR = mandat.Where(a => a.ETAT == 3).Count(),
                                 AvanceT = 0,
                                 AvanceV = 0,
                                 AvanceA = 0,
-                                PaieR = 0,
-                                PaieT = 0,
-                                PaieV = 0,
-                                PaieF = 0,
-                                PaieA = 0
+                                PaieR = payement.Where(a => a.ETAT == 0).Count(),
+                                PaieT = payement.Where(a => a.ETAT == 1).Count(),
+                                PaieV = payement.Where(a => a.ETAT == 2).Count(),
+                                PaieF = payement.Where(a => a.ETAT == 3).Count(),
+                                PaieA = payement.Where(a => a.ETAT == 4).Count()
                             };
                         }
 

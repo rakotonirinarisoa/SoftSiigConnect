@@ -203,7 +203,7 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            var Projet = db.SI_PROJETS.FirstOrDefault(a => a.ID == suser.IDPROJET && a.DELETIONDATE == null).ID;
+            var Projet = db.SI_PROJETS.FirstOrDefault(a => a.ID == societe.IDPROJET && a.DELETIONDATE == null).ID;
             var Soa = db.SI_SOAS.FirstOrDefault(a => a.ID == societe.IDSOA && a.DELETIONDATE == null).ID;
 
             var societeExist = db.SI_PROSOA.FirstOrDefault(a => a.IDPROJET == Projet && a.DELETIONDATE == null/* || a.IDSOA == Soa*/);
@@ -563,17 +563,17 @@ namespace apptab.Controllers
                 var ProjSoa = db.SI_PROSOA.Where(F_ProjetSoa => F_ProjetSoa.IDSOA == IDSOA && F_ProjetSoa.DELETIONDATE == null).Select(F_ProjetSoa => F_ProjetSoa.IDSOA).ToList();
                 if (SOA != null)
                 {
-                    //db.SI_SOAS.Remove(SOA);
                     SOA.DELETIONDATE = DateTime.Now;
                     if (ProjSoa != null)
                     {
                         foreach (var p in ProjSoa)
                         {
-                            var F_del = db.SI_PROSOA.Where(F_remSoa => F_remSoa.IDSOA == p).FirstOrDefault();
+                            var F_del = db.SI_PROSOA.Where(F_remSoa => F_remSoa.IDSOA == p && F_remSoa.DELETIONDATE == null).FirstOrDefault();
                             F_del.DELETIONDATE = DateTime.Now;
-                            //db.SI_PROSOA.Remove(F_del);
+                            db.SaveChanges();
                         }
                     }
+
                     var Hsoas = new HSI_SOAS()
                     {
                         IDPARENT = SOA.ID,
@@ -584,7 +584,7 @@ namespace apptab.Controllers
                     };
                     db.HSI_SOAS.Add(Hsoas);
                     db.SaveChanges();
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Suppression avec succès. " }, settings));
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Suppression avec succès." }, settings));
                 }
                 else
                 {
@@ -825,13 +825,17 @@ namespace apptab.Controllers
 
             bool MAILTE = new Data.Extension().TestMail(param.MAILTE);
             bool MAILTV = new Data.Extension().TestMail(param.MAILTV);
+            bool MAILSIIG = new Data.Extension().TestMail(param.MAILSIIG);
             bool MAILPI = new Data.Extension().TestMail(param.MAILPI);
             bool MAILPE = new Data.Extension().TestMail(param.MAILPE);
             bool MAILPV = new Data.Extension().TestMail(param.MAILPV);
             bool MAILPP = new Data.Extension().TestMail(param.MAILPP);
+            bool MAILREJET = new Data.Extension().TestMail(param.MAILREJET);
+            bool MAILREJETPAIE = new Data.Extension().TestMail(param.MAILREJETPAIE);
             //bool MAILPB = new Extension().TestMail(param.MAILPB);
 
-            if (MAILTE == false || MAILTV == false
+            if (MAILTE == false || MAILTV == false || MAILSIIG == false
+                || MAILREJET == false || MAILREJETPAIE == false
                 || MAILPI == false || MAILPE == false || MAILPV == false || MAILPP == false/* || MAILPB == false*/)
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'une des adresses mail renseignée n'est pas valide. " }, settings));
 
@@ -842,15 +846,18 @@ namespace apptab.Controllers
 
                 if (SExist != null)
                 {
-                    if (SExist.MAILTE != param.MAILTE || SExist.MAILTV != param.MAILTV
+                    if (SExist.MAILTE != param.MAILTE || SExist.MAILTV != param.MAILTV || SExist.MAILSIIG != param.MAILSIIG
                         || SExist.MAILPI != param.MAILPI || SExist.MAILPE != param.MAILPE || SExist.MAILPV != param.MAILPV || SExist.MAILPP != param.MAILPP || SExist.MAILPB != param.MAILPB)
                     {
                         SExist.MAILTE = param.MAILTE;
                         SExist.MAILTV = param.MAILTV;
+                        SExist.MAILSIIG = param.MAILSIIG;
                         SExist.MAILPI = param.MAILPI;
                         SExist.MAILPE = param.MAILPE;
                         SExist.MAILPV = param.MAILPV;
                         SExist.MAILPP = param.MAILPP;
+                        SExist.MAILREJET = param.MAILREJET;
+                        SExist.MAILREJETPAIE = param.MAILREJETPAIE;
 
                         db.SaveChanges();
 
@@ -865,10 +872,13 @@ namespace apptab.Controllers
                         {
                             MAILTE = param.MAILTE,
                             MAILTV = param.MAILTV,
+                            MAILSIIG = param.MAILSIIG,
                             MAILPI = param.MAILPI,
                             MAILPE = param.MAILPE,
                             MAILPV = param.MAILPV,
                             MAILPP = param.MAILPP,
+                            MAILREJET = param.MAILREJET,
+                            MAILREJETPAIE = param.MAILREJETPAIE,
                             IDPROJET = IdS,
                             CREATIONDATE = DateTime.Now,
                             IDUSER = exist.ID,
@@ -886,10 +896,13 @@ namespace apptab.Controllers
                     {
                         MAILTE = param.MAILTE,
                         MAILTV = param.MAILTV,
+                        MAILSIIG = param.MAILSIIG,
                         MAILPI = param.MAILPI,
                         MAILPE = param.MAILPE,
                         MAILPV = param.MAILPV,
                         MAILPP = param.MAILPP,
+                        MAILREJET = param.MAILREJET,
+                        MAILREJETPAIE = param.MAILREJETPAIE,
                         IDPROJET = IdS,
                         CREATIONDATE = DateTime.Now,
                         IDUSER = exist.ID
@@ -904,10 +917,13 @@ namespace apptab.Controllers
                     {
                         MAILTE = isElemH.MAILTE,
                         MAILTV = isElemH.MAILTV,
+                        MAILSIIG = isElemH.MAILSIIG,
                         MAILPI = isElemH.MAILPI,
                         MAILPE = isElemH.MAILPE,
                         MAILPV = isElemH.MAILPV,
                         MAILPP = isElemH.MAILPP,
+                        MAILREJET = param.MAILREJET,
+                        MAILREJETPAIE = param.MAILREJETPAIE,
                         IDPROJET = IdS,
                         CREATIONDATE = isElemH.CREATIONDATE,
                         IDUSER = isElemH.IDUSER,
@@ -972,10 +988,12 @@ namespace apptab.Controllers
 
                 if (SExist != null)
                 {
-                    if (SExist.DELTV != param.DELTV || SExist.DELSIIGFP != param.DELSIIGFP
+                    if (SExist.DELTV != param.DELTV || SExist.DELSIIGFP != param.DELSIIGFP || SExist.DELENVOISIIGFP != param.DELENVOISIIGFP
                         || SExist.DELPE != param.DELPE || SExist.DELPV != param.DELPV || SExist.DELPP != param.DELPP || SExist.DELPB != param.DELPB)
                     {
+                        SExist.DELRAF = param.DELRAF;//Tris par le RAF
                         SExist.DELTV = param.DELTV;//Validation mandat
+                        SExist.DELENVOISIIGFP = param.DELENVOISIIGFP;//Transfert SIIGFP
                         SExist.DELSIIGFP = param.DELSIIGFP;//Traitement SIIGFP
                         SExist.DELPE = param.DELPE;//ENVOI POUR VALIDATION PAIEMENT
                         SExist.DELPV = param.DELPV;//VALIDATION PAIEMENT
@@ -993,7 +1011,9 @@ namespace apptab.Controllers
 
                         var newElemH = new HSI_DELAISTRAITEMENT()
                         {
+                            DELRAF = param.DELRAF,
                             DELTV = param.DELTV,
+                            DELENVOISIIGFP = param.DELENVOISIIGFP,
                             DELSIIGFP = param.DELSIIGFP,
                             DELPE = param.DELPE,
                             DELPV = param.DELPV,
@@ -1014,7 +1034,9 @@ namespace apptab.Controllers
                 {
                     var newPara = new SI_DELAISTRAITEMENT()
                     {
+                        DELRAF = param.DELRAF,
                         DELTV = param.DELTV,
+                        DELENVOISIIGFP = param.DELENVOISIIGFP,
                         DELSIIGFP = param.DELSIIGFP,
                         DELPE = param.DELPE,
                         DELPV = param.DELPV,
@@ -1032,7 +1054,9 @@ namespace apptab.Controllers
                     && a.DELPV == param.DELPV && a.DELPP == param.DELPP && a.DELPB == param.DELPB && a.DELETIONDATE == null);
                     var newElemH = new HSI_DELAISTRAITEMENT()
                     {
+                        DELRAF = param.DELRAF,
                         DELTV = isElemH.DELTV,
+                        DELENVOISIIGFP = isElemH.DELENVOISIIGFP,
                         DELSIIGFP = isElemH.DELSIIGFP,
                         DELPE = isElemH.DELPE,
                         DELPV = isElemH.DELPV,
@@ -1100,13 +1124,15 @@ namespace apptab.Controllers
 
                 if (SExist != null)
                 {
-                    if (SExist.MT0 != param.MT0 || SExist.MT1 != param.MT1 || SExist.MT2 != param.MT2
+                    if (SExist.MTNON != param.MTNON || SExist.MT0 != param.MT0 || SExist.MT1 != param.MT1 || SExist.MT2 != param.MT2
                         || SExist.MD0 != param.MD0 || SExist.MD1 != param.MD1 || SExist.MD2 != param.MD2
                         || SExist.MOP0 != param.MOP0 || SExist.MOP1 != param.MOP1 || SExist.MOP2 != param.MOP2
                         || SExist.MP1 != param.MP1 || SExist.MP2 != param.MP2 || SExist.MP3 != param.MP3 || SExist.MP4 != param.MP4)
                     {
+                        SExist.MTNON = param.MTNON;
                         SExist.MT0 = param.MT0;
                         SExist.MT1 = param.MT1;
+                        SExist.MT2 = param.MT2;
                         SExist.MT2 = param.MT2;
                         SExist.MP1 = param.MP1;
                         SExist.MP2 = param.MP2;
@@ -1130,6 +1156,7 @@ namespace apptab.Controllers
                 {
                     var newPara = new SI_MENU()
                     {
+                        MTNON = param.MTNON,
                         MT0 = param.MT0,
                         MT1 = param.MT1,
                         MT2 = param.MT2,

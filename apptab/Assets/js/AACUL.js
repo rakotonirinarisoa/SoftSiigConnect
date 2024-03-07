@@ -1,6 +1,4 @@
-﻿let User;
-let Origin;
-$(document).ready(() => {
+﻿$(document).ready(() => {
 
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
@@ -26,6 +24,12 @@ function GetCountTDB() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -44,6 +48,8 @@ function GetCountTDB() {
                 $("#MandatT").html(ListResult.MandatT);
                 $("#MandatV").html(ListResult.MandatV);
                 $("#MandatA").html(ListResult.MandatA);
+                /*$("#MandatI").html(ListResult.MandatI);*/
+                $("#MandatTR").html(ListResult.MandatTR);
 
                 $("#AvanceT").html(ListResult.AvanceT);
                 $("#AvanceV").html(ListResult.AvanceV);

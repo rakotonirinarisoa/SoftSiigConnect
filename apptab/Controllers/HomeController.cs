@@ -11,6 +11,8 @@ using Newtonsoft.Json;
 using Renci.SshNet;
 using System.Net;
 using apptab.Models;
+using Extensions.DateTime;
+using System.Net.Mail;
 
 namespace apptab.Controllers
 {
@@ -18,6 +20,7 @@ namespace apptab.Controllers
     {
         private readonly SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
         private readonly SOFTCONNECTOM __db = new SOFTCONNECTOM();
+        private static string Anarana;
 
         JsonSerializerSettings settings = new JsonSerializerSettings
         {
@@ -53,18 +56,19 @@ namespace apptab.Controllers
         public string GetTypeP(SI_USERS suser, string codeproject)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            int PROJECTid = int.Parse(codeproject);
             if (exist == null) return "";
 
             if (exist.IDPROJET != 0)
             {
-                var basename = db.SI_TYPECRITURE.FirstOrDefault(a => a.IDUSER == exist.ID && a.IDPROJET == exist.IDPROJET).TYPE;
+                var basename = db.SI_TYPECRITURE.FirstOrDefault(a => a.IDPROJET == PROJECTid).TYPE;
                 return basename.ToString();
             }
             else
             {
                 //var mapuser = db.SI_MAPUSERPROJET.Where(a => a.IDUS == exist.ID).ToList();
                 int PROJECTID = int.Parse(codeproject);
-                var ii = db.SI_TYPECRITURE.FirstOrDefault(a => a.IDUSER == exist.ID && a.IDPROJET == PROJECTID);
+                var ii = db.SI_TYPECRITURE.FirstOrDefault(a => a.IDPROJET == PROJECTID);
                 var basename = "";
                 if (ii != null)
                 {
@@ -139,7 +143,32 @@ namespace apptab.Controllers
             }
 
         }
-        public string CreateAFBTXTArch(string pathchemin, string pathfiles, string psw)
+        public FileResult CreateFileAFBtXt(string pathchemin, string pathfiles)
+        {
+            try
+            {
+                string pth = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\";
+
+                if (!Directory.Exists(pth))
+                {
+                    Directory.CreateDirectory(pth);
+                }
+                StreamWriter sw = null;
+
+                sw = new StreamWriter(pth + pathchemin + ".txt");
+                sw.Write(pathfiles);
+                sw.Close();
+                byte[] source = System.IO.File.ReadAllBytes(pth + pathchemin + ".txt");
+                string s = "application/txt";
+
+                return File(source, System.Net.Mime.MediaTypeNames.Application.Octet, pathfiles);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        public FileResult CreateAFBTXTArch(string pathchemin, string pathfiles, string psw)
         {
             string pth = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\";
             if (!Directory.Exists(pth))
@@ -152,13 +181,19 @@ namespace apptab.Controllers
             sw.Write(pathfiles);
             sw.Close();
 
-            Archive archive = new Archive(new ArchiveEntrySettings(encryptionSettings: new TraditionalEncryptionSettings(psw)));
+            FileStream zipFile = System.IO.File.Open(pth + pathchemin + ".zip", FileMode.Create);
 
-            // Add files to the archive
-            archive.CreateEntry(pathchemin + ".txt", pth + pathchemin + ".txt");
-            string source = pth + pathchemin + ".zip";
-            archive.Save(source);
-            return source;
+            var archive = new Archive(new ArchiveEntrySettings(encryptionSettings: new TraditionalEncryptionSettings(psw)));
+
+            FileStream source = System.IO.File.Open(pth + pathchemin + ".txt", FileMode.Open, FileAccess.Read);
+
+            archive.CreateEntry(pathchemin + ".txt", source);
+            archive.Save(zipFile);
+
+            zipFile.Dispose();
+            // archive.Dispose();
+
+            return File(source, System.Net.Mime.MediaTypeNames.Application.Octet);
         }
         [HttpPost]
         public ActionResult CreateZipFile(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName)
@@ -169,44 +204,18 @@ namespace apptab.Controllers
             var ps = db.SI_USERS.Where(x => x.LOGIN == suser.LOGIN /*&& x.IDPROJET == PROJECTID*/ && x.PWD == suser.PWD).Select(x => x.PWD).FirstOrDefault();
 
             var pswftp = db.OPA_CRYPTO.Where(x => x.IDPROJET == PROJECTID && x.IDUSER == suser.ID && x.DELETIONDATE != null).Select(x => x.CRYPTOPWD).FirstOrDefault();
-            if (baseName == "1")
-            {
-                var pathfile = aFB160.CreateTOMPAIEAFB160(devise, codeJ, suser, codeproject);
-                if (intbasetype == 0)
-                {
-                    send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
-                }
-                else if (intbasetype == 1)
-                {
-                    send = CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, pswftp);
-                }
-                else if (intbasetype == 2)
-                {
-                    send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
-                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == suser.IDPROJET).FirstOrDefault();
-                    SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
-                }
-                else
-                {
-                    send = CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, pswftp);
-                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == suser.IDPROJET).FirstOrDefault();
-                    //GenererG(send);
-                    SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
-                }
-
-
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archive Success ", data = send }, settings));
-            }
-            else if (baseName == "2")
+            if (baseName == "2")
             {
                 var pathfile = aFB160.CreateTOMPROAFB160(devise, codeJ, suser, codeproject);
                 if (intbasetype == 0)
                 {
-                    send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
+                    Anarana = pathfile.Chemin;
+                    //send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
+                    return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                 }
                 else if (intbasetype == 1)
                 {
-                    send = CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
+                    return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
                 }
                 else if (intbasetype == 2)
                 {
@@ -216,7 +225,7 @@ namespace apptab.Controllers
                 }
                 else
                 {
-                    send = CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
+                    return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == suser.IDPROJET).FirstOrDefault();
                     SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                 }
@@ -227,29 +236,39 @@ namespace apptab.Controllers
             else
             {
                 var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser, codeproject);
-                //var send = "";
+
                 if (intbasetype == 0)
                 {
-                    send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
+                    Anarana = pathfile.Chemin;
+
+                    return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                 }
                 else if (intbasetype == 1)
                 {
-                    send = CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
+                    Anarana = pathfile.Chemin;
+                    return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
                 }
                 else if (intbasetype == 2)
                 {
-                    send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
+                    Anarana = pathfile.Chemin;
+                    return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == suser.IDPROJET).FirstOrDefault();
                     SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                 }
                 else
                 {
-                    send = CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
+                    Anarana = pathfile.Chemin;
+                    return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == suser.IDPROJET).FirstOrDefault();
                     SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                 }
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archive Success ", data = send }, settings));
             }
+        }
+        [HttpPost]
+        public JsonResult FileName()
+        {
+            return Json(JsonConvert.SerializeObject(new { Filename = Anarana }, settings));
         }
         public ActionResult GetFile(string file)
         {
@@ -289,9 +308,9 @@ namespace apptab.Controllers
             public string Journal { get; set; }
             public string Marche { get; set; }
         }
-
+        //=========================================================================================================PaiementsValidations============================================================================
         [HttpPost]
-        public JsonResult getelementjs(int ChoixBase, string codeproject, string journal, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP,/* int mois, int annee, string matr1, string matr2, DateTime datePaie,*/ SI_USERS suser)
+        public JsonResult Getelementjs(int ChoixBase, string codeproject, string journal, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP,/* int mois, int annee, string matr1, string matr2, DateTime datePaie,*/ SI_USERS suser)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -304,7 +323,7 @@ namespace apptab.Controllers
             }
             AFB160 afb160 = new AFB160();
             //var hst = db.OPA_HISTORIQUE.Select(x => x.NUMENREG.ToString()).ToArray();
-            var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4).Select(x => x.IDREGLEMENT.ToString()).ToArray();
+            var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID).Select(x => x.IDREGLEMENT.ToString()).ToArray();
             var list = afb160.getListEcritureCompta(journal, PROJECTID, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => !hstSiig.Contains(x.No.ToString())).ToList();
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list }, settings));
 
@@ -323,9 +342,9 @@ namespace apptab.Controllers
             }
             AFB160 afb160 = new AFB160();
             //var hst = db.OPA_HISTORIQUEBR.Where(x => x.IDSOCIETE == suser.IDPROJET).Select(x => x.NUMENREG.ToString()).ToArray();
-            var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4).Select(x => x.IDREGLEMENT.ToString()).ToArray();
+            var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID).Select(x => x.IDREGLEMENT.ToString()).ToArray();
 
-            var list = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => !hstSiig.Contains(x.No.ToString())).ToList();
+            var list = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID).Where(x => !hstSiig.Contains(x.No.ToString())).ToList();
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list }, settings));
 
         }
@@ -467,6 +486,10 @@ namespace apptab.Controllers
             //    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès.", data = listReg }, settings));
             //}
             #endregion
+            int countTraitement = 0;
+            var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
+
+            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == PROJECTID).FirstOrDefault().PROJET;
 
             OPA_VALIDATIONS avalider = new OPA_VALIDATIONS();
             if (basename == "2")
@@ -479,7 +502,7 @@ namespace apptab.Controllers
                     var listA = afb160.getListEcritureCompta(journal, PROJECTID, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => x.No.ToString() == h).ToList();
                     foreach (var item in listA)
                     {
-                        avalider.IDREGLEMENT = (int)item.No;
+                        avalider.IDREGLEMENT = item.No.ToString();
                         avalider.ETAT = 0;
                         avalider.IDPROJET = PROJECTID;
                         avalider.DateIn = datein;
@@ -516,10 +539,142 @@ namespace apptab.Controllers
                             throw;
                         }
                     }
+                    countTraitement++;
+                }
+                //SEND MAIL ALERT et NOTIFICATION//
+                string MailAdresse = "serviceinfo@softwell.mg";
+                string mdpMail = "09eYpçç0601";
+
+                using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
+                {
+                    SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
+                    smtp.UseDefaultCredentials = true;
+
+                    mail.From = new MailAddress(MailAdresse);
+
+                    mail.To.Add(MailAdresse);
+                    if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE != null)
+                    {
+                        string[] separators = { ";" };
+
+                        var Tomail = mail;
+                        if (Tomail != null)
+                        {
+                            string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE;
+                            string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                            foreach (var mailto in mailListe)
+                            {
+                                mail.To.Add(mailto);
+                            }
+                        }
+                    }
+
+                    mail.Subject = "Attente validation paiements du projet " + ProjetIntitule;
+                    mail.IsBodyHtml = true;
+                    mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " paiements en attente Validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
+                        "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+
+                    smtp.Port = 587;
+                    smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
+                    smtp.EnableSsl = true;
+
+                    try { smtp.Send(mail); }
+                    catch (Exception) { }
+                }
+            }
+            else
+            {
+                string auxi1 = auxi;
+                AFB160 afb160 = new AFB160();
+                var hst = db.OPA_HISTORIQUE.Select(x => x.NUMENREG.ToString()).ToArray();
+                foreach (var h in list)
+                {
+                    var listA = afb160.getListEcritureBR(journal, datein, dateout,devise,comptaG, auxi, etat, dateP, suser, PROJECTID).Where(x => x.No.ToString() == h).ToList();
+                    foreach (var item in listA)
+                    {
+                        avalider.IDREGLEMENT = item.No;
+                        avalider.ETAT = 0;
+                        avalider.IDPROJET = PROJECTID;
+                        avalider.DateIn = datein;
+                        avalider.DateOut = dateout;
+                        avalider.ComptaG = comptaG;
+                        avalider.auxi = auxi;
+                        avalider.DateP = dateP;
+                        avalider.Journal = journal;
+                        avalider.dateOrdre = item.Date.ToString();
+                        avalider.NoPiece = item.NoPiece;
+                        avalider.Compte = item.Compte;
+                        avalider.Libelle = item.Libelle;
+                        avalider.MontantDevise = item.MontantDevise;
+                        avalider.Mon = item.Mon;
+                        avalider.Rang = item.Rang;
+                        avalider.Poste = item.Poste;
+                        avalider.FinancementCategorie = item.FinancementCategorie;
+                        avalider.Commune = item.Commune;
+                        avalider.Plan6 = item.Plan6;
+                        avalider.Marche = item.Marche;
+                        avalider.Statut = item.Status;
+                        avalider.DATECREA = DateTime.Now;
+                        avalider.IDUSCREA = exist.ID;
+                        try
+                        {
+                            db.OPA_VALIDATIONS.Add(avalider);
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                            throw;
+                        }
+                    }
+                    countTraitement++;
+                }
+                //SEND MAIL ALERT et NOTIFICATION//
+                string MailAdresse = "serviceinfo@softwell.mg";
+                string mdpMail = "09eYpçç0601";
+
+                using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
+                {
+                    SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
+                    smtp.UseDefaultCredentials = true;
+
+                    mail.From = new MailAddress(MailAdresse);
+
+                    mail.To.Add(MailAdresse);
+                    if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE != null)
+                    {
+                        string[] separators = { ";" };
+
+                        var Tomail = mail;
+                        if (Tomail != null)
+                        {
+                            string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE;
+                            string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                            foreach (var mailto in mailListe)
+                            {
+                                mail.To.Add(mailto);
+                            }
+                        }
+                    }
+
+                    mail.Subject = "Attente validation paiements du projet " + ProjetIntitule;
+                    mail.IsBodyHtml = true;
+                    mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " paiements en attente Validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
+                        "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+
+                    smtp.Port = 587;
+                    smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
+                    smtp.EnableSsl = true;
+
+                    try { smtp.Send(mail); }
+                    catch (Exception) { }
                 }
             }
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès.", data = "" }, settings));
         }
+        //=========================================================================================TeacherValidation======================================================================
         [HttpPost]
         public JsonResult GetElementAvalider(string ChoixBase,string codeproject, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP, string journal, string etat, bool devise, SI_USERS suser)
         {
@@ -528,21 +683,75 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
+            int retarDate = 0;
+            if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null))
+                retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).DELPE.Value;
+
+            List<OPA_VALIDATIONS> list = new List<OPA_VALIDATIONS>();
             if (ChoixBase == "2")
             {
                 var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0 && ecriture.ComptaG == comptaG && ecriture.Journal == journal).ToList();
+                foreach (var item in avalider)
+                {
+                    bool isLate = false;
+                    if (item.DATECREA.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                        isLate = true;
+                    list.Add(new OPA_VALIDATIONS
+                    {
+                        IDREGLEMENT = item.IDREGLEMENT,
+                        dateOrdre = item.dateOrdre,
+                        NoPiece = item.NoPiece,
+                        Compte = item.Compte,
+                        Journal = item.Journal,
+                        Credit = item.Credit,
+                        Debit = item.Debit,
+                        FinancementCategorie = item.FinancementCategorie,
+                        Mon = item.Mon,
+                        MontantDevise = item.MontantDevise,
+                        Rang = item.Rang,
+                        Plan6 = item.Plan6,
+                        Commune = item.Commune,
+                        Marche = item.Marche,
+                        isLATE = isLate,
+                    });
+                }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = avalider }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = list }, settings));
             }
             else
             {
                 var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0 && ecriture.ComptaG == comptaG && ecriture.DateIn == datein && ecriture.DateOut == dateout && ecriture.auxi == auxi && ecriture.Journal == journal).ToList();
+                foreach (var item in avalider)
+                {
+                    bool isLate = false;
+                    if (item.DATECREA.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                        isLate = true;
+                    list.Add(new OPA_VALIDATIONS
+                    {
+                        IDREGLEMENT = item.IDREGLEMENT,
+                        dateOrdre = item.dateOrdre,
+                        NoPiece = item.NoPiece,
+                        Compte = item.Compte,
+                        Journal = item.Journal,
+                        Credit = item.Credit,
+                        Debit = item.Debit,
+                        FinancementCategorie = item.FinancementCategorie,
+                        Mon = item.Mon,
+                        MontantDevise = item.MontantDevise,
+                        Rang = item.Rang,
+                        Plan6 = item.Plan6,
+                        Commune = item.Commune,
+                        Marche = item.Marche,
+                        isLATE = isLate,
+                    });
+                }
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = avalider }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = list }, settings));
             }
 
         }
         //Envoye Validations
+        //=========================================================================================TeacherValidation======================================================================
         [HttpPost]
         public JsonResult GetElementAvaliderLoad(SI_USERS suser, string codeproject)
         {
@@ -553,23 +762,75 @@ namespace apptab.Controllers
             var basename = GetTypeP(suser, codeproject);
             int PROJECTID = int.Parse(codeproject);
 
-            if (basename =="")
+            int retarDate = 0;
+            if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null))
+                retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).DELPE.Value;
+            
+            List<OPA_VALIDATIONS> list = new List<OPA_VALIDATIONS>();
+            if (basename == "")
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez Parametrer le Types D'ecriture avant toutes Opérations." }, settings));
             }
             if (basename == "2")
             {
                 var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0).ToList();
-
+                foreach (var item in avalider)
+                {
+                    bool isLate = false;
+                    if (item.DATECREA.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                        isLate = true;
+                    list.Add(new OPA_VALIDATIONS
+                    {
+                        IDREGLEMENT = item.IDREGLEMENT,
+                        dateOrdre = item.dateOrdre,
+                        NoPiece = item.NoPiece,
+                        Compte = item.Compte,
+                        Journal = item.Journal,
+                        Credit = item.Credit,
+                        Debit = item.Debit,
+                        FinancementCategorie = item.FinancementCategorie,
+                        Mon = item.Mon,
+                        MontantDevise = item.MontantDevise,
+                        Rang = item.Rang,
+                        Plan6 = item.Plan6,
+                        Commune = item.Commune,
+                        Marche = item.Marche,
+                        isLATE = isLate,
+                    });
+                }
                 //var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == suser.IDPROJET && ecriture.ETAT == 0).ToList();
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = avalider }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = list }, settings));
             }
             else
             {
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == suser.IDPROJET && ecriture.ETAT == 0).ToList();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0).ToList();
+                foreach (var item in avalider)
+                {
+                    bool isLate = false;
+                    if (item.DATECREA.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                        isLate = true;
+                    list.Add(new OPA_VALIDATIONS
+                    {
+                        IDREGLEMENT = item.IDREGLEMENT,
+                        dateOrdre = item.dateOrdre,
+                        NoPiece = item.NoPiece,
+                        Compte = item.Compte,
+                        Journal = item.Journal,
+                        Credit = item.Credit,
+                        Debit = item.Debit,
+                        FinancementCategorie = item.FinancementCategorie,
+                        Mon = item.Mon,
+                        MontantDevise = item.MontantDevise,
+                        Rang = item.Rang,
+                        Plan6 = item.Plan6,
+                        Commune = item.Commune,
+                        Marche = item.Marche,
+                        isLATE = isLate,
+                    });
+                }
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = avalider }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = list }, settings));
             }
 
         }
@@ -594,6 +855,12 @@ namespace apptab.Controllers
             List<string> list = listCompte.Split(',').ToList();
             List<string> numBR = listCompte.Split(',').ToList();
             var AvaliderList = db.OPA_VALIDATIONS.Where(a => list.Contains(a.IDREGLEMENT.ToString()) && a.ETAT == 0);
+
+            int countTraitement = 0;
+            var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
+
+            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == PROJECTID).FirstOrDefault().PROJET;
+
             OPA_VALIDATIONS avalider = new OPA_VALIDATIONS();
 
             if (basename == "2")
@@ -604,33 +871,105 @@ namespace apptab.Controllers
             {
                 foreach (var item in AvaliderList)
                 {
-                    aFB160.SaveValideSelectEcritureBR(numBR, item.Journal, item.ETAT.ToString(), devise, suser);
+                    aFB160.SaveValideSelectEcritureBR(numBR, item.Journal, item.ETAT.ToString(), devise, suser,PROJECTID);
                 }
 
             }
-            foreach (var item in list)
+            if (basename == "2")
             {
-                int b = int.Parse(item);
-                avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == b && a.ETAT == 0).FirstOrDefault();
-                if (avalider != null)
+                foreach (var item in list)
                 {
-                    try
+                    int b = int.Parse(item);
+                    avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == b.ToString() && a.ETAT == 0).FirstOrDefault();
+                    if (avalider != null)
                     {
-                        avalider.DATEACCEPT = DateTime.Now;
-                        avalider.IDUSSEND = exist.ID;
-                        avalider.ETAT = 1;
-                        db.SaveChanges();
+                        try
+                        {
+                            avalider.DATEACCEPT = DateTime.Now;
+                            avalider.IDUSSEND = exist.ID;
+                            avalider.ETAT = 1;
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                            throw;
+                        }
                     }
-                    catch (Exception ex)
+                    countTraitement++;
+                }
+            }
+            else
+            {
+                foreach (var item in list)
+                {
+                    //int b = int.Parse(item);
+                    avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item && a.ETAT == 0).FirstOrDefault();
+                    if (avalider != null)
                     {
-                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
-                        throw;
+                        try
+                        {
+                            avalider.DATEACCEPT = DateTime.Now;
+                            avalider.IDUSSEND = exist.ID;
+                            avalider.ETAT = 1;
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                            throw;
+                        }
+                    }
+                    countTraitement++;
+                }
+            }
+
+            //SEND MAIL ALERT et NOTIFICATION//
+            string MailAdresse = "serviceinfo@softwell.mg";
+            string mdpMail = "09eYpçç0601";
+
+            using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
+            {
+                SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
+                smtp.UseDefaultCredentials = true;
+
+                mail.From = new MailAddress(MailAdresse);
+
+                mail.To.Add(MailAdresse);
+                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE != null)
+                {
+                    string[] separators = { ";" };
+
+                    var Tomail = mail;
+                    if (Tomail != null)
+                    {
+                        string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE;
+                        string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                        foreach (var mailto in mailListe)
+                        {
+                            mail.To.Add(mailto);
+                        }
                     }
                 }
+
+                mail.Subject = "Attente validation paiements du projet " + ProjetIntitule;
+                mail.IsBodyHtml = true;
+                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " paiements en attente Validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
+                    "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+
+                smtp.Port = 587;
+                smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
+                smtp.EnableSsl = true;
+
+                try { smtp.Send(mail); }
+                catch (Exception) { }
             }
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = "" }, settings));
         }
         //ETAT = 1
+        //=========================================================================================TeacherValidation======================================================================
+
         [HttpPost]
         public JsonResult GetAcceptecriture(string ChoixBase, string codeproject, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP, string journal, string etat, bool devise, SI_USERS suser)
         {
@@ -639,18 +978,71 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
+            int retarDate = 0;
+            if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null))
+                retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).DELPV.Value;
+            List<OPA_VALIDATIONS> list = new List<OPA_VALIDATIONS>();
+
             var basename = GetTypeP(suser, codeproject);
             if (basename == "2")
             {
                 var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 1 && ecriture.ComptaG == comptaG && ecriture.auxi == auxi && ecriture.Journal == journal).ToList();
-                //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = avalider }, settings));
+                foreach (var item in avalider)
+                {
+                    bool isLate = false;
+                    if (item.DATEACCEPT.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                        isLate = true;
+                    list.Add(new OPA_VALIDATIONS
+                    {
+                        IDREGLEMENT = item.IDREGLEMENT,
+                        dateOrdre = item.dateOrdre,
+                        NoPiece = item.NoPiece,
+                        Compte = item.Compte,
+                        Journal = item.Journal,
+                        Credit = item.Credit,
+                        Debit = item.Debit,
+                        FinancementCategorie = item.FinancementCategorie,
+                        Mon = item.Mon,
+                        MontantDevise = item.MontantDevise,
+                        Rang = item.Rang,
+                        Plan6 = item.Plan6,
+                        Commune = item.Commune,
+                        Marche = item.Marche,
+                        isLATE = isLate,
+                    });
+                }
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = list }, settings));
             }
             else
             {
                 var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 1 && ecriture.ComptaG == comptaG && ecriture.DateIn == datein && ecriture.DateOut == dateout && ecriture.auxi == auxi && ecriture.Journal == journal).ToList();
-                //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = avalider }, settings));
+                foreach (var item in avalider)
+                {
+                    bool isLate = false;
+                    if (item.DATEACCEPT.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                        isLate = true;
+
+                    list.Add(new OPA_VALIDATIONS
+                    {
+                        IDREGLEMENT = item.IDREGLEMENT,
+                        dateOrdre = item.dateOrdre,
+                        NoPiece = item.NoPiece,
+                        Compte = item.Compte,
+                        Journal = item.Journal,
+                        Credit = item.Credit,
+                        Debit = item.Debit,
+                        FinancementCategorie = item.FinancementCategorie,
+                        Mon = item.Mon,
+                        MontantDevise = item.MontantDevise,
+                        Rang = item.Rang,
+                        Plan6 = item.Plan6,
+                        Commune = item.Commune,
+                        Marche = item.Marche,
+                        isLATE = isLate,
+                    });
+                }
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = list }, settings));
             }
         }
         [HttpPost]
@@ -667,37 +1059,93 @@ namespace apptab.Controllers
                 return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Veuillez Parametrer le Types D'ecriture avant toutes Opérations." }, settings));
             }
 
+            int retarDate = 0;
+            if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null))
+                retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).DELPV.Value;
+            List<OPA_VALIDATIONS> list = new List<OPA_VALIDATIONS>();
+
             if (basename == "2")
             {
                 var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 1).ToList();
+                foreach (var item in avalider)
+                {
+                    bool isLate = false;
+                    if (item.DATEACCEPT.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                        isLate = true;
+                    list.Add(new OPA_VALIDATIONS
+                    {
+                        IDREGLEMENT = item.IDREGLEMENT,
+                        dateOrdre = item.dateOrdre,
+                        NoPiece = item.NoPiece,
+                        Compte = item.Compte,
+                        Journal = item.Journal,
+                        Credit = item.Credit,
+                        Debit = item.Debit,
+                        FinancementCategorie = item.FinancementCategorie,
+                        Mon = item.Mon,
+                        MontantDevise = item.MontantDevise,
+                        Rang = item.Rang,
+                        Plan6 = item.Plan6,
+                        Commune = item.Commune,
+                        Marche = item.Marche,
+                        isLATE = isLate,
+                    });
+                }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = avalider }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = list }, settings));
             }
             else
             {
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == suser.IDPROJET && ecriture.ETAT == 1).ToList();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 1).ToList();
+                foreach (var item in avalider)
+                {
+                    bool isLate = false;
+                    if (item.DATECREA.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                        isLate = true;
+                    list.Add(new OPA_VALIDATIONS
+                    {
+                        IDREGLEMENT = item.IDREGLEMENT,
+                        dateOrdre = item.dateOrdre,
+                        NoPiece = item.NoPiece,
+                        Compte = item.Compte,
+                        Journal = item.Journal,
+                        Credit = item.Credit,
+                        Debit = item.Debit,
+                        FinancementCategorie = item.FinancementCategorie,
+                        Mon = item.Mon,
+                        MontantDevise = item.MontantDevise,
+                        Rang = item.Rang,
+                        Plan6 = item.Plan6,
+                        Commune = item.Commune,
+                        Marche = item.Marche,
+                        isLATE = isLate,
+                    });
+                }
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = avalider }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = list }, settings));
             }
         }
 
         [HttpPost]
-        public JsonResult GetAcceptecritureF(string listCompte, SI_USERS suser)
+        public JsonResult GetAcceptecritureF(string listCompte, SI_USERS suser, string codeproject)
         {//validations
             AFB160 aFB160 = new AFB160();
             List<string> list = listCompte.Split(',').ToList();
             List<string> numBR = listCompte.Split(',').ToList();
             OPA_VALIDATIONS avalider = new OPA_VALIDATIONS();
+            int PROJECTID = int.Parse(codeproject);
+            int countTraitement = 0;
+            var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
 
             foreach (var item in list)
             {
                 int b = int.Parse(item);
-                avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == b).FirstOrDefault();
+                avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == b.ToString()).FirstOrDefault();
                 if (avalider != null)
                 {
                     try
                     {
-                        avalider.IDREGLEMENT = int.Parse(item);
+                        avalider.IDREGLEMENT = item;
                         avalider.ETAT = 2;
                         avalider.DATESEND = DateTime.Now;
                         avalider.IDPROJET = suser.IDPROJET;
@@ -718,6 +1166,8 @@ namespace apptab.Controllers
             }
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = "" }, settings));
         }
+        //======================================================================================================EnvoyerValidations===============================================================
+
         [HttpPost]
         public JsonResult EnvoyeValidatioF(string ChoixBase, string codeproject, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP, string journal, string etat, bool devise, SI_USERS suser)
         {
@@ -728,11 +1178,42 @@ namespace apptab.Controllers
             // var basename = GetTypeP(suser, exist.IDPROJET.ToString());
 
             int PROJECTID = int.Parse(codeproject);
+
+            int retarDate = 0;
+            if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null))
+                retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).DELPP.Value;
+            List<OPA_VALIDATIONS> list = new List<OPA_VALIDATIONS>();
+
             if (ChoixBase == "2")
             {
                 var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && ecriture.ComptaG == comptaG && ecriture.DateIn == datein && ecriture.DateOut == dateout && ecriture.auxi == auxi && ecriture.Journal == journal).ToList();
+                foreach (var item in avalider)
+                {
+                    bool isLate = false;
+                    if (item.DATESEND.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                        isLate = true;
+
+                    list.Add(new OPA_VALIDATIONS
+                    {
+                        IDREGLEMENT = item.IDREGLEMENT,
+                        dateOrdre = item.dateOrdre,
+                        NoPiece = item.NoPiece,
+                        Compte = item.Compte,
+                        Journal = item.Journal,
+                        Credit = item.Credit,
+                        Debit = item.Debit,
+                        FinancementCategorie = item.FinancementCategorie,
+                        Mon = item.Mon,
+                        MontantDevise = item.MontantDevise,
+                        Rang = item.Rang,
+                        Plan6 = item.Plan6,
+                        Commune = item.Commune,
+                        Marche = item.Marche,
+                        isLATE = isLate,
+                    });
+                }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = avalider }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = list }, settings));
             }
             else
             {
@@ -741,6 +1222,8 @@ namespace apptab.Controllers
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = avalider }, settings));
             }
         }
+        //======================================================================================================ValidationsEcrituresF===============================================================
+
         [HttpPost]
         public JsonResult ValidationsEcrituresF(string baseName, string codeproject, string listCompte, SI_USERS suser)
         {
@@ -750,6 +1233,10 @@ namespace apptab.Controllers
             List<DataListTomOP> listRegBR__ = new List<DataListTomOP>();
             AFB160 aFB160 = new AFB160();
             int PROJECTID = int.Parse(codeproject);
+
+            int countTraitement = 0;
+            var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
+            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == PROJECTID).FirstOrDefault().PROJET;
 
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -771,46 +1258,134 @@ namespace apptab.Controllers
             }
 
             OPA_VALIDATIONS avalider = new OPA_VALIDATIONS();
-            foreach (var item in list)
+            if (baseName == "2")
             {
-                int b = int.Parse(item);
-                avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == b).FirstOrDefault();
-                if (avalider != null)
+                foreach (var item in list)
                 {
-                    try
+                    int b = int.Parse(item);
+                    avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == b.ToString()).FirstOrDefault();
+                    if (avalider != null)
                     {
-                        avalider.IDREGLEMENT = b;
-                        avalider.ETAT = 2;
-                        avalider.DATEVAL = DateTime.Now.Date;
-                        avalider.DATESEND = DateTime.Now.Date;
-                        avalider.IDPROJET = PROJECTID;
-                        avalider.DateIn = avalider.DateIn;
-                        avalider.DateOut = avalider.DateOut;
-                        avalider.ComptaG = avalider.ComptaG;
-                        avalider.auxi = avalider.auxi;
-                        avalider.DateP = avalider.DateP;
-                        avalider.Journal = avalider.Journal;
-                        avalider.DATEVAL = DateTime.Now;
-                        avalider.IDUSVAL = exist.ID;
+                        try
+                        {
+                            avalider.IDREGLEMENT = b.ToString();
+                            avalider.ETAT = 2;
+                            avalider.DATESEND = DateTime.Now.Date;
+                            avalider.IDPROJET = PROJECTID;
+                            avalider.DateIn = avalider.DateIn;
+                            avalider.DateOut = avalider.DateOut;
+                            avalider.ComptaG = avalider.ComptaG;
+                            avalider.auxi = avalider.auxi;
+                            avalider.DateP = avalider.DateP;
+                            avalider.Journal = avalider.Journal;
+                            avalider.DATEVAL = DateTime.Now;
+                            avalider.IDUSVAL = exist.ID;
 
-                        db.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
-                        throw;
-                    }
-                    if (baseName == "2")
-                    {
-                        listReg__.Add(listReg.Where(a => (int)a.No == int.Parse(item)).FirstOrDefault());
-                    }
-                    else
-                    {
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                            throw;
+                        }
+                        if (baseName == "2")
+                        {
+                            listReg__.Add(listReg.Where(a => (int)a.No == int.Parse(item)).FirstOrDefault());
+                        }
+                        else
+                        {
 
-                        listRegBR__.Add(listRegBR.Where(a => a.No == item).FirstOrDefault());
+                            listRegBR__.Add(listRegBR.Where(a => a.No == item).FirstOrDefault());
+                        }
                     }
+                    countTraitement++;
+                }
+            }else
+            {
+                foreach (var item in list)
+                {
+                    //int b = int.Parse(item);
+                    avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item).FirstOrDefault();
+                    if (avalider != null)
+                    {
+                        try
+                        {
+                            avalider.IDREGLEMENT = item;
+                            avalider.ETAT = 2;
+                            avalider.DATESEND = DateTime.Now.Date;
+                            avalider.IDPROJET = PROJECTID;
+                            avalider.DateIn = avalider.DateIn;
+                            avalider.DateOut = avalider.DateOut;
+                            avalider.ComptaG = avalider.ComptaG;
+                            avalider.auxi = avalider.auxi;
+                            avalider.DateP = avalider.DateP;
+                            avalider.Journal = avalider.Journal;
+                            avalider.DATEVAL = DateTime.Now;
+                            avalider.IDUSVAL = exist.ID;
+
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                            throw;
+                        }
+                        if (baseName == "2")
+                        {
+                            listReg__.Add(listReg.Where(a => (int)a.No == int.Parse(item)).FirstOrDefault());
+                        }
+                        else
+                        {
+
+                            listRegBR__.Add(listRegBR.Where(a => a.No == item).FirstOrDefault());
+                        }
+                    }
+                    countTraitement++;
                 }
             }
+
+            //SEND MAIL ALERT et NOTIFICATION//
+            string MailAdresse = "serviceinfo@softwell.mg";
+            string mdpMail = "09eYpçç0601";
+
+            using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
+            {
+                SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
+                smtp.UseDefaultCredentials = true;
+
+                mail.From = new MailAddress(MailAdresse);
+
+                mail.To.Add(MailAdresse);
+                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE != null)
+                {
+                    string[] separators = { ";" };
+
+                    var Tomail = mail;
+                    if (Tomail != null)
+                    {
+                        string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE;
+                        string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                        foreach (var mailto in mailListe)
+                        {
+                            mail.To.Add(mailto);
+                        }
+                    }
+                }
+
+                mail.Subject = "Validation paiement du projet " + ProjetIntitule;
+                mail.IsBodyHtml = true;
+                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " paiement Valider pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
+                    "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+
+                smtp.Port = 587;
+                smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
+                smtp.EnableSsl = true;
+
+                try { smtp.Send(mail); }
+                catch (Exception) { }
+            }
+
             if (baseName == "2")
             {
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = listReg__ }, settings));
@@ -822,6 +1397,7 @@ namespace apptab.Controllers
 
         }
         //END ETAT = 1
+        //======================================================================================================Fvalidations===============================================================
         [HttpPost]
         public JsonResult LoadValidateEcriture(SI_USERS suser, string codeproject)
         {
@@ -829,19 +1405,53 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
             int PROJECTID = int.Parse(codeproject);
-            var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2).ToList();
 
-            return Json(JsonConvert.SerializeObject(new { type = "Success", msg = "Connexion avec success. ", data = val }, settings));
+            int retarDate = 0;
+            if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null))
+                retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).DELPP.Value;
+            List<OPA_VALIDATIONS> list = new List<OPA_VALIDATIONS>();
+
+            var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2).ToList();
+            foreach (var item in val)
+            {
+                bool isLate = false;
+                if (item.DATESEND.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                    isLate = true;
+
+                list.Add(new OPA_VALIDATIONS
+                {
+                    IDREGLEMENT = item.IDREGLEMENT,
+                    dateOrdre = item.dateOrdre,
+                    NoPiece = item.NoPiece,
+                    Compte = item.Compte,
+                    Journal = item.Journal,
+                    Credit = item.Credit,
+                    Debit = item.Debit,
+                    FinancementCategorie = item.FinancementCategorie,
+                    Mon = item.Mon,
+                    MontantDevise = item.MontantDevise,
+                    Rang = item.Rang,
+                    Plan6 = item.Plan6,
+                    Commune = item.Commune,
+                    Marche = item.Marche,
+                    isLATE = isLate,
+                });
+            }
+            return Json(JsonConvert.SerializeObject(new { type = "Success", msg = "Connexion avec success. ", data = list }, settings));
         }
-        public JsonResult CancelEcriture(int id, string motif, string commentaire, SI_USERS suser)
+        //======================================================================================================Cancel===============================================================
+
+        public JsonResult CancelEcriture(int id, string motif, string commentaire, SI_USERS suser, string codeproject)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            var cancel = db.OPA_VALIDATIONS.Where(x => x.IDREGLEMENT == id).FirstOrDefault();
+
+            int PROJECTID = int.Parse(codeproject);
+            var cancel = db.OPA_VALIDATIONS.Where(x => x.IDREGLEMENT == id.ToString() && x.IDPROJET == PROJECTID).FirstOrDefault();
             //OPA_HCANCEL Hcancel = new OPA_HCANCEL();
             if (cancel != null)
             {
-                if (motif != "" && commentaire != "")
+                if (motif != "")
                 {
                     cancel.ETAT = 4;
                     cancel.MOTIF = motif;
@@ -893,6 +1503,7 @@ namespace apptab.Controllers
             }
 
         }
+        //======================================================================================================GetAnomalieBack===============================================================
         public JsonResult GetAnomalieBack(SI_USERS suser, string baseName)
         {
             AFB160 Afb = new AFB160();
@@ -910,31 +1521,62 @@ namespace apptab.Controllers
             }
 
         }
+        //======================================================================================================GetAllProjectUser===============================================================
         public JsonResult GetAllProjectUser(SI_USERS suser)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            //var basename = GetTypeP(suser);
-            if (exist.IDPROJET == 0)
-            {
-                var allproject = db.SI_MAPUSERPROJET.Where(a => a.IDUS == exist.ID).Join(db.SI_PROJETS, projet => projet.IDPROJET, map => map.ID, (projet, map) => new
-                {
-                    ID = projet.IDPROJET,
-                    PROJET = map.PROJET,
-                }).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès.", data = allproject }, settings));
-            }
-            else
-            {
-                var project = db.SI_PROJETS.Where(a => a.ID == exist.IDPROJET).Select(a => new
-                {
-                    ID = a.ID,
-                    PROJET = a.PROJET,
-                }).FirstOrDefault();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès.", data = project }, settings));
-            }
 
+            try
+            {
+                var test = db.SI_USERS.Where(x => x.LOGIN == exist.LOGIN && x.PWD == exist.PWD && x.DELETIONDATE == null).FirstOrDefault();
+                if (test.ROLE == (int)Role.SAdministrateur)
+                {
+                    var user = db.SI_PROJETS.Select(a => new
+                    {
+                        PROJET = a.PROJET,
+                        ID = a.ID,
+                        DELETIONDATE = a.DELETIONDATE,
+                    }).Where(a => a.DELETIONDATE == null).ToList();
+
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+                }
+                else
+                {
+                    if (test.IDPROJET != 0)
+                    {
+                        var user = db.SI_PROJETS.Select(a => new
+                        {
+                            PROJET = a.PROJET,
+                            ID = a.ID,
+                            DELETIONDATE = a.DELETIONDATE,
+                        }).Where(a => a.DELETIONDATE == null && a.ID == test.IDPROJET).ToList();
+
+                        return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+                    }
+                    else
+                    {
+                        var user = (from usr in db.SI_PROJETS
+                                    join prj in db.SI_MAPUSERPROJET on usr.ID equals prj.IDPROJET
+                                    where prj.IDUS == test.ID && usr.DELETIONDATE == null
+                                    select new
+                                    {
+                                        PROJET = usr.PROJET,
+                                        ID = usr.ID,
+                                        DELETIONDATE = usr.DELETIONDATE,
+                                    }).ToList();
+
+                        return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
         }
+        //======================================================================================================FTP===============================================================
+
         public void SENDFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE)
         {
             DateTime now = DateTime.Now;

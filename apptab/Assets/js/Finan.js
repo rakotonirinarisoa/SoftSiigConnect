@@ -1,7 +1,4 @@
-﻿let User;
-let Origin;
-
-$(document).ready(() => {
+﻿$(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
@@ -9,13 +6,11 @@ $(document).ready(() => {
     $(`[data-id="username"]`).text(User.LOGIN);
     GetListProjet();
 });
-//let urlOrigin = Origin;
-//let urlOrigin = "http://softwell.cloud/OPAVI";
 function GetUsers() {
     let formData = new FormData();
 
     formData.append("iProjet", $("#proj").val());
-    
+
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
@@ -27,6 +22,12 @@ function GetUsers() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -41,7 +42,7 @@ function GetUsers() {
                 window.location = window.location.origin;
                 return;
             }
-            
+
             $("#Para").val(Datas.data.FINANCEMENT);
             $("#Code").val(Datas.data.CODE);
 
@@ -94,6 +95,12 @@ $(`[data-action="UpdateUser"]`).click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -128,6 +135,12 @@ function GetListProjet() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 

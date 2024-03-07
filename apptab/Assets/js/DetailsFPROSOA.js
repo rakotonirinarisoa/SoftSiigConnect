@@ -1,19 +1,15 @@
-﻿let User;
-let Origin;
-
-$(document).ready(() => {
+﻿$(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
 
     $(`[data-id="username"]`).text(User.LOGIN);
-  
+
     //GetListSociete();
     GetListProjet(getUrlParameter("PROSOAID"));
     GetListFPROSOA(getUrlParameter("PROSOAID"));
 });
-//let urlOrigin = Origin;
-//let urlOrigin = "http://softwell.cloud/OPAVI";
+
 function GetListProjet(id) {
     let formData = new FormData();
 
@@ -31,9 +27,14 @@ function GetListProjet(id) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            //console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -83,6 +84,12 @@ function GetListFPROSOA(id) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -147,6 +154,12 @@ $(`[data-action="AddnewSociete"]`).click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -182,6 +195,12 @@ function GetListSociete() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -243,6 +262,12 @@ function deletePROSOA(id) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             $(`[data-PROJETId="${id}"]`).remove();
@@ -255,7 +280,7 @@ function deletePROSOA(id) {
 //UpdateFPROSOA
 $(`[data-action="UpdateFPROSOA"]`).click(function () {
     let formData = new FormData();
-    let idprosoauP =getUrlParameter("PROSOAID");
+    let idprosoauP = getUrlParameter("PROSOAID");
     let socP = $("#Proj").val();
     if (!socP) {
         alert("Veuillez renseigner le projet. ");
@@ -284,6 +309,12 @@ $(`[data-action="UpdateFPROSOA"]`).click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 

@@ -94,7 +94,6 @@ body.sidebar-mini.layout-fixed.sidebar-collapse ul.nav-pills.nav-sidebar.flex-co
     height:15% !important;
 }
 .elerfr {
-    opacity: 0.5;
     cursor: pointer;
 }
 
@@ -403,7 +402,8 @@ li.active a {
 }
 
 .os-padding {
-    bottom: 8%;
+    bottom: 17%;
+    /*top: 1%*/
 }
 
 .login-page {
@@ -723,3 +723,8 @@ table.dataTable tbody td {
 .button:not(:last-child) {
     margin-bottom: 64px;
 }
+
+.select2-selection__choice {
+    background-color: steelblue !important;
+}
+

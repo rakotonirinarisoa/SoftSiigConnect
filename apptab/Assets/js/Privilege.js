@@ -1,7 +1,4 @@
-﻿let User;
-let Origin;
-
-$(document).ready(() => {
+﻿$(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
@@ -9,7 +6,7 @@ $(document).ready(() => {
     $(`[data-id="username"]`).text(User.LOGIN);
     GetListUser();
 
-    
+
 });
 
 function GetListUser() {
@@ -27,6 +24,12 @@ function GetListUser() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -41,7 +44,7 @@ function GetListUser() {
             }
 
             $(`[data-id="ubody"]`).text("");
-            
+
             var code = ``;
             $.each(Datas.data, function (k, v) {
 
@@ -84,6 +87,11 @@ function GetListUser() {
                 if (v.MENUPAR8 == 0) MENUPAR8N = "checked";
                 if (v.MENUPAR8 == 1) MENUPAR8R = "checked";
                 if (v.MENUPAR8 == 2) MENUPAR8A = "checked";
+
+                let MTNONN = "", MTNONR = "", MTNONA = "";
+                if (v.MTNON == 0) MTNONN = "checked";
+                if (v.MTNON == 1) MTNONR = "checked";
+                if (v.MTNON == 2) MTNONA = "checked";
 
                 let MT0N = "", MT0R = "", MT0A = "";
                 if (v.MT0 == 0) MT0N = "checked";
@@ -259,6 +267,18 @@ function GetListUser() {
                             </div></br>
                             <div class="form-check form-check-inline">
                                 <input type="radio" id="writeMENUPAR8${v.ID}" name="droneMENUPAR8${v.ID}" value="2" ${MENUPAR8A}/><label class="ml-1" for="writeMENUPAR8${v.ID}" style="font-weight:normal">All</label>
+                            </div>
+                        </td>
+
+                        <td text-align:center>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="noneMTNON${v.ID}" name="droneMTNON${v.ID}" value="0" ${MTNONN}/><label class="ml-1" for="noneMTNON${v.ID}" style="font-weight:normal">None</label>
+                            </div></br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="readMTNON${v.ID}" name="droneMTNON${v.ID}" value="1" ${MTNONR}/><label class="ml-1" for="readMTNON${v.ID}" style="font-weight:normal">Read</label>
+                            </div></br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="writeMTNON${v.ID}" name="droneMTNON${v.ID}" value="2" ${MTNONA}/><label class="ml-1" for="writeMTNON${v.ID}" style="font-weight:normal">All</label>
                             </div>
                         </td>
 
@@ -475,10 +495,11 @@ function SavePRIV(id) {
     formData.append("privilege.MENUPAR7", $(`input[name="droneMENUPAR7${id}"]:checked`).val());
     formData.append("privilege.MENUPAR8", $(`input[name="droneMENUPAR8${id}"]:checked`).val());
 
+    formData.append("privilege.MTNON", $(`input[name="droneMTNON${id}"]:checked`).val());
     formData.append("privilege.MT0", $(`input[name="droneMT0${id}"]:checked`).val());
     formData.append("privilege.MT1", $(`input[name="droneMT1${id}"]:checked`).val());
     formData.append("privilege.MT2", $(`input[name="droneMT2${id}"]:checked`).val());
-    
+
     formData.append("privilege.MP1", $(`input[name="droneMP1${id}"]:checked`).val());
     formData.append("privilege.MP2", $(`input[name="droneMP2${id}"]:checked`).val());
     formData.append("privilege.MP3", $(`input[name="droneMP3${id}"]:checked`).val());
@@ -495,7 +516,7 @@ function SavePRIV(id) {
     formData.append("privilege.TDB0", $(`input[name="droneTDB0${id}"]:checked`).val());
 
     formData.append("privilege.GED", $(`input[name="droneGED${id}"]:checked`).val());
-    
+
     $.ajax({
         type: "POST",
         url: Origin + '/Privilege/AddPRIVILEGE',
@@ -503,6 +524,12 @@ function SavePRIV(id) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -521,6 +548,3 @@ function SavePRIV(id) {
         },
     });
 }
-
-
-

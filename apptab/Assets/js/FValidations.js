@@ -1,25 +1,5 @@
-﻿let User;
-let Origin;
-
-let ListCodeJournal;
-let ListCompteG;
-
-var content;
-let validate;
-
-let ListResult;
-let ListResultAnomalie;
-let contentAnomalies;
-var rdv
-let contentpaie;
-let ListResultpaie;
-let reglementresult;
-
-let listEtat;
-let etaCode;
-
-let table = undefined;
-
+﻿var table = undefined;
+var FilenameUsr;
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
@@ -38,6 +18,12 @@ function GetEtat() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             listEtat = Datas.data
@@ -64,7 +50,57 @@ function GetEtat() {
         }
     });
 }
+function GetTypeP() {
+    let formData = new FormData();
 
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
+
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/GetTypeP',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+            baseName = Datas;
+            if (baseName == 1) {
+                $(`[code_Type]`).val('');
+                $(`[code_Type]`).val('BR');
+
+            } else {
+                $(`[code_Type]`).val('');
+                $(`[code_Type]`).val('COMPTA');
+            }
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+};
 function GetListCompG() {
     let formData = new FormData();
 
@@ -81,6 +117,12 @@ function GetListCompG() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -96,7 +138,7 @@ function GetListCompG() {
             let code = ``;
             let codeAuxi = ``;
             ListCompteG = Datas.data;
-            
+
             $.each(ListCompteG, function (_, v) {
                 code += `
                     <option value="${v.COGE}">${v.COGE}</option>
@@ -141,7 +183,7 @@ function GetListCodeJournal() {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDSOCIETE);
     formData.append("codeproject", codeproject);
-    
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/GetCODEJournal',
@@ -149,6 +191,12 @@ function GetListCodeJournal() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -182,12 +230,41 @@ function GetListCodeJournal() {
         GetListCompG();
     });
 }
+//==============================================================================================Get text===================================================================================
+function GetFileNameAnarana(blobUrl) {
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/FileName',
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            console.log(result);
+            const obj = JSON.parse(result)
+            FilenameUsr = obj.Filename
 
+            let a = document.createElement("a");
+            a.href = blobUrl;
+            a.download = FilenameUsr+".txt";
+            document.body.appendChild(a);
+            a.click();
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
 function getelementTXT(a) {
     let formData = new FormData();
     let codeproject = $("#Fproject").val();
     formData.append("codeproject", codeproject);
-
+    alert(a);
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.ID", User.ID);
     formData.append("suser.PWD", User.PWD);
@@ -204,20 +281,24 @@ function getelementTXT(a) {
         data: formData,
         cache: false,
         contentType: false,
+        datatype: 'json',
+        xhrFields: {
+            responseType: 'blob'
+        },
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
-            var Datas = JSON.parse(result);
-            alert(Datas.data)
-            if (Datas.type == "error") {
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
+            console.log(result);
+            let blobUrl = URL.createObjectURL(result);
+            GetFileNameAnarana(blobUrl);
 
-                return;
-            }
 
-            window.location = '/Home/GetFile?file=' + Datas.data;
+            //window.location = '/Home/GetFile?file=' + Datas.data;
 
         },
         error: function () {
@@ -225,16 +306,18 @@ function getelementTXT(a) {
         }
     });
 }
+//==============================================================================================Get All Project===================================================================================
 
 function GetAllProjectUser() {
-    
+
     let formData = new FormData();
     let codeproject = $("#Fproject").val();
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
-     formData.append("codeproject", codeproject);
+    formData.append("codeproject", codeproject);
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/GetAllProjectUser',
@@ -242,12 +325,21 @@ function GetAllProjectUser() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
+
             reglementresult = ``;
+
             reglementresult = Datas.data;
-            console.log(reglementresult);
+
             let listproject = ``;
+
             if (reglementresult.length) {
                 $.each(reglementresult, function (k, v) {
                     listproject += `<option value="${v.ID}">${v.PROJET}</option>`;
@@ -255,8 +347,9 @@ function GetAllProjectUser() {
             } else {
                 listproject += `<option value="${reglementresult.ID}" selected>${reglementresult.PROJET}</option>`;
             }
-           
+
             $("#Fproject").html(listproject);
+            GetTypeP();
             GetListCodeJournal();
             LoadValidate();
         },
@@ -265,9 +358,10 @@ function GetAllProjectUser() {
         }
     });
 }
+//==============================================================================================Load Page===================================================================================
 
 function LoadValidate() {
-    
+
     let formData = new FormData();
     let codeproject = $("#Fproject").val();
     formData.append("codeproject", codeproject);
@@ -276,7 +370,7 @@ function LoadValidate() {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
     formData.append("suser.IDPROJET", User.IDPROJET);
-   
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/LoadValidateEcriture',
@@ -284,6 +378,12 @@ function LoadValidate() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             reglementresult = ``;
@@ -301,15 +401,16 @@ function LoadValidate() {
                     compte: v.Compte,
                     libelle: v.Libelle,
                     debit: v.Debit,
-                    credit: v.Credit,
-                    montantDevise: v.MontantDevise === 0 ? 'NULL' : v.montantDevise,
-                    mon: v.Mon === null ? 'NULL' : v.Mon,
-                    rang: v.Rang === null ? 'NULL' : v.Rang,
-                    financementCategorie: v.FinancementCategorie === " " ? 'NULL ' : v.FinancementCategorie,
-                    commune: v.Commune === null ? 'NULL' : v.Commune,
-                    plan: v.Plan6 === null ? 'NULL' : v.Plan6,
+                    credit: formatCurrency(String(v.Credit).replace(",", ".")),
+                    montantDevise: v.MontantDevise === 0 ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
+                    mon: v.Mon === null ? '' : v.Mon,
+                    rang: v.Rang === null ? '' : v.Rang,
+                    financementCategorie: v.FinancementCategorie === " " ? ' ' : v.FinancementCategorie,
+                    commune: v.Commune === null ? '' : v.Commune,
+                    plan: v.Plan6 === null ? '' : v.Plan6,
                     journal: v.Journal,
-                    marche: v.Marche === null ? 'NULL' : v.Marche,
+                    marche: v.Marche === null ? '' : v.Marche,
+                    isLATE: v.isLATE
                 });
             });
             if (table !== undefined) {
@@ -334,14 +435,29 @@ function LoadValidate() {
                     { data: 'journal' },
                     { data: 'marche' },
                 ],
-                colReorder: {
-                    enable: true,
-                },
-                deferRender: true,
+               
                 createdRow: function (row, data, _) {
                     $(row).attr('compteG-id', data.id);
+
+                    $(row).addClass('select-text');
+                    if (data.isLATE) {
+                        $(row).attr('style', "background-color: #FF7F7F !important;");
+                    }
                 },
-               
+                columnDefs: [
+                    {
+                        targets: [-1],
+                        className: 'elerfr'
+                    }
+                ],
+                colReorder: {
+                    enable: true,
+                    fixedColumnsLeft: 1
+                },
+                deferRender: true,
+                dom: 'Bfrtip',
+                buttons: ['colvis'],
+
             });
         },
         error: function () {
@@ -349,15 +465,21 @@ function LoadValidate() {
         }
     });
 }
+//==============================================================================================Export EXCEL===================================================================================
 
-function exportTableToExcel(tableID, filename = 'RAS') {
-    var downloadLink;
-    var dataType = 'application/vnd.ms-excel';
-    var tableSelect = document.getElementById(tableID);
-    console.log(tableSelect);
-    console.log(tableID);
-    var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+function exportTableToExcel(filename = 'RAS') {
+    let downloadLink;
+
+    const dataType = 'application/vnd.ms-excel';
+
+    const tableID = 'TDB';
+
+    const tableSelect = document.getElementById(tableID);
+
+    const tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
     alert("OK");
+
     // Specify file name
     filename = filename ? filename + '.xls' : 'excel_data.xls';
 
@@ -365,11 +487,12 @@ function exportTableToExcel(tableID, filename = 'RAS') {
     downloadLink = document.createElement("a");
 
     document.body.appendChild(downloadLink);
-    if (confirm("Télécharger") == true) {
+    if (confirm("Voulez-vous le télécharger ?")) {
         if (navigator.msSaveOrOpenBlob) {
-            var blob = new Blob(['\ufeff', tableHTML], {
+            const blob = new Blob(['\ufeff', tableHTML], {
                 type: dataType
             });
+
             navigator.msSaveOrOpenBlob(blob, filename);
         } else {
             // Create a link to the file
@@ -382,7 +505,6 @@ function exportTableToExcel(tableID, filename = 'RAS') {
             downloadLink.click();
         }
     }
-
 }
 
 $(document).ready(() => {
@@ -391,15 +513,8 @@ $(document).ready(() => {
     Origin = User.origin;
 
     $(`[data-id="username"]`).text(User.LOGIN);
-
-    //$(`[tab="autre"]`).hide();
-
-    /*console.log($(`[tab="autre"]`).hide());*/
-
-    //GetUR();
-    GetAllProjectUser();
     
-    //GetListCompG();
+    GetAllProjectUser();
 });
 
 $(document).on("change", "[compG-list]", () => {
@@ -408,6 +523,7 @@ $(document).on("change", "[compG-list]", () => {
 });
 
 $(document).on("change", "[code-project]", () => {
+    GetTypeP();
     GetListCodeJournal();
     LoadValidate();
 });
@@ -418,7 +534,7 @@ $(document).on("change", "[auxi-list]", () => {
 
 $(document).on("change", "[codej-list]", () => {
     var code = ListCodeJournal.filter(function (e) { return e.CODE == $(`[codej-list]`).val(); })[0];
-    $(`[codej-libelle]`).val(code.LIBELLE);
+    //$(`[codej-libelle]`).val(code.LIBELLE);
 });
 
 $(document).on("click", "[data-target]", function () {
@@ -429,7 +545,7 @@ $(document).on("click", "[data-target]", function () {
 
         $(`[data-type="switch_tab"]`).each(function (i) {
             if ($(this).hasClass('active')) {
-                
+
                 $(this).removeClass('active');
                 $(`#${$(this).attr("data-target")}`).hide();
             }
@@ -466,6 +582,7 @@ $('.Checkall').change(function () {
         $('[compteg-ischecked]').prop("checked", false);
     }
 });
+//==============================================================================================ChargeJs===================================================================================
 
 $('[data-action="ChargerJs"]').click(function () {
     let formData = new FormData();
@@ -488,7 +605,7 @@ $('[data-action="ChargerJs"]').click(function () {
         formData.append("dateP", $('#Pay').val());
         formData.append("devise", false);
         formData.append("etat", $('#etat').val());
-        
+
         $.ajax({
             type: "POST",
             url: Origin + '/Home/EnvoyeValidatioF',
@@ -496,6 +613,12 @@ $('[data-action="ChargerJs"]').click(function () {
             cache: false,
             contentType: false,
             processData: false,
+            beforeSend: function () {
+                loader.removeClass('display-none');
+            },
+            complete: function () {
+                loader.addClass('display-none');
+            },
             success: function (result) {
                 var Datas = JSON.parse(result);
 
@@ -505,13 +628,13 @@ $('[data-action="ChargerJs"]').click(function () {
                 }
                 if (Datas.type == "login") {
                     alert(Datas.msg);
-    
+
                     return;
                 }
                 if (Datas.type == "success") {
                     ListResult = ``;
                     ListResult = Datas.data;
-                    console.log(ListResult);
+
                     const data = [];
 
                     $.each(ListResult, function (_, v) {
@@ -522,15 +645,16 @@ $('[data-action="ChargerJs"]').click(function () {
                             compte: v.Compte,
                             libelle: v.Libelle,
                             debit: v.Debit,
-                            credit: v.Credit,
-                            montantDevise: v.MontantDevise === 0 ? 'NULL' : v.montantDevise,
-                            mon: v.Mon === null ? 'NULL' : v.Mon,
-                            rang: v.Rang === null ? 'NULL' : v.Rang,
-                            financementCategorie: v.FinancementCategorie === ' ' ? 'NULL ' : v.FinancementCategorie,
-                            commune: v.Commune === null ? 'NULL' : v.Commune,
-                            plan: v.Plan6 === null ? 'NULL' : v.Plan6,
+                            credit: formatCurrency(String(v.Credit).replace(",", ".")),
+                            montantDevise: v.MontantDevise === 0 ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
+                            mon: v.Mon === null ? '' : v.Mon,
+                            rang: v.Rang === null ? '' : v.Rang,
+                            financementCategorie: v.FinancementCategorie === ' ' ? ' ' : v.FinancementCategorie,
+                            commune: v.Commune === null ? '' : v.Commune,
+                            plan: v.Plan6 === null ? '' : v.Plan6,
                             journal: v.Journal,
-                            marche: v.Marche === null ? 'NULL' : v.Marche,
+                            marche: v.Marche === null ? '' : v.Marche,
+                            isLATE: v.isLATE
                         });
                     });
                     if (table !== undefined) {
@@ -555,13 +679,27 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'journal' },
                             { data: 'marche' },
                         ],
-                        colReorder: {
-                            enable: true,
-                        },
-                        deferRender: true,
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
+
+                            $(row).addClass('select-text');
+                            if (data.isLATE) {
+                                $(row).attr('style', "background-color: #FF7F7F !important;");
+                            }
                         },
+                        columnDefs: [
+                            {
+                                targets: [-1],
+                                className: 'elerfr'
+                            }
+                        ],
+                        colReorder: {
+                            enable: true,
+                            fixedColumnsLeft: 1
+                        },
+                        deferRender: true,
+                        dom: 'Bfrtip',
+                        buttons: ['colvis'],
                     });
                 }
             },
@@ -590,6 +728,12 @@ $('[data-action="ChargerJs"]').click(function () {
             cache: false,
             contentType: false,
             processData: false,
+            beforeSend: function () {
+                loader.removeClass('display-none');
+            },
+            complete: function () {
+                loader.addClass('display-none');
+            },
             success: function (result) {
                 var Datas = JSON.parse(result);
 
@@ -599,7 +743,7 @@ $('[data-action="ChargerJs"]').click(function () {
                 }
                 if (Datas.type == "login") {
                     alert(Datas.msg);
-    
+
                     return;
                 }
                 if (Datas.type == "success") {
@@ -616,18 +760,19 @@ $('[data-action="ChargerJs"]').click(function () {
                             compte: v.Compte,
                             libelle: v.Libelle,
                             debit: v.Debit,
-                            credit: v.Credit,
-                            montantDevise: v.MontantDevise === 0 ? 'NULL' : v.montantDevise,
-                            mon: v.Mon === null ? 'NULL' : v.Mon,
-                            rang: v.Rang === null ? 'NULL' : v.Rang,
-                            financementCategorie: v.FinancementCategorie === " " ? 'NULL ' : v.FinancementCategorie,
-                            commune: v.Commune === null ? 'NULL' : v.Commune,
-                            plan: v.Plan6 === null ? 'NULL' : v.Plan6,
+                            credit: formatCurrency(String(v.Credit).replace(",", ".")),
+                            montantDevise: v.MontantDevise === 0 ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
+                            mon: v.Mon === null ? '' : v.Mon,
+                            rang: v.Rang === null ? '' : v.Rang,
+                            financementCategorie: v.FinancementCategorie === " " ? ' ' : v.FinancementCategorie,
+                            commune: v.Commune === null ? '' : v.Commune,
+                            plan: v.Plan6 === null ? '' : v.Plan6,
                             journal: v.Journal,
-                            marche: v.Marche === null ? 'NULL' : v.Marche,
+                            marche: v.Marche === null ? '' : v.Marche,
+                            isLATE: v.isLATE
                         });
                     });
-        
+
                     if (table !== undefined) {
                         table.destroy();
                     }
@@ -650,14 +795,28 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'journal' },
                             { data: 'marche' },
                         ],
+                        
+                        createdRow: function (row, data, _) {
+                            $(row).attr('compteG-id', data.id);
+
+                            $(row).addClass('select-text');
+                            if (data.isLATE) {
+                                $(row).attr('style', "background-color: #FF7F7F !important;");
+                            }
+                        },
+                        columnDefs: [
+                            {
+                                targets: [-1],
+                                className: 'elerfr'
+                            }
+                        ],
                         colReorder: {
                             enable: true,
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
-                        createdRow: function (row, data, _) {
-                            $(row).attr('compteG-id', data.id);
-                        },
+                        dom: 'Bfrtip',
+                        buttons: ['colvis'],
                         initComplete: function () {
                             $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
                         }
@@ -670,6 +829,7 @@ $('[data-action="ChargerJs"]').click(function () {
         });
     }
 });
+//==============================================================================================Checked===================================================================================
 
 $('[data-action="GetElementChecked"]').click(function () {
     let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
@@ -695,6 +855,7 @@ $('[data-action="GetElementChecked"]').click(function () {
     formData.append("auxi1", $('#auxi').val());
     formData.append("dateP", $('#Pay').val());
     formData.append("etat", $('#etat').val());
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/ValidationsEcrituresF',
@@ -702,6 +863,12 @@ $('[data-action="GetElementChecked"]').click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             reglementresult = ``;
@@ -709,7 +876,7 @@ $('[data-action="GetElementChecked"]').click(function () {
             $.each(listid, (_, v) => {
                 $(`[compteG-id="${v}"]`).remove();
             });
-            
+
             $.each(listid, function (_, x) {
                 $.each(reglementresult, function (_, v) {
                     if (v != null) {
@@ -720,7 +887,9 @@ $('[data-action="GetElementChecked"]').click(function () {
                                 noPiece: v.NoPiece,
                                 compte: v.Compte,
                                 libelle: v.Libelle,
-                                montantDevise: v.MontantDevise,
+                                debit: formatCurrency(String(v.Debit).replace(",", ".")),
+                                credit: formatCurrency(String(v.Credit).replace(",", ".")),
+                                montantDevise: formatCurrency(String(v.MontantDevise).replace(",", ".")),
                                 mon: v.Mon,
                                 rang: v.Rang,
                                 financementCategorie: v.FinancementCategorie,
@@ -770,8 +939,9 @@ $('[data-action="GetElementChecked"]').click(function () {
             alert("Problème de connexion. ");
         }
     });
-  
+
 });
+//==============================================================================================Anomalie===================================================================================
 
 $('[data-action="GetAnomalieListes"]').click(function () {
 
@@ -789,6 +959,12 @@ $('[data-action="GetAnomalieListes"]').click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -839,20 +1015,3 @@ $('[data-action="GetAnomalieListes"]').click(function () {
 
 var baseName = "2";
 
-$(`[name="options"]`).on("change", (_, v) => {
-    var baseId = $(k.target).attr("data-id");
-
-    baseName = baseId;
-
-    if (baseId == "1") {
-        $(`[tab="paie"]`).show();
-        $(`[tab="autre"]`).hide();
-        //GetListCodeJournal();
-    } else {
-        $(`[tab="autre"]`).show();
-        $(`[tab="paie"]`).hide();
-        $('#afb').empty();
-        //GetListCodeJournal();
-    }
-
-});

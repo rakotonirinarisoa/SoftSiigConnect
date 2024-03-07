@@ -1,8 +1,11 @@
 ﻿@{
-    ViewBag.Title = "Traitement MANDATS";
-    ViewData["Controller"] = "Traitement MANDATS";
+    ViewBag.Title = "Dépenses initiées";
+    ViewData["Controller"] = "Dépenses initiées";
     /*Layout = "~/Views/Shared/_Layout.cshtml";*/
 }
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
 <div class="form-row">
     <div class="input-group mb-3 col">
@@ -29,21 +32,16 @@
     </div>
 </div>
 
-<div class="form-row mb-3">
+<div class="form-row">
     <div class="input-group mb-3 col">
         <div class="btn btn-flat bg-gradient-success col-12" data-action="GenereSIIGOTHER">
             <i class="fa fa-download"></i> Générer
         </div>
     </div>
-    @*<div class="input-group mb-3 col">
-            <div class="btn btn-flat bg-gradient-red col-12 custom-fixed-btn" data-action="SaveSIIG">
-                <i class="fa fa-check-double"></i> Enregistrer et envoyer vers SIIGFP
-            </div>
-        </div>*@
 </div>
 
 <div class="table-responsive mb-3" @*style=" max-height: calc(600px - 0.6rem * 2  );"*@ tab="ordsecOTHER">
-    <table class="table table-hover table-striped table-bordered" display responsive nowrap" width="100%" id="TBD_PROJET">
+    <table class="table table-hover table-striped table-bordered" display responsive nowrap" width="100%" id="TBD_PROJET_OTHER">
         <thead style="position:sticky">
             <tr class="thead-accueil1" style="white-space: nowrap;">
                 <td style="text-align:center">
@@ -70,15 +68,15 @@
     </table>
 </div>
 
-@*<div class="form-row mb-3">
-        <div class="input-group mb-3 col">
-            <div class="btn btn-flat bg-gradient-red col-12 custom-fixed-btn" data-action="SaveSIIG">
-                <i class="fa fa-check-double"></i> Enregistrer et envoyer vers SIIGFP
-            </div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TBD_PROJET_OTHER', 'MANDATS')">
+            <i class="fa fa-file-excel"></i> Exporter
         </div>
-    </div>*@
+    </div>
+</div>
 
-<<div class="modal fade" tabindex="-1" role="dialog" id="password-modal">
+<div class="modal fade" tabindex="-1" role="dialog" id="password-modal">
     <div class="modal-dialog modal-xl" role="document" @*style="width:fit-content"*@>
         <div class="modal-content" @*style="width:fit-content"*@>
             <div class="modal-header">
@@ -156,8 +154,8 @@
     </div>
 </div>
 
-<script src="~/Assets/js/Traitmandat.js"></script>
-<script src="~/Assets/js/utils.js"></script>
-<script src="~/Assets/js/TraitmandatModal.js"></script>
-<script src="~/Assets/js/TraitmandatDOC.js"></script>
-<script src="~/Assets/js/TraitmandatLIAS.js"></script>
+<script src="~/Assets/js/TraitmandatO.js" asp-append-version="true"></script>
+<script src="~/Assets/js/utils.js" asp-append-version="true"></script>
+<script src="~/Assets/js/TraitmandatModal.js" asp-append-version="true"></script>
+<script src="~/Assets/js/TraitmandatDOC.js" asp-append-version="true"></script>
+<script src="~/Assets/js/TraitmandatLIAS.js" asp-append-version="true"></script>

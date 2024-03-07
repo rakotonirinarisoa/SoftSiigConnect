@@ -1,7 +1,4 @@
-﻿let User;
-let Origin;
-
-$(document).ready(() => {
+﻿$(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
@@ -9,8 +6,6 @@ $(document).ready(() => {
     GetUsers();
 });
 
-//let urlOrigin = Origin;
-//let urlOrigin = "http://softwell.cloud/OPAVI";
 function GetUsers() {
     let formData = new FormData();
     
@@ -26,6 +21,12 @@ function GetUsers() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -39,9 +40,10 @@ function GetUsers() {
                 return;
             }
             
-            $("#ParaV0").val(Datas.data.MT0);
-            $("#ParaV").val(Datas.data.MT1);
-            $("#ParaS").val(Datas.data.MT2);
+            $("#ParaV0").val(Datas.data.MTNON);
+            $("#ParaV").val(Datas.data.MT0);
+            $("#ParaS").val(Datas.data.MT1);
+            $("#ParaSiig").val(Datas.data.MT2);
             $("#ParaPe").val(Datas.data.MP1);
             $("#ParaPv").val(Datas.data.MP2);
             $("#ParaPp").val(Datas.data.MP3);
@@ -65,6 +67,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let ParaV0 = $("#ParaV0").val();
     let ParaV = $("#ParaV").val();
     let ParaS = $("#ParaS").val();
+    let ParaSiig = $("#ParaSiig").val();
     let ParaPe = $("#ParaPe").val();
     let ParaPv = $("#ParaPv").val();
     let ParaPp = $("#ParaPp").val();
@@ -78,7 +81,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let Mop1 = $("#Mop1").val();
     let Mop2 = $("#Mop2").val();
 
-    if (!ParaV || !ParaS || !ParaPe || !ParaPv || !ParaPp || !ParaPb || !Md0 || !Md1 || !Md2 || !Mop0 || !Mop1 || !Mop2) {
+    if (!ParaV0 || !ParaV || !ParaS || !ParaSiig || !ParaPe || !ParaPv || !ParaPp || !ParaPb || !Md0 || !Md1 || !Md2 || !Mop0 || !Mop1 || !Mop2) {
         alert("Veuillez renseigner les intitulés des menus. ");
         return;
     }
@@ -90,9 +93,10 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
 
-    formData.append("param.MT0", $(`#ParaV0`).val());
-    formData.append("param.MT1", $(`#ParaV`).val());
-    formData.append("param.MT2", $(`#ParaS`).val());
+    formData.append("param.MTNON", $(`#ParaV0`).val());
+    formData.append("param.MT0", $(`#ParaV`).val());
+    formData.append("param.MT1", $(`#ParaS`).val());
+    formData.append("param.MT2", $(`#ParaSiig`).val());
     formData.append("param.MP1", $(`#ParaPe`).val());
     formData.append("param.MP2", $(`#ParaPv`).val());
     formData.append("param.MP3", $(`#ParaPp`).val());
@@ -113,6 +117,12 @@ $(`[data-action="UpdateUser"]`).click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
