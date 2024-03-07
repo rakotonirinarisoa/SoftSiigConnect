@@ -92,8 +92,8 @@
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
-    <Reference Include="System.Text.Encoding.CodePages, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Text.Encoding.CodePages.4.5.0\lib\net461\System.Text.Encoding.CodePages.dll</HintPath>
+    <Reference Include="System.Text.Encoding.CodePages, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encoding.CodePages.8.0.0\lib\net462\System.Text.Encoding.CodePages.dll</HintPath>
     </Reference>
     <Reference Include="System.Text.Encodings.Web, Version=7.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encodings.Web.7.0.0\lib\net462\System.Text.Encodings.Web.dll</HintPath>
@@ -169,6 +169,9 @@
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="ZstdSharp, Version=0.7.4.0, Culture=neutral, PublicKeyToken=8d151af33a4ad5cf, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZstdSharp.Port.0.7.4\lib\net462\ZstdSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
@@ -179,6 +182,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BordTraitementController.cs" />
     <Compile Include="Controllers\CryptoController.cs" />
     <Compile Include="Controllers\EtatController.cs" />
     <Compile Include="Controllers\FtpController.cs" />
@@ -191,7 +195,10 @@
     <Compile Include="Controllers\SuperAdminController.cs" />
     <Compile Include="Controllers\TraitementController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Data\Addbuss.cs" />
     <Compile Include="Data\Entities\ProjectDetails.cs" />
+    <Compile Include="Data\Entities\TraitementEngagementDetails.cs" />
+    <Compile Include="Data\Entities\TraitementEngagement.cs" />
     <Compile Include="Data\Entities\X.cs" />
     <Compile Include="Data\Cipher.cs" />
     <Compile Include="Extension\AFB.cs" />
@@ -217,6 +224,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\COUNTTDB.cs" />
+    <Compile Include="Models\TxLISTETRAIT.cs" />
     <Compile Include="Models\DATATRPROJET.cs" />
     <Compile Include="Models\FCOMPTA.cs" />
     <Compile Include="Models\FOP.cs" />
@@ -297,6 +305,7 @@
     <Compile Include="SOFTCONNECTOM.cs" />
     <Compile Include="SOFTCONNECTSIIG.cs" />
     <Compile Include="Models\TP_MPIECES_JUSTIFICATIVES.cs" />
+    <Compile Include="Utils\Date.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\admlte\dist\css\alt\adminlte.components.css" />
@@ -2141,6 +2150,9 @@
     <Content Include="Assets\admlte\plugins\uplot\uPlot.iife.js" />
     <Content Include="Assets\admlte\plugins\uplot\uPlot.iife.min.js" />
     <Content Include="Assets\admlte\plugins\uplot\uPlot.min.css" />
+    <Content Include="Assets\css\loader.css" />
+    <Content Include="Assets\js\BordSoufTraitement.js" />
+    <Content Include="Assets\js\delaisTraitementEngagements.js" />
     <Content Include="Assets\icons\chevron-down.svg" />
     <Content Include="Assets\icons\chevron-right.svg" />
     <Content Include="Assets\icons\eye.svg" />
@@ -2151,14 +2163,25 @@
     <Content Include="Assets\img\LogoS.png" />
     <Content Include="Assets\js\AACUL.js" />
     <Content Include="Assets\js\BonPourPaiement.js" />
+    <Content Include="Assets\js\BordEngaREJETE.js" />
+    <Content Include="Assets\js\BordStatutEnga.js" />
     <Content Include="Assets\js\FValidations.js" />
-    <Content Include="Assets\js\traitements.ordesec.js" />
+    <Content Include="Assets\js\ProjectsDetails.js" />
+    <Content Include="Assets\js\BordListeEngaPaie.js" />
+    <Content Include="Assets\js\TraitementENVOISIIGF.js" />
+    <Content Include="Assets\js\TraitementORDSEC.js" />
+    <Content Include="Assets\js\TDBDOC.js" />
+    <Content Include="Assets\js\TraitmandatDOCT.js" />
+    <Content Include="Assets\js\TDBLIAS.js" />
+    <Content Include="Assets\js\TraitmandatLIAST.js" />
+    <Content Include="Assets\js\TDBModal.js" />
+    <Content Include="Assets\js\TraitmandatModalT.js" />
+    <Content Include="Assets\js\TraitmandatO.js" />
     <Content Include="Assets\js\TypeC.js" />
     <Content Include="Assets\js\TeacherValidations.js" />
     <Content Include="Assets\js\Crypto.js" />
     <Content Include="Assets\js\DetailCrypto.js" />
     <Content Include="Assets\js\FValidations.js" />
-    <Content Include="Assets\js\javascript.js" />
     <Content Include="Assets\js\CorrEtat.js" />
     <Content Include="Assets\js\DetailsFPROSOA.js" />
     <Content Include="Assets\js\DetailsFSoaUpdate.js" />
@@ -2205,15 +2228,10 @@
     <Content Include="Assets\js\User.js" />
     <Content Include="Assets\js\utils.js" />
     <Content Include="Assets\otherCSS\buttons.dataTables.min.css" />
-    <Content Include="Assets\otherCSS\colReorder.dataTables.min.css" />
-    <Content Include="Assets\otherCSS\responsive.dataTables.min.css" />
-    <Content Include="Assets\otherCSS\jquery.dataTables.min.css" />
+    <Content Include="Assets\otherCSS\datatables.min.css" />
     <Content Include="Assets\otherJs\buttons.colVis.min.js" />
-    <Content Include="Assets\otherJs\dataTables.buttons.min.js" />
-    <Content Include="Assets\otherJs\dataTables.colReorder.min.js" />
-    <Content Include="Assets\otherJs\dataTables.responsive.min.js" />
+    <Content Include="Assets\otherJs\dataTables.rowsGroup.js" />
     <Content Include="Assets\otherJs\jquery-3.7.0.js" />
-    <Content Include="Assets\otherJs\jquery.dataTables.min.js" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -4565,6 +4583,12 @@
     <Content Include="Views\Parametre\TypeECreate.cshtml" />
     <Content Include="Views\Projects\AllProjects.cshtml" />
     <Content Include="Views\Projects\NewProject.cshtml" />
+    <Content Include="Views\BordTraitement\BordListeEngaPaie.cshtml" />
+    <Content Include="Views\BordTraitement\StatutEngagements.cshtml" />
+    <Content Include="Views\Traitement\TraitementSENDSIIGFP.cshtml" />
+    <Content Include="Views\BordTraitement\EngagementsREJETE.cshtml" />
+    <Content Include="Views\BordTraitement\DelaisTraitementEngagements.cshtml" />
+    <Content Include="Views\BordTraitement\SoufTraitement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
