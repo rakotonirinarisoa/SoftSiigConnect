@@ -6,14 +6,22 @@
 
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-
-<div class="input-group mb-3">
-    <div class="input-group-prepend">
-        <span class="input-group-text text-bold" id="inputGroup-sizing-default">Projet</span>
+<div class="form-row">
+    <div class="input-group mb-3 col-sm-12 col-md-6">
+        <div class="input-group-prepend">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Projet</span>
+        </div>
+        <select class="form-control col combobox" id="Fproject" code-project>
+        </select>
     </div>
-    <select class="form-control col combobox" id="Fproject" code-project>
-    </select>
+    <div class="input-group mb-3 col-sm-12 col-md-6">
+        <div class="input-group-prepend">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Ecriture</span>
+        </div>
+        <input type="text" class="form-control" value="" readonly code_Type />
+    </div>
 </div>
+
 <div>
     <div class="form-row">
         <div class="input-group mb-3 col-sm-12 col-md-6">
@@ -144,5 +152,5 @@
     </div>
 </div>
 
-<script src="~/Assets/js/Accueil.js" asp-append-version="true" ></script>
-<script src="~/Assets/js/utils.js" asp-append-version="true" ></script>
+<script src="~/Assets/js/Accueil.js" asp-append-version="true"></script>
+<script src="~/Assets/js/utils.js" asp-append-version="true"></script>
