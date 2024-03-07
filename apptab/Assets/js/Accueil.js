@@ -687,12 +687,4 @@ $('[data-action="GetElementChecked"]').click(function () {
             alert("Problème de connexion. ");
         }
     });
-
-<<<<<<< HEAD
 });
-=======
-});
-
-var baseName = "2";
-
->>>>>>> 36ebcd256bea297ddc88ade22ddac4af2a7984b3
