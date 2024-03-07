@@ -198,36 +198,7 @@ namespace apptab.Controllers
             var ps = db.SI_USERS.Where(x => x.LOGIN == suser.LOGIN /*&& x.IDPROJET == PROJECTID*/ && x.PWD == suser.PWD).Select(x => x.PWD).FirstOrDefault();
 
             var pswftp = db.OPA_CRYPTO.Where(x => x.IDPROJET == PROJECTID && x.IDUSER == suser.ID && x.DELETIONDATE != null).Select(x => x.CRYPTOPWD).FirstOrDefault();
-            if (baseName == "1")
-            {
-                var pathfile = aFB160.CreateTOMPAIEAFB160(devise, codeJ, suser, codeproject);
-
-                if (intbasetype == 0)
-                {
-                    return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
-                }
-                else if (intbasetype == 1)
-                {
-                    send = CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, pswftp);
-                }
-                else if (intbasetype == 2)
-                {
-                    send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
-                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == suser.IDPROJET).FirstOrDefault();
-                    SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
-                }
-                else
-                {
-                    send = CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, pswftp);
-                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == suser.IDPROJET).FirstOrDefault();
-                    //GenererG(send);
-                    SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
-                }
-
-
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archive Success ", data = send }, settings));
-            }
-            else if (baseName == "2")
+           if (baseName == "2")
             {
                 var pathfile = aFB160.CreateTOMPROAFB160(devise, codeJ, suser, codeproject);
                 if (intbasetype == 0)
@@ -284,6 +255,7 @@ namespace apptab.Controllers
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archive Success ", data = send }, settings));
             }
         }
+        [HttpPost]
         public JsonResult FileName()
         {
             return Json(JsonConvert.SerializeObject(new { Filename = Anarana }, settings));
@@ -362,7 +334,7 @@ namespace apptab.Controllers
             //var hst = db.OPA_HISTORIQUEBR.Where(x => x.IDSOCIETE == suser.IDPROJET).Select(x => x.NUMENREG.ToString()).ToArray();
             var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID).Select(x => x.IDREGLEMENT.ToString()).ToArray();
 
-            var list = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => !hstSiig.Contains(x.No.ToString())).ToList();
+            var list = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID).Where(x => !hstSiig.Contains(x.No.ToString())).ToList();
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list }, settings));
 
         }
@@ -608,7 +580,7 @@ namespace apptab.Controllers
                 var hst = db.OPA_HISTORIQUE.Select(x => x.NUMENREG.ToString()).ToArray();
                 foreach (var h in list)
                 {
-                    var listA = afb160.getListEcritureBR(journal, datein, dateout,devise,comptaG, auxi, etat, dateP, suser).Where(x => x.No.ToString() == h).ToList();
+                    var listA = afb160.getListEcritureBR(journal, datein, dateout,devise,comptaG, auxi, etat, dateP, suser, PROJECTID).Where(x => x.No.ToString() == h).ToList();
                     foreach (var item in listA)
                     {
                         avalider.IDREGLEMENT = item.No;

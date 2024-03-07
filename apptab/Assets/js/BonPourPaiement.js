@@ -373,7 +373,8 @@ function chargeLoad() {
                             { data: 'noPiece' },
                             { data: 'compte' },
                             { data: 'libelle' },
-                            { data: 'montant' },
+                            { data: 'debit' },
+                            { data: 'credit' },
                             { data: 'montantDevise' },
                             { data: 'mon' },
                             { data: 'rang' },
@@ -919,7 +920,7 @@ $('[data-action="ChargerJs"]').click(function () {
                 if (Datas.type == "success") {
                     listResult = Datas.data
                     content = ``;
-                     const data = [];
+                    const data = [];
                     $.each(listResult, function (_, v) {
                         data.push({
                             checkbox: '',
@@ -987,6 +988,11 @@ $('[data-action="ChargerJs"]').click(function () {
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
+
+                            $(row).addClass('select-text');
+                            if (data.isLATE) {
+                                $(row).attr('style', "background-color: #FF7F7F !important;");
+                            }
                         },
                         columnDefs: [
                             {
