@@ -11,6 +11,8 @@ namespace apptab.Controllers
         // GET: Calendar
         public ActionResult Index()
         {
+            ViewBag.Controller = "Liste des événements";
+
             return View();
         }
     }
