@@ -1786,12 +1786,12 @@ namespace apptab.Controllers
         }
         public JsonResult SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE)
         {
-            Console.WriteLine("Create client Object");
+            //Console.WriteLine("Create client Object");
             using (SftpClient sftpClient = new SftpClient(getSftpConnection(HOTE, USERFTP, 22, SOURCE)))
             {
-                Console.WriteLine("Connect to server");
+                //Console.WriteLine("Connect to server");
                 sftpClient.Connect();
-                Console.WriteLine("Creating FileStream object to stream a file");
+                //Console.WriteLine("Creating FileStream object to stream a file");
                 using (FileStream fs = new FileStream("filePath", FileMode.Open))
                 {
                     sftpClient.BufferSize = 1024;
