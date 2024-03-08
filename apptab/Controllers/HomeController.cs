@@ -225,7 +225,7 @@ namespace apptab.Controllers
                 }
 
 
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archive Success ", data = send }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archivage avec succès. ", data = send }, settings));
             }
             else
             {
@@ -234,7 +234,7 @@ namespace apptab.Controllers
                 if (intbasetype == 0)
                 {
                     //send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
-                   return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
+                    return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                 }
                 else if (intbasetype == 1)
                 {
@@ -252,7 +252,7 @@ namespace apptab.Controllers
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == suser.IDPROJET).FirstOrDefault();
                     SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                 }
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archive Success ", data = send }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archivage avec succès. ", data = send }, settings));
             }
         }
         [HttpPost]
@@ -309,7 +309,7 @@ namespace apptab.Controllers
             int PROJECTID = int.Parse(codeproject);
             if (basename == "")
             {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez Parametrer le Types D'ecriture avant toutes Opérations." }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le type d'ecriture avant toutes opérations. " }, settings));
             }
             AFB160 afb160 = new AFB160();
             //var hst = db.OPA_HISTORIQUE.Select(x => x.NUMENREG.ToString()).ToArray();
@@ -328,7 +328,7 @@ namespace apptab.Controllers
             int PROJECTID = int.Parse(codeproject);
             if (basename == "")
             {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez Parametrer le Types D'ecriture avant toutes Opérations." }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le type d'ecriture avant toutes opérations. " }, settings));
             }
             AFB160 afb160 = new AFB160();
             //var hst = db.OPA_HISTORIQUEBR.Where(x => x.IDSOCIETE == suser.IDPROJET).Select(x => x.NUMENREG.ToString()).ToArray();
@@ -353,7 +353,7 @@ namespace apptab.Controllers
             var basename = GetTypeP(suser, codeproject);
             if (basename == null)
             {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez Parametrer le Types D'ecriture avant toutes Opérations." }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le type d'ecriture avant toutes opérations. " }, settings));
             }
             #region comms
             //if (baseName == "1")
@@ -402,7 +402,7 @@ namespace apptab.Controllers
             var basename = GetTypeP(suser, exist.IDPROJET.ToString());
             if (basename == null)
             {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez Parametrer le Types D'ecriture avant toutes Opérations." }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le type d'ecriture avant toutes opérations. " }, settings));
             }
             int baseId = 0;
             if (basename != "")
@@ -442,7 +442,7 @@ namespace apptab.Controllers
 
             if (basename == "")
             {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez Parametrer le Types D'ecriture avant toutes Opérations." }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le type d'ecriture avant toutes opérations. " }, settings));
             }
 
             if (string.IsNullOrEmpty(listCompte))
@@ -562,7 +562,7 @@ namespace apptab.Controllers
 
                     mail.Subject = "Attente validation paiements du projet " + ProjetIntitule;
                     mail.IsBodyHtml = true;
-                    mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " paiements en attente Validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
+                    mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " paiements en attente validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
                         "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
 
                     smtp.Port = 587;
@@ -651,7 +651,7 @@ namespace apptab.Controllers
 
                     mail.Subject = "Attente validation paiements du projet " + ProjetIntitule;
                     mail.IsBodyHtml = true;
-                    mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " paiements en attente Validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
+                    mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " paiements en attente validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
                         "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
 
                     smtp.Port = 587;
@@ -662,7 +662,7 @@ namespace apptab.Controllers
                     catch (Exception) { }
                 }
             }
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès.", data = "" }, settings));
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = "" }, settings));
         }
         //=========================================================================================TeacherValidation======================================================================
         [HttpPost]
@@ -706,7 +706,7 @@ namespace apptab.Controllers
                     });
                 }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = list }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = list }, settings));
             }
             else
             {
@@ -736,7 +736,7 @@ namespace apptab.Controllers
                     });
                 }
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = list }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = list }, settings));
             }
 
         }
@@ -759,7 +759,7 @@ namespace apptab.Controllers
             List<OPA_VALIDATIONS> list = new List<OPA_VALIDATIONS>();
             if (basename == "")
             {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez Parametrer le Types D'ecriture avant toutes Opérations." }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le type d'ecriture avant toutes opérations. " }, settings));
             }
             if (basename == "2")
             {
@@ -831,7 +831,7 @@ namespace apptab.Controllers
             AFB160 aFB160 = new AFB160();
             if (codeproject == "")
             {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez Choisir un projet avant toutes actions." }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez choisir un projet avant toutes actions. " }, settings));
             }
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -840,7 +840,7 @@ namespace apptab.Controllers
             var basename = GetTypeP(suser, codeproject);
             if (basename == null)
             {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez Parametrer le Types D'ecriture avant toutes Opérations." }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le type d'ecriture avant toutes opérations. " }, settings));
             }
             List<string> list = listCompte.Split(',').ToList();
             List<string> numBR = listCompte.Split(',').ToList();
@@ -945,7 +945,7 @@ namespace apptab.Controllers
 
                 mail.Subject = "Attente validation paiements du projet " + ProjetIntitule;
                 mail.IsBodyHtml = true;
-                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " paiements en attente Validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
+                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " paiements en attente validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
                     "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
 
                 smtp.Port = 587;
@@ -955,7 +955,7 @@ namespace apptab.Controllers
                 try { smtp.Send(mail); }
                 catch (Exception) { }
             }
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = "" }, settings));
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = "" }, settings));
         }
         //ETAT = 1
         //=========================================================================================TeacherValidation======================================================================
@@ -1001,7 +1001,7 @@ namespace apptab.Controllers
                         isLATE = isLate,
                     });
                 }
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = list }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = list }, settings));
             }
             else
             {
@@ -1032,7 +1032,7 @@ namespace apptab.Controllers
                     });
                 }
 
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = list }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = list }, settings));
             }
         }
         [HttpPost]
@@ -1046,7 +1046,7 @@ namespace apptab.Controllers
             var basename = GetTypeP(suser, codeproject);
             if (basename == null)
             {
-                return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Veuillez Parametrer le Types D'ecriture avant toutes Opérations." }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Veuillez paramétrer le type d'ecriture avant toutes opérations. " }, settings));
             }
 
             int retarDate = 0;
@@ -1082,7 +1082,7 @@ namespace apptab.Controllers
                     });
                 }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = list }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = list }, settings));
             }
             else
             {
@@ -1112,7 +1112,7 @@ namespace apptab.Controllers
                     });
                 }
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = list }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = list }, settings));
             }
         }
 
@@ -1149,12 +1149,12 @@ namespace apptab.Controllers
                     }
                     catch (Exception ex)
                     {
-                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion. ", data = ex.Message }, settings));
                         throw;
                     }
                 }
             }
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = "" }, settings));
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = "" }, settings));
         }
         //======================================================================================================EnvoyerValidations===============================================================
 
@@ -1203,13 +1203,13 @@ namespace apptab.Controllers
                     });
                 }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = list }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = list }, settings));
             }
             else
             {
                 var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && ecriture.ComptaG == comptaG && ecriture.DateIn == datein && ecriture.DateOut == dateout && ecriture.auxi == auxi && ecriture.Journal == journal).Select(a => a.IDREGLEMENT).ToList();
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = avalider }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.  ", data = avalider }, settings));
             }
         }
         //======================================================================================================ValidationsEcrituresF===============================================================
@@ -1226,14 +1226,14 @@ namespace apptab.Controllers
 
             int countTraitement = 0;
             var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
-            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == PROJECTID).FirstOrDefault().PROJET;
+            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == PROJECTID && a.DELETIONDATE == null).FirstOrDefault().PROJET;
 
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
             baseName = GetTypeP(suser, codeproject);
             if (baseName == "")
             {
-                return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Veuillez Parametrer le Types D'ecriture avant toutes Opérations." }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Veuillez paramétrer le type d'ecriture avant toutes opérations. " }, settings));
             }
 
             List<string> list = listCompte.Split(',').ToList();
@@ -1365,7 +1365,7 @@ namespace apptab.Controllers
 
                 mail.Subject = "Validation paiement du projet " + ProjetIntitule;
                 mail.IsBodyHtml = true;
-                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " paiement Valider pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
+                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " paiement valider pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
                     "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
 
                 smtp.Port = 587;
@@ -1378,11 +1378,11 @@ namespace apptab.Controllers
 
             if (baseName == "2")
             {
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = listReg__ }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = listReg__ }, settings));
             }
             else
             {
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = listRegBR__ }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = listRegBR__ }, settings));
             }
 
         }
@@ -1459,20 +1459,65 @@ namespace apptab.Controllers
 
                     //db.OPA_HCANCEL.Add(Hcancel);
                     db.SaveChanges();
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = "" }, settings));
+
+                    var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
+                    var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == PROJECTID && a.DELETIONDATE == null).FirstOrDefault().PROJET;
+                    //SEND MAIL ALERT et NOTIFICATION//
+                    string MailAdresse = "serviceinfo@softwell.mg";
+                    string mdpMail = "09eYpçç0601";
+
+                    using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
+                    {
+                        SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
+                        smtp.UseDefaultCredentials = true;
+
+                        mail.From = new MailAddress(MailAdresse);
+
+                        mail.To.Add(MailAdresse);
+                        if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE != null)
+                        {
+                            string[] separators = { ";" };
+
+                            var Tomail = mail;
+                            if (Tomail != null)
+                            {
+                                string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE;
+                                string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                                foreach (var mailto in mailListe)
+                                {
+                                    mail.To.Add(mailto);
+                                }
+                            }
+                        }
+
+                        mail.Subject = "Rejet paiement du projet " + ProjetIntitule;
+                        mail.IsBodyHtml = true;
+                        mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez un paiement rejeté pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
+                            "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+
+                        smtp.Port = 587;
+                        smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
+                        smtp.EnableSsl = true;
+
+                        try { smtp.Send(mail); }
+                        catch (Exception) { }
+                    }
+
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = "" }, settings));
                 }
                 else
                 {
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Motif ET COMMENTAIRE OBLIGATOIR.", data = "" }, settings));
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Motif obligatoire. ", data = "" }, settings));
                 }
             }
 
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = "" }, settings));
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés .", data = "" }, settings));
         }
         public JsonResult GetCheckedComptePaie(string baseName, int mois, int annee, string listCompte, string matriculeD, string matriculeF, bool devise, DateTime dateP, string journal, SI_USERS suser)
         {
             if (string.IsNullOrEmpty(listCompte))
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès.", data = "" }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = "" }, settings));
 
             List<OPA_REGLEMENTBR> brResult = new List<OPA_REGLEMENTBR>();
             List<string> listReg = new List<string>();
@@ -1484,7 +1529,7 @@ namespace apptab.Controllers
                 aFB160.SaveValideSelectEcriturePaie(listReg, journal, devise, suser);
                 //var zz = aFB160.getListEcriturePaie(journal, mois, annee, matriculeD, matriculeF, dateP, suser);
                 var listePaie = aFB160.getREGLEMENTPaie(suser);
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès.", data = listePaie }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = listePaie }, settings));
             }
             catch (Exception ex)
             {
@@ -1501,13 +1546,13 @@ namespace apptab.Controllers
             {
                 //var anom = db.OPA_ANOMALIEBR.ToList();
                 var resultAnomalies = Afb.getListAnomalieBR(suser);
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès.", data = resultAnomalies }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = resultAnomalies }, settings));
             }
             else
             {
                 //var anom = db.OPA_ANOMALIE.ToList();
                 var resultAnomalies = Afb.getListAnomalie(suser);
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès.", data = resultAnomalies }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = resultAnomalies }, settings));
             }
 
         }
@@ -1704,7 +1749,7 @@ namespace apptab.Controllers
                 })
                 .OrderBy(x => x.DATE).ToList();
 
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès.", data = query, databr = queryBr }, settings));
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = query, databr = queryBr }, settings));
         }
         public JsonResult GetCancel(SI_USERS suser, string listCompte)
         {
@@ -1754,7 +1799,7 @@ namespace apptab.Controllers
                 }
                 sftpClient.Dispose();
             }
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès.", data = "" }, settings));
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = "" }, settings));
         }
 
         private ConnectionInfo getSftpConnection(string hOTE, string uSERFTP, int v, string sOURCE)
