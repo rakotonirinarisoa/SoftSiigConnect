@@ -1,6 +1,7 @@
-﻿@{
-    ViewBag.Title = "Suvi des délais de traitement des engagements";
-    ViewData["Controller"] = "Suvi des délais de traitement des engagements";
+﻿
+@{
+    ViewBag.Title = "TraitementsPaiement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <meta charset="utf-8" />
@@ -65,9 +66,8 @@
     </div>
 </div>
 
-<script src="~/Assets/js/utils.js"></script>
-<script src="~/Assets/js/delaisTraitementEngagements.js" asp-append-version="true"></script>
-
+<script src="~/Assets/js/utils.js" asp-append-version="true"></script>
+<script src="~/Assets/js/TraitementPaiement.js" asp-append-version="true"></script>
 <script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
 <script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
 
@@ -77,3 +77,6 @@
         tokenSeparators: [',', ' ']
     })
 </script>
+
+
+

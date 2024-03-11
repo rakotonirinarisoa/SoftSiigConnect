@@ -5,7 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using apptab.Data.Entities;
+using apptab.Data;
 using Newtonsoft.Json;
+using System.Web.UI.WebControls;
 
 namespace apptab.Controllers
 {
@@ -662,10 +664,11 @@ namespace apptab.Controllers
                         SENDSIIGAGENT = await GetAgent(traitprojets[j].IDUSERENVOISIIGFP),
                         DATESIIGFP = traitprojets[j].DATESIIG,
                         SIIGFPAGENT = "",
-                        DUREETRAITEMENTTRANSFERTRAF = Utils.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
-                        DUREETRAITEMENTVALORDSEC = Utils.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE),
-                        DUREETRAITEMENTSENDSIIG = Utils.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION),
-                        DUREETRAITEMENTSIIGFP = Utils.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP)
+
+                        DUREETRAITEMENTTRANSFERTRAF = Data.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
+                        DUREETRAITEMENTVALORDSEC = Data.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE),
+                        DUREETRAITEMENTSENDSIIG = Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION),
+                        DUREETRAITEMENTSIIGFP = Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP)
                     });
                 }
             }
@@ -737,6 +740,219 @@ namespace apptab.Controllers
 
             var lastIndex = -1;
 
+            try
+            {
+                for (int i = 0; i < iProjectsId.Count; i += 1)
+                {
+                    int projectId = iProjectsId[i];
+
+                    var durPrevu = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == projectId && a.DELETIONDATE == null);
+                    if (durPrevu == null || durPrevu.DELRAF == null || durPrevu.DELTV == null || durPrevu.DELENVOISIIGFP == null || durPrevu.DELSIIGFP == null)
+                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le délais des traitements. " }, settings));
+
+                    var s = await (
+                        from soa in db.SI_SOAS
+                        join prosoa in db.SI_PROSOA on soa.ID equals prosoa.IDSOA
+                        where prosoa.IDPROJET == projectId && prosoa.DELETIONDATE == null && soa.DELETIONDATE == null
+                        select new
+                        {
+                            soa.SOA
+                        }
+                    ).FirstOrDefaultAsync();
+
+                    if (s == null)
+                    {
+                        continue;
+                    }
+
+                    var traitprojets = await db.SI_TRAITPROJET.Where(a => a.IDPROJET == projectId && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToListAsync();
+
+                    if (traitprojets.Count == 0)
+                    {
+                        continue;
+                    }
+
+                    lastIndex += 1;
+
+                    result.Add(new TraitementEngagement
+                    {
+                        SOA = s.SOA,
+                        TraitementsEngagementsDetails = new List<TraitementEngagementDetails>()
+                    });
+
+                    for (int j = 0; j < traitprojets.Count; j += 1)
+                    {
+                        result[lastIndex].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
+                        {
+                            NUM_ENGAGEMENT = traitprojets[j].REF,
+                            BENEFICIAIRE = traitprojets[j].TITUL,
+                            MONTENGAGEMENT = Data.Cipher.Decrypt(traitprojets[j].MONT, "Oppenheimer").ToString(),
+
+                            DATETRANSFERTRAF = traitprojets[j].DATECRE,
+                            DATEVALORDSEC = traitprojets[j].DATEVALIDATION,
+                            DATESENDSIIG = traitprojets[j].DATENVOISIIGFP,
+                            DATESIIGFP = traitprojets[j].DATESIIG,
+
+                            TRANSFERTRAFAGENT = await GetAgent(traitprojets[j].IDUSERCREATE),
+                            VALORDSECAGENT = await GetAgent(traitprojets[j].IDUSERVALIDATE),
+                            SENDSIIGAGENT = await GetAgent(traitprojets[j].IDUSERENVOISIIGFP),
+                            SIIGFPAGENT = "",
+
+                            DUREETRAITEMENTTRANSFERTRAF = Data.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
+                            DUREETRAITEMENTVALORDSEC = Data.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE),
+                            DUREETRAITEMENTSENDSIIG = Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION),
+                            DUREETRAITEMENTSIIGFP = Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP),
+
+                            DURPREVUTRANSFERT = durPrevu != null ? durPrevu.DELRAF.Value : 0,
+                            DURPREVUVALIDATION = durPrevu != null ? durPrevu.DELTV.Value : 0,
+                            DURPREVUTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value : 0,
+                            DURPREVUSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value : 0,
+
+                            DEPASTRANSFERT = durPrevu != null ? durPrevu.DELRAF.Value - Data.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE) : 0,
+                            DEPASVALIDATION = durPrevu != null ? durPrevu.DELTV.Value - Data.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE) : 0,
+                            DEPASTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value - Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) : 0,
+                            DEPASSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value - Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) : 0
+                        });
+                    }
+                }
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = result }, settings));
+            }
+            catch (Exception) { return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Problème de connexion. " }, settings)); }
+        }
+        public ActionResult StatuePaiement()
+        {
+            return View();
+        }
+        [HttpPost]
+        public JsonResult GenereSTATPAIEMENT(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                List<TxtPAIEMENT> list = new List<TxtPAIEMENT>();
+                string[] separators = { "," };
+                var pro = listProjet;
+                if (pro != null)
+                {
+                    string listUser = pro.ToString();
+                    string[] lst = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (var idP in lst)
+                    {
+                        int crpt = int.Parse(idP);
+                        //Check si le projet est mappé à une base de données TOM²PRO//
+                        if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
+
+                        SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                        SOFTCONNECTOM tom = new SOFTCONNECTOM();
+                    }
+
+                    foreach (var idP in lst)
+                    {
+                        int crpt = int.Parse(idP);
+
+                        //var paielst = db.OPA_VALIDATIONS.Where(a => a.IDPROJET == crpt).Join().ToList();
+
+                        var paielst = (
+                                from r in db.OPA_REGLEMENTBR
+                                join v in db.OPA_VALIDATIONS on r.IDSOCIETE equals v.IDPROJET
+                                where r.NUM == v.IDREGLEMENT && r.IDSOCIETE == crpt
+                                select new
+                                {
+                                    BENEFICIAIRE = r.BENEFICIAIRE,
+                                    MONTANT = r.MONTANT != null ? r.MONTANT : null,
+                                    NUM = r.NUM,
+                                    DATECREA = v.DATECREA != null ? v.DATECREA : null,
+                                    DATESEND = v.DATESEND != null ? v.DATESEND : null,
+                                    DATEVAL = v.DATEVAL != null ? v.DATEVAL : null,
+                                }
+                            ).ToList();
+                        foreach (var item in paielst)
+                        {
+                            var soa = (from soas in db.SI_SOAS
+                                       join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                       where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                       select new
+                                       {
+                                           soas.SOA
+                                       }).FirstOrDefault();
+                            if (soa == null)
+                            {
+                                return Json(JsonConvert.SerializeObject(new { type = "Error", msg = "Probleme SOA" },settings));
+                            }
+                            list.Add(new TxtPAIEMENT
+                            {
+                                No = item.NUM,
+                                BENEF = item.BENEFICIAIRE,
+                                MONTANT = item.MONTANT.ToString(),
+                                DATEVALIDATIONOP = item.DATECREA,
+                                DATEVALIDATIONAC = item.DATESEND,
+                                DATEPAIEBANQUE = item.DATEVAL,
+                                SOA = soa.SOA,
+                                PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                            });
+                        }
+                    }
+                }
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list }, settings));
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
+        public ActionResult TraitementsPaiement()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<JsonResult> GenereDelaisTraitementPaiement(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
+        {
+            var user = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
+
+            if (user == null)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            }
+
+            string[] separators = { "," };
+
+            var sProjectsId = listProjet.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            var iProjectsId = new List<int>();
+
+            for (int i = 0; i < sProjectsId.Count; i += 1)
+            {
+                int projectId = int.Parse(sProjectsId[i]);
+
+                if ((await db.SI_MAPPAGES.FirstOrDefaultAsync(a => a.IDPROJET == projectId && a.DELETIONDATE == null)) == null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
+                }
+
+                SOFTCONNECTOM.connex = new Data.Extension().GetCon(projectId);
+
+                var tom = new SOFTCONNECTOM();
+
+                var numCaEtapAPP = await db.SI_PARAMETAT.FirstOrDefaultAsync(a => a.IDPROJET == projectId && a.DELETIONDATE == null);
+
+                if (numCaEtapAPP == null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
+                }
+
+                iProjectsId.Add(projectId);
+            }
+
+            var result = new List<TraitementPaiement>();
+
+            var lastIndex = -1;
+
             for (int i = 0; i < iProjectsId.Count; i += 1)
             {
                 int projectId = iProjectsId[i];
@@ -756,55 +972,47 @@ namespace apptab.Controllers
                     continue;
                 }
 
-                var traitprojets = await db.SI_TRAITPROJET.Where(a => a.IDPROJET == projectId && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToListAsync();
-
-                if (traitprojets.Count == 0)
-                {
-                    continue;
-                }
+                var paielst = (
+                               from r in db.OPA_REGLEMENTBR
+                               join v in db.OPA_VALIDATIONS on r.IDSOCIETE equals v.IDPROJET
+                               where r.NUM == v.IDREGLEMENT && r.IDSOCIETE == projectId
+                               select new
+                               {
+                                   BENEFICIAIRE = r.BENEFICIAIRE,
+                                   MONTANT = r.MONTANT != null ? r.MONTANT : null,
+                                   NUM = r.NUM,
+                                   DATECREA = v.DATECREA != null ? v.DATECREA : null,
+                                   DATESEND = v.DATESEND != null ? v.DATESEND : null,
+                                   DATEVAL = v.DATEVAL != null ? v.DATEVAL : null,
+                                   IDUSCREA = v.IDUSCREA != null ? v.IDUSCREA : null,
+                                   IDUSSEND = v.IDUSSEND != null ? v.IDUSSEND : null,
+                                   IDUSVAL = v.IDUSVAL != null ? v.IDUSVAL : null,
+                               }
+                           ).ToList();
 
                 lastIndex += 1;
 
-                result.Add(new TraitementEngagement
+                result.Add(new TraitementPaiement
                 {
                     SOA = s.SOA,
-                    TraitementsEngagementsDetails = new List<TraitementEngagementDetails>()
+                    TraitementPaiementDetails = new List<TraitementPaiementDetails>()
                 });
 
-                var durPrevu = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == projectId && a.DELETIONDATE == null);
-
-                for (int j = 0; j < traitprojets.Count; j += 1)
+                for (int j = 0; j < paielst.Count; j += 1)
                 {
-                    result[lastIndex].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
+                    result[lastIndex].TraitementPaiementDetails.Add(new TraitementPaiementDetails
                     {
-                        NUM_ENGAGEMENT = traitprojets[j].REF,
-                        BENEFICIAIRE = traitprojets[j].TITUL,
-                        MONTENGAGEMENT = Data.Cipher.Decrypt(traitprojets[j].MONT, "Oppenheimer").ToString(),
-
-                        DATETRANSFERTRAF = traitprojets[j].DATECRE,
-                        DATEVALORDSEC = traitprojets[j].DATEVALIDATION,
-                        DATESENDSIIG = traitprojets[j].DATENVOISIIGFP,
-                        DATESIIGFP = traitprojets[j].DATESIIG,
-
-                        TRANSFERTRAFAGENT = await GetAgent(traitprojets[j].IDUSERCREATE),
-                        VALORDSECAGENT = await GetAgent(traitprojets[j].IDUSERVALIDATE),
-                        SENDSIIGAGENT = await GetAgent(traitprojets[j].IDUSERENVOISIIGFP),
-                        SIIGFPAGENT = "",
-
-                        DUREETRAITEMENTTRANSFERTRAF = Utils.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
-                        DUREETRAITEMENTVALORDSEC = Utils.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE),
-                        DUREETRAITEMENTSENDSIIG = Utils.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION),
-                        DUREETRAITEMENTSIIGFP = Utils.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP),
-
-                        DURPREVUTRANSFERT = durPrevu != null ? durPrevu.DELRAF.Value : 0,
-                        DURPREVUVALIDATION = durPrevu != null ? durPrevu.DELTV.Value : 0,
-                        DURPREVUTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value : 0,
-                        DURPREVUSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value : 0,
-
-                        DEPASTRANSFERT = durPrevu != null ? durPrevu.DELRAF.Value - Utils.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE) : 0,
-                        DEPASVALIDATION = durPrevu != null ? durPrevu.DELTV.Value - Utils.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE) : 0,
-                        DEPASTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value - Utils.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) : 0,
-                        DEPASSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value - Utils.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) : 0
+                        NUM_ENGAGEMENT = paielst[j].NUM,
+                        BENEFICIAIRE = paielst[j].BENEFICIAIRE,
+                        MONTENGAGEMENT = paielst[j].MONTANT.ToString(),
+                        DATETRANSFERTRAF = paielst[j].DATECREA,
+                        TRANSFERTRAFAGENT = await GetAgent(paielst[j].IDUSCREA),
+                        DATEVALORDSEC = paielst[j].DATEVAL,
+                        VALORDSECAGENT = await GetAgent(paielst[j].IDUSVAL),
+                        DATESENDSIIG = paielst[j].DATESEND,
+                        SENDSIIGAGENT = await GetAgent(paielst[j].IDUSSEND),
+                        DUREETRAITEMENTTRANSFERTRAF = Date.GetDifference(paielst[j].DATECREA, paielst[j].DATESEND),
+                        DUREETRAITEMENTVALORDSEC = Date.GetDifference(paielst[j].DATESEND, paielst[j].DATEVAL)
                     });
                 }
             }
