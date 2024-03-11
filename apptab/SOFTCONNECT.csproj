@@ -2148,6 +2148,7 @@
     <Content Include="Assets\admlte\plugins\uplot\uPlot.iife.js" />
     <Content Include="Assets\admlte\plugins\uplot\uPlot.iife.min.js" />
     <Content Include="Assets\admlte\plugins\uplot\uPlot.min.css" />
+    <Content Include="Assets\css\Evenements.css" />
     <Content Include="Assets\css\loader.css" />
     <Content Include="Assets\fullcalendar-6.1.11\dist\index.global.js" />
     <Content Include="Assets\fullcalendar-6.1.11\dist\index.global.min.js" />
@@ -2375,6 +2376,7 @@
     <Content Include="Assets\js\FValidations.js" />
     <Content Include="Assets\js\ProjectsDetails.js" />
     <Content Include="Assets\js\BordListeEngaPaie.js" />
+    <Content Include="Assets\js\Evenements.js" />
     <Content Include="Assets\js\TraitementENVOISIIGF.js" />
     <Content Include="Assets\js\TraitementORDSEC.js" />
     <Content Include="Assets\js\TDBDOC.js" />

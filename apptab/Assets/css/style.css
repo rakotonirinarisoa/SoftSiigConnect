@@ -1,12 +1,20 @@
 ﻿body {
     user-select: none;
-    overflow-y: hidden;
+    /*overflow-y: hidden;*/
 }
 
 .tbodyDiv {
     overflow: auto;
-    /*overflow-x: auto;*/
     max-height: 75vh
+}
+
+/*Normalisation taille label*/
+/*.custom-label {
+    width: 22%;
+}*/
+
+.content-header {
+    padding: 0 !important;
 }
 
 .login-page {
@@ -272,10 +280,6 @@ a.nav-link.Fnav {
 
 #menu-accordeon li:hover li {
     max-height: 15em;
-}
-
-.custom-label {
-    width: 22%;
 }
 
 .custom-label span#inputGroup-sizing-default {
