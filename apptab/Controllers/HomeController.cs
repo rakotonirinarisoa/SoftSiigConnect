@@ -20,7 +20,7 @@ namespace apptab.Controllers
     {
         private readonly SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
         private readonly SOFTCONNECTOM __db = new SOFTCONNECTOM();
-        private string Anarana;
+        private static string Anarana;
 
         JsonSerializerSettings settings = new JsonSerializerSettings
         {
@@ -168,7 +168,7 @@ namespace apptab.Controllers
                 return null;
             }
         }
-        public string CreateAFBTXTArch(string pathchemin, string pathfiles, string psw)
+        public FileResult CreateAFBTXTArch(string pathchemin, string pathfiles, string psw)
         {
             string pth = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\";
             if (!Directory.Exists(pth))
@@ -181,13 +181,19 @@ namespace apptab.Controllers
             sw.Write(pathfiles);
             sw.Close();
 
-            Archive archive = new Archive(new ArchiveEntrySettings(encryptionSettings: new TraditionalEncryptionSettings(psw)));
+            FileStream zipFile = System.IO.File.Open(pth + pathchemin + ".zip", FileMode.Create);
 
-            // Add files to the archive
-            archive.CreateEntry(pathchemin + ".txt", pth + pathchemin + ".txt");
-            string source = pth + pathchemin + ".zip";
-            archive.Save(source);
-            return source;
+            var archive = new Archive(new ArchiveEntrySettings(encryptionSettings: new TraditionalEncryptionSettings(psw)));
+
+            FileStream source = System.IO.File.Open(pth + pathchemin + ".txt", FileMode.Open, FileAccess.Read);
+
+            archive.CreateEntry(pathchemin + ".txt", source);
+            archive.Save(zipFile);
+
+            zipFile.Dispose();
+            // archive.Dispose();
+
+            return File(source, System.Net.Mime.MediaTypeNames.Application.Octet);
         }
         [HttpPost]
         public ActionResult CreateZipFile(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName)
@@ -198,7 +204,7 @@ namespace apptab.Controllers
             var ps = db.SI_USERS.Where(x => x.LOGIN == suser.LOGIN /*&& x.IDPROJET == PROJECTID*/ && x.PWD == suser.PWD).Select(x => x.PWD).FirstOrDefault();
 
             var pswftp = db.OPA_CRYPTO.Where(x => x.IDPROJET == PROJECTID && x.IDUSER == suser.ID && x.DELETIONDATE != null).Select(x => x.CRYPTOPWD).FirstOrDefault();
-           if (baseName == "2")
+            if (baseName == "2")
             {
                 var pathfile = aFB160.CreateTOMPROAFB160(devise, codeJ, suser, codeproject);
                 if (intbasetype == 0)
@@ -209,7 +215,7 @@ namespace apptab.Controllers
                 }
                 else if (intbasetype == 1)
                 {
-                    send = CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
+                    return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
                 }
                 else if (intbasetype == 2)
                 {
@@ -219,7 +225,7 @@ namespace apptab.Controllers
                 }
                 else
                 {
-                    send = CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
+                    return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == suser.IDPROJET).FirstOrDefault();
                     SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                 }
@@ -230,25 +236,29 @@ namespace apptab.Controllers
             else
             {
                 var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser, codeproject);
-                //var send = "";
+
                 if (intbasetype == 0)
                 {
-                    //send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
+                    Anarana = pathfile.Chemin;
+
                     return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                 }
                 else if (intbasetype == 1)
                 {
-                    send = CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
+                    Anarana = pathfile.Chemin;
+                    return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
                 }
                 else if (intbasetype == 2)
                 {
-                    send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
+                    Anarana = pathfile.Chemin;
+                    return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == suser.IDPROJET).FirstOrDefault();
                     SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                 }
                 else
                 {
-                    send = CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
+                    Anarana = pathfile.Chemin;
+                    return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == suser.IDPROJET).FirstOrDefault();
                     SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                 }
@@ -861,7 +871,7 @@ namespace apptab.Controllers
             {
                 foreach (var item in AvaliderList)
                 {
-                    aFB160.SaveValideSelectEcritureBR(numBR, item.Journal, item.ETAT.ToString(), devise, suser);
+                    aFB160.SaveValideSelectEcritureBR(numBR, item.Journal, item.ETAT.ToString(), devise, suser,PROJECTID);
                 }
 
             }

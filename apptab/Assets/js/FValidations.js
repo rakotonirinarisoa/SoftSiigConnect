@@ -1,4 +1,5 @@
 ﻿var table = undefined;
+var FilenameUsr;
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
@@ -230,7 +231,7 @@ function GetListCodeJournal() {
     });
 }
 //==============================================================================================Get text===================================================================================
-function GetFileNameAnarana() {
+function GetFileNameAnarana(blobUrl) {
     $.ajax({
         type: "POST",
         url: Origin + '/Home/FileName',
@@ -245,6 +246,14 @@ function GetFileNameAnarana() {
         },
         success: function (result) {
             console.log(result);
+            const obj = JSON.parse(result)
+            FilenameUsr = obj.Filename
+
+            let a = document.createElement("a");
+            a.href = blobUrl;
+            a.download = FilenameUsr+".txt";
+            document.body.appendChild(a);
+            a.click();
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -255,7 +264,7 @@ function getelementTXT(a) {
     let formData = new FormData();
     let codeproject = $("#Fproject").val();
     formData.append("codeproject", codeproject);
-
+    alert(a);
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.ID", User.ID);
     formData.append("suser.PWD", User.PWD);
@@ -286,12 +295,8 @@ function getelementTXT(a) {
         success: function (result) {
             console.log(result);
             let blobUrl = URL.createObjectURL(result);
-            let anarana = GetFileNameAnarana();
-            let a = document.createElement("a");
-            a.href = blobUrl;
-            a.download = anarana;
-            document.body.appendChild(a);
-            a.click();
+            GetFileNameAnarana(blobUrl);
+
 
             //window.location = '/Home/GetFile?file=' + Datas.data;
 
