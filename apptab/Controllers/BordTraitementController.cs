@@ -305,7 +305,7 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           });
+                                           }).FirstOrDefault();
 
                                 //bool isLate = false;
                                 //if (x.DATECRE.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
@@ -320,7 +320,7 @@ namespace apptab.Controllers
                                     MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                     DATEPAIE = DateTime.Now.Date,
                                     MONTPAIE = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
-                                    SOA = soa.FirstOrDefault() != null ? soa.FirstOrDefault().SOA : "",
+                                    SOA = soa != null ? soa.SOA : "",
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                     //isLATE = isLate
                                 });
@@ -403,7 +403,7 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           });
+                                           }).FirstOrDefault();
 
                                 //bool isLate = false;
                                 //if (x.DATECRE.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
@@ -422,7 +422,7 @@ namespace apptab.Controllers
                                     DATESENDSIIG = x.DATENVOISIIGFP != null ? x.DATENVOISIIGFP : null,
                                     DATESIIGFP = x.DATESIIG != null ? x.DATESIIG : null,
 
-                                    SOA = soa.FirstOrDefault() != null ? soa.FirstOrDefault().SOA : "",
+                                    SOA = soa != null ? soa.SOA : "",
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
                                     //isLATE = isLate
                                 });
@@ -505,7 +505,7 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           });
+                                           }).FirstOrDefault();
 
                                 //bool isLate = false;
                                 //if (x.DATECRE.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
@@ -534,7 +534,7 @@ namespace apptab.Controllers
                                     MOTIF = isRejet != null ? isRejet.MOTIF : "",
                                     COMMENTAIRE = isRejet != null ? isRejet.COMMENTAIRE : "",
 
-                                    SOA = soa.FirstOrDefault() != null ? soa.FirstOrDefault().SOA : "",
+                                    SOA = soa != null ? soa.SOA : "",
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
                                     //isLATE = isLate
                                 });
