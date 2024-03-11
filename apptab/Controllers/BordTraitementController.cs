@@ -320,7 +320,7 @@ namespace apptab.Controllers
                                     MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                     DATEPAIE = DateTime.Now.Date,
                                     MONTPAIE = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
-                                    SOA = soa.FirstOrDefault().SOA,
+                                    SOA = soa.FirstOrDefault() != null ? soa.FirstOrDefault().SOA : "",
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                     //isLATE = isLate
                                 });
@@ -422,7 +422,7 @@ namespace apptab.Controllers
                                     DATESENDSIIG = x.DATENVOISIIGFP != null ? x.DATENVOISIIGFP : null,
                                     DATESIIGFP = x.DATESIIG != null ? x.DATESIIG : null,
 
-                                    SOA = soa.FirstOrDefault().SOA,
+                                    SOA = soa.FirstOrDefault() != null ? soa.FirstOrDefault().SOA : "",
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
                                     //isLATE = isLate
                                 });
@@ -534,7 +534,7 @@ namespace apptab.Controllers
                                     MOTIF = isRejet != null ? isRejet.MOTIF : "",
                                     COMMENTAIRE = isRejet != null ? isRejet.COMMENTAIRE : "",
 
-                                    SOA = soa.FirstOrDefault().SOA,
+                                    SOA = soa.FirstOrDefault() != null ? soa.FirstOrDefault().SOA : "",
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
                                     //isLATE = isLate
                                 });
@@ -645,7 +645,7 @@ namespace apptab.Controllers
 
                 result.Add(new TraitementEngagement
                 {
-                    SOA = s.SOA,
+                    SOA = s != null ? s.SOA : "",
                     TraitementsEngagementsDetails = new List<TraitementEngagementDetails>()
                 });
 
@@ -776,7 +776,7 @@ namespace apptab.Controllers
 
                     result.Add(new TraitementEngagement
                     {
-                        SOA = s.SOA,
+                        SOA = s != null ? s.SOA : "",
                         TraitementsEngagementsDetails = new List<TraitementEngagementDetails>()
                     });
 
@@ -871,6 +871,7 @@ namespace apptab.Controllers
                                     DATEVAL = v.DATEVAL != null ? v.DATEVAL : null,
                                 }
                             ).ToList();
+
                         foreach (var item in paielst)
                         {
                             var soa = (from soas in db.SI_SOAS
@@ -880,10 +881,12 @@ namespace apptab.Controllers
                                        {
                                            soas.SOA
                                        }).FirstOrDefault();
-                            if (soa == null)
-                            {
-                                return Json(JsonConvert.SerializeObject(new { type = "Error", msg = "Probleme SOA" },settings));
-                            }
+
+                            //if (soa == null)
+                            //{
+                            //    return Json(JsonConvert.SerializeObject(new { type = "Error", msg = "Probleme SOA" },settings));
+                            //}
+
                             list.Add(new TxtPAIEMENT
                             {
                                 No = item.NUM,
@@ -892,7 +895,7 @@ namespace apptab.Controllers
                                 DATEVALIDATIONOP = item.DATECREA,
                                 DATEVALIDATIONAC = item.DATESEND,
                                 DATEPAIEBANQUE = item.DATEVAL,
-                                SOA = soa.SOA,
+                                SOA = soa.SOA != null ? soa.SOA : "",
                                 PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
                             });
                         }
@@ -967,10 +970,10 @@ namespace apptab.Controllers
                     }
                 ).FirstOrDefaultAsync();
 
-                if (s == null)
-                {
-                    continue;
-                }
+                //if (s == null)
+                //{
+                //    continue;
+                //}
 
                 var paielst = (
                                from r in db.OPA_REGLEMENTBR
@@ -994,7 +997,7 @@ namespace apptab.Controllers
 
                 result.Add(new TraitementPaiement
                 {
-                    SOA = s.SOA,
+                    SOA = s != null ? s.SOA : "",
                     TraitementPaiementDetails = new List<TraitementPaiementDetails>()
                 });
 
