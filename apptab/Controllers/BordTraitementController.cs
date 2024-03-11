@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using apptab.Data.Entities;
+using apptab.Data;
 using Newtonsoft.Json;
 
 namespace apptab.Controllers
@@ -662,10 +663,11 @@ namespace apptab.Controllers
                         SENDSIIGAGENT = await GetAgent(traitprojets[j].IDUSERENVOISIIGFP),
                         DATESIIGFP = traitprojets[j].DATESIIG,
                         SIIGFPAGENT = "",
-                        DUREETRAITEMENTTRANSFERTRAF = Utils.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
-                        DUREETRAITEMENTVALORDSEC = Utils.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE),
-                        DUREETRAITEMENTSENDSIIG = Utils.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION),
-                        DUREETRAITEMENTSIIGFP = Utils.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP)
+
+                        DUREETRAITEMENTTRANSFERTRAF = Data.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
+                        DUREETRAITEMENTVALORDSEC = Data.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE),
+                        DUREETRAITEMENTSENDSIIG = Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION),
+                        DUREETRAITEMENTSIIGFP = Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP)
                     });
                 }
             }
@@ -737,79 +739,85 @@ namespace apptab.Controllers
 
             var lastIndex = -1;
 
-            for (int i = 0; i < iProjectsId.Count; i += 1)
+            try
             {
-                int projectId = iProjectsId[i];
+                for (int i = 0; i < iProjectsId.Count; i += 1)
+                {
+                    int projectId = iProjectsId[i];
 
-                var s = await (
-                    from soa in db.SI_SOAS
-                    join prosoa in db.SI_PROSOA on soa.ID equals prosoa.IDSOA
-                    where prosoa.IDPROJET == projectId && prosoa.DELETIONDATE == null && soa.DELETIONDATE == null
-                    select new
+                    var durPrevu = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == projectId && a.DELETIONDATE == null);
+                    if (durPrevu == null || durPrevu.DELRAF == null || durPrevu.DELTV == null || durPrevu.DELENVOISIIGFP == null || durPrevu.DELSIIGFP == null)
+                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le délais des traitements. " }, settings));
+
+                    var s = await (
+                        from soa in db.SI_SOAS
+                        join prosoa in db.SI_PROSOA on soa.ID equals prosoa.IDSOA
+                        where prosoa.IDPROJET == projectId && prosoa.DELETIONDATE == null && soa.DELETIONDATE == null
+                        select new
+                        {
+                            soa.SOA
+                        }
+                    ).FirstOrDefaultAsync();
+
+                    if (s == null)
                     {
-                        soa.SOA
+                        continue;
                     }
-                ).FirstOrDefaultAsync();
 
-                if (s == null)
-                {
-                    continue;
-                }
+                    var traitprojets = await db.SI_TRAITPROJET.Where(a => a.IDPROJET == projectId && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToListAsync();
 
-                var traitprojets = await db.SI_TRAITPROJET.Where(a => a.IDPROJET == projectId && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToListAsync();
-
-                if (traitprojets.Count == 0)
-                {
-                    continue;
-                }
-
-                lastIndex += 1;
-
-                result.Add(new TraitementEngagement
-                {
-                    SOA = s.SOA,
-                    TraitementsEngagementsDetails = new List<TraitementEngagementDetails>()
-                });
-
-                var durPrevu = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == projectId && a.DELETIONDATE == null);
-
-                for (int j = 0; j < traitprojets.Count; j += 1)
-                {
-                    result[lastIndex].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
+                    if (traitprojets.Count == 0)
                     {
-                        NUM_ENGAGEMENT = traitprojets[j].REF,
-                        BENEFICIAIRE = traitprojets[j].TITUL,
-                        MONTENGAGEMENT = Data.Cipher.Decrypt(traitprojets[j].MONT, "Oppenheimer").ToString(),
+                        continue;
+                    }
 
-                        DATETRANSFERTRAF = traitprojets[j].DATECRE,
-                        DATEVALORDSEC = traitprojets[j].DATEVALIDATION,
-                        DATESENDSIIG = traitprojets[j].DATENVOISIIGFP,
-                        DATESIIGFP = traitprojets[j].DATESIIG,
+                    lastIndex += 1;
 
-                        TRANSFERTRAFAGENT = await GetAgent(traitprojets[j].IDUSERCREATE),
-                        VALORDSECAGENT = await GetAgent(traitprojets[j].IDUSERVALIDATE),
-                        SENDSIIGAGENT = await GetAgent(traitprojets[j].IDUSERENVOISIIGFP),
-                        SIIGFPAGENT = "",
-
-                        DUREETRAITEMENTTRANSFERTRAF = Utils.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
-                        DUREETRAITEMENTVALORDSEC = Utils.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE),
-                        DUREETRAITEMENTSENDSIIG = Utils.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION),
-                        DUREETRAITEMENTSIIGFP = Utils.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP),
-
-                        DURPREVUTRANSFERT = durPrevu != null ? durPrevu.DELRAF.Value : 0,
-                        DURPREVUVALIDATION = durPrevu != null ? durPrevu.DELTV.Value : 0,
-                        DURPREVUTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value : 0,
-                        DURPREVUSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value : 0,
-
-                        DEPASTRANSFERT = durPrevu != null ? durPrevu.DELRAF.Value - Utils.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE) : 0,
-                        DEPASVALIDATION = durPrevu != null ? durPrevu.DELTV.Value - Utils.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE) : 0,
-                        DEPASTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value - Utils.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) : 0,
-                        DEPASSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value - Utils.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) : 0
+                    result.Add(new TraitementEngagement
+                    {
+                        SOA = s.SOA,
+                        TraitementsEngagementsDetails = new List<TraitementEngagementDetails>()
                     });
-                }
-            }
 
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = result }, settings));
+                    for (int j = 0; j < traitprojets.Count; j += 1)
+                    {
+                        result[lastIndex].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
+                        {
+                            NUM_ENGAGEMENT = traitprojets[j].REF,
+                            BENEFICIAIRE = traitprojets[j].TITUL,
+                            MONTENGAGEMENT = Data.Cipher.Decrypt(traitprojets[j].MONT, "Oppenheimer").ToString(),
+
+                            DATETRANSFERTRAF = traitprojets[j].DATECRE,
+                            DATEVALORDSEC = traitprojets[j].DATEVALIDATION,
+                            DATESENDSIIG = traitprojets[j].DATENVOISIIGFP,
+                            DATESIIGFP = traitprojets[j].DATESIIG,
+
+                            TRANSFERTRAFAGENT = await GetAgent(traitprojets[j].IDUSERCREATE),
+                            VALORDSECAGENT = await GetAgent(traitprojets[j].IDUSERVALIDATE),
+                            SENDSIIGAGENT = await GetAgent(traitprojets[j].IDUSERENVOISIIGFP),
+                            SIIGFPAGENT = "",
+
+                            DUREETRAITEMENTTRANSFERTRAF = Data.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
+                            DUREETRAITEMENTVALORDSEC = Data.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE),
+                            DUREETRAITEMENTSENDSIIG = Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION),
+                            DUREETRAITEMENTSIIGFP = Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP),
+
+                            DURPREVUTRANSFERT = durPrevu != null ? durPrevu.DELRAF.Value : 0,
+                            DURPREVUVALIDATION = durPrevu != null ? durPrevu.DELTV.Value : 0,
+                            DURPREVUTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value : 0,
+                            DURPREVUSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value : 0,
+
+                            DEPASTRANSFERT = durPrevu != null ? durPrevu.DELRAF.Value - Data.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE) : 0,
+                            DEPASVALIDATION = durPrevu != null ? durPrevu.DELTV.Value - Data.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE) : 0,
+                            DEPASTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value - Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) : 0,
+                            DEPASSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value - Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) : 0
+                        });
+                    }
+                }
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = result }, settings));
+            }
+            catch (Exception) { return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Problème de connexion. " }, settings)); }
         }
     }
 }
