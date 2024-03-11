@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using apptab.Data.Entities;
 using apptab.Data;
 using Newtonsoft.Json;
+using System.Web.UI.WebControls;
 
 namespace apptab.Controllers
 {
@@ -818,6 +819,205 @@ namespace apptab.Controllers
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = result }, settings));
             }
             catch (Exception) { return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Problème de connexion. " }, settings)); }
+        }
+        public ActionResult StatuePaiement()
+        {
+            return View();
+        }
+        [HttpPost]
+        public JsonResult GenereSTATPAIEMENT(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                List<TxtPAIEMENT> list = new List<TxtPAIEMENT>();
+                string[] separators = { "," };
+                var pro = listProjet;
+                if (pro != null)
+                {
+                    string listUser = pro.ToString();
+                    string[] lst = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (var idP in lst)
+                    {
+                        int crpt = int.Parse(idP);
+                        //Check si le projet est mappé à une base de données TOM²PRO//
+                        if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
+
+                        SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                        SOFTCONNECTOM tom = new SOFTCONNECTOM();
+                    }
+
+                    foreach (var idP in lst)
+                    {
+                        int crpt = int.Parse(idP);
+
+                        //var paielst = db.OPA_VALIDATIONS.Where(a => a.IDPROJET == crpt).Join().ToList();
+
+                        var paielst = (
+                                from r in db.OPA_REGLEMENTBR
+                                join v in db.OPA_VALIDATIONS on r.IDSOCIETE equals v.IDPROJET
+                                where r.NUM == v.IDREGLEMENT && r.IDSOCIETE == crpt
+                                select new
+                                {
+                                    BENEFICIAIRE = r.BENEFICIAIRE,
+                                    MONTANT = r.MONTANT != null ? r.MONTANT : null,
+                                    NUM = r.NUM,
+                                    DATECREA = v.DATECREA != null ? v.DATECREA : null,
+                                    DATESEND = v.DATESEND != null ? v.DATESEND : null,
+                                    DATEVAL = v.DATEVAL != null ? v.DATEVAL : null,
+                                }
+                            ).ToList();
+                        foreach (var item in paielst)
+                        {
+                            var soa = (from soas in db.SI_SOAS
+                                       join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                       where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                       select new
+                                       {
+                                           soas.SOA
+                                       }).FirstOrDefault();
+                            if (soa == null)
+                            {
+                                return Json(JsonConvert.SerializeObject(new { type = "Error", msg = "Probleme SOA" },settings));
+                            }
+                            list.Add(new TxtPAIEMENT
+                            {
+                                No = item.NUM,
+                                BENEF = item.BENEFICIAIRE,
+                                MONTANT = item.MONTANT.ToString(),
+                                DATEVALIDATIONOP = item.DATECREA,
+                                DATEVALIDATIONAC = item.DATESEND,
+                                DATEPAIEBANQUE = item.DATEVAL,
+                                SOA = soa.SOA,
+                                PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                            });
+                        }
+                    }
+                }
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list }, settings));
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
+        public ActionResult TraitementsPaiement()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<JsonResult> GenereDelaisTraitementPaiement(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
+        {
+            var user = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
+
+            if (user == null)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            }
+
+            string[] separators = { "," };
+
+            var sProjectsId = listProjet.Split(separators, StringSplitOptions.RemoveEmptyEntries).ToList();
+
+            var iProjectsId = new List<int>();
+
+            for (int i = 0; i < sProjectsId.Count; i += 1)
+            {
+                int projectId = int.Parse(sProjectsId[i]);
+
+                if ((await db.SI_MAPPAGES.FirstOrDefaultAsync(a => a.IDPROJET == projectId && a.DELETIONDATE == null)) == null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
+                }
+
+                SOFTCONNECTOM.connex = new Data.Extension().GetCon(projectId);
+
+                var tom = new SOFTCONNECTOM();
+
+                var numCaEtapAPP = await db.SI_PARAMETAT.FirstOrDefaultAsync(a => a.IDPROJET == projectId && a.DELETIONDATE == null);
+
+                if (numCaEtapAPP == null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
+                }
+
+                iProjectsId.Add(projectId);
+            }
+
+            var result = new List<TraitementPaiement>();
+
+            var lastIndex = -1;
+
+            for (int i = 0; i < iProjectsId.Count; i += 1)
+            {
+                int projectId = iProjectsId[i];
+
+                var s = await (
+                    from soa in db.SI_SOAS
+                    join prosoa in db.SI_PROSOA on soa.ID equals prosoa.IDSOA
+                    where prosoa.IDPROJET == projectId && prosoa.DELETIONDATE == null && soa.DELETIONDATE == null
+                    select new
+                    {
+                        soa.SOA
+                    }
+                ).FirstOrDefaultAsync();
+
+                if (s == null)
+                {
+                    continue;
+                }
+
+                var paielst = (
+                               from r in db.OPA_REGLEMENTBR
+                               join v in db.OPA_VALIDATIONS on r.IDSOCIETE equals v.IDPROJET
+                               where r.NUM == v.IDREGLEMENT && r.IDSOCIETE == projectId
+                               select new
+                               {
+                                   BENEFICIAIRE = r.BENEFICIAIRE,
+                                   MONTANT = r.MONTANT != null ? r.MONTANT : null,
+                                   NUM = r.NUM,
+                                   DATECREA = v.DATECREA != null ? v.DATECREA : null,
+                                   DATESEND = v.DATESEND != null ? v.DATESEND : null,
+                                   DATEVAL = v.DATEVAL != null ? v.DATEVAL : null,
+                                   IDUSCREA = v.IDUSCREA != null ? v.IDUSCREA : null,
+                                   IDUSSEND = v.IDUSSEND != null ? v.IDUSSEND : null,
+                                   IDUSVAL = v.IDUSVAL != null ? v.IDUSVAL : null,
+                               }
+                           ).ToList();
+
+                lastIndex += 1;
+
+                result.Add(new TraitementPaiement
+                {
+                    SOA = s.SOA,
+                    TraitementPaiementDetails = new List<TraitementPaiementDetails>()
+                });
+
+                for (int j = 0; j < paielst.Count; j += 1)
+                {
+                    result[lastIndex].TraitementPaiementDetails.Add(new TraitementPaiementDetails
+                    {
+                        NUM_ENGAGEMENT = paielst[j].NUM,
+                        BENEFICIAIRE = paielst[j].BENEFICIAIRE,
+                        MONTENGAGEMENT = paielst[j].MONTANT.ToString(),
+                        DATETRANSFERTRAF = paielst[j].DATECREA,
+                        TRANSFERTRAFAGENT = await GetAgent(paielst[j].IDUSCREA),
+                        DATEVALORDSEC = paielst[j].DATEVAL,
+                        VALORDSECAGENT = await GetAgent(paielst[j].IDUSVAL),
+                        DATESENDSIIG = paielst[j].DATESEND,
+                        SENDSIIGAGENT = await GetAgent(paielst[j].IDUSSEND),
+                        DUREETRAITEMENTTRANSFERTRAF = Date.GetDifference(paielst[j].DATECREA, paielst[j].DATESEND),
+                        DUREETRAITEMENTVALORDSEC = Date.GetDifference(paielst[j].DATESEND, paielst[j].DATEVAL)
+                    });
+                }
+            }
+
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = result }, settings));
         }
     }
 }

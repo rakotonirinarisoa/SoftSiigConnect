@@ -198,6 +198,8 @@
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Data\Addbuss.cs" />
     <Compile Include="Data\Entities\ProjectDetails.cs" />
+    <Compile Include="Data\Entities\TraitementPaiement.cs" />
+    <Compile Include="Data\Entities\TraitementPaiementDetails.cs" />
     <Compile Include="Data\Entities\TraitementEngagementDetails.cs" />
     <Compile Include="Data\Entities\TraitementEngagement.cs" />
     <Compile Include="Data\Entities\X.cs" />
@@ -225,6 +227,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\COUNTTDB.cs" />
+    <Compile Include="Models\TxtPAIEMENT.cs" />
     <Compile Include="Models\TxLISTETRAIT.cs" />
     <Compile Include="Models\DATATRPROJET.cs" />
     <Compile Include="Models\FCOMPTA.cs" />
@@ -2363,6 +2366,8 @@
     <Content Include="Assets\fullcalendar-6.1.11\packages\web-component\index.global.js" />
     <Content Include="Assets\fullcalendar-6.1.11\packages\web-component\index.global.min.js" />
     <Content Include="Assets\js\BordSoufTraitement.js" />
+    <Content Include="Assets\js\TraitementPaiement.js" />
+    <Content Include="Assets\js\statuepaiement.js" />
     <Content Include="Assets\js\delaisTraitementEngagements.js" />
     <Content Include="Assets\icons\chevron-down.svg" />
     <Content Include="Assets\icons\chevron-right.svg" />
@@ -4804,6 +4809,8 @@
     <Content Include="Views\BordTraitement\DelaisTraitementEngagements.cshtml" />
     <Content Include="Views\BordTraitement\SoufTraitement.cshtml" />
     <Content Include="Views\Calendar\Index.cshtml" />
+    <Content Include="Views\BordTraitement\StatuePaiement.cshtml" />
+    <Content Include="Views\BordTraitement\TraitementsPaiement.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
