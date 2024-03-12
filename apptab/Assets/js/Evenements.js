@@ -53,8 +53,8 @@ function GetListEvenements() {
                         backgroundColor: 'green',
                         borderColor: 'green',
                         extendedProps: {
-                            title: 'TRITRE BE MANADALA',
-                            description: 'DESCRIPTION'
+                            title: 'TRITRE TEST',
+                            description: 'DESCRIPTION TEST'
                         },
                     });
             });
@@ -81,6 +81,7 @@ function GetListEvenements() {
                     timeGridDay: { buttonText: 'Jour' },
                 },
                 initialView: 'dayGridMonth',
+                contentHeight: 750,
 
                 events: code,
                 eventDidMount: function (info) {
