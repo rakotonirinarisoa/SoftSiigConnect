@@ -14,6 +14,7 @@ namespace apptab
         public DateTime? DATEVALIDATIONOP { get; set; }
         public DateTime? DATEVALIDATIONAC { get; set; }
         public DateTime? DATEPAIEBANQUE { get; set; }
+        public DateTime? DATEREJETAC { get; set; }
         public string SOA { get; set; }
         public string PROJET { get; set; }
         public bool? isLATE { get; set; }

@@ -1319,5 +1319,104 @@ namespace apptab.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public async Task<JsonResult> GenerePaiementREJETE(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                List<TxtPAIEMENT> list = new List<TxtPAIEMENT>();
+                string[] separators = { "," };
+                var pro = listProjet;
+                if (pro != null)
+                {
+                    string listUser = pro.ToString();
+                    string[] lst = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (var idP in lst)
+                    {
+                        int crpt = int.Parse(idP);
+
+                        //Check si le projet est mappé à une base de données TOM²PRO//
+                        if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
+
+                        SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                        SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
+                        //Check si la correspondance des états est OK//
+                        var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                        if (numCaEtapAPP == null) return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
+                        //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
+                        if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEF) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état DEF n'est pas paramétré sur TOM²PRO. " }, settings));
+                        if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEF) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état TEF n'est pas paramétré sur TOM²PRO. " }, settings));
+                        if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
+                    }
+
+                    foreach (var idP in lst)
+                    {
+                        int crpt = int.Parse(idP);
+
+                        var typeEcriture = db.SI_TYPECRITURE.Where(x => x.IDPROJET == crpt).FirstOrDefault().TYPE;
+                        if (db.OPA_VALIDATIONS.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DateIn >= DateDebut && a.DateOut <= DateFin) != null)
+                        {
+                            foreach (var x in db.OPA_VALIDATIONS.Where(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DateIn >= DateDebut && a.DateOut <= DateFin).OrderBy(a => a.DateIn).OrderBy(a => a.DATECREA).ToList())
+                            {
+                                var soa = (from soas in db.SI_SOAS
+                                           join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                           where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                           select new
+                                           {
+                                               soas.SOA
+                                           }).FirstOrDefault();
+
+                                var cancel = db.OPA_VALIDATIONS.Where(a => a.IDPROJET == crpt && x.ETAT == 4).Join(db.SI_USERS,z => z.IDUSER,e => e.IDUSER, (z, e) => new
+                                {
+                                    AGENT = e.LOGIN,
+                                    NUMENGAGEMENT = z.IDREGLEMENT,
+                                    DATEREJETPAIEMENT = z.DATEANNULER,
+                                    MOTIF = z.MOTIF,
+                                    COMMENTAIRE = z.COMS,
+
+                                }).Join(db.OPA_REGLEMENTBR, t =>t.NUMENGAGEMENT,p => p.NUM, (t, p) => new
+                                {
+                                    AGENT = t.AGENT,
+                                    NUMENGAGEMENT = t.NUMENGAGEMENT,
+                                    DATEREJETPAIEMENT = t.DATEREJETPAIEMENT,
+                                    MOTIF = t.MOTIF,
+                                    COMMENTAIRE = t.MOTIF,
+                                    BENEFICIAIRE = p.BENEFICIAIRE,
+                                    MONTANT = p.MONTANT,
+                                }).ToList();
+
+                                foreach (var item in cancel)
+                                {
+                                    list.Add(new TxtPAIEMENT
+                                    {
+                                        No = item.NUMENGAGEMENT,
+                                        BENEF = item.BENEFICIAIRE,
+                                        MONTANT = item.MONTANT.ToString(),
+                                        DATEREJETAC = item.DATEREJETPAIEMENT,
+                                        SOA = soa.SOA != null ? soa.SOA : "",
+                                        PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list.ToList() }, settings));
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
     }
 }

@@ -132,7 +132,7 @@ $('[data-action="GenereLISTE"]').click(function () {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/BordTraitement/GenereREJETE',
+        url: Origin + '/BordTraitement/GenerePaiementREJETE',
         data: formData,
         cache: false,
         contentType: false,
