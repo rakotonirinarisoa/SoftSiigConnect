@@ -1,7 +1,13 @@
 ﻿body {
     user-select: none;
-    /*overflow-y: hidden;*/
+    overflow-y: auto;
+    overflow-x:hidden !important;
 }
+
+/*html body .login-page {
+    user-select: none;
+    overflow: hidden !important;
+}*/
 
 .tbodyDiv {
     overflow: auto;
@@ -56,6 +62,7 @@
         height: calc(71vh - 0.6rem * 2) !important;
     }
 }
+
 .thead-red {
     color: #fff;
     background-color: crimson;
@@ -233,6 +240,11 @@ body.sidebar-mini.layout-fixed.sidebar-collapse img.brand-image.testClass {
     text-align: center;
 }
 
+.login-box, .register-box {
+    margin-top: 0 !important;
+    width: 100% !important;
+}
+
 .main-footerRFR {
     background-color: #fff;
     border-top: 1px solid #dee2e6;
@@ -406,7 +418,7 @@ li.active a {
 }
 
 .os-padding {
-    bottom: 17%;
+    bottom: 150px;
     /*top: 1%*/
 }
 
@@ -732,3 +744,88 @@ table.dataTable tbody td {
     background-color: steelblue !important;
 }
 
+section.content {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding: 0;
+}
+
+/*Section margin-top and margin-bottom*/
+
+/* For Desktop View */
+/*@media screen and (min-width: 1024px) {
+    .gfg-div {
+        background-color: #63c971;
+        color: #fff;
+    }
+}*/
+
+/* For Tablet View */
+/*@media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    .gfg-div {
+        width: 400px;
+        height: 400px;
+        background-color: orange;
+        color: black;
+    }
+}*/
+
+/* For Mobile Portrait View */
+/*@media screen and (max-device-width: 480px) and (orientation: portrait) {
+    .gfg-div {
+        width: 200px;
+        height: 200px;
+        background-color: red;
+        color: #fff;
+    }
+}*/
+
+/* For Mobile Landscape View */
+/*@media screen and (max-device-width: 640px) and (orientation: landscape) {
+    .gfg-div {
+        width: 400px;
+        height: 200px;
+        background-color: cyan;
+        color: black;
+    }
+}*/
+
+/* For Mobile Phones Portrait or Landscape View */
+/*@media screen and (max-device-width: 640px) {
+    .gfg-div {
+        width: 400px;
+        height: 200px;
+        background-color: chartreuse;
+        color: black;
+    }
+}*/
+
+/* For iPhone 4 Portrait or Landscape View */
+/*@media screen and (min-device-width: 320px) and (-webkit-min-device-pixel-ratio: 2) {
+    .gfg-div {
+        width: 400px;
+        height: 400px;
+        background-color: brown;
+        color: black;
+    }
+}*/
+
+/* For iPhone 5 Portrait or Landscape View */
+/*@media (device-height: 568px) and (device-width: 320px) and (-webkit-min-device-pixel-ratio: 2) {
+    .gfg-div {
+        width: 400px;
+        height: 400px;
+        background-color: cornflowerblue;
+        color: black;
+    }
+}*/
+
+/* For iPhone 6 and 6 plus Portrait or Landscape View */
+/*@media (min-device-height: 667px) and (min-device-width: 375px) and (-webkit-min-device-pixel-ratio: 3) {
+    .gfg-div {
+        width: 400px;
+        height: 400px;
+        background-color: darkgoldenrod;
+        color: black;
+    }
+}*/

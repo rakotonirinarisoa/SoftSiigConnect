@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="overflow-x:hidden;>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -51,7 +51,7 @@
     <script src="~/Assets/otherJs/dataTables.rowsGroup.js"></script>
     <script src="~/Assets/otherJs/buttons.colVis.min.js"></script>
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed" style="background-color: #f4f6f9;">
     <div id="loader" class="lds-dual-ring display-none overlay"></div>
 
     <div class="wrapper">
@@ -61,7 +61,7 @@
             <img class="animation__shake" src="~/Assets/img/df.gif" alt="AdminLTELogo" style="width:5% !important; height:10% !important">
         </div>-->
         <!-- Navbar -->
-        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light" style=" position: fixed; right: 0; left: 0; top:0">
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -547,7 +547,7 @@
                                 <a href="../BordTraitement/TraitementsPaiement" class="nav-link">
                                     <i class="nav-icon fas fa-file-alt"></i>
                                     <p>
-                                        Traitements des paiements
+                                        Délais de traitement des paiements
                                     </p>
                                 </a>
                             </li>
@@ -579,30 +579,31 @@
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <div class="content-header">
-                <div class="container-fluid">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0">@ViewData["Controller"]</h1>
-                        </div><!-- /.col -->
-                        <div class="col-sm-6">
-                            @RenderSection("Navigation", false)
-                            @section Navigation{
-                                <ol class="breadcrumb float-sm-right">
-                                    <li class="breadcrumb-item"><a href="#">Page 1</a></li>
-                                    <li class="breadcrumb-item"><a href="#">Page 1.1</a></li>
-                                    <li class="breadcrumb-item active">Page 1.1.2</li>
-                                </ol>
-                            }
-
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
-                </div><!-- /.container-fluid -->
-            </div>
-            <!-- /.content-header -->
             <!-- Main content -->
             <section class="content">
+                <!-- Content Header (Page header) -->
+                <div class="content-header">
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <h1 class="m-0">@ViewData["Controller"]</h1>
+                            </div><!-- /.col -->
+                            <div class="col-sm-6">
+                                @RenderSection("Navigation", false)
+                                @section Navigation{
+                                    <ol class="breadcrumb float-sm-right">
+                                        <li class="breadcrumb-item"><a href="#">Page 1</a></li>
+                                        <li class="breadcrumb-item"><a href="#">Page 1.1</a></li>
+                                        <li class="breadcrumb-item active">Page 1.1.2</li>
+                                    </ol>
+                                }
+
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                    </div><!-- /.container-fluid -->
+                </div>
+                <!-- /.content-header -->
+
                 <div class="container-fluid">
                     @RenderBody()
                 </div><!-- /.container-fluid -->
@@ -611,7 +612,7 @@
         </div>
 
         <!-- /.content-wrapper -->
-        <footer class="main-footer">
+        <footer class="main-footer" style="position: fixed; bottom: 0; left: 0; right: 0;">
             <strong>Copyright &copy; 2024 <a href="https://www.softwell.mg">Softwell</a>.</strong>
             All rights reserved.
             <div class="float-right d-none d-sm-inline-block">
