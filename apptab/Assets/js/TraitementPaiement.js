@@ -45,7 +45,7 @@ function parseList(array) {
 
                 switch (k) {
                     case 0:
-                        etape = 'Transfert et Validation RAF';
+                        etape = 'Transfert et Validation OP';
                         dateTraitement = array[i].TraitementPaiementDetails[j].DATETRANSFERTRAF === undefined ? '' : formatDate(array[i].TraitementPaiementDetails[j].DATETRANSFERTRAF);
                         beneficiaire = dateTraitement === '' ? '' : array[i].TraitementPaiementDetails[j].BENEFICIAIRE;
                         montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementPaiementDetails[j].MONTENGAGEMENT).replace(',', '.'));

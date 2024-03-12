@@ -4813,6 +4813,7 @@
     <Content Include="Views\BordTraitement\StatuePaiement.cshtml" />
     <Content Include="Views\BordTraitement\TraitementsPaiement.cshtml" />
     <Content Include="Views\BordTraitement\TraitementPaiementSoufrance.cshtml" />
+    <Content Include="Views\BordTraitement\TraitementPaiementRejet.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -30,7 +30,7 @@ function parseList(array) {
     const result = [];
 
     let rowNumber = 0;
-
+    console.log(array);
     for (let i = 0; i < array.length; i += 1) {
         rowNumber = 0;
 
@@ -42,15 +42,19 @@ function parseList(array) {
                 let montant = '';
                 let agent = '';
                 let dureeTraitement = '';
+                let dureePrevu = '';
+                let depassement = '';
 
                 switch (k) {
                     case 0:
-                        etape = 'Transfert et Validation RAF';
+                        etape = 'Transfert et Validation OP';
                         dateTraitement = array[i].TraitementPaiementDetails[j].DATETRANSFERTRAF === undefined ? '' : formatDate(array[i].TraitementPaiementDetails[j].DATETRANSFERTRAF);
                         beneficiaire = dateTraitement === '' ? '' : array[i].TraitementPaiementDetails[j].BENEFICIAIRE;
                         montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementPaiementDetails[j].MONTENGAGEMENT).replace(',', '.'));
                         agent = dateTraitement === '' ? '' : array[i].TraitementPaiementDetails[j].TRANSFERTRAFAGENT;
-                        dureeTraitement = array[i].TraitementPaiementDetails[j].DUREETRAITEMENTTRANSFERTRAF;
+                        dureeTraitement = array[i].TraitementPaiementDetails[j].DUREETRAITEMENTTRANSFERTOP;
+                        dureePrevu = array[i].TraitementPaiementDetails[j].DUREETRAITEMENTPREVUEOP;
+                        depassement = array[i].TraitementPaiementDetails[j].DEPASSEMENTOP;
 
                         break;
                     case 1:
@@ -59,7 +63,9 @@ function parseList(array) {
                         beneficiaire = dateTraitement === '' ? '' : array[i].TraitementPaiementDetails[j].BENEFICIAIRE;
                         montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementPaiementDetails[j].MONTENGAGEMENT).replace(',', '.'));
                         agent = dateTraitement === '' ? '' : array[i].TraitementPaiementDetails[j].VALORDSECAGENT;
-                        dureeTraitement = array[i].TraitementPaiementDetails[j].DUREETRAITEMENTVALORDSEC;
+                        dureeTraitement = array[i].TraitementPaiementDetails[j].DUREETRAITEMENTTRANSFERTAC;
+                        dureePrevu = array[i].TraitementPaiementDetails[j].DUREETRAITEMENTPREVUEAC;
+                        depassement = array[i].TraitementPaiementDetails[j].DEPASSEMENTAC;
 
                         break;
                     case 2:
@@ -68,7 +74,9 @@ function parseList(array) {
                         beneficiaire = dateTraitement === '' ? '' : array[i].TraitementPaiementDetails[j].BENEFICIAIRE;
                         montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementPaiementDetails[j].MONTENGAGEMENT).replace(',', '.'));
                         agent = dateTraitement === '' ? '' : array[i].TraitementPaiementDetails[j].SENDSIIGAGENT;
-                        dureeTraitement = array[i].TraitementPaiementDetails[j].DUREETRAITEMENTSENDSIIG;
+                        dureeTraitement = array[i].TraitementPaiementDetails[j].DUREETRAITEMENTTRANSFERTBK;
+                        dureePrevu = array[i].TraitementPaiementDetails[j].DUREETRAITEMENTPREVUEBK;
+                        depassement = array[i].TraitementPaiementDetails[j].DEPASSEMENTBK;
 
                         break;
                     case 3:
@@ -77,7 +85,9 @@ function parseList(array) {
                         beneficiaire = dateTraitement === '' ? '' : array[i].TraitementPaiementDetails[j].BENEFICIAIRE;
                         montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementPaiementDetails[j].MONTENGAGEMENT).replace(',', '.'));
                         agent = dateTraitement === '' ? '' : array[i].TraitementPaiementDetails[j].SIIGFPAGENT;
-                        dureeTraitement = array[i].TraitementPaiementDetails[j].DUREETRAITEMENTSIIGFP;
+                        dureeTraitement = '';
+                        dureePrevu = array[i].TraitementPaiementDetails[j].DUREETRAITEMENTPREVUEBK;
+                        depassement = '';
 
                         break;
                     default:
@@ -93,7 +103,9 @@ function parseList(array) {
                     montant,
                     agent,
                     dateTraitement,
-                    dureeTraitement
+                    dureeTraitement,
+                    dureePrevu,
+                    depassement
                 });
 
                 rowNumber += 1;
@@ -133,10 +145,13 @@ function setDataTable() {
                 data: 'agent'
             },
             {
-                data: 'dateTraitement'
+                data: 'dureeTraitement'
             },
             {
-                data: 'dureeTraitement'
+                data: 'dureePrevu'
+            },
+            {
+                data: 'depassement'
             }
         ],
         lengthChange: false,
@@ -159,8 +174,11 @@ function setDataTable() {
                 $('td:eq(4)', row).text(data.dateTraitement);
 
                 $('td:eq(5)', row).text(data.dureeTraitement);
-                $('td:eq(6)', row).text('').css({ 'display': 'none' });
-                $('td:eq(7)', row).text('').css({ 'display': 'none' });
+                $('td:eq(6)', row).text(data.dureePrevu);
+                $('td:eq(7)', row).text(data.depassement);
+
+                $('td:eq(8)', row).text('').css({ 'display': 'none' });
+                $('td:eq(9)', row).text('').css({ 'display': 'none' });
             }
         }
     });
@@ -198,7 +216,7 @@ $('[data-action="GenereLISTE"]').click(async function () {
 
     $.ajax({
         type: 'POST',
-        url: Origin + `/BordTraitement/GenereDelaisTraitementPaiement`,
+        url: Origin + `/BordTraitement/GenereTraitementPaiementSouffrance`,
         contentType: false,
         data: formData,
         cache: false,

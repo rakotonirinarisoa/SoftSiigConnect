@@ -15,14 +15,27 @@ namespace apptab.Data.Entities
         public string TRANSFERTRAFAGENT { get; set; }
         public DateTime? DATEVALORDSEC { get; set; }
         public string VALORDSECAGENT { get; set; }
+
         public DateTime? DATESENDSIIG { get; set; }
         public string SENDSIIGAGENT { get; set; }
         public DateTime? DATESIIGFP { get; set; }
         public string SIIGFPAGENT { get; set; }
+
+        public double DUREETRAITEMENTTRANSFERTOP { get; set; }
+        public double DUREETRAITEMENTTRANSFERTAC { get; set; }
+        public double DUREETRAITEMENTTRANSFERTBK { get; set; }
+
         public double DUREETRAITEMENTTRANSFERTRAF { get; set; }
         public double DUREETRAITEMENTVALORDSEC { get; set; }
         public double DUREETRAITEMENTSENDSIIG { get; set; }
         public double DUREETRAITEMENTSIIGFP { get; set; }
 
+        public double DUREETRAITEMENTPREVUEOP { get; set; }
+        public double DUREETRAITEMENTPREVUEAC { get; set; }
+        public double DUREETRAITEMENTPREVUEBK { get; set; }
+
+        public double DEPASSEMENTOP { get; set; }
+        public double DEPASSEMENTAC { get; set; }
+        public double DEPASSEMENTBK { get; set; }
     }
 }
