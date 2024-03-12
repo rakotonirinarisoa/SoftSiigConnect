@@ -829,3 +829,18 @@ section.content {
         color: black;
     }
 }*/
+
+.hr-line-solid-no-margin
+{
+    margin: -0.5em;
+}
+
+aside.main-sidebar.sidebar-light-primary.elevation-4.imageHover a 
+{
+    font-size: 12px;
+}
+
+aside.main-sidebar.sidebar-light-primary.elevation-4.imageHover a p 
+{
+    font-size: 12px;
+}

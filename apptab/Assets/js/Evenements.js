@@ -8,6 +8,10 @@
     GetListEvenements();
 });
 
+//function get_calendar_height() {
+//    return $(window).height() - 250;
+//}
+
 function GetListEvenements() {
     let formData = new FormData();
 
@@ -15,6 +19,10 @@ function GetListEvenements() {
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
+    //$(window).resize(function () {
+    //    $('#calendar').fullCalendar('option', 'height', get_calendar_height());
+    //});
+
 
     $.ajax({
         type: "POST",
@@ -45,26 +53,38 @@ function GetListEvenements() {
             $(`[data-id="proj-list"]`).text("");
             var code = [];
             $.each(Datas.data, function (k, v) {
+                let type = 'engagements';
+                if (v.TYPE == 1) { type = 'paiements'; }
+                let etat = 'Tris';
+                let color = '#1E8BFF'
+                if (v.ETAT == 1) { etat = 'Validation'; color = '#3EB059' }
+                if (v.ETAT == 2) { etat = 'Annulation'; color = '#DF4857' }
+                if (v.ETAT == 3) { etat = 'Transfert vers SIIGFP'; color = '#FFC107' }
+                if (v.ETAT == 4) { etat = 'Intégration dans SIIGFP'; color = '#17A2B8' }
+
                 code.push(
-                    {
-                        //title: 'TRITRE BE MANADALA',
-                        start: '2024-03-11',
-                        constraint: 'businessHours',
-                        backgroundColor: 'green',
-                        borderColor: 'green',
-                        extendedProps: {
-                            title: 'TRITRE BE MANADALA',
-                            description: 'DESCRIPTION'
-                        },
-                    });
+                {
+                    start: (formatDateRFR(v.DATE)),
+                    //constraint: 'businessHours',
+                    backgroundColor: `${color}`,
+                    borderColor: `${color}`,
+                    extendedProps: {
+                        title: `${v.SOA} : ${v.PROJET} : ${v.USER}`,
+                        description: `${etat} de ${v.COUNT} ${type} par ${v.USER}`,
+                    },
+                });
             });
+
             console.log(code);
+
             var calendarEl = document.getElementById('calendar');
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                editable: true,
+                editable: false,
                 selectable: true,
+
                 //businessHours: true,
+
                 dayMaxEvents: true, // allow "more" link when too many events
                 headerToolbar: {
                     left: 'title prev,next today',
@@ -82,8 +102,12 @@ function GetListEvenements() {
                 },
                 initialView: 'dayGridMonth',
 
+                //contentHeight: 700,
+                /*height: get_calendar_height(),*/
+
                 events: code,
                 eventDidMount: function (info) {
+
                     //var tooltip = new Tooltip(info.el, {
                     //    title: info.event.extendedProps.description,
                     //    placement: 'top',
@@ -93,25 +117,29 @@ function GetListEvenements() {
                     /*info.event.extendedProps*/
                     //console.log(info.event.extendedProps);
 
-                    let test = info.el.querySelector('.fc-event-title');
-                    let test2 = info.el.querySelector('.fc-list-event-title');
-                    console.log(info.event);
-                    console.log(info);
-                    if (test === null) {
-                        test2.innerHTML += ('<a>' + info.event.extendedProps.title + '<div class="hr-line-solid-no-margin" ></div ><span style="font-size: 10px">' + info.event.extendedProps.description + '</span></div></a>');
+                    let enventTitle = info.el.querySelector('.fc-event-title');
+                    let eventTitleList = info.el.querySelector('.fc-list-event-title');
+
+                    //console.log(info.event);
+                    //console.log(info);
+
+                    if (enventTitle === null) {
+                        eventTitleList.innerHTML += ('<a style="font-size: 10px">' + info.event.extendedProps.title + '<div class="hr-line-solid-no-margin"></div ><span style="font-size: 7px">' + info.event.extendedProps.description + '</span></a>');
                     }
                     else {
-                        test.innerHTML += ('<a>' + info.event.extendedProps.title + '<div class="hr-line-solid-no-margin" ></div ><span style="font-size: 10px">' + info.event.extendedProps.description + '</span></div></a>');
+                        enventTitle.innerHTML += ('<a style="font-size: 10px">' + info.event.extendedProps.title + '<div class="hr-line-solid-no-margin"></div ><span style="font-size: 7px">' + info.event.extendedProps.description + '</span></a>');
                     }
                 }
             });
-            calendar.setOption('locale', 'FR');
-            calendar.render();
 
-            console.log(calendar);
+            calendar.setOption('locale', 'FR');
+            calendar.updateSize();
+            
+            calendar.render();
+            /*console.log(calendar);*/
         },
         error: function (e) {
             alert("Problème de connexion. ");
         }
-    })
+    });
 }
