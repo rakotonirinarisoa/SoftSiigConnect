@@ -71,7 +71,7 @@ namespace apptab.Controllers
                     if (test.IDPROJET != 0)
                     {
                         mandat = mandat.Where(a => a.IDPROJET == test.IDPROJET).ToList();
-                        payement = payement.Where(a => a.IDPROJET == test.IDPROJET).ToList() ;
+                        payement = payement.Where(a => a.IDPROJET == test.IDPROJET).ToList();
                         newElemH = new COUNTTDB()
                         {
                             MandatT = mandat.Where(a => a.ETAT == 0).Count(),

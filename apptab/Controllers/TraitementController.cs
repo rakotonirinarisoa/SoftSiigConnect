@@ -458,6 +458,7 @@ namespace apptab.Controllers
                         ismod.ETAT = 0;
                         ismod.DATECRE = DateTime.Now;
                         ismod.DATEANNUL = null;
+                        ismod.IDUSERANNUL = null;
 
                         db.SaveChanges();
                     }
@@ -592,6 +593,7 @@ namespace apptab.Controllers
                         isModified.ETAT = 1;
                         isModified.DATEVALIDATION = DateTime.Now;
                         isModified.DATEANNUL = null;
+                        isModified.IDUSERANNUL = null;
                         isModified.IDUSERVALIDATE = exist.ID;
                         db.SaveChanges();
 
@@ -832,6 +834,7 @@ namespace apptab.Controllers
                     ismod.ETAT = 2;
                     //ismod.DATECRE = DateTime.Now;
                     ismod.DATEANNUL = DateTime.Now;
+                    ismod.IDUSERANNUL = exist.ID;
 
                     db.SaveChanges();
                 }

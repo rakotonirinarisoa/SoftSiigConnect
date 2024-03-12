@@ -53,26 +53,38 @@ function GetListEvenements() {
             $(`[data-id="proj-list"]`).text("");
             var code = [];
             $.each(Datas.data, function (k, v) {
+                let type = 'engagements';
+                if (v.TYPE == 1) { type = 'paiements'; }
+                let etat = 'Tris';
+                let color = '#1E8BFF'
+                if (v.ETAT == 1) { etat = 'Validation'; color = '#3EB059' }
+                if (v.ETAT == 2) { etat = 'Annulation'; color = '#DF4857' }
+                if (v.ETAT == 3) { etat = 'Transfert vers SIIGFP'; color = '#FFC107' }
+                if (v.ETAT == 4) { etat = 'Intégration dans SIIGFP'; color = '#17A2B8' }
+
                 code.push(
-                    {
-                        //title: 'TRITRE BE MANADALA',
-                        start: '2024-03-11',
-                        constraint: 'businessHours',
-                        backgroundColor: 'green',
-                        borderColor: 'green',
-                        extendedProps: {
-                            title: 'TRITRE TEST',
-                            description: 'DESCRIPTION TEST'
-                        },
-                    });
+                {
+                    start: (formatDateRFR(v.DATE)),
+                    //constraint: 'businessHours',
+                    backgroundColor: `${color}`,
+                    borderColor: `${color}`,
+                    extendedProps: {
+                        title: `${v.SOA} : ${v.PROJET} : ${v.USER}`,
+                        description: `${etat} de ${v.COUNT} ${type} par ${v.USER}`,
+                    },
+                });
             });
+
+            console.log(code);
 
             var calendarEl = document.getElementById('calendar');
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                editable: true,
+                editable: false,
                 selectable: true,
+
                 //businessHours: true,
+
                 dayMaxEvents: true, // allow "more" link when too many events
                 headerToolbar: {
                     left: 'title prev,next today',
@@ -89,11 +101,13 @@ function GetListEvenements() {
                     timeGridDay: { buttonText: 'Jour' },
                 },
                 initialView: 'dayGridMonth',
+
                 //contentHeight: 700,
                 /*height: get_calendar_height(),*/
 
                 events: code,
                 eventDidMount: function (info) {
+
                     //var tooltip = new Tooltip(info.el, {
                     //    title: info.event.extendedProps.description,
                     //    placement: 'top',
@@ -105,8 +119,10 @@ function GetListEvenements() {
 
                     let enventTitle = info.el.querySelector('.fc-event-title');
                     let eventTitleList = info.el.querySelector('.fc-list-event-title');
+
                     //console.log(info.event);
                     //console.log(info);
+
                     if (enventTitle === null) {
                         eventTitleList.innerHTML += ('<a style="font-size: 10px">' + info.event.extendedProps.title + '<div class="hr-line-solid-no-margin"></div ><span style="font-size: 7px">' + info.event.extendedProps.description + '</span></a>');
                     }

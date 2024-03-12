@@ -478,7 +478,7 @@ namespace apptab.Controllers
                 {
                     user.ETAT = 2;
                     user.DATEANNUL = DateTime.Now;
-                    //user.DATECRE = null;
+                    user.IDUSERANNUL = exist.ID;
                     db.SaveChanges();
 
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Annulation avec succès. " }, settings));

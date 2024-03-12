@@ -10,6 +10,14 @@ function formatDate(date) {
     return dayjs(date).format('DD/MM/YYYY');
 }
 
+function formatDateRFR(date) {
+    if (!dayjs(date).isValid()) {
+        return '';
+    }
+
+    return dayjs(date).format('YYYY-MM-DD');
+}
+
 function tableToExcel(tableId, name, callback = undefined) {
     let table;
 

@@ -58,6 +58,10 @@
         public int? IDUSERENVOISIIGFP { get; set; }
 
         [StringLength(50)]
+        public string USERSIIG { get; set; }
+        public int? IDUSERANNUL { get; set; }
+
+        [StringLength(50)]
         public string NDEFSIIG { get; set; }
         [StringLength(50)]
         public string NTEFSIIG { get; set; }
