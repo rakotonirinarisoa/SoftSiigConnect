@@ -1019,5 +1019,9 @@ namespace apptab.Controllers
 
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = result }, settings));
         }
+        public ActionResult TraitementPaiementSoufrance()
+        {
+            return View();
+        }
     }
 }
