@@ -8,6 +8,10 @@
     GetListEvenements();
 });
 
+//function get_calendar_height() {
+//    return $(window).height() - 250;
+//}
+
 function GetListEvenements() {
     let formData = new FormData();
 
@@ -15,6 +19,10 @@ function GetListEvenements() {
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
+    //$(window).resize(function () {
+    //    $('#calendar').fullCalendar('option', 'height', get_calendar_height());
+    //});
+
 
     $.ajax({
         type: "POST",
@@ -58,7 +66,7 @@ function GetListEvenements() {
                         },
                     });
             });
-            console.log(code);
+
             var calendarEl = document.getElementById('calendar');
 
             var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -81,7 +89,8 @@ function GetListEvenements() {
                     timeGridDay: { buttonText: 'Jour' },
                 },
                 initialView: 'dayGridMonth',
-                contentHeight: 750,
+                //contentHeight: 700,
+                /*height: get_calendar_height(),*/
 
                 events: code,
                 eventDidMount: function (info) {
@@ -94,25 +103,27 @@ function GetListEvenements() {
                     /*info.event.extendedProps*/
                     //console.log(info.event.extendedProps);
 
-                    let test = info.el.querySelector('.fc-event-title');
-                    let test2 = info.el.querySelector('.fc-list-event-title');
-                    console.log(info.event);
-                    console.log(info);
-                    if (test === null) {
-                        test2.innerHTML += ('<a>' + info.event.extendedProps.title + '<div class="hr-line-solid-no-margin" ></div ><span style="font-size: 10px">' + info.event.extendedProps.description + '</span></div></a>');
+                    let enventTitle = info.el.querySelector('.fc-event-title');
+                    let eventTitleList = info.el.querySelector('.fc-list-event-title');
+                    //console.log(info.event);
+                    //console.log(info);
+                    if (enventTitle === null) {
+                        eventTitleList.innerHTML += ('<a style="font-size: 10px">' + info.event.extendedProps.title + '<div class="hr-line-solid-no-margin"></div ><span style="font-size: 7px">' + info.event.extendedProps.description + '</span></a>');
                     }
                     else {
-                        test.innerHTML += ('<a>' + info.event.extendedProps.title + '<div class="hr-line-solid-no-margin" ></div ><span style="font-size: 10px">' + info.event.extendedProps.description + '</span></div></a>');
+                        enventTitle.innerHTML += ('<a style="font-size: 10px">' + info.event.extendedProps.title + '<div class="hr-line-solid-no-margin"></div ><span style="font-size: 7px">' + info.event.extendedProps.description + '</span></a>');
                     }
                 }
             });
-            calendar.setOption('locale', 'FR');
-            calendar.render();
 
-            console.log(calendar);
+            calendar.setOption('locale', 'FR');
+            calendar.updateSize();
+            
+            calendar.render();
+            /*console.log(calendar);*/
         },
         error: function (e) {
             alert("Problème de connexion. ");
         }
-    })
+    });
 }
