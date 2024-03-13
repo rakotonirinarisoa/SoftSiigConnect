@@ -22,6 +22,15 @@
         public string MOP0 { get; set; }
         public string MOP1 { get; set; }
         public string MOP2 { get; set; }
+        public string TDB0 { get; set; }
+        public string TDB1 { get; set; }
+        public string TDB2 { get; set; }
+        public string TDB3 { get; set; }
+        public string TDB4 { get; set; }
+        public string TDB5 { get; set; }
+        public string TDB6 { get; set; }
+        public string TDB7 { get; set; }
+        public string TDB8 { get; set; }
 
         [Column(TypeName = "smalldatetime")]
         public DateTime? CREATIONDATE { get; set; }

@@ -1176,7 +1176,9 @@ namespace apptab.Controllers
                     if (SExist.MTNON != param.MTNON || SExist.MT0 != param.MT0 || SExist.MT1 != param.MT1 || SExist.MT2 != param.MT2
                         || SExist.MD0 != param.MD0 || SExist.MD1 != param.MD1 || SExist.MD2 != param.MD2 || SExist.MD3 != param.MD3
                         || SExist.MOP0 != param.MOP0 || SExist.MOP1 != param.MOP1 || SExist.MOP2 != param.MOP2
-                        || SExist.MP1 != param.MP1 || SExist.MP2 != param.MP2 || SExist.MP3 != param.MP3 || SExist.MP4 != param.MP4)
+                        || SExist.MP1 != param.MP1 || SExist.MP2 != param.MP2 || SExist.MP3 != param.MP3 || SExist.MP4 != param.MP4
+                        || SExist.TDB0 != param.TDB0 || SExist.TDB1 != param.TDB1 || SExist.TDB2 != param.TDB2 || SExist.TDB3 != param.TDB3 || SExist.TDB4 != param.TDB4
+                        || SExist.TDB5 != param.TDB5 || SExist.TDB6 != param.TDB6 || SExist.TDB7 != param.TDB7 || SExist.TDB8 != param.TDB8)
                     {
                         SExist.MTNON = param.MTNON;
                         SExist.MT0 = param.MT0;
@@ -1196,6 +1198,16 @@ namespace apptab.Controllers
                         SExist.MOP0 = param.MOP0;
                         SExist.MOP1 = param.MOP1;
                         SExist.MOP2 = param.MOP2;
+
+                        SExist.TDB0 = param.TDB0;
+                        SExist.TDB1 = param.TDB1;
+                        SExist.TDB2 = param.TDB2;
+                        SExist.TDB3 = param.TDB3;
+                        SExist.TDB4 = param.TDB4;
+                        SExist.TDB5 = param.TDB5;
+                        SExist.TDB6 = param.TDB6;
+                        SExist.TDB7 = param.TDB7;
+                        SExist.TDB8 = param.TDB8;
 
                         db.SaveChanges();
                     }
@@ -1223,6 +1235,16 @@ namespace apptab.Controllers
                         MOP0 = param.MOP0,
                         MOP1 = param.MOP1,
                         MOP2 = param.MOP2,
+
+                        TDB0 = param.TDB0,
+                        TDB1 = param.TDB1,
+                        TDB2 = param.TDB2,
+                        TDB3 = param.TDB3,
+                        TDB4 = param.TDB4,
+                        TDB5 = param.TDB5,
+                        TDB6 = param.TDB6,
+                        TDB7 = param.TDB7,
+                        TDB8 = param.TDB8,
 
                         CREATIONDATE = DateTime.Now
                     };

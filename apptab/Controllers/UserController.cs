@@ -507,6 +507,16 @@ namespace SOFTCONNECT.Controllers
                     Session["MOP0"] = isMenu.MOP0;
                     Session["MOP1"] = isMenu.MOP1;
                     Session["MOP2"] = isMenu.MOP2;
+
+                    Session["TDB0"] = isMenu.TDB0;
+                    Session["TDB1"] = isMenu.TDB1;
+                    Session["TDB2"] = isMenu.TDB2;
+                    Session["TDB3"] = isMenu.TDB3;
+                    Session["TDB4"] = isMenu.TDB4;
+                    Session["TDB5"] = isMenu.TDB5;
+                    Session["TDB6"] = isMenu.TDB6;
+                    Session["TDB7"] = isMenu.TDB7;
+                    Session["TDB8"] = isMenu.TDB8;
                 }
 
                 if (db.SI_GEDLIEN.Any())

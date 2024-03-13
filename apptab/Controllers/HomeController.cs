@@ -168,7 +168,7 @@ namespace apptab.Controllers
 
                 return File(source, System.Net.Mime.MediaTypeNames.Application.Octet, pathfiles);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -797,7 +797,7 @@ namespace apptab.Controllers
             else
             {
                 var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0).ToList();
-                
+
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
