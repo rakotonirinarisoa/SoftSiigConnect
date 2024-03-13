@@ -986,7 +986,7 @@ $('[data-action="GetAnomalieListes"]').click(function () {
                         <td>
                             <input type="checkbox" name = "checkprod" compteg-ischecked/>
                         </td><td>${v.IDREGLEMENT}</td>
-                        <td>${v.DateOrdre}</td>
+                        <td>${v.dateOrdre}</td>
                         <td>${v.NoPiece}</td>
                         <td>${v.Compte}</td>
                         <td>${v.Libelle}</td>

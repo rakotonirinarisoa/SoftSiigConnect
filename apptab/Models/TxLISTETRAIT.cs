@@ -32,7 +32,6 @@ namespace apptab
         public DateTime? DATEREJETE { get; set; }
         public string MOTIF { get; set; }
         public string COMMENTAIRE { get; set; }
-
-
+        public string TYPE { get; set; }
     }
 }
