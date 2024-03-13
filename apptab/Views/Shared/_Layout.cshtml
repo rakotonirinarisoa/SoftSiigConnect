@@ -507,7 +507,7 @@
                                 <a href="../BordTraitement/BordListeEngaPaie" class="nav-link">
                                     <i class="nav-icon fas fa-archive" style="color: #17A2B8"></i>
                                     <p>
-                                        Liste des engagements, avances et paiements
+                                        @Session["TDB0"]@*Liste des engagements, avances et paiements*@
                                     </p>
                                 </a>
                             </li>
@@ -515,7 +515,7 @@
                                 <a href="../BordTraitement/StatutEngagements" class="nav-link">
                                     <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
                                     <p>
-                                        Statut des engagements et avances
+                                        @Session["TDB1"]@*Statut des engagements et avances*@
                                     </p>
                                 </a>
                             </li>
@@ -523,7 +523,7 @@
                                 <a href="../BordTraitement/DelaisTraitementEngagements" class="nav-link">
                                     <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
                                     <p>
-                                        Délais de traitement des engagements et avances
+                                        @Session["TDB2"]@*Délais de traitement des engagements et avances*@
                                     </p>
                                 </a>
                             </li>
@@ -531,7 +531,7 @@
                                 <a href="../BordTraitement/SoufTraitement" class="nav-link">
                                     <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
                                     <p>
-                                        Traitements des engagements et avances en souffrance (par rapport au délai moyen)
+                                        @Session["TDB3"]@*Traitements des engagements et avances en souffrance (par rapport au délai moyen)*@
                                     </p>
                                 </a>
                             </li>
@@ -539,7 +539,7 @@
                                 <a href="../BordTraitement/EngagementsREJETE" class="nav-link">
                                     <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
                                     <p>
-                                        Engagements et avances rejetés
+                                        @Session["TDB4"]@*Engagements et avances rejetés*@
                                     </p>
                                 </a>
                             </li>
@@ -547,7 +547,7 @@
                                 <a href="../BordTraitement/statuepaiement" class="nav-link">
                                     <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
                                     <p>
-                                        Statut des paiements
+                                        @Session["TDB5"]@*Statut des paiements*@
                                     </p>
                                 </a>
                             </li>
@@ -555,8 +555,7 @@
                                 <a href="../BordTraitement/TraitementsPaiement" class="nav-link">
                                     <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
                                     <p>
-                                        Délais de traitement des paiements
-
+                                        @Session["TDB6"]@*Délais de traitement des paiements*@
                                     </p>
                                 </a>
                             </li>
@@ -564,7 +563,7 @@
                                 <a href="../BordTraitement/TraitementPaiementSoufrance" class="nav-link">
                                     <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
                                     <p>
-                                        Traitement des paiements en souffrance (par rapport au délai moyen)
+                                        @Session["TDB7"]@*Traitement des paiements en souffrance (par rapport au délai moyen)*@
                                     </p>
                                 </a>
                             </li>
@@ -572,11 +571,10 @@
                                 <a href="../BordTraitement/TraitementPaiementRejet" class="nav-link">
                                     <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
                                     <p>
-                                        Paiements rejetés
+                                        @Session["TDB8"]@*Paiements rejetés*@
                                     </p>
                                 </a>
                             </li>
-
                         }
                     </ul>
                     <hr />

@@ -168,7 +168,7 @@ namespace apptab.Controllers
 
                 return File(source, System.Net.Mime.MediaTypeNames.Application.Octet, pathfiles);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
