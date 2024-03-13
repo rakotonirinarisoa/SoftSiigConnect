@@ -176,6 +176,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                         id: v.No,
                         soa: v.SOA,
                         projet: v.PROJET,
+                        type: v.TYPE,
                         ref: v.REF,
                         benef: v.BENEF,
                         DATENGAGEMENT: formatDate(v.DATENGAGEMENT),
@@ -208,42 +209,13 @@ $('[data-action="GenereLISTE"]').click(function () {
                         },
                         { data: 'soa' },
                         { data: 'projet' },
+                        { data: 'type' },
                         { data: 'ref' },
                         { data: 'benef' },
                         { data: 'DATENGAGEMENT' },
                         { data: 'MONTENGAGEMENT' },
                         { data: 'DATEPAIE' },
                         { data: 'MONTPAIE' },
-                        //{
-                        //    data: 'imputation',
-                        //    render: function (_, _, row, _) {
-                        //        return `
-                        //            <div onclick="modalD('${row.id}','${row.projet}')">
-                        //                <i class="fa fa-tags fa-lg text-danger elerfr"></i>
-                        //            </div>
-                        //        `;
-                        //    }
-                        //},
-                        //{
-                        //    data: 'piecesJustificatives',
-                        //    render: function (_, _, row, _) {
-                        //        return `
-                        //            <div onclick="modalF('${row.id}','${row.projet}')">
-                        //                <i class="fa fa-tags fa-lg text-success elerfr"></i>
-                        //            </div>
-                        //        `;
-                        //    }
-                        //},
-                        //{
-                        //    data: 'document',
-                        //    render: function (_, _, row, _) {
-                        //        return `
-                        //            <div onclick="modalLIAS('${row.id}','${row.projet}')">
-                        //                <i class="fa fa-tags fa-lg text-info elerfr"></i>
-                        //            </div>
-                        //        `;
-                        //    }
-                        //}
                     ],
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);

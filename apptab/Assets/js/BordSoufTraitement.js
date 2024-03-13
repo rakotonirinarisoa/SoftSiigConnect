@@ -83,6 +83,8 @@ function parseList(array) {
                 result.push({
                     rowNumber,
                     soa: array[i].SOA,
+                    projet: array[i].TraitementsEngagementsDetails[j].PROJET,
+                    type: array[i].TraitementsEngagementsDetails[j].TYPE,
                     num: array[i].TraitementsEngagementsDetails[j].NUM_ENGAGEMENT,
                     etape,
                     beneficiaire,
@@ -144,6 +146,12 @@ function setDataTable() {
                 data: 'soa'
             },
             {
+                data: 'projet'
+            },
+            {
+                data: 'type'
+            },
+            {
                 data: 'num'
             },
             {
@@ -176,25 +184,20 @@ function setDataTable() {
         ordering: false,
         info: false,
         colReorder: false,
-        rowsGroup: [0, 1],
+        rowsGroup: [0, 1, 2, 3],
         order: [['desc']],
         createdRow: function (row, data, _) {
-            if (data.rowNumber !== 0) {
-                $('td:eq(0)', row).addClass('delete-td');
-                $('td:eq(1)', row).addClass('delete-td');
-            }
-
             if (data.rowNumber % NUMBER_OF_ROWS === NUMBER_OF_ROWS - 1) {
-                $('td:eq(3)', row).attr('colspan', 4).css({ 'text-align': 'center' });
-                $('td:eq(3)', row).text('Durée totale');
+                $('td:eq(5)', row).attr('colspan', 4).css({ 'text-align': 'center' });
+                $('td:eq(5)', row).text('Durée totale');
 
-                $('td:eq(4)', row).text(data.dureeTraitement);
-                $('td:eq(5)', row).text(data.dureePrevu);
-                $('td:eq(6)', row).text(data.depassement);
+                $('td:eq(6)', row).text(data.dureeTraitement);
+                $('td:eq(7)', row).text(data.dureePrevu);
+                $('td:eq(8)', row).text(data.depassement);
                 
-                $('td:eq(7)', row).text('').css({ 'display': 'none' });
-                $('td:eq(8)', row).text('').css({ 'display': 'none' });
                 $('td:eq(9)', row).text('').css({ 'display': 'none' });
+                $('td:eq(10)', row).text('').css({ 'display': 'none' });
+                $('td:eq(11)', row).text('').css({ 'display': 'none' });
             }
         }
     });
@@ -284,7 +287,9 @@ $(document).ready(async () => {
 });
 
 $('#export-excel-btn').on('click', () => {
-    $(`td.delete-td`).remove();
+    $('td').filter(function () {
+        return $(this).css('display') === 'none';
+    }).remove();
 
     tableToExcel('dashboard', 'TRAITEMENT EN SOUFFRANCE', setDataTable);
 });

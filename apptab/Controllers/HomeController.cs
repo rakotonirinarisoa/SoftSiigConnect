@@ -682,8 +682,9 @@ namespace apptab.Controllers
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
-                    if (item.DATECREA.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                    if (item.DATECREA.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                         isLate = true;
+
                     list.Add(new OPA_VALIDATIONS
                     {
                         IDREGLEMENT = item.IDREGLEMENT,
@@ -712,8 +713,9 @@ namespace apptab.Controllers
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
-                    if (item.DATECREA.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                    if (item.DATECREA.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                         isLate = true;
+
                     list.Add(new OPA_VALIDATIONS
                     {
                         IDREGLEMENT = item.IDREGLEMENT,
@@ -765,10 +767,8 @@ namespace apptab.Controllers
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
-                    if (item.DATECREA.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
-                    {
+                    if (item.DATECREA.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                         isLate = true;
-                    }
 
                     list.Add(new OPA_VALIDATIONS
                     {
@@ -801,7 +801,7 @@ namespace apptab.Controllers
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
-                    if (item.DATECREA.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                    if (item.DATECREA.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                         isLate = true;
                     if (item.AVANCE == true)
                     {
@@ -1012,8 +1012,9 @@ namespace apptab.Controllers
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
-                    if (item.DATEACCEPT.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                    if (item.DATEACCEPT.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                         isLate = true;
+
                     list.Add(new OPA_VALIDATIONS
                     {
                         IDREGLEMENT = item.IDREGLEMENT,
@@ -1041,7 +1042,7 @@ namespace apptab.Controllers
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
-                    if (item.DATEACCEPT.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                    if (item.DATEACCEPT.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                         isLate = true;
 
                     list.Add(new OPA_VALIDATIONS
@@ -1092,8 +1093,9 @@ namespace apptab.Controllers
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
-                    if (item.DATEACCEPT.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                    if (item.DATEACCEPT.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                         isLate = true;
+
                     list.Add(new OPA_VALIDATIONS
                     {
                         IDREGLEMENT = item.IDREGLEMENT,
@@ -1123,8 +1125,9 @@ namespace apptab.Controllers
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
-                    if (item.DATECREA.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                    if (item.DATECREA.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                         isLate = true;
+
                     list.Add(new OPA_VALIDATIONS
                     {
                         IDREGLEMENT = item.IDREGLEMENT,
@@ -1214,7 +1217,7 @@ namespace apptab.Controllers
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
-                    if (item.DATESEND.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                    if (item.DATESEND.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                         isLate = true;
 
                     list.Add(new OPA_VALIDATIONS
@@ -1441,7 +1444,7 @@ namespace apptab.Controllers
             foreach (var item in val)
             {
                 bool isLate = false;
-                if (item.DATESEND.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                if (item.DATESEND.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                     isLate = true;
 
                 list.Add(new OPA_VALIDATIONS
