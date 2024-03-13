@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq;
+using apptab.Models;
 
 namespace apptab.Extension
 {
@@ -396,26 +397,16 @@ namespace apptab.Extension
             SI_USERS usr = (from u in db.SI_USERS
                             where u.LOGIN == user.LOGIN
                             select u).FirstOrDefault();
-            //SI_MAPPAGES dbt = (from d in db.OPA_DATABASE
-            //                   join m in db.SI_MAPPAGES on d.IDMAPPAGE equals m.ID
-            //                   where d.IDUSER == usr.ID
-            //                   select m).FirstOrDefault();
             SI_MAPPAGES dbt = db.SI_MAPPAGES.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
-            //string bds =(from b in db.OPA_DATABASE
-            //             where )
 
             string texteAFB160 = "";
             OPA_HISTORIQUEBR historique;
 
             /********              0302        ******/
 
-            //var donneurOrde = (from dordre in db.OPA_DONNEURORDRE
-            //                   where dordre.IDSOCIETE == PROJECTID && dordre.APPLICATION == "BR"
-            //                   select dordre).FirstOrDefault();
             var donneurOrde = db.OPA_DONNEURORDRE.Where(x => x.IDSOCIETE == PROJECTID && x.APPLICATION == "BR").FirstOrDefault();
-                /***********************NOM de fichier************************/
-           // string nom2 = (from nom in tom.RPROJET
-           //select nom.NOM2).FirstOrDefault();
+            /***********************NOM de fichier************************/
+
             string nom2 = tom.RPROJET.Select(x => x.NOM).FirstOrDefault();
             //string nom2 = "test test/test.test;";
             nom2 = this.traitementNomFichier(nom2);
@@ -736,14 +727,14 @@ namespace apptab.Extension
             }
 
         }
-        public List<DataListTompro> getREGLEMENT(SI_USERS user)
+        public List<DataListTompro> getREGLEMENT(SI_USERS user,int PROJECTID)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
             /**************Remplissage dataGridFactSelect*********/
 
             List<OPA_REGLEMENT> numRegs = (from num in db.OPA_REGLEMENT
-                                           where num.IDSOCIETE == user.IDPROJET
+                                           where num.IDSOCIETE == PROJECTID
                                            select num).ToList();
 
             List<DataListTompro> listEcritureSelect = new List<DataListTompro>();
@@ -816,14 +807,14 @@ namespace apptab.Extension
             }
             return list;
         }
-        public List<DataListTomOP> getREGLEMENTBR(SI_USERS user)
+        public List<DataListTomOP> getREGLEMENTBR(SI_USERS user,int PROJECTID)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
             /**************Remplissage dataGridFactSelect*********/
 
             List<OPA_REGLEMENTBR> numRegs = (from num in db.OPA_REGLEMENTBR
-                                             where num.IDSOCIETE == user.IDPROJET
+                                             where num.IDSOCIETE == PROJECTID
                                              select num).ToList();
 
             List<DataListTomOP> listEcritureSelect = new List<DataListTomOP>();
@@ -1704,13 +1695,20 @@ namespace apptab.Extension
                              select jrnl).Single();//Miova table FOP
 
             List<string> DjournalFop = tom.FOP.Where(x => x.JOURNAL == journal && (x.ETAPE1USER == etat || x.ETAPE2USER == etat || x.ETAPE3USER == etat || x.ETAPE4USER == etat || x.ETAPE5USER == etat || x.ETAPE6USER == etat || x.ETAPE7USER == etat || x.ETAPE8USER == etat || x.ETAPE9USER == etat || x.ETAPE10USER == etat)).Select(x => x.NUMEROOP).ToList();
+            List<string> DjournalAvance = tom.GA_AVANCE.Where(x => x.JOURNAL == journal).Select(x => x.NUMERO).ToList();
 
             List<MOP> lNoOPS = new List<MOP>();
+            List<GA_AVANCE> lNoOpsAV = new List<GA_AVANCE>();
+
             foreach (string num in DjournalFop)
             {
                 lNoOPS.AddRange((from mo in tom.MOP
                                  where mo.DATEFACTURE >= dateD.Date && mo.DATEFACTURE <= dateF.Date && mo.NUMEROOP == num
                                  select mo).ToList());
+            }
+            foreach (var item in DjournalAvance)
+            {
+                lNoOpsAV.AddRange(tom.GA_AVANCE.Where(x => x.DATE >= dateD.Date && x.DATE <= dateF.Date && x.NUMERO == item).ToList());
             }
 
             if (djournal.RIB != null && djournal.RIB != "")
@@ -1721,6 +1719,8 @@ namespace apptab.Extension
                     if (auxi == "")
                     {
                         List<MOP> lNoOp = lNoOPS;
+                        List<GA_AVANCE> lnoOpAVS = lNoOpsAV;
+
                         foreach (var nord in lNoOp)
                         {
                             try
@@ -1743,6 +1743,40 @@ namespace apptab.Extension
                                     FinancementCategorie = reglement.CONVENTION + " " + reglement.CATEGORIE,
                                     Commune = reglement.GEO,
                                     Plan6 = reglement.PLAN6,
+                                    Journal = journal,
+                                    Marche = "",
+                                    Status = etat
+                                });
+
+                            }
+                            catch (Exception) { }
+
+
+                        }
+
+                        foreach (var nordAV in lnoOpAVS)
+                        {
+                            try
+                            {
+                                var reglementAV = (from mcpt in tom.MOP
+                                                   where mcpt.NUMEROOP == nordAV.NUMERO && mcpt.COGE == djournal.COMPTEASSOCIE
+                                                   select mcpt).Single();
+
+                                list.Add(new DataListTomOP()
+                                {
+                                    No = reglementAV.NUMEROOP,
+                                    Date = reglementAV.DATEFACTURE.Value,
+                                    NoPiece = reglementAV.NUMEROFACTURE,
+                                    Compte = reglementAV.COGE,
+                                    Libelle = reglementAV.LIBELLE,
+                                    Montant = reglementAV.MONTANTLOC.Value,
+                                    MontantDevise = reglementAV.MONTANTDEV.Value,
+                                    Mon = "",
+                                    Rang = reglementAV.ACTI,
+                                    Poste = reglementAV.POSTE,
+                                    FinancementCategorie = reglementAV.CONVENTION + " " + reglementAV.CATEGORIE,
+                                    Commune = reglementAV.GEO,
+                                    Plan6 = reglementAV.PLAN6,
                                     Journal = journal,
                                     Marche = "",
                                     Status = etat
@@ -1799,9 +1833,36 @@ namespace apptab.Extension
                     List<MOP> lOPCOGE = (from m in lNoOPS
                                          where m.COGEFOURNISSEUR == compteG
                                          select m).ToList();
+
+                    List<GA_AVANCE> lOPCOGEAV = (from m in lNoOpsAV
+                                                 where m.COGE == compteG
+                                                 select m).ToList();
+
                     if (auxi == "" || auxi == "Tous")
                     {
-
+                        foreach (var item in lOPCOGEAV)
+                        {
+                            var reglementAV = tom.GA_AVANCE.Where(a => a.NUMERO == item.NUMERO).FirstOrDefault();
+                            list.Add(new DataListTomOP()
+                            {
+                                No = reglementAV.NUMERO,
+                                Date = reglementAV.DATE.Value,
+                                NoPiece = reglementAV.NUMERO_PIECE,
+                                Compte = reglementAV.COGE,
+                                Libelle = reglementAV.LIBELLE,
+                                Montant = 0,
+                                MontantDevise = 0,
+                                Mon = "",
+                                Rang = "",
+                                Poste = "",
+                                FinancementCategorie = "",
+                                Commune = "",
+                                Plan6 = "",
+                                Journal = journal,
+                                Marche = reglementAV.MARCHE,
+                                Status = etat
+                            });
+                        }
                         foreach (var nord in lOPCOGE)
                         {
                             try
@@ -1809,6 +1870,7 @@ namespace apptab.Extension
                                 var reglement = (from mcpt in tom.MOP
                                                  where mcpt.NUMEROOP == nord.NUMEROOP /*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
                                                  select mcpt).Single();
+
                                 list.Add(new DataListTomOP()
                                 {
                                     No = reglement.NUMEROOP,
@@ -1828,7 +1890,6 @@ namespace apptab.Extension
                                     Marche = "",
                                     Status = etat
                                 });
-
                             }
                             catch (Exception) { }
 
@@ -2140,7 +2201,7 @@ namespace apptab.Extension
                                             DOM1 = bn.DOM1,
                                             DOM2 = bn.DOM2
                                         }
-                                        ).FirstOrDefault();
+                                      ).FirstOrDefault();
                     #region Sauve REGELEMENT & ANOMALIE
 
                     if (beneficiaire.COMPTE_BANQUE == null || beneficiaire.BENEFICIAIRE == null)

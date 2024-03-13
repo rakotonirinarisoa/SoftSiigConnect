@@ -1254,11 +1254,11 @@ namespace apptab.Controllers
 
             if (baseName == "2")
             {
-                listReg = aFB160.getREGLEMENT(suser);
+                listReg = aFB160.getREGLEMENT(suser, PROJECTID);
             }
             else
             {
-                listRegBR = aFB160.getREGLEMENTBR(suser);
+                listRegBR = aFB160.getREGLEMENTBR(suser, PROJECTID);
             }
 
             OPA_VALIDATIONS avalider = new OPA_VALIDATIONS();
