@@ -37,5 +37,6 @@ namespace apptab
         public string CONVENTION { get; set; }
         public string CATEGORIE { get; set; }
         public string ACTI { get; set; }
+        public string GEO { get; set; }
     }
 }

@@ -396,12 +396,12 @@ function LoadValidate() {
             $.each(reglementresult, function (_, v) {
                 data.push({
                     id: v.IDREGLEMENT,
-                    dateOrdre: v.dateOrdre === undefined ? '' : v.dateOrdre,
+                    dateOrdre: v.dateOrdre ? '' : v.dateOrdre,
                     noPiece: v.NoPiece,
                     compte: v.Compte,
                     libelle: v.Libelle,
                     debit: v.Debit,
-                    credit: formatCurrency(String(v.Credit).replace(",", ".")),
+                    credit: isNullAndUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
                     montantDevise: v.MontantDevise === 0 ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                     mon: v.Mon === null ? '' : v.Mon,
                     rang: v.Rang === null ? '' : v.Rang,
@@ -645,7 +645,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             compte: v.Compte,
                             libelle: v.Libelle,
                             debit: v.Debit,
-                            credit: formatCurrency(String(v.Credit).replace(",", ".")),
+                            credit: isNullAndUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
                             montantDevise: v.MontantDevise === 0 ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                             mon: v.Mon === null ? '' : v.Mon,
                             rang: v.Rang === null ? '' : v.Rang,
@@ -760,7 +760,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             compte: v.Compte,
                             libelle: v.Libelle,
                             debit: v.Debit,
-                            credit: formatCurrency(String(v.Credit).replace(",", ".")),
+                            credit: isNullAndUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
                             montantDevise: v.MontantDevise === 0 ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                             mon: v.Mon === null ? '' : v.Mon,
                             rang: v.Rang === null ? '' : v.Rang,
@@ -887,8 +887,8 @@ $('[data-action="GetElementChecked"]').click(function () {
                                 noPiece: v.NoPiece,
                                 compte: v.Compte,
                                 libelle: v.Libelle,
-                                debit: formatCurrency(String(v.Debit).replace(",", ".")),
-                                credit: formatCurrency(String(v.Credit).replace(",", ".")),
+                                debit: isNullAndUndefined(v.Debit) ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
+                                credit: isNullAndUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
                                 montantDevise: formatCurrency(String(v.MontantDevise).replace(",", ".")),
                                 mon: v.Mon,
                                 rang: v.Rang,
@@ -986,7 +986,7 @@ $('[data-action="GetAnomalieListes"]').click(function () {
                         <td>
                             <input type="checkbox" name = "checkprod" compteg-ischecked/>
                         </td><td>${v.IDREGLEMENT}</td>
-                        <td>${v.DateOrdre}</td>
+                        <td>${v.dateOrdre}</td>
                         <td>${v.NoPiece}</td>
                         <td>${v.Compte}</td>
                         <td>${v.Libelle}</td>
