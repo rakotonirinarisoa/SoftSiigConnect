@@ -401,7 +401,7 @@ function LoadValidate() {
                     compte: v.Compte,
                     libelle: v.Libelle,
                     debit: v.Debit,
-                    credit: isNullAndUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
+                    credit: isNullOrUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
                     montantDevise: v.MontantDevise === 0 ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                     mon: v.Mon === null ? '' : v.Mon,
                     rang: v.Rang === null ? '' : v.Rang,
@@ -523,6 +523,7 @@ $(document).on("change", "[compG-list]", () => {
 });
 
 $(document).on("change", "[code-project]", () => {
+    $('#commercial').html('');
     GetTypeP();
     GetListCodeJournal();
     LoadValidate();
@@ -645,7 +646,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             compte: v.Compte,
                             libelle: v.Libelle,
                             debit: v.Debit,
-                            credit: isNullAndUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
+                            credit: isNullOrUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
                             montantDevise: v.MontantDevise === 0 ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                             mon: v.Mon === null ? '' : v.Mon,
                             rang: v.Rang === null ? '' : v.Rang,
@@ -760,7 +761,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             compte: v.Compte,
                             libelle: v.Libelle,
                             debit: v.Debit,
-                            credit: isNullAndUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
+                            credit: isNullOrUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
                             montantDevise: v.MontantDevise === 0 ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                             mon: v.Mon === null ? '' : v.Mon,
                             rang: v.Rang === null ? '' : v.Rang,
@@ -887,8 +888,8 @@ $('[data-action="GetElementChecked"]').click(function () {
                                 noPiece: v.NoPiece,
                                 compte: v.Compte,
                                 libelle: v.Libelle,
-                                debit: isNullAndUndefined(v.Debit) ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
-                                credit: isNullAndUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
+                                debit: isNullOrUndefined(v.Debit) ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
+                                credit: isNullOrUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
                                 montantDevise: formatCurrency(String(v.MontantDevise).replace(",", ".")),
                                 mon: v.Mon,
                                 rang: v.Rang,
