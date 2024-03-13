@@ -51,3 +51,7 @@ function tableToExcel(tableId, name, callback = undefined) {
 
     a.click();
 }
+
+function isNullOrUndefined(input) {
+    return input === null || input === undefined;
+} 
