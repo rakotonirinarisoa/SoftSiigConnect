@@ -52,6 +52,7 @@ function GetUsers() {
             $("#Md0").val(Datas.data.MD0);
             $("#Md1").val(Datas.data.MD1);
             $("#Md2").val(Datas.data.MD2);
+            $("#Md3").val(Datas.data.MD3);
 
             $("#Mop0").val(Datas.data.MOP0);
             $("#Mop1").val(Datas.data.MOP1);
@@ -76,12 +77,13 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let Md0 = $("#Md0").val();
     let Md1 = $("#Md1").val();
     let Md2 = $("#Md2").val();
+    let Md3 = $("#Md3").val();
 
     let Mop0 = $("#Mop0").val();
     let Mop1 = $("#Mop1").val();
     let Mop2 = $("#Mop2").val();
 
-    if (!ParaV0 || !ParaV || !ParaS || !ParaSiig || !ParaPe || !ParaPv || !ParaPp || !ParaPb || !Md0 || !Md1 || !Md2 || !Mop0 || !Mop1 || !Mop2) {
+    if (!ParaV0 || !ParaV || !ParaS || !ParaSiig || !ParaPe || !ParaPv || !ParaPp || !ParaPb || !Md0 || !Md1 || !Md2 || !Md3 || !Mop0 || !Mop1 || !Mop2) {
         alert("Veuillez renseigner les intitulés des menus. ");
         return;
     }
@@ -105,6 +107,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("param.MD0", $(`#Md0`).val());
     formData.append("param.MD1", $(`#Md1`).val());
     formData.append("param.MD2", $(`#Md2`).val());
+    formData.append("param.MD3", $(`#Md3`).val());
 
     formData.append("param.MOP0", $(`#Mop0`).val());
     formData.append("param.MOP1", $(`#Mop1`).val());

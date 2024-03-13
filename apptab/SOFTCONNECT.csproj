@@ -194,6 +194,7 @@
     <Compile Include="Controllers\PrivilegeController.cs" />
     <Compile Include="Controllers\ProjectsController.cs" />
     <Compile Include="Controllers\SuperAdminController.cs" />
+    <Compile Include="Controllers\TraitementAvanceController.cs" />
     <Compile Include="Controllers\TraitementController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Models\CPTADMIN_CHAINETRAITEMENT_AVANCE.cs" />
@@ -314,6 +315,8 @@
     <Compile Include="Models\SI_GEDLIEN.cs" />
     <Compile Include="Models\SI_PRIVILEGE.cs" />
     <Compile Include="Models\SI_TYPECRITURE.cs" />
+    <Compile Include="Models\SI_TRAITANNULAVANCE.cs" />
+    <Compile Include="Models\SI_TRAITAVANCE.cs" />
     <Compile Include="SOFTCONNECTOM.cs" />
     <Compile Include="SOFTCONNECTSIIG.cs" />
     <Compile Include="Models\TP_MPIECES_JUSTIFICATIVES.cs" />
@@ -2375,6 +2378,8 @@
     <Content Include="Assets\fullcalendar-6.1.11\packages\web-component\index.global.min.js" />
     <Content Include="Assets\js\PaiementsRejeters.js" />
     <Content Include="Assets\js\BordSoufTraitement.js" />
+    <Content Include="Assets\js\TraitementENVOISIIGFA.js" />
+    <Content Include="Assets\js\TraitementORDSECA.js" />
     <Content Include="Assets\js\TraitementPaiementSoufrance.js" />
     <Content Include="Assets\js\TraitementPaiement.js" />
     <Content Include="Assets\js\statuepaiement.js" />
@@ -2398,11 +2403,20 @@
     <Content Include="Assets\js\TraitementENVOISIIGF.js" />
     <Content Include="Assets\js\TraitementORDSEC.js" />
     <Content Include="Assets\js\TDBDOC.js" />
+    <Content Include="Assets\js\TraitmandatA.js" />
+    <Content Include="Assets\js\TraitmandatANNULA.js" />
+    <Content Include="Assets\js\TraitmandatDOCA.js" />
+    <Content Include="Assets\js\TraitmandatDOCTA.js" />
     <Content Include="Assets\js\TraitmandatDOCT.js" />
     <Content Include="Assets\js\TDBLIAS.js" />
+    <Content Include="Assets\js\TraitmandatLIASA.js" />
+    <Content Include="Assets\js\TraitmandatLIASTA.js" />
     <Content Include="Assets\js\TraitmandatLIAST.js" />
     <Content Include="Assets\js\TDBModal.js" />
+    <Content Include="Assets\js\TraitmandatModalA.js" />
+    <Content Include="Assets\js\TraitmandatModalTA.js" />
     <Content Include="Assets\js\TraitmandatModalT.js" />
+    <Content Include="Assets\js\TraitmandatOA.js" />
     <Content Include="Assets\js\TraitmandatO.js" />
     <Content Include="Assets\js\TypeC.js" />
     <Content Include="Assets\js\TeacherValidations.js" />
@@ -4823,6 +4837,10 @@
     <Content Include="Views\BordTraitement\TraitementsPaiement.cshtml" />
     <Content Include="Views\BordTraitement\TraitementPaiementSoufrance.cshtml" />
     <Content Include="Views\BordTraitement\TraitementPaiementRejet.cshtml" />
+    <Content Include="Views\TraitementAvance\TraitementORDSECOTHER.cshtml" />
+    <Content Include="Views\TraitementAvance\TraitementPROJET.cshtml" />
+    <Content Include="Views\TraitementAvance\TraitementORDSEC.cshtml" />
+    <Content Include="Views\TraitementAvance\TraitementSENDSIIGFP.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1174,7 +1174,7 @@ namespace apptab.Controllers
                 if (SExist != null)
                 {
                     if (SExist.MTNON != param.MTNON || SExist.MT0 != param.MT0 || SExist.MT1 != param.MT1 || SExist.MT2 != param.MT2
-                        || SExist.MD0 != param.MD0 || SExist.MD1 != param.MD1 || SExist.MD2 != param.MD2
+                        || SExist.MD0 != param.MD0 || SExist.MD1 != param.MD1 || SExist.MD2 != param.MD2 || SExist.MD3 != param.MD3
                         || SExist.MOP0 != param.MOP0 || SExist.MOP1 != param.MOP1 || SExist.MOP2 != param.MOP2
                         || SExist.MP1 != param.MP1 || SExist.MP2 != param.MP2 || SExist.MP3 != param.MP3 || SExist.MP4 != param.MP4)
                     {
@@ -1191,6 +1191,7 @@ namespace apptab.Controllers
                         SExist.MD0 = param.MD0;
                         SExist.MD1 = param.MD1;
                         SExist.MD2 = param.MD2;
+                        SExist.MD3 = param.MD3;
 
                         SExist.MOP0 = param.MOP0;
                         SExist.MOP1 = param.MOP1;
@@ -1217,6 +1218,7 @@ namespace apptab.Controllers
                         MD0 = param.MD0,
                         MD1 = param.MD1,
                         MD2 = param.MD2,
+                        MD3 = param.MD3,
 
                         MOP0 = param.MOP0,
                         MOP1 = param.MOP1,
