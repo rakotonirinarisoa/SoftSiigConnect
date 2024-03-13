@@ -1,4 +1,5 @@
 ﻿var table = undefined;
+let arr = [];
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
@@ -139,7 +140,7 @@ function ChargeLoad() {
                     listResult = Datas.data;
 
                     const data = [];
-
+                    arr = data;
                     $.each(listResult, function (k, v) {
                         console.log(v);
 
@@ -162,7 +163,8 @@ function ChargeLoad() {
                             journal: isNullAndUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullAndUndefined(v.Marche) ? '' : v.Marche,
                             //rejeter: '',
-                            isLATE : v.IsLATE
+                            isLATE: v.IsLATE,
+                            estAvance: v.AVANCE
                         });
                     });
 
@@ -666,7 +668,7 @@ $('[data-action="ChargerJs"]').click(function () {
                     listResult = Datas.data;
 
                     const data = [];
-
+                    arr = data;
                     $.each(listResult, function (_, v) {
                         console.log(v.Montant);
 
@@ -689,7 +691,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             journal: isNullAndUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullAndUndefined(v.Marche) ? '' : v.Marche,
                             //rejeter: '',
-                            isLATE: v.IsLATE
+                            isLATE: v.IsLATE,
+                            estAvance: v.AVANCE
                         });
                     });
 
@@ -813,7 +816,7 @@ $('[data-action="ChargerJs"]').click(function () {
                     content = ``;
 
                     const data = [];
-
+                    arr = data;
                     $.each(listResult, function (_, v) {
                         data.push({
                             checkbox: '',
@@ -834,7 +837,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             journal: isNullAndUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullAndUndefined(v.Marche) ? '' : v.Marche,
                             //rejeter: '',
-                            isLATE: v.IsLATE
+                            isLATE: v.IsLATE,
+                            estAvance: v.AVANCE
                         });
                     });
 
@@ -917,9 +921,18 @@ $('[data-action="ChargerJs"]').click(function () {
 $('[data-action="GetElementChecked"]').click(function () {
     let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
     let list = [];
-    $.each(CheckList, (k, v) => {
-        list.push($(v).attr("compteG-id"));
-    });
+    for (let i = 0; i < CheckList.length; i += 1) {
+        const id = $(CheckList[i]).attr("compteG-id");
+
+        const item = arr.find(item => item.id === id);
+
+        list.push({
+            id,
+            estAvance: item.estAvance
+        });
+
+        console.log(item);
+    }
 
     let formData = new FormData();
 
@@ -927,7 +940,8 @@ $('[data-action="GetElementChecked"]').click(function () {
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
-    formData.append("listCompte", list);
+    formData.append("listCompte", JSON.stringify(list));
+    //formData.append("listCompte", list);
     formData.append("baseName", baseName);
     formData.append("journal", $('#commercial').val());
     formData.append("devise", false);
@@ -986,17 +1000,3 @@ $('[data-action="GetElementChecked"]').click(function () {
 
 var baseName = "2";
 
-$(`[name="options"]`).on("change", (k, v) => {
-
-    var baseId = $(k.target).attr("data-id");
-    baseName = baseId;
-    if (baseId == "1") {
-        $(`[tab="paie"]`).show();
-        $(`[tab="autre"]`).hide();
-        //GetListCodeJournal();
-    } else {
-        $(`[tab="autre"]`).show();
-        $(`[tab="paie"]`).hide();
-        $('#afb').empty();
-    }
-});

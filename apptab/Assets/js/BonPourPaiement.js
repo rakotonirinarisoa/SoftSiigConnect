@@ -1,4 +1,5 @@
 ﻿var table = undefined;
+let arr = [];
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
@@ -199,7 +200,7 @@ function chargeLoad() {
                     listResult = Datas.data;
 
                     const data = [];
-
+                    arr = data;
                     $.each(listResult, function (_, v) {
                         data.push({
                             checkbox: '',
@@ -220,7 +221,8 @@ function chargeLoad() {
                             journal: isNullAndUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullAndUndefined(v.Marche) ? '' : v.Marche,
                             rejeter: '',
-                            isLATE : v.IsLATE
+                            isLATE: v.IsLATE,
+                            estAvance: v.AVANCE
                         });
                     });
 
@@ -330,7 +332,7 @@ function chargeLoad() {
                     listResult = Datas.data;
 
                     const data = [];
-
+                    arr = data;
                     $.each(listResult, function (_, v) {
                         data.push({
                             checkbox: '',
@@ -351,7 +353,8 @@ function chargeLoad() {
                             journal: isNullAndUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullAndUndefined(v.Marche) ? '' : v.Marche,
                             rejeter: '',
-                            isLATE: v.IsLATE
+                            isLATE: v.IsLATE,
+                            estAvance: v.AVANCE
                         });
                     });
 
@@ -785,7 +788,7 @@ $('[data-action="ChargerJs"]').click(function () {
                     listResult = Datas.data;
 
                     const data = [];
-
+                    arr = data;
                     $.each(listResult, function (k, v) {
                         data.push({
                             checkbox: '',
@@ -806,7 +809,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             journal: isNullAndUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullAndUndefined(v.Marche) ? '' : v.Marche,
                             rejeter: '',
-                            isLATE: v.IsLATE
+                            isLATE: v.IsLATE ?
+                            estAvance : v.AVANCE
                         });
                     });
 
@@ -928,6 +932,7 @@ $('[data-action="ChargerJs"]').click(function () {
                     listResult = Datas.data
                     content = ``;
                     const data = [];
+                    arr = data;
                     $.each(listResult, function (_, v) {
                         data.push({
                             checkbox: '',
@@ -948,7 +953,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             journal: isNullAndUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullAndUndefined(v.Marche) ? '' : v.Marche,
                             rejeter: '',
-                            isLATE: v.IsLATE
+                            isLATE: v.IsLATE,
+                            estAvance: v.AVANCE
                         });
                     });
 
@@ -1033,12 +1039,24 @@ $('[data-action="ChargerJs"]').click(function () {
 $('[data-action="GetElementChecked"]').click(function () {
     let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
     let list = [];
-    $.each(CheckList, (k, v) => {
-        list.push($(v).attr("compteG-id"));
-    });
+    //$.each(CheckList, (k, v) => {
+    //    list.push($(v).attr("compteG-id"));
+    //});
+    for (let i = 0; i < CheckList.length; i += 1) {
+        const id = $(CheckList[i]).attr("compteG-id");
+
+        const item = arr.find(item => item.id === id);
+
+        list.push({
+            id,
+            estAvance: item.estAvance
+        });
+
+        console.log(item);
+    }
 
     let formData = new FormData();
-    let listid = list.splice(',');
+    //let listid = list.splice(',');
 
     let codeproject = $("#Fproject").val();
     formData.append("codeproject", codeproject);
@@ -1066,7 +1084,9 @@ $('[data-action="GetElementChecked"]').click(function () {
     formData.append("dateP", dateP);
     formData.append("devise", false);
     formData.append("etat", etat);
-    formData.append("listCompte", listid);
+    //formData.append("listCompte", listid);
+
+    formData.append("listCompte", JSON.stringify(list));
     formData.append("baseName", baseName);
 
     //ValidationsEcrituresF
@@ -1088,8 +1108,8 @@ $('[data-action="GetElementChecked"]').click(function () {
             var Datas = JSON.parse(result);
             reglementresult = ``;
             reglementresult = Datas.data;
-            $.each(listid, (k, v) => {
-                $(`[compteG-id="${v}"]`).remove();
+            $.each(list, (k, v) => {
+                $(`[compteG-id="${v.id}"]`).remove();
             });
 
         },
