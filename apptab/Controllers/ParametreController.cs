@@ -1128,11 +1128,17 @@ namespace apptab.Controllers
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
             if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == param.DEF) == null)
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état DEF n'est pas présent sur TOM²PRO. " }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état DEF n'est pas présent sur TOM²PRO (Liquidation). " }, settings));
             if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == param.TEF) == null)
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état TEF n'est pas présent sur TOM²PRO. " }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état TEF n'est pas présent sur TOM²PRO (Liquidation). " }, settings));
             if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == param.BE) == null)
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état BE n'est pas présent sur TOM²PRO. " }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état BE n'est pas présent sur TOM²PRO (Liquidation). " }, settings));
+            if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == param.DEFA) == null)
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état DEF n'est pas présent sur TOM²PRO (Avance). " }, settings));
+            if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == param.TEFA) == null)
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état TEF n'est pas présent sur TOM²PRO (Avance). " }, settings));
+            if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == param.BEA) == null)
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état BE n'est pas présent sur TOM²PRO (Avance). " }, settings));
 
             try
             {
@@ -1140,11 +1146,14 @@ namespace apptab.Controllers
 
                 if (SExist != null)
                 {
-                    if (SExist.DEF != param.DEF || SExist.TEF != param.TEF || SExist.BE != param.BE)
+                    if (SExist.DEF != param.DEF || SExist.TEF != param.TEF || SExist.BE != param.BE || SExist.DEFA != param.DEFA || SExist.TEFA != param.TEFA || SExist.BEA != param.BEA)
                     {
                         SExist.DEF = param.DEF;
                         SExist.TEF = param.TEF;
                         SExist.BE = param.BE;
+                        SExist.DEFA = param.DEFA;
+                        SExist.TEFA = param.TEFA;
+                        SExist.BEA = param.BEA;
 
                         db.SaveChanges();
 
@@ -1160,6 +1169,9 @@ namespace apptab.Controllers
                             DEF = param.DEF,
                             TEF = param.TEF,
                             BE = param.BE,
+                            DEFA = param.DEFA,
+                            TEFA = param.TEFA,
+                            BEA = param.BEA,
                             IDPROJET = IdS,
                             CREATIONDATE = DateTime.Now,
                             IDUSER = exist.ID,
@@ -1178,6 +1190,9 @@ namespace apptab.Controllers
                         DEF = param.DEF,
                         TEF = param.TEF,
                         BE = param.BE,
+                        DEFA = param.DEFA,
+                        TEFA = param.TEFA,
+                        BEA = param.BEA,
                         IDPROJET = IdS,
                         CREATIONDATE = DateTime.Now,
                         IDUSER = exist.ID
@@ -1192,6 +1207,9 @@ namespace apptab.Controllers
                         DEF = isElemH.DEF,
                         TEF = isElemH.TEF,
                         BE = isElemH.BE,
+                        DEFA = param.DEFA,
+                        TEFA = param.TEFA,
+                        BEA = param.BEA,
                         IDPROJET = IdS,
                         CREATIONDATE = isElemH.CREATIONDATE,
                         IDUSER = isElemH.IDUSER,

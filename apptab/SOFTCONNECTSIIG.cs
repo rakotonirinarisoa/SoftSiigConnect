@@ -51,6 +51,8 @@ namespace apptab
         public virtual DbSet<SI_GEDLIEN> SI_GEDLIEN { get; set; }
         public virtual DbSet<SI_PRIVILEGE> SI_PRIVILEGE { get; set; }
         public virtual DbSet<SI_TYPECRITURE> SI_TYPECRITURE { get; set; }
+        public virtual DbSet<SI_TRAITANNULAVANCE> SI_TRAITANNULAVANCE { get; set; }
+        public virtual DbSet<SI_TRAITAVANCE> SI_TRAITAVANCE { get; set; }
 
         public virtual DbSet<HSI_PROSOA> HSI_PROSOA { get; set; }
         public virtual DbSet<HSI_ACTIVITE> HSI_ACTIVITE { get; set; }

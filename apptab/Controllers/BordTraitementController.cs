@@ -110,9 +110,9 @@ namespace apptab.Controllers
 
                 List<DATATRPROJET> list = new List<DATATRPROJET>();
 
-                if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF) != null)
+                if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.MODULLE == "LIQUIDATION") != null)
                 {
-                    foreach (var x in tom.TP_MPIECES_JUSTIFICATIVES.Where(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE != "DEF" && a.TYPEPIECE != "TEF" && a.TYPEPIECE != "BE").OrderBy(a => a.RANG).ToList())
+                    foreach (var x in tom.TP_MPIECES_JUSTIFICATIVES.Where(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE != "DEF" && a.TYPEPIECE != "TEF" && a.TYPEPIECE != "BE" && a.MODULLE == "LIQUIDATION").OrderBy(a => a.RANG).ToList())
                     {
                         var idFGuid = Guid.Parse(IdF);
                         DateTime dpj = tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == idFGuid).FirstOrDefault().DATELIQUIDATION.Value;
@@ -194,17 +194,17 @@ namespace apptab.Controllers
                     TITUL = ""
                 };
 
-                if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && (a.TYPEPIECE == "DEF" || a.TYPEPIECE == "TEF" || a.TYPEPIECE == "BE")) != null)
+                if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && (a.TYPEPIECE == "DEF" || a.TYPEPIECE == "TEF" || a.TYPEPIECE == "BE") && a.MODULLE == "LIQUIDATION") != null)
                 {
                     var def = "";
-                    if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "DEF") != null)
-                        def = tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "DEF").LIEN;
+                    if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "DEF" && a.MODULLE == "LIQUIDATION") != null)
+                        def = tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "DEF" && a.MODULLE == "LIQUIDATION").LIEN;
                     var tef = "";
-                    if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "TEF") != null)
-                        tef = tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "TEF").LIEN;
+                    if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "TEF" && a.MODULLE == "LIQUIDATION") != null)
+                        tef = tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "TEF" && a.MODULLE == "LIQUIDATION").LIEN;
                     var be = "";
-                    if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "BE") != null)
-                        be = tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "BE").LIEN;
+                    if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "BE" && a.MODULLE == "LIQUIDATION") != null)
+                        be = tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "BE" && a.MODULLE == "LIQUIDATION").LIEN;
 
                     newElemH = new DATATRPROJET()
                     {
@@ -808,10 +808,10 @@ namespace apptab.Controllers
                             DURPREVUTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value : 0,
                             DURPREVUSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value : 0,
 
-                            DEPASTRANSFERT = durPrevu != null ? durPrevu.DELRAF.Value - Data.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE) : 0,
-                            DEPASVALIDATION = durPrevu != null ? durPrevu.DELTV.Value - Data.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE) : 0,
-                            DEPASTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value - Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) : 0,
-                            DEPASSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value - Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) : 0
+                            DEPASTRANSFERT = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE) - durPrevu.DELRAF.Value : 0,
+                            DEPASVALIDATION = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE) - durPrevu.DELTV.Value : 0,
+                            DEPASTRANSFSIIG = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) - durPrevu.DELENVOISIIGFP.Value : 0,
+                            DEPASSIIG = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) - durPrevu.DELSIIGFP.Value : 0
                         });
                     }
                 }
@@ -1011,7 +1011,7 @@ namespace apptab.Controllers
                             where prosoa.IDPROJET == projectId && prosoa.DELETIONDATE == null && soa.DELETIONDATE == null
                             select new
                             {
-                            soa.SOA
+                                soa.SOA
                             }
                             ).FirstOrDefaultAsync();
 

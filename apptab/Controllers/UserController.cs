@@ -502,6 +502,7 @@ namespace SOFTCONNECT.Controllers
                     Session["MD0"] = isMenu.MD0;
                     Session["MD1"] = isMenu.MD1;
                     Session["MD2"] = isMenu.MD2;
+                    Session["MD3"] = isMenu.MD3;
 
                     Session["MOP0"] = isMenu.MOP0;
                     Session["MOP1"] = isMenu.MOP1;
