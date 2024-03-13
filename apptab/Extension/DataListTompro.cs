@@ -9,6 +9,7 @@
         public string Libelle { get; set; }
         public decimal Debit { get; set; }
         public decimal Credit { get; set; }
+        public decimal Montant { get; set; }
         public decimal MontantDevise { get; set; }
         public string Mon { get; set; }
         public string Rang { get; set; }

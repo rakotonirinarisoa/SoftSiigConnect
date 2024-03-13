@@ -204,13 +204,14 @@ function chargeLoad() {
                         data.push({
                             checkbox: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.dateOrdre === undefined ? '' : v.dateOrdre,
+                            dateOrdre: v.DateOrdre === null ? '' : v.DateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
-                            debit: v.Debit === undefined ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
-                            credit: v.Credit === undefined ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
-                            montantDevise: v.MontantDevise === undefined ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
+                            debit: v.Debit === null ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
+                            credit: v.Credit === null ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
+                            montant: v.Montant === null ? '' : formatCurrency(String(v.Montant)).replace(",", "."),
+                            montantDevise: v.MontantDevise === null ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                             mon: v.Mon === null ? '' : v.Mon,
                             rang: v.Rang === null ? '' : v.Rang,
                             financementCategorie: v.FinancementCategorie === " " ? ' ' : v.FinancementCategorie,
@@ -219,7 +220,7 @@ function chargeLoad() {
                             journal: v.Journal,
                             marche: v.Marche === null ? '' : v.Marche,
                             rejeter: '',
-                            isLATE : v.isLATE
+                            isLATE : v.IsLATE
                         });
                     });
 
@@ -246,6 +247,7 @@ function chargeLoad() {
                             { data: 'libelle' },
                             { data: 'debit' },
                             { data: 'credit' },
+                            { data: 'montant' },
                             { data: 'montantDevise' },
                             { data: 'mon' },
                             { data: 'rang' },
@@ -333,12 +335,13 @@ function chargeLoad() {
                         data.push({
                             checkbox: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.dateOrdre === undefined ? '' : v.dateOrdre,
+                            dateOrdre: v.DateOrdre === null ? '' : v.DateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
                             debit: v.Debit,
                             credit: v.Credit,
+                            montant: v.Montant === null ? '' : formatCurrency(String(v.Montant)).replace(",", "."),
                             montantDevise: v.MontantDevise,
                             mon: v.Mon === null ? '' : v.Mon,
                             rang: v.Rang === null ? '' : v.Rang,
@@ -348,7 +351,7 @@ function chargeLoad() {
                             journal: v.Journal,
                             marche: v.Marche === null ? '' : v.Marche,
                             rejeter: '',
-                            isLATE: v.isLATE
+                            isLATE: v.IsLATE
                         });
                     });
 
@@ -375,6 +378,7 @@ function chargeLoad() {
                             { data: 'libelle' },
                             { data: 'debit' },
                             { data: 'credit' },
+                            { data: 'montant' },
                             { data: 'montantDevise' },
                             { data: 'mon' },
                             { data: 'rang' },
@@ -786,12 +790,13 @@ $('[data-action="ChargerJs"]').click(function () {
                         data.push({
                             checkbox: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.dateOrdre === undefined ? '' : v.dateOrdre,
+                            dateOrdre: v.DateOrdre === undefined ? '' : v.DateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
                             debit: v.Debit,
                             credit: v.Credit,
+                            montant: v.Montant === null ? '' : formatCurrency(String(v.Montant)).replace(",", "."),
                             montantDevise: v.MontantDevise,
                             mon: v.Mon === null ? '' : v.Mon,
                             rang: v.Rang === null ? '' : v.Rang,
@@ -801,7 +806,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             journal: v.Journal,
                             marche: v.Marche === null ? '' : v.Marche,
                             rejeter: '',
-                            isLATE: v.isLATE
+                            isLATE: v.IsLATE
                         });
                     });
 
@@ -828,6 +833,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'libelle' },
                             { data: 'debit' },
                             { data: 'credit' },
+                            { data: 'montant' },
                             { data: 'montantDevise' },
                             { data: 'mon' },
                             { data: 'rang' },
@@ -926,12 +932,13 @@ $('[data-action="ChargerJs"]').click(function () {
                         data.push({
                             checkbox: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.dateOrdre,
+                            dateOrdre: v.DateOrdre === null ? '' : v.DateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
                             debit: v.Debit === undefined ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
                             credit: v.credit === undefined ? '' : formatCurrency(String(v.credit).replace(",", ".")),
+                            montant: v.Montant === null ? '' : formatCurrency(String(v.Montant)).replace(",", "."),
                             montantDevise: v.montantDevise === undefined ? '' : formatCurrency(String(v.montantDevise).replace(",", ".")),
                             mon: v.Mon === null ? '' : v.Mon,
                             rang: v.Rang === null ? '' : v.Rang,
@@ -941,7 +948,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             journal: v.Journal,
                             marche: v.Marche === null ? '' : v.Marche,
                             rejeter: '',
-                            isLATE: v.isLATE
+                            isLATE: v.IsLATE
                         });
                     });
 
@@ -968,6 +975,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'libelle' },
                             { data: 'debit' },
                             { data: 'credit' },
+                            { data: 'montant' },
                             { data: 'montantDevise' },
                             { data: 'mon' },
                             { data: 'rang' },

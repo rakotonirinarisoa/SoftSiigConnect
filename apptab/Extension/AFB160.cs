@@ -1195,6 +1195,7 @@ namespace apptab.Extension
                                                 Libelle = reglement.LIBELLE,
                                                 Debit = reglement.MONTANT.Value,
                                                 Credit = 0,
+                                                Montant = 0,
                                                 MontantDevise = reglement.MONTDEV.Value,
                                                 Mon = reglement.DEVISE,
                                                 Rang = reglement.ACTI,
@@ -1218,6 +1219,7 @@ namespace apptab.Extension
                                                 Libelle = reglement.LIBELLE,
                                                 Debit = 0,
                                                 Credit = reglement.MONTANT.Value,
+                                                Montant = 0,
                                                 MontantDevise = reglement.MONTDEV.Value,
                                                 Mon = reglement.DEVISE,
                                                 Rang = reglement.ACTI,
@@ -1254,6 +1256,7 @@ namespace apptab.Extension
                                             Libelle = reglement.LIBELLE,
                                             Debit = reglement.MONTANT.Value,
                                             Credit = 0,
+                                            Montant = 0,
                                             MontantDevise = reglement.MONTDEV.Value,
                                             Mon = reglement.DEVISE,
                                             Rang = reglement.ACTI,
@@ -1276,6 +1279,7 @@ namespace apptab.Extension
                                             Libelle = reglement.LIBELLE,
                                             Debit = 0,
                                             Credit = reglement.MONTANT.Value,
+                                            Montant = 0,
                                             MontantDevise = reglement.MONTDEV.Value,
                                             Mon = reglement.DEVISE,
                                             Rang = reglement.ACTI,
@@ -1324,6 +1328,7 @@ namespace apptab.Extension
                                         Libelle = reglement.LIBELLE,
                                         Debit = (reglement.MONTANT.Value),
                                         Credit = 0,
+                                        Montant = 0,
                                         MontantDevise = (reglement.MONTDEV.Value),
                                         Mon = reglement.DEVISE,
                                         Rang = reglement.ACTI,
@@ -1346,6 +1351,7 @@ namespace apptab.Extension
                                         Libelle = reglement.LIBELLE,
                                         Debit = 0,
                                         Credit = (reglement.MONTANT.Value),
+                                        Montant = 0,
                                         MontantDevise = (reglement.MONTDEV.Value),
                                         Mon = reglement.DEVISE,
                                         Rang = reglement.ACTI,
@@ -1397,6 +1403,7 @@ namespace apptab.Extension
                                         Libelle = reglement.LIBELLE,
                                         Debit = reglement.MONTANT.Value,
                                         Credit = 0,
+                                        Montant = 0,
                                         MontantDevise = reglement.MONTDEV.Value,
                                         Mon = reglement.DEVISE,
                                         Rang = reglement.ACTI,
@@ -1419,6 +1426,7 @@ namespace apptab.Extension
                                         Libelle = reglement.LIBELLE,
                                         Debit = 0,
                                         Credit = reglement.MONTANT.Value,
+                                        Montant = 0,
                                         MontantDevise = reglement.MONTDEV.Value,
                                         Mon = reglement.DEVISE,
                                         Rang = reglement.ACTI,
@@ -1473,6 +1481,7 @@ namespace apptab.Extension
                                         Libelle = reglement.LIBELLE,
                                         Debit = reglement.MONTANT.Value,
                                         Credit = 0,
+                                        Montant = 0,
                                         MontantDevise = reglement.MONTDEV.Value,
                                         Mon = reglement.DEVISE,
                                         Rang = reglement.ACTI,
@@ -1495,6 +1504,7 @@ namespace apptab.Extension
                                         Libelle = reglement.LIBELLE,
                                         Debit = 0,
                                         Credit = reglement.MONTANT.Value,
+                                        Montant = 0,
                                         MontantDevise = reglement.MONTDEV.Value,
                                         Mon = reglement.DEVISE,
                                         Rang = reglement.ACTI,
@@ -1526,6 +1536,7 @@ namespace apptab.Extension
             }
             return list;
         }
+
         public List<DataListTompaie> getListEcriturePaie(string journal, int mois, int annee, string matriculeD, string matriculeF, DateTime dateP, SI_USERS user)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
