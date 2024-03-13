@@ -27,5 +27,9 @@ $(document).ready(() => {
 $('nav').find(`a.nav-link`).on('click', (e) => {
     const id = $(e.currentTarget).prop('href');
 
-    setCurrentRoute(id);
+    const str = id.split(User.origin);
+
+    alert(str[1]);
+
+    setCurrentRoute(str[1].replace('//', '../'));
 });
