@@ -1860,7 +1860,8 @@ namespace apptab.Extension
                                 Plan6 = "",
                                 Journal = journal,
                                 Marche = reglementAV.MARCHE,
-                                Status = etat
+                                Status = etat,
+                                Avance = true
                             });
                         }
                         foreach (var nord in lOPCOGE)
@@ -1888,7 +1889,8 @@ namespace apptab.Extension
                                     Plan6 = reglement.PLAN6,
                                     Journal = journal,
                                     Marche = "",
-                                    Status = etat
+                                    Status = etat,
+                                    Avance = false
                                 });
                             }
                             catch (Exception) { }
@@ -2190,7 +2192,7 @@ namespace apptab.Extension
                                         Marche = "",
                                         Auxi = mcpt.AUXIFOURNISSEUR
                                     }).FirstOrDefault();
-
+                    
                     var beneficiaire = (from bn in tom.RTIERS
                                         where bn.AUXI == ecriture.Auxi && bn.COGE == ecriture.Compte
                                         select new
