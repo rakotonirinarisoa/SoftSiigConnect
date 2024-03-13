@@ -1804,6 +1804,8 @@ namespace apptab.Extension
                     CONVENTION = z.CONVENTION,
                     CATEGORIE = z.CATEGORIE,
                     ACTI = z.ACTI,
+                    GEO = z.GEO,
+
                 }).ToList());
             }
 
