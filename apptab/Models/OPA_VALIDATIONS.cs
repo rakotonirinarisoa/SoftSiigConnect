@@ -1,8 +1,10 @@
 ﻿namespace apptab.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
 
     public partial class OPA_VALIDATIONS
     {
@@ -31,7 +33,7 @@
         [StringLength(50)]
         public string Journal { get; set; }
 
-        public string DateOrdre { get; set; }
+        public string dateOrdre { get; set; }
 
         [StringLength(50)]
         public string NoPiece { get; set; }
@@ -44,8 +46,7 @@
         public decimal? Debit { get; set; }
 
         public decimal? Credit { get; set; }
-        [NotMapped]
-        public decimal? Montant { get; set; }
+
         public decimal? MontantDevise { get; set; }
 
         [StringLength(50)]
@@ -101,8 +102,13 @@
 
         public int? IDUSANNUL { get; set; }
 
-        public bool AVANCE { get; set; }
+        public bool? AVANCE { get; set; }
+
+        public decimal? MONTANT { get; set; }
         [NotMapped]
-        public bool IsLATE { get; set; }
+        public bool isLATE { get; set; }
+
+
+
     }
 }
