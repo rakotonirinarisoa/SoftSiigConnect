@@ -1,5 +1,8 @@
 ﻿var table = undefined;
 var baseName = "2";
+
+let arr = [];
+
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
@@ -427,8 +430,9 @@ $('[data-action="ChargerJs"]').click(function () {
 
                     const data = [];
 
-                    $.each(listResult, function (_, v) {
+                    arr = data;
 
+                    $.each(listResult, function (_, v) {
                         data.push({
                             checkbox: '',
                             id: v.No === undefined ? '' : v.No,
@@ -438,6 +442,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             libelle: v.Libelle === null ? '' : v.Libelle,
                             debit: v.Debit === null ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
                             credit: v.Credit === null ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
+                            montant: v.Montant === null ? '' : formatCurrency(String(v.Montant).replace(",", ".")),
                             montantDevise: v.MontantDevise === null ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                             mon: v.Mon === null ? '' : v.Mon,
                             rang: v.Rang === null ? '' : v.Rang,
@@ -446,6 +451,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             plan: v.Plan6 === null ? '' : v.Plan6,
                             journal: v.Journal === null ? '' : v.Journal,
                             marche: v.Marche === null ? '' : v.Marche,
+                            estAvance: v.Avance
                         });
                     });
 
@@ -472,6 +478,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'libelle' },
                             { data: 'debit' },
                             { data: 'credit' },
+                            { data: 'montant' },
                             { data: 'montantDevise' },
                             { data: 'mon' },
                             { data: 'rang' },
@@ -563,6 +570,8 @@ $('[data-action="ChargerJs"]').click(function () {
 
                     const data = [];
 
+                    arr = data;
+
                     $.each(listResult, function (_, v) {
                         data.push({
                             checkbox: '',
@@ -573,6 +582,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             libelle: v.Libelle === null ? '' : v.Libelle,
                             debit: v.Debit === null ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
                             credit: v.Credit === null ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
+                            montant: v.Montant === null ? '' : formatCurrency(String(v.Montant).replace(",", ".")),
                             montantDevise: v.MontantDevise === null ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                             mon: v.Mon === null ? '' : v.Mon,
                             rang: v.Rang === null ? '' : v.Rang,
@@ -581,6 +591,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             plan: v.Plan6 === null ? '' : v.Plan6,
                             journal: v.Journal === null ? '' : v.Journal,
                             marche: v.Marche === null ? '' : v.Marche,
+                            estAvance: v.Avance
                         });
                     });
 
@@ -607,6 +618,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'libelle' },
                             { data: 'debit' },
                             { data: 'credit' },
+                            { data: 'montant' },
                             { data: 'montantDevise' },
                             { data: 'mon' },
                             { data: 'rang' },
@@ -649,27 +661,39 @@ $('[data-action="ChargerJs"]').click(function () {
 });
 //==============================================================================================CHECK===================================================================================
 
-$('[data-action="GetElementChecked"]').click(function () {
-    let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
+$('[data-action="GetElementChecked"]').on('click', () => {
+    let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
+
     let list = [];
-    $.each(CheckList, (k, v) => {
-        list.push($(v).attr("compteG-id"));
-    });
-    alert(list);
-    let codeproject = $("#Fproject").val();
+
+    for (let i = 0; i < checkList.length; i += 1) {
+        const id = $(checkList[i]).attr("compteG-id");
+
+        const item = arr.find(item => item.id === id);
+
+        list.push({
+            id,
+            estAvance: item.estAvance
+        });
+
+        console.log(item);
+    }
+
+    console.log(list);
 
     let formData = new FormData();
+
+    let codeproject = $("#Fproject").val();
 
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
-    formData.append("listCompte", list);
+    formData.append("listCompte", JSON.stringify(list));
     formData.append("codeproject", codeproject);
     //formData.append("baseName", baseName);
     formData.append("journal", $('#commercial').val());
     formData.append("devise", false);
-    let listid = list.splice(',');
     formData.append("datein", $('#Pdu').val());
     formData.append("dateout", $('#Pau').val());
     formData.append("comptaG", $('#comptaG').val());
@@ -693,9 +717,9 @@ $('[data-action="GetElementChecked"]').click(function () {
         },
         success: function (result) {
             var Datas = JSON.parse(result);
-            $.each(listid, (k, v) => {
-                $(`[compteG-id="${v}"]`).remove();
-            });
+            //$.each(listid, (k, v) => {
+            //    $(`[compteG-id="${v}"]`).remove();
+            //});
         },
         error: function () {
             alert("Problème de connexion. ");

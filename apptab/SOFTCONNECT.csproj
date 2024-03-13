@@ -197,6 +197,7 @@
     <Compile Include="Controllers\TraitementAvanceController.cs" />
     <Compile Include="Controllers\TraitementController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Data\Entities\AvanceDetails.cs" />
     <Compile Include="Models\CPTADMIN_CHAINETRAITEMENT_AVANCE.cs" />
     <Compile Include="Models\CPTADMIN_COMMENTAIRE_AVANCE.cs" />
     <Compile Include="Models\CPTADMIN_FAVANCE.cs" />
@@ -237,6 +238,8 @@
     <Compile Include="Models\COUNTTDB.cs" />
     <Compile Include="Models\EVENEMENTS.cs" />
     <Compile Include="Models\GA_AVANCE.cs" />
+    <Compile Include="Models\GA_AVANCE_MOUVEMENT.cs" />
+    <Compile Include="Data\Entities\GA_AVANCE_DETAILS.cs" />
     <Compile Include="Models\Model1.cs" />
     <Compile Include="Models\TxtPAIEMENT.cs" />
     <Compile Include="Models\TxLISTETRAIT.cs" />

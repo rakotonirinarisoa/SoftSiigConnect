@@ -141,16 +141,19 @@ function ChargeLoad() {
                     const data = [];
 
                     $.each(listResult, function (k, v) {
+                        console.log(v);
+
                         data.push({
                             checkbox: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.dateOrdre,
+                            dateOrdre: v.DateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
-                            debit: v.Debit === undefined ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
-                            credit: v.credit === undefined ? '' : formatCurrency(String(v.credit).replace(",", ".")),
-                            montantDevise: v.montantDevise === undefined ? '' : formatCurrency(String(v.montantDevise).replace(",", ".")),
+                            debit: v.Debit === null ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
+                            credit: v.Credit === null ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
+                            montant: v.Montant === null ? '' : formatCurrency(String(v.Montant).replace(",", ".")),
+                            montantDevise: v.MontantDevise === null ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                             mon: v.Mon === null ? '' : v.Mon,
                             rang: v.Rang === null ? '' : v.Rang,
                             financementCategorie: v.FinancementCategorie === " " ? '' : v.FinancementCategorie,
@@ -159,7 +162,7 @@ function ChargeLoad() {
                             journal: v.Journal,
                             marche: v.Marche === null ? '' : v.Marche,
                             //rejeter: '',
-                            isLATE : v.isLATE
+                            isLATE : v.IsLATE
                         });
                     });
 
@@ -186,6 +189,7 @@ function ChargeLoad() {
                             { data: 'libelle' },
                             { data: 'debit' },
                             { data: 'credit' },
+                            { data: 'montant' },
                             { data: 'montantDevise' },
                             { data: 'mon' },
                             { data: 'rang' },
@@ -664,16 +668,19 @@ $('[data-action="ChargerJs"]').click(function () {
                     const data = [];
 
                     $.each(listResult, function (_, v) {
+                        console.log(v.Montant);
+
                         data.push({
                             checkbox: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.dateOrdre,
+                            dateOrdre: v.DateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
-                            debit: v.Debit === undefined ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
-                            credit: v.credit === undefined ? '' : formatCurrency(String(v.credit).replace(",", ".")),
-                            montantDevise: v.montantDevise === undefined ? '' : formatCurrency(String(v.montantDevise).replace(",", ".")),
+                            debit: v.Debit === null ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
+                            credit: v.Credit === null ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
+                            montant: v.Montant === null ? '' : formatCurrency(String(v.Montant).replace(",", ".")),
+                            montantDevise: v.MontantDevise === null ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                             mon: v.Mon === null ? '' : v.Mon,
                             rang: v.Rang === null ? '' : v.Rang,
                             financementCategorie: v.FinancementCategorie === " " ? '' : v.FinancementCategorie,
@@ -682,7 +689,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             journal: v.Journal,
                             marche: v.Marche === null ? '' : v.Marche,
                             //rejeter: '',
-                            isLATE: v.isLATE
+                            isLATE: v.IsLATE
                         });
                     });
 
@@ -709,6 +716,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'libelle' },
                             { data: 'debit' },
                             { data: 'credit' },
+                            { data: 'montant' },
                             { data: 'montantDevise' },
                             { data: 'mon' },
                             { data: 'rang' },
@@ -810,13 +818,14 @@ $('[data-action="ChargerJs"]').click(function () {
                         data.push({
                             checkbox: '',
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.dateOrdre,
+                            dateOrdre: v.DateOrdre,
                             noPiece: v.NoPiece,
                             compte: v.Compte,
                             libelle: v.Libelle,
-                            debit: v.Debit === undefined ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
-                            credit: v.credit === undefined ? '' : formatCurrency(String(v.credit).replace(",", ".")),
-                            montantDevise: v.montantDevise === undefined ? '' : formatCurrency(String(v.montantDevise).replace(",", ".")),
+                            debit: v.Debit === null ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
+                            credit: v.Credit === null ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
+                            montant: v.Montant === null ? '' : formatCurrency(String(v.Montant).replace(",", ".")),
+                            montantDevise: v.MontantDevise === null ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                             mon: v.Mon === null ? '' : v.Mon,
                             rang: v.Rang === null ? '' : v.Rang,
                             financementCategorie: v.FinancementCategorie === " " ? '' : v.FinancementCategorie,
@@ -852,6 +861,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'libelle' },
                             { data: 'debit' },
                             { data: 'credit' },
+                            { data: 'montant' },
                             { data: 'montantDevise' },
                             { data: 'mon' },
                             { data: 'rang' },
@@ -953,6 +963,12 @@ $('[data-action="GetElementChecked"]').click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             reglementresult = ``;

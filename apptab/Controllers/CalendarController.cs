@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Runtime;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using apptab.Data.Entities;
 using apptab.Models;
-using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
 
 namespace apptab.Controllers
