@@ -14,6 +14,12 @@ namespace apptab
 
         public int? BE { get; set; }
 
+        public int? DEFA { get; set; }
+
+        public int? TEFA { get; set; }
+
+        public int? BEA { get; set; }
+
         public int? IDPROJET { get; set; }
 
         [Column(TypeName = "smalldatetime")]

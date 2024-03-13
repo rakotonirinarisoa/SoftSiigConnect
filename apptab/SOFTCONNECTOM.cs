@@ -25,6 +25,17 @@ namespace apptab
         public virtual DbSet<CPTADMIN_TRAITEMENT> CPTADMIN_TRAITEMENT { get; set; }
         public virtual DbSet<CPTADMIN_TYPEENGAGEMENT> CPTADMIN_TYPEENGAGEMENT { get; set; }
         public virtual DbSet<CPTADMIN_TYPEPROCEDURE> CPTADMIN_TYPEPROCEDURE { get; set; }
+
+
+        public virtual DbSet<CPTADMIN_CHAINETRAITEMENT_AVANCE> CPTADMIN_CHAINETRAITEMENT_AVANCE { get; set; }
+        public virtual DbSet<CPTADMIN_COMMENTAIRE_AVANCE> CPTADMIN_COMMENTAIRE_AVANCE { get; set; }
+        public virtual DbSet<CPTADMIN_FAVANCE> CPTADMIN_FAVANCE { get; set; }
+        public virtual DbSet<CPTADMIN_MAVANCE> CPTADMIN_MAVANCE { get; set; }
+        public virtual DbSet<CPTADMIN_MAVANCEPJ> CPTADMIN_MAVANCEPJ { get; set; }
+        public virtual DbSet<CPTADMIN_MODELEETATS_AVANCE> CPTADMIN_MODELEETATS_AVANCE { get; set; }
+        public virtual DbSet<CPTADMIN_TRAITEMENT_AVANCE> CPTADMIN_TRAITEMENT_AVANCE { get; set; }
+
+
         public virtual DbSet<RTIERS> RTIERS { get; set; }
         public virtual DbSet<TP_MPIECES_JUSTIFICATIVES> TP_MPIECES_JUSTIFICATIVES { get; set; }
         public virtual DbSet<FCOMPTA> FCOMPTA { get; set; }
@@ -858,7 +869,36 @@ namespace apptab
                 .HasMany(e => e.MCOMPTA)
                 .WithOptional(e => e.RJL1)
                 .HasForeignKey(e => e.JL);
+
+            modelBuilder.Entity<CPTADMIN_FAVANCE>()
+                .Property(e => e.COURSDEVISE)
+                .HasPrecision(30, 12);
+
+            modelBuilder.Entity<CPTADMIN_FAVANCE>()
+                .Property(e => e.COURSRAPPORT)
+                .HasPrecision(30, 12);
+
+            modelBuilder.Entity<CPTADMIN_FAVANCE>()
+                .HasMany(e => e.CPTADMIN_MAVANCE)
+                .WithRequired(e => e.CPTADMIN_FAVANCE)
+                .HasForeignKey(e => e.IDAVANCE);
+
+            modelBuilder.Entity<CPTADMIN_FAVANCE>()
+                .HasMany(e => e.CPTADMIN_MAVANCEPJ)
+                .WithRequired(e => e.CPTADMIN_FAVANCE)
+                .HasForeignKey(e => e.IDAVANCE);
+
+            modelBuilder.Entity<CPTADMIN_MAVANCE>()
+                .Property(e => e.MONTANTLOCAL)
+                .HasPrecision(30, 12);
+
+            modelBuilder.Entity<CPTADMIN_MAVANCE>()
+                .Property(e => e.MONTANTRAPPORT)
+                .HasPrecision(30, 12);
+
+            modelBuilder.Entity<CPTADMIN_MAVANCE>()
+                .Property(e => e.MONTANTDEVISE)
+                .HasPrecision(30, 12);
         }
     }
-    
 }

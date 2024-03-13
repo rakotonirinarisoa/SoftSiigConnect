@@ -20,6 +20,14 @@
 
         public int? DELSIIGFP { get; set; }
 
+        public int? DELARAF { get; set; }
+
+        public int? DELAV { get; set; }
+
+        public int? DELAENVOISIIGFP { get; set; }
+
+        public int? DELASIIGFP { get; set; }
+
         public int? DELPE { get; set; }
 
         public int? DELPV { get; set; }

@@ -41,6 +41,12 @@ function GetUsers() {
                 $("#ParaPp").val("");
                 $("#ParaPb").val("");
                 $("#ParaRAF").val("");
+
+                $("#ParaRAFA").val("");
+                $("#ParaVA").val("");
+                $("#ParaSiigA").val("");
+                $("#ParaSA").val("");
+
                 return;
             }
             if (Datas.type == "login") {
@@ -50,13 +56,17 @@ function GetUsers() {
             }
 
             $("#ParaV").val(Datas.data.DELTV);
+            $("#ParaVA").val(Datas.data.DELAV);
             $("#ParaS").val(Datas.data.DELSIIGFP);
+            $("#ParaSA").val(Datas.data.DELASIIGFP);
             $("#ParaSiig").val(Datas.data.DELENVOISIIGFP);
+            $("#ParaSiigA").val(Datas.data.DELAENVOISIIGFP);
             $("#ParaPe").val(Datas.data.DELPE);
             $("#ParaPv").val(Datas.data.DELPV);
             $("#ParaPp").val(Datas.data.DELPP);
             $("#ParaPb").val(Datas.data.DELPB);
-            $("#ParaRAF").val(Datas.data.DELPB);
+            $("#ParaRAF").val(Datas.data.DELRAF);
+            $("#ParaRAFA").val(Datas.data.DELARAF);
 
             if (Datas.data.IDPROJET != 0)
                 $("#proj").val(`${Datas.data.IDPROJET}`);
@@ -76,14 +86,18 @@ $('#proj').on('change', () => {
 
 $(`[data-action="UpdateUser"]`).click(function () {
     let ParaV = $("#ParaV").val();
+    let ParaVA = $("#ParaVA").val();
     let ParaS = $("#ParaS").val();
+    let ParaSA = $("#ParaSA").val();
     let ParaSiig = $("#ParaSiig").val();
+    let ParaSiigA = $("#ParaSiigA").val();
     let ParaPe = $("#ParaPe").val();
     let ParaPv = $("#ParaPv").val();
     let ParaPp = $("#ParaPp").val();
     let ParaPb = $("#ParaPb").val();
     let ParaRAF = $("#ParaRAF").val();
-    if (!ParaV || !ParaS || !ParaSiig || !ParaPe || !ParaPv || !ParaPp || !ParaPb || !ParaRAF) {
+    let ParaRAFA = $("#ParaRAFA").val();
+    if (!ParaV || !ParaS || !ParaSiig || !ParaPe || !ParaPv || !ParaPp || !ParaPb || !ParaRAF || !ParaVA || !ParaSA || !ParaSiigA || !ParaRAFA) {
         alert("Veuillez renseigner les délais de traitement. ");
         return;
     }
@@ -102,13 +116,17 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("suser.IDPROJET", User.IDPROJET);
 
     formData.append("param.DELTV", $(`#ParaV`).val());
+    formData.append("param.DELAV", $(`#ParaVA`).val());
     formData.append("param.DELSIIGFP", $(`#ParaS`).val());
+    formData.append("param.DELASIIGFP", $(`#ParaSA`).val());
     formData.append("param.DELENVOISIIGFP", $(`#ParaSiig`).val());
+    formData.append("param.DELAENVOISIIGFP", $(`#ParaSiigA`).val());
     formData.append("param.DELPE", $(`#ParaPe`).val());
     formData.append("param.DELPV", $(`#ParaPv`).val());
     formData.append("param.DELPP", $(`#ParaPp`).val());
     formData.append("param.DELPB", $(`#ParaPb`).val());
     formData.append("param.DELRAF", $(`#ParaRAF`).val());
+    formData.append("param.DELARAF", $(`#ParaRAFA`).val());
 
     formData.append("iProjet", $("#proj").val());
 

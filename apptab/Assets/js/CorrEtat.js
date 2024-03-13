@@ -37,6 +37,9 @@ function GetUsers() {
                 $("#defC").val("");
                 $("#tefC").val("");
                 $("#beC").val("");
+                $("#defCA").val("");
+                $("#tefCA").val("");
+                $("#beCA").val("");
                 return;
             }
             if (Datas.type == "login") {
@@ -48,6 +51,9 @@ function GetUsers() {
             $("#defC").val(Datas.data.DEF);
             $("#tefC").val(Datas.data.TEF);
             $("#beC").val(Datas.data.BE);
+            $("#defCA").val(Datas.data.DEFA);
+            $("#tefCA").val(Datas.data.TEFA);
+            $("#beCA").val(Datas.data.BEA);
 
             if (Datas.data.IDPROJET != 0)
                 $("#proj").val(`${Datas.data.IDPROJET}`);
@@ -69,7 +75,10 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let defC = $("#defC").val();
     let tefC = $("#tefC").val();
     let beC = $("#beC").val();
-    if (!defC || !tefC || !beC) {
+    let defCA = $("#defCA").val();
+    let tefCA = $("#tefCA").val();
+    let beCA = $("#beCA").val();
+    if (!defC || !tefC || !beC || !defCA || !tefCA || !beCA) {
         alert("Veuillez renseigner les informations sur la correspondance des états. ");
         return;
     }
@@ -90,6 +99,9 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("param.DEF", $(`#defC`).val());
     formData.append("param.TEF", $(`#tefC`).val());
     formData.append("param.BE", $(`#beC`).val());
+    formData.append("param.DEFA", $(`#defCA`).val());
+    formData.append("param.TEFA", $(`#tefCA`).val());
+    formData.append("param.BEA", $(`#beCA`).val());
 
     formData.append("iProjet", $("#proj").val());
 

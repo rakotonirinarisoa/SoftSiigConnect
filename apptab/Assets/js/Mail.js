@@ -37,6 +37,12 @@ function GetUsers() {
                 $("#ParaV").val("");
                 $("#ParaSiig").val("");
                 $("#ParaREJET").val("");
+
+                $("#ParaTA").val("");
+                $("#ParaVA").val("");
+                $("#ParaSiigA").val("");
+                $("#ParaREJETA").val("");
+                
                 $("#ParaREJETPAIE").val("");
                 $("#ParaPi").val("");
                 $("#ParaPe").val("");
@@ -54,6 +60,12 @@ function GetUsers() {
             $("#ParaV").val(Datas.data.MAILTV);
             $("#ParaSiig").val(Datas.data.MAILSIIG);
             $("#ParaREJET").val(Datas.data.MAILREJET);
+
+            $("#ParaTA").val(Datas.data.MAILTEA);
+            $("#ParaVA").val(Datas.data.MAILTVA);
+            $("#ParaSiigA").val(Datas.data.MAILSIIGA);
+            $("#ParaREJETA").val(Datas.data.MAILREJETA);
+
             $("#ParaREJETPAIE").val(Datas.data.MAILREJETPAIE);
             $("#ParaPi").val(Datas.data.MAILPI);
             $("#ParaPe").val(Datas.data.MAILPE);
@@ -82,13 +94,19 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let ParaV = $("#ParaV").val();
     let ParaSiig = $("#ParaSiig").val();
     let ParaREJET = $("#ParaREJET").val();
+
+    let ParaTA = $("#ParaTA").val();
+    let ParaVA = $("#ParaVA").val();
+    let ParaSiigA = $("#ParaSiigA").val();
+    let ParaREJETA = $("#ParaREJETA").val();
+
     let ParaREJETPAIE = $("#ParaREJETPAIE").val();
     let ParaPi = $("#ParaPi").val();
     let ParaPe = $("#ParaPe").val();
     let ParaPv = $("#ParaPv").val();
     let ParaPp = $("#ParaPp").val();
     //let ParaPb = $("#ParaPb").val();
-    if (!ParaT || !ParaV || !ParaSiig || !ParaREJET || !ParaPi || !ParaPe || !ParaPv || !ParaPp || !ParaREJETPAIE /*|| !ParaPb*/) {
+    if (!ParaT || !ParaV || !ParaSiig || !ParaREJET || !ParaPi || !ParaPe || !ParaPv || !ParaPp || !ParaREJETPAIE /*|| !ParaPb*/ || !ParaTA || !ParaVA || !ParaSiigA || !ParaREJETA) {
         alert("Veuillez renseigner les mails. ");
         return;
     }
@@ -110,6 +128,12 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("param.MAILTV", $(`#ParaV`).val());
     formData.append("param.MAILSIIG", $(`#ParaSiig`).val());
     formData.append("param.MAILREJET", $(`#ParaREJET`).val());
+
+    formData.append("param.MAILTEA", $(`#ParaTA`).val());
+    formData.append("param.MAILTVA", $(`#ParaVA`).val());
+    formData.append("param.MAILSIIGA", $(`#ParaSiigA`).val());
+    formData.append("param.MAILREJETA", $(`#ParaREJETA`).val());
+
     formData.append("param.MAILREJETPAIE", $(`#ParaREJETPAIE`).val());
     formData.append("param.MAILPI", $(`#ParaPi`).val());
     formData.append("param.MAILPE", $(`#ParaPe`).val());
