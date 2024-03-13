@@ -1011,7 +1011,7 @@ namespace apptab.Controllers
                             where prosoa.IDPROJET == projectId && prosoa.DELETIONDATE == null && soa.DELETIONDATE == null
                             select new
                             {
-                            soa.SOA
+                                soa.SOA
                             }
                             ).FirstOrDefaultAsync();
 
