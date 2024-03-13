@@ -145,6 +145,9 @@ function setDataTable() {
                 data: 'agent'
             },
             {
+                data: 'dateTraitement'
+            },
+            {
                 data: 'dureeTraitement'
             },
             {
@@ -168,15 +171,15 @@ function setDataTable() {
             }
 
             if (data.rowNumber % NUMBER_OF_ROWS === NUMBER_OF_ROWS - 1) {
-                $('td:eq(3)', row).attr('colspan', 3).css({ 'text-align': 'center' });
+                $('td:eq(3)', row).attr('colspan', 4).css({ 'text-align': 'center' });
                 $('td:eq(3)', row).text('Durée totale');
 
-                $('td:eq(4)', row).text(data.dateTraitement);
+                /*$('td:eq(4)', row).text(data.dateTraitement);*/
+                $('td:eq(4)', row).text(data.dureeTraitement);
+                $('td:eq(5)', row).text(data.dureePrevu);
+                $('td:eq(6)', row).text(data.depassement);
 
-                $('td:eq(5)', row).text(data.dureeTraitement);
-                $('td:eq(6)', row).text(data.dureePrevu);
-                $('td:eq(7)', row).text(data.depassement);
-
+                $('td:eq(7)', row).text('').css({ 'display': 'none' });
                 $('td:eq(8)', row).text('').css({ 'display': 'none' });
                 $('td:eq(9)', row).text('').css({ 'display': 'none' });
             }
