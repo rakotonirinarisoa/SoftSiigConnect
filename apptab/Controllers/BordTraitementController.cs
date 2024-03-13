@@ -857,7 +857,7 @@ namespace apptab.Controllers
 
                         //var paielst = db.OPA_VALIDATIONS.Where(a => a.IDPROJET == crpt).Join().ToList();
                         var typeEcriture = db.SI_TYPECRITURE.Where(x => x.IDPROJET == crpt).FirstOrDefault().TYPE;
-                        if (typeEcriture == 2)
+                        if (typeEcriture == 1)
                         {
                             var paielst = (
                                from r in db.OPA_REGLEMENTBR
@@ -1003,7 +1003,7 @@ namespace apptab.Controllers
 
                 var typeEcriture = db.SI_TYPECRITURE.Where(x => x.IDPROJET == projectId).FirstOrDefault().TYPE;
 
-                if (typeEcriture == 2)
+                if (typeEcriture == 1)
                 {
                     var s = await (
                             from soa in db.SI_SOAS
@@ -1173,7 +1173,7 @@ namespace apptab.Controllers
                 int projectId = iProjectsId[i];
 
                 var typeEcriture = db.SI_TYPECRITURE.Where(x => x.IDPROJET == projectId).FirstOrDefault().TYPE;
-                if (typeEcriture == 2)
+                if (typeEcriture == 1)
                 {
                     var s = await (
                     from soa in db.SI_SOAS
@@ -1203,11 +1203,13 @@ namespace apptab.Controllers
                                        IDUSVAL = v.IDUSVAL != null ? v.IDUSVAL : null,
                                    }
                                ).ToList();
+
                     var durerTraite = db.SI_DELAISTRAITEMENT.Where(x => x.IDPROJET == projectId).Select(x => new {
                         DELAISOP = x.DELPP,
                         DELAISAC = x.DELPV,
                         DELAISBK = x.DELPB,
                     }).ToList();
+
                     lastIndex += 1;
 
                     result.Add(new TraitementPaiement
@@ -1218,6 +1220,9 @@ namespace apptab.Controllers
 
                     for (int j = 0; j < paielst.Count; j += 1)
                     {
+                        double dateOP = Date.GetDifference(paielst[j].DATESEND, paielst[j].DATECREA);
+                        double dateAC = Date.GetDifference(paielst[j].DATEVAL, paielst[j].DATESEND);
+                        double dateBK = Date.GetDifference(paielst[j].DATEVAL, paielst[j].DATESEND);
                         result[lastIndex].TraitementPaiementDetails.Add(new TraitementPaiementDetails
                         {
                             NUM_ENGAGEMENT = paielst[j].NUM,
@@ -1229,17 +1234,17 @@ namespace apptab.Controllers
                             VALORDSECAGENT = await GetAgent(paielst[j].IDUSVAL),
                             DATESENDSIIG = paielst[j].DATESEND,
                             SENDSIIGAGENT = await GetAgent(paielst[j].IDUSSEND),
-                            DUREETRAITEMENTTRANSFERTOP = Date.GetDifference(paielst[j].DATECREA, paielst[j].DATESEND),
-                            DUREETRAITEMENTTRANSFERTAC = Date.GetDifference(paielst[j].DATESEND, paielst[j].DATEVAL),
-                            DUREETRAITEMENTTRANSFERTBK = Date.GetDifference(paielst[j].DATESEND, paielst[j].DATEVAL),
+                            DUREETRAITEMENTTRANSFERTOP = dateOP,
+                            DUREETRAITEMENTTRANSFERTAC = dateAC,
+                            DUREETRAITEMENTTRANSFERTBK = dateBK,
 
                             DUREETRAITEMENTPREVUEOP = Convert.ToDouble(durerTraite.FirstOrDefault().DELAISOP),
                             DUREETRAITEMENTPREVUEAC = Convert.ToDouble(durerTraite.FirstOrDefault().DELAISAC),
                             DUREETRAITEMENTPREVUEBK = Convert.ToDouble(durerTraite.FirstOrDefault().DELAISBK),
 
-                            DEPASSEMENTOP = durerTraite.FirstOrDefault().DELAISOP != null ? Convert.ToDouble(durerTraite.FirstOrDefault().DELAISOP) - Convert.ToDouble(Date.GetDifference(paielst[j].DATECREA, paielst[j].DATESEND)) : 0,
-                            DEPASSEMENTAC = durerTraite.FirstOrDefault().DELAISAC != null ? Convert.ToDouble(durerTraite.FirstOrDefault().DELAISAC) - Convert.ToDouble(Date.GetDifference(paielst[j].DATESEND, paielst[j].DATEVAL)) : 0,
-                            DEPASSEMENTBK = durerTraite.FirstOrDefault().DELAISBK != null ? Convert.ToDouble(durerTraite.FirstOrDefault().DELAISBK) - Convert.ToDouble(Date.GetDifference(paielst[j].DATEVAL, paielst[j].DATEVAL)) : 0,
+                            DEPASSEMENTOP = durerTraite.FirstOrDefault().DELAISOP != null ? Convert.ToDouble(durerTraite.FirstOrDefault().DELAISOP) - dateOP : 0,
+                            DEPASSEMENTAC = durerTraite.FirstOrDefault().DELAISAC != null ? Convert.ToDouble(durerTraite.FirstOrDefault().DELAISAC) - dateAC : 0,
+                            DEPASSEMENTBK = durerTraite.FirstOrDefault().DELAISBK != null ? Convert.ToDouble(durerTraite.FirstOrDefault().DELAISBK) - dateBK : 0,
                         });
                     }
                 }

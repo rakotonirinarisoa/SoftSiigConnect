@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System.Data.Entity;
+using apptab.Models;
 
 namespace apptab
 {
@@ -40,6 +41,7 @@ namespace apptab
         public virtual DbSet<TP_MPIECES_JUSTIFICATIVES> TP_MPIECES_JUSTIFICATIVES { get; set; }
         public virtual DbSet<FCOMPTA> FCOMPTA { get; set; }
         public virtual DbSet<FOP> FOP { get; set; }
+        public virtual DbSet<GA_AVANCE> GA_AVANCE { get; set; }
         public virtual DbSet<MCOMPTA> MCOMPTA { get; set; }
         public virtual DbSet<MOP> MOP { get; set; }
         public virtual DbSet<OP_CHAINETRAITEMENT> OP_CHAINETRAITEMENT { get; set; }

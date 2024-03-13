@@ -4,16 +4,22 @@ let list = [];
 
 const NUMBER_OF_ROWS = 5;
 
+
 function setSum(array, startIndex, endIndex) {
     let total = 0;
+    let totalPREVU = 0;
+    let totalDEPASS = 0;
 
     for (let i = startIndex; i <= endIndex; i += 1) {
         total += Number(array[i].dureeTraitement);
+        totalPREVU += Number(array[i].dureePrevu);
+        totalDEPASS += Number(array[i].depassement);
     }
 
     array[endIndex + 1].dureeTraitement = total;
+    array[endIndex + 1].dureePrevu = totalPREVU;
+    array[endIndex + 1].depassement = totalDEPASS;
 }
-
 function calculateDuration(array) {
     let pointer = 0;
 

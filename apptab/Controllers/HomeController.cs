@@ -465,30 +465,7 @@ namespace apptab.Controllers
             List<string> list = listCompte.Split(',').ToList();
 
             #region CommOpavi
-            //List<string> numBR = listCompte.Split(',').ToList();
-            //List<OPA_REGLEMENTBR> brResult = new List<OPA_REGLEMENTBR>();
-            //List<DataListTompro> listReg = new List<DataListTompro>();
-            //List<DataListTomOP> listRegBR = new List<DataListTomOP>();
-            //AFB160 aFB160 = new AFB160();
-            //if (baseName == "3")
-            //{
-
-            //    aFB160.SaveValideSelectEcritureBR(numBR, journal, etat, devise, suser);
-            //    foreach (var item in numBR)
-            //    {
-            //        brResult.Add(db.OPA_REGLEMENTBR.Where(x => x.NUM == item && x.CODE_J == journal && x.IDSOCIETE == suser.IDPROJET).FirstOrDefault());
-            //    }
-            //    listRegBR = aFB160.getREGLEMENTBR(suser);
-
-            //    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès.", data = listRegBR }, settings));
-            //}
-            //else
-            //{
-            //    aFB160.SaveValideSelectEcriture(list, true, suser);
-
-            //    listReg = aFB160.getREGLEMENT(suser);
-            //    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès.", data = listReg }, settings));
-            //}
+            
             #endregion
             int countTraitement = 0;
             var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
@@ -1254,11 +1231,11 @@ namespace apptab.Controllers
 
             if (baseName == "2")
             {
-                listReg = aFB160.getREGLEMENT(suser);
+                listReg = aFB160.getREGLEMENT(suser, PROJECTID);
             }
             else
             {
-                listRegBR = aFB160.getREGLEMENTBR(suser);
+                listRegBR = aFB160.getREGLEMENTBR(suser, PROJECTID);
             }
 
             OPA_VALIDATIONS avalider = new OPA_VALIDATIONS();
