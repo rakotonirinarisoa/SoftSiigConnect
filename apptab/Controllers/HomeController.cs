@@ -496,7 +496,7 @@ namespace apptab.Controllers
                         avalider.auxi = auxi;
                         avalider.DateP = dateP;
                         avalider.Journal = journal;
-                        avalider.DateOrdre = item.DateOrdre;
+                        avalider.dateOrdre = item.DateOrdre;
                         avalider.NoPiece = item.NoPiece;
                         avalider.Compte = item.Compte;
                         avalider.Libelle = item.Libelle;
@@ -588,10 +588,11 @@ namespace apptab.Controllers
                         avalider.auxi = auxi;
                         avalider.DateP = dateP;
                         avalider.Journal = journal;
-                        avalider.DateOrdre = item.Date.ToString();
+                        avalider.dateOrdre = item.Date.ToString();
                         avalider.NoPiece = item.NoPiece;
                         avalider.Compte = item.Compte;
                         avalider.Libelle = item.Libelle;
+                        avalider.MONTANT = item.Montant;
                         avalider.MontantDevise = item.MontantDevise;
                         avalider.Mon = item.Mon;
                         avalider.Rang = item.Rang;
@@ -686,7 +687,7 @@ namespace apptab.Controllers
                     list.Add(new OPA_VALIDATIONS
                     {
                         IDREGLEMENT = item.IDREGLEMENT,
-                        DateOrdre = item.DateOrdre,
+                        dateOrdre = item.dateOrdre,
                         NoPiece = item.NoPiece,
                         Compte = item.Compte,
                         Journal = item.Journal,
@@ -699,7 +700,7 @@ namespace apptab.Controllers
                         Plan6 = item.Plan6,
                         Commune = item.Commune,
                         Marche = item.Marche,
-                        IsLATE = isLate,
+                        isLATE = isLate,
                     });
                 }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
@@ -716,7 +717,7 @@ namespace apptab.Controllers
                     list.Add(new OPA_VALIDATIONS
                     {
                         IDREGLEMENT = item.IDREGLEMENT,
-                        DateOrdre = item.DateOrdre,
+                        dateOrdre = item.dateOrdre,
                         NoPiece = item.NoPiece,
                         Compte = item.Compte,
                         Journal = item.Journal,
@@ -729,7 +730,7 @@ namespace apptab.Controllers
                         Plan6 = item.Plan6,
                         Commune = item.Commune,
                         Marche = item.Marche,
-                        IsLATE = isLate,
+                        isLATE = isLate,
                     });
                 }
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
@@ -772,21 +773,21 @@ namespace apptab.Controllers
                     list.Add(new OPA_VALIDATIONS
                     {
                         IDREGLEMENT = item.IDREGLEMENT,
-                        DateOrdre = item.DateOrdre,
+                        dateOrdre = item.dateOrdre,
                         NoPiece = item.NoPiece,
                         Compte = item.Compte,
                         Journal = item.Journal,
                         Credit = item.Credit,
                         Debit = item.Debit,
                         FinancementCategorie = item.FinancementCategorie,
-                        Montant = 0,
+                        MONTANT = item.MONTANT,
                         Mon = item.Mon,
                         MontantDevise = item.MontantDevise,
                         Rang = item.Rang,
                         Plan6 = item.Plan6,
                         Commune = item.Commune,
                         Marche = item.Marche,
-                        IsLATE = isLate,
+                        isLATE = isLate,
                     });
                 }
                 //var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == suser.IDPROJET && ecriture.ETAT == 0).ToList();
@@ -796,31 +797,58 @@ namespace apptab.Controllers
             else
             {
                 var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0).ToList();
+                
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
                     if (item.DATECREA.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                         isLate = true;
-                    list.Add(new OPA_VALIDATIONS
+                    if (item.AVANCE == true)
                     {
-                        IDREGLEMENT = item.IDREGLEMENT,
-                        DateOrdre = item.DateOrdre,
-                        NoPiece = item.NoPiece,
-                        Compte = item.Compte,
-                        Journal = item.Journal,
-                        Credit = item.Credit,
-                        Debit = item.Debit,
-                        FinancementCategorie = item.FinancementCategorie,
-                        Montant = 0,
-                        Mon = item.Mon,
-                        MontantDevise = item.MontantDevise,
-                        Rang = item.Rang,
-                        Plan6 = item.Plan6,
-                        Commune = item.Commune,
-                        Marche = item.Marche,
-                        IsLATE = isLate,
-                        AVANCE = item.AVANCE,
-                    });
+                        list.Add(new OPA_VALIDATIONS
+                        {
+                            IDREGLEMENT = item.IDREGLEMENT,
+                            dateOrdre = item.dateOrdre,
+                            NoPiece = item.NoPiece,
+                            Compte = item.Compte,
+                            Journal = item.Journal,
+                            Credit = item.Credit,
+                            Debit = item.Debit,
+                            FinancementCategorie = item.FinancementCategorie,
+                            MONTANT = item.MONTANT,
+                            Mon = item.Mon,
+                            MontantDevise = item.MontantDevise,
+                            Rang = item.Rang,
+                            Plan6 = item.Plan6,
+                            Commune = item.Commune,
+                            Marche = item.Marche,
+                            isLATE = isLate,
+                            AVANCE = item.AVANCE,
+                        });
+                    }
+                    else
+                    {
+                        list.Add(new OPA_VALIDATIONS
+                        {
+                            IDREGLEMENT = item.IDREGLEMENT,
+                            dateOrdre = item.dateOrdre,
+                            NoPiece = item.NoPiece,
+                            Compte = item.Compte,
+                            Journal = item.Journal,
+                            Credit = item.Credit,
+                            Debit = item.Debit,
+                            FinancementCategorie = item.FinancementCategorie,
+                            MONTANT = item.MONTANT,
+                            Mon = item.Mon,
+                            MontantDevise = item.MontantDevise,
+                            Rang = item.Rang,
+                            Plan6 = item.Plan6,
+                            Commune = item.Commune,
+                            Marche = item.Marche,
+                            isLATE = isLate,
+                            AVANCE = item.AVANCE,
+                        });
+                    }
                 }
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = list }, settings));
@@ -865,7 +893,7 @@ namespace apptab.Controllers
                 foreach (var item in AvaliderList)
                 {
 
-                    aFB160.SaveValideSelectEcritureBR(numBR, item.Journal, item.ETAT.ToString(), devise, suser, PROJECTID, item.AVANCE);
+                    aFB160.SaveValideSelectEcritureBR(numBR, item.Journal, item.ETAT.ToString(), devise, suser, PROJECTID, (bool)item.AVANCE);
                 }
 
             }
@@ -989,7 +1017,7 @@ namespace apptab.Controllers
                     list.Add(new OPA_VALIDATIONS
                     {
                         IDREGLEMENT = item.IDREGLEMENT,
-                        DateOrdre = item.DateOrdre,
+                        dateOrdre = item.dateOrdre,
                         NoPiece = item.NoPiece,
                         Compte = item.Compte,
                         Journal = item.Journal,
@@ -1002,7 +1030,7 @@ namespace apptab.Controllers
                         Plan6 = item.Plan6,
                         Commune = item.Commune,
                         Marche = item.Marche,
-                        IsLATE = isLate,
+                        isLATE = isLate,
                     });
                 }
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = list }, settings));
@@ -1019,7 +1047,7 @@ namespace apptab.Controllers
                     list.Add(new OPA_VALIDATIONS
                     {
                         IDREGLEMENT = item.IDREGLEMENT,
-                        DateOrdre = item.DateOrdre,
+                        dateOrdre = item.dateOrdre,
                         NoPiece = item.NoPiece,
                         Compte = item.Compte,
                         Journal = item.Journal,
@@ -1032,7 +1060,7 @@ namespace apptab.Controllers
                         Plan6 = item.Plan6,
                         Commune = item.Commune,
                         Marche = item.Marche,
-                        IsLATE = isLate,
+                        isLATE = isLate,
                     });
                 }
 
@@ -1069,21 +1097,21 @@ namespace apptab.Controllers
                     list.Add(new OPA_VALIDATIONS
                     {
                         IDREGLEMENT = item.IDREGLEMENT,
-                        DateOrdre = item.DateOrdre,
+                        dateOrdre = item.dateOrdre,
                         NoPiece = item.NoPiece,
                         Compte = item.Compte,
                         Journal = item.Journal,
                         Credit = item.Credit,
                         Debit = item.Debit,
                         FinancementCategorie = item.FinancementCategorie,
-                        Montant = 0,
+                        MONTANT = item.MONTANT,
                         Mon = item.Mon,
                         MontantDevise = item.MontantDevise,
                         Rang = item.Rang,
                         Plan6 = item.Plan6,
                         Commune = item.Commune,
                         Marche = item.Marche,
-                        IsLATE = isLate,
+                        isLATE = isLate,
                     });
                 }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
@@ -1100,7 +1128,7 @@ namespace apptab.Controllers
                     list.Add(new OPA_VALIDATIONS
                     {
                         IDREGLEMENT = item.IDREGLEMENT,
-                        DateOrdre = item.DateOrdre,
+                        dateOrdre = item.dateOrdre,
                         NoPiece = item.NoPiece,
                         Compte = item.Compte,
                         Journal = item.Journal,
@@ -1108,13 +1136,13 @@ namespace apptab.Controllers
                         Debit = item.Debit,
                         FinancementCategorie = item.FinancementCategorie,
                         Mon = item.Mon,
-                        Montant = 0,
+                        MONTANT = item.MONTANT,
                         MontantDevise = item.MontantDevise,
                         Rang = item.Rang,
                         Plan6 = item.Plan6,
                         Commune = item.Commune,
                         Marche = item.Marche,
-                        IsLATE = isLate,
+                        isLATE = isLate,
                     });
                 }
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
@@ -1192,12 +1220,13 @@ namespace apptab.Controllers
                     list.Add(new OPA_VALIDATIONS
                     {
                         IDREGLEMENT = item.IDREGLEMENT,
-                        DateOrdre = item.DateOrdre,
+                        dateOrdre = item.dateOrdre,
                         NoPiece = item.NoPiece,
                         Compte = item.Compte,
                         Journal = item.Journal,
                         Credit = item.Credit,
                         Debit = item.Debit,
+                        MONTANT = item.MONTANT,
                         FinancementCategorie = item.FinancementCategorie,
                         Mon = item.Mon,
                         MontantDevise = item.MontantDevise,
@@ -1205,7 +1234,7 @@ namespace apptab.Controllers
                         Plan6 = item.Plan6,
                         Commune = item.Commune,
                         Marche = item.Marche,
-                        IsLATE = isLate,
+                        isLATE = isLate,
                     });
                 }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
@@ -1418,12 +1447,13 @@ namespace apptab.Controllers
                 list.Add(new OPA_VALIDATIONS
                 {
                     IDREGLEMENT = item.IDREGLEMENT,
-                    DateOrdre = item.DateOrdre,
+                    dateOrdre = item.dateOrdre,
                     NoPiece = item.NoPiece,
                     Compte = item.Compte,
                     Journal = item.Journal,
                     Credit = item.Credit,
                     Debit = item.Debit,
+                    MONTANT = item.MONTANT,
                     FinancementCategorie = item.FinancementCategorie,
                     Mon = item.Mon,
                     MontantDevise = item.MontantDevise,
@@ -1431,7 +1461,7 @@ namespace apptab.Controllers
                     Plan6 = item.Plan6,
                     Commune = item.Commune,
                     Marche = item.Marche,
-                    IsLATE = isLate,
+                    isLATE = isLate,
                 });
             }
             return Json(JsonConvert.SerializeObject(new { type = "Success", msg = "Connexion avec success. ", data = list }, settings));
