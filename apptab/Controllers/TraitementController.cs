@@ -323,7 +323,7 @@ namespace apptab.Controllers
                                    });
 
                         bool isLate = false;
-                        if (x.DATECRE.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                        if (x.DATECRE.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                             isLate = true;
 
                         list.Add(new DATATRPROJET
@@ -404,7 +404,7 @@ namespace apptab.Controllers
                                    });
 
                         bool isLate = false;
-                        if (x.DATECRE.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                        if (x.DATECRE.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                             isLate = true;
 
                         list.Add(new DATATRPROJET
@@ -873,14 +873,14 @@ namespace apptab.Controllers
                     mail.From = new MailAddress(MailAdresse);
 
                     mail.To.Add(MailAdresse);
-                    if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null).MAILTE != null)
+                    if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null).MAILREJET != null)
                     {
                         string[] separators = { ";" };
 
                         var Tomail = mail;
                         if (Tomail != null)
                         {
-                            string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null).MAILTE;
+                            string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null).MAILREJET;
                             string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
                             foreach (var mailto in mailListe)
@@ -1227,7 +1227,7 @@ namespace apptab.Controllers
                                    });
 
                         bool isLate = false;
-                        if (x.DATEVALIDATION.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                        if (x.DATEVALIDATION.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                             isLate = true;
 
                         list.Add(new DATATRPROJET
@@ -1315,7 +1315,7 @@ namespace apptab.Controllers
                                    });
 
                         bool isLate = false;
-                        if (x.DATEVALIDATION.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                        if (x.DATEVALIDATION.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                             isLate = true;
 
                         list.Add(new DATATRPROJET

@@ -467,7 +467,7 @@ namespace apptab.Controllers
             var list = JsonConvert.DeserializeObject<List<AvanceDetails>>(listCompte);
 
             #region CommOpavi
-            
+
             #endregion
             int countTraitement = 0;
             var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
@@ -576,7 +576,7 @@ namespace apptab.Controllers
                 var hst = db.OPA_HISTORIQUE.Select(x => x.NUMENREG.ToString()).ToArray();
                 foreach (var h in list)
                 {
-                    var listA = afb160.getListEcritureBR(journal, datein, dateout,devise,comptaG, auxi, etat, dateP, suser, PROJECTID).Where(x => x.No.ToString() == h.Id).ToList();
+                    var listA = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID).Where(x => x.No.ToString() == h.Id).ToList();
                     foreach (var item in listA)
                     {
                         avalider.IDREGLEMENT = item.No;
@@ -603,6 +603,7 @@ namespace apptab.Controllers
                         avalider.Statut = item.Status;
                         avalider.DATECREA = DateTime.Now;
                         avalider.IDUSCREA = exist.ID;
+                        avalider.AVANCE = item.Avance;
                         try
                         {
                             db.OPA_VALIDATIONS.Add(avalider);
@@ -662,7 +663,7 @@ namespace apptab.Controllers
         }
         //=========================================================================================TeacherValidation======================================================================
         [HttpPost]
-        public JsonResult GetElementAvalider(string ChoixBase,string codeproject, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP, string journal, string etat, bool devise, SI_USERS suser)
+        public JsonResult GetElementAvalider(string ChoixBase, string codeproject, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP, string journal, string etat, bool devise, SI_USERS suser)
         {
             AFB160 aFB160 = new AFB160();
             int PROJECTID = int.Parse(codeproject);
@@ -751,7 +752,7 @@ namespace apptab.Controllers
             int retarDate = 0;
             if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null))
                 retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).DELPE.Value;
-            
+
             List<OPA_VALIDATIONS> list = new List<OPA_VALIDATIONS>();
             if (basename == "")
             {
@@ -818,6 +819,7 @@ namespace apptab.Controllers
                         Commune = item.Commune,
                         Marche = item.Marche,
                         IsLATE = isLate,
+                        AVANCE = item.AVANCE,
                     });
                 }
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
@@ -862,7 +864,8 @@ namespace apptab.Controllers
             {
                 foreach (var item in AvaliderList)
                 {
-                    aFB160.SaveValideSelectEcritureBR(numBR, item.Journal, item.ETAT.ToString(), devise, suser,PROJECTID);
+
+                    aFB160.SaveValideSelectEcritureBR(numBR, item.Journal, item.ETAT.ToString(), devise, suser, PROJECTID, item.AVANCE);
                 }
 
             }
@@ -1293,7 +1296,8 @@ namespace apptab.Controllers
                     }
                     countTraitement++;
                 }
-            }else
+            }
+            else
             {
                 foreach (var item in list)
                 {
