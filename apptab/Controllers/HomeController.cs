@@ -377,7 +377,7 @@ namespace apptab.Controllers
             //SOFTCONNECTOM.connex = "Data Source=DESKTOP-N8EMIRC;Initial Catalog=PIC;Integrated Security=True";
             //OPAVITOMATE.connex = "Data Source=NOM-IT-PC;Initial Catalog=PIC3;Integrated Security=True";
             #endregion
-            SOFTCONNECTOM __db = new SOFTCONNECTOM();
+            //SOFTCONNECTOM __db = new SOFTCONNECTOM();
             int crpt = 0;
             if (codeproject != "")
             {
@@ -395,7 +395,7 @@ namespace apptab.Controllers
             SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
-            var JournalVM = __db.RJL1.Select(x => new
+            var JournalVM = tom.RJL1.Select(x => new
             {
                 CODE = x.CODE,
                 LIBELLE = x.LIBELLE

@@ -264,6 +264,7 @@ function GetListCodeJournal() {
             loader.addClass('display-none');
         },
         success: function (result) {
+            console.log(result);
             var Datas = JSON.parse(result);
 
             if (Datas.type == "error") {
@@ -275,16 +276,16 @@ function GetListCodeJournal() {
                 window.location = window.location.origin;
                 return;
             }
-
+            ListCodeJournal = ``;
             let code = ``;
             ListCodeJournal = Datas.data;
-
             $.each(ListCodeJournal, function (k, v) {
                 code += `
                     <option value="${v.CODE}">${v.CODE}</option>
                 `;
             });
 
+            $(`[codej-list]`)html('');
             $(`[codej-list]`).append(code);
             $(`[codej-libelle]`).val(ListCodeJournal[0].LIBELLE);
             GetEtat();
@@ -552,6 +553,8 @@ $(document).ready(() => {
 });
 
 $(document).on("change", "[code-project]", () => {
+    ListCodeJournal = ``;
+    $('#commercial').html('');
     GetTypeP();
     GetListCodeJournal();
     ChargeLoad();

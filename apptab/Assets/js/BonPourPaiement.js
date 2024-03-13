@@ -680,6 +680,7 @@ $(document).ready(() => {
 });
 
 $(document).on("change", "[code-project]", () => {
+    $('#commercial').html('');
     GetTypeP();
     GetListCodeJournal();
     chargeLoad();

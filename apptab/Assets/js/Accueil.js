@@ -170,6 +170,8 @@ function GetListCodeJournal() {
     formData.append("suser.IDPROJET", User.IDSOCIETE);
     //formData.append("baseName", id);
 
+    console.log(codeproject)
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/GetCODEJournal',
@@ -184,7 +186,8 @@ function GetListCodeJournal() {
             loader.addClass('display-none');
         },
         success: function (result) {
-            var Datas = JSON.parse(result);
+            
+            const Datas = JSON.parse(result);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -198,13 +201,13 @@ function GetListCodeJournal() {
 
             let code = ``;
             ListCodeJournal = Datas.data;
-
+            console.log(ListCodeJournal);
             $.each(ListCodeJournal, function (k, v) {
                 code += `
                     <option value="${v.CODE}">${v.CODE}</option>
                 `;
             });
-
+            $(`[codej-list]`).html('');
             $(`[codej-list]`).append(code);
             $(`[codej-libelle]`).val(ListCodeJournal[0].LIBELLE);
             GetEtat();
@@ -292,6 +295,7 @@ $(document).ready(() => {
 });
 
 $(document).on("change", "[code-project]", () => {
+    $('#commercial').html('');
     GetTypeP();
     GetListCodeJournal();
     emptyTable();
