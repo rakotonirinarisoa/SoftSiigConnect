@@ -822,6 +822,7 @@ namespace apptab.Controllers
         }
         public ActionResult StatuePaiement()
         {
+            ViewBag.Controller = "Status des paiements";
             return View();
         }
         [HttpPost]
@@ -950,6 +951,7 @@ namespace apptab.Controllers
         }
         public ActionResult TraitementsPaiement()
         {
+            ViewBag.Controller = "Traitements des paiements";
             return View();
         }
         [HttpPost]
@@ -1120,6 +1122,7 @@ namespace apptab.Controllers
         }
         public ActionResult TraitementPaiementSoufrance()
         {
+            ViewBag.Controller = "Traitements des paiements en souffrance";
             return View();
         }
         [HttpPost]
@@ -1317,6 +1320,7 @@ namespace apptab.Controllers
         }
         public ActionResult TraitementPaiementRejet()
         {
+            ViewBag.Controller = "Traitements des paiements réjéter";
             return View();
         }
         [HttpPost]

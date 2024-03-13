@@ -34,12 +34,10 @@ namespace apptab.Controllers
 
         public ActionResult TdbAccueil()
         {
-            
             return View();
         }
         public ActionResult PaiementValidation()
         {
-            
             ViewBag.Controller = "Récupération des paiements";
             return View();
         }
