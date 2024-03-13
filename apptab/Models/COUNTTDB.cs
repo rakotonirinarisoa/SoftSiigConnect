@@ -9,9 +9,6 @@ namespace apptab
         public int? MandatT { get; set; }
         public int? MandatV { get; set; }
         public int? MandatA { get; set; }
-        public int? AvanceT { get; set; }
-        public int? AvanceV { get; set; }
-        public int? AvanceA { get; set; }
         public int? PaieR { get; set; }
         public int? PaieT { get; set; }
         public int? PaieV { get; set; }
@@ -19,5 +16,10 @@ namespace apptab
         public int? PaieA { get; set; }
         public int? MandatI { get; set; }
         public int? MandatTR { get; set; }
+
+        public int? MandatTA { get; set; }
+        public int? MandatVA { get; set; }
+        public int? MandatAA { get; set; }
+        public int? MandatTRA { get; set; }
     }
 }
