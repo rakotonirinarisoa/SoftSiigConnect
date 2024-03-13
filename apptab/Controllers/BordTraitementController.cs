@@ -808,10 +808,10 @@ namespace apptab.Controllers
                             DURPREVUTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value : 0,
                             DURPREVUSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value : 0,
 
-                            DEPASTRANSFERT = durPrevu != null ? durPrevu.DELRAF.Value - Data.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE) : 0,
-                            DEPASVALIDATION = durPrevu != null ? durPrevu.DELTV.Value - Data.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE) : 0,
-                            DEPASTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value - Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) : 0,
-                            DEPASSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value - Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) : 0
+                            DEPASTRANSFERT = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE) - durPrevu.DELRAF.Value : 0,
+                            DEPASVALIDATION = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE) - durPrevu.DELTV.Value : 0,
+                            DEPASTRANSFSIIG = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) - durPrevu.DELENVOISIIGFP.Value : 0,
+                            DEPASSIIG = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) - durPrevu.DELSIIGFP.Value : 0
                         });
                     }
                 }
@@ -1310,7 +1310,6 @@ namespace apptab.Controllers
                         });
                     }
                 }
-                
             }
 
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = result }, settings));
