@@ -54,7 +54,9 @@ function GetListEvenements() {
             var code = [];
             $.each(Datas.data, function (k, v) {
                 let type = 'engagements';
-                if (v.TYPE == 1) { type = 'paiements'; }
+                let typeT = 'ENGAGEMENT';
+                if (v.TYPE == 1) { type = 'paiements'; typeT = 'PAIEMENT'; }
+                if (v.TYPE == 3) { type = 'avances'; typeT = 'AVANCE'; }
                 let etat = 'Tris';
                 let color = '#1E8BFF'
                 if (v.ETAT == 1) { etat = 'Validation'; color = '#3EB059' }
@@ -69,13 +71,11 @@ function GetListEvenements() {
                     backgroundColor: `${color}`,
                     borderColor: `${color}`,
                     extendedProps: {
-                        title: `${v.SOA} : ${v.PROJET} : ${v.USER}`,
+                        title: `${v.SOA} : ${v.PROJET} : ${typeT} : ${v.USER}`,
                         description: `${etat} de ${v.COUNT} ${type} par ${v.USER}`,
                     },
                 });
             });
-
-            console.log(code);
 
             var calendarEl = document.getElementById('calendar');
 

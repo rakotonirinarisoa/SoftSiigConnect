@@ -7,10 +7,10 @@ function setCurrentRoute(link) {
 function getCurrentLink() {
     const currentRoute = localStorage.getItem('j3rGjf');
 
-    console.log($('nav').find(`a[href="${currentRoute}"].nav-link`));
-
     if (currentRoute) {
-        $('nav').find(`a[href="${currentRoute}"].nav-link`).find('p').css({ 'color': 'red' });
+        const elmt = $('nav').find(`a[href="${currentRoute}"].nav-link`);
+
+        elmt.find('p').css({ 'color': 'red' });
 
         return currentRoute;
     }
@@ -19,15 +19,15 @@ function getCurrentLink() {
 }
 
 $(document).ready(() => {
-    console.log('d');
-
     getCurrentLink();
 });
 
 $('nav').find(`a.nav-link`).on('click', (e) => {
+    $('nav').find(`a.nav-link`).find('p').css({ 'color': 'title' });
+
     const id = $(e.currentTarget).prop('href');
 
     const str = id.split(User.origin);
 
-    setCurrentRoute(str[1].replace('//', '../'));
+    setCurrentRoute(`..${str[1]}`);
 });
