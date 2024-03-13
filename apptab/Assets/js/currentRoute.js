@@ -29,7 +29,5 @@ $('nav').find(`a.nav-link`).on('click', (e) => {
 
     const str = id.split(User.origin);
 
-    alert(str[1]);
-
     setCurrentRoute(str[1].replace('//', '../'));
 });
