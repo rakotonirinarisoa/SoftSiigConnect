@@ -466,7 +466,7 @@ namespace apptab.Extension
                 var fact = (from mct in tom.MCOMPTA
                             where mct.NUMENREG == bnfcr.NUM
                             select mct).First();*/
-               
+
                 if (opp.AVANCE == true)
                 {
                     mont = tom.GA_AVANCE_MOUVEMENT.Where(a => a.NUMERO == bnfcr.NUM).FirstOrDefault();
@@ -575,13 +575,13 @@ namespace apptab.Extension
             var nums = (from ecrt in db.OPA_REGLEMENTBR
                         where ecrt.IDSOCIETE == PROJECTID && ecrt.APPLICATION == "BR"
                         select ecrt).ToList();
-            
+
             foreach (var num in nums)
             {
                 var pop = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == num.NUM).FirstOrDefault();
                 if (pop.AVANCE == true)
                 {
-                    mont = tom.GA_AVANCE.Where(a => a.NUMERO == num.NUM).Join(tom.GA_AVANCE_MOUVEMENT,ga => ga.NUMERO ,av => av.NUMERO ,(ga,av)=> new
+                    mont = tom.GA_AVANCE.Where(a => a.NUMERO == num.NUM).Join(tom.GA_AVANCE_MOUVEMENT, ga => ga.NUMERO, av => av.NUMERO, (ga, av) => new
                     {
                         MONTANT = av.MONTANT
                     }).FirstOrDefault();
@@ -596,7 +596,7 @@ namespace apptab.Extension
                 }
                 else
                 {
-                   
+
                     mont = (from mn in tom.MOP
                             where mn.NUMEROOP == num.NUM
                             select mn).FirstOrDefault();
@@ -768,7 +768,7 @@ namespace apptab.Extension
             }
 
         }
-        public List<DataListTompro> getREGLEMENT(SI_USERS user,int PROJECTID)
+        public List<DataListTompro> getREGLEMENT(SI_USERS user, int PROJECTID)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -848,7 +848,7 @@ namespace apptab.Extension
             }
             return list;
         }
-        public List<DataListTomOP> getREGLEMENTBR(SI_USERS user,int PROJECTID)
+        public List<DataListTomOP> getREGLEMENTBR(SI_USERS user, int PROJECTID)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -860,10 +860,10 @@ namespace apptab.Extension
 
             List<DataListTomOP> listEcritureSelect = new List<DataListTomOP>();
 
-            
+
             foreach (OPA_REGLEMENTBR num in numRegs)
             {
-                var OPAV = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == num.NUM ).FirstOrDefault();
+                var OPAV = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == num.NUM).FirstOrDefault();
                 if (OPAV.AVANCE == true)
                 {
                     DataListTomOP ligneRegs = tom.GA_AVANCE.Where(a => a.NUMERO == num.NUM).Join(tom.GA_AVANCE_MOUVEMENT, ga => ga.NUMERO, av => av.NUMERO, (ga, av) => new DataListTomOP
@@ -1461,7 +1461,7 @@ namespace apptab.Extension
                                 //var reglement = (from mcpt in tom.MCOMPTA
                                 //                 where mcpt.NORD == nord.Key && mcpt.COGE == djournal.COMPTEASSOCIE && mcpt.EVIREMENT == null
                                 //                 select mcpt).SingleOrDefault();
-                                var reglement = tom.MCOMPTA.Where( x => x.NORD == nord.Key && x.COGE == djournal.COMPTEASSOCIE).FirstOrDefault();
+                                var reglement = tom.MCOMPTA.Where(x => x.NORD == nord.Key && x.COGE == djournal.COMPTEASSOCIE).FirstOrDefault();
                                 if (reglement.S == "D")
                                 {
                                     list.Add(new DataListTompro()
@@ -1764,7 +1764,7 @@ namespace apptab.Extension
             }
             return list;
         }
-        public List<DataListTomOP> getListEcritureBR(string journal, DateTime dateD, DateTime dateF, bool devise, string compteG, string auxi, string etat, DateTime dateP, SI_USERS user,int PROJECTID)
+        public List<DataListTomOP> getListEcritureBR(string journal, DateTime dateD, DateTime dateF, bool devise, string compteG, string auxi, string etat, DateTime dateP, SI_USERS user, int PROJECTID)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -1789,14 +1789,14 @@ namespace apptab.Extension
             }
             foreach (var item in DjournalAvance)
             {
-                lNoOpsAV.AddRange(tom.GA_AVANCE.Where(x => x.DATE >= dateD.Date && x.DATE <= dateF.Date && x.NUMERO == item).Join(tom.GA_AVANCE_MOUVEMENT ,a => a.NUMERO ,z =>z.NUMERO,(a,z) => new GA_AVANCE_DETAILS
+                lNoOpsAV.AddRange(tom.GA_AVANCE.Where(x => x.DATE >= dateD.Date && x.DATE <= dateF.Date && x.NUMERO == item).Join(tom.GA_AVANCE_MOUVEMENT, a => a.NUMERO, z => z.NUMERO, (a, z) => new GA_AVANCE_DETAILS
                 {
                     NUMERO = a.NUMERO,
                     MONTANT = z.MONTANT ?? 0,
-                    PLAN6 =z.PLAN6,
+                    PLAN6 = z.PLAN6,
                     POSTE = z.POSTE,
                     LIBELLE = a.LIBELLE,
-                    COGE  = a.COGE,
+                    COGE = a.COGE,
                     MARCHE = a.MARCHE,
                     JOURNAL = a.JOURNAL,
                     AUXI = a.AUXI,
@@ -1804,11 +1804,6 @@ namespace apptab.Extension
                     CONVENTION = z.CONVENTION,
                     CATEGORIE = z.CATEGORIE,
                     ACTI = z.ACTI,
-<<<<<<< HEAD
-                    GEO = z.GEO,
-
-=======
->>>>>>> 4a8625ce279ee964fa0ccda98ec56dcebec6bf9b
                 }).ToList());
             }
 
@@ -1935,8 +1930,8 @@ namespace apptab.Extension
                                          select m).ToList();
 
                     List<GA_AVANCE_DETAILS> lOPCOGEAV = (from m in lNoOpsAV
-                                                 where m.COGE == compteG
-                                                 select m).ToList();
+                                                         where m.COGE == compteG
+                                                         select m).ToList();
 
                     if (auxi == "" || auxi == "Tous")
                     {
@@ -2005,8 +2000,8 @@ namespace apptab.Extension
                                            select m).ToList();
 
                         List<GA_AVANCE_DETAILS> lNoOpAV = (from m in lNoOpsAV
-                                                             where m.AUXI == auxi
-                                                             select m).ToList();
+                                                           where m.AUXI == auxi
+                                                           select m).ToList();
                         if (lNoOp != null)
                         {
                             foreach (var nord in lNoOp)
@@ -2072,7 +2067,7 @@ namespace apptab.Extension
                                             Montant = nord.MONTANT,
                                             MontantDevise = 0,
                                             Mon = "",
-                                            Rang =nord.ACTI,
+                                            Rang = nord.ACTI,
                                             Poste = nord.POSTE,
                                             FinancementCategorie = nord.CONVENTION + " " + nord.CATEGORIE,
                                             Commune = nord.GEO,
@@ -2302,7 +2297,7 @@ namespace apptab.Extension
             string textdate = day + mounth + year;
             return this.couperText(5, textdate);
         }
-        public void SaveValideSelectEcritureBR(List<AvanceDetails> numBR, string journal, string etat, bool devise, SI_USERS user,int PROJECTID, bool avance)
+        public void SaveValideSelectEcritureBR(List<AvanceDetails> numBR, string journal, string etat, bool devise, SI_USERS user, int PROJECTID, bool avance)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -2319,7 +2314,7 @@ namespace apptab.Extension
                     string num = row.Id;
                     try
                     {
-                        var ecriture = tom.GA_AVANCE.Where(a => a.NUMERO == row.Id).Join(tom.GA_AVANCE_MOUVEMENT,ga=>ga.NUMERO,av => av.NUMERO,(ga,av) => new
+                        var ecriture = tom.GA_AVANCE.Where(a => a.NUMERO == row.Id).Join(tom.GA_AVANCE_MOUVEMENT, ga => ga.NUMERO, av => av.NUMERO, (ga, av) => new
                         {
                             No = ga.NUMERO,
                             Date = ga.DATE.Value,
@@ -2327,7 +2322,7 @@ namespace apptab.Extension
                             Compte = ga.COGE,
                             Libelle = ga.LIBELLE,
                             Montant = av.MONTANT,
-                            MontantDevise =0,
+                            MontantDevise = 0,
                             Mon = "",
                             Rang = av.ACTI,
                             Poste = av.POSTE,
@@ -2518,7 +2513,7 @@ namespace apptab.Extension
 
                 }
             }
-           
+
 
         }
         public void SaveValideSelectEcriturePaie(List<string> listReg, string journal, bool devise, SI_USERS user)
