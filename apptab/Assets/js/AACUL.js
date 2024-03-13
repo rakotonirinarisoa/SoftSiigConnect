@@ -48,12 +48,12 @@ function GetCountTDB() {
                 $("#MandatT").html(ListResult.MandatT);
                 $("#MandatV").html(ListResult.MandatV);
                 $("#MandatA").html(ListResult.MandatA);
-                /*$("#MandatI").html(ListResult.MandatI);*/
                 $("#MandatTR").html(ListResult.MandatTR);
 
-                $("#AvanceT").html(ListResult.AvanceT);
-                $("#AvanceV").html(ListResult.AvanceV);
-                $("#AvanceA").html(ListResult.AvanceA);
+                $("#MandatTA").html(ListResult.MandatTA);
+                $("#MandatVA").html(ListResult.MandatVA);
+                $("#MandatAA").html(ListResult.MandatAA);
+                $("#MandatTRA").html(ListResult.MandatTRA);
 
                 $("#PaieR").html(ListResult.PaieR);
                 $("#PaieT").html(ListResult.PaieT);
