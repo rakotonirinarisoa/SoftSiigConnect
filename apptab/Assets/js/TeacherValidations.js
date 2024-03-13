@@ -285,7 +285,7 @@ function GetListCodeJournal() {
                 `;
             });
 
-            $(`[codej-list]`)html('');
+            $(`[codej-list]`).html('');
             $(`[codej-list]`).append(code);
             $(`[codej-libelle]`).val(ListCodeJournal[0].LIBELLE);
             GetEtat();

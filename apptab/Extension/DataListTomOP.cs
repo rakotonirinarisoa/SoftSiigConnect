@@ -28,5 +28,6 @@ namespace apptab.Extension
         public string CompteBanque { get; set; }
         public string CleRIB { get; set; }
         public string Agence { get; set; }
+        public bool Avance { get; set; }
     }
 }

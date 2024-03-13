@@ -13,6 +13,7 @@ namespace apptab.Data
             }
 
             double difference = Math.Ceiling(((DateTime)endDate.Value.Date).Subtract((DateTime)startDate.Value.Date).TotalDays);
+
             double NoweekDay = Enumerable
                 .Range(1, int.Parse(difference.ToString()))
                 .Select(day => startDate.Value.Date.AddDays(day))
