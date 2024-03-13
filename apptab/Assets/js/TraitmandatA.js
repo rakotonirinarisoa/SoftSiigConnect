@@ -162,7 +162,8 @@ $('[data-action="GenereR"]').click(async function () {
                         dateBE: formatDate(v.DATEBE),
                         imputation: '',
                         piecesJustificatives: '',
-                        document: ''
+                        document: '',
+                        isLATE: v.isLATE
                     });
                 });
 
@@ -228,6 +229,10 @@ $('[data-action="GenereR"]').click(async function () {
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
                         $(row).addClass('select-text');
+
+                        if (data.isLATE) {
+                            $(row).attr('style', "background-color: #FF7F7F !important;");
+                        }
                     },
 
                     columnDefs: [
