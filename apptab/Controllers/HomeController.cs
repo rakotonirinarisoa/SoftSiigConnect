@@ -38,18 +38,22 @@ namespace apptab.Controllers
         }
         public ActionResult PaiementValidation()
         {
+            ViewBag.Controller = "Récupération des paiements";
             return View();
         }
         public ActionResult TeacherValidation()
         {
+            ViewBag.Controller = "Envoi pour validation";
             return View();
         }
         public ActionResult FValidation()
         {
+            ViewBag.Controller = "Génération fichier banque";
             return View();
         }
         public ActionResult BonPourPaiement()
         {
+            ViewBag.Controller = "Validation comptable payeur";
             return View();
         }
         [HttpPost]
