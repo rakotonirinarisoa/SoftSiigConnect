@@ -749,7 +749,7 @@ namespace apptab.Extension
                     listEcritureSelect.Add(new DataListTompro()
                     {
                         No = ligneRegs.NUMENREG,
-                        DateOrdre = this.formaterNORD(ligneRegs.NORD),
+                        dateOrdre = this.formaterNORD(ligneRegs.NORD),
                         NoPiece = ligneRegs.NOPIECE,
                         Compte = ligneRegs.COGE,
                         Libelle = num.LIBELLE,
@@ -868,7 +868,7 @@ namespace apptab.Extension
                 listAnomalie.Add(new DataListTompro()
                 {
                     No = factAnoms.NUMENREG,
-                    DateOrdre = this.formaterNORD(factAnoms.NORD),
+                    dateOrdre = this.formaterNORD(factAnoms.NORD),
                     NoPiece = factAnoms.NOPIECE,
                     Compte = factAnoms.COGE,
                     Libelle = factAnoms.LIBELLE,
@@ -1190,7 +1190,7 @@ namespace apptab.Extension
                                             list.Add(new DataListTompro()
                                             {
                                                 No = reglement.NUMENREG,
-                                                DateOrdre = formaterNORD(reglement.NORD),
+                                                dateOrdre = formaterNORD(reglement.NORD),
                                                 NoPiece = reglement.NOPIECE,
                                                 Compte = reglement.COGE,
                                                 Libelle = reglement.LIBELLE,
@@ -1214,7 +1214,7 @@ namespace apptab.Extension
                                             list.Add(new DataListTompro()
                                             {
                                                 No = reglement.NUMENREG,
-                                                DateOrdre = formaterNORD(reglement.NORD),
+                                                dateOrdre = formaterNORD(reglement.NORD),
                                                 NoPiece = reglement.NOPIECE,
                                                 Compte = reglement.COGE,
                                                 Libelle = reglement.LIBELLE,
@@ -1251,7 +1251,7 @@ namespace apptab.Extension
                                         list.Add(new DataListTompro()
                                         {
                                             No = reglement.NUMENREG,
-                                            DateOrdre = formaterNORD(reglement.NORD),
+                                            dateOrdre = formaterNORD(reglement.NORD),
                                             NoPiece = reglement.NOPIECE,
                                             Compte = reglement.COGE,
                                             Libelle = reglement.LIBELLE,
@@ -1274,7 +1274,7 @@ namespace apptab.Extension
                                         list.Add(new DataListTompro()
                                         {
                                             No = reglement.NUMENREG,
-                                            DateOrdre = formaterNORD(reglement.NORD),
+                                            dateOrdre = formaterNORD(reglement.NORD),
                                             NoPiece = reglement.NOPIECE,
                                             Compte = reglement.COGE,
                                             Libelle = reglement.LIBELLE,
@@ -1323,7 +1323,7 @@ namespace apptab.Extension
                                     list.Add(new DataListTompro()
                                     {
                                         No = reglement.NUMENREG,
-                                        DateOrdre = this.formaterNORD(reglement.NORD),
+                                        dateOrdre = this.formaterNORD(reglement.NORD),
                                         NoPiece = reglement.NOPIECE,
                                         Compte = reglement.COGE,
                                         Libelle = reglement.LIBELLE,
@@ -1346,7 +1346,7 @@ namespace apptab.Extension
                                     list.Add(new DataListTompro()
                                     {
                                         No = reglement.NUMENREG,
-                                        DateOrdre = formaterNORD(reglement.NORD),
+                                        dateOrdre = formaterNORD(reglement.NORD),
                                         NoPiece = reglement.NOPIECE,
                                         Compte = reglement.COGE,
                                         Libelle = reglement.LIBELLE,
@@ -1398,7 +1398,7 @@ namespace apptab.Extension
                                     list.Add(new DataListTompro()
                                     {
                                         No = reglement.NUMENREG,
-                                        DateOrdre = this.formaterNORD(reglement.NORD),
+                                        dateOrdre = this.formaterNORD(reglement.NORD),
                                         NoPiece = reglement.NOPIECE,
                                         Compte = reglement.COGE,
                                         Libelle = reglement.LIBELLE,
@@ -1421,7 +1421,7 @@ namespace apptab.Extension
                                     list.Add(new DataListTompro()
                                     {
                                         No = reglement.NUMENREG,
-                                        DateOrdre = this.formaterNORD(reglement.NORD),
+                                        dateOrdre = this.formaterNORD(reglement.NORD),
                                         NoPiece = reglement.NOPIECE,
                                         Compte = reglement.COGE,
                                         Libelle = reglement.LIBELLE,
@@ -1476,7 +1476,7 @@ namespace apptab.Extension
                                     list.Add(new DataListTompro()
                                     {
                                         No = reglement.NUMENREG,
-                                        DateOrdre = this.formaterNORD(reglement.NORD),
+                                        dateOrdre = this.formaterNORD(reglement.NORD),
                                         NoPiece = reglement.NOPIECE,
                                         Compte = reglement.COGE,
                                         Libelle = reglement.LIBELLE,
@@ -1499,7 +1499,7 @@ namespace apptab.Extension
                                     list.Add(new DataListTompro()
                                     {
                                         No = reglement.NUMENREG,
-                                        DateOrdre = this.formaterNORD(reglement.NORD),
+                                        dateOrdre = this.formaterNORD(reglement.NORD),
                                         NoPiece = reglement.NOPIECE,
                                         Compte = reglement.COGE,
                                         Libelle = reglement.LIBELLE,

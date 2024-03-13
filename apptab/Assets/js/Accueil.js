@@ -35,7 +35,7 @@ function GetTypeP() {
             var Datas = JSON.parse(result);
             baseName = Datas;
             if (baseName == 1) {
-                
+
                 $(`[code_Type]`).val('');
                 $(`[code_Type]`).val('BR');
 
@@ -189,7 +189,7 @@ function GetListCodeJournal() {
             loader.addClass('display-none');
         },
         success: function (result) {
-            
+
             const Datas = JSON.parse(result);
 
             if (Datas.type == "error") {
@@ -370,7 +370,7 @@ $('.Checkall').change(function () {
 //==============================================================================================ChargeJs===================================================================================
 
 $('[data-action="ChargerJs"]').click(function () {
-    
+
     let formData = new FormData();
     let codeproject = $("#Fproject").val();
     formData.append("codeproject", codeproject);
@@ -436,7 +436,7 @@ $('[data-action="ChargerJs"]').click(function () {
                         data.push({
                             checkbox: '',
                             id: isNullAndUndefined(v.No) ? '' : v.No,
-                            dateOrdre: isNullAndUndefined(v.DateOrdre) ? '' : v.DateOrdre,
+                            dateOrdre: isNullAndUndefined(v.dateOrdre) ? '' : v.dateOrdre,
                             noPiece: isNullAndUndefined(v.NoPiece) ? '' : v.NoPiece,
                             compte: isNullAndUndefined(v.Compte) ? '' : v.Compte,
                             libelle: isNullAndUndefined(v.Libelle) ? '' : v.Libelle,
@@ -446,11 +446,11 @@ $('[data-action="ChargerJs"]').click(function () {
                             montantDevise: isNullAndUndefined(v.MontantDevise) ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                             mon: isNullAndUndefined(v.Mon) ? '' : v.Mon,
                             rang: isNullAndUndefined(v.Rang) ? '' : v.Rang,
-                            financementCategorie: v.FinancementCategorie ? '' : v.FinancementCategorie,
-                            commune: v.Commune ? '' : v.Commune,
-                            plan: v.Plan6 ? '' : v.Plan6,
-                            journal: v.Journal ? '' : v.Journal,
-                            marche: v.Marche ? '' : v.Marche,
+                            financementCategorie: isNullOrUndefined(v.FinancementCategorie) ? '' : v.FinancementCategorie,
+                            commune: isNullOrUndefined(v.Commune) ? '' : v.Commune,
+                            plan: isNullOrUndefined(v.Plan6) ? '' : v.Plan6,
+                            journal: isNullOrUndefined(v.Journal) ? '' : v.Journal,
+                            marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             estAvance: v.Avance
                         });
                     });
@@ -578,21 +578,21 @@ $('[data-action="ChargerJs"]').click(function () {
                         data.push({
                             checkbox: '',
                             id: v.No,
-                            date: v.Date === null ? '' : v.Date,
-                            noPiece: v.NoPiece === null ? '' : v.NoPiece,
-                            compte: v.Compte === null ? '' : v.Compte,
-                            libelle: v.Libelle === null ? '' : v.Libelle,
-                            debit: v.Debit === null ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
-                            credit: v.Credit === null ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
-                            montant: v.Montant === null ? '' : formatCurrency(String(v.Montant).replace(",", ".")),
-                            montantDevise: v.MontantDevise === null ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
-                            mon: v.Mon === null ? '' : v.Mon,
-                            rang: v.Rang === null ? '' : v.Rang,
-                            financementCategorie: v.FinancementCategorie === null ? '' : v.FinancementCategorie,
-                            commune: v.Commune === null ? '' : v.Commune,
-                            plan: v.Plan6 === null ? '' : v.Plan6,
-                            journal: v.Journal === null ? '' : v.Journal,
-                            marche: v.Marche === null ? '' : v.Marche,
+                            date: isNullOrUndefined(v.Date) ? '' : v.Date,
+                            noPiece: isNullOrUndefined(v.NoPiece) ? '' : v.NoPiece,
+                            compte: isNullOrUndefined(v.Compte) ? '' : v.Compte,
+                            libelle: isNullOrUndefined(v.Libelle) ? '' : v.Libelle,
+                            debit: isNullOrUndefined(v.Debit) ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
+                            credit: isNullOrUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
+                            montant: isNullOrUndefined(v.Montant) ? '' : formatCurrency(String(v.Montant).replace(",", ".")),
+                            montantDevise: isNullOrUndefined(v.MontantDevise) ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
+                            mon: isNullOrUndefined(v.Mon) ? '' : v.Mon,
+                            rang: isNullOrUndefined(v.Rang) ? '' : v.Rang,
+                            financementCategorie: isNullOrUndefined(v.FinancementCategorie) ? '' : v.FinancementCategorie,
+                            commune: isNullOrUndefined(v.Commune) ? '' : v.Commune,
+                            plan: isNullOrUndefined(v.Plan6) ? '' : v.Plan6,
+                            journal: isNullOrUndefined(v.Journal) ? '' : v.Journal,
+                            marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             estAvance: v.Avance
                         });
                     });

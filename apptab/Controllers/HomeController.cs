@@ -496,7 +496,7 @@ namespace apptab.Controllers
                         avalider.auxi = auxi;
                         avalider.DateP = dateP;
                         avalider.Journal = journal;
-                        avalider.dateOrdre = item.DateOrdre;
+                        avalider.dateOrdre = item.dateOrdre;
                         avalider.NoPiece = item.NoPiece;
                         avalider.Compte = item.Compte;
                         avalider.Libelle = item.Libelle;
@@ -797,7 +797,7 @@ namespace apptab.Controllers
             else
             {
                 var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0).ToList();
-                
+
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
