@@ -20,7 +20,6 @@ function formatDateRFR(date) {
 
 function tableToExcel(tableId, name, callback = undefined) {
     let table;
-
     const uri = 'data:application/vnd.ms-excel;base64,'
         ,
         template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
@@ -36,7 +35,7 @@ function tableToExcel(tableId, name, callback = undefined) {
     if (!tableId.nodeType) {
         table = document.getElementById(tableId);
     }
-
+    //const er = table.innerHTML.replace(/^0/g, "'0")
     const ctx = { worksheet: name || 'Worksheet', table: table.innerHTML };
 
     if (callback) {

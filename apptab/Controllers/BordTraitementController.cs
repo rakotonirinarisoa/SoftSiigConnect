@@ -242,7 +242,7 @@ namespace apptab.Controllers
         //Liste des engagements, avances et paiements//
         public ActionResult BordListeEngaPaie()
         {
-            ViewBag.Controller = "Liste des engagements et des paiements";
+            ViewBag.Controller = "Liste des engagements, avances et des paiements";
 
             return View();
         }
@@ -323,7 +323,8 @@ namespace apptab.Controllers
                                     DATEPAIE = DateTime.Now.Date,
                                     MONTPAIE = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                     SOA = soa != null ? soa.SOA : "",
-                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    TYPE = "Engagement",
                                 });
                             }
                         }
@@ -349,7 +350,8 @@ namespace apptab.Controllers
                                     DATEPAIE = DateTime.Now.Date,
                                     MONTPAIE = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                     SOA = soa != null ? soa.SOA : "",
-                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    TYPE = "Avance",
                                 });
                             }
                         }
@@ -452,7 +454,8 @@ namespace apptab.Controllers
                                     DATESIIGFP = x.DATESIIG != null ? x.DATESIIG : null,
 
                                     SOA = soa != null ? soa.SOA : "",
-                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    TYPE = "Engagement"
                                 });
                             }
                         }
@@ -482,7 +485,8 @@ namespace apptab.Controllers
                                     DATESIIGFP = x.DATESIIG != null ? x.DATESIIG : null,
 
                                     SOA = soa != null ? soa.SOA : "",
-                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    TYPE = "Avance"
                                 });
                             }
                         }
@@ -710,7 +714,6 @@ namespace apptab.Controllers
             }
 
             var result = new List<TraitementEngagement>();
-            var resultAVANCE = new List<TraitementEngagement>();
 
             var lastIndex = -1;
             var lastIndexAVANCE = -1;
@@ -754,6 +757,8 @@ namespace apptab.Controllers
                 {
                     result[lastIndex].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
                     {
+                        PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
+                        TYPE = "Engagement",
                         NUM_ENGAGEMENT = traitprojets[j].REF,
                         BENEFICIAIRE = traitprojets[j].TITUL,
                         MONTENGAGEMENT = Data.Cipher.Decrypt(traitprojets[j].MONT, "Oppenheimer").ToString(),
@@ -783,7 +788,7 @@ namespace apptab.Controllers
 
                 lastIndexAVANCE += 1;
 
-                resultAVANCE.Add(new TraitementEngagement
+                result.Add(new TraitementEngagement
                 {
                     SOA = s != null ? s.SOA : "",
                     TraitementsEngagementsDetails = new List<TraitementEngagementDetails>()
@@ -791,8 +796,10 @@ namespace apptab.Controllers
 
                 for (int j = 0; j < traitprojetsAVANCE.Count; j += 1)
                 {
-                    resultAVANCE[lastIndexAVANCE].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
+                    result[lastIndexAVANCE].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
                     {
+                        PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
+                        TYPE = "Avance",
                         NUM_ENGAGEMENT = traitprojetsAVANCE[j].REF,
                         BENEFICIAIRE = traitprojetsAVANCE[j].TITUL,
                         MONTENGAGEMENT = Data.Cipher.Decrypt(traitprojetsAVANCE[j].MONT, "Oppenheimer").ToString(),
@@ -878,7 +885,6 @@ namespace apptab.Controllers
             }
 
             var result = new List<TraitementEngagement>();
-            var resultAVANCE = new List<TraitementEngagement>();
 
             var lastIndex = -1;
             var lastIndexAVANCE = -1;
@@ -932,6 +938,8 @@ namespace apptab.Controllers
                     {
                         result[lastIndex].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
                         {
+                            PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
+                            TYPE = "Engagement",
                             NUM_ENGAGEMENT = traitprojets[j].REF,
                             BENEFICIAIRE = traitprojets[j].TITUL,
                             MONTENGAGEMENT = Data.Cipher.Decrypt(traitprojets[j].MONT, "Oppenheimer").ToString(),
@@ -973,7 +981,7 @@ namespace apptab.Controllers
 
                     lastIndexAVANCE += 1;
 
-                    resultAVANCE.Add(new TraitementEngagement
+                    result.Add(new TraitementEngagement
                     {
                         SOA = s != null ? s.SOA : "",
                         TraitementsEngagementsDetails = new List<TraitementEngagementDetails>()
@@ -981,8 +989,10 @@ namespace apptab.Controllers
 
                     for (int j = 0; j < traitprojetsAVANCE.Count; j += 1)
                     {
-                        resultAVANCE[lastIndexAVANCE].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
+                        result[lastIndexAVANCE].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
                         {
+                            PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
+                            TYPE = "Avance",
                             NUM_ENGAGEMENT = traitprojetsAVANCE[j].REF,
                             BENEFICIAIRE = traitprojetsAVANCE[j].TITUL,
                             MONTENGAGEMENT = Data.Cipher.Decrypt(traitprojetsAVANCE[j].MONT, "Oppenheimer").ToString(),
