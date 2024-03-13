@@ -598,6 +598,7 @@ namespace apptab.Controllers
                         avalider.Statut = item.Status;
                         avalider.DATECREA = DateTime.Now;
                         avalider.IDUSCREA = exist.ID;
+                        avalider.AVANCE = item.Avance;
                         try
                         {
                             db.OPA_VALIDATIONS.Add(avalider);
@@ -808,6 +809,7 @@ namespace apptab.Controllers
                         Commune = item.Commune,
                         Marche = item.Marche,
                         isLATE = isLate,
+                        AVANCE = item.AVANCE,
                     });
                 }
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
@@ -836,7 +838,7 @@ namespace apptab.Controllers
             List<string> list = listCompte.Split(',').ToList();
             List<string> numBR = listCompte.Split(',').ToList();
             var AvaliderList = db.OPA_VALIDATIONS.Where(a => list.Contains(a.IDREGLEMENT.ToString()) && a.ETAT == 0);
-
+            
             int countTraitement = 0;
             var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
 
@@ -852,7 +854,8 @@ namespace apptab.Controllers
             {
                 foreach (var item in AvaliderList)
                 {
-                    aFB160.SaveValideSelectEcritureBR(numBR, item.Journal, item.ETAT.ToString(), devise, suser,PROJECTID);
+                   
+                    aFB160.SaveValideSelectEcritureBR(numBR, item.Journal, item.ETAT.ToString(), devise, suser,PROJECTID, item.AVANCE);
                 }
 
             }

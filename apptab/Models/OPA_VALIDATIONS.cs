@@ -102,7 +102,8 @@
 
         public int? IDUSANNUL { get; set; }
 
+        public bool AVANCE { get; set; }
         [NotMapped]
-        public bool? isLATE { get; set; }
+        public bool isLATE { get; set; }
     }
 }
