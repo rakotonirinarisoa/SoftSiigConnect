@@ -501,81 +501,80 @@
                                 </p>
                             </a>
                         </li>
-                        @if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur)
-                        {
-                            <li class="nav-item">
-                                <a href="../BordTraitement/BordListeEngaPaie" class="nav-link">
-                                    <i class="nav-icon fas fa-archive" style="color: #FFC107"></i>
-                                    <p>
-                                        @Session["TDB0"]@*Liste des engagements, avances et paiements*@
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="../BordTraitement/StatutEngagements" class="nav-link">
-                                    <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
-                                    <p>
-                                        @Session["TDB1"]@*Statut des engagements et avances*@
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="../BordTraitement/DelaisTraitementEngagements" class="nav-link">
-                                    <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
-                                    <p>
-                                        @Session["TDB2"]@*Délais de traitement des engagements et avances*@
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="../BordTraitement/SoufTraitement" class="nav-link">
-                                    <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
-                                    <p>
-                                        @Session["TDB3"]@*Traitements des engagements et avances en souffrance (par rapport au délai moyen)*@
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="../BordTraitement/EngagementsREJETE" class="nav-link">
-                                    <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
-                                    <p>
-                                        @Session["TDB4"]@*Engagements et avances rejetés*@
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="../BordTraitement/StatutPaiement" class="nav-link">
-                                    <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
-                                    <p>
-                                        @Session["TDB5"]@*Statut des paiements*@
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="../BordTraitement/TraitementsPaiement" class="nav-link">
-                                    <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
-                                    <p>
-                                        @Session["TDB6"]@*Délais de traitement des paiements*@
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="../BordTraitement/TraitementPaiementSoufrance" class="nav-link">
-                                    <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
-                                    <p>
-                                        @Session["TDB7"]@*Traitement des paiements en souffrance (par rapport au délai moyen)*@
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="../BordTraitement/TraitementPaiementRejet" class="nav-link">
-                                    <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
-                                    <p>
-                                        @Session["TDB8"]@*Paiements rejetés*@
-                                    </p>
-                                </a>
-                            </li>
-                        }
+                        @*@if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur)
+        { }*@
+                        <li class="nav-item">
+                            <a href="../BordTraitement/BordListeEngaPaie" class="nav-link">
+                                <i class="nav-icon fas fa-archive" style="color: #FFC107"></i>
+                                <p>
+                                    @Session["TDB0"]@*Liste des engagements, avances et paiements*@
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../BordTraitement/StatutEngagements" class="nav-link">
+                                <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
+                                <p>
+                                    @Session["TDB1"]@*Statut des engagements et avances*@
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../BordTraitement/DelaisTraitementEngagements" class="nav-link">
+                                <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
+                                <p>
+                                    @Session["TDB2"]@*Délais de traitement des engagements et avances*@
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../BordTraitement/SoufTraitement" class="nav-link">
+                                <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
+                                <p>
+                                    @Session["TDB3"]@*Traitements des engagements et avances en souffrance (par rapport au délai moyen)*@
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../BordTraitement/EngagementsREJETE" class="nav-link">
+                                <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
+                                <p>
+                                    @Session["TDB4"]@*Engagements et avances rejetés*@
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../BordTraitement/StatutPaiement" class="nav-link">
+                                <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
+                                <p>
+                                    @Session["TDB5"]@*Statut des paiements*@
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../BordTraitement/TraitementsPaiement" class="nav-link">
+                                <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
+                                <p>
+                                    @Session["TDB6"]@*Délais de traitement des paiements*@
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../BordTraitement/TraitementPaiementSoufrance" class="nav-link">
+                                <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
+                                <p>
+                                    @Session["TDB7"]@*Traitement des paiements en souffrance (par rapport au délai moyen)*@
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="../BordTraitement/TraitementPaiementRejet" class="nav-link">
+                                <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
+                                <p>
+                                    @Session["TDB8"]@*Paiements rejetés*@
+                                </p>
+                            </a>
+                        </li>
                     </ul>
                     <hr />
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">

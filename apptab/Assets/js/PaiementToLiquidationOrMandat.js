@@ -6,7 +6,6 @@ $(document).ready(() => {
     $(`[data-widget="pushmenu"]`).on('click', () => {
         $(`[data-action="SaveSIIG"]`).toggleClass('custom-fixed-btn');
     });
-
 });
 
 var IdD;
