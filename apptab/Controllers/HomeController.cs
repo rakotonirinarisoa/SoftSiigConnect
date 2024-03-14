@@ -513,6 +513,7 @@ namespace apptab.Controllers
                         avalider.Statut = item.Statut;
                         avalider.DATECREA = DateTime.Now;
                         avalider.IDUSCREA = exist.ID;
+                        avalider.AVANCE = false;
 
                         try
                         {
@@ -605,6 +606,7 @@ namespace apptab.Controllers
                         avalider.DATECREA = DateTime.Now;
                         avalider.IDUSCREA = exist.ID;
                         avalider.AVANCE = item.Avance;
+                        avalider.NUMEROLIQUIDATION = item.Mandat;
                         try
                         {
                             db.OPA_VALIDATIONS.Add(avalider);
@@ -791,6 +793,7 @@ namespace apptab.Controllers
                         Commune = item.Commune,
                         Marche = item.Marche,
                         isLATE = isLate,
+                        AVANCE = item.AVANCE,
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                     });
                 }
@@ -828,6 +831,7 @@ namespace apptab.Controllers
                             Marche = item.Marche,
                             isLATE = isLate,
                             AVANCE = item.AVANCE,
+                            NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                         });
                     }
                     else
@@ -851,6 +855,7 @@ namespace apptab.Controllers
                             Marche = item.Marche,
                             isLATE = isLate,
                             AVANCE = item.AVANCE,
+                            NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                         });
                     }
                 }
@@ -1045,6 +1050,7 @@ namespace apptab.Controllers
                         Marche = item.Marche,
                         isLATE = isLate,
                         AVANCE = item.AVANCE,
+                        NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                     });
                 }
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = list }, settings));
@@ -1076,6 +1082,7 @@ namespace apptab.Controllers
                         Marche = item.Marche,
                         isLATE = isLate,
                         AVANCE = item.AVANCE,
+                        NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                     });
                 }
 
@@ -1129,6 +1136,7 @@ namespace apptab.Controllers
                         Marche = item.Marche,
                         isLATE = isLate,
                         AVANCE = item.AVANCE,
+                        NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                     });
                 }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
@@ -1162,6 +1170,7 @@ namespace apptab.Controllers
                         Marche = item.Marche,
                         isLATE = isLate,
                         AVANCE = item.AVANCE,
+                        NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                     });
                 }
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();

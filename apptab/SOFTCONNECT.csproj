@@ -2387,6 +2387,7 @@
     <Content Include="Assets\js\currentRoute.js" />
     <Content Include="Assets\js\PaiementsRejeters.js" />
     <Content Include="Assets\js\BordSoufTraitement.js" />
+    <Content Include="Assets\js\PaiementsRejets.js" />
     <Content Include="Assets\js\TraitementENVOISIIGFA.js" />
     <Content Include="Assets\js\TraitementORDSECA.js" />
     <Content Include="Assets\js\TraitementPaiementSoufrance.js" />
