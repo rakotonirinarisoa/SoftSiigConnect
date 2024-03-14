@@ -4850,6 +4850,7 @@
     <Content Include="Views\TraitementAvance\TraitementPROJET.cshtml" />
     <Content Include="Views\TraitementAvance\TraitementORDSEC.cshtml" />
     <Content Include="Views\TraitementAvance\TraitementSENDSIIGFP.cshtml" />
+    <Content Include="Views\Traitement\GenerationPAIEMENTIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

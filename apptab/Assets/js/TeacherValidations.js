@@ -171,7 +171,8 @@ function ChargeLoad() {
                             isLATE: v.IsLATE,
                             estAvance: v.AVANCE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
-                            type: v.AVANCE ? 'Avance' : 'Paiement'
+                            type: v.AVANCE ? 'Avance' : 'Paiement',
+                            idprojet: codeproject
                         });
                     });
 
@@ -211,7 +212,7 @@ function ChargeLoad() {
                                 data: 'numeroliquidations',
                                 render: function (data, _, row, _) {
                                     return `
-                                        <div onclick="showLiquidationModal('${row.id}', '${row.numeroliquidations}', '${row.estAvance}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
+                                        <div onclick="showLiquidationModal('${row.idprojet}', '${row.numeroliquidations}', '${row.estAvance}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
                                             ${data}
                                         </div>
                                     `;
@@ -566,7 +567,6 @@ function AcceptRefuser() {
 }
 
 $(document).ready(() => {
-
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
