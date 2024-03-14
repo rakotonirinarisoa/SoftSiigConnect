@@ -73,6 +73,7 @@
 }
 .table-responsive.mb-3 {
     height: calc(62vh - 0.9rem * 2);
+    font-size: 9px;
 }
 .thead-green {
     color: #fff;
@@ -88,7 +89,6 @@
 .newbtn-green:hover {
     color: #fff;    
     background-color: #08d5a0;
-
 }
 body.sidebar-mini.layout-fixed.sidebar-collapse ul.nav-pills.nav-sidebar.flex-column {
     padding: 0;
@@ -111,7 +111,6 @@ body.sidebar-mini.layout-fixed.sidebar-collapse ul.nav-pills.nav-sidebar.flex-co
 .elerfr {
     cursor: pointer;
 }
-
     .elerfr:hover {
         opacity: 1.0;
     }
