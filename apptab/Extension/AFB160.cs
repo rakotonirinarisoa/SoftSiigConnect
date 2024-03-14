@@ -781,31 +781,58 @@ namespace apptab.Extension
             List<DataListTompro> listEcritureSelect = new List<DataListTompro>();
             foreach (OPA_REGLEMENT num in numRegs)
             {
-                var ligneRegs = (from lgnR in tom.MCOMPTA
-                                 where lgnR.NUMENREG == num.NUM
-                                 select lgnR).FirstOrDefault();
-                if (ligneRegs != null)
+                var OPAV = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == num.NUM.ToString()).FirstOrDefault();
+                if (OPAV.AVANCE ==true)
                 {
-                    listEcritureSelect.Add(new DataListTompro()
+                    DataListTompro ligneRegs = tom.GA_AVANCE.Where(a => a.NUMERO == num.NUM.ToString()).Join(tom.GA_AVANCE_MOUVEMENT, ga => ga.NUMERO, av => av.NUMERO, (ga, av) => new DataListTompro
                     {
-                        No = ligneRegs.NUMENREG,
-                        dateOrdre = this.formaterNORD(ligneRegs.NORD),
-                        NoPiece = ligneRegs.NOPIECE,
-                        Compte = ligneRegs.COGE,
-                        Libelle = num.LIBELLE,
-                        Debit = ligneRegs.MONTANT.Value,
-                        MontantDevise = (ligneRegs.MONTDEV.Value),
-                        Mon = ligneRegs.DEVISE,
-                        Rang = ligneRegs.ACTI,
-                        Poste = ligneRegs.POSTE,
-                        FinancementCategorie = ligneRegs.CONVENTION + " " + ligneRegs.CATEGORIE,
-                        Commune = ligneRegs.GEO,
-                        Plan6 = ligneRegs.PLAN6,
-                        Journal = ligneRegs.JL,
-                        Marche = ligneRegs.MARCHE
+                        No = Convert.ToDecimal(ga.NUMERO),
+                        dateOrdre = ga.DATE.Value.ToString(),
+                        NoPiece = ga.NUMERO_PIECE,
+                        Compte = ga.COGE,
+                        Libelle = ga.LIBELLE,
+                        Montant = av.MONTANT ?? 0,
+                        MontantDevise = 0,
+                        Mon = "",
+                        Rang = av.ACTI,
+                        Poste = av.POSTE,
+                        FinancementCategorie = av.CONVENTION + " " + av.CATEGORIE,
+                        Commune = av.GEO,
+                        Plan6 = av.PLAN6,
+                        Marche = ""
+                    }).FirstOrDefault();
 
-                    });
+                    listEcritureSelect.Add(ligneRegs);
                 }
+                else
+                {
+                    var ligneRegs = (from lgnR in tom.MCOMPTA
+                                     where lgnR.NUMENREG == num.NUM
+                                     select lgnR).FirstOrDefault();
+                    if (ligneRegs != null)
+                    {
+                        listEcritureSelect.Add(new DataListTompro()
+                        {
+                            No = ligneRegs.NUMENREG,
+                            dateOrdre = this.formaterNORD(ligneRegs.NORD),
+                            NoPiece = ligneRegs.NOPIECE,
+                            Compte = ligneRegs.COGE,
+                            Libelle = num.LIBELLE,
+                            Debit = ligneRegs.MONTANT.Value,
+                            MontantDevise = (ligneRegs.MONTDEV.Value),
+                            Mon = ligneRegs.DEVISE,
+                            Rang = ligneRegs.ACTI,
+                            Poste = ligneRegs.POSTE,
+                            FinancementCategorie = ligneRegs.CONVENTION + " " + ligneRegs.CATEGORIE,
+                            Commune = ligneRegs.GEO,
+                            Plan6 = ligneRegs.PLAN6,
+                            Journal = ligneRegs.JL,
+                            Marche = ligneRegs.MARCHE
+
+                        });
+                    }
+                }
+
 
             }
             return listEcritureSelect;
@@ -1275,7 +1302,8 @@ namespace apptab.Extension
                                                 Plan6 = reglement.PLAN6,
                                                 Journal = reglement.JL,
                                                 Marche = reglement.MARCHE,
-                                                Statut = status
+                                                Statut = status,
+                                                Avance = false
                                             });
                                         }
                                         else
@@ -1299,7 +1327,8 @@ namespace apptab.Extension
                                                 Plan6 = reglement.PLAN6,
                                                 Journal = reglement.JL,
                                                 Marche = reglement.MARCHE,
-                                                Statut = status
+                                                Statut = status,
+                                                Avance = false
                                             });
                                         }
                                     }
@@ -1335,7 +1364,8 @@ namespace apptab.Extension
                                             Commune = reglement.GEO,
                                             Plan6 = reglement.PLAN6,
                                             Journal = reglement.JL,
-                                            Marche = reglement.MARCHE
+                                            Marche = reglement.MARCHE,
+                                            Avance = false
                                         });
                                     }
                                     else
@@ -1358,7 +1388,8 @@ namespace apptab.Extension
                                             Commune = reglement.GEO,
                                             Plan6 = reglement.PLAN6,
                                             Journal = reglement.JL,
-                                            Marche = reglement.MARCHE
+                                            Marche = reglement.MARCHE,
+                                            Avance = false
                                         });
                                     }
                                 }
@@ -1407,7 +1438,8 @@ namespace apptab.Extension
                                         Commune = reglement.GEO,
                                         Plan6 = reglement.PLAN6,
                                         Journal = reglement.JL,
-                                        Marche = reglement.MARCHE
+                                        Marche = reglement.MARCHE,
+                                        Avance = false
                                     });
                                 }
                                 else
@@ -1430,7 +1462,8 @@ namespace apptab.Extension
                                         Commune = reglement.GEO,
                                         Plan6 = reglement.PLAN6,
                                         Journal = reglement.JL,
-                                        Marche = reglement.MARCHE
+                                        Marche = reglement.MARCHE,
+                                        Avance = false
                                     });
                                 }
                             }
@@ -1482,7 +1515,8 @@ namespace apptab.Extension
                                         Commune = reglement.GEO,
                                         Plan6 = reglement.PLAN6,
                                         Journal = reglement.JL,
-                                        Marche = reglement.MARCHE
+                                        Marche = reglement.MARCHE,
+                                        Avance = false
                                     });
                                 }
                                 else
@@ -1505,7 +1539,8 @@ namespace apptab.Extension
                                         Commune = reglement.GEO,
                                         Plan6 = reglement.PLAN6,
                                         Journal = reglement.JL,
-                                        Marche = reglement.MARCHE
+                                        Marche = reglement.MARCHE,
+                                        Avance = false
                                     });
                                 }
 
@@ -1560,7 +1595,8 @@ namespace apptab.Extension
                                         Commune = reglement.GEO,
                                         Plan6 = reglement.PLAN6,
                                         Journal = reglement.JL,
-                                        Marche = reglement.MARCHE
+                                        Marche = reglement.MARCHE,
+                                        Avance = false
                                     });
                                 }
                                 else
@@ -1583,7 +1619,8 @@ namespace apptab.Extension
                                         Commune = reglement.GEO,
                                         Plan6 = reglement.PLAN6,
                                         Journal = reglement.JL,
-                                        Marche = reglement.MARCHE
+                                        Marche = reglement.MARCHE,
+                                        Avance = false
                                     });
                                 }
                             }

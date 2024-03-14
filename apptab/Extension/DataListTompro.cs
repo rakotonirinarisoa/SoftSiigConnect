@@ -20,5 +20,6 @@
         public string Journal { get; set; }
         public string Marche { get; set; }
         public string Statut { get; set; }
+        public bool Avance { get; set; }
     }
 }
