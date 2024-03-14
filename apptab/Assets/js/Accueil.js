@@ -681,11 +681,7 @@ $('[data-action="GetElementChecked"]').on('click', () => {
             id,
             estAvance: item.estAvance
         });
-
-        console.log(item);
     }
-
-    console.log(list);
 
     let formData = new FormData();
 
@@ -721,11 +717,10 @@ $('[data-action="GetElementChecked"]').on('click', () => {
         complete: function () {
             loader.addClass('display-none');
         },
-        success: function (result) {
-            var Datas = JSON.parse(result);
-            $.each(list, (k, v) => {
-                $(`[compteG-id="${v.id}"]`).remove();
-            });
+        success: function () {
+            for (let i = 0; i < checkList.length; i += 1) {
+                table.row($(checkList[i])).remove().draw();
+            }
         },
         error: function () {
             alert("Problème de connexion. ");

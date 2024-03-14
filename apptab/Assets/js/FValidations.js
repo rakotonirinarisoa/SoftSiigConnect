@@ -836,9 +836,10 @@ $('[data-action="ChargerJs"]').click(function () {
 //==============================================================================================Checked===================================================================================
 
 $('[data-action="GetElementChecked"]').click(function () {
-    let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
+    let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
     let list = [];
-    $.each(CheckList, (_, v) => {
+
+    $.each(checkList, (_, v) => {
         list.push($(v).attr("compteG-id"));
     });
 
@@ -875,11 +876,13 @@ $('[data-action="GetElementChecked"]').click(function () {
         },
         success: function (result) {
             var Datas = JSON.parse(result);
+
             reglementresult = ``;
             reglementresult = Datas.data;
-            $.each(listid, (_, v) => {
-                $(`[compteG-id="${v}"]`).remove();
-            });
+
+            for (let i = 0; i < checkList.length; i += 1) {
+                table.row($(checkList[i])).remove().draw();
+            }
 
             $.each(listid, function (_, x) {
                 $.each(reglementresult, function (_, v) {

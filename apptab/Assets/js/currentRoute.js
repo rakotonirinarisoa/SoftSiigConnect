@@ -1,11 +1,11 @@
 function setCurrentRoute(link) {
-    localStorage.setItem('j3rGjf', link);
+    sessionStorage.setItem('j3rGjf', link);
 
     $('nav').find(`a[href="${link}"].nav-link`).find('p').css({ 'color': 'red' });
 }
 
 function getCurrentLink() {
-    const currentRoute = localStorage.getItem('j3rGjf');
+    const currentRoute = sessionStorage.getItem('j3rGjf');
 
     if (currentRoute) {
         const elmt = $('nav').find(`a[href="${currentRoute}"].nav-link`);

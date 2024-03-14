@@ -919,10 +919,11 @@ $('[data-action="ChargerJs"]').click(function () {
 });
 
 $('[data-action="GetElementChecked"]').click(function () {
-    let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
+    let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
     let list = [];
-    for (let i = 0; i < CheckList.length; i += 1) {
-        const id = $(CheckList[i]).attr("compteG-id");
+
+    for (let i = 0; i < checkList.length; i += 1) {
+        const id = $(checkList[i]).attr("compteG-id");
 
         const item = arr.find(item => item.id === id);
 
@@ -983,12 +984,12 @@ $('[data-action="GetElementChecked"]').click(function () {
         complete: function () {
             loader.addClass('display-none');
         },
-        success: function (result) {
-            var Datas = JSON.parse(result);
+        success: function () {
             reglementresult = ``;
-            $.each(list, (k, v) => {
-                $(`[compteG-id="${v.id}"]`).remove();
-            });
+
+            for (let i = 0; i < checkList.length; i += 1) {
+                table.row($(checkList[i])).remove().draw();
+            }
         },
         error: function () {
             alert("Problème de connexion. ");

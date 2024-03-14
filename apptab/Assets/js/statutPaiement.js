@@ -132,7 +132,7 @@ $('[data-action="GenereLISTE"]').click(function () {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/BordTraitement/GenerePaiementREJETE',
+        url: Origin + '/BordTraitement/GenereSTATPAIEMENT',
         data: formData,
         cache: false,
         contentType: false,
@@ -175,20 +175,15 @@ $('[data-action="GenereLISTE"]').click(function () {
                     data.push({
                         id: v.No,
                         soa: v.SOA,
+                        numeroEngagement: v.No,
                         projet: v.PROJET,
-                        ref: v.REF,
                         benef: v.BENEF,
-                        MONTENGAGEMENT: formatCurrency(String(v.MONTENGAGEMENT).replace(",", ".")),
-
-                        AGENTREJETE: v.AGENTREJETE,
-                        DATEREJETE: formatDate(v.DATEREJETE),
-                        MOTIF: v.MOTIF,
-                        COMMENTAIRE: v.COMMENTAIRE.replace('\r\n', '<br/>'),
-                        //imputation: '',
-                        //piecesJustificatives: '',
-                        //document: '',
-                        /*rejeter: '',*/
-                        /*isLATE: v.isLATE*/
+                        montant: formatCurrency(String(v.MONTANT).replace(",", ".")),
+                        dateTransfert: formatDate(v.DATEVALIDATIONOP),
+                        dateValidation: formatDate(v.DATEVALIDATIONAC),
+                        datePaie: formatDate(v.DATEPAIEBANQUE),
+                        dateTraitBanque: formatDate(v.DATEPAIEBANQUE),
+                        type: v.AVANCE ? 'Avance' : 'Paiement'
                     });
                 });
 
@@ -196,57 +191,19 @@ $('[data-action="GenereLISTE"]').click(function () {
                     table.destroy();
                 }
 
-                table = $('#TBD_PROJET_ORDSEC').DataTable({
+                table = $('#TDB_Pai').DataTable({
                     data,
                     columns: [
-                        {
-                            data: 'id',
-                            render: function (data, _, _, _) {
-                                return `
-                                    <input type="checkbox" name="checkprod" compteg-ischecked class="chk" onchange="checkdel('${data}')" />
-                                `;
-                            },
-                            orderable: false
-                        },
                         { data: 'soa' },
+                        { data: 'numeroEngagement' },
                         { data: 'projet' },
-                        { data: 'ref' },
                         { data: 'benef' },
-                        { data: 'MONTENGAGEMENT' },
-                        { data: 'AGENTREJETE' },
-                        { data: 'DATEREJETE' },
-                        { data: 'MOTIF' },
-                        { data: 'COMMENTAIRE' },
-                        //{
-                        //    data: 'imputation',
-                        //    render: function (_, _, row, _) {
-                        //        return `
-                        //            <div onclick="modalD('${row.id}','${row.projet}')">
-                        //                <i class="fa fa-tags fa-lg text-danger elerfr"></i>
-                        //            </div>
-                        //        `;
-                        //    }
-                        //},
-                        //{
-                        //    data: 'piecesJustificatives',
-                        //    render: function (_, _, row, _) {
-                        //        return `
-                        //            <div onclick="modalF('${row.id}','${row.projet}')">
-                        //                <i class="fa fa-tags fa-lg text-success elerfr"></i>
-                        //            </div>
-                        //        `;
-                        //    }
-                        //},
-                        //{
-                        //    data: 'document',
-                        //    render: function (_, _, row, _) {
-                        //        return `
-                        //            <div onclick="modalLIAS('${row.id}','${row.projet}')">
-                        //                <i class="fa fa-tags fa-lg text-info elerfr"></i>
-                        //            </div>
-                        //        `;
-                        //    }
-                        //}
+                        { data: 'montant' },
+                        { data: 'dateTransfert' },
+                        { data: 'dateValidation' },
+                        { data: 'datePaie' },
+                        { data: 'dateTraitBanque' },
+                        { data: 'type' }
                     ],
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
@@ -256,11 +213,11 @@ $('[data-action="GenereLISTE"]').click(function () {
                         //    $(row).attr('style', "background-color: #FF7F7F !important;");
                         //}
                     },
-                    columnDefs: [
-                        {
-                            targets: [-4, -3, -2, -1]
-                        }
-                    ],
+                    //columnDefs: [
+                    //    {
+                    //        targets: [-4, -3, -2, -1]
+                    //    }
+                    //],
                     colReorder: {
                         enable: true,
                         fixedColumnsLeft: 1
@@ -268,9 +225,9 @@ $('[data-action="GenereLISTE"]').click(function () {
                     deferRender: true,
                     dom: 'Bfrtip',
                     buttons: ['colvis'],
-                    initComplete: function () {
-                        $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
-                    }
+                    //initComplete: function () {
+                    //    $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
+                    //}
                 });
             }
         },

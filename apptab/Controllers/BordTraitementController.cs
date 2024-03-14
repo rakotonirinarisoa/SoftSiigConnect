@@ -1029,11 +1029,13 @@ namespace apptab.Controllers
             }
             catch (Exception) { return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Problème de connexion. " }, settings)); }
         }
-        public ActionResult StatuePaiement()
+
+        public ActionResult StatutPaiement()
         {
             ViewBag.Controller = "Status des paiements";
             return View();
         }
+
         [HttpPost]
         public JsonResult GenereSTATPAIEMENT(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
         {

@@ -23,14 +23,25 @@
         public int? MP2 { get; set; }
         public int? MP3 { get; set; }
         public int? MP4 { get; set; }
-        public int? TDB0 { get; set; }
         public int? GED { get; set; }
         public int? MD0 { get; set; }
         public int? MD1 { get; set; }
         public int? MD2 { get; set; }
+        public int? MD3 { get; set; }
         public int? MOP0 { get; set; }
         public int? MOP1 { get; set; }
         public int? MOP2 { get; set; }
+
+        public int? TDB0 { get; set; }
+        public int? TDB1 { get; set; }
+        public int? TDB2 { get; set; }
+        public int? TDB3 { get; set; }
+        public int? TDB4 { get; set; }
+        public int? TDB5 { get; set; }
+        public int? TDB6 { get; set; }
+        public int? TDB7 { get; set; }
+        public int? TDB8 { get; set; }
+
 
         public int? IDUSER { get; set; }
 
