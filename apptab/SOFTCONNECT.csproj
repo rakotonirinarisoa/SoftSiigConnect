@@ -2382,7 +2382,6 @@
     <Content Include="Assets\fullcalendar-6.1.11\packages\web-component\index.global.js" />
     <Content Include="Assets\fullcalendar-6.1.11\packages\web-component\index.global.min.js" />
     <Content Include="Assets\js\currentRoute.js" />
-    <Content Include="Assets\js\PaiementsRejeters.js" />
     <Content Include="Assets\js\BordSoufTraitement.js" />
     <Content Include="Assets\js\TraitementENVOISIIGFA.js" />
     <Content Include="Assets\js\TraitementORDSECA.js" />
