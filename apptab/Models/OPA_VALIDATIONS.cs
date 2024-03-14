@@ -104,11 +104,11 @@
 
         public bool? AVANCE { get; set; }
 
+        [Column(TypeName = "numeric")]
         public decimal? MONTANT { get; set; }
+
+        public string NUMEROLIQUIDATION { get; set; }
         [NotMapped]
-        public bool isLATE { get; set; }
-
-
-
+        public bool? isLATE { get; set; }
     }
 }

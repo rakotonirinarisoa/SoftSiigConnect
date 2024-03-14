@@ -198,6 +198,7 @@
     <Compile Include="Controllers\TraitementController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Data\Entities\AvanceDetails.cs" />
+    <Compile Include="Data\Entities\MOPFOP.cs" />
     <Compile Include="Models\CPTADMIN_CHAINETRAITEMENT_AVANCE.cs" />
     <Compile Include="Models\CPTADMIN_COMMENTAIRE_AVANCE.cs" />
     <Compile Include="Models\CPTADMIN_FAVANCE.cs" />
@@ -241,6 +242,8 @@
     <Compile Include="Models\GA_AVANCE_MOUVEMENT.cs" />
     <Compile Include="Data\Entities\GA_AVANCE_DETAILS.cs" />
     <Compile Include="Models\Model1.cs" />
+    <Compile Include="Models\Model2.cs" />
+    <Compile Include="Models\Model3.cs" />
     <Compile Include="Models\TxtPAIEMENT.cs" />
     <Compile Include="Models\TxLISTETRAIT.cs" />
     <Compile Include="Models\DATATRPROJET.cs" />
@@ -2383,6 +2386,7 @@
     <Content Include="Assets\fullcalendar-6.1.11\packages\web-component\index.global.min.js" />
     <Content Include="Assets\js\currentRoute.js" />
     <Content Include="Assets\js\BordSoufTraitement.js" />
+    <Content Include="Assets\js\PaiementsRejets.js" />
     <Content Include="Assets\js\TraitementENVOISIIGFA.js" />
     <Content Include="Assets\js\TraitementORDSECA.js" />
     <Content Include="Assets\js\TraitementPaiementSoufrance.js" />

@@ -164,7 +164,9 @@ function ChargeLoad() {
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             //rejeter: '',
                             isLATE: v.IsLATE,
-                            estAvance: v.AVANCE
+                            estAvance: v.AVANCE,
+                            numeroliquidations: v.NUMEROLIQUIDATION,
+                            type: v.AVANCE ? 'Avance' : 'Paiement'
                         });
                     });
 
@@ -200,6 +202,8 @@ function ChargeLoad() {
                             { data: 'plan' },
                             { data: 'journal' },
                             { data: 'marche' },
+                            { data: 'numeroliquidations' },
+                            { data: 'type' },
                             //{
                             //    data: 'rejeter',
                             //    render: function (_, _, row, _) {
@@ -692,7 +696,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             //rejeter: '',
                             isLATE: v.IsLATE,
-                            estAvance: v.AVANCE
+                            estAvance: v.AVANCE,
+                            numeroliquidations: v.NUMEROLIQUIDATION 
                         });
                     });
 
@@ -728,6 +733,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'plan' },
                             { data: 'journal' },
                             { data: 'marche' },
+                            { data: 'numeroliquidations' },
                             //{
                             //    data: 'rejeter',
                             //    render: function (_, _, row, _) {
@@ -838,7 +844,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             //rejeter: '',
                             isLATE: v.IsLATE,
-                            estAvance: v.AVANCE
+                            estAvance: v.AVANCE,
+                            numeroliquidations: v.NUMEROLIQUIDATION 
                         });
                     });
 
@@ -874,6 +881,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'plan' },
                             { data: 'journal' },
                             { data: 'marche' },
+                            { data: 'numeroliquidations' },
                             //{
                             //    data: 'rejeter',
                             //    render: function (_, _, row, _) {

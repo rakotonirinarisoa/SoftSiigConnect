@@ -1,8 +1,10 @@
-namespace apptab
+namespace apptab.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
 
     [Table("MOP")]
     public partial class MOP
@@ -131,12 +133,12 @@ namespace apptab
         [Column(TypeName = "numeric")]
         public decimal? MONTANTRETENUERAP { get; set; }
 
-        public bool? PAYE { get; set; }
-
         [Column(TypeName = "numeric")]
         public decimal? MONTANTCOMMISSION { get; set; }
 
         [Column(TypeName = "numeric")]
         public decimal? TAXECOMMISSION { get; set; }
+
+        public bool? PAYE { get; set; }
     }
 }
