@@ -1,26 +1,4 @@
-<<<<<<< HEAD
-$(document).ready(() => {
-    User = JSON.parse(sessionStorage.getItem("user"));
-    if (User == null || User === "undefined") window.location = User.origin;
-    Origin = User.origin;
-
-    $(`[data-widget="pushmenu"]`).on('click', () => {
-        $(`[data-action="SaveSIIG"]`).toggleClass('custom-fixed-btn');
-    });
-});
-
-var IdD;
-var numeroliquidations;
-var estAvance;
-
-function showLiquidationModal(id, numeroliquidations, estAvance) {
-
-    IdD = id;
-    numeroliquidations = numeroliquidations;
-    estAvance = estAvance;
-=======
 let table = undefined;
->>>>>>> b8dc2e0d4e4980b02e5e376c04d1a7a773856389
 
 function fillTable() {
     let formData = new FormData();
@@ -94,7 +72,8 @@ function fillTable() {
                         piecesJustificatives: '',
                         document: '',
                         rejeter: '',
-                        isLATE: v.isLATE
+                        isLATE: v.isLATE,
+                        isAvance: v.isAvance
                     });
                 });
 

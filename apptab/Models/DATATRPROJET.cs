@@ -26,5 +26,6 @@ namespace apptab
         public string SOA { get; set; }
         public string PROJET { get; set; }
         public bool? isLATE { get; set; }
+        public bool? isAvance { get; set; }
     }
 }
