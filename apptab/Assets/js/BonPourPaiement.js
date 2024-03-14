@@ -50,6 +50,7 @@ function GetEtat() {
         }
     });
 }
+
 function GetTypeP() {
     let formData = new FormData();
 
@@ -856,7 +857,16 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'plan' },
                             { data: 'journal' },
                             { data: 'marche' },
-                            { data: 'numeroliquidations' },
+                            {
+                                data: 'numeroliquidations',
+                                render: function (data, _, row, _) {
+                                    return `
+                                        <div onclick="showLiquidationModal('${row.id}', '${row.numeroliquidations}', '${row.estAvance}')">
+                                            ${data}
+                                        </div>
+                                    `;
+                                }
+                            },
                             { data: 'type' },
                             {
                                 data: 'rejeter',
