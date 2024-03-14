@@ -3,6 +3,11 @@ let arr = [];
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
+
+function showLiquidationModal(id, numLiquidation, estAvance) {
+    console.log(id, numLiquidation, estAvance);
+}
+
 function GetTypeP() {
     let formData = new FormData();
 
@@ -202,7 +207,16 @@ function ChargeLoad() {
                             { data: 'plan' },
                             { data: 'journal' },
                             { data: 'marche' },
-                            { data: 'numeroliquidations' },
+                            {
+                                data: 'numeroliquidations',
+                                render: function (data, _, row, _) {
+                                    return `
+                                        <div onclick="showLiquidationModal('${row.id}', '${row.numeroliquidations}', '${row.estAvance}')">
+                                            ${data}
+                                        </div>
+                                    `;
+                                }
+                            },
                             { data: 'type' },
                             //{
                             //    data: 'rejeter',
@@ -696,7 +710,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             //rejeter: '',
                             isLATE: v.IsLATE,
-                            estAvance: v.AVANCE,
+                            estAvance: v.AVANCE ? "Avance" : "Paiement",
                             numeroliquidations: v.NUMEROLIQUIDATION 
                         });
                     });
@@ -733,7 +747,17 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'plan' },
                             { data: 'journal' },
                             { data: 'marche' },
-                            { data: 'numeroliquidations' },
+                            {
+                                data: 'numeroliquidations',
+                                render: function (data, _, row, _) {
+                                    return `
+                                        <div onclick="showLiquidationModal('${row.id}', '${row.numeroliquidations}', '${row.estAvance}')">
+                                            ${data}
+                                        </div>
+                                    `;
+                                }
+                            },
+                            { data: 'estAvance' },
                             //{
                             //    data: 'rejeter',
                             //    render: function (_, _, row, _) {
@@ -844,7 +868,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             //rejeter: '',
                             isLATE: v.IsLATE,
-                            estAvance: v.AVANCE,
+                            estAvance: v.AVANCE ? "Avance" : "Paiement",
                             numeroliquidations: v.NUMEROLIQUIDATION 
                         });
                     });
@@ -881,7 +905,17 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'plan' },
                             { data: 'journal' },
                             { data: 'marche' },
-                            { data: 'numeroliquidations' },
+                            {
+                                data: 'numeroliquidations',
+                                render: function (data, _, row, _) {
+                                    return `
+                                        <div onclick="showLiquidationModal('${row.id}', '${row.numeroliquidations}', '${row.estAvance}')">
+                                            ${data}
+                                        </div>
+                                    `;
+                                }
+                            },
+                            { data: 'estAvance' },
                             //{
                             //    data: 'rejeter',
                             //    render: function (_, _, row, _) {
