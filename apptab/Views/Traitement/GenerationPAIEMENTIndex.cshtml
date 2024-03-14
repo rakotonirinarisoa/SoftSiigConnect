@@ -6,10 +6,6 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-<input type="hidden" id="IdF" value="@ViewData["IdF"]" />
-<input type="hidden" id="numeroliquidations" value="@ViewData["numeroliquidations"]" />
-<input type="hidden" id="estAvance" value="@ViewData["estAvance"]" />
-
 <div class="table-responsive mb-3" @*style=" max-height: calc(600px - 0.6rem * 2  );"*@ tab="ordsec">
     <table class="table table-hover table-striped table-bordered" display responsive nowrap" width="100%" id="TBD_PROJET_ORDSEC">
         <thead style="position:sticky">
@@ -141,5 +137,9 @@
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
 
-    showLiquidationModal($("#IdF").val(), $("#numeroliquidations").val(), $("#estAvance").val());
+    $(`[data-widget="pushmenu"]`).on('click', () => {
+        $(`[data-action="SaveSIIG"]`).toggleClass('custom-fixed-btn');
+    });
+
+    fillTable();
 </script>

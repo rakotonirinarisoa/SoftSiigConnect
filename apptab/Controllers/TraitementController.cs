@@ -17,7 +17,7 @@ namespace apptab.Controllers
 
         private static int idF = 0;
         private static string Numeroliquidations = "";
-        private static bool EstAvance = false;
+        private static string EstAvance = "";
 
         JsonSerializerSettings settings = new JsonSerializerSettings
         {
@@ -1442,31 +1442,45 @@ namespace apptab.Controllers
 
 
         //GENERATION PAIEMENT//
-        public ActionResult GenerationPAIEMENTIndex(SI_USERS suser)
+        public ActionResult GenerationPAIEMENTIndex()
         {
             ViewBag.Controller = "Liste des engagements ou avances par paiement";
-
-            ViewData["IdF"] = idF;
-            ViewData["numeroliquidations"] = Numeroliquidations;
-            ViewData["estAvance"] = EstAvance;
 
             return View();
         }
 
         [HttpPost]
-        public JsonResult GenerationPAIEMENT(SI_USERS suser, int IdF, string numeroliquidations, string estAvance)
+        public async Task<JsonResult> SetGlobalStates(SI_USERS suser, int IdF, string numeroliquidations, string estAvance)
+        {
+            var exist = await db.SI_USERS.FirstOrDefaultAsync(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
+
+            if (exist == null)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            }
+
+            idF = IdF;
+            Numeroliquidations = numeroliquidations;
+            EstAvance = estAvance;
+
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = "" }, settings));
+        }
+
+        [HttpPost]
+        public JsonResult GenerationPAIEMENT(SI_USERS suser)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            idF = IdF;
-            Numeroliquidations = numeroliquidations;
-            EstAvance = bool.Parse(estAvance);
+            if (idF == 0 || Numeroliquidations == "" || EstAvance == "")
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            }
 
             try
             {
-                int crpt = IdF;
-                bool isAvance = bool.Parse(estAvance);
+                int crpt = idF;
+                bool isAvance = bool.Parse(EstAvance);
 
                 int retarDate = 0;
                 if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null))
@@ -1494,9 +1508,9 @@ namespace apptab.Controllers
 
                 if (isAvance)
                 {
-                    if (db.SI_TRAITAVANCE.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 1 && a.REF == numeroliquidations) != null)
+                    if (db.SI_TRAITAVANCE.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 1 && a.REF == Numeroliquidations) != null)
                     {
-                        foreach (var x in db.SI_TRAITAVANCE.Where(a => a.IDPROJET == crpt && a.ETAT == 1 && a.REF == numeroliquidations).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                        foreach (var x in db.SI_TRAITAVANCE.Where(a => a.IDPROJET == crpt && a.ETAT == 1 && a.REF == Numeroliquidations).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
                         {
                             var soa = (from soas in db.SI_SOAS
                                        join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -1534,9 +1548,9 @@ namespace apptab.Controllers
                 }
                 else
                 {
-                    if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 1 && a.REF == numeroliquidations) != null)
+                    if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 1 && a.REF == Numeroliquidations) != null)
                     {
-                        foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT == 1 && a.REF == numeroliquidations).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                        foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT == 1 && a.REF == Numeroliquidations).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
                         {
                             var soa = (from soas in db.SI_SOAS
                                        join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
