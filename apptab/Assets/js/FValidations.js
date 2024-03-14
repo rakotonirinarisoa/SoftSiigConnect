@@ -396,13 +396,13 @@ function LoadValidate() {
             $.each(reglementresult, function (_, v) {
                 data.push({
                     id: v.IDREGLEMENT,
-                    dateOrdre: v.dateOrdre ? '' : v.dateOrdre,
+                    dateOrdre: v.dateOrdre === null ? '' : v.dateOrdre,
                     noPiece: isNullOrUndefined(v.NoPiece) ? '' : v.NoPiece,
                     compte: isNullOrUndefined(v.Compte) ? '' : v.Compte,
                     libelle: isNullOrUndefined(v.Libelle) ? '' : v.Libelle,
                     debit: isNullOrUndefined(v.Debit) ? '' : v.Debit,
                     credit: isNullOrUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
-                    montant: isNullOrUndefined(v.Montant) ? '' : formatCurrency(String(v.Montant).replace(",", ".")),
+                    montant: isNullOrUndefined(v.MONTANT) ? '' : formatCurrency(String(v.MONTANT).replace(",", ".")),
                     montantDevise: v.MontantDevise === 0 ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                     mon: isNullOrUndefined(v.Mon) ? '' : v.Mon,
                     rang: isNullOrUndefined(v.Rang) ? '' : v.Rang,
@@ -427,6 +427,7 @@ function LoadValidate() {
                     { data: 'libelle' },
                     { data: 'debit' },
                     { data: 'credit' },
+                    { data: 'montant' },
                     { data: 'montantDevise' },
                     { data: 'mon' },
                     { data: 'rang' },
@@ -642,7 +643,7 @@ $('[data-action="ChargerJs"]').click(function () {
                     $.each(ListResult, function (_, v) {
                         data.push({
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.dateOrdre ? '' : v.dateOrdre,
+                            dateOrdre: v.dateOrdre === null ? '' : v.dateOrdre,
                             noPiece: isNullOrUndefined(v.NoPiece) ? '' : v.NoPiece,
                             compte: isNullOrUndefined(v.Compte) ? '' : v.Compte,
                             libelle: isNullOrUndefined(v.Libelle) ? '' : v.Libelle,
@@ -758,7 +759,7 @@ $('[data-action="ChargerJs"]').click(function () {
                     $.each(ListResult, function (_, v) {
                         data.push({
                             id: v.IDREGLEMENT,
-                            dateOrdre: v.dateOrdre ? '' : v.dateOrdre,
+                            dateOrdre: v.dateOrdre === null ? '' : v.dateOrdre,
                             noPiece: isNullOrUndefined(v.NoPiece) ? '' : v.NoPiece,
                             compte: isNullOrUndefined(v.Compte) ? '' : v.Compte,
                             libelle: isNullOrUndefined(v.Libelle) ? '' : v.Libelle,
