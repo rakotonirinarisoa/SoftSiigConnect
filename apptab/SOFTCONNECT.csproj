@@ -2412,6 +2412,7 @@
     <Content Include="Assets\js\TraitementORDSEC.js" />
     <Content Include="Assets\js\TDBDOC.js" />
     <Content Include="Assets\js\TraitmandatA.js" />
+    <Content Include="Assets\js\PaiementToLiquidationOrMandat.js" />
     <Content Include="Assets\js\TraitmandatANNULA.js" />
     <Content Include="Assets\js\TraitmandatDOCA.js" />
     <Content Include="Assets\js\TraitmandatDOCTA.js" />
