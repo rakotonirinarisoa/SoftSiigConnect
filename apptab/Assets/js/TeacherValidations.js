@@ -1,11 +1,60 @@
-﻿var table = undefined;
+﻿let table = undefined;
 let arr = [];
+
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
 
-function showLiquidationModal(id, numLiquidation, estAvance) {
-    console.log(id, numLiquidation, estAvance);
+function showLiquidationModal(id, numeroliquidations, estAvance) {
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
+
+    formData.append("IdF", id);
+    formData.append("numeroliquidations", numeroliquidations);
+    formData.append("estAvance", estAvance);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Traitement/SetGlobalStates',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            $('#loader').removeClass('display-none');
+        },
+        complete: function () {
+            $('#loader').addClass('display-none');
+        },
+        success: function (result) {
+            var { type, msg } = JSON.parse(result);
+
+            if (type === "error") {
+                alert(msg);
+
+                return;
+            }
+
+            if (type === "login") {
+                alert(msg);
+
+                window.location = window.location.origin;
+
+                return;
+            }
+
+            if (type == "success") {
+                window.location = Origin + '/Traitement/GenerationPAIEMENTIndex';
+            }
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
 }
 
 function GetTypeP() {
@@ -710,8 +759,9 @@ $('[data-action="ChargerJs"]').click(function () {
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             //rejeter: '',
                             isLATE: v.IsLATE,
-                            estAvance: v.AVANCE ? "Avance" : "Paiement",
-                            numeroliquidations: v.NUMEROLIQUIDATION 
+                            estAvance: v.AVANCE,
+                            numeroliquidations: v.NUMEROLIQUIDATION,
+                            type: v.AVANCE ? 'Avance' : 'Paiement'
                         });
                     });
 
@@ -868,8 +918,9 @@ $('[data-action="ChargerJs"]').click(function () {
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             //rejeter: '',
                             isLATE: v.IsLATE,
-                            estAvance: v.AVANCE ? "Avance" : "Paiement",
-                            numeroliquidations: v.NUMEROLIQUIDATION 
+                            estAvance: v.AVANCE,
+                            numeroliquidations: v.NUMEROLIQUIDATION,
+                            type: v.AVANCE ? 'Avance' : 'Paiement'
                         });
                     });
 

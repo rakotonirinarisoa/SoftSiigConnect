@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 $(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
@@ -17,17 +18,17 @@ function showLiquidationModal(id, numeroliquidations, estAvance) {
     IdD = id;
     numeroliquidations = numeroliquidations;
     estAvance = estAvance;
+=======
+let table = undefined;
+>>>>>>> b8dc2e0d4e4980b02e5e376c04d1a7a773856389
 
+function fillTable() {
     let formData = new FormData();
 
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
-
-    formData.append("IdF", IdD);
-    formData.append("numeroliquidations", numeroliquidations);
-    formData.append("estAvance", estAvance);
 
     $.ajax({
         type: "POST",
@@ -37,10 +38,10 @@ function showLiquidationModal(id, numeroliquidations, estAvance) {
         contentType: false,
         processData: false,
         beforeSend: function () {
-            loader.removeClass('display-none');
+            $('#loader').removeClass('display-none');
         },
         complete: function () {
-            loader.addClass('display-none');
+            $('#loader').addClass('display-none');
         },
         success: function (result) {
             var Datas = JSON.parse(result);
@@ -182,8 +183,6 @@ function showLiquidationModal(id, numeroliquidations, estAvance) {
                         $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
                     }
                 });
-
-                window.location = Origin + '/Traitement/GenerationPAIEMENTIndex';
             }
         },
         error: function () {
@@ -193,14 +192,12 @@ function showLiquidationModal(id, numeroliquidations, estAvance) {
 }
 
 $('.Checkall').change(function () {
-
     if ($('.Checkall').prop("checked") == true) {
 
         $('[compteg-ischecked]').prop("checked", true);
     } else {
         $('[compteg-ischecked]').prop("checked", false);
     }
-
 });
 
 function checkdel(id) {
