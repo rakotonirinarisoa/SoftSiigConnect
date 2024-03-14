@@ -710,8 +710,9 @@ $('[data-action="ChargerJs"]').click(function () {
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             //rejeter: '',
                             isLATE: v.IsLATE,
-                            estAvance: v.AVANCE ? "Avance" : "Paiement",
-                            numeroliquidations: v.NUMEROLIQUIDATION 
+                            estAvance: v.AVANCE,
+                            numeroliquidations: v.NUMEROLIQUIDATION,
+                            type: v.AVANCE ? 'Avance' : 'Paiement'
                         });
                     });
 
@@ -868,8 +869,9 @@ $('[data-action="ChargerJs"]').click(function () {
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             //rejeter: '',
                             isLATE: v.IsLATE,
-                            estAvance: v.AVANCE ? "Avance" : "Paiement",
-                            numeroliquidations: v.NUMEROLIQUIDATION 
+                            estAvance: v.AVANCE,
+                            numeroliquidations: v.NUMEROLIQUIDATION,
+                            type: v.AVANCE ? 'Avance' : 'Paiement'
                         });
                     });
 
