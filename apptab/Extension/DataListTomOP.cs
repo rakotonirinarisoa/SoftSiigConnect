@@ -29,5 +29,6 @@ namespace apptab.Extension
         public string CleRIB { get; set; }
         public string Agence { get; set; }
         public bool Avance { get; set; }
+        public string Mandat { get; set; }
     }
 }

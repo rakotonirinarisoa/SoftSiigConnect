@@ -451,7 +451,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             plan: isNullOrUndefined(v.Plan6) ? '' : v.Plan6,
                             journal: isNullOrUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
-                            estAvance: v.Avance
+                            estAvance: v.Avance,
+                            numeroliquidations: isNullOrUndefined(v.NUMEROLIQUIDATION) ? '' : v.NUMEROLIQUIDATION 
                         });
                     });
 
@@ -486,7 +487,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'commune' },
                             { data: 'plan' },
                             { data: 'journal' },
-                            { data: 'marche' }
+                            { data: 'marche' },
+                            { data: 'numeroliquidations' }
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
@@ -593,7 +595,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             plan: isNullOrUndefined(v.Plan6) ? '' : v.Plan6,
                             journal: isNullOrUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
-                            estAvance: v.Avance
+                            estAvance: v.Avance,
+                            numeroliquidations: v.Mandat 
                         });
                     });
 
@@ -628,7 +631,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'commune' },
                             { data: 'plan' },
                             { data: 'journal' },
-                            { data: 'marche' }
+                            { data: 'marche' },
+                            { data: 'numeroliquidations' }
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
@@ -719,9 +723,9 @@ $('[data-action="GetElementChecked"]').on('click', () => {
         },
         success: function (result) {
             var Datas = JSON.parse(result);
-            //$.each(listid, (k, v) => {
-            //    $(`[compteG-id="${v}"]`).remove();
-            //});
+            $.each(list, (k, v) => {
+                $(`[compteG-id="${v.id}"]`).remove();
+            });
         },
         error: function () {
             alert("Problème de connexion. ");

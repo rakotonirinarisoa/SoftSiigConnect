@@ -986,8 +986,8 @@ $('[data-action="GetElementChecked"]').click(function () {
         success: function (result) {
             var Datas = JSON.parse(result);
             reglementresult = ``;
-            $.each(listid, (k, v) => {
-                $(`[compteG-id="${v}"]`).remove();
+            $.each(list, (k, v) => {
+                $(`[compteG-id="${v.id}"]`).remove();
             });
         },
         error: function () {

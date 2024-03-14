@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
+using apptab.apptab;
 using apptab.Data.Entities;
 using apptab.Models;
 using Microsoft.Ajax.Utilities;
+using Microsoft.Build.Framework.XamlTypes;
 
 namespace apptab.Extension
 {
@@ -1778,14 +1781,63 @@ namespace apptab.Extension
             List<string> DjournalFop = tom.FOP.Where(x => x.JOURNAL == journal && (x.ETAPE1USER == etat || x.ETAPE2USER == etat || x.ETAPE3USER == etat || x.ETAPE4USER == etat || x.ETAPE5USER == etat || x.ETAPE6USER == etat || x.ETAPE7USER == etat || x.ETAPE8USER == etat || x.ETAPE9USER == etat || x.ETAPE10USER == etat)).Select(x => x.NUMEROOP).ToList();
             List<string> DjournalAvance = tom.GA_AVANCE.Where(x => x.JOURNAL == journal && x.COGE == compteG).Select(x => x.NUMERO).ToList();
 
-            List<MOP> lNoOPS = new List<MOP>();
+            List<MOPFOP> lNoOPS = new List<MOPFOP>();
             List<GA_AVANCE_DETAILS> lNoOpsAV = new List<GA_AVANCE_DETAILS>();
 
             foreach (string num in DjournalFop)
             {
-                lNoOPS.AddRange((from mo in tom.MOP
-                                 where mo.DATEFACTURE >= dateD.Date && mo.DATEFACTURE <= dateF.Date && mo.NUMEROOP == num
-                                 select mo).ToList());
+                //lNoOPS.AddRange((from mo in tom.MOP
+                //                 where mo.DATEFACTURE >= dateD.Date && mo.DATEFACTURE <= dateF.Date && mo.NUMEROOP == num
+                //                 select mo).ToList());
+
+                // lNoOPS.AddRange(tom.MOP.Where(a => a.DATEFACTURE >= dateD.Date && a.DATEFACTURE <= dateF.Date && a.NUMEROOP == num).Join(tom.FOP, mo => mo.NUMEROOP, fo => fo.NUMEROOP, (mo, fo) => new MOPFOP
+
+                var c = (
+                    from mo in tom.MOP
+                    join fo in tom.FOP on mo.NUMEROOP equals fo.NUMEROOP
+                    where mo.NUMEROOP == num && mo.DATEFACTURE.Value >= dateD.Date && mo.DATEFACTURE.Value <= dateF.Date
+                    select new MOPFOP
+                    {
+                        NUMEROLIQUIDATION = fo.NUMEROLIQUIDATION,
+                        NUMEROOP = mo.NUMEROOP,
+                        NUMENREG = mo.NUMENREG,
+                        LIBELLE = mo.LIBELLE,
+                        DATEFACTURE = mo.DATEFACTURE.Value,
+                        NUMEROFACTURE = mo.NUMEROFACTURE,
+                        COGE = mo.COGE,
+                        AUXI = mo.AUXI,
+                        CONVENTION = mo.CONVENTION,
+                        CATEGORIE = mo.CATEGORIE,
+                        SOUSCATEGORIE = mo.SOUSCATEGORIE,
+                        POSTE = mo.POSTE,
+                        ACTI = mo.ACTI,
+                        GEO = mo.GEO,
+                        PLAN6 = mo.PLAN6,
+                        PLAN7 = mo.PLAN7,
+                        PLAN8 = mo.PLAN8,
+                        MONTANTLOC = mo.MONTANTLOC,
+                        MONTANTDEV = mo.MONTANTDEV,
+                        MONTANTRAP = mo.MONTANTRAP,
+                        MONTANTTVA = mo.MONTANTTVA,
+                        MONTANTAUTRETAXE = mo.MONTANTTVA,
+                        COGEFOURNISSEUR = mo.COGEFOURNISSEUR,
+                        AUXIFOURNISSEUR = mo.AUXIFOURNISSEUR,
+                        NORDPEC = mo.NORDPEC,
+                        NORDPAIEMENT = mo.NORDPAIEMENT,
+                        NORDFRAISBQ = mo.NORDFRAISBQ,
+                        DATECRE = mo.DATECRE,
+                        DATEMAJ = mo.DATEMAJ,
+                        USERCRE = mo.USERCRE,
+                        USERMAJ = mo.USERMAJ,
+                        DATEREJET = mo.DATEREJET,
+                        OBSERVATIONREJET = mo.OBSERVATIONREJET,
+                        MONTANTRETENUE = mo.MONTANTRETENUE,
+                    }
+                );
+
+                // lNoOPS.AddRange(tom.MOP.Join(tom.FOP, mo => mo.NUMEROOP, fo => fo.NUMEROOP, (mo, fo) => )).Where(tom => tom.DATEFACTURE >= dateD.Date && a.DATEFACTURE <= dateF.Date && a.NUMEROOP == num)..ToList());
+
+                lNoOPS.AddRange(c);
             }
             foreach (var item in DjournalAvance)
             {
@@ -1816,7 +1868,7 @@ namespace apptab.Extension
                 {
                     if (auxi == "")
                     {
-                        List<MOP> lNoOp = lNoOPS;
+                        List<MOPFOP> lNoOp = lNoOPS;
                         List<GA_AVANCE_DETAILS> lnoOpAVS = lNoOpsAV;
 
                         foreach (var nord in lNoOp)
@@ -1843,7 +1895,8 @@ namespace apptab.Extension
                                     Plan6 = reglement.PLAN6,
                                     Journal = journal,
                                     Marche = "",
-                                    Status = etat
+                                    Status = etat,
+                                    Mandat = nord.NUMEROLIQUIDATION
                                 });
 
                             }
@@ -1876,7 +1929,8 @@ namespace apptab.Extension
                                     Plan6 = nordAV.PLAN6,
                                     Journal = journal,
                                     Marche = "",
-                                    Status = etat
+                                    Status = etat,
+                                    Mandat = ""
                                 });
 
                             }
@@ -1887,7 +1941,7 @@ namespace apptab.Extension
                     }
                     else
                     {
-                        List<MOP> lNoOp = (from m in lNoOPS
+                        List<MOPFOP> lNoOp = (from m in lNoOPS
                                            where m.COGEFOURNISSEUR == auxi
                                            select m).ToList();
                         //List<MOP> lNoOp = (from m in lNoOPS
@@ -1917,7 +1971,8 @@ namespace apptab.Extension
                                     Plan6 = reglement.PLAN6,
                                     Journal = journal,
                                     Marche = "",
-                                    Status = etat
+                                    Status = etat,
+                                    Mandat = nord.NUMEROLIQUIDATION
                                 });
 
                             }
@@ -1927,7 +1982,7 @@ namespace apptab.Extension
                 }
                 else
                 {
-                    List<MOP> lOPCOGE = (from m in lNoOPS
+                    List<MOPFOP> lOPCOGE = (from m in lNoOPS
                                          where m.COGEFOURNISSEUR == compteG
                                          select m).ToList();
 
@@ -1958,7 +2013,8 @@ namespace apptab.Extension
                                 Journal = journal,
                                 Marche = reglementAV.MARCHE,
                                 Status = etat,
-                                Avance = true
+                                Avance = true,
+                                Mandat = ""
                             });
                         }
                         foreach (var nord in lOPCOGE)
@@ -1987,7 +2043,8 @@ namespace apptab.Extension
                                     Journal = journal,
                                     Marche = "",
                                     Status = etat,
-                                    Avance = false
+                                    Avance = false,
+                                    Mandat = nord.NUMEROLIQUIDATION
                                 });
                             }
                             catch (Exception) { }
@@ -1997,7 +2054,7 @@ namespace apptab.Extension
                     }
                     else
                     {
-                        List<MOP> lNoOp = (from m in lOPCOGE
+                        List<MOPFOP> lNoOp = (from m in lOPCOGE
                                            where m.AUXIFOURNISSEUR == auxi
                                            select m).ToList();
 
@@ -2036,7 +2093,8 @@ namespace apptab.Extension
                                             Plan6 = reglement.PLAN6,
                                             Journal = journal,
                                             Marche = "",
-                                            Status = etat
+                                            Status = etat,
+                                            Mandat = nord.NUMEROLIQUIDATION
 
                                         });
                                     }
@@ -2076,7 +2134,9 @@ namespace apptab.Extension
                                             Plan6 = nord.PLAN6,
                                             Journal = journal,
                                             Marche = "",
-                                            Status = etat
+                                            Status = etat,
+                                            Avance = true,
+                                            Mandat = ""
 
                                         });
                                     }
