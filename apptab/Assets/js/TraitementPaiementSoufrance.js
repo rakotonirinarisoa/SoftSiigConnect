@@ -111,7 +111,8 @@ function parseList(array) {
                     dateTraitement,
                     dureeTraitement,
                     dureePrevu,
-                    depassement
+                    depassement,
+                    type: array[i].TraitementPaiementDetails[j].AVANCE ? 'Avance' : 'Paiement'
                 });
 
                 rowNumber += 1;
@@ -161,7 +162,10 @@ function setDataTable() {
             },
             {
                 data: 'depassement'
-            }
+            },
+            {
+                data: 'type'
+            },
         ],
         lengthChange: false,
         paging: false,

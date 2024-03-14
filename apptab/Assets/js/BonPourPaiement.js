@@ -1,5 +1,6 @@
 ﻿var table = undefined;
 let arr = [];
+
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
@@ -1037,13 +1038,13 @@ $('[data-action="ChargerJs"]').click(function () {
 //==============================================================================================Checked===================================================================================
 
 $('[data-action="GetElementChecked"]').click(function () {
-    let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
+    let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
     let list = [];
-    //$.each(CheckList, (k, v) => {
+    //$.each(checkList, (k, v) => {
     //    list.push($(v).attr("compteG-id"));
     //});
-    for (let i = 0; i < CheckList.length; i += 1) {
-        const id = $(CheckList[i]).attr("compteG-id");
+    for (let i = 0; i < checkList.length; i += 1) {
+        const id = $(checkList[i]).attr("compteG-id");
 
         const item = arr.find(item => item.id === id);
 
@@ -1108,10 +1109,10 @@ $('[data-action="GetElementChecked"]').click(function () {
             var Datas = JSON.parse(result);
             reglementresult = ``;
             reglementresult = Datas.data;
-            $.each(list, (k, v) => {
-                $(`[compteG-id="${v.id}"]`).remove();
-            });
 
+            for (let i = 0; i < checkList.length; i += 1) {
+                table.row($(checkList[i])).remove().draw();
+            }
         },
         error: function () {
             alert("Problème de connexion. ");

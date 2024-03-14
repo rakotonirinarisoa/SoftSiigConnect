@@ -2388,7 +2388,7 @@
     <Content Include="Assets\js\TraitementORDSECA.js" />
     <Content Include="Assets\js\TraitementPaiementSoufrance.js" />
     <Content Include="Assets\js\TraitementPaiement.js" />
-    <Content Include="Assets\js\statuepaiement.js" />
+    <Content Include="Assets\js\statutPaiement.js" />
     <Content Include="Assets\js\delaisTraitementEngagements.js" />
     <Content Include="Assets\icons\chevron-down.svg" />
     <Content Include="Assets\icons\chevron-right.svg" />
@@ -4839,7 +4839,7 @@
     <Content Include="Views\BordTraitement\DelaisTraitementEngagements.cshtml" />
     <Content Include="Views\BordTraitement\SoufTraitement.cshtml" />
     <Content Include="Views\Calendar\Index.cshtml" />
-    <Content Include="Views\BordTraitement\StatuePaiement.cshtml" />
+    <Content Include="Views\BordTraitement\StatutPaiement.cshtml" />
     <Content Include="Views\BordTraitement\TraitementsPaiement.cshtml" />
     <Content Include="Views\BordTraitement\TraitementPaiementSoufrance.cshtml" />
     <Content Include="Views\BordTraitement\TraitementPaiementRejet.cshtml" />

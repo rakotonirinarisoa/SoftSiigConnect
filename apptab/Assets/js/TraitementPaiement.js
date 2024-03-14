@@ -93,7 +93,8 @@ function parseList(array) {
                     montant,
                     agent,
                     dateTraitement,
-                    dureeTraitement
+                    dureeTraitement,
+                    type: array[i].TraitementPaiementDetails[j].AVANCE ? 'Avance' : 'Paiement'
                 });
 
                 rowNumber += 1;
@@ -137,6 +138,9 @@ function setDataTable() {
             },
             {
                 data: 'dureeTraitement'
+            },
+            {
+                data: 'type'
             }
         ],
         lengthChange: false,
