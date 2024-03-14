@@ -211,7 +211,7 @@ function ChargeLoad() {
                                 data: 'numeroliquidations',
                                 render: function (data, _, row, _) {
                                     return `
-                                        <div onclick="showLiquidationModal('${row.id}', '${row.numeroliquidations}', '${row.estAvance}')">
+                                        <div onclick="showLiquidationModal('${row.id}', '${row.numeroliquidations}', '${row.estAvance}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
                                             ${data}
                                         </div>
                                     `;
@@ -751,7 +751,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 data: 'numeroliquidations',
                                 render: function (data, _, row, _) {
                                     return `
-                                        <div onclick="showLiquidationModal('${row.id}', '${row.numeroliquidations}', '${row.estAvance}')">
+                                        <div onclick="showLiquidationModal('${row.id}', '${row.numeroliquidations}', '${row.estAvance}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
                                             ${data}
                                         </div>
                                     `;
@@ -909,7 +909,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 data: 'numeroliquidations',
                                 render: function (data, _, row, _) {
                                     return `
-                                        <div onclick="showLiquidationModal('${row.id}', '${row.numeroliquidations}', '${row.estAvance}')">
+                                        <div onclick="showLiquidationModal('${row.id}', '${row.numeroliquidations}', '${row.estAvance}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
                                             ${data}
                                         </div>
                                     `;
