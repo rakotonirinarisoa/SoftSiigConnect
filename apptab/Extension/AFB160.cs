@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
+using apptab.apptab;
 using apptab.Data.Entities;
 using apptab.Models;
-using Microsoft.Ajax.Utilities;
-using Microsoft.Build.Framework.XamlTypes;
 
 namespace apptab.Extension
 {

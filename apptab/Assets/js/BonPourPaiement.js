@@ -50,6 +50,11 @@ function GetEtat() {
         }
     });
 }
+
+function showLiquidationModal(id, numLiquidation, estAvance) {
+
+}
+
 function GetTypeP() {
     let formData = new FormData();
 
@@ -816,7 +821,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             rejeter: '',
                             isLATE: v.IsLATE ,
                             estAvance : v.AVANCE,
-                            numeroliquidations: v.NUMEROLIQUIDATION
+                            numeroliquidations: v.NUMEROLIQUIDATION,
+                            type: v.AVANCE ? 'Avance' : 'Paiement'
                         });
                     });
 
@@ -852,7 +858,17 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'plan' },
                             { data: 'journal' },
                             { data: 'marche' },
-                            { data: 'numeroliquidations' },
+                            {
+                                data: 'numeroliquidations',
+                                render: function (data, _, row, _) {
+                                    return `
+                                        <div onclick="showLiquidationModal('${row.id}', '${row.numeroliquidations}', '${row.estAvance}')">
+                                            ${data}
+                                        </div>
+                                    `;
+                                }
+                            },
+                            { data: 'type' },
                             {
                                 data: 'rejeter',
                                 render: function (_, _, row, _) {
