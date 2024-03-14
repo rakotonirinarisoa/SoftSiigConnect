@@ -10,7 +10,8 @@ function getCurrentLink() {
     if (currentRoute) {
         const elmt = $('nav').find(`a[href="${currentRoute}"].nav-link`);
 
-        elmt.find('p').css({ 'color': 'red' });
+        //elmt.find('p').css({ 'color': 'red' });
+        elmt.find('p').addClass('image-clignote');
 
         return currentRoute;
     }

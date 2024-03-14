@@ -845,6 +845,26 @@ aside.main-sidebar.sidebar-light-primary.elevation-4.imageHover a p
     font-size: 12px;
 }
 
-.rfrtdtd {
-    mso-number-format: \@;
+.image-clignote {
+    animation-duration: .8s;
+    animation-name: clignoter;
+    animation-iteration-count: infinite;
+    transition: none;
+    font-weight: bold;
+    text-decoration: underline;
+    color: tomato;
+}
+
+@keyframes clignoter {
+    0% {
+        opacity: 1;
+    }
+
+    40% {
+        opacity: 0.4;
+    }
+
+    100% {
+        opacity: 1;
+    }
 }
