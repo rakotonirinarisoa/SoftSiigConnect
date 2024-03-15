@@ -485,14 +485,17 @@
                         </li>
                     </ul>
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block" id="menu-accordeon">
-                        <li class="nav-item">
-                            <a href="../Calendar/Index" class="nav-link">
-                                <i class="nav-icon fas fa-calendar-alt" style="color: #17A2B8"></i>
-                                <p>
-                                    Evénements
-                                </p>
-                            </a>
-                        </li>
+                        @if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur)
+                        { 
+                            <li class="nav-item">
+                                <a href="../Calendar/Index" class="nav-link">
+                                    <i class="nav-icon fas fa-calendar-alt" style="color: #17A2B8"></i>
+                                    <p>
+                                        Evénements
+                                    </p>
+                                </a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a href="../Etat/InfoProCreate" class="nav-link">
                                 <i class="nav-icon fa fa-exclamation" style="color: #FFC107"></i>
@@ -501,8 +504,6 @@
                                 </p>
                             </a>
                         </li>
-                        @*@if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur)
-        { }*@
                         <li class="nav-item">
                             <a href="../BordTraitement/BordListeEngaPaie" class="nav-link">
                                 <i class="nav-icon fas fa-archive" style="color: #FFC107"></i>
