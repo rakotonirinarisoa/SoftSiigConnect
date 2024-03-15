@@ -1541,7 +1541,8 @@ namespace apptab.Controllers
                                 DATECREATION = x.DATECRE.Value.Date,
                                 SOA = soa.FirstOrDefault().SOA,
                                 PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                isLATE = isLate
+                                isLATE = isLate,
+                                isAvance = true
                             });
                         }
                     }
@@ -1581,13 +1582,210 @@ namespace apptab.Controllers
                                 DATECREATION = x.DATECRE.Value.Date,
                                 SOA = soa.FirstOrDefault().SOA,
                                 PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                isLATE = isLate
+                                isLATE = isLate,
+                                isAvance = false
                             });
                         }
                     }
                 }
 
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list.OrderByDescending(a => a.isLATE).ToList() }, settings));
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ModalFRFR(SI_USERS suser, string IdF)
+        {
+            var exist = await db.SI_USERS.FirstOrDefaultAsync(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                int crpt = idF;
+                bool isAvance = bool.Parse(EstAvance);
+
+                SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
+                List<DATATRPROJET> list = new List<DATATRPROJET>();
+
+                if (isAvance)
+                {
+                    if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.MODULLE == "CPTADMINAVANCE") != null)
+                    {
+                        foreach (var x in tom.TP_MPIECES_JUSTIFICATIVES.Where(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE != "DEF" && a.TYPEPIECE != "TEF" && a.TYPEPIECE != "BE" && a.MODULLE == "CPTADMINAVANCE").OrderBy(a => a.RANG).ToList())
+                        {
+                            var idFGuid = Guid.Parse(IdF);
+                            DateTime dpj = tom.CPTADMIN_FAVANCE.Where(a => a.ID == idFGuid).FirstOrDefault().DATEAVANCE.Value;
+                            list.Add(new DATATRPROJET
+                            {
+                                REF = x.TYPEPIECE != null ? x.TYPEPIECE : "",
+                                OBJ = x.RANG != null ? x.RANG.ToString() : "",
+                                TITUL = x.NOMBRE != null ? x.NOMBRE.ToString() : "",
+                                DATE = dpj,
+                                MONT = x.MONTANT != null ? Math.Round(x.MONTANT.Value, 2).ToString() : "0",
+                                LIEN = !String.IsNullOrEmpty(x.LIEN) ? x.LIEN : ""
+                            });
+                        }
+                    }
+                }
+                else
+                {
+                    if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.MODULLE == "LIQUIDATION") != null)
+                    {
+                        foreach (var x in tom.TP_MPIECES_JUSTIFICATIVES.Where(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE != "DEF" && a.TYPEPIECE != "TEF" && a.TYPEPIECE != "BE" && a.MODULLE == "LIQUIDATION").OrderBy(a => a.RANG).ToList())
+                        {
+                            var idFGuid = Guid.Parse(IdF);
+                            DateTime dpj = tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == idFGuid).FirstOrDefault().DATELIQUIDATION.Value;
+                            list.Add(new DATATRPROJET
+                            {
+                                REF = x.TYPEPIECE != null ? x.TYPEPIECE : "",
+                                OBJ = x.RANG != null ? x.RANG.ToString() : "",
+                                TITUL = x.NOMBRE != null ? x.NOMBRE.ToString() : "",
+                                DATE = dpj,
+                                MONT = x.MONTANT != null ? Math.Round(x.MONTANT.Value, 2).ToString() : "0",
+                                LIEN = !String.IsNullOrEmpty(x.LIEN) ? x.LIEN : ""
+                            });
+                        }
+                    }
+                }
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list }, settings));
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ModalDRFR(SI_USERS suser, Guid IdF)
+        {
+            var exist = await db.SI_USERS.FirstOrDefaultAsync(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                int crpt = idF;
+                bool isAvance = bool.Parse(EstAvance);
+
+                SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
+                List<DATATRPROJET> list = new List<DATATRPROJET>();
+
+                if (isAvance)
+                {
+                    if (tom.CPTADMIN_MAVANCE.FirstOrDefault(a => a.IDAVANCE == IdF) != null)
+                    {
+                        foreach (var x in tom.CPTADMIN_MAVANCE.Where(a => a.IDAVANCE == IdF).ToList())
+                        {
+                            list.Add(new DATATRPROJET
+                            {
+                                REF = x.LIBELLE != null ? x.LIBELLE : "",
+                                OBJ = x.COGE != null ? x.COGE.ToString() : "",
+                                TITUL = x.POSTE != null ? x.POSTE.ToString() : "",
+                                MONT = x.MONTANTLOCAL != null ? Math.Round(x.MONTANTLOCAL.Value, 2).ToString() : "0",
+                            });
+                        }
+                    }
+                }
+                else
+                {
+                    if (tom.CPTADMIN_MLIQUIDATION.FirstOrDefault(a => a.IDLIQUIDATION == IdF) != null)
+                    {
+                        foreach (var x in tom.CPTADMIN_MLIQUIDATION.Where(a => a.IDLIQUIDATION == IdF).ToList())
+                        {
+                            list.Add(new DATATRPROJET
+                            {
+                                REF = x.LIBELLE != null ? x.LIBELLE : "",
+                                OBJ = x.COGE != null ? x.COGE.ToString() : "",
+                                TITUL = x.POSTE != null ? x.POSTE.ToString() : "",
+                                MONT = x.MONTANTLOCAL != null ? Math.Round(x.MONTANTLOCAL.Value, 2).ToString() : "0",
+                            });
+                        }
+                    }
+                }
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list }, settings));
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> ModalLIASRFR(SI_USERS suser, string IdF)
+        {
+            var exist = await db.SI_USERS.FirstOrDefaultAsync(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                int crpt = idF;
+                bool isAvance = bool.Parse(EstAvance);
+
+                SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
+                var newElemH = new DATATRPROJET()
+                {
+                    REF = "",
+                    OBJ = "",
+                    TITUL = ""
+                };
+
+                if (isAvance)
+                {
+                    if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && (a.TYPEPIECE == "DEF" || a.TYPEPIECE == "TEF" || a.TYPEPIECE == "BE") && a.MODULLE == "CPTADMINAVANCE") != null)
+                    {
+                        var def = "";
+                        if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "DEF" && a.MODULLE == "CPTADMINAVANCE") != null)
+                            def = tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "DEF" && a.MODULLE == "CPTADMINAVANCE").LIEN;
+                        var tef = "";
+                        if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "TEF" && a.MODULLE == "CPTADMINAVANCE") != null)
+                            tef = tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "TEF" && a.MODULLE == "CPTADMINAVANCE").LIEN;
+                        var be = "";
+                        if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "BE" && a.MODULLE == "CPTADMINAVANCE") != null)
+                            be = tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "BE" && a.MODULLE == "CPTADMINAVANCE").LIEN;
+
+                        newElemH = new DATATRPROJET()
+                        {
+                            REF = String.IsNullOrEmpty(def) ? "" : def,
+                            OBJ = String.IsNullOrEmpty(tef) ? "" : tef,
+                            TITUL = String.IsNullOrEmpty(be) ? "" : be
+                        };
+                    }
+                }
+                else
+                {
+                    if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && (a.TYPEPIECE == "DEF" || a.TYPEPIECE == "TEF" || a.TYPEPIECE == "BE") && a.MODULLE == "LIQUIDATION") != null)
+                    {
+                        var def = "";
+                        if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "DEF" && a.MODULLE == "LIQUIDATION") != null)
+                            def = tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "DEF" && a.MODULLE == "LIQUIDATION").LIEN;
+                        var tef = "";
+                        if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "TEF" && a.MODULLE == "LIQUIDATION") != null)
+                            tef = tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "TEF" && a.MODULLE == "LIQUIDATION").LIEN;
+                        var be = "";
+                        if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "BE" && a.MODULLE == "LIQUIDATION") != null)
+                            be = tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "BE" && a.MODULLE == "LIQUIDATION").LIEN;
+
+                        newElemH = new DATATRPROJET()
+                        {
+                            REF = String.IsNullOrEmpty(def) ? "" : def,
+                            OBJ = String.IsNullOrEmpty(tef) ? "" : tef,
+                            TITUL = String.IsNullOrEmpty(be) ? "" : be
+                        };
+                    }
+                }
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = newElemH }, settings));
             }
             catch (Exception e)
             {

@@ -2414,14 +2414,17 @@
     <Content Include="Assets\js\TraitmandatA.js" />
     <Content Include="Assets\js\PaiementToLiquidationOrMandat.js" />
     <Content Include="Assets\js\TraitmandatANNULA.js" />
+    <Content Include="Assets\js\TraitmandatDOCRFR.js" />
     <Content Include="Assets\js\TraitmandatDOCA.js" />
     <Content Include="Assets\js\TraitmandatDOCTA.js" />
     <Content Include="Assets\js\TraitmandatDOCT.js" />
     <Content Include="Assets\js\TDBLIAS.js" />
+    <Content Include="Assets\js\TraitmandatLIASRFR.js" />
     <Content Include="Assets\js\TraitmandatLIASA.js" />
     <Content Include="Assets\js\TraitmandatLIASTA.js" />
     <Content Include="Assets\js\TraitmandatLIAST.js" />
     <Content Include="Assets\js\TDBModal.js" />
+    <Content Include="Assets\js\TraitmandatModalRFR.js" />
     <Content Include="Assets\js\TraitmandatModalA.js" />
     <Content Include="Assets\js\TraitmandatModalTA.js" />
     <Content Include="Assets\js\TraitmandatModalT.js" />
