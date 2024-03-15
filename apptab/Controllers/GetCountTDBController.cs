@@ -45,7 +45,12 @@ namespace apptab.Controllers
 
                 var mandat = db.SI_TRAITPROJET.ToList();
                 var ava = db.SI_TRAITAVANCE.ToList();
-                var payement = db.OPA_VALIDATIONS.ToList();
+                var typedecriture = db.SI_TYPECRITURE.Where(a => a.IDUSER ==test.ID ).ToList();
+                var payement = db.OPA_VALIDATIONS.Join(db.OPA_REGLEMENT,va => va.IDPROJET,re => re.IDSOCIETE, (va, re) => new
+                {
+                    ETAT = va.ETAT,
+                    IDPROJET = va.IDPROJET,
+                }).ToList();
 
                 if (test.ROLE == (int)Role.SAdministrateur)
                 {

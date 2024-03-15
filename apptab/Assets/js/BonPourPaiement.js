@@ -1068,17 +1068,26 @@ $('[data-action="GetElementChecked"]').click(function () {
     //$.each(checkList, (k, v) => {
     //    list.push($(v).attr("compteG-id"));
     //});
-    for (let i = 0; i < checkList.length; i += 1) {
-        const id = $(checkList[i]).attr("compteG-id");
+    if (baseName == "2") {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
 
-        const item = arr.find(item => item.id === id);
+            const item = arr.find(item => item.id === Number(id));
+            list.push({
+                id,
+                estAvance: item.estAvance
+            });
+        }
+    } else {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
 
-        list.push({
-            id,
-            estAvance: item.estAvance
-        });
-
-        console.log(item);
+            const item = arr.find(item => item.id === id);
+            list.push({
+                id,
+                estAvance: item.estAvance
+            });
+        }
     }
 
     let formData = new FormData();
