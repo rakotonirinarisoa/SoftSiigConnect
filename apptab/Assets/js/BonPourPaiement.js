@@ -224,7 +224,8 @@ function chargeLoad() {
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             rejeter: '',
                             isLATE: v.IsLATE,
-                            estAvance: v.AVANCE ? 'Avance' : 'Paiement',
+                            estAvance: v.AVANCE,
+                            type: v.AVANCE ? 'Avance' : 'Paiement',
                             numeroliquidations: v.NUMEROLIQUIDATION 
                         });
                     });
