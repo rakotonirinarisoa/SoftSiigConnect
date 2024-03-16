@@ -14,6 +14,7 @@ using apptab.Models;
 using Extensions.DateTime;
 using System.Net.Mail;
 using apptab.Data.Entities;
+using apptab.Data;
 
 namespace apptab.Controllers
 {
@@ -538,14 +539,14 @@ namespace apptab.Controllers
                     mail.From = new MailAddress(MailAdresse);
 
                     mail.To.Add(MailAdresse);
-                    if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE != null)
+                    if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILPP != null)
                     {
                         string[] separators = { ";" };
 
                         var Tomail = mail;
                         if (Tomail != null)
                         {
-                            string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE;
+                            string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILPP;
                             string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
                             foreach (var mailto in mailListe)
@@ -630,14 +631,14 @@ namespace apptab.Controllers
                     mail.From = new MailAddress(MailAdresse);
 
                     mail.To.Add(MailAdresse);
-                    if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE != null)
+                    if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILPE != null)
                     {
                         string[] separators = { ";" };
 
                         var Tomail = mail;
                         if (Tomail != null)
                         {
-                            string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE;
+                            string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILPE;
                             string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
                             foreach (var mailto in mailListe)
@@ -710,11 +711,11 @@ namespace apptab.Controllers
             }
             else
             {
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0 && ecriture.ComptaG == comptaG && ecriture.auxi == auxi && ecriture.Journal == journal).ToList();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && ecriture.ComptaG == comptaG && ecriture.Journal == journal).ToList();
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
-                    if (item.DATECREA.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                    if (item.DATEVAL.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                         isLate = true;
                     list.Add(new OPA_VALIDATIONS
                     {
@@ -1238,7 +1239,8 @@ namespace apptab.Controllers
 
             if (ChoixBase == "2")
             {
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && ecriture.ComptaG == comptaG && ecriture.DateIn == datein && ecriture.DateOut == dateout && ecriture.auxi == auxi && ecriture.Journal == journal).ToList();
+                var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG).ToArray();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && ecriture.ComptaG == comptaG  && ecriture.Journal == journal && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
@@ -1270,7 +1272,8 @@ namespace apptab.Controllers
             }
             else
             {
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && ecriture.ComptaG == comptaG && ecriture.DateIn == datein && ecriture.DateOut == dateout && ecriture.auxi == auxi && ecriture.Journal == journal).ToList();
+                var HistoAFB = db.OPA_HISTORIQUE.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG.ToString()).ToArray();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && ecriture.ComptaG == comptaG  && ecriture.Journal == journal && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
                 foreach (var item in avalider)
                 {
@@ -1437,14 +1440,14 @@ namespace apptab.Controllers
                 mail.From = new MailAddress(MailAdresse);
 
                 mail.To.Add(MailAdresse);
-                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE != null)
+                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILPV != null)
                 {
                     string[] separators = { ";" };
 
                     var Tomail = mail;
                     if (Tomail != null)
                     {
-                        string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE;
+                        string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILPV;
                         string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
                         foreach (var mailto in mailListe)
@@ -1492,39 +1495,77 @@ namespace apptab.Controllers
                 retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).DELPP.Value;
             List<OPA_VALIDATIONS> list = new List<OPA_VALIDATIONS>();
 
-            var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2).ToList();
-            foreach (var item in val)
-            {
-                bool isLate = false;
-                if (item.DATESEND.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
-                    isLate = true;
+            var typeEcriture = db.SI_TYPECRITURE.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault().TYPE;
 
-                list.Add(new OPA_VALIDATIONS
+            if (typeEcriture == 1)
+            {
+                var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG).ToArray();
+                var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 && !HistoAFB.Contains(a.IDREGLEMENT.ToString())).ToList();
+                foreach (var item in val)
                 {
-                    IDREGLEMENT = item.IDREGLEMENT,
-                    dateOrdre = item.dateOrdre,
-                    NoPiece = item.NoPiece,
-                    Compte = item.Compte,
-                    Libelle = item.Libelle,
-                    Journal = item.Journal,
-                    Credit = item.Credit,
-                    Debit = item.Debit,
-                    MONTANT = item.MONTANT,
-                    FinancementCategorie = item.FinancementCategorie,
-                    Mon = item.Mon,
-                    MontantDevise = item.MontantDevise,
-                    Rang = item.Rang,
-                    Plan6 = item.Plan6,
-                    Commune = item.Commune,
-                    Marche = item.Marche,
-                    isLATE = isLate,
-                });
+                    bool isLate = false;
+                    if (item.DATESEND.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                        isLate = true;
+
+                    list.Add(new OPA_VALIDATIONS
+                    {
+                        IDREGLEMENT = item.IDREGLEMENT,
+                        dateOrdre = item.dateOrdre,
+                        NoPiece = item.NoPiece,
+                        Compte = item.Compte,
+                        Libelle = item.Libelle,
+                        Journal = item.Journal,
+                        Credit = item.Credit,
+                        Debit = item.Debit,
+                        MONTANT = item.MONTANT,
+                        FinancementCategorie = item.FinancementCategorie,
+                        Mon = item.Mon,
+                        MontantDevise = item.MontantDevise,
+                        Rang = item.Rang,
+                        Plan6 = item.Plan6,
+                        Commune = item.Commune,
+                        Marche = item.Marche,
+                        isLATE = isLate,
+                    });
+                }
+            }
+            else
+            {
+                var HistoAFB = db.OPA_HISTORIQUE.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG.ToString()).ToArray();
+                var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 && !HistoAFB.Contains(a.IDREGLEMENT.ToString())).ToList();
+                foreach (var item in val)
+                {
+                    bool isLate = false;
+                    if (item.DATESEND.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                        isLate = true;
+
+                    list.Add(new OPA_VALIDATIONS
+                    {
+                        IDREGLEMENT = item.IDREGLEMENT,
+                        dateOrdre = item.dateOrdre,
+                        NoPiece = item.NoPiece,
+                        Compte = item.Compte,
+                        Libelle = item.Libelle,
+                        Journal = item.Journal,
+                        Credit = item.Credit,
+                        Debit = item.Debit,
+                        MONTANT = item.MONTANT,
+                        FinancementCategorie = item.FinancementCategorie,
+                        Mon = item.Mon,
+                        MontantDevise = item.MontantDevise,
+                        Rang = item.Rang,
+                        Plan6 = item.Plan6,
+                        Commune = item.Commune,
+                        Marche = item.Marche,
+                        isLATE = isLate,
+                    });
+                }
             }
             return Json(JsonConvert.SerializeObject(new { type = "Success", msg = "Connexion avec success. ", data = list }, settings));
         }
         //======================================================================================================Cancel===============================================================
-
-        public JsonResult CancelEcriture(int id, string motif, string commentaire, SI_USERS suser, string codeproject)
+        [HttpPost]
+        public JsonResult CancelEcriture(string id, string motif, string commentaire, SI_USERS suser, string codeproject)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -1567,14 +1608,14 @@ namespace apptab.Controllers
                         mail.From = new MailAddress(MailAdresse);
 
                         mail.To.Add(MailAdresse);
-                        if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE != null)
+                        if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILREJETPAIE != null)
                         {
                             string[] separators = { ";" };
 
                             var Tomail = mail;
                             if (Tomail != null)
                             {
-                                string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE;
+                                string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILREJETPAIE;
                                 string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
                                 foreach (var mailto in mailListe)
