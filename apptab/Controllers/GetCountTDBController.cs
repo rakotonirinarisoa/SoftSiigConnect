@@ -71,8 +71,8 @@ namespace apptab.Controllers
                 //        }).Where(a => a.IDPROJET == type.IDPROJET).ToList();
                 //    }
                 //}
-
-               var  payement = db.OPA_VALIDATIONS.ToList();
+                
+                var payement = db.OPA_VALIDATIONS.ToList();
 
                 if (test.ROLE == (int)Role.SAdministrateur)
                 {
@@ -255,7 +255,7 @@ namespace apptab.Controllers
                     {
                         MandatT = mandatI,
                         MandatV = mandat.Where(a => a.ETAT == 0).Count(),//ok
-                        MandatA = mandatRAFA,
+                        MandatA = mandatRAFI,
                         MandatTR = mandat.Where(a => a.ETAT == 1).Count(),//ok
                         PaieR = 0,/*payement.Where(a => a.ETAT == 0).Count(),*/
                         PaieT = payement.Where(a => a.ETAT == 0).Count(),
@@ -264,7 +264,7 @@ namespace apptab.Controllers
                         PaieA = payement.Where(a => a.ETAT == 4).Count(),
                         MandatTA = mandatIA,
                         MandatVA = ava.Where(a => a.ETAT == 0).Count(),//ok
-                        MandatAA = mandatRAFI,
+                        MandatAA = mandatRAFA,
                         MandatTRA = ava.Where(a => a.ETAT == 1).Count(),//ok
                     };
 
@@ -462,7 +462,7 @@ namespace apptab.Controllers
                         {
                             MandatT = mandatI,
                             MandatV = mandat.Where(a => a.ETAT == 0).Count(),//ok
-                            MandatA = mandatRAFA,
+                            MandatA = mandatRAFI,
                             MandatTR = mandat.Where(a => a.ETAT == 1).Count(),//ok
                             PaieR = payement.Where(a => a.ETAT == 0).Count(),
                             PaieT = payement.Where(a => a.ETAT == 1).Count(),
@@ -471,7 +471,7 @@ namespace apptab.Controllers
                             PaieA = payement.Where(a => a.ETAT == 4).Count(),
                             MandatTA = mandatIA,
                             MandatVA = ava.Where(a => a.ETAT == 0).Count(),//ok
-                            MandatAA = mandatRAFI,
+                            MandatAA = mandatRAFA,
                             MandatTRA = ava.Where(a => a.ETAT == 1).Count(),//ok
                         };
 
@@ -669,7 +669,7 @@ namespace apptab.Controllers
                             {
                                 MandatT = mandatI,
                                 MandatV = mandat.Where(a => a.ETAT == 0).Count(),//ok
-                                MandatA = mandatRAFA,
+                                MandatA = mandatRAFI,
                                 MandatTR = mandat.Where(a => a.ETAT == 1).Count(),//ok
                                 PaieR = payement.Where(a => a.ETAT == 0).Count(),
                                 PaieT = payement.Where(a => a.ETAT == 1).Count(),
@@ -678,7 +678,7 @@ namespace apptab.Controllers
                                 PaieA = payement.Where(a => a.ETAT == 4).Count(),
                                 MandatTA = mandatIA,
                                 MandatVA = ava.Where(a => a.ETAT == 0).Count(),//ok
-                                MandatAA = mandatRAFI,
+                                MandatAA = mandatRAFA,
                                 MandatTRA = ava.Where(a => a.ETAT == 1).Count(),//ok
                             };
                         }

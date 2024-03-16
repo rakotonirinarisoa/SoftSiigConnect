@@ -122,7 +122,8 @@ $(`[data-action="AddnewSociete"]`).click(function () {
             }
             if (Datas.type == "success") {
                 alert(Datas.msg);
-                window.location = Origin + "/SuperAdmin/ProjetList";
+                alert(Origin + "/Projects/AllProjects");
+                window.location = Origin + "/Projects/AllProjects";
             }
             if (Datas.type == "login") {
                 alert(Datas.msg);
