@@ -443,7 +443,7 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                         }
                     ],
                     colReorder: {
-                        enable: true,
+                        enable: false,
                         fixedColumnsLeft: 1
                     },
                     deferRender: true,

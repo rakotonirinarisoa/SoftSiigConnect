@@ -916,5 +916,14 @@ th span {
     width: -webkit-fill-available !important;
 }
 .select2-container .select2-selection--multiple {
-    height: 30px;
+    height: -webkit-fill-available !important;
+}
+
+li.dt-paging-button.page-item.disabled {
+    border: 0px solid transparent !important;
+}
+
+div.dt-container .dt-paging .dt-paging-button {
+    padding: 0 !important;
+    margin-left: 0px !important;
 }
