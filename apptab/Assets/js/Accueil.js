@@ -89,7 +89,8 @@ function GetEtat() {
             if (Datas.type == "login") {
                 return;
             }
-            etaCode = `<option value = "Tous" > Tous</option> `;
+            etaCode = `<option value = "Tous"> Tous</option> `;
+            console.log(listEtat);
             $.each(listEtat, function (k, v) {
                 etaCode += `
                     <option value="${v}">${v}</option>
@@ -108,10 +109,13 @@ function GetEtat() {
 function GetListCompG() {
     let formData = new FormData();
 
+    let codeproject = $("#Fproject").val();
+
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDSOCIETE", User.IDSOCIETE);
+    formData.append("codeproject", codeproject);
     //formData.append("baseName", id);
 
     $.ajax({

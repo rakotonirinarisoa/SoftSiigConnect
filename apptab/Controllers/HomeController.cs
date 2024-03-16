@@ -370,19 +370,6 @@ namespace apptab.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le type d'ecriture avant toutes opérations. " }, settings));
             }
-            #region comms
-            //if (baseName == "1")
-            //{
-            //	OPAVITOMATE.connex = "Data Source=FID-INF-PC;Initial Catalog=TOMPAIE;User ID=sa;Password=Soft123well!;";
-            //}else 
-            //{
-            //	OPAVITOMATE.connex = "Data Source=FID-INF-PC;Initial Catalog=PIC3;User ID=sa;Password=Soft123well!;";
-            //}
-            //OPAVITOMATE.connex = "Data Source=FID-INF-PC;Initial Catalog=TOMPAIE;User ID=sa;Password=Soft123well!;";
-            //SOFTCONNECTOM.connex = "Data Source=DESKTOP-N8EMIRC;Initial Catalog=PIC;Integrated Security=True";
-            //OPAVITOMATE.connex = "Data Source=NOM-IT-PC;Initial Catalog=PIC3;Integrated Security=True";
-            #endregion
-            //SOFTCONNECTOM __db = new SOFTCONNECTOM();
             int crpt = 0;
             if (codeproject != "")
             {
@@ -409,39 +396,50 @@ namespace apptab.Controllers
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = JournalVM }, settings));
         }
         [HttpPost]
-        public JsonResult GetCompteG(SI_USERS suser)
+        public JsonResult GetCompteG(SI_USERS suser , string codeproject)
         {
+            int PROJECTID = int.Parse(codeproject);
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-
             var basename = GetTypeP(suser, exist.IDPROJET.ToString());
+            if (exist.IDPROJET == 0)
+            {
+                basename = db.SI_TYPECRITURE.Where(x => x.IDPROJET == PROJECTID).Select(x => x.TYPE).FirstOrDefault().ToString();
+            }
             if (basename == null)
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le type d'ecriture avant toutes opérations. " }, settings));
             }
-            int baseId = 0;
-            if (basename != "")
+            if (basename == "1")
             {
-                baseId = int.Parse(basename);
-            }
+                var CompteGBR = __db.MOP.Where(a => a.COGE.StartsWith("4")).GroupBy(x => x.COGE).Select(x => new
+                {
+                    COGE = x.Key,
+                    AUXI = x.Select(y => y.AUXI/*new { AUXI = y.AUXI, NOM = y.NOM }*/).Distinct().ToList()
+                }).ToList();
+                var CompteAvance = __db.GA_AVANCE.Where(a => a.COGE.StartsWith("4")).GroupBy(x => x.COGE).Select(x => new
+                {
+                    COGE = x.Key,
+                    AUXI = x.Select(y => y.AUXI).Distinct().ToList()
+                }).ToList();
 
-            var CompteG = __db.MCOMPTA.Where(a => a.COGE.StartsWith("4")).GroupBy(x => x.COGE).Select(x => new
-            {
-                COGE = x.Key,
-                AUXI = x.Select(y => y.AUXI).Distinct().ToList()
-            }).ToList();
-
-            var CompteGBR = __db.MOP.Where(a => a.COGE.StartsWith("4")).GroupBy(x => x.COGE).Select(x => new
-            {
-                COGE = x.Key,
-                AUXI = x.Select(y => y.AUXI/*new { AUXI = y.AUXI, NOM = y.NOM }*/).Distinct().ToList()
-            }).ToList();
-            if (baseId == 3)
-            {
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = CompteGBR }, settings));
+                if (CompteGBR.Count != 0)
+                {
+                    CompteGBR.Concat(CompteAvance);
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = CompteGBR }, settings));
+                }
+                else
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = CompteAvance }, settings));
+                }
             }
             else
             {
+                var CompteG = __db.MCOMPTA.Where(a => a.COGE.StartsWith("4")).GroupBy(x => x.COGE).Select(x => new
+                {
+                    COGE = x.Key,
+                    AUXI = x.Select(y => y.AUXI).Distinct().ToList()
+                }).ToList();
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = CompteG }, settings));
             }
 
