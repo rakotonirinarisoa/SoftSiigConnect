@@ -26,7 +26,6 @@ function fillTable() {
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
-                emptyTable();
                 return;
             }
             if (Datas.type == "login") {
@@ -38,12 +37,10 @@ function fillTable() {
             }
             if (Datas.type == "PEtat") {
                 alert(Datas.msg);
-                emptyTable();
                 return;
             }
             if (Datas.type == "Prese") {
                 alert(Datas.msg);
-                emptyTable();
                 return;
             }
             if (Datas.type == "success") {
