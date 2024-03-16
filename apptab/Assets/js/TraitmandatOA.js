@@ -261,19 +261,14 @@ function GetListLOADOTHER() {
                                 });
 
                             column.data().unique().sort().each(function (d, j) {
-                                //if (j!=0) {
-                                //    select.append('<option value="' + d + '">' + d + '</option>');
-                                //}
                                 select.append('<option value="' + d + '">' + d + '</option>');
                             });
 
                             //use column title as selector and placeholder
                             $('#' + title).select2({
                                 multiple: true,
-                                closeOnSelect: false,
-                                //placeholder: /*"Select a " + */title,
-                                //enable: true
-                                
+                                closeOnSelect: false
+
                             });
 
                             //initially clear select otherwise first option is selected
@@ -287,13 +282,6 @@ function GetListLOADOTHER() {
                         $(this).addClass("NOTVISIBLE");
                     }
                 });
-
-                //$(table.table().container()).on('keyup', 'tfoot input', function () {
-                //    table
-                //        .column($(this).data('index'))
-                //        .search(this.value)
-                //        .draw();
-                //});
             }
         },
         error: function () {
