@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Newtonsoft.Json;
@@ -23,6 +24,8 @@ namespace apptab.Controllers
 
             try
             {
+                var proj = new List<int>();
+
                 var newElemH = new COUNTTDB()
                 {
                     MandatI = 0,
@@ -45,8 +48,8 @@ namespace apptab.Controllers
 
                 var mandat = db.SI_TRAITPROJET.ToList();
                 var ava = db.SI_TRAITAVANCE.ToList();
-                var typedecriture = db.SI_TYPECRITURE.Where(a => a.IDUSER ==test.ID ).ToList();
-                var payement = db.OPA_VALIDATIONS.Join(db.OPA_REGLEMENT,va => va.IDPROJET,re => re.IDSOCIETE, (va, re) => new
+                var typedecriture = db.SI_TYPECRITURE.Where(a => a.IDUSER == test.ID).ToList();
+                var payement = db.OPA_VALIDATIONS.Join(db.OPA_REGLEMENT, va => va.IDPROJET, re => re.IDSOCIETE, (va, re) => new
                 {
                     ETAT = va.ETAT,
                     IDPROJET = va.IDPROJET,
@@ -54,21 +57,196 @@ namespace apptab.Controllers
 
                 if (test.ROLE == (int)Role.SAdministrateur)
                 {
+                    int mandatI = 0;
+                    int mandatIA = 0;
+                    int mandatRAFI = 0;
+                    int mandatRAFA = 0;
+                    var PRJ = db.SI_PROJETS.Select(a => new
+                    {
+                        PROJET = a.PROJET,
+                        ID = a.ID,
+                        DELETIONDATE = a.DELETIONDATE,
+                    }).Where(a => a.DELETIONDATE == null).ToList();
+
+                    foreach (var item in PRJ)
+                    {
+                        int crpt = item.ID;
+                        //Check si le projet est mappé à une base de données TOM²PRO//
+                        if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
+                        {
+                            continue;
+                        }
+
+                        SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                        SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
+                        List<DATATRPROJET> list = new List<DATATRPROJET>();
+
+                        //Check si la correspondance des états est OK//
+                        var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                        if (numCaEtapAPP == null)
+                        {
+                            continue;
+                        }
+                        //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
+                        if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEF) == null)
+                        {
+                            continue;
+                        }
+                        if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEF) == null)
+                        {
+                            continue;
+                        }
+                        if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
+                        {
+                            continue;
+                        }
+
+                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEF) == null)
+                        {
+                            continue;
+                        }
+                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEF) == null)
+                        {
+                            continue;
+                        }
+                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
+                        {
+                            continue;
+                        }
+
+                        if (tom.CPTADMIN_FLIQUIDATION.Any())
+                        {
+                            foreach (var x in tom.CPTADMIN_FLIQUIDATION.OrderBy(a => a.DATELIQUIDATION).ToList())
+                            {
+                                decimal MTN = 0;
+                                decimal MTNPJ = 0;
+                                var PCOP = "";
+
+                                //Get total MTN dans CPTADMIN_MLIQUIDATION pour vérification du SOMMES MTN M = SOMMES MTN MPJ//
+                                if (tom.CPTADMIN_MLIQUIDATION.Any(a => a.IDLIQUIDATION == x.ID))
+                                {
+                                    foreach (var y in tom.CPTADMIN_MLIQUIDATION.Where(a => a.IDLIQUIDATION == x.ID).ToList())
+                                    {
+                                        MTN += y.MONTANTLOCAL.Value;
+
+                                        if (String.IsNullOrEmpty(PCOP))
+                                            PCOP = y.POSTE;
+                                    }
+                                }
+
+                                //TEST SI SOMMES MTN M = SOMMES MTN MPJ//
+                                var IDString = x.ID.ToString();
+                                if (tom.TP_MPIECES_JUSTIFICATIVES.Any(a => a.NUMERO_FICHE == IDString && a.MODULLE == "LIQUIDATION"))
+                                {
+                                    foreach (var y in tom.TP_MPIECES_JUSTIFICATIVES.Where(a => a.NUMERO_FICHE == IDString && a.MODULLE == "LIQUIDATION").ToList())
+                                    {
+                                        MTNPJ += y.MONTANT.Value;
+                                    }
+                                }
+
+                                //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
+                                if (Math.Round(MTN, 3) == Math.Round(MTNPJ, 3))
+                                {
+                                    //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
+                                    var canBeDEF = true;
+                                    var canBeTEF = true;
+                                    var canBeBE = true;
+                                    if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF) == null)
+                                        canBeDEF = false;
+                                    if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF) == null)
+                                        canBeTEF = false;
+                                    if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE) == null)
+                                        canBeBE = false;
+
+                                    //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
+                                    if (canBeDEF == false || canBeTEF == false || canBeBE == false)
+                                    {
+                                        mandatI++;
+                                    }
+
+                                    if (canBeDEF && canBeTEF && canBeBE)
+                                    {
+                                        mandatRAFI++;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (tom.CPTADMIN_FAVANCE.Any())
+                        {
+                            foreach (var x in tom.CPTADMIN_FAVANCE.OrderBy(a => a.DATEAVANCE).ToList())
+                            {
+                                decimal MTN = 0;
+                                decimal MTNPJ = 0;
+                                var PCOP = "";
+
+                                //Get total MTN dans CPTADMIN_MLIQUIDATION pour vérification du SOMMES MTN M = SOMMES MTN MPJ//
+                                if (tom.CPTADMIN_MAVANCE.Any(a => a.IDAVANCE == x.ID))
+                                {
+                                    foreach (var y in tom.CPTADMIN_MAVANCE.Where(a => a.IDAVANCE == x.ID).ToList())
+                                    {
+                                        MTN += y.MONTANTLOCAL.Value;
+
+                                        if (String.IsNullOrEmpty(PCOP))
+                                            PCOP = y.POSTE;
+                                    }
+                                }
+
+                                //TEST SI SOMMES MTN M = SOMMES MTN MPJ//
+                                var IDString = x.ID.ToString();
+                                if (tom.TP_MPIECES_JUSTIFICATIVES.Any(a => a.NUMERO_FICHE == IDString && a.MODULLE == "CPTADMINAVANCE"))
+                                {
+                                    foreach (var y in tom.TP_MPIECES_JUSTIFICATIVES.Where(a => a.NUMERO_FICHE == IDString && a.MODULLE == "CPTADMINAVANCE").ToList())
+                                    {
+                                        MTNPJ += y.MONTANT.Value;
+                                    }
+                                }
+
+                                //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
+                                if (Math.Round(MTN, 3) == Math.Round(MTNPJ, 3))
+                                {
+                                    //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
+                                    var canBeDEFA = true;
+                                    var canBeTEFA = true;
+                                    var canBeBEA = true;
+                                    if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.DEF) == null)
+                                        canBeDEFA = false;
+                                    if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.TEF) == null)
+                                        canBeTEFA = false;
+                                    if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BE) == null)
+                                        canBeBEA = false;
+
+                                    //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
+                                    if (canBeDEFA == false || canBeTEFA == false || canBeBEA == false)
+                                    {
+                                        mandatIA++;
+                                    }
+
+                                    if (canBeDEFA && canBeTEFA && canBeBEA)
+                                    {
+                                        mandatRAFA++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     newElemH = new COUNTTDB()
                     {
-                        MandatT = mandat.Where(a => a.ETAT == 0).Count(),
-                        MandatV = mandat.Where(a => a.ETAT == 1).Count(),
-                        MandatA = mandat.Where(a => a.ETAT == 2).Count(),
-                        MandatTR = mandat.Where(a => a.ETAT == 3).Count(),
+                        MandatT = mandatI,
+                        MandatV = mandat.Where(a => a.ETAT == 0).Count(),//ok
+                        MandatA = mandatRAFA,
+                        MandatTR = mandat.Where(a => a.ETAT == 1).Count(),//ok
                         PaieR = payement.Where(a => a.ETAT == 0).Count(),
                         PaieT = payement.Where(a => a.ETAT == 1).Count(),
                         PaieV = payement.Where(a => a.ETAT == 2).Count(),
                         PaieF = payement.Where(a => a.ETAT == 3).Count(),
                         PaieA = payement.Where(a => a.ETAT == 4).Count(),
-                        MandatTA = ava.Where(a => a.ETAT == 0).Count(),
-                        MandatVA = ava.Where(a => a.ETAT == 1).Count(),
-                        MandatAA = ava.Where(a => a.ETAT == 2).Count(),
-                        MandatTRA = ava.Where(a => a.ETAT == 3).Count(),
+                        MandatTA = mandatIA,
+                        MandatVA = ava.Where(a => a.ETAT == 0).Count(),//ok
+                        MandatAA = mandatRAFI,
+                        MandatTRA = ava.Where(a => a.ETAT == 1).Count(),//ok
                     };
 
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = newElemH }, settings));
@@ -77,24 +255,205 @@ namespace apptab.Controllers
                 {
                     if (test.IDPROJET != 0)
                     {
+                        var user = db.SI_PROJETS.Select(a => new
+                        {
+                            PROJET = a.PROJET,
+                            ID = a.ID,
+                            DELETIONDATE = a.DELETIONDATE,
+                        }).Where(a => a.DELETIONDATE == null && a.ID == test.IDPROJET).ToList();
+
+                        int mandatI = 0;
+                        int mandatIA = 0;
+                        int mandatRAFI = 0;
+                        int mandatRAFA = 0;
+
+                        foreach (var x in user)
+                        {
+                            proj.Add(x.ID);
+                        }
+
+                        foreach (var item in proj)
+                        {
+                            int crpt = item;
+                            //Check si le projet est mappé à une base de données TOM²PRO//
+                            if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
+                            {
+                                continue;
+                            }
+
+                            SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                            SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
+                            List<DATATRPROJET> list = new List<DATATRPROJET>();
+
+                            //Check si la correspondance des états est OK//
+                            var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                            if (numCaEtapAPP == null)
+                            {
+                                continue;
+                            }
+                            //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
+                            if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEF) == null)
+                            {
+                                continue;
+                            }
+                            if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEF) == null)
+                            {
+                                continue;
+                            }
+                            if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
+                            {
+                                continue;
+                            }
+
+                            if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEF) == null)
+                            {
+                                continue;
+                            }
+                            if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEF) == null)
+                            {
+                                continue;
+                            }
+                            if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
+                            {
+                                continue;
+                            }
+
+                            if (tom.CPTADMIN_FLIQUIDATION.Any())
+                            {
+                                foreach (var x in tom.CPTADMIN_FLIQUIDATION.OrderBy(a => a.DATELIQUIDATION).ToList())
+                                {
+                                    decimal MTN = 0;
+                                    decimal MTNPJ = 0;
+                                    var PCOP = "";
+
+                                    //Get total MTN dans CPTADMIN_MLIQUIDATION pour vérification du SOMMES MTN M = SOMMES MTN MPJ//
+                                    if (tom.CPTADMIN_MLIQUIDATION.Any(a => a.IDLIQUIDATION == x.ID))
+                                    {
+                                        foreach (var y in tom.CPTADMIN_MLIQUIDATION.Where(a => a.IDLIQUIDATION == x.ID).ToList())
+                                        {
+                                            MTN += y.MONTANTLOCAL.Value;
+
+                                            if (String.IsNullOrEmpty(PCOP))
+                                                PCOP = y.POSTE;
+                                        }
+                                    }
+
+                                    //TEST SI SOMMES MTN M = SOMMES MTN MPJ//
+                                    var IDString = x.ID.ToString();
+                                    if (tom.TP_MPIECES_JUSTIFICATIVES.Any(a => a.NUMERO_FICHE == IDString && a.MODULLE == "LIQUIDATION"))
+                                    {
+                                        foreach (var y in tom.TP_MPIECES_JUSTIFICATIVES.Where(a => a.NUMERO_FICHE == IDString && a.MODULLE == "LIQUIDATION").ToList())
+                                        {
+                                            MTNPJ += y.MONTANT.Value;
+                                        }
+                                    }
+
+                                    //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
+                                    if (Math.Round(MTN, 3) == Math.Round(MTNPJ, 3))
+                                    {
+                                        //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
+                                        var canBeDEF = true;
+                                        var canBeTEF = true;
+                                        var canBeBE = true;
+                                        if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF) == null)
+                                            canBeDEF = false;
+                                        if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF) == null)
+                                            canBeTEF = false;
+                                        if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE) == null)
+                                            canBeBE = false;
+
+                                        //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
+                                        if (canBeDEF == false || canBeTEF == false || canBeBE == false)
+                                        {
+                                            mandatI++;
+                                        }
+
+                                        if (canBeDEF && canBeTEF && canBeBE)
+                                        {
+                                            mandatRAFI++;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (tom.CPTADMIN_FAVANCE.Any())
+                            {
+                                foreach (var x in tom.CPTADMIN_FAVANCE.OrderBy(a => a.DATEAVANCE).ToList())
+                                {
+                                    decimal MTN = 0;
+                                    decimal MTNPJ = 0;
+                                    var PCOP = "";
+
+                                    //Get total MTN dans CPTADMIN_MLIQUIDATION pour vérification du SOMMES MTN M = SOMMES MTN MPJ//
+                                    if (tom.CPTADMIN_MAVANCE.Any(a => a.IDAVANCE == x.ID))
+                                    {
+                                        foreach (var y in tom.CPTADMIN_MAVANCE.Where(a => a.IDAVANCE == x.ID).ToList())
+                                        {
+                                            MTN += y.MONTANTLOCAL.Value;
+
+                                            if (String.IsNullOrEmpty(PCOP))
+                                                PCOP = y.POSTE;
+                                        }
+                                    }
+
+                                    //TEST SI SOMMES MTN M = SOMMES MTN MPJ//
+                                    var IDString = x.ID.ToString();
+                                    if (tom.TP_MPIECES_JUSTIFICATIVES.Any(a => a.NUMERO_FICHE == IDString && a.MODULLE == "CPTADMINAVANCE"))
+                                    {
+                                        foreach (var y in tom.TP_MPIECES_JUSTIFICATIVES.Where(a => a.NUMERO_FICHE == IDString && a.MODULLE == "CPTADMINAVANCE").ToList())
+                                        {
+                                            MTNPJ += y.MONTANT.Value;
+                                        }
+                                    }
+
+                                    //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
+                                    if (Math.Round(MTN, 3) == Math.Round(MTNPJ, 3))
+                                    {
+                                        //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
+                                        var canBeDEFA = true;
+                                        var canBeTEFA = true;
+                                        var canBeBEA = true;
+                                        if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.DEF) == null)
+                                            canBeDEFA = false;
+                                        if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.TEF) == null)
+                                            canBeTEFA = false;
+                                        if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BE) == null)
+                                            canBeBEA = false;
+
+                                        //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
+                                        if (canBeDEFA == false || canBeTEFA == false || canBeBEA == false)
+                                        {
+                                            mandatIA++;
+                                        }
+
+                                        if (canBeDEFA && canBeTEFA && canBeBEA)
+                                        {
+                                            mandatRAFA++;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                         mandat = mandat.Where(a => a.IDPROJET == test.IDPROJET).ToList();
                         ava = ava.Where(a => a.IDPROJET == test.IDPROJET).ToList();
                         payement = payement.Where(a => a.IDPROJET == test.IDPROJET).ToList();
                         newElemH = new COUNTTDB()
                         {
-                            MandatT = mandat.Where(a => a.ETAT == 0).Count(),
-                            MandatV = mandat.Where(a => a.ETAT == 1).Count(),
-                            MandatA = mandat.Where(a => a.ETAT == 2).Count(),
-                            MandatTR = mandat.Where(a => a.ETAT == 3).Count(),
+                            MandatT = mandatI,
+                            MandatV = mandat.Where(a => a.ETAT == 0).Count(),//ok
+                            MandatA = mandatRAFA,
+                            MandatTR = mandat.Where(a => a.ETAT == 1).Count(),//ok
                             PaieR = payement.Where(a => a.ETAT == 0).Count(),
                             PaieT = payement.Where(a => a.ETAT == 1).Count(),
                             PaieV = payement.Where(a => a.ETAT == 2).Count(),
                             PaieF = payement.Where(a => a.ETAT == 3).Count(),
                             PaieA = payement.Where(a => a.ETAT == 4).Count(),
-                            MandatTA = ava.Where(a => a.ETAT == 0).Count(),
-                            MandatVA = ava.Where(a => a.ETAT == 1).Count(),
-                            MandatAA = ava.Where(a => a.ETAT == 2).Count(),
-                            MandatTRA = ava.Where(a => a.ETAT == 3).Count(),
+                            MandatTA = mandatIA,
+                            MandatVA = ava.Where(a => a.ETAT == 0).Count(),//ok
+                            MandatAA = mandatRAFI,
+                            MandatTRA = ava.Where(a => a.ETAT == 1).Count(),//ok
                         };
 
                         return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = newElemH }, settings));
@@ -111,26 +470,197 @@ namespace apptab.Controllers
                                         DELETIONDATE = usr.DELETIONDATE,
                                     }).ToList();
 
+                        int mandatI = 0;
+                        int mandatIA = 0;
+                        int mandatRAFI = 0;
+                        int mandatRAFA = 0;
+
                         foreach (var x in user)
                         {
-                            mandat = mandat.Where(a => a.IDPROJET == x.ID).ToList();
-                            ava = ava.Where(a => a.IDPROJET == x.ID).ToList();
-                            payement = payement.Where(a => a.IDPROJET == x.ID).ToList();
+                            proj.Add(x.ID);
+                        }
+
+                        foreach (var z in proj)
+                        {
+                            int crpt = z;
+                            //Check si le projet est mappé à une base de données TOM²PRO//
+                            if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
+                            {
+                                continue;
+                            }
+
+                            SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                            SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
+                            List<DATATRPROJET> list = new List<DATATRPROJET>();
+
+                            //Check si la correspondance des états est OK//
+                            var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                            if (numCaEtapAPP == null)
+                            {
+                                continue;
+                            }
+                            //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
+                            if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEF) == null)
+                            {
+                                continue;
+                            }
+                            if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEF) == null)
+                            {
+                                continue;
+                            }
+                            if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
+                            {
+                                continue;
+                            }
+
+                            if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEF) == null)
+                            {
+                                continue;
+                            }
+                            if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEF) == null)
+                            {
+                                continue;
+                            }
+                            if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
+                            {
+                                continue;
+                            }
+
+                            if (tom.CPTADMIN_FLIQUIDATION.Any())
+                            {
+                                foreach (var x in tom.CPTADMIN_FLIQUIDATION.OrderBy(a => a.DATELIQUIDATION).ToList())
+                                {
+                                    decimal MTN = 0;
+                                    decimal MTNPJ = 0;
+                                    var PCOP = "";
+
+                                    //Get total MTN dans CPTADMIN_MLIQUIDATION pour vérification du SOMMES MTN M = SOMMES MTN MPJ//
+                                    if (tom.CPTADMIN_MLIQUIDATION.Any(a => a.IDLIQUIDATION == x.ID))
+                                    {
+                                        foreach (var y in tom.CPTADMIN_MLIQUIDATION.Where(a => a.IDLIQUIDATION == x.ID).ToList())
+                                        {
+                                            MTN += y.MONTANTLOCAL.Value;
+
+                                            if (String.IsNullOrEmpty(PCOP))
+                                                PCOP = y.POSTE;
+                                        }
+                                    }
+
+                                    //TEST SI SOMMES MTN M = SOMMES MTN MPJ//
+                                    var IDString = x.ID.ToString();
+                                    if (tom.TP_MPIECES_JUSTIFICATIVES.Any(a => a.NUMERO_FICHE == IDString && a.MODULLE == "LIQUIDATION"))
+                                    {
+                                        foreach (var y in tom.TP_MPIECES_JUSTIFICATIVES.Where(a => a.NUMERO_FICHE == IDString && a.MODULLE == "LIQUIDATION").ToList())
+                                        {
+                                            MTNPJ += y.MONTANT.Value;
+                                        }
+                                    }
+
+                                    //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
+                                    if (Math.Round(MTN, 3) == Math.Round(MTNPJ, 3))
+                                    {
+                                        //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
+                                        var canBeDEF = true;
+                                        var canBeTEF = true;
+                                        var canBeBE = true;
+                                        if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF) == null)
+                                            canBeDEF = false;
+                                        if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF) == null)
+                                            canBeTEF = false;
+                                        if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE) == null)
+                                            canBeBE = false;
+
+                                        //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
+                                        if (canBeDEF == false || canBeTEF == false || canBeBE == false)
+                                        {
+                                            mandatI++;
+                                        }
+
+                                        if (canBeDEF && canBeTEF && canBeBE)
+                                        {
+                                            mandatRAFI++;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (tom.CPTADMIN_FAVANCE.Any())
+                            {
+                                foreach (var x in tom.CPTADMIN_FAVANCE.OrderBy(a => a.DATEAVANCE).ToList())
+                                {
+                                    decimal MTN = 0;
+                                    decimal MTNPJ = 0;
+                                    var PCOP = "";
+
+                                    //Get total MTN dans CPTADMIN_MLIQUIDATION pour vérification du SOMMES MTN M = SOMMES MTN MPJ//
+                                    if (tom.CPTADMIN_MAVANCE.Any(a => a.IDAVANCE == x.ID))
+                                    {
+                                        foreach (var y in tom.CPTADMIN_MAVANCE.Where(a => a.IDAVANCE == x.ID).ToList())
+                                        {
+                                            MTN += y.MONTANTLOCAL.Value;
+
+                                            if (String.IsNullOrEmpty(PCOP))
+                                                PCOP = y.POSTE;
+                                        }
+                                    }
+
+                                    //TEST SI SOMMES MTN M = SOMMES MTN MPJ//
+                                    var IDString = x.ID.ToString();
+                                    if (tom.TP_MPIECES_JUSTIFICATIVES.Any(a => a.NUMERO_FICHE == IDString && a.MODULLE == "CPTADMINAVANCE"))
+                                    {
+                                        foreach (var y in tom.TP_MPIECES_JUSTIFICATIVES.Where(a => a.NUMERO_FICHE == IDString && a.MODULLE == "CPTADMINAVANCE").ToList())
+                                        {
+                                            MTNPJ += y.MONTANT.Value;
+                                        }
+                                    }
+
+                                    //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
+                                    if (Math.Round(MTN, 3) == Math.Round(MTNPJ, 3))
+                                    {
+                                        //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
+                                        var canBeDEFA = true;
+                                        var canBeTEFA = true;
+                                        var canBeBEA = true;
+                                        if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.DEF) == null)
+                                            canBeDEFA = false;
+                                        if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.TEF) == null)
+                                            canBeTEFA = false;
+                                        if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BE) == null)
+                                            canBeBEA = false;
+
+                                        //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
+                                        if (canBeDEFA == false || canBeTEFA == false || canBeBEA == false)
+                                        {
+                                            mandatIA++;
+                                        }
+
+                                        if (canBeDEFA && canBeTEFA && canBeBEA)
+                                        {
+                                            mandatRAFA++;
+                                        }
+                                    }
+                                }
+                            }
+
+                            mandat = mandat.Where(a => a.IDPROJET == z).ToList();
+                            ava = ava.Where(a => a.IDPROJET == z).ToList();
+                            payement = payement.Where(a => a.IDPROJET == z).ToList();
                             newElemH = new COUNTTDB()
                             {
-                                MandatT = mandat.Where(a => a.ETAT == 0).Count(),
-                                MandatV = mandat.Where(a => a.ETAT == 1).Count(),
-                                MandatA = mandat.Where(a => a.ETAT == 2).Count(),
-                                MandatTR = mandat.Where(a => a.ETAT == 3).Count(),
-                                MandatTA = ava.Where(a => a.ETAT == 0).Count(),
-                                MandatVA = ava.Where(a => a.ETAT == 1).Count(),
-                                MandatAA = ava.Where(a => a.ETAT == 2).Count(),
-                                MandatTRA = ava.Where(a => a.ETAT == 3).Count(),
+                                MandatT = mandatI,
+                                MandatV = mandat.Where(a => a.ETAT == 0).Count(),//ok
+                                MandatA = mandatRAFA,
+                                MandatTR = mandat.Where(a => a.ETAT == 1).Count(),//ok
                                 PaieR = payement.Where(a => a.ETAT == 0).Count(),
                                 PaieT = payement.Where(a => a.ETAT == 1).Count(),
                                 PaieV = payement.Where(a => a.ETAT == 2).Count(),
                                 PaieF = payement.Where(a => a.ETAT == 3).Count(),
-                                PaieA = payement.Where(a => a.ETAT == 4).Count()
+                                PaieA = payement.Where(a => a.ETAT == 4).Count(),
+                                MandatTA = mandatIA,
+                                MandatVA = ava.Where(a => a.ETAT == 0).Count(),//ok
+                                MandatAA = mandatRAFI,
+                                MandatTRA = ava.Where(a => a.ETAT == 1).Count(),//ok
                             };
                         }
 
