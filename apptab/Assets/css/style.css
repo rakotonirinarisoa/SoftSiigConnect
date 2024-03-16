@@ -906,12 +906,13 @@ span.select2.select2-container.select2-container--default.select2-container--bel
 }
 
 li.select2-selection__choice {
-    font-size: 7px;
+    /*font-size: 7px;*/
 }
 
 span.select2-results {
     font-size: 7px;
 }
+
 th span {
     width: -webkit-fill-available !important;
 }
