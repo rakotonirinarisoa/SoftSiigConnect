@@ -33,6 +33,29 @@
             </tr>
         </thead>
         <tbody class="traitementORDSEC"></tbody>
+        <tfoot style="opacity:50%">
+            <tr>
+                <th></th>
+                <th>SOA</th>
+                <th>Projet</th>
+                <th>Référence</th>
+                <th>Objet</th>
+                <th>Titulaire</th>
+                <th>Date</th>
+                <th>Compte bénéficiaire</th>
+                <th>PCOP</th>
+                <th>Montant</th>
+                <th>Date DEF</th>
+                <th>Date TEF</th>
+                <th>Date BE</th>
+                <th>Utilisateur</th>
+                <th>Date génération</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
     </table>
 </div>
 
@@ -132,6 +155,10 @@
 <script src="~/Assets/js/TraitmandatDOCRFR.js" asp-append-version="true"></script>
 <script src="~/Assets/js/TraitmandatLIASRFR.js" asp-append-version="true"></script>
 <script src="~/Assets/js/TraitmandatModalRFR.js" asp-append-version="true"></script>
+
+<script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
+<script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
+
 <script>
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;

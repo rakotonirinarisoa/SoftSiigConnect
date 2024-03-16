@@ -8,9 +8,9 @@
     <title>SOFT - SIIG CONNECT</title>
 
     @*<!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">*@
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+        <!-- Ionicons -->
+        <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">*@
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="~/Assets/admlte/plugins/fontawesome-free/css/all.min.css">
@@ -37,6 +37,7 @@
 
     <link rel="stylesheet" href="~/Assets/css/style.css" />
     <link rel="stylesheet" href="~/Assets/css/loader.css" />
+    <link href="~/Assets/css/acco.css" rel="stylesheet" />
 
     <script src="~/Assets/admlte/plugins/jquery/jquery.min.js"></script>
     <script src="~/Assets/admlte/plugins/sweetalert2/sweetalert2.all.min.js"></script>
@@ -50,6 +51,8 @@
     <script src="~/Assets/otherJs/datatables.min.js"></script>
     <script src="~/Assets/otherJs/dataTables.rowsGroup.js"></script>
     <script src="~/Assets/otherJs/buttons.colVis.min.js"></script>
+
+    @*https://www.svgrepo.com/collection/market-and-economics/*@
 </head>
 <body class="hold-transition sidebar-mini layout-fixed" style="background-color: #f4f6f9;">
     <div id="loader" class="lds-dual-ring display-none overlay"></div>
@@ -107,480 +110,495 @@
                     @if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
                     {
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">
-                            <li class="nav-item menu-open">
+                            <li class="nav-item menu-open" onclick="myFunction('Demo1')">
                                 <hr />
                                 <a class="nav-link active" style="background-color: darkblue">
+                                    <img src="~/Assets/icons/settings-gear-svgrepo-com.svg" style="width: 25px; margin-right: 5px;" />
                                     <p>
                                         PARAMETRAGES
                                     </p>
                                 </a>
                             </li>
                         </ul>
+                        <div id="Demo1" class="w3-hide" @*class="panel"*@>
+                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block" id="menu-accordeon">
+                                @if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur)
+                                {
+                                    <li class="nav-item SuperAd" data-io>
+                                        <a class="nav-link">
+                                            <i class="nav-icon fas fa-user-secret"></i>
+                                            <p>
+                                                Super-Admin
+                                            </p>
+                                        </a>
+                                        <ul style="list-style-type: none; display:block" class="nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                                            <li class="nav-item">
+                                                <a href="../SuperAdmin/MenuCreate" class="nav-link">
+                                                    <i class="nav-icon fas fa-window-maximize"></i>
+                                                    <p>
+                                                        Paramétrage menus
+                                                    </p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="../Projects/AllProjects" class="nav-link">
+                                                    <i class="nav-icon fas fa-id-card"></i>
+                                                    <p>
+                                                        Gestion PROJETS
+                                                    </p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="../SuperAdmin/SOAList" class="nav-link">
+                                                    <i class="nav-icon fas fa-id-card-alt" s></i>
+                                                    <p>
+                                                        Gestion SOA
+                                                    </p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="../SuperAdmin/PROSOAList" class="nav-link">
+                                                    <i class="nav-icon nav-icon fas fa-link"></i>
+                                                    <p>
+                                                        PROJETS-SOA
+                                                    </p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="../SuperAdmin/SuperAdminMaPList" class="nav-link">
+                                                    <i class="nav-icon fas fa-user-cog"></i>
+                                                    <p>
+                                                        Mappages
+                                                    </p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="../Parametre/MotifCreate" class="nav-link">
+                                                    <i class="nav-icon fas fa-question"></i>
+                                                    <p>
+                                                        Motifs de rejet
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                }
 
-                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block" id="menu-accordeon">
-                            @if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur)
-                            {
-                                <li class="nav-item SuperAd" data-io>
+                                <li class="nav-item SuperAd" data-io id="Demo1">
                                     <a class="nav-link">
-                                        <i class="nav-icon fas fa-user-secret"></i>
+                                        <i class="nav-icon fas fa-cogs"></i>
                                         <p>
-                                            Super-Admin
+                                            Paramétrages des projets
                                         </p>
                                     </a>
                                     <ul style="list-style-type: none; display:block" class="nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                                         <li class="nav-item">
-                                            <a href="../SuperAdmin/MenuCreate" class="nav-link">
-                                                <i class="nav-icon fas fa-window-maximize"></i>
+                                            <a href="../Parametre/FinanCreate" class="nav-link">
+                                                <i class="nav-icon fa fa-credit-card"></i>
                                                 <p>
-                                                    Paramétrage menus
+                                                    Financement
                                                 </p>
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="../Projects/AllProjects" class="nav-link">
-                                                <i class="nav-icon fas fa-id-card"></i>
+                                            <a href="../Parametre/ConvCreate" class="nav-link">
+                                                <i class="nav-icon fas fa-handshake"></i>
                                                 <p>
-                                                    Gestion PROJETS
+                                                    Convention
                                                 </p>
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="../SuperAdmin/SOAList" class="nav-link">
-                                                <i class="nav-icon fas fa-id-card-alt" s></i>
+                                            <a href="../Parametre/CatCreate" class="nav-link">
+                                                <i class="nav-icon fas fa-th"></i>
                                                 <p>
-                                                    Gestion SOA
+                                                    Catégorie
                                                 </p>
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="../SuperAdmin/PROSOAList" class="nav-link">
-                                                <i class="nav-icon nav-icon fas fa-link"></i>
+                                            <a href="../Parametre/EngaCreate" class="nav-link">
+                                                <i class="nav-icon fas fa-book-reader"></i>
                                                 <p>
-                                                    PROJETS-SOA
+                                                    Types d’engagement
                                                 </p>
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="../SuperAdmin/SuperAdminMaPList" class="nav-link">
-                                                <i class="nav-icon fas fa-user-cog"></i>
+                                            <a href="../Parametre/ProcCreate" class="nav-link">
+                                                <i class="nav-icon fas fa-book-open"></i>
                                                 <p>
-                                                    Mappages
+                                                    Types de procédure
                                                 </p>
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="../Parametre/MotifCreate" class="nav-link">
-                                                <i class="nav-icon fas fa-question"></i>
+                                            <a href="../Parametre/MinCreate" class="nav-link">
+                                                <i class="nav-icon fas fa-folder"></i>
                                                 <p>
-                                                    Motifs de rejet
+                                                    Ministère
+                                                </p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="../Parametre/MisCreate" class="nav-link">
+                                                <i class="nav-icon fas fa-folder-minus"></i>
+                                                <p>
+                                                    Mission
+                                                </p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="../Parametre/ProgCreate" class="nav-link">
+                                                <i class="nav-icon fas fa-calendar-minus"></i>
+                                                <p>
+                                                    Programme
+                                                </p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="../Parametre/ActCreate" class="nav-link">
+                                                <i class="nav-icon fas fa-bookmark"></i>
+                                                <p>
+                                                    Activité
                                                 </p>
                                             </a>
                                         </li>
                                     </ul>
                                 </li>
-                            }
+                            </ul>
+                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">
 
-                            <li class="nav-item SuperAd" data-io>
-                                <a class="nav-link">
-                                    <i class="nav-icon fas fa-cogs"></i>
-                                    <p>
-                                        Paramétrages des projets
-                                    </p>
-                                </a>
-                                <ul style="list-style-type: none; display:block" class="nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                                    <li class="nav-item">
-                                        <a href="../Parametre/FinanCreate" class="nav-link">
-                                            <i class="nav-icon fa fa-credit-card"></i>
-                                            <p>
-                                                Financement
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="../Parametre/ConvCreate" class="nav-link">
-                                            <i class="nav-icon fas fa-handshake"></i>
-                                            <p>
-                                                Convention
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="../Parametre/CatCreate" class="nav-link">
-                                            <i class="nav-icon fas fa-th"></i>
-                                            <p>
-                                                Catégorie
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="../Parametre/EngaCreate" class="nav-link">
-                                            <i class="nav-icon fas fa-book-reader"></i>
-                                            <p>
-                                                Types d’engagement
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="../Parametre/ProcCreate" class="nav-link">
-                                            <i class="nav-icon fas fa-book-open"></i>
-                                            <p>
-                                                Types de procédure
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="../Parametre/MinCreate" class="nav-link">
-                                            <i class="nav-icon fas fa-folder"></i>
-                                            <p>
-                                                Ministère
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="../Parametre/MisCreate" class="nav-link">
-                                            <i class="nav-icon fas fa-folder-minus"></i>
-                                            <p>
-                                                Mission
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="../Parametre/ProgCreate" class="nav-link">
-                                            <i class="nav-icon fas fa-calendar-minus"></i>
-                                            <p>
-                                                Programme
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a href="../Parametre/ActCreate" class="nav-link">
-                                            <i class="nav-icon fas fa-bookmark"></i>
-                                            <p>
-                                                Activité
-                                            </p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
+                                <li class="nav-item" data-io id="Demo1">
+                                    <a href="../User/List" class="nav-link">
+                                        <i class="nav-icon fas fa-users"></i>
+                                        <p>
+                                            Gestion des utilisateurs
+                                        </p>
+                                    </a>
+                                </li>
 
-                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">
+                                <li class="nav-item" data-io id="Demo1">
+                                    <a href="../Privilege/List" class="nav-link">
+                                        <i class="nav-icon fas fa-flag-checkered"></i>
+                                        <p>
+                                            Gestion des privilèges
+                                        </p>
+                                    </a>
+                                </li>
 
-                            <li class="nav-item" data-io>
-                                <a href="../User/List" class="nav-link">
-                                    <i class="nav-icon fas fa-users"></i>
-                                    <p>
-                                        Gestion des utilisateurs
-                                    </p>
-                                </a>
-                            </li>
+                                <li class="nav-item" data-io id="Demo1">
+                                    <a href="../Parametre/CorrEtatCreate" class="nav-link">
+                                        <i class="nav-icon fas fa-cog"></i>
+                                        <p>
+                                            Correspondance des états
+                                        </p>
+                                    </a>
+                                </li>
 
-                            <li class="nav-item" data-io>
-                                <a href="../Privilege/List" class="nav-link">
-                                    <i class="nav-icon fas fa-flag-checkered"></i>
-                                    <p>
-                                        Gestion des privilèges
-                                    </p>
-                                </a>
-                            </li>
+                                <li class="nav-item" data-io id="Demo1">
+                                    <a href="../SuperAdmin/DelaisCreate" class="nav-link">
+                                        <i class="nav-icon fas fa-clock"></i>
+                                        <p>
+                                            Délais des traitements
+                                        </p>
+                                    </a>
+                                </li>
 
-                            <li class="nav-item" data-io>
-                                <a href="../Parametre/CorrEtatCreate" class="nav-link">
-                                    <i class="nav-icon fas fa-cog"></i>
-                                    <p>
-                                        Correspondance des états
-                                    </p>
-                                </a>
-                            </li>
+                                <li class="nav-item" data-io id="Demo1">
+                                    <a href="../SuperAdmin/MailCreate" class="nav-link">
+                                        <i class="nav-icon fas fa-envelope"></i>
+                                        <p>
+                                            Gestion des mails
+                                        </p>
+                                    </a>
+                                </li>
 
-                            <li class="nav-item" data-io>
-                                <a href="../SuperAdmin/DelaisCreate" class="nav-link">
-                                    <i class="nav-icon fas fa-clock"></i>
-                                    <p>
-                                        Délais des traitements
-                                    </p>
-                                </a>
-                            </li>
+                                <li class="nav-item" data-io id="Demo1">
+                                    <a href="../Crypto/CryptoCreate" class="nav-link">
+                                        <i class="nav-icon fas fa-key"></i>
+                                        <p>
+                                            Cryptages
+                                        </p>
+                                    </a>
+                                </li>
 
-                            <li class="nav-item" data-io>
-                                <a href="../SuperAdmin/MailCreate" class="nav-link">
-                                    <i class="nav-icon fas fa-envelope"></i>
-                                    <p>
-                                        Gestion des mails
-                                    </p>
-                                </a>
-                            </li>
+                                <li class="nav-item" data-io id="Demo1">
+                                    <a href="../FTP/FtpCreate" class="nav-link">
+                                        <i class="nav-icon fas fa-paper-plane"></i>
+                                        <p>
+                                            FTP
+                                        </p>
+                                    </a>
+                                </li>
 
-                            <li class="nav-item" data-io>
-                                <a href="../Crypto/CryptoCreate" class="nav-link">
-                                    <i class="nav-icon fas fa-key"></i>
-                                    <p>
-                                        Cryptages
-                                    </p>
-                                </a>
-                            </li>
+                                <li class="nav-item" data-io id="Demo1">
+                                    <a href="../Parametre/TypeECreate" class="nav-link">
+                                        <i class="nav-icon fa fa-exclamation-triangle"></i>
+                                        <p>
+                                            Type d'écriture
+                                        </p>
+                                    </a>
+                                </li>
 
-                            <li class="nav-item" data-io>
-                                <a href="../FTP/FtpCreate" class="nav-link">
-                                    <i class="nav-icon fas fa-paper-plane"></i>
-                                    <p>
-                                        FTP
-                                    </p>
-                                </a>
-                            </li>
-
-                            <li class="nav-item" data-io>
-                                <a href="../Parametre/TypeECreate" class="nav-link">
-                                    <i class="nav-icon fa fa-exclamation-triangle"></i>
-                                    <p>
-                                        Type d'écriture
-                                    </p>
-                                </a>
-                            </li>
-
-                        </ul>
+                            </ul>
+                        </div>
                     }
 
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">
-                        <li class="nav-item menu-open">
+                        <li class="nav-item menu-open" onclick="myFunction('Demo2')">
                             <hr />
                             <a class="nav-link active" style="background-color: darkslateblue">
+                                <img src="~/Assets/icons/document-svgrepo-com.svg" style="width: 25px; margin-right: 5px;" />
                                 <p>
                                     MANDATS
                                 </p>
                             </a>
                         </li>
                     </ul>
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block" id="menu-accordeon">
-                        <li class="nav-item">
-                            <a href="../Traitement/TraitementORDSECOTHER" class="nav-link">
-                                <i class="nav-icon fas fa-list" style="color: #17A2B8"></i>
-                                <p>
-                                    @Session["MTNON"]
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../Traitement/TraitementPROJET" class="nav-link">
-                                <i class="nav-icon fas fa-th-list" style="color: #FFC107"></i>
-                                <p>
-                                    @Session["MT0"]
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../Traitement/TraitementORDSEC" class="nav-link">
-                                <i class="nav-icon fas fa-list-ol" style="color: #DF4857"></i>
-                                <p>
-                                    @Session["MT1"]
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../Traitement/TraitementSENDSIIGFP" class="nav-link">
-                                <i class="nav-icon fas fa-tasks" style="color: #3EB059"></i>
-                                <p>
-                                    @Session["MT2"]
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
+                    <div id="Demo2" class="w3-hide">
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block" id="menu-accordeon">
+                            <li class="nav-item">
+                                <a href="../Traitement/TraitementORDSECOTHER" class="nav-link">
+                                    <i class="nav-icon fas fa-list" style="color: #17A2B8"></i>
+                                    <p>
+                                        @Session["MTNON"]
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../Traitement/TraitementPROJET" class="nav-link">
+                                    <i class="nav-icon fas fa-th-list" style="color: #FFC107"></i>
+                                    <p>
+                                        @Session["MT0"]
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../Traitement/TraitementORDSEC" class="nav-link">
+                                    <i class="nav-icon fas fa-list-ol" style="color: #DF4857"></i>
+                                    <p>
+                                        @Session["MT1"]
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../Traitement/TraitementSENDSIIGFP" class="nav-link">
+                                    <i class="nav-icon fas fa-tasks" style="color: #3EB059"></i>
+                                    <p>
+                                        @Session["MT2"]
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
 
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">
-                        <li class="nav-item menu-open">
+                        <li class="nav-item menu-open" onclick="myFunction('Demo3')">
                             <hr />
                             <a class="nav-link active" style="background-color: blueviolet">
+                                <img src="~/Assets/icons/coin-cash-svgrepo-com.svg" style="width: 25px; margin-right: 5px;" />
                                 <p>
                                     AVANCES
                                 </p>
                             </a>
                         </li>
                     </ul>
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block" id="menu-accordeon">
-                        <li class="nav-item">
-                            <a href="../TraitementAvance/TraitementORDSECOTHER" class="nav-link">
-                                <i class="nav-icon fas fa-list" style="color: #17A2B8"></i>
-                                <p>
-                                    @Session["MD0"]
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../TraitementAvance/TraitementPROJET" class="nav-link">
-                                <i class="nav-icon fas fa-th-list" style="color: #FFC107"></i>
-                                <p>
-                                    @Session["MD1"]
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../TraitementAvance/TraitementORDSEC" class="nav-link">
-                                <i class="nav-icon fas fa-list-ol" style="color: #DF4857"></i>
-                                <p>
-                                    @Session["MD2"]
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../TraitementAvance/TraitementSENDSIIGFP" class="nav-link">
-                                <i class="nav-icon fas fa-tasks" style="color: #3EB059"></i>
-                                <p>
-                                    @Session["MD3"]
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
-
+                    <div id="Demo3" class="w3-hide">
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block" id="menu-accordeon">
+                            <li class="nav-item">
+                                <a href="../TraitementAvance/TraitementORDSECOTHER" class="nav-link">
+                                    <i class="nav-icon fas fa-list" style="color: #17A2B8"></i>
+                                    <p>
+                                        @Session["MD0"]
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../TraitementAvance/TraitementPROJET" class="nav-link">
+                                    <i class="nav-icon fas fa-th-list" style="color: #FFC107"></i>
+                                    <p>
+                                        @Session["MD1"]
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../TraitementAvance/TraitementORDSEC" class="nav-link">
+                                    <i class="nav-icon fas fa-list-ol" style="color: #DF4857"></i>
+                                    <p>
+                                        @Session["MD2"]
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../TraitementAvance/TraitementSENDSIIGFP" class="nav-link">
+                                    <i class="nav-icon fas fa-tasks" style="color: #3EB059"></i>
+                                    <p>
+                                        @Session["MD3"]
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                     <hr />
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block;">
-                        <li class="nav-item menu-open">
+                        <li class="nav-item menu-open" onclick="myFunction('Demo4')">
                             <a class="nav-link active" style="background-color: steelblue">
+                                <img src="~/Assets/icons/pound-sterling-pound-svgrepo-com.svg" style="width: 25px; margin-right: 5px;" />
                                 <p>
                                     PAIEMENTS
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="../Home/PaiementValidation" class="nav-link">
-                                <i class="nav-icon fas fa-list" style="color: #17A2B8"></i>
-                                <p>
-                                    @Session["MP1"]
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../Home/TeacherValidation" class="nav-link">
-                                <i class="nav-icon fas fa-th-list" style="color: #FFC107"></i>
-                                <p>
-                                    @Session["MP2"]
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../Home/BonPourPaiement" class="nav-link">
-                                <i class="nav-icon fas fa-list-ol" style="color: #DF4857"></i>
-                                <p>
-                                    @Session["MP3"]
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../Home/FValidation" class="nav-link">
-                                <i class="nav-icon fas fa-tasks" style="color: #3EB059"></i>
-                                <p>
-                                    @Session["MP4"]
-                                </p>
-                            </a>
-                        </li>
                     </ul>
-
+                    <div id="Demo4" class="w3-hide">
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block" id="menu-accordeon">
+                            <li class="nav-item">
+                                <a href="../Home/PaiementValidation" class="nav-link">
+                                    <i class="nav-icon fas fa-list" style="color: #17A2B8"></i>
+                                    <p>
+                                        @Session["MP1"]
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../Home/TeacherValidation" class="nav-link">
+                                    <i class="nav-icon fas fa-th-list" style="color: #FFC107"></i>
+                                    <p>
+                                        @Session["MP2"]
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../Home/BonPourPaiement" class="nav-link">
+                                    <i class="nav-icon fas fa-list-ol" style="color: #DF4857"></i>
+                                    <p>
+                                        @Session["MP3"]
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../Home/FValidation" class="nav-link">
+                                    <i class="nav-icon fas fa-tasks" style="color: #3EB059"></i>
+                                    <p>
+                                        @Session["MP4"]
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                     <hr />
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">
-                        <li class="nav-item menu-open">
+                        <li class="nav-item menu-open" onclick="myFunction('Demo5')">
                             <a class="nav-link active" style="background-color: lightslategrey">
+                                <img src="~/Assets/icons/analytics-data-analytics-svgrepo-com.svg" style="width: 25px; margin-right: 5px;" />
                                 <p>
                                     TABLEAUX DE BORD
                                 </p>
                             </a>
                         </li>
                     </ul>
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block" id="menu-accordeon">
-                        @if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur)
-                        { 
+                    <div id="Demo5" class="w3-hide">
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block" id="menu-accordeon">
+                            @if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur)
+                            {
+                                <li class="nav-item">
+                                    <a href="../Calendar/Index" class="nav-link">
+                                        <i class="nav-icon fas fa-calendar-alt" style="color: #17A2B8"></i>
+                                        <p>
+                                            Evénements
+                                        </p>
+                                    </a>
+                                </li>
+                            }
                             <li class="nav-item">
-                                <a href="../Calendar/Index" class="nav-link">
-                                    <i class="nav-icon fas fa-calendar-alt" style="color: #17A2B8"></i>
+                                <a href="../Etat/InfoProCreate" class="nav-link">
+                                    <i class="nav-icon fa fa-exclamation" style="color: #FFC107"></i>
                                     <p>
-                                        Evénements
+                                        Informations PROJET
                                     </p>
                                 </a>
                             </li>
-                        }
-                        <li class="nav-item">
-                            <a href="../Etat/InfoProCreate" class="nav-link">
-                                <i class="nav-icon fa fa-exclamation" style="color: #FFC107"></i>
-                                <p>
-                                    Informations PROJET
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../BordTraitement/BordListeEngaPaie" class="nav-link">
-                                <i class="nav-icon fas fa-archive" style="color: #FFC107"></i>
-                                <p>
-                                    @Session["TDB0"]@*Liste des engagements, avances et paiements*@
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../BordTraitement/StatutEngagements" class="nav-link">
-                                <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
-                                <p>
-                                    @Session["TDB1"]@*Statut des engagements et avances*@
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../BordTraitement/DelaisTraitementEngagements" class="nav-link">
-                                <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
-                                <p>
-                                    @Session["TDB2"]@*Délais de traitement des engagements et avances*@
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../BordTraitement/SoufTraitement" class="nav-link">
-                                <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
-                                <p>
-                                    @Session["TDB3"]@*Traitements des engagements et avances en souffrance (par rapport au délai moyen)*@
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../BordTraitement/EngagementsREJETE" class="nav-link">
-                                <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
-                                <p>
-                                    @Session["TDB4"]@*Engagements et avances rejetés*@
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../BordTraitement/StatutPaiement" class="nav-link">
-                                <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
-                                <p>
-                                    @Session["TDB5"]@*Statut des paiements*@
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../BordTraitement/TraitementsPaiement" class="nav-link">
-                                <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
-                                <p>
-                                    @Session["TDB6"]@*Délais de traitement des paiements*@
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../BordTraitement/TraitementPaiementSoufrance" class="nav-link">
-                                <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
-                                <p>
-                                    @Session["TDB7"]@*Traitement des paiements en souffrance (par rapport au délai moyen)*@
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="../BordTraitement/TraitementPaiementRejet" class="nav-link">
-                                <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
-                                <p>
-                                    @Session["TDB8"]@*Paiements rejetés*@
-                                </p>
-                            </a>
-                        </li>
-                    </ul>
+                            <li class="nav-item">
+                                <a href="../BordTraitement/BordListeEngaPaie" class="nav-link">
+                                    <i class="nav-icon fas fa-archive" style="color: #FFC107"></i>
+                                    <p>
+                                        @Session["TDB0"]@*Liste des engagements, avances et paiements*@
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../BordTraitement/StatutEngagements" class="nav-link">
+                                    <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
+                                    <p>
+                                        @Session["TDB1"]@*Statut des engagements et avances*@
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../BordTraitement/DelaisTraitementEngagements" class="nav-link">
+                                    <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
+                                    <p>
+                                        @Session["TDB2"]@*Délais de traitement des engagements et avances*@
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../BordTraitement/SoufTraitement" class="nav-link">
+                                    <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
+                                    <p>
+                                        @Session["TDB3"]@*Traitements des engagements et avances en souffrance (par rapport au délai moyen)*@
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../BordTraitement/EngagementsREJETE" class="nav-link">
+                                    <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
+                                    <p>
+                                        @Session["TDB4"]@*Engagements et avances rejetés*@
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../BordTraitement/StatutPaiement" class="nav-link">
+                                    <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
+                                    <p>
+                                        @Session["TDB5"]@*Statut des paiements*@
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../BordTraitement/TraitementsPaiement" class="nav-link">
+                                    <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
+                                    <p>
+                                        @Session["TDB6"]@*Délais de traitement des paiements*@
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../BordTraitement/TraitementPaiementSoufrance" class="nav-link">
+                                    <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
+                                    <p>
+                                        @Session["TDB7"]@*Traitement des paiements en souffrance (par rapport au délai moyen)*@
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../BordTraitement/TraitementPaiementRejet" class="nav-link">
+                                    <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
+                                    <p>
+                                        @Session["TDB8"]@*Paiements rejetés*@
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
                     <hr />
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">
                         <li class="nav-item menu-open">
-                            <a href="@Session["GED"]" class="nav-link active" style="background-color: tomato" target="_blank">
+                            <a href="@Session["GED"]" class="nav-link active" style="background-color: tomato;" target="_blank">
+                                <img src="~/Assets/icons/analytics-statistics-svgrepo-com.svg" style="width: 25px; margin-right: 5px;" />
                                 <p>
                                     GED
                                 </p>
@@ -682,5 +700,33 @@
     <script defer>
         const loader = $('#loader');
     </script>
+    <script>
+        function myFunction(id) {
+            var x = document.getElementById(id);
+            if (x.className.indexOf("w3-show") == -1) {
+                x.className += " w3-show";
+                x.className += " fiderana"
+            } else {
+                x.className = x.className.replace(" w3-show", "");
+                x.className = x.className.replace(" fiderana", "");
+            }
+        }
+    </script>
+    @*<script>
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.maxHeight) {
+                    panel.style.maxHeight = null;
+                } else {
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                }
+            });
+        }
+    </script>*@
 </body>
 </html>

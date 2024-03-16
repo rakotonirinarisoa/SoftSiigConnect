@@ -1,6 +1,5 @@
 function setCurrentRoute(link) {
     sessionStorage.setItem('j3rGjf', link);
-
     $('nav').find(`a[href="${link}"].nav-link`).find('p').css({ 'color': 'red' });
 }
 

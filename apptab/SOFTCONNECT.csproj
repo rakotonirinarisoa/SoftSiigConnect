@@ -2172,6 +2172,7 @@
     <Content Include="Assets\admlte\plugins\uplot\uPlot.iife.js" />
     <Content Include="Assets\admlte\plugins\uplot\uPlot.iife.min.js" />
     <Content Include="Assets\admlte\plugins\uplot\uPlot.min.css" />
+    <Content Include="Assets\css\acco.css" />
     <Content Include="Assets\css\Evenements.css" />
     <Content Include="Assets\css\loader.css" />
     <Content Include="Assets\fullcalendar-6.1.11\dist\index.global.js" />
@@ -2383,6 +2384,12 @@
     <Content Include="Assets\fullcalendar-6.1.11\packages\timegrid\index.global.min.js" />
     <Content Include="Assets\fullcalendar-6.1.11\packages\web-component\index.global.js" />
     <Content Include="Assets\fullcalendar-6.1.11\packages\web-component\index.global.min.js" />
+    <Content Include="Assets\icons\analytics-data-analytics-svgrepo-com.svg" />
+    <Content Include="Assets\icons\analytics-statistics-svgrepo-com.svg" />
+    <Content Include="Assets\icons\coin-cash-svgrepo-com.svg" />
+    <Content Include="Assets\icons\document-svgrepo-com.svg" />
+    <Content Include="Assets\icons\pound-sterling-pound-svgrepo-com.svg" />
+    <Content Include="Assets\icons\settings-gear-svgrepo-com.svg" />
     <Content Include="Assets\js\currentRoute.js" />
     <Content Include="Assets\js\BordSoufTraitement.js" />
     <Content Include="Assets\js\PaiementsRejets.js" />
@@ -2482,7 +2489,9 @@
     <Content Include="Assets\js\User.js" />
     <Content Include="Assets\js\utils.js" />
     <Content Include="Assets\otherCSS\buttons.dataTables.min.css" />
+    <Content Include="Assets\otherCSS\dataTables.dataTables.css" />
     <Content Include="Assets\otherCSS\datatables.min.css" />
+    <Content Include="Assets\otherCSS\fixedColumns.dataTables.css" />
     <Content Include="Assets\otherJs\buttons.colVis.min.js" />
     <Content Include="Assets\otherJs\dataTables.rowsGroup.js" />
     <Content Include="Assets\otherJs\jquery-3.7.0.js" />
