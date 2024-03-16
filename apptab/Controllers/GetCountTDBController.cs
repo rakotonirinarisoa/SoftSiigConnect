@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using apptab.Models;
 using Newtonsoft.Json;
 
 namespace apptab.Controllers
@@ -48,12 +49,30 @@ namespace apptab.Controllers
 
                 var mandat = db.SI_TRAITPROJET.ToList();
                 var ava = db.SI_TRAITAVANCE.ToList();
+
                 var typedecriture = db.SI_TYPECRITURE.Where(a => a.IDUSER == test.ID).ToList();
-                var payement = db.OPA_VALIDATIONS.Join(db.OPA_REGLEMENT, va => va.IDPROJET, re => re.IDSOCIETE, (va, re) => new
-                {
-                    ETAT = va.ETAT,
-                    IDPROJET = va.IDPROJET,
-                }).ToList();
+                //List<ListPaimentV> payement = new List<ListPaimentV>();
+                //foreach (var type in typedecriture)
+                //{
+                //    if (type.TYPE == 1)
+                //    {
+                //        payement = db.OPA_VALIDATIONS.Join(db.OPA_REGLEMENT, va => va.IDPROJET, re => re.IDSOCIETE, (va, re) => new ListPaimentV
+                //        {
+                //            ETAT = va.ETAT,
+                //            IDPROJET = va.IDPROJET,
+                //        }).Where(a => a.IDPROJET == type.IDPROJET).ToList();
+                //    }
+                //    else
+                //    {
+                //        payement = db.OPA_VALIDATIONS.Join(db.OPA_REGLEMENTBR, va => va.IDPROJET, re => re.IDSOCIETE, (va, re) => new ListPaimentV
+                //        {
+                //            ETAT = va.ETAT,
+                //            IDPROJET = va.IDPROJET,
+                //        }).Where(a => a.IDPROJET == type.IDPROJET).ToList();
+                //    }
+                //}
+
+               var  payement = db.OPA_VALIDATIONS.ToList();
 
                 if (test.ROLE == (int)Role.SAdministrateur)
                 {
@@ -238,10 +257,10 @@ namespace apptab.Controllers
                         MandatV = mandat.Where(a => a.ETAT == 0).Count(),//ok
                         MandatA = mandatRAFA,
                         MandatTR = mandat.Where(a => a.ETAT == 1).Count(),//ok
-                        PaieR = payement.Where(a => a.ETAT == 0).Count(),
-                        PaieT = payement.Where(a => a.ETAT == 1).Count(),
-                        PaieV = payement.Where(a => a.ETAT == 2).Count(),
-                        PaieF = payement.Where(a => a.ETAT == 3).Count(),
+                        PaieR = 0,/*payement.Where(a => a.ETAT == 0).Count(),*/
+                        PaieT = payement.Where(a => a.ETAT == 0).Count(),
+                        PaieV = payement.Where(a => a.ETAT == 1).Count(),
+                        PaieF = payement.Where(a => a.ETAT == 2).Count(),
                         PaieA = payement.Where(a => a.ETAT == 4).Count(),
                         MandatTA = mandatIA,
                         MandatVA = ava.Where(a => a.ETAT == 0).Count(),//ok

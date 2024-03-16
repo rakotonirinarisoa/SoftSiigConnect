@@ -96,6 +96,7 @@ function GetTypeP() {
                 window.location = window.location.origin;
                 return;
             }
+            chargeLoad();
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -263,7 +264,7 @@ function chargeLoad() {
                             { data: 'journal' },
                             { data: 'marche' },
                             { data: 'numeroliquidations' },
-                            { data: 'estAvance' },
+                            { data: 'type' },
                             {
                                 data: 'rejeter',
                                 render: function (_, _, row, _) {
@@ -299,6 +300,55 @@ function chargeLoad() {
                         
                         initComplete: function () {
                             $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
+                            count = 0;
+                            this.api().columns().every(function () {
+                                var title = this.header();
+                                //replace spaces with dashes
+                                title = $(title).html().replace(/[\W]/g, '-');
+                                var column = this;
+                                var select = $('<select id="' + title + '" class="select2" ></select>')
+                                    .appendTo($(column.footer()).empty())
+                                    .on('change', function () {
+                                        //Get the "text" property from each selected data 
+                                        //regex escape the value and store in array
+                                        var data = $.map($(this).select2('data'), function (value, key) {
+                                            return value.text ? '^' + $.fn.dataTable.util.escapeRegex(value.text) + '$' : null;
+                                        });
+
+                                        //if no data selected use ""
+                                        if (data.length === 0) {
+                                            data = [""];
+                                        }
+
+                                        //join array into string with regex or (|)
+                                        var val = data.join('|');
+
+                                        //search for the option(s) selected
+                                        column
+                                            .search(val ? val : '', true, false)
+                                            .draw();
+                                    });
+
+                                column.data().unique().sort().each(function (d, j) {
+                                    select.append('<option value="' + d + '">' + d + '</option>');
+                                });
+
+                                //use column title as selector and placeholder
+                                $('#' + title).select2({
+                                    multiple: true,
+                                    closeOnSelect: false
+
+                                });
+
+                                //initially clear select otherwise first option is selected
+                                $('.select2').val(null).trigger('change');
+                            });
+                        }
+
+                    });
+                    $('#TDB_OPA tfoot th').each(function (i) {
+                        if (i == 0) {
+                            $(this).addClass("NOTVISIBLE");
                         }
                     });
                 }
@@ -360,8 +410,8 @@ function chargeLoad() {
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             rejeter: '',
                             isLATE: v.IsLATE,
-                            type: v.AVANCE ? 'Avance':'Paiement',
                             estAvance: v.AVANCE,
+                            type: v.AVANCE ? 'Avance':'Paiement',                            
                             numeroliquidations: v.NUMEROLIQUIDATION
                         });
                     });
@@ -429,6 +479,55 @@ function chargeLoad() {
                         buttons: ['colvis'],
                         initComplete: function () {
                             $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
+
+                            count = 0;
+                            this.api().columns().every(function () {
+                                var title = this.header();
+                                //replace spaces with dashes
+                                title = $(title).html().replace(/[\W]/g, '-');
+                                var column = this;
+                                var select = $('<select id="' + title + '" class="select2" ></select>')
+                                    .appendTo($(column.footer()).empty())
+                                    .on('change', function () {
+                                        //Get the "text" property from each selected data 
+                                        //regex escape the value and store in array
+                                        var data = $.map($(this).select2('data'), function (value, key) {
+                                            return value.text ? '^' + $.fn.dataTable.util.escapeRegex(value.text) + '$' : null;
+                                        });
+
+                                        //if no data selected use ""
+                                        if (data.length === 0) {
+                                            data = [""];
+                                        }
+
+                                        //join array into string with regex or (|)
+                                        var val = data.join('|');
+
+                                        //search for the option(s) selected
+                                        column
+                                            .search(val ? val : '', true, false)
+                                            .draw();
+                                    });
+
+                                column.data().unique().sort().each(function (d, j) {
+                                    select.append('<option value="' + d + '">' + d + '</option>');
+                                });
+
+                                //use column title as selector and placeholder
+                                $('#' + title).select2({
+                                    multiple: true,
+                                    closeOnSelect: false
+
+                                });
+
+                                //initially clear select otherwise first option is selected
+                                $('.select2').val(null).trigger('change');
+                            });
+                        }
+                    });
+                    $('#TDB_OPA tfoot th').each(function (i) {
+                        if (i == 0 || i == 19) {
+                            $(this).addClass("NOTVISIBLE");
                         }
                     });
                 }
@@ -480,7 +579,7 @@ function GetAllProjectUser() {
             $("#Fproject").html(listproject);
             GetTypeP();
             GetListCodeJournal();
-            chargeLoad();
+            
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -510,6 +609,8 @@ function FillCompteName() {
 function GetListCompG() {
     let formData = new FormData();
 
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
@@ -628,24 +729,25 @@ function Refuser(id) {
 
 function AcceptRefuser() {
     const id = $('#F-modal').attr("data-id");
+    
     let motif = $("#Motif").val();
     let commentaire = $("#Commentaire").val();
-
-  
 
     let formData = new FormData();
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDSOCIETE", User.IDSOCIETE);
-    formData.append("baseName", baseName);
     formData.append("id", id);
     formData.append("motif", motif);
     formData.append("commentaire", commentaire);
 
     let codeproject = $("#Fproject").val();
     formData.append("codeproject", codeproject);
-
+    alert(codeproject);
+        alert(commentaire);
+    alert(motif);
+    alert(id);
     $.ajax({
         type: "POST",
         url: Origin + '/Home/CancelEcriture',
@@ -758,6 +860,7 @@ $('[data-action="ChargerJs"]').click(function () {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
     formData.append("ChoixBase", baseName);
+
     if (baseName == 2) {
         //compta
         formData.append("datein", $('#Pdu').val());
@@ -905,6 +1008,54 @@ $('[data-action="ChargerJs"]').click(function () {
                        
                         initComplete: function () {
                             $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
+                            count = 0;
+                            this.api().columns().every(function () {
+                                var title = this.header();
+                                //replace spaces with dashes
+                                title = $(title).html().replace(/[\W]/g, '-');
+                                var column = this;
+                                var select = $('<select id="' + title + '" class="select2" ></select>')
+                                    .appendTo($(column.footer()).empty())
+                                    .on('change', function () {
+                                        //Get the "text" property from each selected data 
+                                        //regex escape the value and store in array
+                                        var data = $.map($(this).select2('data'), function (value, key) {
+                                            return value.text ? '^' + $.fn.dataTable.util.escapeRegex(value.text) + '$' : null;
+                                        });
+
+                                        //if no data selected use ""
+                                        if (data.length === 0) {
+                                            data = [""];
+                                        }
+
+                                        //join array into string with regex or (|)
+                                        var val = data.join('|');
+
+                                        //search for the option(s) selected
+                                        column
+                                            .search(val ? val : '', true, false)
+                                            .draw();
+                                    });
+
+                                column.data().unique().sort().each(function (d, j) {
+                                    select.append('<option value="' + d + '">' + d + '</option>');
+                                });
+
+                                //use column title as selector and placeholder
+                                $('#' + title).select2({
+                                    multiple: true,
+                                    closeOnSelect: false
+
+                                });
+
+                                //initially clear select otherwise first option is selected
+                                $('.select2').val(null).trigger('change');
+                            });
+                        }
+                    });
+                    $('#TDB_OPA tfoot th').each(function (i) {
+                        if (i == 0 || i == 19) {
+                            $(this).addClass("NOTVISIBLE");
                         }
                     });
                 }
@@ -1051,6 +1202,55 @@ $('[data-action="ChargerJs"]').click(function () {
                         buttons: ['colvis'],
                         initComplete: function () {
                             $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
+                            count = 0;
+                            this.api().columns().every(function () {
+                                var title = this.header();
+                                //replace spaces with dashes
+                                title = $(title).html().replace(/[\W]/g, '-');
+                                var column = this;
+                                var select = $('<select id="' + title + '" class="select2" ></select>')
+                                    .appendTo($(column.footer()).empty())
+                                    .on('change', function () {
+                                        //Get the "text" property from each selected data 
+                                        //regex escape the value and store in array
+                                        var data = $.map($(this).select2('data'), function (value, key) {
+                                            return value.text ? '^' + $.fn.dataTable.util.escapeRegex(value.text) + '$' : null;
+                                        });
+
+                                        //if no data selected use ""
+                                        if (data.length === 0) {
+                                            data = [""];
+                                        }
+
+                                        //join array into string with regex or (|)
+                                        var val = data.join('|');
+
+                                        //search for the option(s) selected
+                                        column
+                                            .search(val ? val : '', true, false)
+                                            .draw();
+                                    });
+
+                                column.data().unique().sort().each(function (d, j) {
+                                    select.append('<option value="' + d + '">' + d + '</option>');
+                                });
+
+                                //use column title as selector and placeholder
+                                $('#' + title).select2({
+                                    multiple: true,
+                                    closeOnSelect: false
+
+                                });
+
+                                //initially clear select otherwise first option is selected
+                                $('.select2').val(null).trigger('change');
+                            });
+                        }
+
+                    });
+                    $('#TDB_OPA tfoot th').each(function (i) {
+                        if (i == 0 || i == 19) {
+                            $(this).addClass("NOTVISIBLE");
                         }
                     });
                 }
@@ -1158,18 +1358,4 @@ $('[data-action="GetElementChecked"]').click(function () {
 
 var baseName = "2";
 
-$(`[name="options"]`).on("change", (k, v) => {
 
-    var baseId = $(k.target).attr("data-id");
-    baseName = baseId;
-    if (baseId == "1") {
-        $(`[tab="paie"]`).show();
-        $(`[tab="autre"]`).hide();
-        //GetListCodeJournal();
-    } else {
-        $(`[tab="autre"]`).show();
-        $(`[tab="paie"]`).hide();
-        $('#afb').empty();
-        //GetListCodeJournal();
-    }
-});
