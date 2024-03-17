@@ -71,7 +71,6 @@ namespace apptab.Controllers
                 //        }).Where(a => a.IDPROJET == type.IDPROJET).ToList();
                 //    }
                 //}
-                
                 var payement = db.OPA_VALIDATIONS.ToList();
 
                 if (test.ROLE == (int)Role.SAdministrateur)
