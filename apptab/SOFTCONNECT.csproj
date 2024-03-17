@@ -2398,7 +2398,6 @@
     <Content Include="Assets\icons\eye.svg" />
     <Content Include="Assets\img\bg.jpg" />
     <Content Include="Assets\img\df.gif" />
-    <Content Include="Assets\img\df.png" />
     <Content Include="Assets\img\logo-soft.png" />
     <Content Include="Assets\img\LogoS.png" />
     <Content Include="Assets\js\AACUL.js" />
