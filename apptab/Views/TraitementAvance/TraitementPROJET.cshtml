@@ -101,8 +101,8 @@
     </div>
 </div>
 
-<script src="~/Assets/js/TraitmandatA.js" asp-append-version="true"></script>
-<script src="~/Assets/js/utils.js" asp-append-version="true"></script>
+<script src="~/Assets/js/TraitmandatA.js?version=@Session["VERSION"]"></script>
+<script src="~/Assets/js/utils.js?version=@Session["VERSION"]"></script>
 
 
 <div class="modal fade" tabindex="-1" role="dialog" id="password-modal">
@@ -133,7 +133,7 @@
     </div>
 </div>
 
-<script src="~/Assets/js/TraitmandatModalTA.js" asp-append-version="true"></script>
+<script src="~/Assets/js/TraitmandatModalTA.js?version=@Session["VERSION"]"></script>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="imputation-modal">
     <div class="modal-dialog modal-xl" role="document" @*style="width:fit-content"*@>
@@ -161,7 +161,7 @@
     </div>
 </div>
 
-<script src="~/Assets/js/TraitmandatDOCTA.js" asp-append-version="true"></script>
+<script src="~/Assets/js/TraitmandatDOCTA.js?version=@Session["VERSION"]"></script>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="document-modal">
     <div class="modal-dialog modal-xl" role="document" @*style="width:fit-content"*@>
@@ -187,7 +187,7 @@
     </div>
 </div>
 
-<script src="~/Assets/js/TraitmandatLIASTA.js" asp-append-version="true"></script>
+<script src="~/Assets/js/TraitmandatLIASTA.js?version=@Session["VERSION"]"></script>
 
 <script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
 <script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
