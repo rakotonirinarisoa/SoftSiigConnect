@@ -377,7 +377,14 @@ $('.Checkall').change(function () {
 //==============================================================================================ChargeJs===================================================================================
 
 $('[data-action="ChargerJs"]').click(function () {
+    let dateDeb = $('#Pdu').val();
+    let dateFin = $('#Pau').val();
+    let datePaie = $('#Pay').val();
 
+    if ( !dateDeb || !dateFin || !datePaie)  {
+        alert("Veuillez renseigner les dates afin de générer les payements.")
+        return;
+    }
     let formData = new FormData();
     let codeproject = $("#Fproject").val();
     formData.append("codeproject", codeproject);
@@ -387,8 +394,9 @@ $('[data-action="ChargerJs"]').click(function () {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDSOCIETE", User.IDSOCIETE);
     formData.append("ChoixBase", baseName);
-
+    
     if (baseName == "2") {
+       
         formData.append("datein", $('#Pdu').val());
         formData.append("dateout", $('#Pau').val());
         formData.append("journal", $('#commercial').val());
@@ -396,6 +404,8 @@ $('[data-action="ChargerJs"]').click(function () {
         formData.append("auxi", $('#auxi').val());
         formData.append("auxi1", $('#auxi').val());
         formData.append("dateP", $('#Pay').val());
+
+      
 
         if ($('#ChkDevise').prop("checked") == true) {
             formData.append("devise", true);

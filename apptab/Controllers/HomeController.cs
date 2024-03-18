@@ -423,7 +423,7 @@ namespace apptab.Controllers
                              select jrnl).Single();
             if (djournal.RIB == null || djournal.RIB == "")
             {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez Remplir les Compte RIB de votre Journal ", data = "" }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez remplir les comptes RIB du " + journal + " journal. ", data = "" }, settings));
             }
             var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID && x.ComptaG == comptaG && x.Journal == journal).Select(x => x.IDREGLEMENT.ToString()).ToArray();
 
