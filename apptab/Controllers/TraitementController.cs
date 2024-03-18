@@ -1129,47 +1129,44 @@ namespace apptab.Controllers
                             //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
                             if (canBeDEF == false || canBeTEF == false || canBeBE == false)
                             {
-                                if (!db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.IDPROJET == crpt) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt))
+                                var titulaire = "";
+                                if (tom.RTIERS.Any(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE))
+                                    titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE).NOM;
+
+                                DateTime? DATEDEF = null;
+                                if (tom.CPTADMIN_TRAITEMENT.Any(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF))
+                                    DATEDEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF).DATECA;
+                                DateTime? DATETEF = null;
+                                if (tom.CPTADMIN_TRAITEMENT.Any(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF))
+                                    DATETEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF).DATECA;
+                                DateTime? DATEBE = null;
+                                if (tom.CPTADMIN_TRAITEMENT.Any(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE))
+                                    DATEBE = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE).DATECA;
+
+                                var soa = (from soas in db.SI_SOAS
+                                           join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                           where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                           select new
+                                           {
+                                               soas.SOA
+                                           });
+
+                                list.Add(new DATATRPROJET
                                 {
-                                    var titulaire = "";
-                                    if (tom.RTIERS.Any(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE))
-                                        titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE).NOM;
-
-                                    DateTime? DATEDEF = null;
-                                    if (tom.CPTADMIN_TRAITEMENT.Any(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF))
-                                        DATEDEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF).DATECA;
-                                    DateTime? DATETEF = null;
-                                    if (tom.CPTADMIN_TRAITEMENT.Any(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF))
-                                        DATETEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF).DATECA;
-                                    DateTime? DATEBE = null;
-                                    if (tom.CPTADMIN_TRAITEMENT.Any(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE))
-                                        DATEBE = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE).DATECA;
-
-                                    var soa = (from soas in db.SI_SOAS
-                                               join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
-                                               where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
-                                               select new
-                                               {
-                                                   soas.SOA
-                                               });
-
-                                    list.Add(new DATATRPROJET
-                                    {
-                                        No = x.ID,
-                                        REF = x.NUMEROCA,
-                                        OBJ = x.DESCRIPTION,
-                                        TITUL = titulaire,
-                                        MONT = Math.Round(MTN, 2).ToString(),
-                                        COMPTE = x.COGEBENEFICIAIRE,
-                                        DATE = x.DATELIQUIDATION.Value.Date,
-                                        PCOP = PCOP,
-                                        DATEDEF = DATEDEF,
-                                        DATETEF = DATETEF,
-                                        DATEBE = DATEBE,
-                                        SOA = soa.FirstOrDefault().SOA,
-                                        PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
-                                    });
-                                }
+                                    No = x.ID,
+                                    REF = x.NUMEROCA,
+                                    OBJ = x.DESCRIPTION,
+                                    TITUL = titulaire,
+                                    MONT = Math.Round(MTN, 2).ToString(),
+                                    COMPTE = x.COGEBENEFICIAIRE,
+                                    DATE = x.DATELIQUIDATION.Value.Date,
+                                    PCOP = PCOP,
+                                    DATEDEF = DATEDEF,
+                                    DATETEF = DATETEF,
+                                    DATEBE = DATEBE,
+                                    SOA = soa.FirstOrDefault().SOA,
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                });
                             }
                         }
                     }
@@ -1202,10 +1199,6 @@ namespace apptab.Controllers
 
                 List<DATATRPROJET> list = new List<DATATRPROJET>();
 
-                decimal MTN = 0;
-                decimal MTNPJ = 0;
-                var PCOP = "";
-
                 //Check si la correspondance des états est OK//
                 var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
                 if (numCaEtapAPP == null) return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
@@ -1221,6 +1214,10 @@ namespace apptab.Controllers
                 {
                     foreach (var x in tom.CPTADMIN_FLIQUIDATION.Where(a => a.DATELIQUIDATION >= DateDebut && a.DATELIQUIDATION <= DateFin).OrderBy(a => a.DATELIQUIDATION).ToList())
                     {
+                        decimal MTN = 0;
+                        decimal MTNPJ = 0;
+                        var PCOP = "";
+
                         //Get total MTN dans CPTADMIN_MLIQUIDATION pour vérification du SOMMES MTN M = SOMMES MTN MPJ//
                         if (tom.CPTADMIN_MLIQUIDATION.Any(a => a.IDLIQUIDATION == x.ID))
                         {

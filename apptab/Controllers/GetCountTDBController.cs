@@ -184,7 +184,8 @@ namespace apptab.Controllers
 
                                     if (canBeDEF && canBeTEF && canBeBE)
                                     {
-                                        mandatRAFI++;
+                                        if (!db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.IDPROJET == crpt) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt))
+                                            mandatRAFI++;
                                     }
                                 }
                             }
@@ -242,7 +243,8 @@ namespace apptab.Controllers
 
                                     if (canBeDEFA && canBeTEFA && canBeBEA)
                                     {
-                                        mandatRAFA++;
+                                        if (!db.SI_TRAITAVANCE.Any(a => a.No == x.ID && a.IDPROJET == crpt) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt))
+                                            mandatRAFA++;
                                     }
                                 }
                             }
@@ -389,7 +391,8 @@ namespace apptab.Controllers
 
                                         if (canBeDEF && canBeTEF && canBeBE)
                                         {
-                                            mandatRAFI++;
+                                            if (!db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.IDPROJET == crpt) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt))
+                                                mandatRAFI++;
                                         }
                                     }
                                 }
@@ -447,7 +450,8 @@ namespace apptab.Controllers
 
                                         if (canBeDEFA && canBeTEFA && canBeBEA)
                                         {
-                                            mandatRAFA++;
+                                            if (!db.SI_TRAITAVANCE.Any(a => a.No == x.ID && a.IDPROJET == crpt) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt))
+                                                mandatRAFA++;
                                         }
                                     }
                                 }
@@ -597,7 +601,8 @@ namespace apptab.Controllers
 
                                         if (canBeDEF && canBeTEF && canBeBE)
                                         {
-                                            mandatRAFI++;
+                                            if (!db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.IDPROJET == crpt) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt))
+                                                mandatRAFI++;
                                         }
                                     }
                                 }
@@ -655,7 +660,8 @@ namespace apptab.Controllers
 
                                         if (canBeDEFA && canBeTEFA && canBeBEA)
                                         {
-                                            mandatRAFA++;
+                                            if (!db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.IDPROJET == crpt) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt))
+                                                mandatRAFA++;
                                         }
                                     }
                                 }
