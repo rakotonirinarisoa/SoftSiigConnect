@@ -7,6 +7,6 @@
         <div id="calendar"></div>
     </div>
 
-    <script src="~/Assets/js/Evenements.js" asp-append-version="true"></script>
-    <script src="~/Assets/js/utils.js" asp-append-version="true"></script>
+    <script src="~/Assets/js/Evenements.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/js/utils.js?version=@Session["VERSION"]"></script>
 </body>

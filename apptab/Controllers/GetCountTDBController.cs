@@ -253,7 +253,7 @@ namespace apptab.Controllers
                     {
                         MandatT = mandatI,
                         MandatV = mandat.Where(a => a.ETAT == 0).Count(),//ok
-                        MandatA = mandatRAFA,
+                        MandatA = mandatRAFI,
                         MandatTR = mandat.Where(a => a.ETAT == 1).Count(),//ok
                         PaieR = 0,/*payement.Where(a => a.ETAT == 0).Count(),*/
                         PaieT = paiement.Where(a => a.ETAT == 0).Count(),
@@ -262,7 +262,7 @@ namespace apptab.Controllers
                         PaieA = paiement.Where(a => a.ETAT == 4).Count(),
                         MandatTA = mandatIA,
                         MandatVA = ava.Where(a => a.ETAT == 0).Count(),//ok
-                        MandatAA = mandatRAFI,
+                        MandatAA = mandatRAFA,
                         MandatTRA = ava.Where(a => a.ETAT == 1).Count(),//ok
                     };
 
@@ -461,7 +461,7 @@ namespace apptab.Controllers
                         {
                             MandatT = mandatI,
                             MandatV = mandat.Where(a => a.ETAT == 0).Count(),//ok
-                            MandatA = mandatRAFA,
+                            MandatA = mandatRAFI,
                             MandatTR = mandat.Where(a => a.ETAT == 1).Count(),//ok
                             PaieR = paiement.Where(a => a.ETAT == 0).Count(),
                             PaieT = paiement.Where(a => a.ETAT == 1).Count(),
@@ -470,7 +470,7 @@ namespace apptab.Controllers
                             PaieA = paiement.Where(a => a.ETAT == 4).Count(),
                             MandatTA = mandatIA,
                             MandatVA = ava.Where(a => a.ETAT == 0).Count(),//ok
-                            MandatAA = mandatRAFI,
+                            MandatAA = mandatRAFA,
                             MandatTRA = ava.Where(a => a.ETAT == 1).Count(),//ok
                         };
 
@@ -668,7 +668,7 @@ namespace apptab.Controllers
                             {
                                 MandatT = mandatI,
                                 MandatV = mandat.Where(a => a.ETAT == 0).Count(),//ok
-                                MandatA = mandatRAFA,
+                                MandatA = mandatRAFI,
                                 MandatTR = mandat.Where(a => a.ETAT == 1).Count(),//ok
                                 PaieR = paiement.Where(a => a.ETAT == 0).Count(),
                                 PaieT = paiement.Where(a => a.ETAT == 1).Count(),
@@ -677,7 +677,7 @@ namespace apptab.Controllers
                                 PaieA = paiement.Where(a => a.ETAT == 4).Count(),
                                 MandatTA = mandatIA,
                                 MandatVA = ava.Where(a => a.ETAT == 0).Count(),//ok
-                                MandatAA = mandatRAFI,
+                                MandatAA = mandatRAFA,
                                 MandatTRA = ava.Where(a => a.ETAT == 1).Count(),//ok
                             };
                         }

@@ -12,6 +12,9 @@
         <!-- Ionicons -->
         <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">*@
 
+    @*<!--CACHE VERSIONING JS et CSS*@
+    @*<script src="~/Assets/js/AAACache.js"></script>*@
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="~/Assets/admlte/plugins/fontawesome-free/css/all.min.css">
     <!-- Tempusdominus Bootstrap 4 -->
@@ -30,27 +33,27 @@
     <link rel="stylesheet" href="~/Assets/admlte/plugins/summernote/summernote-bs4.min.css">
     <link rel="stylesheet" href="~/Assets/admlte/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
 
-    <link rel="stylesheet" href="~/Assets/otherCSS/datatables.min.css" />
+    <link rel="stylesheet" href="~/Assets/otherCSS/datatables.min.css?version=@Session["VERSION"]" />
 
     <link href="~/Assets/admlte/plugins/select2/css/select2.css" rel="stylesheet" />
     <link href="~/Assets/admlte/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
 
-    <link rel="stylesheet" href="~/Assets/css/style.css" />
-    <link rel="stylesheet" href="~/Assets/css/loader.css" />
-    <link href="~/Assets/css/acco.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Assets/css/style.css?version=@Session["VERSION"]" />
+    <link rel="stylesheet" href="~/Assets/css/loader.css?version=@Session["VERSION"]" />
+    <link href="~/Assets/css/acco.css?version=@Session["VERSION"]" rel="stylesheet" />
 
     <script src="~/Assets/admlte/plugins/jquery/jquery.min.js"></script>
     <script src="~/Assets/admlte/plugins/sweetalert2/sweetalert2.all.min.js"></script>
     <script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
-    <script src="~/Assets/js/script.js" asp-append-version="true"></script>
+    <script src="~/Assets/js/script.js?version=@Session["VERSION"]"></script>
 
-    <link href="~/Assets/otherCSS/datatables.min.css" rel="stylesheet" />
-    <link href="~/Assets/otherCSS/buttons.dataTables.min.css" rel="stylesheet" />
+    <link href="~/Assets/otherCSS/datatables.min.css?version=@Session["VERSION"]" rel="stylesheet" />
+    <link href="~/Assets/otherCSS/buttons.dataTables.min.css?version=@Session["VERSION"]" rel="stylesheet" />
 
-    <script src="~/Assets/otherJs/jquery-3.7.0.js"></script>
-    <script src="~/Assets/otherJs/datatables.min.js"></script>
-    <script src="~/Assets/otherJs/dataTables.rowsGroup.js"></script>
-    <script src="~/Assets/otherJs/buttons.colVis.min.js"></script>
+    <script src="~/Assets/otherJs/jquery-3.7.0.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/otherJs/datatables.min.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/otherJs/dataTables.rowsGroup.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/otherJs/buttons.colVis.min.js?version=@Session["VERSION"]"></script>
 
     @*https://www.svgrepo.com/collection/market-and-economics/*@
 </head>
@@ -98,7 +101,7 @@
             <!-- Brand Logo -->
             <a href="../Home/TdbAccueil">
                 @*<img src="~/Assets/img/LogoS.png" alt="AdminLTE Logo" class="brand-image testClass" style="opacity: .8">*@
-                <img src="~/Assets/img/LogoS.png" alt="AdminLTE Logo" class="brand-image testClass" style="opacity: .8; width: 100%;">
+                <img src="~/Assets/img/LogoS.png?version=@Session["VERSION"]" alt="AdminLTE Logo" class="brand-image testClass" style="opacity: .8; width: 100%; margin-top: 5px !important">
                 @*<span class="brand-text font-weight-bolder">SOFT - SIIG CONNECT</span>*@
             </a>
 
@@ -113,7 +116,7 @@
                             <li class="nav-item menu-open" onclick="myFunction('Demo1')">
                                 <hr />
                                 <a class="nav-link active" style="background-color: darkblue">
-                                    <img src="~/Assets/icons/settings-gear-svgrepo-com.svg" style="width: 25px; margin-right: 5px;" />
+                                    <img src="~/Assets/icons/settings-gear-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
                                     <p>
                                         PARAMETRAGES
                                     </p>
@@ -348,8 +351,8 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">
                         <li class="nav-item menu-open" onclick="myFunction('Demo2')">
                             <hr />
-                            <a class="nav-link active" style="background-color: darkslateblue">
-                                <img src="~/Assets/icons/document-svgrepo-com.svg" style="width: 25px; margin-right: 5px;" />
+                            <a class="nav-link active" style="background-color: dodgerblue">
+                                <img src="~/Assets/icons/document-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
                                 <p>
                                     MANDATS
                                 </p>
@@ -396,8 +399,8 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">
                         <li class="nav-item menu-open" onclick="myFunction('Demo3')">
                             <hr />
-                            <a class="nav-link active" style="background-color: blueviolet">
-                                <img src="~/Assets/icons/coin-cash-svgrepo-com.svg" style="width: 25px; margin-right: 5px;" />
+                            <a class="nav-link active" style="background-color: royalblue">
+                                <img src="~/Assets/icons/coin-cash-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
                                 <p>
                                     AVANCES
                                 </p>
@@ -443,8 +446,8 @@
                     <hr />
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block;">
                         <li class="nav-item menu-open" onclick="myFunction('Demo4')">
-                            <a class="nav-link active" style="background-color: steelblue">
-                                <img src="~/Assets/icons/pound-sterling-pound-svgrepo-com.svg" style="width: 25px; margin-right: 5px;" />
+                            <a class="nav-link active" style="background-color: darkviolet">
+                                <img src="~/Assets/icons/pound-sterling-pound-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
                                 <p>
                                     PAIEMENTS
                                 </p>
@@ -490,8 +493,8 @@
                     <hr />
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">
                         <li class="nav-item menu-open" onclick="myFunction('Demo5')">
-                            <a class="nav-link active" style="background-color: lightslategrey">
-                                <img src="~/Assets/icons/analytics-data-analytics-svgrepo-com.svg" style="width: 25px; margin-right: 5px;" />
+                            <a class="nav-link active" style="background-color: crimson">
+                                <img src="~/Assets/icons/analytics-data-analytics-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
                                 <p>
                                     TABLEAUX DE BORD
                                 </p>
@@ -597,8 +600,8 @@
                     <hr />
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">
                         <li class="nav-item menu-open">
-                            <a href="@Session["GED"]" class="nav-link active" style="background-color: tomato;" target="_blank">
-                                <img src="~/Assets/icons/analytics-statistics-svgrepo-com.svg" style="width: 25px; margin-right: 5px;" />
+                            <a href="@Session["GED"]" class="nav-link active" style="background-color: lightcoral;" target="_blank">
+                                <img src="~/Assets/icons/analytics-statistics-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
                                 <p>
                                     GED
                                 </p>
@@ -612,7 +615,7 @@
                 <!-- /.sidebar-menu -->
             </div>
 
-            <img src="~/Assets/img/logo-soft.png" alt="AdminLTE Logo" class="brand-image elevation-0 imageHoverLogo" style="opacity: .7; bottom: 0; position: absolute; width: 60%; padding-bottom: 15%;">
+            <img src="~/Assets/img/logo-soft.png?version=@Session["VERSION"]" alt="AdminLTE Logo" class="brand-image elevation-0 imageHoverLogo" style="opacity: .7; bottom: 0; position: absolute; width: 60%; padding-bottom: 15%;">
 
             <!-- /.sidebar -->
         </aside>
@@ -656,7 +659,7 @@
             <strong>Copyright &copy; 2024 <a href="https://www.softwell.mg">Softwell</a>.</strong>
             All rights reserved.
             <div class="float-right d-none d-sm-inline-block">
-                <b>Version</b> 1.0.0
+                <b>Version @Session["VERSION"]</b>
             </div>
         </footer>
         <!-- /.control-sidebar -->
@@ -695,7 +698,7 @@
     @* <script src="~/Assets/js/Accueil.js"></script>*@
 
     <script src="~/Scripts/dayjs.min.js"></script>
-    <script src="~/Assets/js/currentRoute.js"></script>
+    <script src="~/Assets/js/currentRoute.js?version=@Session["VERSION"]"></script>
 
     <script defer>
         const loader = $('#loader');
@@ -706,28 +709,10 @@
 
             if (x.className.indexOf("w3-show") == -1) {
                 x.className += " w3-show";
-                /*x.className += " fiderana"*/
             } else {
                 x.className = x.className.replace(" w3-show", "");
-                /*x.className = x.className.replace(" fiderana", "");*/
             }
         }
     </script>
-    @*<script>
-        var acc = document.getElementsByClassName("accordion");
-        var i;
-
-        for (i = 0; i < acc.length; i++) {
-            acc[i].addEventListener("click", function () {
-                this.classList.toggle("active");
-                var panel = this.nextElementSibling;
-                if (panel.style.maxHeight) {
-                    panel.style.maxHeight = null;
-                } else {
-                    panel.style.maxHeight = panel.scrollHeight + "px";
-                }
-            });
-        }
-    </script>*@
 </body>
 </html>

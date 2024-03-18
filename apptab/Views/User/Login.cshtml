@@ -18,7 +18,7 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="~/Assets/admlte/dist/css/adminlte.min.css">
     <link href="~/Assets/css/style.css" rel="stylesheet" />
-    <link rel="stylesheet" href="~/Assets/css/loader.css" />
+    <link rel="stylesheet" href="~/Assets/css/loader.css?version=@Session["VERSION"]" />
 </head>
 
 <body class="hold-transition login-page" scroll="no" style="overflow: hidden">
@@ -28,7 +28,7 @@
             <!-- /.login-logo -->
             <div>
                 <div class="card-header text-center">
-                    <img src="~/Assets/img/logo-soft.png" />
+                    <img src="~/Assets/img/logo-soft.png?version=@Session["VERSION"]" />
                     <p class="login-box-msg font-weight-bold" style="color: #3d9970">
                         SOFT - SIIG CONNECT
                     </p>
@@ -90,20 +90,8 @@
     <script src="~/Assets/admlte/dist/js/adminlte.min.js"></script>
 
     <!-- Login.js -->
-    <script src="~/Assets/js/Login.js" asp-append-version="true"></script>
-
-    @*<script type="text/javascript">
-            function googleTranslateElementInit() {
-                new google.translate.TranslateElement({ pageLanguage: 'en' }, 'login_user');
-                new google.translate.TranslateElement({ pageLanguage: 'en' }, 'login_mdp');
-                /*new google.translate.TranslateElement({ pageLanguage: 'en' }, 'btnCon');*/
-            }
-        </script>
-
-        <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>*@
-
+    <script src="~/Assets/js/Login.js"></script>
 </body>
-
 </html>
 
 
