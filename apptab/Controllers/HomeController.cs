@@ -167,7 +167,6 @@ namespace apptab.Controllers
                 sw.Close();
                 byte[] source = System.IO.File.ReadAllBytes(pth + pathchemin + ".txt");
                 string s = "application/txt";
-                
                 return File(source, System.Net.Mime.MediaTypeNames.Application.Octet, pathfiles);
             }
             catch (Exception)
@@ -232,13 +231,13 @@ namespace apptab.Controllers
                 {
                     Anarana = pathfile.Chemin;
                     send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
-                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == suser.IDPROJET).FirstOrDefault();
+                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                 }
                 else
                 {
                     Anarana = pathfile.Chemin;
-                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == suser.IDPROJET).FirstOrDefault();
+                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                     return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
                 }
@@ -298,14 +297,14 @@ namespace apptab.Controllers
                 else if (intbasetype == 2)
                 {
                     Anarana = pathfile.Chemin;
-                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == suser.IDPROJET).FirstOrDefault();
+                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                     return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                 }
                 else
                 {
                     Anarana = pathfile.Chemin;
-                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == suser.IDPROJET).FirstOrDefault();
+                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                     return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
                 }
