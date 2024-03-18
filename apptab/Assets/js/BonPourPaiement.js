@@ -12,6 +12,9 @@ function GetEtat() {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDSOCIETE", User.IDSOCIETE);
 
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/GetEtat',
@@ -912,7 +915,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             libelle: isNullOrUndefined(v.Libelle) ? '' : v.Libelle,
                             debit: isNullOrUndefined(v.Debit) ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
                             credit: isNullOrUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
-                            montant: isNullOrUndefined(v.Montant) ? '' : formatCurrency(String(v.Montant)).replace(",", "."),
+                            montant: isNullOrUndefined(v.MONTANT) ? '' : formatCurrency(String(v.MONTANT)).replace(",", "."),
                             montantDevise: isNullOrUndefined(v.MontantDevise) ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                             mon: isNullOrUndefined(v.Mon) ? '' : v.Mon,
                             rang: isNullOrUndefined(v.Rang) ? '' : v.Rang,
@@ -1117,7 +1120,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             libelle: isNullOrUndefined(v.Libelle) ? '' : v.Libelle,
                             debit: isNullOrUndefined(v.Debit) ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
                             credit: isNullOrUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
-                            montant: isNullOrUndefined(v.Montant) ? '' : formatCurrency(String(v.Montant)).replace(",", "."),
+                            montant: isNullOrUndefined(v.MONTANT) ? '' : formatCurrency(String(v.MONTANT)).replace(",", "."),
                             montantDevise: isNullOrUndefined(v.MontantDevise) ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                             mon: isNullOrUndefined(v.Mon) ? '' : v.Mon,
                             rang: isNullOrUndefined(v.Rang) ? '' : v.Rang,

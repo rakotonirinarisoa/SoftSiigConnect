@@ -15,6 +15,7 @@ using Extensions.DateTime;
 using System.Net.Mail;
 using apptab.Data.Entities;
 using apptab.Data;
+using System.Collections;
 
 namespace apptab.Controllers
 {
@@ -316,18 +317,36 @@ namespace apptab.Controllers
         }
         //=========================================================================================================PaiementsValidations============================================================================
         [HttpPost]
-        public JsonResult Getelementjs(int ChoixBase, string codeproject, string journal, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP,/* int mois, int annee, string matr1, string matr2, DateTime datePaie,*/ SI_USERS suser)
+        public JsonResult Getelementjs(int ChoixBase, string codeproject, string journal, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP, SI_USERS suser)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             var basename = GetTypeP(suser, codeproject);
             int PROJECTID = int.Parse(codeproject);
+
             if (basename == "")
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le type d'ecriture avant toutes opérations. " }, settings));
             }
+            if (basename == "")
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le type d'ecriture avant toutes opérations. " }, settings));
+            }
+            if (codeproject != "")
+            {
+                PROJECTID = int.Parse(codeproject);
+            }
+            else
+            {
+                PROJECTID = exist.IDPROJET.Value;
+            }
+
+            SOFTCONNECTOM.connex = new Data.Extension().GetCon(PROJECTID);
+            SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
             AFB160 afb160 = new AFB160();
+
             //var hst = db.OPA_HISTORIQUE.Select(x => x.NUMENREG.ToString()).ToArray();
             var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID).Select(x => x.IDREGLEMENT.ToString()).ToArray();
             var list = afb160.getListEcritureCompta(journal, PROJECTID, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => !hstSiig.Contains(x.No.ToString())).ToList();
@@ -346,17 +365,54 @@ namespace apptab.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le type d'ecriture avant toutes opérations. " }, settings));
             }
+            if (codeproject != "")
+            {
+                PROJECTID = int.Parse(codeproject);
+            }
+            else
+            {
+                PROJECTID = exist.IDPROJET.Value;
+            }
+
+            SOFTCONNECTOM.connex = new Data.Extension().GetCon(PROJECTID);
+            SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
             AFB160 afb160 = new AFB160();
-            //var hst = db.OPA_HISTORIQUEBR.Where(x => x.IDSOCIETE == suser.IDPROJET).Select(x => x.NUMENREG.ToString()).ToArray();
-            var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID).Select(x => x.IDREGLEMENT.ToString()).ToArray();
+
+            RJL1 djournal = (from jrnl in tom.RJL1
+                             where jrnl.CODE == journal
+                             select jrnl).Single();
+            if (djournal.RIB == null || djournal.RIB == "")
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "Error", msg = "Veuillez Remplir les Compte RIB de votre Journal ", data = "" }, settings));
+            }
+            var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID && x.ComptaG == comptaG && x.Journal == journal).Select(x => x.IDREGLEMENT.ToString()).ToArray();
 
             var list = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID).Where(x => !hstSiig.Contains(x.No.ToString())).ToList();
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list }, settings));
 
         }
         [HttpPost]
-        public JsonResult GetEtat()
+        public JsonResult GetEtat(string codeproject, SI_USERS suser)
         {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            //var basename = GetTypeP(suser, codeproject);
+
+            int PROJECTID = int.Parse(codeproject);
+
+            if (codeproject != "")
+            {
+                PROJECTID = int.Parse(codeproject);
+            }
+            else
+            {
+                PROJECTID = exist.IDPROJET.Value;
+            }
+
+            SOFTCONNECTOM.connex = new Data.Extension().GetCon(PROJECTID);
+            SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
             List<string> listEtat = __db.OP_CHAINETRAITEMENT.Select(x => x.ETAT).ToList();
             return Json(JsonConvert.SerializeObject(new { type = "sucess", msg = "", data = listEtat }));
@@ -411,9 +467,22 @@ namespace apptab.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le type d'ecriture avant toutes opérations. " }, settings));
             }
+            int crpt = 0;
+            if (codeproject != "")
+            {
+                crpt = int.Parse(codeproject);
+            }
+            else
+            {
+                crpt = exist.IDPROJET.Value;
+            }
+
+            SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+            SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
             if (basename == "1")
             {
-                var CompteGBR = __db.MOP.Where(a => a.COGE.StartsWith("4")).GroupBy(x => x.COGE).Select(x => new
+                var CompteGBR = __db.MOP.Where(a => a.COGEFOURNISSEUR.StartsWith("4")).GroupBy(x => x.COGEFOURNISSEUR).Select(x => new
                 {
                     COGE = x.Key,
                     AUXI = x.Select(y => y.AUXI/*new { AUXI = y.AUXI, NOM = y.NOM }*/).Distinct().ToList()
@@ -426,7 +495,7 @@ namespace apptab.Controllers
 
                 if (CompteGBR.Count != 0)
                 {
-                    CompteGBR.Concat(CompteAvance);
+                    CompteGBR.AddRange(CompteAvance);
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = CompteGBR }, settings));
                 }
                 else
@@ -679,11 +748,12 @@ namespace apptab.Controllers
             List<OPA_VALIDATIONS> list = new List<OPA_VALIDATIONS>();
             if (ChoixBase == "2")
             {
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0 && ecriture.ComptaG == comptaG && ecriture.Journal == journal).ToList();
+                var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG).ToArray();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT ==2 && ecriture.ComptaG == comptaG && ecriture.Journal == journal && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())) ).ToList();
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
-                    if (item.DATECREA.Value.AddBusinessDays(retarDate - 1).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                    if (item.DATEVAL.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                         isLate = true;
                     list.Add(new OPA_VALIDATIONS
                     {
@@ -711,11 +781,12 @@ namespace apptab.Controllers
             }
             else
             {
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && ecriture.ComptaG == comptaG && ecriture.Journal == journal).ToList();
+                var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG).ToArray();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && ecriture.ComptaG == comptaG && ecriture.Journal == journal && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
-                    if (item.DATEVAL.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                    if (item.DATEVAL.Value.AddBusinessDays(retarDate).Date < DateTime.Now.Date/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                         isLate = true;
                     list.Add(new OPA_VALIDATIONS
                     {
@@ -1037,9 +1108,11 @@ namespace apptab.Controllers
                         dateOrdre = item.dateOrdre,
                         NoPiece = item.NoPiece,
                         Compte = item.Compte,
+                        Libelle = item.Libelle,
                         Journal = item.Journal,
                         Credit = item.Credit,
                         Debit = item.Debit,
+                        MONTANT = item.MONTANT,
                         FinancementCategorie = item.FinancementCategorie,
                         Mon = item.Mon,
                         MontantDevise = item.MontantDevise,
@@ -1056,7 +1129,7 @@ namespace apptab.Controllers
             }
             else
             {
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 1 && ecriture.ComptaG == comptaG && ecriture.DateIn == datein && ecriture.DateOut == dateout && ecriture.auxi == auxi && ecriture.Journal == journal).ToList();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 1 && ecriture.ComptaG == comptaG && ecriture.Journal == journal).ToList();
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
@@ -1069,9 +1142,11 @@ namespace apptab.Controllers
                         dateOrdre = item.dateOrdre,
                         NoPiece = item.NoPiece,
                         Compte = item.Compte,
+                        Libelle = item.Libelle,
                         Journal = item.Journal,
                         Credit = item.Credit,
                         Debit = item.Debit,
+                        MONTANT = item.MONTANT,
                         FinancementCategorie = item.FinancementCategorie,
                         Mon = item.Mon,
                         MontantDevise = item.MontantDevise,
@@ -1504,7 +1579,7 @@ namespace apptab.Controllers
                 foreach (var item in val)
                 {
                     bool isLate = false;
-                    if (item.DATESEND.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                    if (item.DATEVAL.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                         isLate = true;
 
                     list.Add(new OPA_VALIDATIONS
@@ -1536,7 +1611,7 @@ namespace apptab.Controllers
                 foreach (var item in val)
                 {
                     bool isLate = false;
-                    if (item.DATESEND.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                    if (item.DATEVAL.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                         isLate = true;
 
                     list.Add(new OPA_VALIDATIONS

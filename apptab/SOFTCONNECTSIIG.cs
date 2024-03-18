@@ -75,6 +75,7 @@ namespace apptab
         public virtual DbSet<OPA_HCANCEL> OPA_HCANCEL { get; set; }
         public virtual DbSet<HSI_SOAS> HSI_SOAS { get; set; }
 
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<OPA_ANOMALIE>()
@@ -135,6 +136,25 @@ namespace apptab
             modelBuilder.Entity<OPA_VALIDATIONS>()
               .Property(e => e.Devise)
               .IsFixedLength();
+            modelBuilder.Entity<OPA_VALIDATIONS>()
+               .Property(e => e.Debit)
+               .HasPrecision(18, 0);
+
+            modelBuilder.Entity<OPA_VALIDATIONS>()
+                .Property(e => e.Credit)
+                .HasPrecision(18, 0);
+
+            modelBuilder.Entity<OPA_VALIDATIONS>()
+                .Property(e => e.MontantDevise)
+                .HasPrecision(18, 0);
+
+            modelBuilder.Entity<OPA_VALIDATIONS>()
+                .Property(e => e.Devise)
+                .IsFixedLength();
+
+            modelBuilder.Entity<OPA_VALIDATIONS>()
+                .Property(e => e.MONTANT)
+                .HasPrecision(18, 0);
         }
     }
 }
