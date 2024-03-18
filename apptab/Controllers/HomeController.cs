@@ -167,7 +167,7 @@ namespace apptab.Controllers
                 sw.Close();
                 byte[] source = System.IO.File.ReadAllBytes(pth + pathchemin + ".txt");
                 string s = "application/txt";
-
+                
                 return File(source, System.Net.Mime.MediaTypeNames.Application.Octet, pathfiles);
             }
             catch (Exception)
@@ -210,44 +210,84 @@ namespace apptab.Controllers
             int PROJECTID = int.Parse(codeproject);
             var ps = db.SI_USERS.Where(x => x.LOGIN == suser.LOGIN /*&& x.IDPROJET == PROJECTID*/ && x.PWD == suser.PWD).Select(x => x.PWD).FirstOrDefault();
 
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
             var pswftp = db.OPA_CRYPTO.Where(x => x.IDPROJET == PROJECTID && x.IDUSER == suser.ID && x.DELETIONDATE != null).Select(x => x.CRYPTOPWD).FirstOrDefault();
+            var avalider = db.OPA_VALIDATIONS.Where(a => a.IDPROJET == PROJECTID && a.ETAT == 2).ToList();
             if (baseName == "2")
             {
                 var pathfile = aFB160.CreateTOMPROAFB160(devise, codeJ, suser, codeproject);
                 if (intbasetype == 0)
                 {
                     Anarana = pathfile.Chemin;
-                    //send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
                     return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                 }
                 else if (intbasetype == 1)
                 {
+                    Anarana = pathfile.Chemin;
                     return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
                 }
                 else if (intbasetype == 2)
                 {
+                    Anarana = pathfile.Chemin;
                     send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == suser.IDPROJET).FirstOrDefault();
                     SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                 }
                 else
                 {
-                    return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
+                    Anarana = pathfile.Chemin;
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == suser.IDPROJET).FirstOrDefault();
                     SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
+                    return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
                 }
 
+                if (avalider != null)
+                {
+                    foreach (var item in avalider)
+                    {
+                        try
+                        {
+                            item.DATEVAL = DateTime.Now;
+                            item.IDUSVAL = exist.ID;
+                            item.ETAT = 3;
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                            throw;
+                        }
+                    }
+                }
 
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archivage avec succès. ", data = send }, settings));
             }
             else
             {
                 var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser, codeproject);
-
+                if (avalider != null)
+                {
+                    foreach (var item in avalider)
+                    {
+                        try
+                        {
+                            item.DATEVAL = DateTime.Now;
+                            item.IDUSVAL = exist.ID;
+                            item.ETAT = 3;
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                            throw;
+                        }
+                    }
+                }
                 if (intbasetype == 0)
                 {
                     Anarana = pathfile.Chemin;
-
                     return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                 }
                 else if (intbasetype == 1)
@@ -258,18 +298,18 @@ namespace apptab.Controllers
                 else if (intbasetype == 2)
                 {
                     Anarana = pathfile.Chemin;
-                    return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == suser.IDPROJET).FirstOrDefault();
                     SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
+                    return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                 }
                 else
                 {
                     Anarana = pathfile.Chemin;
-                    return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == suser.IDPROJET).FirstOrDefault();
                     SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
+                    return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
                 }
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archivage avec succès. ", data = send }, settings));
+
             }
         }
         [HttpPost]
@@ -384,7 +424,7 @@ namespace apptab.Controllers
                              select jrnl).Single();
             if (djournal.RIB == null || djournal.RIB == "")
             {
-                return Json(JsonConvert.SerializeObject(new { type = "Error", msg = "Veuillez Remplir les Compte RIB de votre Journal ", data = "" }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez Remplir les Compte RIB de votre Journal ", data = "" }, settings));
             }
             var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID && x.ComptaG == comptaG && x.Journal == journal).Select(x => x.IDREGLEMENT.ToString()).ToArray();
 
