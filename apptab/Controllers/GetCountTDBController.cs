@@ -71,8 +71,7 @@ namespace apptab.Controllers
                 //        }).Where(a => a.IDPROJET == type.IDPROJET).ToList();
                 //    }
                 //}
-                var payement = db.OPA_VALIDATIONS.ToList();
-
+                List<OPA_VALIDATIONS> paiement = new List<OPA_VALIDATIONS>();
                 if (test.ROLE == (int)Role.SAdministrateur)
                 {
                     int mandatI = 0;
@@ -94,7 +93,7 @@ namespace apptab.Controllers
                         {
                             continue;
                         }
-
+                        paiement.AddRange(db.OPA_VALIDATIONS.Where(a => a.IDPROJET == item.ID).ToList());
                         SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
                         SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
@@ -257,10 +256,10 @@ namespace apptab.Controllers
                         MandatA = mandatRAFI,
                         MandatTR = mandat.Where(a => a.ETAT == 1).Count(),//ok
                         PaieR = 0,/*payement.Where(a => a.ETAT == 0).Count(),*/
-                        PaieT = payement.Where(a => a.ETAT == 0).Count(),
-                        PaieV = payement.Where(a => a.ETAT == 1).Count(),
-                        PaieF = payement.Where(a => a.ETAT == 2).Count(),
-                        PaieA = payement.Where(a => a.ETAT == 4).Count(),
+                        PaieT = paiement.Where(a => a.ETAT == 0).Count(),
+                        PaieV = paiement.Where(a => a.ETAT == 1).Count(),
+                        PaieF = paiement.Where(a => a.ETAT == 2).Count(),
+                        PaieA = paiement.Where(a => a.ETAT == 4).Count(),
                         MandatTA = mandatIA,
                         MandatVA = ava.Where(a => a.ETAT == 0).Count(),//ok
                         MandatAA = mandatRAFA,
@@ -285,6 +284,7 @@ namespace apptab.Controllers
                         int mandatRAFI = 0;
                         int mandatRAFA = 0;
 
+                        paiement.AddRange(db.OPA_VALIDATIONS.Where(a => a.IDPROJET == test.IDPROJET).ToList());
                         foreach (var x in user)
                         {
                             proj.Add(x.ID);
@@ -456,18 +456,18 @@ namespace apptab.Controllers
 
                         mandat = mandat.Where(a => a.IDPROJET == test.IDPROJET).ToList();
                         ava = ava.Where(a => a.IDPROJET == test.IDPROJET).ToList();
-                        payement = payement.Where(a => a.IDPROJET == test.IDPROJET).ToList();
+                        //paiement = paiement.Where(a => a.IDPROJET == test.IDPROJET).ToList();
                         newElemH = new COUNTTDB()
                         {
                             MandatT = mandatI,
                             MandatV = mandat.Where(a => a.ETAT == 0).Count(),//ok
                             MandatA = mandatRAFI,
                             MandatTR = mandat.Where(a => a.ETAT == 1).Count(),//ok
-                            PaieR = payement.Where(a => a.ETAT == 0).Count(),
-                            PaieT = payement.Where(a => a.ETAT == 1).Count(),
-                            PaieV = payement.Where(a => a.ETAT == 2).Count(),
-                            PaieF = payement.Where(a => a.ETAT == 3).Count(),
-                            PaieA = payement.Where(a => a.ETAT == 4).Count(),
+                            PaieR = paiement.Where(a => a.ETAT == 0).Count(),
+                            PaieT = paiement.Where(a => a.ETAT == 1).Count(),
+                            PaieV = paiement.Where(a => a.ETAT == 2).Count(),
+                            PaieF = paiement.Where(a => a.ETAT == 3).Count(),
+                            PaieA = paiement.Where(a => a.ETAT == 4).Count(),
                             MandatTA = mandatIA,
                             MandatVA = ava.Where(a => a.ETAT == 0).Count(),//ok
                             MandatAA = mandatRAFA,
@@ -663,18 +663,18 @@ namespace apptab.Controllers
 
                             mandat = mandat.Where(a => a.IDPROJET == z).ToList();
                             ava = ava.Where(a => a.IDPROJET == z).ToList();
-                            payement = payement.Where(a => a.IDPROJET == z).ToList();
+                            paiement = paiement.Where(a => a.IDPROJET == z).ToList();
                             newElemH = new COUNTTDB()
                             {
                                 MandatT = mandatI,
                                 MandatV = mandat.Where(a => a.ETAT == 0).Count(),//ok
                                 MandatA = mandatRAFI,
                                 MandatTR = mandat.Where(a => a.ETAT == 1).Count(),//ok
-                                PaieR = payement.Where(a => a.ETAT == 0).Count(),
-                                PaieT = payement.Where(a => a.ETAT == 1).Count(),
-                                PaieV = payement.Where(a => a.ETAT == 2).Count(),
-                                PaieF = payement.Where(a => a.ETAT == 3).Count(),
-                                PaieA = payement.Where(a => a.ETAT == 4).Count(),
+                                PaieR = paiement.Where(a => a.ETAT == 0).Count(),
+                                PaieT = paiement.Where(a => a.ETAT == 1).Count(),
+                                PaieV = paiement.Where(a => a.ETAT == 2).Count(),
+                                PaieF = paiement.Where(a => a.ETAT == 3).Count(),
+                                PaieA = paiement.Where(a => a.ETAT == 4).Count(),
                                 MandatTA = mandatIA,
                                 MandatVA = ava.Where(a => a.ETAT == 0).Count(),//ok
                                 MandatAA = mandatRAFA,
