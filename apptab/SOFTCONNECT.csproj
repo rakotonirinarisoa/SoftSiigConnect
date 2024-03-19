@@ -197,6 +197,7 @@
     <Compile Include="Controllers\TraitementAvanceController.cs" />
     <Compile Include="Controllers\TraitementController.cs" />
     <Compile Include="Controllers\TraitementJustifController.cs" />
+    <Compile Include="Controllers\TraitementReversController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Data\Entities\AvanceDetails.cs" />
     <Compile Include="Data\Entities\MOPFOP.cs" />
@@ -328,6 +329,8 @@
     <Compile Include="Models\SI_TRAITAVANCE.cs" />
     <Compile Include="Models\SI_TRAITANNULJUSTIF.cs" />
     <Compile Include="Models\SI_TRAITJUSTIF.cs" />
+    <Compile Include="Models\SI_TRAITANNULREVERS.cs" />
+    <Compile Include="Models\SI_TRAITREVERS.cs" />
     <Compile Include="SOFTCONNECTOM.cs" />
     <Compile Include="SOFTCONNECTSIIG.cs" />
     <Compile Include="Models\TP_MPIECES_JUSTIFICATIVES.cs" />
@@ -2387,11 +2390,13 @@
     <Content Include="Assets\fullcalendar-6.1.11\packages\timegrid\index.global.min.js" />
     <Content Include="Assets\fullcalendar-6.1.11\packages\web-component\index.global.js" />
     <Content Include="Assets\fullcalendar-6.1.11\packages\web-component\index.global.min.js" />
+    <Content Include="Assets\js\BordStatutJR.js" />
     <Content Include="Assets\js\currentRoute.js" />
     <Content Include="Assets\js\BordSoufTraitement.js" />
     <Content Include="Assets\js\PaiementsRejets.js" />
     <Content Include="Assets\js\BordSoufTraitement.js" />
     <Content Include="Assets\js\TraitementENVOISIIGFA.js" />
+    <Content Include="Assets\js\TraitementORDSECRV.js" />
     <Content Include="Assets\js\TraitementORDSECJU.js" />
     <Content Include="Assets\js\TraitementORDSECA.js" />
     <Content Include="Assets\js\TraitementPaiementSoufrance.js" />
@@ -2416,9 +2421,17 @@
     <Content Include="Assets\js\TraitementENVOISIIGF.js" />
     <Content Include="Assets\js\TraitementORDSEC.js" />
     <Content Include="Assets\js\TDBDOC.js" />
+    <Content Include="Assets\js\TraitmandatANNULORV.js" />
     <Content Include="Assets\js\TraitmandatANNULOJU.js" />
+    <Content Include="Assets\js\TraitmandatDOCORV.js" />
+    <Content Include="Assets\js\TraitmandatDOCRV.js" />
     <Content Include="Assets\js\TraitmandatDOCOJU.js" />
     <Content Include="Assets\js\TraitmandatDOCJU.js" />
+    <Content Include="Assets\js\TraitmandatLIASORV.js" />
+    <Content Include="Assets\js\TraitmandatLIASRV.js" />
+    <Content Include="Assets\js\TraitmandatModalORV.js" />
+    <Content Include="Assets\js\TraitmandatModalRV.js" />
+    <Content Include="Assets\js\TraitmandatRV.js" />
     <Content Include="Assets\js\TraitmandatJU.js" />
     <Content Include="Assets\js\TraitmandatA.js" />
     <Content Include="Assets\js\PaiementToLiquidationOrMandat.js" />
@@ -4869,6 +4882,9 @@
     <Content Include="Views\Traitement\GenerationPAIEMENTIndex.cshtml" />
     <Content Include="Views\TraitementJustif\TraitementPROJET.cshtml" />
     <Content Include="Views\TraitementJustif\TraitementORDSEC.cshtml" />
+    <Content Include="Views\TraitementRevers\TraitementPROJET.cshtml" />
+    <Content Include="Views\TraitementRevers\TraitementORDSEC.cshtml" />
+    <Content Include="Views\BordTraitement\StatutJR.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

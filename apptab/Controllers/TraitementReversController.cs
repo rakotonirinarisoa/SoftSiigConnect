@@ -6,13 +6,11 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using apptab.Data.Entities;
-using Extensions.DateTime;
 using Newtonsoft.Json;
 
 namespace apptab.Controllers
 {
-    public class TraitementJustifController : Controller
+    public class TraitementReversController : Controller
     {
         private readonly SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
         private readonly SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -26,7 +24,7 @@ namespace apptab.Controllers
         //Traitement justificatifs PROJET//
         public ActionResult TraitementPROJET()
         {
-            ViewBag.Controller = "Tris des justificatifs par le RAF";
+            ViewBag.Controller = "Tris des reversements par le RAF";
 
             return View();
         }
@@ -165,12 +163,12 @@ namespace apptab.Controllers
                             //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
                             if (canBe)
                             {
-                                if (tom.GA_AVANCE_JUSTIFICATIF.Any(a => a.NUMERO_AVANCE == x.NUMEROAVANCE))
+                                if (tom.GA_AVANCE_REVERSEMENT.Any(a => a.NUMERO_AVANCE == x.NUMEROAVANCE))
                                 {
-                                    foreach (var y in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.NUMERO_AVANCE == x.NUMEROAVANCE).OrderBy(a => a.DATE).OrderBy(a => a.NUMERO_PIECE).ToList())
+                                    foreach (var y in tom.GA_AVANCE_REVERSEMENT.Where(a => a.NUMERO_AVANCE == x.NUMEROAVANCE).OrderBy(a => a.DATE).OrderBy(a => a.NUMERO_PIECE).ToList())
                                     {
                                         Guid idJustif = Guid.Parse(y.ID);
-                                        if (!db.SI_TRAITJUSTIF.Any(a => a.No == idJustif && a.NPIECE == y.NUMERO_PIECE && a.IDPROJET == crpt) || db.SI_TRAITJUSTIF.Any(a => a.No == idJustif && a.ETAT == 2 && a.IDPROJET == crpt))
+                                        if (!db.SI_TRAITREVERS.Any(a => a.No == idJustif && a.NPIECE == y.NUMERO_PIECE && a.IDPROJET == crpt) || db.SI_TRAITREVERS.Any(a => a.No == idJustif && a.ETAT == 2 && a.IDPROJET == crpt))
                                         {
                                             var titulaire = "";
 
@@ -309,12 +307,12 @@ namespace apptab.Controllers
                             //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
                             if (canBe)
                             {
-                                if (tom.GA_AVANCE_JUSTIFICATIF.Any(a => a.NUMERO_AVANCE == x.NUMEROAVANCE && a.DATE >= DateDebut && a.DATE <= DateFin))
+                                if (tom.GA_AVANCE_REVERSEMENT.Any(a => a.NUMERO_AVANCE == x.NUMEROAVANCE && a.DATE >= DateDebut && a.DATE <= DateFin))
                                 {
-                                    foreach (var y in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.NUMERO_AVANCE == x.NUMEROAVANCE && a.DATE >= DateDebut && a.DATE <= DateFin).OrderBy(a => a.DATE).OrderBy(a => a.NUMERO_PIECE).ToList())
+                                    foreach (var y in tom.GA_AVANCE_REVERSEMENT.Where(a => a.NUMERO_AVANCE == x.NUMEROAVANCE && a.DATE >= DateDebut && a.DATE <= DateFin).OrderBy(a => a.DATE).OrderBy(a => a.NUMERO_PIECE).ToList())
                                     {
                                         Guid idJustif = Guid.Parse(y.ID);
-                                        if (!db.SI_TRAITJUSTIF.Any(a => a.No == idJustif && a.NPIECE == y.NUMERO_PIECE && a.IDPROJET == crpt) || db.SI_TRAITJUSTIF.Any(a => a.No == idJustif && a.NPIECE == y.NUMERO_PIECE && a.ETAT == 2 && a.IDPROJET == crpt))
+                                        if (!db.SI_TRAITREVERS.Any(a => a.No == idJustif && a.NPIECE == y.NUMERO_PIECE && a.IDPROJET == crpt) || db.SI_TRAITREVERS.Any(a => a.No == idJustif && a.NPIECE == y.NUMERO_PIECE && a.ETAT == 2 && a.IDPROJET == crpt))
                                         {
                                             var titulaire = "";
 
@@ -399,10 +397,10 @@ namespace apptab.Controllers
                     List<DATATRPROJET> list = new List<DATATRPROJET>();
 
                     Guid elem = Guid.Parse(SAV);
-                    var isPiece = tom.GA_AVANCE_JUSTIFICATIF.FirstOrDefault(a => a.ID == SAV);
-                    if (db.SI_TRAITJUSTIF.FirstOrDefault(a => a.No == elem && a.NPIECE == isPiece.NUMERO_PIECE && a.ETAT == 2 && a.IDPROJET == crpt) != null)
+                    var isPiece = tom.GA_AVANCE_REVERSEMENT.FirstOrDefault(a => a.ID == SAV);
+                    if (db.SI_TRAITREVERS.FirstOrDefault(a => a.No == elem && a.NPIECE == isPiece.NUMERO_PIECE && a.ETAT == 2 && a.IDPROJET == crpt) != null)
                     {
-                        var ismod = db.SI_TRAITJUSTIF.FirstOrDefault(a => a.No == elem && a.NPIECE == isPiece.NUMERO_PIECE && a.IDPROJET == crpt);
+                        var ismod = db.SI_TRAITREVERS.FirstOrDefault(a => a.No == elem && a.NPIECE == isPiece.NUMERO_PIECE && a.IDPROJET == crpt);
                         ismod.ETAT = 0;
                         ismod.DATECRE = DateTime.Now;
                         ismod.DATEANNUL = null;
@@ -425,7 +423,7 @@ namespace apptab.Controllers
 
                         var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
 
-                        var newT = new SI_TRAITJUSTIF()
+                        var newT = new SI_TRAITREVERS()
                         {
                             IDPROJET = crpt,
                             No = elem,
@@ -445,7 +443,7 @@ namespace apptab.Controllers
                             IDUSERCREATE = exist.ID
                         };
 
-                        db.SI_TRAITJUSTIF.Add(newT);
+                        db.SI_TRAITREVERS.Add(newT);
                         db.SaveChanges();
                     }
 
@@ -469,14 +467,14 @@ namespace apptab.Controllers
                 mail.From = new MailAddress(MailAdresse);
 
                 mail.To.Add(MailAdresse);
-                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).MAILJ0 != null)
+                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).MAILJ2 != null)
                 {
                     string[] separators = { ";" };
 
                     var Tomail = mail;
                     if (Tomail != null)
                     {
-                        string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).MAILJ0;
+                        string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).MAILJ2;
                         string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
                         foreach (var mailto in mailListe)
@@ -486,9 +484,9 @@ namespace apptab.Controllers
                     }
                 }
 
-                mail.Subject = "Attente validation justificatifs du projet " + ProjetIntitule;
+                mail.Subject = "Attente validation reversements du projet " + ProjetIntitule;
                 mail.IsBodyHtml = true;
-                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " justificatifs en attente de validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
+                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " reversements en attente de validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
                     "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
 
                 smtp.Port = 587;
@@ -517,9 +515,9 @@ namespace apptab.Controllers
 
                 List<DATATRPROJET> list = new List<DATATRPROJET>();
 
-                if (tom.GA_AVANCE_JUSTIFICATIF.FirstOrDefault(a => a.ID == IdF) != null)
+                if (tom.GA_AVANCE_REVERSEMENT.FirstOrDefault(a => a.ID == IdF) != null)
                 {
-                    foreach (var x in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == IdF).ToList())
+                    foreach (var x in tom.GA_AVANCE_REVERSEMENT.Where(a => a.ID == IdF).ToList())
                     {
                         var isGA = tom.GA_AVANCE.FirstOrDefault(a => a.NUMERO == x.NUMERO_AVANCE);
 
@@ -562,7 +560,7 @@ namespace apptab.Controllers
                     TITUL = ""
                 };
 
-                var isJustif = tom.GA_AVANCE_JUSTIFICATIF.FirstOrDefault(a => a.ID == IdF);
+                var isJustif = tom.GA_AVANCE_REVERSEMENT.FirstOrDefault(a => a.ID == IdF);
                 string isAv = tom.CPTADMIN_FAVANCE.FirstOrDefault(a => a.NUMEROAVANCE == isJustif.NUMERO_AVANCE).ID.ToString();
 
                 if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == isAv && (a.TYPEPIECE == "DEF" || a.TYPEPIECE == "TEF" || a.TYPEPIECE == "BE") && a.MODULLE == "CPTADMINAVANCE") != null)
@@ -608,11 +606,11 @@ namespace apptab.Controllers
 
                 List<DATATRPROJET> list = new List<DATATRPROJET>();
 
-                if (tom.GA_AVANCE_JUSTIFICATIF.Any(a => a.ID == IdF))
+                if (tom.GA_AVANCE_REVERSEMENT.Any(a => a.ID == IdF))
                 {
                     list.Add(new DATATRPROJET
                     {
-                        LIEN = tom.GA_AVANCE_JUSTIFICATIF.FirstOrDefault(a => a.ID == IdF).COMMENTAIRE != null ? tom.GA_AVANCE_JUSTIFICATIF.FirstOrDefault(a => a.ID == IdF).COMMENTAIRE : ""
+                        LIEN = tom.GA_AVANCE_REVERSEMENT.FirstOrDefault(a => a.ID == IdF).COMMENTAIRE != null ? tom.GA_AVANCE_REVERSEMENT.FirstOrDefault(a => a.ID == IdF).COMMENTAIRE : ""
                     });
                 }
 
@@ -673,9 +671,9 @@ namespace apptab.Controllers
 
                 var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == IdS && a.DELETIONDATE == null).FirstOrDefault().PROJET;
 
-                if (db.SI_TRAITJUSTIF.FirstOrDefault(a => a.No == IdF && a.IDPROJET == IdS) != null)
+                if (db.SI_TRAITREVERS.FirstOrDefault(a => a.No == IdF && a.IDPROJET == IdS) != null)
                 {
-                    var ismod = db.SI_TRAITJUSTIF.FirstOrDefault(a => a.No == IdF && a.IDPROJET == IdS);
+                    var ismod = db.SI_TRAITREVERS.FirstOrDefault(a => a.No == IdF && a.IDPROJET == IdS);
                     ismod.ETAT = 2;
                     //ismod.DATECRE = DateTime.Now;
                     ismod.DATEANNUL = DateTime.Now;
@@ -684,7 +682,7 @@ namespace apptab.Controllers
                     db.SaveChanges();
                 }
 
-                var newElemH = new SI_TRAITANNULJUSTIF()
+                var newElemH = new SI_TRAITANNULREVERS()
                 {
                     No = IdF,
                     DATEANNUL = DateTime.Now,
@@ -693,7 +691,7 @@ namespace apptab.Controllers
                     IDPROJET = IdS,
                     IDUSER = exist.ID
                 };
-                db.SI_TRAITANNULJUSTIF.Add(newElemH);
+                db.SI_TRAITANNULREVERS.Add(newElemH);
                 db.SaveChanges();
 
                 //SEND MAIL ALERT et NOTIFICATION//
@@ -708,14 +706,14 @@ namespace apptab.Controllers
                     mail.From = new MailAddress(MailAdresse);
 
                     mail.To.Add(MailAdresse);
-                    if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null).MAILREJETJUST != null)
+                    if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null).MAILREJETREV != null)
                     {
                         string[] separators = { ";" };
 
                         var Tomail = mail;
                         if (Tomail != null)
                         {
-                            string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null).MAILREJETJUST;
+                            string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null).MAILREJETREV;
                             string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
                             foreach (var mailto in mailListe)
@@ -725,9 +723,9 @@ namespace apptab.Controllers
                         }
                     }
 
-                    mail.Subject = "Rejet justificatif du projet " + ProjetIntitule;
+                    mail.Subject = "Rejet reversement du projet " + ProjetIntitule;
                     mail.IsBodyHtml = true;
-                    mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez un justificatif rejeté pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
+                    mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez un reversement rejeté pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
                         "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
 
                     smtp.Port = 587;
@@ -749,7 +747,7 @@ namespace apptab.Controllers
         //Traitement justificatifs ORDSEC//
         public ActionResult TraitementORDSEC()
         {
-            ViewBag.Controller = "Validation des justificatifs par ORDESEC";
+            ViewBag.Controller = "Validation des reversements par ORDESEC";
 
             return View();
         }
@@ -789,9 +787,9 @@ namespace apptab.Controllers
                 if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
 
-                if (db.SI_TRAITJUSTIF.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 0) != null)
+                if (db.SI_TRAITREVERS.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 0) != null)
                 {
-                    foreach (var x in db.SI_TRAITJUSTIF.Where(a => a.IDPROJET == crpt && a.ETAT == 0).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                    foreach (var x in db.SI_TRAITREVERS.Where(a => a.IDPROJET == crpt && a.ETAT == 0).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
                     {
                         var soa = (from soas in db.SI_SOAS
                                    join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -871,9 +869,9 @@ namespace apptab.Controllers
                 if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO. " }, settings));
 
-                if (db.SI_TRAITJUSTIF.Any(a => a.IDPROJET == crpt && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 0))
+                if (db.SI_TRAITREVERS.Any(a => a.IDPROJET == crpt && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 0))
                 {
-                    foreach (var x in db.SI_TRAITJUSTIF.Where(a => a.IDPROJET == crpt && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 0).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                    foreach (var x in db.SI_TRAITREVERS.Where(a => a.IDPROJET == crpt && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 0).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
                     {
                         var soa = (from soas in db.SI_SOAS
                                    join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -940,9 +938,9 @@ namespace apptab.Controllers
                     List<DATATRPROJET> list = new List<DATATRPROJET>();
 
                     Guid isSAV = Guid.Parse(SAV);
-                    if (db.SI_TRAITJUSTIF.FirstOrDefault(a => a.IDPROJET == crpt && a.No == isSAV) != null)
+                    if (db.SI_TRAITREVERS.FirstOrDefault(a => a.IDPROJET == crpt && a.No == isSAV) != null)
                     {
-                        var isModified = db.SI_TRAITJUSTIF.FirstOrDefault(a => a.IDPROJET == crpt && a.No == isSAV);
+                        var isModified = db.SI_TRAITREVERS.FirstOrDefault(a => a.IDPROJET == crpt && a.No == isSAV);
                         isModified.ETAT = 1;
                         isModified.DATEVALIDATION = DateTime.Now;
                         isModified.DATEANNUL = null;
@@ -971,14 +969,14 @@ namespace apptab.Controllers
                 mail.From = new MailAddress(MailAdresse);
 
                 mail.To.Add(MailAdresse);
-                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).MAILJ1 != null)
+                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).MAILJ3 != null)
                 {
                     string[] separators = { ";" };
 
                     var Tomail = mail;
                     if (Tomail != null)
                     {
-                        string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).MAILJ1;
+                        string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).MAILJ3;
                         string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
                         foreach (var mailto in mailListe)
@@ -988,9 +986,9 @@ namespace apptab.Controllers
                     }
                 }
 
-                mail.Subject = "Validation justificatifs du projet " + ProjetIntitule;
+                mail.Subject = "Validation reversements du projet " + ProjetIntitule;
                 mail.IsBodyHtml = true;
-                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " justificatifs validés pour le compte du projet " + ProjetIntitule + " .<br/><br>" +
+                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " reversements validés pour le compte du projet " + ProjetIntitule + " .<br/><br>" +
                     "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
 
                 smtp.Port = 587;

@@ -525,6 +525,8 @@ namespace SOFTCONNECT.Controllers
                     Session["J1"] = isMenu.J1;
                     Session["J2"] = isMenu.J2;
                     Session["J3"] = isMenu.J3;
+
+                    Session["JR"] = isMenu.JR;
                 }
 
                 if (db.SI_GEDLIEN.Any())

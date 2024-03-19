@@ -557,17 +557,17 @@
                     </ul>
                     <div id="Demo5" class="w3-hide">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block" id="menu-accordeon">
-                            @if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur)
-                            {
-                                <li class="nav-item">
-                                    <a href="../Calendar/Index" class="nav-link">
-                                        <i class="nav-icon fas fa-calendar-alt" style="color: #4970cb"></i>
-                                        <p>
-                                            Evénements
-                                        </p>
-                                    </a>
-                                </li>
-                            }
+                            @*@if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur)
+        {
+            <li class="nav-item">
+                <a href="../Calendar/Index" class="nav-link">
+                    <i class="nav-icon fas fa-calendar-alt" style="color: #4970cb"></i>
+                    <p>
+                        Evénements
+                    </p>
+                </a>
+            </li>
+        }*@
                             <li class="nav-item">
                                 <a href="../Etat/InfoProCreate" class="nav-link">
                                     <i class="nav-icon fa fa-exclamation" style="color: #FFD463"></i>
@@ -581,6 +581,14 @@
                                     <i class="nav-icon fas fa-archive" style="color: #FFD463"></i>
                                     <p>
                                         @Session["TDB0"]@*Liste des engagements, avances et paiements*@
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../BordTraitement/StatutJR" class="nav-link">
+                                    <i class="nav-icon fas fa-file-alt" style="color: #FFD463"></i>
+                                    <p>
+                                        @Session["JR"]@*Statut Justificatifs et Reversements*@
                                     </p>
                                 </a>
                             </li>

@@ -1217,7 +1217,7 @@ namespace apptab.Controllers
                         || SExist.MP1 != param.MP1 || SExist.MP2 != param.MP2 || SExist.MP3 != param.MP3 || SExist.MP4 != param.MP4
                         || SExist.TDB0 != param.TDB0 || SExist.TDB1 != param.TDB1 || SExist.TDB2 != param.TDB2 || SExist.TDB3 != param.TDB3 || SExist.TDB4 != param.TDB4
                         || SExist.TDB5 != param.TDB5 || SExist.TDB6 != param.TDB6 || SExist.TDB7 != param.TDB7 || SExist.TDB8 != param.TDB8
-                        || SExist.J0 != param.J0 || SExist.J1 != param.J1 || SExist.J2 != param.J2 || SExist.J3 != param.J3)
+                        || SExist.J0 != param.J0 || SExist.J1 != param.J1 || SExist.J2 != param.J2 || SExist.J3 != param.J3 || SExist.JR != param.JR)
                     {
                         SExist.MTNON = param.MTNON;
                         SExist.MT0 = param.MT0;
@@ -1252,6 +1252,7 @@ namespace apptab.Controllers
                         SExist.J1 = param.J1;
                         SExist.J2 = param.J2;
                         SExist.J3 = param.J3;
+                        SExist.JR = param.JR;
 
                         db.SaveChanges();
                     }
@@ -1294,6 +1295,7 @@ namespace apptab.Controllers
                         J1 = param.J1,
                         J2 = param.J2,
                         J3 = param.J3,
+                        JR = param.JR,
 
                         CREATIONDATE = DateTime.Now
                     };
