@@ -4867,8 +4867,8 @@
     <Content Include="Views\TraitementAvance\TraitementORDSEC.cshtml" />
     <Content Include="Views\TraitementAvance\TraitementSENDSIIGFP.cshtml" />
     <Content Include="Views\Traitement\GenerationPAIEMENTIndex.cshtml" />
-    <Content Include="Views\TraitementJustifRevers\TraitementPROJET.cshtml" />
-    <Content Include="Views\TraitementJustifRevers\TraitementORDSEC.cshtml" />
+    <Content Include="Views\TraitementJustif\TraitementPROJET.cshtml" />
+    <Content Include="Views\TraitementJustif\TraitementORDSEC.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
