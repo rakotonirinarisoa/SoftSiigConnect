@@ -18,7 +18,7 @@
 <div class="row">
     <div class="col-lg-3 col-6" style="cursor:pointer" show-create-user-modal>
         <a href="../Traitement/TraitementORDSECOTHER">
-            <div class="small-box" style="background-color: #4970cb">
+            <div class="small-box tdbinitier">
                 <div class="inner">
                     <h3 id="MandatT">0</h3>
                     <p>Dépenses initées</p>
@@ -31,7 +31,7 @@
     </div>
     <div class="col-lg-3 col-6" style="cursor:pointer">
         <a href="../Traitement/TraitementPROJET">
-            <div class="small-box" style="background-color: #FFD463">
+            <div class="small-box tbdattente">
                 <div class="inner">
                     <h3 id="MandatA">0</h3>
                     <p>En attente tris par le RAF</p>
@@ -44,7 +44,7 @@
     </div>
     <div class="col-lg-3 col-6" style="cursor:pointer">
         <a href="../Traitement/TraitementORDSEC">
-            <div class="small-box" style="background-color: #eb7575">
+            <div class="small-box tdbvalider">
                 <div class="inner">
                     <h3 id="MandatV">0</h3>
                     <p>En attente validation ORDSEC</p>
@@ -57,7 +57,7 @@
     </div>
     <div class="col-lg-3 col-6" style="cursor:pointer">
         <a href="../Traitement/TraitementSENDSIIGFP">
-            <div class="small-box" style="background-color: #338B85 ">
+            <div class="small-box tdblast">
                 <div class="inner">
                     <h3 id="MandatTR">0</h3>
                     <p>En attente transfert vers SIIGFP</p>
@@ -74,7 +74,7 @@
 <div class="row">
     <div class="col-lg-3 col-6" style="cursor:pointer" show-create-user-modal>
         <a href="../TraitementAvance/TraitementORDSECOTHER">
-            <div class="small-box" style="background-color: #4970cb">
+            <div class="small-box tdbinitier">
                 <div class="inner">
                     <h3 id="MandatTA">0</h3>
                     <p>Avances initiées</p>
@@ -87,7 +87,7 @@
     </div>
     <div class="col-lg-3 col-6" style="cursor:pointer">
         <a href="../TraitementAvance/TraitementPROJET">
-            <div class="small-box" style="background-color: #FFD463">
+            <div class="small-box tbdattente">
                 <div class="inner">
                     <h3 id="MandatAA">0</h3>
                     <p>En attente tris par le RAF</p>
@@ -100,7 +100,7 @@
     </div>
     <div class="col-lg-3 col-6" style="cursor:pointer">
         <a href="../TraitementAvance/TraitementORDSEC">
-            <div class="small-box" style="background-color: #eb7575">
+            <div class="small-box tdbvalider">
                 <div class="inner">
                     <h3 id="MandatVA">0</h3>
                     <p>En attente validation ORDSEC</p>
@@ -113,7 +113,7 @@
     </div>
     <div class="col-lg-3 col-6" style="cursor:pointer">
         <a href="../TraitementAvance/TraitementSENDSIIGFP">
-            <div class="small-box" style="background-color: #338B85 ">
+            <div class="small-box tdblast">
                 <div class="inner">
                     <h3 id="MandatTRA">0</h3>
                     <p>En attente transfert vers SIIGFP</p>
@@ -141,9 +141,9 @@
         </div>*@
     <div class="col-lg-4 col-6" style="cursor:pointer" show-create-user-modal>
         <a href="../Home/TeacherValidation">
-            <div class="small-box bg-gradient-yellow">
+            <div class="small-box tbdattente">
                 <div class="inner">
-                    <h3 id="PaieT">0</h3>
+                    <h3 id="PaieR">0</h3>
                     <p>Paiements en attente de validation</p>
                 </div>
                 <div class="icon">
@@ -165,9 +165,9 @@
         </div>*@
     <div class="col-lg-4 col-6" style="cursor:pointer">
         <a href="../Home/BonPourPaiement">
-            <div class="small-box bg-gradient-danger">
+            <div class="small-box tdbvalider">
                 <div class="inner">
-                    <h3 id="PaieV">0</h3>
+                    <h3 id="PaieT">0</h3>
                     <p>Paiements validés</p>
                 </div>
                 <div class="icon">
@@ -178,9 +178,9 @@
     </div>
     <div class="col-lg-4 col-6" style="cursor:pointer">
         <a href="../Home/FValidation">
-            <div class="small-box bg-gradient-success">
+            <div class="small-box tdblast">
                 <div class="inner">
-                    <h3 id="PaieF">0</h3>
+                    <h3 id="PaieV">0</h3>
                     <p>Paiements finalisés</p>
                 </div>
                 <div class="icon">
@@ -189,6 +189,19 @@
             </div>
         </a>
     </div>
+    @*<div class="col-lg-3 col-6" style="cursor:pointer">
+        <a href="#">
+            <div class="small-box bg-gradient-cyan">
+                <div class="inner">
+                    <h3 id="PaieF">0</h3>
+                    <p>Fichier AFB  à récupérer</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-check-double"></i>
+                </div>
+            </div>
+        </a>
+    </div>*@
 </div>
 
 <script src="~/Assets/js/AACUL.js?version=@Session["VERSION"]"></script>

@@ -731,6 +731,15 @@ $('.Checkall').change(function () {
 });
 //===============================================================================================================ChargeJs===============================================================
 $('[data-action="ChargerJs"]').click(function () {
+
+    let dateDeb = $('#Pdu').val();
+    let dateFin = $('#Pau').val();
+    let datePaie = $('#Pay').val();
+
+    if (!dateDeb || !dateFin || !datePaie) {
+        alert("Veuillez renseigner les dates afin de générer les payements.")
+        return;
+    }
     let formData = new FormData();
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);

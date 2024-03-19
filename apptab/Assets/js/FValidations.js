@@ -644,6 +644,15 @@ $('.Checkall').change(function () {
 //==============================================================================================ChargeJs===================================================================================
 
 $('[data-action="ChargerJs"]').click(function () {
+
+    let dateDeb = $('#Pdu').val();
+    let dateFin = $('#Pau').val();
+    let datePaie = $('#Pay').val();
+
+    if (!dateDeb || !dateFin || !datePaie) {
+        alert("Veuillez renseigner les dates afin de générer les payements.")
+        return;
+    }
     let formData = new FormData();
     let codeproject = $("#Fproject").val();
     formData.append("suser.LOGIN", User.LOGIN);
@@ -835,7 +844,7 @@ $('[data-action="ChargerJs"]').click(function () {
 
         $.ajax({
             type: "POST",
-            url: Origin + '/Home/GetElementAvalider',
+            url: Origin + '/Home/EnvoyeValidatioF',
             data: formData,
             cache: false,
             contentType: false,

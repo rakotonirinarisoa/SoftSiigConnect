@@ -929,3 +929,15 @@ div.dt-container .dt-paging .dt-paging-button {
     padding: 0 !important;
     margin-left: 0px !important;
 }
+.small-box.tdbinitier {
+    background-color: #4970cb;
+}
+.small-box.tbdattente {
+    background-color: #FFD463;
+}
+.small-box.tdbvalider {
+    background-color: #eb7575;
+}
+.small-box.tdblast {
+    background-color: #338B85;
+}
