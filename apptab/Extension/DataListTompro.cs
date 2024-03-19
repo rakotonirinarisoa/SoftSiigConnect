@@ -1,9 +1,11 @@
-﻿namespace apptab.Extension
+﻿using System;
+
+namespace apptab.Extension
 {
     public class DataListTompro
     {
         public decimal No { get; set; }
-        public string dateOrdre { get; set; }
+        public DateTime dateOrdre { get; set; }
         public string NoPiece { get; set; }
         public string Compte { get; set; }
         public string Libelle { get; set; }

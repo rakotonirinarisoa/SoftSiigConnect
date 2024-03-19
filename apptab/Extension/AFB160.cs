@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Linq;
+using System.Xml.Linq;
 using apptab.apptab;
 using apptab.Data.Entities;
 using apptab.Models;
@@ -460,96 +461,98 @@ namespace apptab.Extension
             {
                 var opp = db.OPA_VALIDATIONS.Where(e => e.IDREGLEMENT == bnfcr.NUM).FirstOrDefault();
                 historique = new OPA_HISTORIQUEBR();
+                if (opp != null)
+                {
+                    if (opp.AVANCE == true)
+                    {
+                        mont = tom.GA_AVANCE_MOUVEMENT.Where(a => a.NUMERO == bnfcr.NUM).FirstOrDefault();
+                    }
+                    else
+                    {
+                        mont = (from bul in tom.MOP
+                                where bul.NUMEROOP == bnfcr.NUM
+                                select bul).FirstOrDefault();
+                    }
+                    var jrnl = "jrnl";
+                    i++;
+                    //MessageBox.Show(fact.MONTANT.ToString());
+
+                    if (bnfcr.LIBELLE.Length > 11)
+                    {
+                        texteAFB160 += "0602";
+                        texteAFB160 += this.formaterTexte(14, "                      ");
+                        texteAFB160 += this.formaterTexte(4, jrnl) + this.ajouter0(8, i.ToString());
+                        texteAFB160 += this.formaterTexte(24, bnfcr.BENEFICIAIRE);
+                        texteAFB160 += this.formaterTexte(14, bnfcr.BANQUE);
+                        texteAFB160 += this.formaterTexte(18, " ");
+                        texteAFB160 += this.formaterTexte(5, bnfcr.GUICHET);
+                        texteAFB160 += this.formaterTexte(11, bnfcr.RIB);
+                        if (opp.AVANCE == true)
+                        {
+                            texteAFB160 += this.formaterChiffre(16, mont.MONTANT.ToString());
+                        }
+                        else
+                        {
+                            texteAFB160 += this.formaterChiffre(16, mont.MONTANTLOC.ToString());
+                        }
+                        texteAFB160 += this.formaterTexte(11, bnfcr.LIBELLE);
+                        texteAFB160 += this.formaterTexte(20, " ");
+                        texteAFB160 += this.formaterTexte(5, bnfcr.NUM_ETABLISSEMENT);
+                        texteAFB160 += this.formaterTexte(6, " ");
+                        texteAFB160 += "\r\n";
+
+                        texteAFB160 += "0702";
+                        texteAFB160 += this.formaterTexte(14, "                      ");
+                        texteAFB160 += this.formaterTexte(4, jrnl.ToString()) + this.ajouter0(8, i.ToString());
+                        texteAFB160 += this.formaterTexte(24, bnfcr.BENEFICIAIRE);
+                        texteAFB160 += this.formaterTexte(14, bnfcr.BANQUE);
+                        texteAFB160 += this.formaterTexte(18, " ");
+                        texteAFB160 += this.formaterTexte(5, bnfcr.GUICHET);
+                        texteAFB160 += this.formaterTexte(11, bnfcr.RIB);
+                        texteAFB160 += this.formaterChiffre(16, "0000");
+                        texteAFB160 += this.formatLibelle0702(bnfcr.LIBELLE);
+                        texteAFB160 += this.formaterTexte(20, " ");
+                        texteAFB160 += this.formaterTexte(5, bnfcr.NUM_ETABLISSEMENT);
+                        texteAFB160 += this.formaterTexte(6, " ");
+                        texteAFB160 += "\r\n";
+                        historique.NUMENREG = bnfcr.NUM;
+                        historique.DATEAFB = DateTime.Now;
+                        historique.IDUSER = usr.ID;
+                        historique.AFB = fileName;
+                        historique.IDSOCIETE = PROJECTID;
+                    }
+                    else
+                    {
+                        texteAFB160 += "0602";
+                        texteAFB160 += this.formaterTexte(14, "                      ");
+                        texteAFB160 += this.formaterTexte(4, jrnl.ToString()) + this.ajouter0(8, i.ToString());
+                        texteAFB160 += this.formaterTexte(24, bnfcr.BENEFICIAIRE);
+                        texteAFB160 += this.formaterTexte(14, bnfcr.BANQUE);
+                        texteAFB160 += this.formaterTexte(18, " ");
+                        texteAFB160 += this.formaterTexte(5, bnfcr.GUICHET);
+                        texteAFB160 += this.formaterTexte(11, bnfcr.RIB);
+                        texteAFB160 += this.formaterChiffre(16, mont.MONTANTLOC.ToString());
+                        texteAFB160 += this.formaterTexte(11, bnfcr.LIBELLE);
+                        texteAFB160 += this.formaterTexte(20, " ");
+                        texteAFB160 += this.formaterTexte(5, bnfcr.NUM_ETABLISSEMENT);
+                        texteAFB160 += this.formaterTexte(6, " ");
+                        texteAFB160 += "\r\n";
+                        historique.NUMENREG = bnfcr.NUM;
+                        historique.DATEAFB = DateTime.Now;
+                        historique.IDUSER = usr.ID;
+                        historique.AFB = fileName;
+                        historique.IDSOCIETE = PROJECTID;
+                    }
+                    db.OPA_HISTORIQUEBR.Add(historique);
+                    db.SaveChanges();
+                }
                 /*var jrnl = (from mct in tom.MCOMPTA
                             where mct.NUMENREG == bnfcr.NUM
                             select mct.JL).Single();
                 var fact = (from mct in tom.MCOMPTA
                             where mct.NUMENREG == bnfcr.NUM
                             select mct).First();*/
-
-                if (opp.AVANCE == true)
-                {
-                    mont = tom.GA_AVANCE_MOUVEMENT.Where(a => a.NUMERO == bnfcr.NUM).FirstOrDefault();
-                }
-                else
-                {
-                    mont = (from bul in tom.MOP
-                            where bul.NUMEROOP == bnfcr.NUM
-                            select bul).FirstOrDefault();
-                }
-                var jrnl = "jrnl";
-                i++;
-                //MessageBox.Show(fact.MONTANT.ToString());
-
-                if (bnfcr.LIBELLE.Length > 11)
-                {
-                    texteAFB160 += "0602";
-                    texteAFB160 += this.formaterTexte(14, "                      ");
-                    texteAFB160 += this.formaterTexte(4, jrnl) + this.ajouter0(8, i.ToString());
-                    texteAFB160 += this.formaterTexte(24, bnfcr.BENEFICIAIRE);
-                    texteAFB160 += this.formaterTexte(14, bnfcr.BANQUE);
-                    texteAFB160 += this.formaterTexte(18, " ");
-                    texteAFB160 += this.formaterTexte(5, bnfcr.GUICHET);
-                    texteAFB160 += this.formaterTexte(11, bnfcr.RIB);
-                    if (opp.AVANCE == true)
-                    {
-                        texteAFB160 += this.formaterChiffre(16, mont.MONTANT.ToString());
-                    }
-                    else
-                    {
-                        texteAFB160 += this.formaterChiffre(16, mont.MONTANTLOC.ToString());
-                    }
-                    texteAFB160 += this.formaterTexte(11, bnfcr.LIBELLE);
-                    texteAFB160 += this.formaterTexte(20, " ");
-                    texteAFB160 += this.formaterTexte(5, bnfcr.NUM_ETABLISSEMENT);
-                    texteAFB160 += this.formaterTexte(6, " ");
-                    texteAFB160 += "\r\n";
-
-                    texteAFB160 += "0702";
-                    texteAFB160 += this.formaterTexte(14, "                      ");
-                    texteAFB160 += this.formaterTexte(4, jrnl.ToString()) + this.ajouter0(8, i.ToString());
-                    texteAFB160 += this.formaterTexte(24, bnfcr.BENEFICIAIRE);
-                    texteAFB160 += this.formaterTexte(14, bnfcr.BANQUE);
-                    texteAFB160 += this.formaterTexte(18, " ");
-                    texteAFB160 += this.formaterTexte(5, bnfcr.GUICHET);
-                    texteAFB160 += this.formaterTexte(11, bnfcr.RIB);
-                    texteAFB160 += this.formaterChiffre(16, "0000");
-                    texteAFB160 += this.formatLibelle0702(bnfcr.LIBELLE);
-                    texteAFB160 += this.formaterTexte(20, " ");
-                    texteAFB160 += this.formaterTexte(5, bnfcr.NUM_ETABLISSEMENT);
-                    texteAFB160 += this.formaterTexte(6, " ");
-                    texteAFB160 += "\r\n";
-                    historique.NUMENREG = bnfcr.NUM;
-                    historique.DATEAFB = DateTime.Now;
-                    historique.IDUSER = usr.ID;
-                    historique.AFB = fileName;
-                    historique.IDSOCIETE = PROJECTID;
-                }
-                else
-                {
-                    texteAFB160 += "0602";
-                    texteAFB160 += this.formaterTexte(14, "                      ");
-                    texteAFB160 += this.formaterTexte(4, jrnl.ToString()) + this.ajouter0(8, i.ToString());
-                    texteAFB160 += this.formaterTexte(24, bnfcr.BENEFICIAIRE);
-                    texteAFB160 += this.formaterTexte(14, bnfcr.BANQUE);
-                    texteAFB160 += this.formaterTexte(18, " ");
-                    texteAFB160 += this.formaterTexte(5, bnfcr.GUICHET);
-                    texteAFB160 += this.formaterTexte(11, bnfcr.RIB);
-                    texteAFB160 += this.formaterChiffre(16, mont.MONTANTLOC.ToString());
-                    texteAFB160 += this.formaterTexte(11, bnfcr.LIBELLE);
-                    texteAFB160 += this.formaterTexte(20, " ");
-                    texteAFB160 += this.formaterTexte(5, bnfcr.NUM_ETABLISSEMENT);
-                    texteAFB160 += this.formaterTexte(6, " ");
-                    texteAFB160 += "\r\n";
-                    historique.NUMENREG = bnfcr.NUM;
-                    historique.DATEAFB = DateTime.Now;
-                    historique.IDUSER = usr.ID;
-                    historique.AFB = fileName;
-                    historique.IDSOCIETE = PROJECTID;
-                }
-                db.OPA_HISTORIQUEBR.Add(historique);
-                db.SaveChanges();
-
+                
                 /*****************************CHANGER ETAT FACTURE*****************************/
 
                 /* var virement = (from vrmt in tom.MCOMPTA
@@ -787,7 +790,8 @@ namespace apptab.Extension
                     DataListTompro ligneRegs = tom.GA_AVANCE.Where(a => a.NUMERO == num.NUM.ToString()).Join(tom.GA_AVANCE_MOUVEMENT, ga => ga.NUMERO, av => av.NUMERO, (ga, av) => new DataListTompro
                     {
                         No = Convert.ToDecimal(ga.NUMERO),
-                        dateOrdre = ga.DATE.Value.ToString(),
+                        dateOrdre =Convert.ToDateTime(ga.DATE),
+                       // dateOrdre = Convert.ToDateTime(formaterNORD(ga.DATE.Value.ToString())),
                         NoPiece = ga.NUMERO_PIECE,
                         Compte = ga.COGE,
                         Libelle = ga.LIBELLE,
@@ -814,7 +818,7 @@ namespace apptab.Extension
                         listEcritureSelect.Add(new DataListTompro()
                         {
                             No = ligneRegs.NUMENREG,
-                            dateOrdre = this.formaterNORD(ligneRegs.NORD),
+                            dateOrdre = Convert.ToDateTime(ligneRegs.NORD),
                             NoPiece = ligneRegs.NOPIECE,
                             Compte = ligneRegs.COGE,
                             Libelle = num.LIBELLE,
@@ -891,55 +895,59 @@ namespace apptab.Extension
             foreach (OPA_REGLEMENTBR num in numRegs)
             {
                 var OPAV = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == num.NUM).FirstOrDefault();
-                if (OPAV.AVANCE == true)
+                if (OPAV != null)
                 {
-                    DataListTomOP ligneRegs = tom.GA_AVANCE.Where(a => a.NUMERO == num.NUM).Join(tom.GA_AVANCE_MOUVEMENT, ga => ga.NUMERO, av => av.NUMERO, (ga, av) => new DataListTomOP
+                    if (OPAV.AVANCE == true)
                     {
-                        No = ga.NUMERO,
-                        Date = ga.DATE.Value,
-                        NoPiece = ga.NUMERO_PIECE,
-                        Compte = ga.COGE,
-                        Libelle = ga.LIBELLE,
-                        Montant = av.MONTANT ?? 0,
-                        MontantDevise = 0,
-                        Mon = "",
-                        Rang = av.ACTI,
-                        Poste = av.POSTE,
-                        FinancementCategorie = av.CONVENTION + " " + av.CATEGORIE,
-                        Commune = av.GEO,
-                        Plan6 = av.PLAN6,
-                        Marche = "",
-                        Auxi = av.AUXI,
-                        Status = num.ETAT
-                    }).FirstOrDefault();
+                        DataListTomOP ligneRegs = tom.GA_AVANCE.Where(a => a.NUMERO == num.NUM).Join(tom.GA_AVANCE_MOUVEMENT, ga => ga.NUMERO, av => av.NUMERO, (ga, av) => new DataListTomOP
+                        {
+                            No = ga.NUMERO,
+                            Date = ga.DATE.Value,
+                            NoPiece = ga.NUMERO_PIECE,
+                            Compte = ga.COGE,
+                            Libelle = ga.LIBELLE,
+                            Montant = av.MONTANT ?? 0,
+                            MontantDevise = 0,
+                            Mon = "",
+                            Rang = av.ACTI,
+                            Poste = av.POSTE,
+                            FinancementCategorie = av.CONVENTION + " " + av.CATEGORIE,
+                            Commune = av.GEO,
+                            Plan6 = av.PLAN6,
+                            Marche = "",
+                            Auxi = av.AUXI,
+                            Status = num.ETAT
+                        }).FirstOrDefault();
 
-                    listEcritureSelect.Add(ligneRegs);
+                        listEcritureSelect.Add(ligneRegs);
+                    }
+                    else
+                    {
+                        DataListTomOP ligneRegs = (from mcpt in tom.MOP
+                                                   where mcpt.NUMEROOP == num.NUM
+                                                   select new DataListTomOP()
+                                                   {
+                                                       No = mcpt.NUMEROOP,
+                                                       Date = mcpt.DATEFACTURE.Value,
+                                                       NoPiece = mcpt.NUMEROFACTURE,
+                                                       Compte = mcpt.COGE,
+                                                       Libelle = mcpt.LIBELLE,
+                                                       Montant = mcpt.MONTANTLOC.Value,
+                                                       MontantDevise = mcpt.MONTANTDEV.Value,
+                                                       Mon = "",
+                                                       Rang = mcpt.ACTI,
+                                                       Poste = mcpt.POSTE,
+                                                       FinancementCategorie = mcpt.CONVENTION + " " + mcpt.CATEGORIE,
+                                                       Commune = mcpt.GEO,
+                                                       Plan6 = mcpt.PLAN6,
+                                                       Marche = "",
+                                                       Auxi = mcpt.AUXIFOURNISSEUR,
+                                                       Status = num.ETAT
+                                                   }).FirstOrDefault();
+                        listEcritureSelect.Add(ligneRegs);
+                    }
                 }
-                else
-                {
-                    DataListTomOP ligneRegs = (from mcpt in tom.MOP
-                                               where mcpt.NUMEROOP == num.NUM
-                                               select new DataListTomOP()
-                                               {
-                                                   No = mcpt.NUMEROOP,
-                                                   Date = mcpt.DATEFACTURE.Value,
-                                                   NoPiece = mcpt.NUMEROFACTURE,
-                                                   Compte = mcpt.COGE,
-                                                   Libelle = mcpt.LIBELLE,
-                                                   Montant = mcpt.MONTANTLOC.Value,
-                                                   MontantDevise = mcpt.MONTANTDEV.Value,
-                                                   Mon = "",
-                                                   Rang = mcpt.ACTI,
-                                                   Poste = mcpt.POSTE,
-                                                   FinancementCategorie = mcpt.CONVENTION + " " + mcpt.CATEGORIE,
-                                                   Commune = mcpt.GEO,
-                                                   Plan6 = mcpt.PLAN6,
-                                                   Marche = "",
-                                                   Auxi = mcpt.AUXIFOURNISSEUR,
-                                                   Status = num.ETAT
-                                               }).FirstOrDefault();
-                    listEcritureSelect.Add(ligneRegs);
-                }
+               
             }
             return listEcritureSelect;
         }
@@ -964,7 +972,8 @@ namespace apptab.Extension
                 listAnomalie.Add(new DataListTompro()
                 {
                     No = factAnoms.NUMENREG,
-                    dateOrdre = this.formaterNORD(factAnoms.NORD),
+                    //dateOrdre = this.formaterNORD(factAnoms.NORD),
+                    dateOrdre = Convert.ToDateTime(factAnoms.NORD),
                     NoPiece = factAnoms.NOPIECE,
                     Compte = factAnoms.COGE,
                     Libelle = factAnoms.LIBELLE,
@@ -1286,7 +1295,8 @@ namespace apptab.Extension
                                             list.Add(new DataListTompro()
                                             {
                                                 No = reglement.NUMENREG,
-                                                dateOrdre = formaterNORD(reglement.NORD),
+                                                //dateOrdre = formaterNORD(reglement.NORD),
+                                                dateOrdre = Convert.ToDateTime(reglement.NORD),
                                                 NoPiece = reglement.NOPIECE,
                                                 Compte = reglement.COGE,
                                                 Libelle = reglement.LIBELLE,
@@ -1311,7 +1321,8 @@ namespace apptab.Extension
                                             list.Add(new DataListTompro()
                                             {
                                                 No = reglement.NUMENREG,
-                                                dateOrdre = formaterNORD(reglement.NORD),
+                                                dateOrdre = Convert.ToDateTime(formaterNORD(reglement.NORD)),
+                                                //dateOrdre = formaterNORD(reglement.NORD),
                                                 NoPiece = reglement.NOPIECE,
                                                 Compte = reglement.COGE,
                                                 Libelle = reglement.LIBELLE,
@@ -1349,7 +1360,8 @@ namespace apptab.Extension
                                         list.Add(new DataListTompro()
                                         {
                                             No = reglement.NUMENREG,
-                                            dateOrdre = formaterNORD(reglement.NORD),
+                                            //dateOrdre = formaterNORD(reglement.NORD),
+                                            dateOrdre = Convert.ToDateTime(formaterNORD(reglement.NORD)),
                                             NoPiece = reglement.NOPIECE,
                                             Compte = reglement.COGE,
                                             Libelle = reglement.LIBELLE,
@@ -1373,7 +1385,8 @@ namespace apptab.Extension
                                         list.Add(new DataListTompro()
                                         {
                                             No = reglement.NUMENREG,
-                                            dateOrdre = formaterNORD(reglement.NORD),
+                                            //dateOrdre = formaterNORD(reglement.NORD),
+                                            dateOrdre = Convert.ToDateTime(formaterNORD(reglement.NORD)),
                                             NoPiece = reglement.NOPIECE,
                                             Compte = reglement.COGE,
                                             Libelle = reglement.LIBELLE,
@@ -1423,7 +1436,8 @@ namespace apptab.Extension
                                     list.Add(new DataListTompro()
                                     {
                                         No = reglement.NUMENREG,
-                                        dateOrdre = this.formaterNORD(reglement.NORD),
+                                        //dateOrdre = this.formaterNORD(reglement.NORD),
+                                        dateOrdre = Convert.ToDateTime(formaterNORD(reglement.NORD)),
                                         NoPiece = reglement.NOPIECE,
                                         Compte = reglement.COGE,
                                         Libelle = reglement.LIBELLE,
@@ -1447,7 +1461,8 @@ namespace apptab.Extension
                                     list.Add(new DataListTompro()
                                     {
                                         No = reglement.NUMENREG,
-                                        dateOrdre = formaterNORD(reglement.NORD),
+                                        //dateOrdre = formaterNORD(reglement.NORD),
+                                        dateOrdre = Convert.ToDateTime(formaterNORD(reglement.NORD)),
                                         NoPiece = reglement.NOPIECE,
                                         Compte = reglement.COGE,
                                         Libelle = reglement.LIBELLE,
@@ -1500,7 +1515,8 @@ namespace apptab.Extension
                                     list.Add(new DataListTompro()
                                     {
                                         No = reglement.NUMENREG,
-                                        dateOrdre = this.formaterNORD(reglement.NORD),
+                                        //dateOrdre = this.formaterNORD(reglement.NORD),
+                                        dateOrdre = Convert.ToDateTime(formaterNORD(reglement.NORD)),
                                         NoPiece = reglement.NOPIECE,
                                         Compte = reglement.COGE,
                                         Libelle = reglement.LIBELLE,
@@ -1524,7 +1540,7 @@ namespace apptab.Extension
                                     list.Add(new DataListTompro()
                                     {
                                         No = reglement.NUMENREG,
-                                        dateOrdre = this.formaterNORD(reglement.NORD),
+                                        dateOrdre = Convert.ToDateTime(reglement.NORD),
                                         NoPiece = reglement.NOPIECE,
                                         Compte = reglement.COGE,
                                         Libelle = reglement.LIBELLE,
@@ -1580,7 +1596,8 @@ namespace apptab.Extension
                                     list.Add(new DataListTompro()
                                     {
                                         No = reglement.NUMENREG,
-                                        dateOrdre = this.formaterNORD(reglement.NORD),
+                                        //dateOrdre = this.formaterNORD(reglement.NORD),
+                                        dateOrdre = Convert.ToDateTime(formaterNORD(reglement.NORD)),
                                         NoPiece = reglement.NOPIECE,
                                         Compte = reglement.COGE,
                                         Libelle = reglement.LIBELLE,
@@ -1604,7 +1621,8 @@ namespace apptab.Extension
                                     list.Add(new DataListTompro()
                                     {
                                         No = reglement.NUMENREG,
-                                        dateOrdre = this.formaterNORD(reglement.NORD),
+                                        //dateOrdre = this.formaterNORD(reglement.NORD),
+                                        dateOrdre = Convert.ToDateTime(formaterNORD(reglement.NORD)),
                                         NoPiece = reglement.NOPIECE,
                                         Compte = reglement.COGE,
                                         Libelle = reglement.LIBELLE,

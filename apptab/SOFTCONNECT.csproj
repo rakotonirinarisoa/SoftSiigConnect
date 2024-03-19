@@ -243,6 +243,8 @@
     <Compile Include="Data\Entities\GA_AVANCE_DETAILS.cs" />
     <Compile Include="Models\ListPaimentV.cs" />
     <Compile Include="Models\Model1.cs" />
+    <Compile Include="Models\Model2.cs" />
+    <Compile Include="Models\Model3.cs" />
     <Compile Include="Models\TxtPAIEMENT.cs" />
     <Compile Include="Models\TxLISTETRAIT.cs" />
     <Compile Include="Models\DATATRPROJET.cs" />

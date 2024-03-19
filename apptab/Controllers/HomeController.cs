@@ -16,6 +16,7 @@ using System.Net.Mail;
 using apptab.Data.Entities;
 using apptab.Data;
 using System.Collections;
+using System.Web.WebPages;
 
 namespace apptab.Controllers
 {
@@ -696,7 +697,7 @@ namespace apptab.Controllers
                         avalider.auxi = auxi;
                         avalider.DateP = dateP;
                         avalider.Journal = journal;
-                        avalider.dateOrdre = item.Date.ToString();
+                        avalider.dateOrdre = item.Date;
                         avalider.NoPiece = item.NoPiece;
                         avalider.Compte = item.Compte;
                         avalider.Libelle = item.Libelle;
@@ -788,7 +789,7 @@ namespace apptab.Controllers
             if (ChoixBase == "2")
             {
                 var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG).ToArray();
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT ==2 && ecriture.ComptaG == comptaG && ecriture.Journal == journal && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && ecriture.dateOrdre >= datein && ecriture.dateOrdre <= dateout.Date && ecriture.ComptaG == comptaG && ecriture.Journal == journal && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
@@ -821,11 +822,11 @@ namespace apptab.Controllers
             else
             {
                 var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG).ToArray();
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && ecriture.ComptaG == comptaG && ecriture.Journal == journal && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && ecriture.ComptaG == comptaG && ecriture.Journal == journal && ecriture.dateOrdre >= datein && ecriture.dateOrdre <= dateout && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
-                    if (item.DATEVAL.Value.AddBusinessDays(retarDate).Date < DateTime.Now.Date/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                    if (item.DATECREA.Value.AddBusinessDays(retarDate).Date < DateTime.Now.Date/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                         isLate = true;
                     list.Add(new OPA_VALIDATIONS
                     {
@@ -854,8 +855,7 @@ namespace apptab.Controllers
             }
 
         }
-
-        //=========================================================================================TeacherValidation======================================================================
+    
         [HttpPost]
         public JsonResult GetElementAvaliderLoad(SI_USERS suser, string codeproject)
         {
@@ -973,6 +973,7 @@ namespace apptab.Controllers
             }
 
         }
+        //=========================================================================================TeacherValidation======================================================================
 
         [HttpPost]
         public JsonResult GetElementValiderF(string listCompte, SI_USERS suser, string codeproject)
