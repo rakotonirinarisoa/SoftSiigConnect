@@ -313,7 +313,7 @@ $('[data-action="GenereSIIG"]').click(function () {
     let dd = $("#dateD").val();
     let df = $("#dateF").val();
     if (!dd || !df) {
-        alert("Veuillez renseigner les dates afin de générer les mandats. ");
+        alert("Veuillez renseigner les dates afin de générer les avances. ");
         return;
     }
 
@@ -563,7 +563,7 @@ $('[data-action="SaveV"]').click(function () {
     });
 
     if (list.length == 0) {
-        alert("Veuillez sélectionner au moins un mandat afin de l'enregistrer et l'envoyer pour validation. ");
+        alert("Veuillez sélectionner au moins une avance afin de l'enregistrer et l'envoyer pour validation. ");
         return;
     }
 

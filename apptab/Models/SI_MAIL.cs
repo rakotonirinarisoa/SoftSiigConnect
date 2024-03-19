@@ -39,6 +39,13 @@
 
         public string MAILREJETA { get; set; }
 
+        public string MAILJ0 { get; set; }
+        public string MAILJ1 { get; set; }
+        public string MAILJ2 { get; set; }
+        public string MAILJ3 { get; set; }
+        public string MAILREJETJUST { get; set; }
+        public string MAILREJETREV { get; set; }
+
         public int? IDUSER { get; set; }
 
         [Column(TypeName = "smalldatetime")]

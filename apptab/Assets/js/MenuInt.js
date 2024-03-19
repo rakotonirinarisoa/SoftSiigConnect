@@ -67,6 +67,11 @@ function GetUsers() {
             $("#Tdb6").val(Datas.data.TDB6);
             $("#Tdb7").val(Datas.data.TDB7);
             $("#Tdb8").val(Datas.data.TDB8);
+
+            $("#J0").val(Datas.data.J0);
+            $("#J1").val(Datas.data.J1);
+            $("#J2").val(Datas.data.J2);
+            $("#J3").val(Datas.data.J3);
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -103,8 +108,14 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let Tdb7 = $("#Tdb7").val();
     let Tdb8 = $("#Tdb8").val();
 
+    let J0 = $("#J0").val();
+    let J1 = $("#J1").val();
+    let J2 = $("#J2").val();
+    let J3 = $("#J3").val();
+
     if (!ParaV0 || !ParaV || !ParaS || !ParaSiig || !ParaPe || !ParaPv || !ParaPp || !ParaPb || !Md0 || !Md1 || !Md2 || !Md3 || !Mop0 || !Mop1 || !Mop2
-        || !Tdb0 || !Tdb1 || !Tdb2 || !Tdb3 || !Tdb4 || !Tdb5 || !Tdb6 || !Tdb7 || !Tdb8) {
+        || !Tdb0 || !Tdb1 || !Tdb2 || !Tdb3 || !Tdb4 || !Tdb5 || !Tdb6 || !Tdb7 || !Tdb8
+        || !J0 || !J1 || !J2 || !J3) {
         alert("Veuillez renseigner les intitulés des menus. ");
         return;
     }
@@ -143,6 +154,11 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("param.TDB6", $(`#Tdb6`).val());
     formData.append("param.TDB7", $(`#Tdb7`).val());
     formData.append("param.TDB8", $(`#Tdb8`).val());
+
+    formData.append("param.J0", $(`#J0`).val());
+    formData.append("param.J1", $(`#J1`).val());
+    formData.append("param.J2", $(`#J2`).val());
+    formData.append("param.J3", $(`#J3`).val());
 
     $.ajax({
         type: "POST",

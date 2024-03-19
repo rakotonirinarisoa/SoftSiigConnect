@@ -487,7 +487,7 @@ namespace SOFTCONNECT.Controllers
                 Session["UserName"] = test.LOGIN;
 
                 Session["VERSIONCONNNECT"] = "1.0.0";
-                Session["VERSION"] = "1.3.181";
+                Session["VERSION"] = "1.3.182";
 
 
                 if (db.SI_MENU.Any())
@@ -520,6 +520,11 @@ namespace SOFTCONNECT.Controllers
                     Session["TDB6"] = isMenu.TDB6;
                     Session["TDB7"] = isMenu.TDB7;
                     Session["TDB8"] = isMenu.TDB8;
+
+                    Session["J0"] = isMenu.J0;
+                    Session["J1"] = isMenu.J1;
+                    Session["J2"] = isMenu.J2;
+                    Session["J3"] = isMenu.J3;
                 }
 
                 if (db.SI_GEDLIEN.Any())
