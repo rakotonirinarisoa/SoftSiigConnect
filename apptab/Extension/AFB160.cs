@@ -454,11 +454,13 @@ namespace apptab.Extension
             texteAFB160 += "\r\n";
             /********              0602        ******/
             var beneficiaires = (from dordre in db.OPA_REGLEMENTBR
-                                 where dordre.IDSOCIETE == PROJECTID && dordre.APPLICATION == "BR"
+                                 where dordre.IDSOCIETE == PROJECTID && dordre.APPLICATION == "BR" && dordre.ETAT == "0"
                                  select dordre).ToList();
 
             foreach (var bnfcr in beneficiaires)
             {
+                bnfcr.ETAT = "1";
+                db.SaveChanges();
                 var opp = db.OPA_VALIDATIONS.Where(e => e.IDREGLEMENT == bnfcr.NUM).FirstOrDefault();
                 historique = new OPA_HISTORIQUEBR();
                 if (opp != null)
@@ -544,6 +546,7 @@ namespace apptab.Extension
                         historique.IDSOCIETE = PROJECTID;
                     }
                     db.OPA_HISTORIQUEBR.Add(historique);
+
                     db.SaveChanges();
                 }
                 /*var jrnl = (from mct in tom.MCOMPTA
@@ -576,7 +579,7 @@ namespace apptab.Extension
             decimal? montant = 0;
 
             var nums = (from ecrt in db.OPA_REGLEMENTBR
-                        where ecrt.IDSOCIETE == PROJECTID && ecrt.APPLICATION == "BR"
+                        where ecrt.IDSOCIETE == PROJECTID && ecrt.APPLICATION == "BR" && ecrt.ETAT == "0"
                         select ecrt).ToList();
 
             foreach (var num in nums)
@@ -886,7 +889,7 @@ namespace apptab.Extension
             /**************Remplissage dataGridFactSelect*********/
 
             List<OPA_REGLEMENTBR> numRegs = (from num in db.OPA_REGLEMENTBR
-                                             where num.IDSOCIETE == PROJECTID
+                                             where num.IDSOCIETE == PROJECTID && num.ETAT == "0"
                                              select num).ToList();
 
             List<DataListTomOP> listEcritureSelect = new List<DataListTomOP>();

@@ -844,7 +844,7 @@ $('[data-action="ChargerJs"]').click(function () {
 
         $.ajax({
             type: "POST",
-            url: Origin + '/Home/GetElementAvalider',
+            url: Origin + '/Home/EnvoyeValidatioF',
             data: formData,
             cache: false,
             contentType: false,
