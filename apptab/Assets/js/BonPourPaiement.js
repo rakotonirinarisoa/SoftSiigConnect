@@ -1315,27 +1315,13 @@ $('[data-action="GetElementChecked"]').click(function () {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
 
-    let datein = $('#Pdu').val();
-    let dateout = $('#Pau').val();
-    let journal = $('#commercial').val();
-    let comptaG = $('#comptaG').val();
-    let auxi = $('#auxi').val();
-    let dateP = $('#Pay').val();
-    let etat = $('#etat').val();
-
-    formData.append("datein", datein);
-    formData.append("dateout", dateout);
-    formData.append("journal", journal);
-    formData.append("comptaG", comptaG)
-    formData.append("auxi", auxi);
-    formData.append("auxi1", auxi);
-    formData.append("dateP", dateP);
-    formData.append("devise", false);
-    formData.append("etat", etat);
     //formData.append("listCompte", listid);
 
     formData.append("listCompte", JSON.stringify(list));
     formData.append("baseName", baseName);
+
+    console.log(formData);
+    console.log(Origin);
 
     //ValidationsEcrituresF
     //tokony io no antsoina
