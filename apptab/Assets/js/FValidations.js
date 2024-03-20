@@ -164,10 +164,13 @@ function GetListCompG() {
 function FillAUXI() {
     var list = ListCompteG.filter(x => x.COGE == $(`[compG-list]`).val()).pop();
     let code = `<option value="Tous"> Tous</option> `;
-    $.each(list.AUXI, function (_, v) {
-        code += `
-            <option value="${v}">${v}</option>
-        `;
+    $.each(list.AUXI, function (k, v) {
+        $.each(v, function (x, y) {
+            code += `
+                    <option value="${y}">${y}</option>
+                `;
+        })
+
     });
 
     $(`[auxi-list]`).html('');
