@@ -457,6 +457,10 @@ namespace apptab.Extension
                                  where dordre.IDSOCIETE == PROJECTID && dordre.APPLICATION == "BR" && dordre.ETAT == "0"
                                  select dordre).ToList();
 
+            var nums = (from ecrt in db.OPA_REGLEMENTBR
+                        where ecrt.IDSOCIETE == PROJECTID && ecrt.APPLICATION == "BR" && ecrt.ETAT == "0"
+                        select ecrt).ToList();
+            var nums_2 = nums;
             foreach (var bnfcr in beneficiaires)
             {
                 bnfcr.ETAT = "1";
@@ -585,11 +589,7 @@ namespace apptab.Extension
             /********              0802       *********/
             decimal? montant = 0;
 
-            var nums = (from ecrt in db.OPA_REGLEMENTBR
-                        where ecrt.IDSOCIETE == PROJECTID && ecrt.APPLICATION == "BR" && ecrt.ETAT == "0"
-                        select ecrt).ToList();
-
-            foreach (var num in nums)
+            foreach (var num in nums_2)
             {
                 var pop = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == num.NUM).FirstOrDefault();
                 if (pop.AVANCE == true)
