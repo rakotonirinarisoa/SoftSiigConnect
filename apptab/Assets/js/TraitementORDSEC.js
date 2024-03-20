@@ -575,9 +575,6 @@ $('[data-action="SaveV"]').click(function () {
 
     formData.append("listCompte", list);
 
-    formData.append("DateDebut", $('#dateD').val());
-    formData.append("DateFin", $('#dateF').val());
-
     formData.append("iProjet", $("#proj").val());
 
     $.ajax({

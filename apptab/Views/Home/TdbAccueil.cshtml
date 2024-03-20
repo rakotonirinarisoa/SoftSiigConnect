@@ -4,6 +4,16 @@
     /*Layout = "~/Views/Shared/_Layout.cshtml";*/
 }
 
+<style>
+    .inner {
+        color: black;
+    }
+    /*.rfrele {
+        background: no-repeat center url('../img/bg.jpg');
+        background-size: cover;
+    }*/
+</style>
+
 <h1>Mandats</h1>
 <div class="row">
     <div class="col-lg-3 col-6" style="cursor:pointer" show-create-user-modal>
@@ -116,6 +126,62 @@
     </div>
 </div>
 
+<h1>Justificatifs et Reversements</h1>
+<div class="row">
+    <div class="col-lg-3 col-6" style="cursor:pointer" show-create-user-modal>
+        <a href="../TraitementJustif/TraitementPROJET">
+            <div class="small-box tdbinitier">
+                <div class="inner">
+                    <h3 id="J0">0</h3>
+                    <p>Justificatifs en attente tris par le RAF</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-exclamation"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-6" style="cursor:pointer">
+        <a href="../TraitementJustif/TraitementORDSEC">
+            <div class="small-box tbdattente">
+                <div class="inner">
+                    <h3 id="J1">0</h3>
+                    <p>Justificatifs en attente validation par ORDSEC</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-6" style="cursor:pointer">
+        <a href="../TraitementRevers/TraitementPROJET">
+            <div class="small-box tdbvalider">
+                <div class="inner">
+                    <h3 id="J2">0</h3>
+                    <p>Reversements en attente tris par le RAF</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-exclamation"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-6" style="cursor:pointer">
+        <a href="../TraitementRevers/TraitementORDSEC">
+            <div class="small-box tdblast">
+                <div class="inner">
+                    <h3 id="J3">0</h3>
+                    <p>Reversements en attente validation par ORDSEC</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
 <h1>Paiements</h1>
 <div class="row">
     @*<div class="col-lg-2 col-6" style="cursor:pointer" show-create-user-modal>
@@ -180,18 +246,18 @@
         </a>
     </div>
     @*<div class="col-lg-3 col-6" style="cursor:pointer">
-        <a href="#">
-            <div class="small-box bg-gradient-cyan">
-                <div class="inner">
-                    <h3 id="PaieF">0</h3>
-                    <p>Fichier AFB  à récupérer</p>
+            <a href="#">
+                <div class="small-box bg-gradient-cyan">
+                    <div class="inner">
+                        <h3 id="PaieF">0</h3>
+                        <p>Fichier AFB  à récupérer</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-check-double"></i>
+                    </div>
                 </div>
-                <div class="icon">
-                    <i class="fas fa-check-double"></i>
-                </div>
-            </div>
-        </a>
-    </div>*@
+            </a>
+        </div>*@
 </div>
 
 <script src="~/Assets/js/AACUL.js?version=@Session["VERSION"]"></script>

@@ -27,7 +27,6 @@ namespace apptab
         public virtual DbSet<CPTADMIN_TYPEENGAGEMENT> CPTADMIN_TYPEENGAGEMENT { get; set; }
         public virtual DbSet<CPTADMIN_TYPEPROCEDURE> CPTADMIN_TYPEPROCEDURE { get; set; }
 
-
         public virtual DbSet<CPTADMIN_CHAINETRAITEMENT_AVANCE> CPTADMIN_CHAINETRAITEMENT_AVANCE { get; set; }
         public virtual DbSet<CPTADMIN_COMMENTAIRE_AVANCE> CPTADMIN_COMMENTAIRE_AVANCE { get; set; }
         public virtual DbSet<CPTADMIN_FAVANCE> CPTADMIN_FAVANCE { get; set; }
@@ -36,6 +35,8 @@ namespace apptab
         public virtual DbSet<CPTADMIN_MODELEETATS_AVANCE> CPTADMIN_MODELEETATS_AVANCE { get; set; }
         public virtual DbSet<CPTADMIN_TRAITEMENT_AVANCE> CPTADMIN_TRAITEMENT_AVANCE { get; set; }
 
+        public virtual DbSet<GA_AVANCE_JUSTIFICATIF> GA_AVANCE_JUSTIFICATIF { get; set; }
+        public virtual DbSet<GA_AVANCE_REVERSEMENT> GA_AVANCE_REVERSEMENT { get; set; }
 
         public virtual DbSet<RTIERS> RTIERS { get; set; }
         public virtual DbSet<TP_MPIECES_JUSTIFICATIVES> TP_MPIECES_JUSTIFICATIVES { get; set; }
@@ -549,9 +550,10 @@ namespace apptab
             modelBuilder.Entity<tpa_salaries>()
                 .Property(e => e.taux5)
                 .HasPrecision(18, 3);
+
             modelBuilder.Entity<MCOMPTA>()
-    .Property(e => e.NUMENREG)
-    .HasPrecision(30, 0);
+                .Property(e => e.NUMENREG)
+                .HasPrecision(30, 0);
 
             modelBuilder.Entity<MCOMPTA>()
                 .Property(e => e.MONTANT)
@@ -624,9 +626,10 @@ namespace apptab
             modelBuilder.Entity<MCOMPTA>()
                 .Property(e => e.NUMENREGSITE)
                 .HasPrecision(30, 0);
+
             modelBuilder.Entity<FCOMPTA>()
-    .Property(e => e.NUMEROCHEQUE)
-    .HasPrecision(18, 0);
+                .Property(e => e.NUMEROCHEQUE)
+                .HasPrecision(18, 0);
 
             modelBuilder.Entity<FOP>()
                 .Property(e => e.MONTANT)
@@ -902,6 +905,14 @@ namespace apptab
             modelBuilder.Entity<CPTADMIN_MAVANCE>()
                 .Property(e => e.MONTANTDEVISE)
                 .HasPrecision(30, 12);
+
+            modelBuilder.Entity<GA_AVANCE_JUSTIFICATIF>()
+                .Property(e => e.MONTANT)
+                .HasPrecision(18, 6);
+
+            modelBuilder.Entity<GA_AVANCE_REVERSEMENT>()
+                .Property(e => e.MONTANT)
+                .HasPrecision(18, 6);
         }
     }
 }

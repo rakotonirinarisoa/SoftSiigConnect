@@ -115,7 +115,7 @@
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">
                             <li class="nav-item menu-open" onclick="myFunction('Demo1')">
                                 <hr />
-                                <a class="nav-link active" style="background-color: darkblue">
+                                <a class="nav-link active" style="background: #2f2c79 ">
                                     <img src="~/Assets/icons/settings-gear-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
                                     <p>
                                         PARAMETRAGES
@@ -351,7 +351,7 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">
                         <li class="nav-item menu-open" onclick="myFunction('Demo2')">
                             <hr />
-                            <a class="nav-link active" style="background-color: dodgerblue">
+                            <a class="nav-link active" style="background: #005187 " >
                                 <img src="~/Assets/icons/document-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
                                 <p>
                                     MANDATS
@@ -363,7 +363,7 @@
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block" id="menu-accordeon">
                             <li class="nav-item">
                                 <a href="../Traitement/TraitementORDSECOTHER" class="nav-link">
-                                    <i class="nav-icon fas fa-list" style="color: #17A2B8"></i>
+                                    <i class="nav-icon fas fa-list" style="color: #4970cb"></i>
                                     <p>
                                         @Session["MTNON"]
                                     </p>
@@ -371,7 +371,7 @@
                             </li>
                             <li class="nav-item">
                                 <a href="../Traitement/TraitementPROJET" class="nav-link">
-                                    <i class="nav-icon fas fa-th-list" style="color: #FFC107"></i>
+                                    <i class="nav-icon fas fa-th-list" style="color: #FFD463"></i>
                                     <p>
                                         @Session["MT0"]
                                     </p>
@@ -379,7 +379,7 @@
                             </li>
                             <li class="nav-item">
                                 <a href="../Traitement/TraitementORDSEC" class="nav-link">
-                                    <i class="nav-icon fas fa-list-ol" style="color: #DF4857"></i>
+                                    <i class="nav-icon fas fa-list-ol" style="color: #eb7575"></i>
                                     <p>
                                         @Session["MT1"]
                                     </p>
@@ -387,7 +387,7 @@
                             </li>
                             <li class="nav-item">
                                 <a href="../Traitement/TraitementSENDSIIGFP" class="nav-link">
-                                    <i class="nav-icon fas fa-tasks" style="color: #3EB059"></i>
+                                    <i class="nav-icon fas fa-tasks" style="color: #338B85"></i>
                                     <p>
                                         @Session["MT2"]
                                     </p>
@@ -399,7 +399,7 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">
                         <li class="nav-item menu-open" onclick="myFunction('Demo3')">
                             <hr />
-                            <a class="nav-link active" style="background-color: royalblue">
+                            <a class="nav-link active" style="background: #0a5cb8 " >
                                 <img src="~/Assets/icons/coin-cash-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
                                 <p>
                                     AVANCES
@@ -407,46 +407,100 @@
                             </a>
                         </li>
                     </ul>
-                    <div id="Demo3" class="w3-hide">
+                    <div id="Demo3" class="w3-hide" @*class="panel"*@>
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block" id="menu-accordeon">
-                            <li class="nav-item">
-                                <a href="../TraitementAvance/TraitementORDSECOTHER" class="nav-link">
-                                    <i class="nav-icon fas fa-list" style="color: #17A2B8"></i>
+                            <li class="nav-item SuperAd" data-io id="Demo3">
+                                <a class="nav-link">
+                                    <i class="nav-icon fa fa-edit"></i>
                                     <p>
-                                        @Session["MD0"]
+                                        Initiation des avances
                                     </p>
                                 </a>
+                                <ul style="list-style-type: none; display:block" class="nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                                    <li class="nav-item">
+                                        <a href="../TraitementAvance/TraitementORDSECOTHER" class="nav-link">
+                                            <i class="nav-icon fas fa-list" style="color: #4970cb"></i>
+                                            <p>
+                                                @Session["MD0"]
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="../TraitementAvance/TraitementPROJET" class="nav-link">
+                                            <i class="nav-icon fas fa-th-list" style="color: #FFD463"></i>
+                                            <p>
+                                                @Session["MD1"]
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="../TraitementAvance/TraitementORDSEC" class="nav-link">
+                                            <i class="nav-icon fas fa-list-ol" style="color: #eb7575"></i>
+                                            <p>
+                                                @Session["MD2"]
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="../TraitementAvance/TraitementSENDSIIGFP" class="nav-link">
+                                            <i class="nav-icon fas fa-tasks" style="color: #338B85"></i>
+                                            <p>
+                                                @Session["MD3"]
+                                            </p>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
-                            <li class="nav-item">
-                                <a href="../TraitementAvance/TraitementPROJET" class="nav-link">
-                                    <i class="nav-icon fas fa-th-list" style="color: #FFC107"></i>
+
+                            <li class="nav-item SuperAd" data-io id="Demo3">
+                                <a class="nav-link">
+                                    <i class="nav-icon fa fa-check-square"></i>
                                     <p>
-                                        @Session["MD1"]
+                                        Justificatifs et reversements
                                     </p>
                                 </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="../TraitementAvance/TraitementORDSEC" class="nav-link">
-                                    <i class="nav-icon fas fa-list-ol" style="color: #DF4857"></i>
-                                    <p>
-                                        @Session["MD2"]
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="../TraitementAvance/TraitementSENDSIIGFP" class="nav-link">
-                                    <i class="nav-icon fas fa-tasks" style="color: #3EB059"></i>
-                                    <p>
-                                        @Session["MD3"]
-                                    </p>
-                                </a>
+                                <ul style="list-style-type: none; display:block" class="nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                                    <li class="nav-item">
+                                        <a href="../TraitementJustif/TraitementPROJET" class="nav-link">
+                                            <i class="nav-icon fas fa-list" style="color: #17A2B8"></i>
+                                            <p>
+                                                @Session["J0"]
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="../TraitementJustif/TraitementORDSEC" class="nav-link">
+                                            <i class="nav-icon fas fa-th-list" style="color: #FFC107"></i>
+                                            <p>
+                                                @Session["J1"]
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="../TraitementRevers/TraitementPROJET" class="nav-link">
+                                            <i class="nav-icon fas fa-list-ol" style="color: #DF4857"></i>
+                                            <p>
+                                                @Session["J2"]
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="../TraitementRevers/TraitementORDSEC" class="nav-link">
+                                            <i class="nav-icon fas fa-tasks" style="color: #3EB059"></i>
+                                            <p>
+                                                @Session["J3"]
+                                            </p>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
                     </div>
+
                     <hr />
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block;">
                         <li class="nav-item menu-open" onclick="myFunction('Demo4')">
-                            <a class="nav-link active" style="background-color: darkviolet">
+                            <a class="nav-link active" style="background: #427ed7 " >
                                 <img src="~/Assets/icons/pound-sterling-pound-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
                                 <p>
                                     PAIEMENTS
@@ -458,7 +512,7 @@
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block" id="menu-accordeon">
                             <li class="nav-item">
                                 <a href="../Home/PaiementValidation" class="nav-link">
-                                    <i class="nav-icon fas fa-list" style="color: #17A2B8"></i>
+                                    <i class="nav-icon fas fa-list" style="color: #4970cb"></i>
                                     <p>
                                         @Session["MP1"]
                                     </p>
@@ -466,7 +520,7 @@
                             </li>
                             <li class="nav-item">
                                 <a href="../Home/TeacherValidation" class="nav-link">
-                                    <i class="nav-icon fas fa-th-list" style="color: #FFC107"></i>
+                                    <i class="nav-icon fas fa-th-list" style="color: #FFD463"></i>
                                     <p>
                                         @Session["MP2"]
                                     </p>
@@ -474,7 +528,7 @@
                             </li>
                             <li class="nav-item">
                                 <a href="../Home/BonPourPaiement" class="nav-link">
-                                    <i class="nav-icon fas fa-list-ol" style="color: #DF4857"></i>
+                                    <i class="nav-icon fas fa-list-ol" style="color: #eb7575"></i>
                                     <p>
                                         @Session["MP3"]
                                     </p>
@@ -482,7 +536,7 @@
                             </li>
                             <li class="nav-item">
                                 <a href="../Home/FValidation" class="nav-link">
-                                    <i class="nav-icon fas fa-tasks" style="color: #3EB059"></i>
+                                    <i class="nav-icon fas fa-tasks" style="color: #338B85"></i>
                                     <p>
                                         @Session["MP4"]
                                     </p>
@@ -493,7 +547,7 @@
                     <hr />
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">
                         <li class="nav-item menu-open" onclick="myFunction('Demo5')">
-                            <a class="nav-link active" style="background-color: crimson">
+                            <a class="nav-link active" style="background: #4a9ae9 " >
                                 <img src="~/Assets/icons/analytics-data-analytics-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
                                 <p>
                                     TABLEAUX DE BORD
@@ -503,20 +557,20 @@
                     </ul>
                     <div id="Demo5" class="w3-hide">
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block" id="menu-accordeon">
-                            @if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur)
-                            {
-                                <li class="nav-item">
-                                    <a href="../Calendar/Index" class="nav-link">
-                                        <i class="nav-icon fas fa-calendar-alt" style="color: #17A2B8"></i>
-                                        <p>
-                                            Evénements
-                                        </p>
-                                    </a>
-                                </li>
-                            }
+                            @*@if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur)
+        {
+            <li class="nav-item">
+                <a href="../Calendar/Index" class="nav-link">
+                    <i class="nav-icon fas fa-calendar-alt" style="color: #4970cb"></i>
+                    <p>
+                        Evénements
+                    </p>
+                </a>
+            </li>
+        }*@
                             <li class="nav-item">
                                 <a href="../Etat/InfoProCreate" class="nav-link">
-                                    <i class="nav-icon fa fa-exclamation" style="color: #FFC107"></i>
+                                    <i class="nav-icon fa fa-exclamation" style="color: #FFD463"></i>
                                     <p>
                                         Informations PROJET
                                     </p>
@@ -524,15 +578,23 @@
                             </li>
                             <li class="nav-item">
                                 <a href="../BordTraitement/BordListeEngaPaie" class="nav-link">
-                                    <i class="nav-icon fas fa-archive" style="color: #FFC107"></i>
+                                    <i class="nav-icon fas fa-archive" style="color: #FFD463"></i>
                                     <p>
                                         @Session["TDB0"]@*Liste des engagements, avances et paiements*@
                                     </p>
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a href="../BordTraitement/StatutJR" class="nav-link">
+                                    <i class="nav-icon fas fa-file-alt" style="color: #FFD463"></i>
+                                    <p>
+                                        @Session["JR"]@*Statut Justificatifs et Reversements*@
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="../BordTraitement/StatutEngagements" class="nav-link">
-                                    <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
+                                    <i class="nav-icon fas fa-file-alt" style="color: #eb7575"></i>
                                     <p>
                                         @Session["TDB1"]@*Statut des engagements et avances*@
                                     </p>
@@ -540,7 +602,7 @@
                             </li>
                             <li class="nav-item">
                                 <a href="../BordTraitement/DelaisTraitementEngagements" class="nav-link">
-                                    <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
+                                    <i class="nav-icon fas fa-file-alt" style="color: #eb7575"></i>
                                     <p>
                                         @Session["TDB2"]@*Délais de traitement des engagements et avances*@
                                     </p>
@@ -548,7 +610,7 @@
                             </li>
                             <li class="nav-item">
                                 <a href="../BordTraitement/SoufTraitement" class="nav-link">
-                                    <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
+                                    <i class="nav-icon fas fa-file-alt" style="color: #eb7575"></i>
                                     <p>
                                         @Session["TDB3"]@*Traitements des engagements et avances en souffrance (par rapport au délai moyen)*@
                                     </p>
@@ -556,7 +618,7 @@
                             </li>
                             <li class="nav-item">
                                 <a href="../BordTraitement/EngagementsREJETE" class="nav-link">
-                                    <i class="nav-icon fas fa-file-alt" style="color: #DF4857"></i>
+                                    <i class="nav-icon fas fa-file-alt" style="color: #eb7575"></i>
                                     <p>
                                         @Session["TDB4"]@*Engagements et avances rejetés*@
                                     </p>
@@ -564,7 +626,7 @@
                             </li>
                             <li class="nav-item">
                                 <a href="../BordTraitement/StatutPaiement" class="nav-link">
-                                    <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
+                                    <i class="nav-icon fa fa-file" style="color: #338B85"></i>
                                     <p>
                                         @Session["TDB5"]@*Statut des paiements*@
                                     </p>
@@ -572,7 +634,7 @@
                             </li>
                             <li class="nav-item">
                                 <a href="../BordTraitement/TraitementsPaiement" class="nav-link">
-                                    <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
+                                    <i class="nav-icon fa fa-file" style="color: #338B85"></i>
                                     <p>
                                         @Session["TDB6"]@*Délais de traitement des paiements*@
                                     </p>
@@ -580,7 +642,7 @@
                             </li>
                             <li class="nav-item">
                                 <a href="../BordTraitement/TraitementPaiementSoufrance" class="nav-link">
-                                    <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
+                                    <i class="nav-icon fa fa-file" style="color: #338B85"></i>
                                     <p>
                                         @Session["TDB7"]@*Traitement des paiements en souffrance (par rapport au délai moyen)*@
                                     </p>
@@ -588,7 +650,7 @@
                             </li>
                             <li class="nav-item">
                                 <a href="../BordTraitement/TraitementPaiementRejet" class="nav-link">
-                                    <i class="nav-icon fa fa-file" style="color: #3EB059"></i>
+                                    <i class="nav-icon fa fa-file" style="color: #338B85"></i>
                                     <p>
                                         @Session["TDB8"]@*Paiements rejetés*@
                                     </p>
@@ -600,7 +662,7 @@
                     <hr />
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display:block">
                         <li class="nav-item menu-open">
-                            <a href="@Session["GED"]" class="nav-link active" style="background-color: lightcoral;" target="_blank">
+                            <a href="@Session["GED"]" class="nav-link active bg-gradient-success" target="_blank">
                                 <img src="~/Assets/icons/analytics-statistics-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
                                 <p>
                                     GED

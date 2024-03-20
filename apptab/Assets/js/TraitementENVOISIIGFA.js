@@ -313,7 +313,7 @@ $('[data-action="GenereSIIG"]').click(function () {
     let dd = $("#dateD").val();
     let df = $("#dateF").val();
     if (!dd || !df) {
-        alert("Veuillez renseigner les dates afin de générer les mandats. ");
+        alert("Veuillez renseigner les dates afin de générer les avances. ");
         return;
     }
 

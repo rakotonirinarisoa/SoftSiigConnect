@@ -43,12 +43,19 @@ namespace apptab.Controllers
                     MandatTA = 0,
                     MandatVA = 0,
                     MandatAA = 0,
+
+                    J0 = 0,
+                    J1 = 0,
+                    J2 = 0,
+                    J3 = 0
                 };
 
                 var test = db.SI_USERS.Where(x => x.LOGIN == exist.LOGIN && x.PWD == exist.PWD && x.DELETIONDATE == null).FirstOrDefault();
 
                 var mandat = db.SI_TRAITPROJET.ToList();
                 var ava = db.SI_TRAITAVANCE.ToList();
+                var justif = db.SI_TRAITJUSTIF.ToList();
+                var revers = db.SI_TRAITREVERS.ToList();
 
                 var typedecriture = db.SI_TYPECRITURE.Where(a => a.IDUSER == test.ID).ToList();
                 //List<ListPaimentV> payement = new List<ListPaimentV>();
@@ -78,6 +85,9 @@ namespace apptab.Controllers
                     int mandatIA = 0;
                     int mandatRAFI = 0;
                     int mandatRAFA = 0;
+                    int J0 = 0;
+                    int J2 = 0;
+
                     var PRJ = db.SI_PROJETS.Select(a => new
                     {
                         PROJET = a.PROJET,
@@ -245,6 +255,29 @@ namespace apptab.Controllers
                                     {
                                         if (!db.SI_TRAITAVANCE.Any(a => a.No == x.ID && a.IDPROJET == crpt) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt))
                                             mandatRAFA++;
+
+                                        if (tom.GA_AVANCE_JUSTIFICATIF.Any(a => a.NUMERO_AVANCE == x.NUMEROAVANCE))
+                                        {
+                                            foreach (var y in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.NUMERO_AVANCE == x.NUMEROAVANCE).OrderBy(a => a.DATE).OrderBy(a => a.NUMERO_PIECE).ToList())
+                                            {
+                                                Guid idJustif = Guid.Parse(y.ID);
+                                                if (!db.SI_TRAITJUSTIF.Any(a => a.No == idJustif && a.NPIECE == y.NUMERO_PIECE && a.IDPROJET == crpt) || db.SI_TRAITJUSTIF.Any(a => a.No == idJustif && a.ETAT == 2 && a.IDPROJET == crpt))
+                                                {
+                                                    J0++;
+                                                }
+                                            }
+                                        }
+                                        if (tom.GA_AVANCE_REVERSEMENT.Any(a => a.NUMERO_AVANCE == x.NUMEROAVANCE))
+                                        {
+                                            foreach (var y in tom.GA_AVANCE_REVERSEMENT.Where(a => a.NUMERO_AVANCE == x.NUMEROAVANCE).OrderBy(a => a.DATE).OrderBy(a => a.NUMERO_PIECE).ToList())
+                                            {
+                                                Guid idJustif = Guid.Parse(y.ID);
+                                                if (!db.SI_TRAITREVERS.Any(a => a.No == idJustif && a.NPIECE == y.NUMERO_PIECE && a.IDPROJET == crpt) || db.SI_TRAITREVERS.Any(a => a.No == idJustif && a.ETAT == 2 && a.IDPROJET == crpt))
+                                                {
+                                                    J2++;
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -266,6 +299,11 @@ namespace apptab.Controllers
                         MandatVA = ava.Where(a => a.ETAT == 0).Count(),//ok
                         MandatAA = mandatRAFA,
                         MandatTRA = ava.Where(a => a.ETAT == 1).Count(),//ok
+
+                        J0 = J0,
+                        J1 = justif.Where(a => a.ETAT == 0).Count(),
+                        J2 = J2,
+                        J3 = revers.Where(a => a.ETAT == 0).Count()
                     };
 
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = newElemH }, settings));
@@ -285,6 +323,8 @@ namespace apptab.Controllers
                         int mandatIA = 0;
                         int mandatRAFI = 0;
                         int mandatRAFA = 0;
+                        int J0 = 0;
+                        int J2 = 0;
 
                         paiement.AddRange(db.OPA_VALIDATIONS.Where(a => a.IDPROJET == test.IDPROJET).ToList());
                         foreach (var x in user)
@@ -452,6 +492,29 @@ namespace apptab.Controllers
                                         {
                                             if (!db.SI_TRAITAVANCE.Any(a => a.No == x.ID && a.IDPROJET == crpt) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt))
                                                 mandatRAFA++;
+
+                                            if (tom.GA_AVANCE_JUSTIFICATIF.Any(a => a.NUMERO_AVANCE == x.NUMEROAVANCE))
+                                            {
+                                                foreach (var y in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.NUMERO_AVANCE == x.NUMEROAVANCE).OrderBy(a => a.DATE).OrderBy(a => a.NUMERO_PIECE).ToList())
+                                                {
+                                                    Guid idJustif = Guid.Parse(y.ID);
+                                                    if (!db.SI_TRAITJUSTIF.Any(a => a.No == idJustif && a.NPIECE == y.NUMERO_PIECE && a.IDPROJET == crpt) || db.SI_TRAITJUSTIF.Any(a => a.No == idJustif && a.ETAT == 2 && a.IDPROJET == crpt))
+                                                    {
+                                                        J0++;
+                                                    }
+                                                }
+                                            }
+                                            if (tom.GA_AVANCE_REVERSEMENT.Any(a => a.NUMERO_AVANCE == x.NUMEROAVANCE))
+                                            {
+                                                foreach (var y in tom.GA_AVANCE_REVERSEMENT.Where(a => a.NUMERO_AVANCE == x.NUMEROAVANCE).OrderBy(a => a.DATE).OrderBy(a => a.NUMERO_PIECE).ToList())
+                                                {
+                                                    Guid idJustif = Guid.Parse(y.ID);
+                                                    if (!db.SI_TRAITREVERS.Any(a => a.No == idJustif && a.NPIECE == y.NUMERO_PIECE && a.IDPROJET == crpt) || db.SI_TRAITREVERS.Any(a => a.No == idJustif && a.ETAT == 2 && a.IDPROJET == crpt))
+                                                    {
+                                                        J2++;
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -476,6 +539,11 @@ namespace apptab.Controllers
                             MandatVA = ava.Where(a => a.ETAT == 0).Count(),//ok
                             MandatAA = mandatRAFA,
                             MandatTRA = ava.Where(a => a.ETAT == 1).Count(),//ok
+
+                            J0 = J0,
+                            J1 = justif.Where(a => a.ETAT == 0).Count(),
+                            J2 = J2,
+                            J3 = revers.Where(a => a.ETAT == 0).Count()
                         };
 
                         return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = newElemH }, settings));
@@ -496,6 +564,8 @@ namespace apptab.Controllers
                         int mandatIA = 0;
                         int mandatRAFI = 0;
                         int mandatRAFA = 0;
+                        int J0 = 0;
+                        int J2 = 0;
 
                         foreach (var x in user)
                         {
@@ -662,6 +732,29 @@ namespace apptab.Controllers
                                         {
                                             if (!db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.IDPROJET == crpt) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt))
                                                 mandatRAFA++;
+
+                                            if (tom.GA_AVANCE_JUSTIFICATIF.Any(a => a.NUMERO_AVANCE == x.NUMEROAVANCE))
+                                            {
+                                                foreach (var y in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.NUMERO_AVANCE == x.NUMEROAVANCE).OrderBy(a => a.DATE).OrderBy(a => a.NUMERO_PIECE).ToList())
+                                                {
+                                                    Guid idJustif = Guid.Parse(y.ID);
+                                                    if (!db.SI_TRAITJUSTIF.Any(a => a.No == idJustif && a.NPIECE == y.NUMERO_PIECE && a.IDPROJET == crpt) || db.SI_TRAITJUSTIF.Any(a => a.No == idJustif && a.ETAT == 2 && a.IDPROJET == crpt))
+                                                    {
+                                                        J0++;
+                                                    }
+                                                }
+                                            }
+                                            if (tom.GA_AVANCE_REVERSEMENT.Any(a => a.NUMERO_AVANCE == x.NUMEROAVANCE))
+                                            {
+                                                foreach (var y in tom.GA_AVANCE_REVERSEMENT.Where(a => a.NUMERO_AVANCE == x.NUMEROAVANCE).OrderBy(a => a.DATE).OrderBy(a => a.NUMERO_PIECE).ToList())
+                                                {
+                                                    Guid idJustif = Guid.Parse(y.ID);
+                                                    if (!db.SI_TRAITREVERS.Any(a => a.No == idJustif && a.NPIECE == y.NUMERO_PIECE && a.IDPROJET == crpt) || db.SI_TRAITREVERS.Any(a => a.No == idJustif && a.ETAT == 2 && a.IDPROJET == crpt))
+                                                    {
+                                                        J2++;
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -685,6 +778,11 @@ namespace apptab.Controllers
                                 MandatVA = ava.Where(a => a.ETAT == 0).Count(),//ok
                                 MandatAA = mandatRAFA,
                                 MandatTRA = ava.Where(a => a.ETAT == 1).Count(),//ok
+
+                                J0 = J0,
+                                J1 = justif.Where(a => a.ETAT == 0).Count(),
+                                J2 = J2,
+                                J3 = revers.Where(a => a.ETAT == 0).Count()
                             };
                         }
 

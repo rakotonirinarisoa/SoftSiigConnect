@@ -55,6 +55,11 @@ function GetCountTDB() {
                 $("#MandatAA").html(ListResult.MandatAA);
                 $("#MandatTRA").html(ListResult.MandatTRA);
 
+                $("#J0").html(ListResult.J0);
+                $("#J1").html(ListResult.J1);
+                $("#J2").html(ListResult.J2);
+                $("#J3").html(ListResult.J3);
+
                 $("#PaieR").html(ListResult.PaieR);
                 $("#PaieT").html(ListResult.PaieT);
                 $("#PaieV").html(ListResult.PaieV);

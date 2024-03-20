@@ -520,6 +520,13 @@ namespace SOFTCONNECT.Controllers
                     Session["TDB6"] = isMenu.TDB6;
                     Session["TDB7"] = isMenu.TDB7;
                     Session["TDB8"] = isMenu.TDB8;
+
+                    Session["J0"] = isMenu.J0;
+                    Session["J1"] = isMenu.J1;
+                    Session["J2"] = isMenu.J2;
+                    Session["J3"] = isMenu.J3;
+
+                    Session["JR"] = isMenu.JR;
                 }
 
                 if (db.SI_GEDLIEN.Any())

@@ -21,5 +21,10 @@ namespace apptab
         public int? MandatVA { get; set; }
         public int? MandatAA { get; set; }
         public int? MandatTRA { get; set; }
+
+        public int? J0 { get; set; }
+        public int? J1 { get; set; }
+        public int? J2 { get; set; }
+        public int? J3 { get; set; }
     }
 }

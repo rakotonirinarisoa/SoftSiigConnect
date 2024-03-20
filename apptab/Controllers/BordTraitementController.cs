@@ -1599,5 +1599,133 @@ namespace apptab.Controllers
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
             }
         }
+
+        //Statut des Justificatifs et reversements//
+        public ActionResult StatutJR()
+        {
+            ViewBag.Controller = "Statut des justificatifs et reversements";
+
+            return View();
+        }
+
+        //Genere Statut des Justificatifs et reversements//
+        [HttpPost]
+        public JsonResult GenereStatutJR(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                List<TxLISTETRAIT> list = new List<TxLISTETRAIT>();
+                string[] separators = { "," };
+                var pro = listProjet;
+                if (pro != null)
+                {
+                    string listUser = pro.ToString();
+                    string[] lst = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (var idP in lst)
+                    {
+                        int crpt = int.Parse(idP);
+
+                        //int retarDate = 0;
+                        //if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null))
+                        //    retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELENVOISIIGFP.Value;
+
+                        //Check si le projet est mappé à une base de données TOM²PRO//
+                        if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
+
+                        SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                        SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
+                        //Check si la correspondance des états est OK//
+                        var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                        if (numCaEtapAPP == null) return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
+                        //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
+                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEFA) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état DEF n'est pas paramétré sur TOM²PRO (Avance). " }, settings));
+                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEFA) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état TEF n'est pas paramétré sur TOM²PRO (Avance). " }, settings));
+                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.BEA) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état BE n'est pas paramétré sur TOM²PRO (Avance). " }, settings));
+                    }
+
+                    foreach (var idP in lst)
+                    {
+                        int crpt = int.Parse(idP);
+
+                        if (db.SI_TRAITJUSTIF.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
+                        {
+                            foreach (var x in db.SI_TRAITJUSTIF.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
+                            {
+                                var soa = (from soas in db.SI_SOAS
+                                           join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                           where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                           select new
+                                           {
+                                               soas.SOA
+                                           }).FirstOrDefault();
+
+                                list.Add(new TxLISTETRAIT
+                                {
+                                    No = x.No,
+                                    REF = x.REF,
+                                    BENEF = x.TITUL,
+                                    NPIECE = x.NPIECE,
+
+                                    MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+
+                                    DATETRANSFERTRAF = x.DATECRE != null ? x.DATECRE : null,
+                                    DATEVALORDSEC = x.DATEVALIDATION != null ? x.DATEVALIDATION : null,
+
+                                    SOA = soa != null ? soa.SOA : "",
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    TYPE = "Justificatif"
+                                });
+                            }
+                        }
+                        if (db.SI_TRAITREVERS.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
+                        {
+                            foreach (var x in db.SI_TRAITREVERS.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
+                            {
+                                var soa = (from soas in db.SI_SOAS
+                                           join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                           where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                           select new
+                                           {
+                                               soas.SOA
+                                           }).FirstOrDefault();
+
+                                list.Add(new TxLISTETRAIT
+                                {
+                                    No = x.No,
+                                    REF = x.REF,
+                                    BENEF = x.TITUL,
+
+                                    NPIECE = x.NPIECE,
+
+                                    MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+
+                                    DATETRANSFERTRAF = x.DATECRE != null ? x.DATECRE : null,
+                                    DATEVALORDSEC = x.DATEVALIDATION != null ? x.DATEVALIDATION : null,
+
+                                    SOA = soa != null ? soa.SOA : "",
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    TYPE = "Reversement"
+                                });
+                            }
+                        }
+                    }
+                }
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list.ToList() }, settings));
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
     }
 }

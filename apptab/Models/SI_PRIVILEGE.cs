@@ -41,6 +41,11 @@
         public int? TDB6 { get; set; }
         public int? TDB7 { get; set; }
         public int? TDB8 { get; set; }
+        public int? J0 { get; set; }
+        public int? J1 { get; set; }
+        public int? J2 { get; set; }
+        public int? J3 { get; set; }
+        public int? JR { get; set; }
 
 
         public int? IDUSER { get; set; }
