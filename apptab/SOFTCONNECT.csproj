@@ -337,6 +337,7 @@
     <Compile Include="Data\Date.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="apptab.sln" />
     <Content Include="Assets\admlte\dist\css\alt\adminlte.components.css" />
     <Content Include="Assets\admlte\dist\css\alt\adminlte.components.min.css" />
     <Content Include="Assets\admlte\dist\css\alt\adminlte.core.css" />
@@ -2391,6 +2392,8 @@
     <Content Include="Assets\fullcalendar-6.1.11\packages\timegrid\index.global.min.js" />
     <Content Include="Assets\fullcalendar-6.1.11\packages\web-component\index.global.js" />
     <Content Include="Assets\fullcalendar-6.1.11\packages\web-component\index.global.min.js" />
+    <Content Include="Assets\img\bgo.png" />
+    <Content Include="Assets\img\LogoS1.png" />
     <Content Include="Assets\js\BordJRA.js" />
     <Content Include="Assets\js\BordStatutJR.js" />
     <Content Include="Assets\js\currentRoute.js" />
