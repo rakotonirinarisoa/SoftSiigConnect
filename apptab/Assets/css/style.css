@@ -931,13 +931,17 @@ div.dt-container .dt-paging .dt-paging-button {
 }
 .small-box.tdbinitier {
     background-color: #4970cb;
+    height: 75%;
 }
 .small-box.tbdattente {
     background-color: #FFD463;
+    height: 75%;
 }
 .small-box.tdbvalider {
     background-color: #eb7575;
+    height: 75%;
 }
 .small-box.tdblast {
     background-color: #338B85;
+    height: 75%;
 }
