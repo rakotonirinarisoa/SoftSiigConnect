@@ -13,6 +13,7 @@ namespace apptab.Extension
         public decimal Credit { get; set; }
         public decimal Montant { get; set; }
         public decimal MontantDevise { get; set; }
+        public string Auxi { get; set; }
         public string Mon { get; set; }
         public string Rang { get; set; }
         public string Poste { get; set; }

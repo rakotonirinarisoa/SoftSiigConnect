@@ -1,0 +1,4 @@
+0302                     20034SOFTWELLVersiondémoSOFTW000010                          0000505074000775                                               00008      
+0602              02JB00000099TEKNET GROUPE           SOCIETE GENERA                  00050200100422130000000010000000RINAH0002AV                    00080      
+0702              02JB00000099TEKNET GROUPE           SOCIETE GENERA                  00050200100422130000000000000000ANCE RINA C                    00080      
+0802                                                                                                  0000000000000000                                          

@@ -1,0 +1,10 @@
+0302                     20034SOFTWELLVersiondémoSOFTW000005                          0000774097130002                                               00005      
+0602              510100000014EA TRADING              BFV SG MADAGAS                  009410200100941 0000000075000000003FA N°005                    02001      
+0702              510100000014EA TRADING              BFV SG MADAGAS                  009410200100941 0000000000000000 ACHAT FOUR                    02001      
+0602              510100000015EA TRADING              BFV SG MADAGAS                  009410200100941 0000000350000000005FA N°055                    02001      
+0702              510100000015EA TRADING              BFV SG MADAGAS                  009410200100941 00000000000000002 ACHAT DIS                    02001      
+0602              510100000016EA TRADING              BFV SG MADAGAS                  009410200100941 0000000075000000003FA N°005                    02001      
+0702              510100000016EA TRADING              BFV SG MADAGAS                  009410200100941 0000000000000000 ACHAT FOUR                    02001      
+0602              510100000017EA TRADING              BFV SG MADAGAS                  009410200100941 0000000350000000005FA N°055                    02001      
+0702              510100000017EA TRADING              BFV SG MADAGAS                  009410200100941 00000000000000002 ACHAT DIS                    02001      
+0802                                                                                                  0000000000000000                                          

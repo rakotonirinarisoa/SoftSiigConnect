@@ -1,0 +1,6 @@
+0302                     20034SOFTWELLVersiondémoSOFTW000008                          0000774097130002                                               00005      
+0602              510100000018ENTREPRISE MAMY         MCB MADAGASCAR                  00001000010466080000000035000000AV0006AV000                    00006      
+0702              510100000018ENTREPRISE MAMY         MCB MADAGASCAR                  000010000104660800000000000000006                              00006      
+0602              510100000019ENTREPRISE MAMY         MCB MADAGASCAR                  00001000010466080000000035000000AV0006AV000                    00006      
+0702              510100000019ENTREPRISE MAMY         MCB MADAGASCAR                  000010000104660800000000000000006                              00006      
+0802                                                                                                  0000000000000000                                          

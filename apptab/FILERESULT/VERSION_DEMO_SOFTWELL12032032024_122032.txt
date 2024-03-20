@@ -1,0 +1,10 @@
+0302                     20034SOFTWELLVersiondémoSOFTW000004                          0000774097130002                                               00005      
+0602              510100000010EA TRADING              BFV SG MADAGAS                  00941           0000000075000000003FA N°005                    02001      
+0702              510100000010EA TRADING              BFV SG MADAGAS                  00941           0000000000000000 ACHAT FOUR                    02001      
+0602              510100000011ENTREPRISE MAMY         MCB MADAGASCAR                  04660           0000000035000000AV0006AV000                    00001      
+0702              510100000011ENTREPRISE MAMY         MCB MADAGASCAR                  04660           00000000000000006                              00001      
+0602              510100000012ENTREPRISE MAMY         MCB MADAGASCAR                  046608          0000000035000000AV0006AV000                    00001      
+0702              510100000012ENTREPRISE MAMY         MCB MADAGASCAR                  046608          00000000000000006                              00001      
+0602              510100000013EA TRADING              BFV SG MADAGAS                  009419          0000000075000000003FA N°005                    02001      
+0702              510100000013EA TRADING              BFV SG MADAGAS                  009419          0000000000000000 ACHAT FOUR                    02001      
+0802                                                                                                  0000000000000000                                          

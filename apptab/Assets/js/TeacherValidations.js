@@ -1245,9 +1245,13 @@ $('[data-action="GetElementChecked"]').click(function () {
         complete: function () {
             loader.addClass('display-none');
         },
-        success: function () {
+        success: function (result) {
             reglementresult = ``;
-
+            var Datas = JSON.parse(result);
+            if (Datas.type === "error") {
+                alert(Datas.msg);
+                return;
+            }
             for (let i = 0; i < checkList.length; i += 1) {
                 table.row($(checkList[i])).remove().draw();
             }

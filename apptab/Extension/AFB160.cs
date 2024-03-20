@@ -1313,6 +1313,7 @@ namespace apptab.Extension
                                                 Debit = reglement.MONTANT.Value,
                                                 Credit = 0,
                                                 Montant = 0,
+                                                Auxi = reglement.AUXI,
                                                 MontantDevise = reglement.MONTDEV.Value,
                                                 Mon = reglement.DEVISE,
                                                 Rang = reglement.ACTI,
@@ -1339,6 +1340,7 @@ namespace apptab.Extension
                                                 Debit = 0,
                                                 Credit = reglement.MONTANT.Value,
                                                 Montant = 0,
+                                                Auxi = reglement.AUXI,
                                                 MontantDevise = reglement.MONTDEV.Value,
                                                 Mon = reglement.DEVISE,
                                                 Rang = reglement.ACTI,
@@ -1378,6 +1380,7 @@ namespace apptab.Extension
                                             Debit = reglement.MONTANT.Value,
                                             Credit = 0,
                                             Montant = 0,
+                                            Auxi = reglement.AUXI,
                                             MontantDevise = reglement.MONTDEV.Value,
                                             Mon = reglement.DEVISE,
                                             Rang = reglement.ACTI,
@@ -1403,6 +1406,7 @@ namespace apptab.Extension
                                             Debit = 0,
                                             Credit = reglement.MONTANT.Value,
                                             Montant = 0,
+                                            Auxi = reglement.AUXI,
                                             MontantDevise = reglement.MONTDEV.Value,
                                             Mon = reglement.DEVISE,
                                             Rang = reglement.ACTI,
@@ -1454,6 +1458,7 @@ namespace apptab.Extension
                                         Debit = (reglement.MONTANT.Value),
                                         Credit = 0,
                                         Montant = 0,
+                                        Auxi = reglement.AUXI,
                                         MontantDevise = (reglement.MONTDEV.Value),
                                         Mon = reglement.DEVISE,
                                         Rang = reglement.ACTI,
@@ -1479,6 +1484,7 @@ namespace apptab.Extension
                                         Debit = 0,
                                         Credit = (reglement.MONTANT.Value),
                                         Montant = 0,
+                                        Auxi = reglement.AUXI,
                                         MontantDevise = (reglement.MONTDEV.Value),
                                         Mon = reglement.DEVISE,
                                         Rang = reglement.ACTI,
@@ -1533,6 +1539,7 @@ namespace apptab.Extension
                                         Debit = reglement.MONTANT.Value,
                                         Credit = 0,
                                         Montant = 0,
+                                        Auxi = reglement.AUXI,
                                         MontantDevise = reglement.MONTDEV.Value,
                                         Mon = reglement.DEVISE,
                                         Rang = reglement.ACTI,
@@ -1557,6 +1564,7 @@ namespace apptab.Extension
                                         Debit = 0,
                                         Credit = reglement.MONTANT.Value,
                                         Montant = 0,
+                                        Auxi = reglement.AUXI,
                                         MontantDevise = reglement.MONTDEV.Value,
                                         Mon = reglement.DEVISE,
                                         Rang = reglement.ACTI,
@@ -1614,6 +1622,7 @@ namespace apptab.Extension
                                         Debit = reglement.MONTANT.Value,
                                         Credit = 0,
                                         Montant = 0,
+                                        Auxi = reglement.AUXI,
                                         MontantDevise = reglement.MONTDEV.Value,
                                         Mon = reglement.DEVISE,
                                         Rang = reglement.ACTI,
@@ -1639,6 +1648,7 @@ namespace apptab.Extension
                                         Debit = 0,
                                         Credit = reglement.MONTANT.Value,
                                         Montant = 0,
+                                        Auxi = reglement.AUXI,
                                         MontantDevise = reglement.MONTDEV.Value,
                                         Mon = reglement.DEVISE,
                                         Rang = reglement.ACTI,
@@ -2466,7 +2476,11 @@ namespace apptab.Extension
                                                 BANQUE = bn.BQNOM,
                                                 COMPTE_BANQUE = bn.RIB1,
                                                 DOM1 = bn.DOM1,
-                                                DOM2 = bn.DOM2
+                                                DOM2 = bn.DOM2,
+                                                GUICHET = bn.RIBGUICHET,
+                                                CLE = bn.RIBCLE,
+                                                ETABLISMENT = bn.RIB2,
+
                                             }
                                           ).FirstOrDefault();
 
@@ -2492,8 +2506,10 @@ namespace apptab.Extension
                             preg.DATE = ecriture.Date;
                             preg.BENEFICIAIRE = beneficiaire.BENEFICIAIRE;
                             preg.BANQUE = beneficiaire.BANQUE;
-                            preg.GUICHET = this.RIB(beneficiaire.COMPTE_BANQUE)[1];
-                            preg.RIB = this.RIB(beneficiaire.COMPTE_BANQUE)[2];
+                            //preg.GUICHET = this.RIB(beneficiaire.COMPTE_BANQUE)[1];
+                            preg.GUICHET = beneficiaire.GUICHET;
+                            //preg.RIB = this.RIB(beneficiaire.COMPTE_BANQUE)[2];
+                            preg.RIB = beneficiaire.COMPTE_BANQUE;
                             preg.ETAT = etat;
 
                             if (devise)
@@ -2506,7 +2522,8 @@ namespace apptab.Extension
                             }
 
                             preg.LIBELLE = this.formaterTexte(100, ecriture.No + ecriture.Libelle);
-                            preg.NUM_ETABLISSEMENT = this.RIB(beneficiaire.COMPTE_BANQUE)[0];
+                            //preg.NUM_ETABLISSEMENT = this.RIB(beneficiaire.COMPTE_BANQUE)[0];
+                            preg.NUM_ETABLISSEMENT = beneficiaire.ETABLISMENT;
                             preg.CODE_J = journal;
                             preg.DOM1 = beneficiaire.DOM1;
                             preg.DOM2 = beneficiaire.DOM2;
@@ -2571,9 +2588,13 @@ namespace apptab.Extension
                                                 BANQUE = bn.BQNOM,
                                                 COMPTE_BANQUE = bn.RIB1,
                                                 DOM1 = bn.DOM1,
-                                                DOM2 = bn.DOM2
+                                                DOM2 = bn.DOM2,
+                                                GUICHET = bn.RIBGUICHET,
+                                                CLE = bn.RIBCLE,
+                                                ETABLISMENT = bn.RIB2,
                                             }
                                           ).FirstOrDefault();
+
                         #region Sauve REGELEMENT & ANOMALIE
 
                         if (beneficiaire.COMPTE_BANQUE == null || beneficiaire.BENEFICIAIRE == null)
@@ -2596,8 +2617,10 @@ namespace apptab.Extension
                             preg.DATE = ecriture.Date;
                             preg.BENEFICIAIRE = beneficiaire.BENEFICIAIRE;
                             preg.BANQUE = beneficiaire.BANQUE;
-                            preg.GUICHET = this.RIB(beneficiaire.COMPTE_BANQUE)[1];
-                            preg.RIB = this.RIB(beneficiaire.COMPTE_BANQUE)[2];
+                            preg.GUICHET = beneficiaire.GUICHET;
+                            //preg.GUICHET = this.RIB(beneficiaire.COMPTE_BANQUE)[1];
+                            preg.RIB = beneficiaire.COMPTE_BANQUE;
+                            //preg.RIB = this.RIB(beneficiaire.COMPTE_BANQUE)[2];
                             preg.ETAT = etat;
 
                             if (devise)
@@ -2610,7 +2633,8 @@ namespace apptab.Extension
                             }
 
                             preg.LIBELLE = this.formaterTexte(100, ecriture.No + ecriture.Libelle);
-                            preg.NUM_ETABLISSEMENT = this.RIB(beneficiaire.COMPTE_BANQUE)[0];
+                            //preg.NUM_ETABLISSEMENT = this.RIB(beneficiaire.COMPTE_BANQUE)[0];
+                            preg.NUM_ETABLISSEMENT = beneficiaire.ETABLISMENT;
                             preg.CODE_J = journal;
                             preg.DOM1 = beneficiaire.DOM1;
                             preg.DOM2 = beneficiaire.DOM2;

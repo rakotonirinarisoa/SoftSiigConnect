@@ -426,6 +426,10 @@ namespace apptab.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez remplir les comptes RIB du " + journal + " journal. ", data = "" }, settings));
             }
+            //if (djournal.RIB.Length <23)
+            //{
+            //    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Votre RIB du journal " + journal + " est incomplet ", data = "" }, settings));
+            //}
             var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID && x.ComptaG == comptaG && x.Journal == journal).Select(x => x.IDREGLEMENT.ToString()).ToArray();
 
             var list = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID).Where(x => !hstSiig.Contains(x.No.ToString())).ToList();
@@ -536,8 +540,12 @@ namespace apptab.Controllers
                 if (CompteGBR.Count != 0)
                 {
                     //CompteGBR.AddRange(CompteAvance);
-                    CompteGBR.Union(CompteAvance);
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = CompteGBR }, settings));
+                    var listCompteGENERALE  = CompteGBR.Union(CompteAvance).GroupBy(x => x.COGE).Select(x => new
+                    {
+                        COGE = x.Key,
+                        AUXI = x.Select(y => y.AUXI).Distinct().ToList()
+                    }).ToList();
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = listCompteGENERALE }, settings));
                 }
                 else
                 {
@@ -602,7 +610,7 @@ namespace apptab.Controllers
                         avalider.DateIn = datein;
                         avalider.DateOut = dateout;
                         avalider.ComptaG = comptaG;
-                        avalider.auxi = auxi;
+                        avalider.auxi = item.Auxi;
                         avalider.DateP = dateP;
                         avalider.Journal = journal;
                         avalider.dateOrdre = item.dateOrdre;
@@ -695,7 +703,7 @@ namespace apptab.Controllers
                         avalider.DateIn = datein;
                         avalider.DateOut = dateout;
                         avalider.ComptaG = comptaG;
-                        avalider.auxi = auxi;
+                        avalider.auxi = item.Auxi;
                         avalider.DateP = dateP;
                         avalider.Journal = journal;
                         avalider.dateOrdre = item.Date;
@@ -1020,7 +1028,6 @@ namespace apptab.Controllers
             {
                 foreach (var item in AvaliderList)
                 {
-
                     aFB160.SaveValideSelectEcritureBR(numBR, item.Journal, item.ETAT.ToString(), devise, suser, PROJECTID, (bool)item.AVANCE);
                 }
 
