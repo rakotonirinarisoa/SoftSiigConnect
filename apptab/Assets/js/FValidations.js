@@ -259,6 +259,7 @@ function GetFileNameAnarana(blobUrl) {
             a.download = FilenameUsr+".txt";
             document.body.appendChild(a);
             a.click();
+
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -303,7 +304,7 @@ function getelementTXT(a) {
             let blobUrl = URL.createObjectURL(result);
             GetFileNameAnarana(blobUrl);
             //window.location = '/Home/GetFile?file=' + Datas.data;
-            window.location.reload();
+            
         },
         error: function () {
             alert("Problème de connexion. ");
