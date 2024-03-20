@@ -1,4 +1,0 @@
-0302                     20034SOFTWELLVersiondémoSOFTW000004                          0000774097130002                                               00005      
-0602              510100000005ENTREPRISE MAMY         MCB MADAGASCAR                  04660           0000000035000000AV0006AV000                    00001      
-0702              510100000005ENTREPRISE MAMY         MCB MADAGASCAR                  04660           00000000000000006                              00001      
-0802                                                                                                  0000000000000000                                          
