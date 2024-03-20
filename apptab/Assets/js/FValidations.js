@@ -267,9 +267,10 @@ function GetFileNameAnarana(blobUrl) {
 }
 function getelementTXT(a) {
     let formData = new FormData();
+
     let codeproject = $("#Fproject").val();
     formData.append("codeproject", codeproject);
-    alert(a);
+
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.ID", User.ID);
     formData.append("suser.PWD", User.PWD);
@@ -301,10 +302,8 @@ function getelementTXT(a) {
             console.log(result);
             let blobUrl = URL.createObjectURL(result);
             GetFileNameAnarana(blobUrl);
-
-
             //window.location = '/Home/GetFile?file=' + Datas.data;
-
+            window.location.reload();
         },
         error: function () {
             alert("Problème de connexion. ");

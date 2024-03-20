@@ -475,7 +475,14 @@ namespace apptab.Extension
                                 where bul.NUMEROOP == bnfcr.NUM
                                 select bul).FirstOrDefault();
                     }
-                    var jrnl = "jrnl";
+                    //var jrnl = "jrnl";
+                    var jrnl = (from mct in tom.FOP
+                                where mct.NUMEROOP == bnfcr.NUM
+                                select mct.JOURNAL).FirstOrDefault();
+                    if (jrnl == null)
+                    {
+                        jrnl = tom.GA_AVANCE.Where(x => x.NUMERO == bnfcr.NUM).Select(x => x.JOURNAL).FirstOrDefault();
+                    }
                     i++;
                     //MessageBox.Show(fact.MONTANT.ToString());
 

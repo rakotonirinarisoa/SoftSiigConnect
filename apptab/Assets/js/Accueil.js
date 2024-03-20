@@ -150,7 +150,7 @@ function GetListCompG() {
             let code = ``;
 
             ListCompteG = Datas.data;
-
+            console.log(GetListCompG);
             $.each(ListCompteG, function (k, v) {
                 code += `
                     <option value="${v.COGE}">${v.COGE}</option>
@@ -277,7 +277,7 @@ function GetAllProjectUser() {
 
 function FillAUXI() {
     var list = ListCompteG.filter(x => x.COGE == $(`[compG-list]`).val()).pop();
-
+    console.log(list);
     let code = `<option value="Tous"> Tous</option> `;
     $.each(list.AUXI, function (k, v) {
         code += `

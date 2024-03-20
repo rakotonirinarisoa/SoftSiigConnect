@@ -525,7 +525,7 @@ namespace apptab.Controllers
                 var CompteGBR = __db.MOP.Where(a => a.COGEFOURNISSEUR.StartsWith("4")).GroupBy(x => x.COGEFOURNISSEUR).Select(x => new
                 {
                     COGE = x.Key,
-                    AUXI = x.Select(y => y.AUXI/*new { AUXI = y.AUXI, NOM = y.NOM }*/).Distinct().ToList()
+                    AUXI = x.Select(y => y.AUXIFOURNISSEUR/*new { AUXI = y.AUXI, NOM = y.NOM }*/).Distinct().ToList()
                 }).ToList();
                 var CompteAvance = __db.GA_AVANCE.Where(a => a.COGE.StartsWith("4")).GroupBy(x => x.COGE).Select(x => new
                 {
@@ -535,7 +535,8 @@ namespace apptab.Controllers
 
                 if (CompteGBR.Count != 0)
                 {
-                    CompteGBR.AddRange(CompteAvance);
+                    //CompteGBR.AddRange(CompteAvance);
+                    CompteGBR.Union(CompteAvance);
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = CompteGBR }, settings));
                 }
                 else
