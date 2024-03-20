@@ -132,7 +132,7 @@ $('[data-action="GenereLISTE"]').click(function () {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/BordTraitement/GenerePaiementREJETE',
+        url: Origin + '/BordTraitement/GenereStatutJRA',
         data: formData,
         cache: false,
         contentType: false,
@@ -176,7 +176,9 @@ $('[data-action="GenereLISTE"]').click(function () {
                         id: v.No,
                         soa: v.SOA,
                         projet: v.PROJET,
+                        type: v.TYPE,
                         ref: v.REF,
+                        npiece: v.NPIECE,
                         benef: v.BENEF,
                         MONTENGAGEMENT: formatCurrency(String(v.MONTENGAGEMENT).replace(",", ".")),
 
@@ -184,7 +186,6 @@ $('[data-action="GenereLISTE"]').click(function () {
                         DATEREJETE: formatDate(v.DATEREJETE),
                         MOTIF: v.MOTIF,
                         COMMENTAIRE: v.COMMENTAIRE.replace('\r\n', '<br/>'),
-                        type: v.AVANCE ? 'Avance' : 'Paiement'
                         //imputation: '',
                         //piecesJustificatives: '',
                         //document: '',
@@ -211,14 +212,15 @@ $('[data-action="GenereLISTE"]').click(function () {
                         },
                         { data: 'soa' },
                         { data: 'projet' },
+                        { data: 'type' },
                         { data: 'ref' },
+                        { data: 'npiece' },
                         { data: 'benef' },
                         { data: 'MONTENGAGEMENT' },
                         { data: 'AGENTREJETE' },
                         { data: 'DATEREJETE' },
                         { data: 'MOTIF' },
                         { data: 'COMMENTAIRE' },
-                        { data: 'type' },
                         //{
                         //    data: 'imputation',
                         //    render: function (_, _, row, _) {

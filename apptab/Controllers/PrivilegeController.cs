@@ -85,6 +85,7 @@ namespace apptab.Controllers
                         J2 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J2 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J2 : 0,
                         J3 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J3 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J3 : 0,
                         JR = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JR != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JR : 0,
+                        JRA = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JRA != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JRA : 0,
 
                         GED = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).GED != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).GED : 0
 
@@ -145,6 +146,7 @@ namespace apptab.Controllers
                         J2 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J2 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J2 : 0,
                         J3 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J3 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J3 : 0,
                         JR = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JR != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JR : 0,
+                        JRA = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JRA != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JRA : 0,
 
                         GED = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).GED != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).GED : 0
 
@@ -221,6 +223,7 @@ namespace apptab.Controllers
                 J2 = privilege.J2,
                 J3 = privilege.J3,
                 JR = privilege.JR,
+                JRA = privilege.JRA,
 
                 GED = privilege.GED
             };

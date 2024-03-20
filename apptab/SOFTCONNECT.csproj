@@ -2179,6 +2179,7 @@
     <Content Include="Assets\admlte\plugins\uplot\uPlot.iife.js" />
     <Content Include="Assets\admlte\plugins\uplot\uPlot.iife.min.js" />
     <Content Include="Assets\admlte\plugins\uplot\uPlot.min.css" />
+    <Content Include="Assets\css\acco.css" />
     <Content Include="Assets\css\Evenements.css" />
     <Content Include="Assets\css\loader.css" />
     <Content Include="Assets\fullcalendar-6.1.11\dist\index.global.js" />
@@ -2390,6 +2391,7 @@
     <Content Include="Assets\fullcalendar-6.1.11\packages\timegrid\index.global.min.js" />
     <Content Include="Assets\fullcalendar-6.1.11\packages\web-component\index.global.js" />
     <Content Include="Assets\fullcalendar-6.1.11\packages\web-component\index.global.min.js" />
+    <Content Include="Assets\js\BordJRA.js" />
     <Content Include="Assets\js\BordStatutJR.js" />
     <Content Include="Assets\js\currentRoute.js" />
     <Content Include="Assets\js\BordSoufTraitement.js" />
@@ -2507,8 +2509,11 @@
     <Content Include="Assets\js\User.js" />
     <Content Include="Assets\js\utils.js" />
     <Content Include="Assets\otherCSS\buttons.dataTables.min.css" />
+    <Content Include="Assets\otherCSS\dataTables.dataTables.css" />
     <Content Include="Assets\otherCSS\datatables.min.css" />
+    <Content Include="Assets\otherCSS\fixedColumns.dataTables.css" />
     <Content Include="Assets\otherJs\buttons.colVis.min.js" />
+    <Content Include="Assets\otherJs\datatables.min.js" />
     <Content Include="Assets\otherJs\dataTables.rowsGroup.js" />
     <Content Include="Assets\otherJs\jquery-3.7.0.js" />
     <Content Include="Content\bootstrap-grid.css" />
@@ -4885,6 +4890,7 @@
     <Content Include="Views\TraitementRevers\TraitementPROJET.cshtml" />
     <Content Include="Views\TraitementRevers\TraitementORDSEC.cshtml" />
     <Content Include="Views\BordTraitement\StatutJR.cshtml" />
+    <Content Include="Views\BordTraitement\StatutJRA.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

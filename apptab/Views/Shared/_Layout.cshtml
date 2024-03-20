@@ -7,11 +7,6 @@
 
     <title>SOFT - SIIG CONNECT</title>
 
-    @*<!-- Google Font: Source Sans Pro -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-        <!-- Ionicons -->
-        <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">*@
-
     @*<!--CACHE VERSIONING JS et CSS*@
     @*<script src="~/Assets/js/AAACache.js"></script>*@
 
@@ -589,6 +584,14 @@
                                     <i class="nav-icon fas fa-file-alt" style="color: #FFD463"></i>
                                     <p>
                                         @Session["JR"]@*Statut Justificatifs et Reversements*@
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="../BordTraitement/StatutJRA" class="nav-link">
+                                    <i class="nav-icon fas fa-file-alt" style="color: #FFD463"></i>
+                                    <p>
+                                        @Session["JRA"]@*Justificatifs et Reversements annulés*@
                                     </p>
                                 </a>
                             </li>
