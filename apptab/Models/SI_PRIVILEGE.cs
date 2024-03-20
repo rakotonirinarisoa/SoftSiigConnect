@@ -46,6 +46,7 @@
         public int? J2 { get; set; }
         public int? J3 { get; set; }
         public int? JR { get; set; }
+        public int? JRA { get; set; }
 
 
         public int? IDUSER { get; set; }

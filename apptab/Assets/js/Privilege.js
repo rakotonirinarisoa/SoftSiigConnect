@@ -138,6 +138,11 @@ function GetListUser() {
                 if (v.JR == 1) JRR = "checked";
                 if (v.JR == 2) JRA = "checked";
 
+                let JRAN = "", JRAR = "", JRAA = "";
+                if (v.JRA == 0) JRAN = "checked";
+                if (v.JRA == 1) JRAR = "checked";
+                if (v.JRA == 2) JRAA = "checked";
+
                 let TDB1N = "", TDB1R = "", TDB1A = "";
                 if (v.TDB1 == 0) TDB1N = "checked";
                 if (v.TDB1 == 1) TDB1R = "checked";
@@ -594,6 +599,18 @@ function GetListUser() {
 
                         <td text-align:center>
                             <div class="form-check form-check-inline">
+                                <input type="radio" id="noneJRA${v.ID}" name="droneJRA${v.ID}" value="0" ${JRAN}/><label class="ml-1" for="noneJRA${v.ID}" style="font-weight:normal">None</label>
+                            </div></br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="readJRA${v.ID}" name="droneJRA${v.ID}" value="1" ${JRAR}/><label class="ml-1" for="readJRA${v.ID}" style="font-weight:normal">Read</label>
+                            </div></br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="writeJRA${v.ID}" name="droneJRA${v.ID}" value="2" ${JRAA}/><label class="ml-1" for="writeJRA${v.ID}" style="font-weight:normal">All</label>
+                            </div>
+                        </td>
+
+                        <td text-align:center>
+                            <div class="form-check form-check-inline">
                                 <input type="radio" id="noneTDB1${v.ID}" name="droneTDB1${v.ID}" value="0" ${TDB1N}/><label class="ml-1" for="noneTDB1${v.ID}" style="font-weight:normal">None</label>
                             </div></br>
                             <div class="form-check form-check-inline">
@@ -767,6 +784,7 @@ function SavePRIV(id) {
     formData.append("privilege.TDB7", $(`input[name="droneTDB7${id}"]:checked`).val());
     formData.append("privilege.TDB8", $(`input[name="droneTDB8${id}"]:checked`).val());
     formData.append("privilege.JR", $(`input[name="droneJR${id}"]:checked`).val());
+    formData.append("privilege.JRA", $(`input[name="droneJRA${id}"]:checked`).val());
 
     formData.append("privilege.GED", $(`input[name="droneGED${id}"]:checked`).val());
 

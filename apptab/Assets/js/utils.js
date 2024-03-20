@@ -1,5 +1,9 @@
 function formatCurrency(amount) {
-    return new Intl.NumberFormat("fr-FR").format(amount);
+    return new Intl.NumberFormat("fr", {
+        style: "decimal",
+        minimumFractionDigits: 2,
+        currencySign: "accounting",
+    }).format(amount);
 }
 
 function formatDate(date) {

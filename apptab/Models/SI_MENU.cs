@@ -36,6 +36,7 @@
         public string J2 { get; set; }
         public string J3 { get; set; }
         public string JR { get; set; }
+        public string JRA { get; set; }
 
         [Column(TypeName = "smalldatetime")]
         public DateTime? CREATIONDATE { get; set; }
