@@ -487,7 +487,7 @@ namespace SOFTCONNECT.Controllers
                 Session["UserName"] = test.LOGIN;
 
                 Session["VERSIONCONNNECT"] = "1.0.0";
-                Session["VERSION"] = "1.3.2123";
+                Session["VERSION"] = "1.3.213";
 
 
                 if (db.SI_MENU.Any())
