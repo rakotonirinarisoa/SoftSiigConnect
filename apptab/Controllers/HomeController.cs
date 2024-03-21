@@ -537,14 +537,26 @@ namespace apptab.Controllers
                     AUXI = x.Select(y => y.AUXI).Distinct().ToList()
                 }).ToList();
 
+                var compteGSiig = db.OPA_VALIDATIONS.GroupBy(x => x.ComptaG).Select(x => new
+                {
+                    COGE = x.Key,
+                    AUXI = x.Select(y => y.auxi).Distinct().ToList()
+                }).ToList();
+
                 if (CompteGBR.Count != 0)
                 {
-                    //CompteGBR.AddRange(CompteAvance);
-                    var listCompteGENERALE  = CompteGBR.Union(CompteAvance).GroupBy(x => x.COGE).Select(x => new
+                    var CompteGtmp = CompteGBR.Union(compteGSiig).ToList();
+                    var listCompteGENERALE  = CompteGtmp.Union(CompteAvance).GroupBy(x => x.COGE).Select(x => new
                     {
                         COGE = x.Key,
                         AUXI = x.Select(y => y.AUXI).Distinct().ToList()
                     }).ToList();
+
+                    //var listCompteGENERALE  = CompteGBR.Union(CompteAvance).GroupBy(x => x.COGE).Select(x => new
+                    //{
+                    //    COGE = x.Key,
+                    //    AUXI = x.Select(y => y.AUXI).Distinct().ToList()
+                    //}).ToList();
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = listCompteGENERALE }, settings));
                 }
                 else

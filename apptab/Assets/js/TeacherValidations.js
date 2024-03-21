@@ -1205,32 +1205,8 @@ $('[data-action="GetElementChecked"]').click(function () {
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
+
     formData.append("listCompte", JSON.stringify(list));
-    //formData.append("listCompte", list);
-    formData.append("baseName", baseName);
-    formData.append("journal", $('#commercial').val());
-    formData.append("devise", false);
-
-    let datein = $('#Pdu').val();
-    let dateout = $('#Pau').val();
-    let journal = $('#commercial').val();
-    let comptaG = $('#comptaG').val();
-    let auxi = $('#auxi').val();
-    let dateP = $('#Pay').val();
-    let etat = $('#etat').val();
-
-    let listid = list.splice(',');
-
-    formData.append("datein", datein);
-    formData.append("dateout", dateout);
-    formData.append("journal", journal);
-    formData.append("comptaG", comptaG)
-    formData.append("auxi", auxi);
-    formData.append("auxi1", auxi);
-    formData.append("dateP", dateP);
-    formData.append("devise", false);
-    formData.append("etat", etat);
-    formData.append("listCompte", listid);
 
     let codeproject = $("#Fproject").val();
     formData.append("codeproject", codeproject);
