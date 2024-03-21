@@ -4,12 +4,10 @@ function setCurrentRoute(link) {
     $('nav').find(`a[href="${link}"].nav-link`).find('p').css({ 'color': 'red' });
 }
 
-function extendDataParentId(id) {
-
-}
-
 function getCurrentLink() {
     const currentRoute = sessionStorage.getItem('j3rGjf');
+
+    $(`ul[data-menu-accordion-child]`).removeClass('cancel-max-height-0');
 
     if (currentRoute !== undefined && currentRoute !== null &&  currentRoute !== '') {
         const elmt = $('nav').find(`a[href="${currentRoute}"].nav-link`);
@@ -20,14 +18,10 @@ function getCurrentLink() {
 
         $(`[data-parent-id="${dataChildId}"]`).addClass('w3-show');
 
-        $(`ul[data-menu-accordion-parent]`).removeClass('cancel-max-height-0');
+        const dataMenuAccordionChild = elmt.parent().parent();
 
-        const dataMenuAccordionParent = elmt.parent().parent();
-
-        console.log(dataMenuAccordionParent);
-
-        if (dataMenuAccordionParent.is('ul[data-menu-accordion-parent]')) {
-            dataMenuAccordionParent.addClass(`cancel-max-height-0`);
+        if (dataMenuAccordionChild.is('ul[data-menu-accordion-child]')) {
+            dataMenuAccordionChild.addClass(`cancel-max-height-0`);
         }
 
         //elmt.find('p').css({ 'color': 'red' });
@@ -62,17 +56,9 @@ $('aside a[href="../Home/TdbAccueil"]').on('click', () => {
 });
 
 $('[data-menu-accordion]').on('click', (e) => {
-    $(`ul[data-menu-accordion-parent]`).removeClass('cancel-max-height-0');
+    $(`ul[data-menu-accordion-child]`).removeClass('cancel-max-height-0');
 
-    const dataMenuAccordionParent = $(e.currentTarget).find(`ul[data-menu-accordion-parent]`);
+    const dataMenuAccordionChild = $(e.currentTarget).find(`ul[data-menu-accordion-child]`);
 
-    dataMenuAccordionParent.addClass(`cancel-max-height-0`);
-
-    //console.log(id);
-
-    //if ($(e.currentTarget).hasClass('cancel-max-height-0')) {
-    //    $(e.currentTarget).removeClass('cancel-max-height-0');
-    //} else {
-    //    $(e.currentTarget).addClass('cancel-max-height-0');
-    //}
+    dataMenuAccordionChild.addClass(`cancel-max-height-0`);
 });

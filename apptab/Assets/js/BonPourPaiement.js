@@ -250,6 +250,16 @@ function chargeLoad() {
                                 },
                                 orderable: false
                             },
+                            {
+                                data: 'rejeter',
+                                render: function (_, _, row, _) {
+                                    return `
+                                        <div onclick="Refuser('${row.id}')">
+                                            <i class="fa fa-times fa-lg text-dark"></i>
+                                        </div>
+                                    `;
+                                }
+                            },
                             { data: 'id' },
                             { data: 'dateOrdre' },
                             { data: 'noPiece' },
@@ -268,16 +278,7 @@ function chargeLoad() {
                             { data: 'marche' },
                             { data: 'numeroliquidations' },
                             { data: 'type' },
-                            {
-                                data: 'rejeter',
-                                render: function (_, _, row, _) {
-                                    return `
-                                        <div onclick="Refuser('${row.id}')">
-                                            <i class="fa fa-times fa-lg text-dark"></i>
-                                        </div>
-                                    `;
-                                }
-                            }
+                            
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
@@ -397,6 +398,7 @@ function chargeLoad() {
                             checkbox: '',
                             id: isNullOrUndefined(v.IDREGLEMENT) ? '' : v.IDREGLEMENT,
                             dateOrdre: isNullOrUndefined(v.dateOrdre) ? '' : v.dateOrdre,
+                            auxi:isNullOrUndefined(v.auxi)? '': v.auxi,
                             noPiece: isNullOrUndefined(v.NoPiece) ? '' : v.NoPiece,
                             compte: isNullOrUndefined(v.Compte) ? '' : v.Compte,
                             libelle: isNullOrUndefined(v.Libelle) ? '' : v.Libelle,
@@ -435,9 +437,20 @@ function chargeLoad() {
                                 },
                                 orderable: false
                             },
+                            {
+                                data: 'rejeter',
+                                render: function (_, _, row, _) {
+                                    return `
+                                        <div onclick="Refuser('${row.id}')">
+                                            <i class="fa fa-times fa-lg text-dark"></i>
+                                        </div>
+                                    `;
+                                }
+                            },
                             { data: 'id' },
                             { data: 'dateOrdre' },
                             { data: 'noPiece' },
+                            { data: 'auxi' },
                             { data: 'compte' },
                             { data: 'libelle' },
                             { data: 'debit' },
@@ -453,16 +466,7 @@ function chargeLoad() {
                             { data: 'marche' },
                             { data: 'numeroliquidations' },
                             { data: 'type' },
-                            {
-                                data: 'rejeter',
-                                render: function (_, _, row, _) {
-                                    return `
-                                        <div onclick="Refuser('${row.id}')">
-                                            <i class="fa fa-times fa-lg text-dark"></i>
-                                        </div>
-                                    `;
-                                }
-                            }
+                            
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
@@ -529,7 +533,7 @@ function chargeLoad() {
                         }
                     });
                     $('#TDB_OPA tfoot th').each(function (i) {
-                        if (i == 0 || i == 19) {
+                        if (i == 0 || i == 1) {
                             $(this).addClass("NOTVISIBLE");
                         }
                     });
@@ -750,10 +754,7 @@ function AcceptRefuser() {
 
     let codeproject = $("#Fproject").val();
     formData.append("codeproject", codeproject);
-    alert(codeproject);
-        alert(commentaire);
-    alert(motif);
-    alert(id);
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/CancelEcriture',
@@ -822,7 +823,7 @@ $(document).on("change", "[auxi-list]", () => {
 
 $(document).on("change", "[codej-list]", () => {
     var code = ListCodeJournal.filter(function (e) { return e.CODE == $(`[codej-list]`).val(); })[0];
-    //$(`[codej-libelle]`).val(code.LIBELLE);
+    $(`[codej-libelle]`).val(code.LIBELLE);
 });
 
 $(document).on("click", "[data-target]", function () {
@@ -922,6 +923,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             checkbox: '',
                             id: isNullOrUndefined(v.IDREGLEMENT) ? '' : v.IDREGLEMENT,
                             dateOrdre: isNullOrUndefined(v.dateOrdre) ? '' : v.dateOrdre,
+                            auxi: isNullOrUndefined(v.auxi)? '' :v.auxi,
                             noPiece: isNullOrUndefined(v.NoPiece) ? '' : v.NoPiece,
                             compte: isNullOrUndefined(v.Compte) ? '' : v.Compte,
                             libelle: isNullOrUndefined(v.Libelle) ? '' : v.Libelle,
@@ -960,9 +962,20 @@ $('[data-action="ChargerJs"]').click(function () {
                                 },
                                 orderable: false
                             },
+                            {
+                                data: 'rejeter',
+                                render: function (_, _, row, _) {
+                                    return `
+                                        <div onclick="Refuser('${row.id}')">
+                                            <i class="fa fa-times fa-lg text-dark"></i>
+                                        </div>
+                                    `;
+                                }
+                            },
                             { data: 'id' },
                             { data: 'dateOrdre' },
                             { data: 'noPiece' },
+                            { data: 'auxi' },
                             { data: 'compte' },
                             { data: 'libelle' },
                             { data: 'debit' },
@@ -987,16 +1000,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 }
                             },
                             { data: 'type' },
-                            {
-                                data: 'rejeter',
-                                render: function (_, _, row, _) {
-                                    return `
-                                        <div onclick="Refuser('${row.id}')">
-                                            <i class="fa fa-times fa-lg text-dark"></i>
-                                        </div>
-                                    `;
-                                }
-                            }
+                            
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
@@ -1127,6 +1131,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             checkbox: '',
                             id: isNullOrUndefined(v.IDREGLEMENT) ? '' : v.IDREGLEMENT,
                             dateOrdre: isNullOrUndefined(v.dateOrdre) ? '' : v.dateOrdre,
+                            auxi : isNullOrUndefined(v.auxi) ? '' : v.auxi,
                             noPiece: isNullOrUndefined(v.NoPiece) ? '' : v.NoPiece,
                             compte: isNullOrUndefined(v.Compte) ? '' : v.Compte,
                             libelle: isNullOrUndefined(v.Libelle) ? '' : v.Libelle,
@@ -1165,9 +1170,20 @@ $('[data-action="ChargerJs"]').click(function () {
                                 },
                                 orderable: false
                             },
+                            {
+                                data: 'rejeter',
+                                render: function (_, _, row, _) {
+                                    return `
+                                        <div onclick="Refuser('${row.id}')">
+                                            <i class="fa fa-times fa-lg text-dark"></i>
+                                        </div>
+                                    `;
+                                }
+                            },
                             { data: 'id' },
                             { data: 'dateOrdre' },
                             { data: 'noPiece' },
+                            { data: 'auxi' },
                             { data: 'compte' },
                             { data: 'libelle' },
                             { data: 'debit' },
@@ -1183,16 +1199,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'marche' },
                             { data: 'numeroliquidations' },
                             { data: 'type' },
-                            {
-                                data: 'rejeter',
-                                render: function (_, _, row, _) {
-                                    return `
-                                        <div onclick="Refuser('${row.id}')">
-                                            <i class="fa fa-times fa-lg text-dark"></i>
-                                        </div>
-                                    `;
-                                }
-                            }
+                            
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
@@ -1264,7 +1271,7 @@ $('[data-action="ChargerJs"]').click(function () {
 
                     });
                     $('#TDB_OPA tfoot th').each(function (i) {
-                        if (i == 0 || i == 19) {
+                        if (i == 0 || i == 1) {
                             $(this).addClass("NOTVISIBLE");
                         }
                     });
