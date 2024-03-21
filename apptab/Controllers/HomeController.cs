@@ -426,10 +426,10 @@ namespace apptab.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez remplir les comptes RIB du " + journal + " journal. ", data = "" }, settings));
             }
-            //if (djournal.RIB.Length <23)
-            //{
-            //    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Votre RIB du journal " + journal + " est incomplet ", data = "" }, settings));
-            //}
+            if (djournal.RIB.Length < 11)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Votre RIB du journal " + journal + " est incomplet ", data = "" }, settings));
+            }
             var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID && x.ComptaG == comptaG && x.Journal == journal).Select(x => x.IDREGLEMENT.ToString()).ToArray();
 
             var list = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID).Where(x => !hstSiig.Contains(x.No.ToString())).ToList();
@@ -820,6 +820,7 @@ namespace apptab.Controllers
                     {
                         IDREGLEMENT = item.IDREGLEMENT,
                         dateOrdre = item.dateOrdre,
+                        auxi = item.auxi,
                         NoPiece = item.NoPiece,
                         Compte = item.Compte,
                         Journal = item.Journal,
@@ -853,6 +854,7 @@ namespace apptab.Controllers
                     {
                         IDREGLEMENT = item.IDREGLEMENT,
                         dateOrdre = item.dateOrdre,
+                        auxi = item.auxi,
                         NoPiece = item.NoPiece,
                         Compte = item.Compte,
                         Journal = item.Journal,
@@ -909,6 +911,7 @@ namespace apptab.Controllers
                     {
                         IDREGLEMENT = item.IDREGLEMENT,
                         dateOrdre = item.dateOrdre,
+                        auxi = item.auxi,
                         NoPiece = item.NoPiece,
                         Compte = item.Compte,
                         Journal = item.Journal,
@@ -946,6 +949,7 @@ namespace apptab.Controllers
                         {
                             IDREGLEMENT = item.IDREGLEMENT,
                             dateOrdre = item.dateOrdre,
+                            auxi = item.auxi,
                             NoPiece = item.NoPiece,
                             Compte = item.Compte,
                             Journal = item.Journal,
@@ -1167,6 +1171,7 @@ namespace apptab.Controllers
                         IDREGLEMENT = item.IDREGLEMENT,
                         dateOrdre = item.dateOrdre,
                         NoPiece = item.NoPiece,
+                        auxi = item.auxi,
                         Compte = item.Compte,
                         Libelle = item.Libelle,
                         Journal = item.Journal,
@@ -1201,6 +1206,7 @@ namespace apptab.Controllers
                         IDREGLEMENT = item.IDREGLEMENT,
                         dateOrdre = item.dateOrdre,
                         NoPiece = item.NoPiece,
+                        auxi = item.auxi,
                         Compte = item.Compte,
                         Libelle = item.Libelle,
                         Journal = item.Journal,
@@ -1256,6 +1262,7 @@ namespace apptab.Controllers
                         IDREGLEMENT = item.IDREGLEMENT,
                         dateOrdre = item.dateOrdre,
                         NoPiece = item.NoPiece,
+                        auxi = item.auxi,
                         Compte = item.Compte,
                         Journal = item.Journal,
                         Credit = item.Credit,
@@ -1291,6 +1298,7 @@ namespace apptab.Controllers
                         IDREGLEMENT = item.IDREGLEMENT,
                         dateOrdre = item.dateOrdre,
                         NoPiece = item.NoPiece,
+                        auxi = item.auxi,
                         Compte = item.Compte,
                         Journal = item.Journal,
                         Credit = item.Credit,

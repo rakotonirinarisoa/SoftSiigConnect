@@ -1954,6 +1954,7 @@ namespace apptab.Extension
                                 {
                                     No = reglement.NUMEROOP,
                                     Date = reglement.DATEFACTURE.Value,
+                                    Auxi = reglement.AUXI,
                                     NoPiece = reglement.NUMEROFACTURE,
                                     Compte = reglement.COGE,
                                     Libelle = reglement.LIBELLE,
@@ -1988,6 +1989,7 @@ namespace apptab.Extension
                                 {
                                     No = reglementAV.NUMERO,
                                     Date = reglementAV.DATE.Value,
+                                    Auxi = reglementAV.AUXI,
                                     NoPiece = reglementAV.NUMERO_PIECE,
                                     Compte = nordAV.COGE,
                                     Libelle = nordAV.LIBELLE,
@@ -2030,6 +2032,7 @@ namespace apptab.Extension
                                 {
                                     No = reglement.NUMEROOP,
                                     Date = reglement.DATEFACTURE.Value,
+                                    Auxi = reglement.AUXI,
                                     NoPiece = reglement.NUMEROFACTURE,
                                     Compte = reglement.COGE,
                                     Libelle = reglement.LIBELLE,
@@ -2071,6 +2074,7 @@ namespace apptab.Extension
                             {
                                 No = reglementAV.NUMERO,
                                 Date = reglementAV.DATE.Value,
+                                Auxi = reglementAV.AUXI,
                                 NoPiece = reglementAV.NUMERO_PIECE,
                                 Compte = reglementAV.COGE,
                                 Libelle = reglementAV.LIBELLE,
@@ -2101,6 +2105,7 @@ namespace apptab.Extension
                                 {
                                     No = reglement.NUMEROOP,
                                     Date = reglement.DATEFACTURE.Value,
+                                    Auxi = reglement.AUXI,
                                     NoPiece = reglement.NUMEROFACTURE,
                                     Compte = reglement.COGE,
                                     Libelle = reglement.LIBELLE,
@@ -2152,6 +2157,7 @@ namespace apptab.Extension
                                         {
                                             No = reglement.NUMEROOP,
                                             Date = reglement.DATEFACTURE.Value,
+                                            Auxi = reglement.AUXI,
                                             NoPiece = reglement.NUMEROFACTURE,
                                             Compte = reglement.COGE,
                                             Libelle = reglement.LIBELLE,
@@ -2193,6 +2199,7 @@ namespace apptab.Extension
                                         {
                                             No = reglement.NUMERO,
                                             Date = reglement.DATE.Value,
+                                            Auxi = reglement.AUXI,
                                             NoPiece = reglement.NUMERO_PIECE,
                                             Compte = reglement.COGE,
                                             Libelle = reglement.LIBELLE,
