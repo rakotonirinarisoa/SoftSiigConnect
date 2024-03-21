@@ -1,10 +1,6 @@
-let clickedId;
-
 const loginNameInput = $('#login-name');
 const passwordInput = $('#password');
-
 const p = $('#user-password');
-
 const closeButton = $('#close-btn');
 
 function showPassword(id) {
@@ -26,7 +22,7 @@ $('#get-user-password-btn').on('click', () => {
         password: passwordInput.val(),
         userId: clickedId
     };
-    
+
     $.ajax({
         type: 'POST',
         async: true,
@@ -34,10 +30,14 @@ $('#get-user-password-btn').on('click', () => {
         contentType: 'application/json',
         datatype: 'json',
         data: JSON.stringify({ ...payload }),
-        
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             const res = JSON.parse(result);
-            console.log(result);
             if (res.type === 'error') {
                 p.css({ 'color': 'red' });
                 p.text('Identifiants incorrects!');

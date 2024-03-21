@@ -7,6 +7,16 @@
 <div class="form-row">
     <div class="input-group mb-3 col">
         <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">PROJET</span>
+        </div>
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="proj" data-id="proj-list">
+        </select>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
             <span class="input-group-text text-bold" id="inputGroup-sizing-default">Nouveau mot de passe</span>
         </div>
         <input type="password" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Para">
@@ -32,7 +42,7 @@
 </div>
 
 <!-- Droit.js -->
-<script src="~/Assets/js/Crypto.js"></script>
+<script src="~/Assets/js/Crypto.js?version=@Session["VERSION"]"></script>
 
 <script>
     const togglePassword = document

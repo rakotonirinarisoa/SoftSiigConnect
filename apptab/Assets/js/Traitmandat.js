@@ -1,7 +1,4 @@
-﻿let User;
-let Origin;
-let compteur = 1;
-let table;
+﻿var table = undefined;
 
 $(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
@@ -9,34 +6,44 @@ $(document).ready(() => {
     Origin = User.origin;
 
     $(`[data-id="username"]`).text(User.LOGIN);
-
-    //GetListProjet();
-    //GetUsers(undefined);
     
-    IsProjet();
-
-    GetListLOAD();//Partie ORDSEC
-    GetListLOADOTHER();//Partie ORDSEC
+    GetListProjet();
 
     $(`[data-widget="pushmenu"]`).on('click', () => {
         $(`[data-action="SaveV"]`).toggleClass('custom-fixed-btn');
     });
 });
 
-function IsProjet() {
+function checkdel(id) {
+    $('.Checkall').prop("checked", false);
+}
+
+$('#projMANDAT').on('change', () => {
+    //emptyTableTRM();
+    GetListLOADOTHER();
+});
+
+function GetListProjet() {
     let formData = new FormData();
 
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
 
     $.ajax({
         type: "POST",
-        url: Origin + '/Traitement/GetIsProjet',
+        url: Origin + '/Traitement/GetAllPROJET',
         data: formData,
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -49,109 +56,242 @@ function IsProjet() {
                 window.location = window.location.origin;
                 return;
             }
+            
+            $(`[data-id="proj-listMANDAT"]`).text("");
 
-            $("#proj").val(`${Datas.data}`);
+            var code = ``;
+
+            $.each(Datas.data, function (k, v) {
+                code += `
+                    <option value="${v.ID}">${v.PROJET}</option>
+                `;
+            });
+            
+            $(`[data-id="proj-listMANDAT"]`).append(code);
+
+            GetListLOADOTHER();
+        },
+        error: function (e) {
+            alert("Problème de connexion. ");
+        }
+    })
+}
+
+function GetListLOADOTHER() {
+    let formData = new FormData();
+    //alert(baseName);
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDSOCIETE);
+
+    formData.append("iProjet", $("#projMANDAT").val());
+
+    $.ajax({
+        type: "POST",
+        async: true,
+        url: Origin + '/Traitement/GenerationLOAD',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                emptyTableTRM();
+                return;
+            }
+            if (Datas.type == "PEtat") {
+                alert(Datas.msg);
+                emptyTableTRM();
+                return;
+            }
+            if (Datas.type == "Prese") {
+                alert(Datas.msg);
+                emptyTableTRM();
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+            if (Datas.type == "success") {
+                listResult = Datas.data;
+
+                const data = [];
+
+                $.each(listResult, function (k, v) {
+                    data.push({
+                        id: v.No,
+                        soa: v.SOA,
+                        projet: v.PROJET,
+                        ref: v.REF,
+                        objet: v.OBJ,
+                        titulaire: v.TITUL,
+                        dateMandat: formatDate(v.DATE),
+                        compte: v.COMPTE,
+                        pcop: v.PCOP,
+                        montant: formatCurrency(String(v.MONT).replace(",", ".")),
+                        dateDEF: formatDate(v.DATEDEF),
+                        dateTEF: formatDate(v.DATETEF),
+                        dateBE: formatDate(v.DATEBE),
+                        imputation: '',
+                        piecesJustificatives: '',
+                        document: '',
+                        isLATE: v.isLATE
+                    });
+                });
+
+                if (table !== undefined) {
+                    table.destroy();
+                }
+
+                table = $('#TBD_PROJET_MANDAT').DataTable({
+                    data,
+                    columns: [
+                        {
+                            data: 'id',
+                            render: function (data, _, _, _) {
+                                return `
+                                    <input type="checkbox" name="checkprod" compteg-ischecked class="chk" onchange="checkdel('${data}')" />
+                                `;
+                            },
+                            orderable: false
+                        },
+                        { data: 'soa' },
+                        { data: 'projet' },
+                        { data: 'ref' },
+                        { data: 'objet' },
+                        { data: 'titulaire' },
+                        { data: 'dateMandat' },
+                        { data: 'compte' },
+                        { data: 'pcop' },
+                        { data: 'montant' },
+                        { data: 'dateDEF' },
+                        { data: 'dateTEF' },
+                        { data: 'dateBE' },
+                        {
+                            data: 'imputation',
+                            render: function (_, _, row, _) {
+                                return `
+                                    <div onclick="modalD('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-danger elerfr"></i>
+                                    </div>
+                                `;
+                            }
+                        },
+                        {
+                            data: 'piecesJustificatives',
+                            render: function (_, _, row, _) {
+                                return `
+                                    <div onclick="modalF('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-success elerfr"></i>
+                                    </div>
+                                `;
+                            }
+                        },
+                        {
+                            data: 'document',
+                            render: function (_, _, row, _) {
+                                return `
+                                    <div onclick="modalLIAS('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-info elerfr"></i>
+                                    </div>
+                                `;
+                            }
+                        }
+                    ],
+                    createdRow: function (row, data, _) {
+                        $(row).attr('compteG-id', data.id);
+                        $(row).addClass('select-text');
+
+                        if (data.isLATE) {
+                            $(row).attr('style', "background-color: #FF7F7F !important;");
+                        }
+                    },
+
+                    columnDefs: [
+                        {
+                            targets: [-3, -2, -1]
+                        }
+                    ],
+                    colReorder: {
+                        enable: false,
+                        fixedColumnsLeft: 1
+                    },
+                    deferRender: true,
+                    dom: 'Bfrtip',
+                    buttons: ['colvis'],
+                    initComplete: function () {
+                        $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
+
+                        count = 0;
+                        this.api().columns().every(function () {
+                            var title = this.header();
+                            //replace spaces with dashes
+                            title = $(title).html().replace(/[\W]/g, '-');
+                            var column = this;
+                            var select = $('<select id="' + title + '" class="select2" ></select>')
+                                .appendTo($(column.footer()).empty())
+                                .on('change', function () {
+                                    //Get the "text" property from each selected data 
+                                    //regex escape the value and store in array
+                                    var data = $.map($(this).select2('data'), function (value, key) {
+                                        return value.text ? '^' + $.fn.dataTable.util.escapeRegex(value.text) + '$' : null;
+                                    });
+
+                                    //if no data selected use ""
+                                    if (data.length === 0) {
+                                        data = [""];
+                                    }
+
+                                    //join array into string with regex or (|)
+                                    var val = data.join('|');
+
+                                    //search for the option(s) selected
+                                    column
+                                        .search(val ? val : '', true, false)
+                                        .draw();
+                                });
+
+                            column.data().unique().sort().each(function (d, j) {
+                                select.append('<option value="' + d + '">' + d + '</option>');
+                            });
+
+                            //use column title as selector and placeholder
+                            $('#' + title).select2({
+                                multiple: true,
+                                closeOnSelect: false
+
+                            });
+
+                            //initially clear select otherwise first option is selected
+                            $('.select2').val(null).trigger('change');
+                        });
+                    }
+                });
+
+                $('#TBD_PROJET_MANDAT tfoot th').each(function (i) {
+                    if (i == 0 || i >= 13) {
+                        $(this).addClass("NOTVISIBLE");
+                    }
+                });
+            }
         },
         error: function () {
             alert("Problème de connexion. ");
         }
     });
 }
-
-//function GetUsers(id) {
-//    let formData = new FormData();
-
-//    formData.append("suser.LOGIN", User.LOGIN);
-//    formData.append("suser.PWD", User.PWD);
-//    formData.append("suser.ROLE", User.ROLE);
-
-//    if (!id) {
-//        formData.append("suser.IDPROJET", User.IDPROJET);
-//    } else {
-//        formData.append("suser.IDPROJET", id);
-//    }
-
-//    $.ajax({
-//        type: "POST",
-//        url: Origin + '/Traitement/DetailsInfoPro',
-//        data: formData,
-//        cache: false,
-//        contentType: false,
-//        processData: false,
-//        success: function (result) {
-//            var Datas = JSON.parse(result);
-
-//            if (Datas.type == "error") {
-//                alert(Datas.msg);
-//                return;
-//            }
-//            if (Datas.type == "login") {
-//                alert(Datas.msg);
-//                window.location = window.location.origin;
-//                return;
-//            }
-
-//            $("#proj").val(`${Datas.data.PROJ}`);
-//        },
-//        error: function () {
-//            alert("Problème de connexion. ");
-//        }
-//    });
-//}
-
-//let urlOrigin = "http://softwell.cloud/OPAVI";
-//function GetListProjet() {
-//    let formData = new FormData();
-
-//    formData.append("suser.LOGIN", User.LOGIN);
-//    formData.append("suser.PWD", User.PWD);
-//    formData.append("suser.ROLE", User.ROLE);
-//    formData.append("suser.IDPROJET", User.IDPROJET);
-
-//    $.ajax({
-//        type: "POST",
-//        url: Origin + '/Traitement/GetAllPROJET',
-//        data: formData,
-//        cache: false,
-//        contentType: false,
-//        processData: false,
-//        success: function (result) {
-//            var Datas = JSON.parse(result);
-//            console.log(Datas);
-
-//            if (Datas.type == "error") {
-//                alert(Datas.msg);
-//                return;
-//            }
-//            if (Datas.type == "login") {
-//                alert(Datas.msg);
-//                window.location = window.location.origin;
-//                return;
-//            }
-
-//            $(`[data-id="proj-list"]`).text("");
-//            var code = ``;
-//            $.each(Datas.data, function (k, v) {
-//                code += `
-//                    <option value="${v.ID}">${v.PROJET}</option>
-//                `;
-//            });
-//            $(`[data-id="proj-list"]`).append(code);
-
-//        },
-//        error: function (e) {
-//            console.log(e);
-//            alert("Problème de connexion. ");
-//        }
-//    })
-//}
-
-//$('#proj').on('change', () => {
-//    const id = $('#proj').val();
-
-//    GetUsers(id);
-//});
-
 
 //GENERER//
 $('[data-action="GenereR"]').click(async function () {
@@ -162,6 +302,12 @@ $('[data-action="GenereR"]').click(async function () {
         return;
     }
 
+    let pr = $("#projMANDAT").val();
+    if (!pr) {
+        alert("Veuillez sélectionner au moins un projet. ");
+        return;
+    }
+
     let formData = new FormData();
     //alert(baseName);
     formData.append("suser.LOGIN", User.LOGIN);
@@ -172,27 +318,38 @@ $('[data-action="GenereR"]').click(async function () {
     formData.append("DateDebut", $('#dateD').val());
     formData.append("DateFin", $('#dateF').val());
 
+    formData.append("iProjet", $("#projMANDAT").val());
+
     $.ajax({
         type: "POST",
-        async : true,
+        async: true,
         url: Origin + '/Traitement/Generation',
         data: formData,
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
+                emptyTableTRM();
                 return;
             }
             if (Datas.type == "PEtat") {
                 alert(Datas.msg);
+                emptyTableTRM();
                 return;
             }
             if (Datas.type == "Prese") {
                 alert(Datas.msg);
+                emptyTableTRM();
                 return;
             }
             if (Datas.type == "login") {
@@ -201,418 +358,166 @@ $('[data-action="GenereR"]').click(async function () {
                 return;
             }
             if (Datas.type == "success") {
-                //window.location = window.location.origin;
-                ListResult = Datas.data
-                contentpaie = ``;
-                $.each(ListResult, function (k, v) {
-                    contentpaie += `
-                    <tr compteG-id="${v.No}" class="select-text">
-                        <td style="font-weight: bold; text-align:center">
-                            <input type="checkbox" name = "checkprod" compteg-ischecked class="chk" onchange = "checkdel('${v.No}')" />
-                        </td>
-                        <td style="font-weight: bold; text-align:center">${v.REF}</td>
-                        <td style="font-weight: bold; text-align:center">${v.OBJ}</td>
-                        <td style="font-weight: bold; text-align:center">${v.TITUL}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATE)}</td>
-                        <td style="font-weight: bold; text-align:center">${v.COMPTE}</td>
-                        <td style="font-weight: bold; text-align:center">${v.PCOP}</td>
-                        <td style="font-weight: bold; text-align:center">${formatCurrency(String(v.MONT).replace(",", "."))}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATEDEF)}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATETEF)}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATEBE)}</td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center">
-                            <div onclick="modalD('${v.No}')"><i class="fa fa-tags fa-lg text-danger"></i></div>
-                        </td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center">
-                            <div onclick="modalF('${v.No}')"><i class="fa fa-tags fa-lg text-success"></i></div>
-                        </td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center">
-                            <div onclick="modalLIAS('${v.No}')"><i class="fa fa-tags fa-lg text-info"></i></div>
-                        </td>
-                    </tr>
-                    `
+                listResult = Datas.data;
+
+                const data = [];
+
+                $.each(listResult, function (k, v) {
+                    data.push({
+                        id: v.No,
+                        soa: v.SOA,
+                        projet: v.PROJET,
+                        ref: v.REF,
+                        objet: v.OBJ,
+                        titulaire: v.TITUL,
+                        dateMandat: formatDate(v.DATE),
+                        compte: v.COMPTE,
+                        pcop: v.PCOP,
+                        montant: formatCurrency(String(v.MONT).replace(",", ".")),
+                        dateDEF: formatDate(v.DATEDEF),
+                        dateTEF: formatDate(v.DATETEF),
+                        dateBE: formatDate(v.DATEBE),
+                        imputation: '',
+                        piecesJustificatives: '',
+                        document: '',
+                        isLATE: v.isLATE
+                    });
                 });
 
-                $('.afb160Paie').empty();
-                $('.afb160Paie').html(contentpaie);
+                if (table !== undefined) {
+                    table.destroy();
+                }
 
-                //new DataTable(`#TBD_PROJET`, {
-                //    //dom: 'Bfrtip',
-                //    //buttons: ['colvis'],
-                //    //colReorder: false,
-                    
-                //    responsive: true,
-                //    retrieve: true,
-                //    paging: true,
-                //    search: true
-                //    //destroy:true
-                //});
-            }
-        },
-        error: function () {
-            alert("Problème de connexion. ");
-        }
-    });
-});
+                table = $('#TBD_PROJET_MANDAT').DataTable({
+                    data,
+                    columns: [
+                        {
+                            data: 'id',
+                            render: function (data, _, _, _) {
+                                return `
+                                    <input type="checkbox" name="checkprod" compteg-ischecked class="chk" onchange="checkdel('${data}')" />
+                                `;
+                            },
+                            orderable: false
+                        },
+                        { data: 'soa' },
+                        { data: 'projet' },
+                        { data: 'ref' },
+                        { data: 'objet' },
+                        { data: 'titulaire' },
+                        { data: 'dateMandat' },
+                        { data: 'compte' },
+                        { data: 'pcop' },
+                        { data: 'montant' },
+                        { data: 'dateDEF' },
+                        { data: 'dateTEF' },
+                        { data: 'dateBE' },
+                        {
+                            data: 'imputation',
+                            render: function (_, _, row, _) {
+                                return `
+                                    <div onclick="modalD('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-danger elerfr"></i>
+                                    </div>
+                                `;
+                            }
+                        },
+                        {
+                            data: 'piecesJustificatives',
+                            render: function (_, _, row, _) {
+                                return `
+                                    <div onclick="modalF('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-success elerfr"></i>
+                                    </div>
+                                `;
+                            }
+                        },
+                        {
+                            data: 'document',
+                            render: function (_, _, row, _) {
+                                return `
+                                    <div onclick="modalLIAS('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-info elerfr"></i>
+                                    </div>
+                                `;
+                            }
+                        }
+                    ],
+                    createdRow: function (row, data, _) {
+                        $(row).attr('compteG-id', data.id);
+                        $(row).addClass('select-text');
 
-function checkdel(id) {
-    $('.Checkall').prop("checked", false);
-}
+                        if (data.isLATE) {
+                            $(row).attr('style', "background-color: #FF7F7F !important;");
+                        }
+                    },
 
-//SIIGLOAD//
-function GetListLOAD() {
-    let formData = new FormData();
-    //alert(baseName);
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDPROJET", User.IDSOCIETE);
+                    columnDefs: [
+                        {
+                            targets: [-3, -2, -1]
+                        }
+                    ],
+                    colReorder: {
+                        enable: false,
+                        fixedColumnsLeft: 1
+                    },
+                    deferRender: true,
+                    dom: 'Bfrtip',
+                    buttons: ['colvis'],
+                    initComplete: function () {
+                        $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
 
-    $.ajax({
-        type: "POST",
-        url: Origin + '/Traitement/GenerationSIIGLOAD',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (result) {
-            var Datas = JSON.parse(result);
-            console.log(Datas);
+                        count = 0;
+                        this.api().columns().every(function () {
+                            var title = this.header();
+                            //replace spaces with dashes
+                            title = $(title).html().replace(/[\W]/g, '-');
+                            var column = this;
+                            var select = $('<select id="' + title + '" class="select2" ></select>')
+                                .appendTo($(column.footer()).empty())
+                                .on('change', function () {
+                                    //Get the "text" property from each selected data 
+                                    //regex escape the value and store in array
+                                    var data = $.map($(this).select2('data'), function (value, key) {
+                                        return value.text ? '^' + $.fn.dataTable.util.escapeRegex(value.text) + '$' : null;
+                                    });
 
-            if (Datas.type == "error") {
-                alert(Datas.msg);
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-                window.location = window.location.origin;
-                return;
-            }
-            if (Datas.type == "success") {
-                //window.location = window.location.origin;
-                ListResult = Datas.data
-                contentpaie = ``;
-                $.each(ListResult, function (k, v) {
-                    contentpaie += `
-                   <tr compteG-id="${v.No}" class="select-text caret">
-                        <td style="font-weight: bold; text-align:center">
-                            <input type="checkbox" name = "checkprod" compteg-ischecked  onchange = "checkdel()"/>
-                        </td>
-                        <td style="font-weight: bold; text-align:center">${v.REF}</td>
-                        <td style="font-weight: bold; text-align:center">${v.OBJ}</td>
-                        <td style="font-weight: bold; text-align:center">${v.TITUL}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATE)}</td>
-                        <td style="font-weight: bold; text-align:center">${v.COMPTE}</td>
-                        <td style="font-weight: bold; text-align:center">${v.PCOP}</td>
-                        <td style="font-weight: bold; text-align:center">${formatCurrency(String(v.MONT).replace(",", "."))}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATEDEF)}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATETEF)}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATEBE)}</td>
-                        <td style="font-weight: bold; text-align:center">${v.LIEN}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATECREATION)}</td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center">
-                            <div onclick="modalD('${v.No}')"><i class="fa fa-tags fa-lg text-danger"></i></div>
-                        </td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center">
-                            <div onclick="modalF('${v.No}')"><i class="fa fa-tags fa-lg text-success"></i></div>
-                        </td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center">
-                            <div onclick="modalLIAS('${v.No}')"><i class="fa fa-tags fa-lg text-info"></i></div>
-                        </td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center">
-                            <div onclick="modalREJET('${v.No}')"><i class="fa fa-times fa-lg text-dark"></i></div>
-                        </td>
-                    </tr>`
+                                    //if no data selected use ""
+                                    if (data.length === 0) {
+                                        data = [""];
+                                    }
+
+                                    //join array into string with regex or (|)
+                                    var val = data.join('|');
+
+                                    //search for the option(s) selected
+                                    column
+                                        .search(val ? val : '', true, false)
+                                        .draw();
+                                });
+
+                            column.data().unique().sort().each(function (d, j) {
+                                select.append('<option value="' + d + '">' + d + '</option>');
+                            });
+
+                            //use column title as selector and placeholder
+                            $('#' + title).select2({
+                                multiple: true,
+                                closeOnSelect: false
+
+                            });
+
+                            //initially clear select otherwise first option is selected
+                            $('.select2').val(null).trigger('change');
+                        });
+                    }
                 });
 
-                $('.traitementORDSEC').empty();
-                $('.traitementORDSEC').html(contentpaie);
-
-                //new DataTable(`#TBD_PROJET`, {
-                //    //dom: 'Bfrtip',
-                //    //buttons: ['colvis'],
-                //    //colReorder: false,
-
-                //    responsive: true,
-                //    retrieve: true,
-                //    paging: true,
-                //    search: true
-                //    //destroy:true
-                //});
-            }
-        },
-        error: function () {
-            alert("Problème de connexion. ");
-        }
-    });
-}
-
-//GetListLOADOTHER//
-function GetListLOADOTHER() {
-    let formData = new FormData();
-    //alert(baseName);
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDPROJET", User.IDSOCIETE);
-
-    $.ajax({
-        type: "POST",
-        url: Origin + '/Traitement/GenerationSIIGLOADOTHER',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (result) {
-            var Datas = JSON.parse(result);
-            console.log(Datas);
-
-            if (Datas.type == "error") {
-                alert(Datas.msg);
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-                window.location = window.location.origin;
-                return;
-            }
-            if (Datas.type == "success") {
-                //window.location = window.location.origin;
-                ListResult = Datas.data
-                contentpaie = ``;
-                $.each(ListResult, function (k, v) {
-                    contentpaie += `
-                   <tr compteG-id="${v.No}" class="select-text caret">
-                        <td style="font-weight: bold; text-align:center">
-                            <input type="checkbox" name = "checkprod" compteg-ischecked  onchange = "checkdel()"/>
-                        </td>
-                        <td style="font-weight: bold; text-align:center">${v.REF}</td>
-                        <td style="font-weight: bold; text-align:center">${v.OBJ}</td>
-                        <td style="font-weight: bold; text-align:center">${v.TITUL}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATE)}</td>
-                        <td style="font-weight: bold; text-align:center">${v.COMPTE}</td>
-                        <td style="font-weight: bold; text-align:center">${v.PCOP}</td>
-                        <td style="font-weight: bold; text-align:center">${formatCurrency(String(v.MONT).replace(",", "."))}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATEDEF)}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATETEF)}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATEBE)}</td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center">
-                            <div onclick="modalD('${v.No}')"><i class="fa fa-tags fa-lg text-danger"></i></div>
-                        </td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center">
-                            <div onclick="modalF('${v.No}')"><i class="fa fa-tags fa-lg text-success"></i></div>
-                        </td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center">
-                            <div onclick="modalLIAS('${v.No}')"><i class="fa fa-tags fa-lg text-info"></i></div>
-                        </td>
-                    </tr>`
+                $('#TBD_PROJET_MANDAT tfoot th').each(function (i) {
+                    if (i == 0 || i >= 13) {
+                        $(this).addClass("NOTVISIBLE");
+                    }
                 });
-
-                $('.traitementORDSECOTHER').empty();
-                $('.traitementORDSECOTHER').html(contentpaie);
-
-                //new DataTable(`#TBD_PROJET`, {
-                //    //dom: 'Bfrtip',
-                //    //buttons: ['colvis'],
-                //    //colReorder: false,
-
-                //    responsive: true,
-                //    retrieve: true,
-                //    paging: true,
-                //    search: true
-                //    //destroy:true
-                //});
-            }
-        },
-        error: function () {
-            alert("Problème de connexion. ");
-        }
-    });
-}
-
-//GENERER SIIGOTHER//
-$('[data-action="GenereSIIGOTHER"]').click(function () {
-    let dd = $("#dateD").val();
-    let df = $("#dateF").val();
-    if (!dd || !df) {
-        alert("Veuillez renseigner les dates afin de générer les mandats. ");
-        return;
-    }
-
-    let formData = new FormData();
-    //alert(baseName);
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDPROJET", User.IDSOCIETE);
-
-    formData.append("DateDebut", $('#dateD').val());
-    formData.append("DateFin", $('#dateF').val());
-
-    $.ajax({
-        type: "POST",
-        url: Origin + '/Traitement/GenerationSIIGOTHER',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (result) {
-            var Datas = JSON.parse(result);
-            console.log(Datas);
-
-            if (Datas.type == "error") {
-                alert(Datas.msg);
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-                window.location = window.location.origin;
-                return;
-            }
-            if (Datas.type == "success") {
-                //window.location = window.location.origin;
-                ListResult = Datas.data
-                contentpaie = ``;
-                $.each(ListResult, function (k, v) {
-                    contentpaie += `
-                   <tr compteG-id="${v.No}" class="select-text caret">
-                        <td style="font-weight: bold; text-align:center">
-                            <input type="checkbox" name = "checkprod" compteg-ischecked  onchange = "checkdel()"/>
-                        </td>
-                        <td style="font-weight: bold; text-align:center">${v.REF}</td>
-                        <td style="font-weight: bold; text-align:center">${v.OBJ}</td>
-                        <td style="font-weight: bold; text-align:center">${v.TITUL}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATE)}</td>
-                        <td style="font-weight: bold; text-align:center">${v.COMPTE}</td>
-                        <td style="font-weight: bold; text-align:center">${v.PCOP}</td>
-                        <td style="font-weight: bold; text-align:center">${formatCurrency(String(v.MONT).replace(",", "."))}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATEDEF)}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATETEF)}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATEBE)}</td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center">
-                            <div onclick="modalD('${v.No}')"><i class="fa fa-tags fa-lg text-danger"></i></div>
-                        </td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center">
-                            <div onclick="modalF('${v.No}')"><i class="fa fa-tags fa-lg text-success"></i></div>
-                        </td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center">
-                            <div onclick="modalLIAS('${v.No}')"><i class="fa fa-tags fa-lg text-info"></i></div>
-                        </td>
-                    </tr>`
-                });
-
-                $('.traitementORDSECOTHER').empty();
-                $('.traitementORDSECOTHER').html(contentpaie);
-
-                //new DataTable(`#TBD_PROJET`, {
-                //    //dom: 'Bfrtip',
-                //    //buttons: ['colvis'],
-                //    //colReorder: false,
-
-                //    responsive: true,
-                //    retrieve: true,
-                //    paging: true,
-                //    search: true
-                //    //destroy:true
-                //});
-            }
-        },
-        error: function () {
-            alert("Problème de connexion. ");
-        }
-    });
-});
-
-//GENERER SIIG//
-$('[data-action="GenereSIIG"]').click(function () {
-    let dd = $("#dateD").val();
-    let df = $("#dateF").val();
-    if (!dd || !df) {
-        alert("Veuillez renseigner les dates afin de générer les mandats. ");
-        return;
-    }
-
-    let formData = new FormData();
-    //alert(baseName);
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDPROJET", User.IDSOCIETE);
-
-    formData.append("DateDebut", $('#dateD').val());
-    formData.append("DateFin", $('#dateF').val());
-
-    $.ajax({
-        type: "POST",
-        url: Origin + '/Traitement/GenerationSIIG',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (result) {
-            var Datas = JSON.parse(result);
-            console.log(Datas);
-
-            if (Datas.type == "error") {
-                alert(Datas.msg);
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-                window.location = window.location.origin;
-                return;
-            }
-            if (Datas.type == "success") {
-                //window.location = window.location.origin;
-                ListResult = Datas.data
-                contentpaie = ``;
-                $.each(ListResult, function (k, v) {
-                    contentpaie += `
-                    <tr compteG-id="${v.No}" class="select-text">
-                        <td style="font-weight: bold; text-align:center">
-                            <input type="checkbox" name = "checkprod" compteg-ischecked  onchange = "checkdel()"/>
-                        </td>
-                        <td style="font-weight: bold; text-align:center">${v.REF}</td>
-                        <td style="font-weight: bold; text-align:center">${v.OBJ}</td>
-                        <td style="font-weight: bold; text-align:center">${v.TITUL}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATE)}</td>
-                        <td style="font-weight: bold; text-align:center">${v.COMPTE}</td>
-                        <td style="font-weight: bold; text-align:center">${v.PCOP}</td>
-                        <td style="font-weight: bold; text-align:center">${formatCurrency(String(v.MONT).replace(",", "."))}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATEDEF)}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATETEF)}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATEBE)}</td>
-                        <td style="font-weight: bold; text-align:center">${v.LIEN}</td>
-                        <td style="font-weight: bold; text-align:center">${formatDate(v.DATECREATION)}</td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center">
-                            <div onclick="modalD('${v.No}')"><i class="fa fa-tags fa-lg text-danger"></i></div>
-                        </td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center">
-                            <div onclick="modalF('${v.No}')"><i class="fa fa-tags fa-lg text-success"></i></div>
-                        </td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center">
-                            <div onclick="modalLIAS('${v.No}')"><i class="fa fa-tags fa-lg text-info"></i></div>
-                        </td>
-                        <td class="elerfr" style="font-weight: bold; text-align:center">
-                            <div onclick="modalREJET('${v.No}')"><i class="fa fa-times fa-lg text-dark"></i></div>
-                        </td>
-                    </tr>`
-                });
-
-                $('.traitementORDSEC').empty();
-                $('.traitementORDSEC').html(contentpaie);
-
-                //new DataTable(`#TBD_PROJET`, {
-                //    //dom: 'Bfrtip',
-                //    //buttons: ['colvis'],
-                //    //colReorder: false,
-
-                //    responsive: true,
-                //    retrieve: true,
-                //    paging: true,
-                //    search: true
-                //    //destroy:true
-                //});
             }
         },
         error: function () {
@@ -623,7 +528,7 @@ $('[data-action="GenereSIIG"]').click(function () {
 
 $('[data-action="SaveV"]').click(function () {
     let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
-    
+
     let list = [];
     $.each(CheckList, (k, v) => {
         list.push($(v).attr("compteG-id"));
@@ -633,7 +538,7 @@ $('[data-action="SaveV"]').click(function () {
         alert("Veuillez sélectionner au moins un mandat afin de l'enregistrer et l'envoyer pour validation. ");
         return;
     }
-    
+
     let formData = new FormData();
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
@@ -642,8 +547,7 @@ $('[data-action="SaveV"]').click(function () {
 
     formData.append("listCompte", list);
 
-    formData.append("DateDebut", $('#dateD').val());
-    formData.append("DateFin", $('#dateF').val());
+    formData.append("iProjet", $("#projMANDAT").val());
 
     $.ajax({
         type: "POST",
@@ -652,6 +556,12 @@ $('[data-action="SaveV"]').click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
             alert(Datas.msg);
@@ -664,6 +574,7 @@ $('[data-action="SaveV"]').click(function () {
         }
     });
 });
+
 $('.Checkall').change(function () {
 
     if ($('.Checkall').prop("checked") == true) {
@@ -675,41 +586,25 @@ $('.Checkall').change(function () {
 
 });
 
+function emptyTableTRM() {
+    const data = [];
 
-$('[data-action="SaveSIIG"]').click(function () {
-    let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
-    let list = [];
-    $.each(CheckList, (k, v) => {
-        list.push($(v).attr("compteG-id"));
-    });
+    if (table !== undefined) {
+        table.destroy();
+    }
 
-    let formData = new FormData();
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDPROJET", User.IDSOCIETE);
-
-    formData.append("listCompte", list);
-
-    //formData.append("DateDebut", $('#dateD').val());
-    //formData.append("DateFin", $('#dateF').val());
-
-    $.ajax({
-        type: "POST",
-        url: Origin + '/Traitement/GetCheckedEcritureORDSEC',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (result) {
-            var Datas = JSON.parse(result);
-            alert(Datas.msg);
-            $.each(CheckList, (k, v) => {
-                list.push($(v).remove());
-            });
+    table = $('#TBD_PROJET_MANDAT').DataTable({
+        data,
+        colReorder: {
+            enable: true,
+            fixedColumnsLeft: 1
         },
-        error: function () {
-            alert("Problème de connexion. ");
-        }
+        deferRender: true,
+        dom: 'Bfrtip',
+        buttons: ['colvis'],
     });
+}
+
+$('#btn-export-excel').on('click', () => {
+    exportTableToExcel('TBD_PROJET_MANDAT');
 });

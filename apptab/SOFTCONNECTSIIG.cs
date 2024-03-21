@@ -1,5 +1,4 @@
 ﻿using System.Data.Entity;
-using apptab;
 using apptab.Models;
 
 namespace apptab
@@ -52,6 +51,13 @@ namespace apptab
         public virtual DbSet<SI_GEDLIEN> SI_GEDLIEN { get; set; }
         public virtual DbSet<SI_PRIVILEGE> SI_PRIVILEGE { get; set; }
         public virtual DbSet<SI_TYPECRITURE> SI_TYPECRITURE { get; set; }
+        public virtual DbSet<SI_TRAITANNULAVANCE> SI_TRAITANNULAVANCE { get; set; }
+        public virtual DbSet<SI_TRAITAVANCE> SI_TRAITAVANCE { get; set; }
+        public virtual DbSet<SI_TRAITANNULJUSTIF> SI_TRAITANNULJUSTIF { get; set; }
+        public virtual DbSet<SI_TRAITJUSTIF> SI_TRAITJUSTIF { get; set; }
+        public virtual DbSet<SI_TRAITANNULREVERS> SI_TRAITANNULREVERS { get; set; }
+        public virtual DbSet<SI_TRAITREVERS> SI_TRAITREVERS { get; set; }
+
 
         public virtual DbSet<HSI_PROSOA> HSI_PROSOA { get; set; }
         public virtual DbSet<HSI_ACTIVITE> HSI_ACTIVITE { get; set; }
@@ -63,6 +69,8 @@ namespace apptab
         public virtual DbSet<HSI_MISSION> HSI_MISSION { get; set; }
         public virtual DbSet<HSI_PROCEDURE> HSI_PROCEDURE { get; set; }
         public virtual DbSet<HSI_PROGRAMME> HSI_PROGRAMME { get; set; }
+        public virtual DbSet<HSI_PROJETS> HSI_PROJETS { get; set; }
+        public virtual DbSet<HSI_USERS> HSI_USERS { get; set; }
         public virtual DbSet<HOPA_CRYPTO> HOPA_CRYPTO { get; set; }
         public virtual DbSet<HOPA_FTP> HOPA_FTP { get; set; }
         public virtual DbSet<HSI_DELAISTRAITEMENT> HSI_DELAISTRAITEMENT { get; set; }
@@ -71,6 +79,7 @@ namespace apptab
         public virtual DbSet<OPA_VALIDATIONS> OPA_VALIDATIONS { get; set; }
         public virtual DbSet<OPA_HCANCEL> OPA_HCANCEL { get; set; }
         public virtual DbSet<HSI_SOAS> HSI_SOAS { get; set; }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -101,9 +110,22 @@ namespace apptab
             modelBuilder.Entity<OPA_REGLEMENTBR>()
                 .Property(e => e.MONTANT)
                 .HasPrecision(18, 0);
+
             modelBuilder.Entity<OPA_VALIDATIONS>()
-                .Property(e => e.IDREGLEMENT)
+                .Property(e => e.Debit)
                 .HasPrecision(18, 0);
+
+            modelBuilder.Entity<OPA_VALIDATIONS>()
+                .Property(e => e.Credit)
+                .HasPrecision(18, 0);
+
+            modelBuilder.Entity<OPA_VALIDATIONS>()
+                .Property(e => e.MontantDevise)
+                .HasPrecision(18, 0);
+
+            modelBuilder.Entity<OPA_VALIDATIONS>()
+                .Property(e => e.Devise)
+                .IsFixedLength();
 
             modelBuilder.Entity<OPA_VALIDATIONS>()
                 .Property(e => e.Debit)
@@ -119,7 +141,25 @@ namespace apptab
             modelBuilder.Entity<OPA_VALIDATIONS>()
               .Property(e => e.Devise)
               .IsFixedLength();
+            modelBuilder.Entity<OPA_VALIDATIONS>()
+               .Property(e => e.Debit)
+               .HasPrecision(18, 0);
 
+            modelBuilder.Entity<OPA_VALIDATIONS>()
+                .Property(e => e.Credit)
+                .HasPrecision(18, 0);
+
+            modelBuilder.Entity<OPA_VALIDATIONS>()
+                .Property(e => e.MontantDevise)
+                .HasPrecision(18, 0);
+
+            modelBuilder.Entity<OPA_VALIDATIONS>()
+                .Property(e => e.Devise)
+                .IsFixedLength();
+
+            modelBuilder.Entity<OPA_VALIDATIONS>()
+                .Property(e => e.MONTANT)
+                .HasPrecision(18, 0);
         }
     }
 }

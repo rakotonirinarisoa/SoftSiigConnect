@@ -2,10 +2,7 @@
 namespace apptab
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     public partial class HSI_PARAMETAT
     {
@@ -16,6 +13,12 @@ namespace apptab
         public int? TEF { get; set; }
 
         public int? BE { get; set; }
+
+        public int? DEFA { get; set; }
+
+        public int? TEFA { get; set; }
+
+        public int? BEA { get; set; }
 
         public int? IDPROJET { get; set; }
 

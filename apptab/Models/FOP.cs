@@ -1,10 +1,8 @@
-namespace apptab
+namespace apptab.Models
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     [Table("FOP")]
     public partial class FOP
@@ -78,6 +76,15 @@ namespace apptab
         [StringLength(255)]
         public string OBSERVATION { get; set; }
 
+        [StringLength(20)]
+        public string COGEBENEF { get; set; }
+
+        [StringLength(12)]
+        public string AUXIBENEF { get; set; }
+
+        [StringLength(100)]
+        public string NOMBENEF { get; set; }
+
         public DateTime? DATETAPE1 { get; set; }
 
         public DateTime? DATETAPE2 { get; set; }
@@ -128,20 +135,11 @@ namespace apptab
         [StringLength(50)]
         public string ETAPE10USER { get; set; }
 
-        [StringLength(20)]
-        public string COGEBENEF { get; set; }
-
-        [StringLength(12)]
-        public string AUXIBENEF { get; set; }
-
-        [StringLength(100)]
-        public string NOMBENEF { get; set; }
+        [StringLength(10)]
+        public string JOURNAL { get; set; }
 
         [StringLength(10)]
         public string TYPE_OPERATION { get; set; }
-
-        [StringLength(10)]
-        public string JOURNAL { get; set; }
 
         [Column(TypeName = "numeric")]
         public decimal? MONTANTTOTALOPAVECOPENCOURSEXO { get; set; }
@@ -203,8 +201,8 @@ namespace apptab
         [StringLength(250)]
         public string REJETMOTIF { get; set; }
 
-        [StringLength(10)]
-        public string SOURCEFIN { get; set; }
+        [Column(TypeName = "numeric")]
+        public decimal? MONTANTBUDGETEXO { get; set; }
 
         [StringLength(50)]
         public string TYPEENGAGEMENT { get; set; }
@@ -214,17 +212,6 @@ namespace apptab
 
         [StringLength(50)]
         public string NUMEROBORDEREAU { get; set; }
-
-        [StringLength(20)]
-        public string ANNEEBUDGETAIRE { get; set; }
-
-        [StringLength(10)]
-        public string NUMEROBUDGETAIRE { get; set; }
-
-        [StringLength(255)]
-        public string LIGNEBUDGETAIRE { get; set; }
-
-        public DateTime? DATE_CALCUL_BUDGET { get; set; }
 
         public bool? ISGENERATE { get; set; }
 
@@ -240,8 +227,19 @@ namespace apptab
         [Column(TypeName = "numeric")]
         public decimal? MONTANTTOTALOPAVECOPENCOURSPERIODE { get; set; }
 
-        [Column(TypeName = "numeric")]
-        public decimal? MONTANTBUDGETEXO { get; set; }
+        [StringLength(10)]
+        public string SOURCEFIN { get; set; }
+
+        [StringLength(20)]
+        public string ANNEEBUDGETAIRE { get; set; }
+
+        [StringLength(10)]
+        public string NUMEROBUDGETAIRE { get; set; }
+
+        [StringLength(255)]
+        public string LIGNEBUDGETAIRE { get; set; }
+
+        public DateTime? DATE_CALCUL_BUDGET { get; set; }
 
         [Column(TypeName = "numeric")]
         public decimal? MARCHEMONTANTINITIAL { get; set; }
@@ -254,5 +252,7 @@ namespace apptab
 
         [Column(TypeName = "numeric")]
         public decimal? MARCHESOLDEAPAYER { get; set; }
+
+        public string NUMEROLIQUIDATION { get; set; }
     }
 }

@@ -1,16 +1,10 @@
-﻿using apptab.Data;
-using apptab.Data.Entities;
-using apptab;
-using Microsoft.Build.Framework.XamlTypes;
+﻿using apptab.Data.Entities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.DynamicData;
 using System.Web.Mvc;
 
 namespace apptab.Controllers
@@ -35,18 +29,15 @@ namespace apptab.Controllers
 
         [HttpPost]
         //public async DetailsInfoPro(SI_USERS suser)
-        public async Task<ActionResult> DetailsInfoPro(SI_USERS suser)
+        public async Task<ActionResult> DetailsInfoPro(SI_USERS suser, int iProjet)
         {
             var exist = await db.SI_USERS.FirstOrDefaultAsync(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             try
             {
-                int crpt = 0;
-                if (suser.IDPROJET == null)
-                    crpt = exist.IDPROJET.Value;
-                else
-                    crpt = suser.IDPROJET.Value;
+                //int crpt = exist.IDPROJET.Value;
+                int crpt = iProjet;
 
                 var fina = "";
                 if (db.SI_FINANCEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null) != null)
@@ -110,32 +101,25 @@ namespace apptab.Controllers
                             select soa.SOA).FirstOrDefault();
                 }
 
-                if (proj != 0)
+                return Json(JsonConvert.SerializeObject(new
                 {
-                    return Json(JsonConvert.SerializeObject(new
+                    type = "success",
+                    msg = "message",
+                    data = new
                     {
-                        type = "success",
-                        msg = "message",
-                        data = new
-                        {
-                            FIN = fina,
-                            CONV = convention,
-                            CAT = catego,
-                            ENG = enga,
-                            PROC = proc,
-                            MIN = min,
-                            MIS = mis,
-                            PROG = prog,
-                            ACT = act,
-                            PROJ = proj,
-                            SOA = soaA
-                        }
-                    }, settings));
-                }
-                else
-                {
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "message" }, settings));
-                }
+                        FIN = fina,
+                        CONV = convention,
+                        CAT = catego,
+                        ENG = enga,
+                        PROC = proc,
+                        MIN = min,
+                        MIS = mis,
+                        PROG = prog,
+                        ACT = act,
+                        PROJ = proj,
+                        SOA = soaA
+                    }
+                }, settings));
             }
             catch (Exception e)
             {
@@ -186,14 +170,56 @@ namespace apptab.Controllers
         [HttpPost]
         public async Task<ActionResult> GetAllPROJET(SI_USERS suser)
         {
-            var user = await db.SI_PROJETS.Select(a => new
-            {
-                PROJET = a.PROJET,
-                ID = a.ID,
-                DELETIONDATE = a.DELETIONDATE,
-            }).Where(a => a.DELETIONDATE == null).ToListAsync();
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+            try
+            {
+                var test = db.SI_USERS.Where(x => x.LOGIN == exist.LOGIN && x.PWD == exist.PWD && x.DELETIONDATE == null).FirstOrDefault();
+                if (test.ROLE == (int)Role.SAdministrateur)
+                {
+                    var user = await db.SI_PROJETS.Select(a => new
+                    {
+                        PROJET = a.PROJET,
+                        ID = a.ID,
+                        DELETIONDATE = a.DELETIONDATE,
+                    }).Where(a => a.DELETIONDATE == null).ToListAsync();
+
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+                }
+                else
+                {
+                    if (test.IDPROJET != 0)
+                    {
+                        var user = await db.SI_PROJETS.Select(a => new
+                        {
+                            PROJET = a.PROJET,
+                            ID = a.ID,
+                            DELETIONDATE = a.DELETIONDATE,
+                        }).Where(a => a.DELETIONDATE == null && a.ID == test.IDPROJET).ToListAsync();
+
+                        return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+                    }
+                    else
+                    {
+                        var user = (from usr in db.SI_PROJETS
+                                    join prj in db.SI_MAPUSERPROJET on usr.ID equals prj.IDPROJET
+                                    where prj.IDUS == test.ID && usr.DELETIONDATE == null
+                                    select new
+                                    {
+                                        PROJET = usr.PROJET,
+                                        ID = usr.ID,
+                                        DELETIONDATE = usr.DELETIONDATE,
+                                    }).ToList();
+
+                        return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
         }
 
         //ETAT MANDAT PROJET//
@@ -452,7 +478,7 @@ namespace apptab.Controllers
                 {
                     user.ETAT = 2;
                     user.DATEANNUL = DateTime.Now;
-                    //user.DATECRE = null;
+                    user.IDUSERANNUL = exist.ID;
                     db.SaveChanges();
 
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Annulation avec succès. " }, settings));

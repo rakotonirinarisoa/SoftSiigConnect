@@ -10,7 +10,7 @@
     </div>
 </div>
 
-<div class="table-responsive">
+<div class="table-responsive tbodyDiv">
     <table class="table table-hover table-striped" id="idTable">
         <thead class="thead-green">
             <tr>
@@ -25,12 +25,4 @@
 </div>
 
 <!-- USer.js -->
-<script src="~/Assets/js/PROSOA.js"></script>
-
-<script>
-    $(document).ready(function () {
-        $("#idTable").DataTable()
-    });
-</script>
-
-
+<script src="~/Assets/js/PROSOA.js?version=@Session["VERSION"]" ></script>

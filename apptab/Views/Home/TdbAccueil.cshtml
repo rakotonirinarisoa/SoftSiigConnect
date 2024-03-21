@@ -1,138 +1,263 @@
 ﻿@{
     ViewBag.Title = "SOFT - SIIGFP CONNECT";
-    ViewData["Controller"] = "SOFT - SIIGFP CONNECT";
+    //ViewData["Controller"] = "SOFT - SIIGFP CONNECT";
     /*Layout = "~/Views/Shared/_Layout.cshtml";*/
 }
 
-@*<script src="~/Assets/js/InfoMandat.js"></script>*@
+<style>
+    .inner {
+        color: black;
+    }
+    /*.rfrele {
+        background: no-repeat center url('../img/bg.jpg');
+        background-size: cover;
+    }*/
+</style>
 
-@*<link rel="stylesheet" href="~/Scripts/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />*@
-
-<!--<link href="~/Assets/otherCSS/jquery.dataTables.min.css" rel="stylesheet" />
-<link href="~/Assets/otherCSS/responsive.dataTables.min.css" rel="stylesheet" />
-<link href="~/Assets/otherCSS/buttons.dataTables.min.css" rel="stylesheet" />
-<link href="~/Assets/otherCSS/colReorder.dataTables.min.css" rel="stylesheet" />
-
-<script src="~/Assets/otherJs/jquery-3.7.0.js"></script>
-<script src="~/Assets/otherJs/jquery.dataTables.min.js"></script>
-<script src="~/Assets/otherJs/dataTables.responsive.min.js"></script>
-<script src="~/Assets/otherJs/dataTables.buttons.min.js"></script>
-<script src="~/Assets/otherJs/buttons.colVis.min.js"></script>
-<script src="~/Assets/otherJs/dataTables.colReorder.min.js"></script>-->
-
-@*<script src="~/Assets/admlte/plugins/datatables/jquery.dataTables.js"></script>
-    <script src="~/Assets/admlte/plugins/datatables/jquery.dataTables.min.js"></script>*@
-
-<!--<div class="form-row">
-    <div class="input-group mb-3 col">
-        <div class="input-group-prepend custom-label">
-            <span class="input-group-text text-bold" id="inputGroup-sizing-default">PROJET</span>
-        </div>
-        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="proj" data-id="proj-list" disabled="@((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Autre)">
-        </select>
-    </div>
-</div>
-<div class="form-row">
-    <div class="input-group mb-3 col">
-        <div class="input-group-prepend custom-label">
-            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Date début</span>
-        </div>
-        <input type="date" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="dateD">
-    </div>
-    <div class="input-group mb-3 col">
-        <div class="input-group-prepend custom-label">
-            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Date fin</span>
-        </div>
-        <input type="date" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="dateF">
-    </div>
-</div>
-<div class="form-row">
-    <div class="input-group mb-3 col">
-        <div class="input-group-prepend custom-label">
-            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Etat</span>
-        </div>
-        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="stat" data-id="stat-list">
-            <option value="0">Tous</option>
-            <option value="1">Attente validation</option>
-            <option value="2">Validée</option>
-            <option value="3">Annulée</option>
-            <option value="4">Traitée SIIGFP</option>
-        </select>
-    </div>
-</div>
-
-<div class="form-row mb-3">
-    <div class="input-group mb-3 col">
-        <div class="btn btn-flat bg-gradient-success col-12" data-action="SearchPROJET">
-            <i class="fa fa-search"></i> Filtrer
-        </div>
-    </div>
-</div>
-
-<div class="table-responsive mb-3"--> @*style="max-height: calc(600px - 0.6rem * 2 );"*@ <!--tab="ordsec">
-    <table class="table table-hover table-striped table-bordered " display responsive nowrap" width="100%" id="tableRFR">
-        <thead style="position:sticky">
-            <tr class="thead-accueil1" style="white-space: nowrap;">-->
-                @*<td style="text-align:right">
-                        <input type="checkbox" />
-                    </td>*@
-                <!--<td style="font-weight:bold; text-align:center">Référence mandat</td>
-                <td style="font-weight: bold; text-align: center">Objet</td>
-                <td style="font-weight: bold; text-align: center">Titulaire</td>
-                <td style="font-weight: bold; text-align: center">Date mandat</td>
-                <td style="font-weight: bold; text-align: center">Compte bénéficiaire</td>
-                <td style="font-weight: bold; text-align: center">PCOP</td>
-                <td style="font-weight: bold; text-align: center">Montant</td>
-                <td style="font-weight: bold; text-align: center">Date DEF</td>
-                <td style="font-weight: bold; text-align: center">Date TEF</td>
-                <td style="font-weight: bold; text-align: center">Date BE</td>
-                <td style="font-weight: bold; text-align: center">Etat</td>
-                <td style="font-weight: bold; text-align: center"></td>
-                <td style="font-weight: bold; text-align: center"></td>
-            </tr>
-        </thead>
-        <tbody class="traitementPROJET">
-        </tbody>
-    </table>
-</div>-->
-
-@*<script>
-        new DataTable('#tableRFR', {
-            buttons: ['colvis'],
-            dom: 'Bfrtip',
-            fixedHeader: true
-        });
-    </script>*@
-
-<!-- Droit.js -->
-<!--<script src="~/Assets/js/InfoMandat.js"></script>
-<script src="~/Assets/js/utils.js"></script>
-
-<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="password-modal">
-    <div class="modal-dialog modal-fullscreen-sm-down" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title w-100">Pièces justificatives</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<h1>Mandats</h1>
+<div class="row">
+    <div class="col-lg-3 col-6" style="cursor:pointer" show-create-user-modal>
+        <a href="../Traitement/TraitementORDSECOTHER">
+            <div class="small-box tdbinitier">
+                <div class="inner">
+                    <h3 id="MandatT">0</h3>
+                    <p>Dépenses initées</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-exclamation"></i>
+                </div>
             </div>
-            <div class="modal-body">
-                <table class="table table-hover table-striped table-bordered" id="TBDMODAL">
-                    <thead style="position:sticky">
-                        <tr class="thead-green" style="white-space: nowrap;">
-                            <td style="font-weight:bold; text-align:center">Type</td>
-                            <td style="font-weight: bold; text-align: center">Numéro</td>
-                            <td style="font-weight: bold; text-align: center">Nombre exemplaire</td>
-                            <td style="font-weight: bold; text-align: center">Date</td>
-                            <td style="font-weight: bold; text-align: center">Montant</td>
-                        </tr>
-                    </thead>
-                    <tbody class="afb160MODAL"></tbody>
-                </table>
+        </a>
+    </div>
+    <div class="col-lg-3 col-6" style="cursor:pointer">
+        <a href="../Traitement/TraitementPROJET">
+            <div class="small-box tbdattente">
+                <div class="inner">
+                    <h3 id="MandatA">0</h3>
+                    <p>En attente tris par le RAF</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
             </div>
-        </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-6" style="cursor:pointer">
+        <a href="../Traitement/TraitementORDSEC">
+            <div class="small-box tdbvalider">
+                <div class="inner">
+                    <h3 id="MandatV">0</h3>
+                    <p>En attente validation ORDSEC</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-check"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-6" style="cursor:pointer">
+        <a href="../Traitement/TraitementSENDSIIGFP">
+            <div class="small-box tdblast">
+                <div class="inner">
+                    <h3 id="MandatTR">0</h3>
+                    <p>En attente transfert vers SIIGFP</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+            </div>
+        </a>
     </div>
 </div>
 
-<script src="~/Assets/js/TraitmandatModal.js"></script>-->
+<h1>Avances</h1>
+<div class="row">
+    <div class="col-lg-3 col-6" style="cursor:pointer" show-create-user-modal>
+        <a href="../TraitementAvance/TraitementORDSECOTHER">
+            <div class="small-box tdbinitier">
+                <div class="inner">
+                    <h3 id="MandatTA">0</h3>
+                    <p>Avances initiées</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-exclamation"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-6" style="cursor:pointer">
+        <a href="../TraitementAvance/TraitementPROJET">
+            <div class="small-box tbdattente">
+                <div class="inner">
+                    <h3 id="MandatAA">0</h3>
+                    <p>En attente tris par le RAF</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-6" style="cursor:pointer">
+        <a href="../TraitementAvance/TraitementORDSEC">
+            <div class="small-box tdbvalider">
+                <div class="inner">
+                    <h3 id="MandatVA">0</h3>
+                    <p>En attente validation ORDSEC</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-check"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-6" style="cursor:pointer">
+        <a href="../TraitementAvance/TraitementSENDSIIGFP">
+            <div class="small-box tdblast">
+                <div class="inner">
+                    <h3 id="MandatTRA">0</h3>
+                    <p>En attente transfert vers SIIGFP</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<h1>Justificatifs et Reversements</h1>
+<div class="row">
+    <div class="col-lg-3 col-6" style="cursor:pointer" show-create-user-modal>
+        <a href="../TraitementJustif/TraitementPROJET">
+            <div class="small-box tdbinitier">
+                <div class="inner">
+                    <h3 id="J0">0</h3>
+                    <p>Justificatifs en attente tris par le RAF</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-exclamation"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-6" style="cursor:pointer">
+        <a href="../TraitementJustif/TraitementORDSEC">
+            <div class="small-box tbdattente">
+                <div class="inner">
+                    <h3 id="J1">0</h3>
+                    <p>Justificatifs en attente validation par ORDSEC</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-6" style="cursor:pointer">
+        <a href="../TraitementRevers/TraitementPROJET">
+            <div class="small-box tdbvalider">
+                <div class="inner">
+                    <h3 id="J2">0</h3>
+                    <p>Reversements en attente tris par le RAF</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-exclamation"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-3 col-6" style="cursor:pointer">
+        <a href="../TraitementRevers/TraitementORDSEC">
+            <div class="small-box tdblast">
+                <div class="inner">
+                    <h3 id="J3">0</h3>
+                    <p>Reversements en attente validation par ORDSEC</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<h1>Paiements</h1>
+<div class="row">
+    @*<div class="col-lg-2 col-6" style="cursor:pointer" show-create-user-modal>
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3 id="PaieR">0</h3>
+                    <p>Paiement récupérés</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-list"></i>
+                </div>
+            </div>
+        </div>*@
+    <div class="col-lg-4 col-6" style="cursor:pointer" show-create-user-modal>
+        <a href="../Home/TeacherValidation">
+            <div class="small-box tbdattente">
+                <div class="inner">
+                    <h3 id="PaieR">0</h3>
+                    <p>Paiements en attente de validation</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+    @*<div class="col-lg-3 col-6" style="cursor:pointer">
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3 id="PaieA">0</h3>
+                    <p>Paiements rejetés</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+        </div>*@
+    <div class="col-lg-4 col-6" style="cursor:pointer">
+        <a href="../Home/BonPourPaiement">
+            <div class="small-box tdbvalider">
+                <div class="inner">
+                    <h3 id="PaieT">0</h3>
+                    <p>Paiements validés</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-check"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-4 col-6" style="cursor:pointer">
+        <a href="../Home/FValidation">
+            <div class="small-box tdblast">
+                <div class="inner">
+                    <h3 id="PaieV">0</h3>
+                    <p>Paiements finalisés</p>
+                </div>
+                <div class="icon">
+                    <i class="fas fa-check-double"></i>
+                </div>
+            </div>
+        </a>
+    </div>
+    @*<div class="col-lg-3 col-6" style="cursor:pointer">
+            <a href="#">
+                <div class="small-box bg-gradient-cyan">
+                    <div class="inner">
+                        <h3 id="PaieF">0</h3>
+                        <p>Fichier AFB  à récupérer</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-check-double"></i>
+                    </div>
+                </div>
+            </a>
+        </div>*@
+</div>
+
+<script src="~/Assets/js/AACUL.js?version=@Session["VERSION"]"></script>

@@ -1,5 +1,4 @@
-﻿using apptab;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -8,10 +7,6 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Threading.Tasks;
 using System.Data.Entity;
-using System.Text.RegularExpressions;
-using System.Security.Cryptography;
-using Newtonsoft.Json.Schema;
-using apptab.Data;
 using apptab.Models;
 
 namespace apptab.Controllers
@@ -208,7 +203,7 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            var Projet = db.SI_PROJETS.FirstOrDefault(a => a.ID == suser.IDPROJET && a.DELETIONDATE == null).ID;
+            var Projet = db.SI_PROJETS.FirstOrDefault(a => a.ID == societe.IDPROJET && a.DELETIONDATE == null).ID;
             var Soa = db.SI_SOAS.FirstOrDefault(a => a.ID == societe.IDSOA && a.DELETIONDATE == null).ID;
 
             var societeExist = db.SI_PROSOA.FirstOrDefault(a => a.IDPROJET == Projet && a.DELETIONDATE == null/* || a.IDSOA == Soa*/);
@@ -568,17 +563,17 @@ namespace apptab.Controllers
                 var ProjSoa = db.SI_PROSOA.Where(F_ProjetSoa => F_ProjetSoa.IDSOA == IDSOA && F_ProjetSoa.DELETIONDATE == null).Select(F_ProjetSoa => F_ProjetSoa.IDSOA).ToList();
                 if (SOA != null)
                 {
-                    //db.SI_SOAS.Remove(SOA);
                     SOA.DELETIONDATE = DateTime.Now;
                     if (ProjSoa != null)
                     {
                         foreach (var p in ProjSoa)
                         {
-                            var F_del = db.SI_PROSOA.Where(F_remSoa => F_remSoa.IDSOA == p).FirstOrDefault();
+                            var F_del = db.SI_PROSOA.Where(F_remSoa => F_remSoa.IDSOA == p && F_remSoa.DELETIONDATE == null).FirstOrDefault();
                             F_del.DELETIONDATE = DateTime.Now;
-                            //db.SI_PROSOA.Remove(F_del);
+                            db.SaveChanges();
                         }
                     }
+
                     var Hsoas = new HSI_SOAS()
                     {
                         IDPARENT = SOA.ID,
@@ -589,7 +584,7 @@ namespace apptab.Controllers
                     };
                     db.HSI_SOAS.Add(Hsoas);
                     db.SaveChanges();
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Suppression avec succès. " }, settings));
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Suppression avec succès." }, settings));
                 }
                 else
                 {
@@ -784,8 +779,8 @@ namespace apptab.Controllers
             }
         }
 
-        //Mailing//
-        public ActionResult MailCreate()
+        //MAILing//
+        public ActionResult MAILCreate()
         {
             ViewBag.Controller = "Paramétrage des mails (Notifications et Alertes)";
 
@@ -793,14 +788,15 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public ActionResult DetailsMail(SI_USERS suser)
+        public ActionResult DetailsMAIL(SI_USERS suser, int iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             try
             {
-                int crpt = exist.IDPROJET.Value;
+                int crpt = iProjet;
+
                 var crpto = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
                 if (crpto != null)
                 {
@@ -818,7 +814,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateMail(SI_USERS suser, SI_MAIL param)
+        public JsonResult UpdateMAIL(SI_USERS suser, SI_MAIL param, int iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -829,32 +825,67 @@ namespace apptab.Controllers
 
             bool MAILTE = new Data.Extension().TestMail(param.MAILTE);
             bool MAILTV = new Data.Extension().TestMail(param.MAILTV);
+            bool MAILSIIG = new Data.Extension().TestMail(param.MAILSIIG);
             bool MAILPI = new Data.Extension().TestMail(param.MAILPI);
             bool MAILPE = new Data.Extension().TestMail(param.MAILPE);
             bool MAILPV = new Data.Extension().TestMail(param.MAILPV);
             bool MAILPP = new Data.Extension().TestMail(param.MAILPP);
-            //bool MAILPB = new Extension().TestMail(param.MAILPB);
+            bool MAILREJET = new Data.Extension().TestMail(param.MAILREJET);
+            bool MAILREJETPAIE = new Data.Extension().TestMail(param.MAILREJETPAIE);
 
-            if (MAILTE == false || MAILTV == false
-                || MAILPI == false || MAILPE == false || MAILPV == false || MAILPP == false/* || MAILPB == false*/)
+            bool MAILTEA = new Data.Extension().TestMail(param.MAILTEA);
+            bool MAILTVA = new Data.Extension().TestMail(param.MAILTVA);
+            bool MAILSIIGA = new Data.Extension().TestMail(param.MAILSIIGA);
+            bool MAILREJETA = new Data.Extension().TestMail(param.MAILREJETA);
+
+            bool MAILJ0 = new Data.Extension().TestMail(param.MAILJ0);
+            bool MAILJ1 = new Data.Extension().TestMail(param.MAILJ1);
+            bool MAILJ2 = new Data.Extension().TestMail(param.MAILJ2);
+            bool MAILJ3 = new Data.Extension().TestMail(param.MAILJ3);
+            bool MAILREJETREV = new Data.Extension().TestMail(param.MAILREJETREV);
+            bool MAILREJETJUST = new Data.Extension().TestMail(param.MAILREJETJUST);
+
+            //bool MAILPB = new Extension().TestMAIL(param.MAILPB);
+
+            if (MAILTE == false || MAILTV == false || MAILSIIG == false || MAILTEA == false || MAILTVA == false || MAILSIIGA == false
+                || MAILREJET == false || MAILREJETPAIE == false || MAILREJETA == false
+                || MAILPI == false || MAILPE == false || MAILPV == false || MAILPP == false/* || MAILPB == false*/
+                || MAILJ0 == false || MAILJ1 == false || MAILJ2 == false || MAILJ3 == false || MAILREJETJUST == false || MAILREJETREV == false)
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'une des adresses mail renseignée n'est pas valide. " }, settings));
 
             try
             {
-                int IdS = exist.IDPROJET.Value;
+                int IdS = iProjet;
                 var SExist = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null);
 
                 if (SExist != null)
                 {
-                    if (SExist.MAILTE != param.MAILTE || SExist.MAILTV != param.MAILTV
+                    if (SExist.MAILTE != param.MAILTE || SExist.MAILTV != param.MAILTV || SExist.MAILSIIG != param.MAILSIIG || SExist.MAILTEA != param.MAILTEA || SExist.MAILTVA != param.MAILTVA || SExist.MAILSIIGA != param.MAILSIIGA
+                        || SExist.MAILREJET != param.MAILREJET || SExist.MAILREJETA != param.MAILREJETA
+                        || SExist.MAILJ0 != param.MAILJ0 || SExist.MAILJ1 != param.MAILJ1 || SExist.MAILJ3 != param.MAILJ3 || SExist.MAILJ2 != param.MAILJ2 || SExist.MAILREJETREV != param.MAILREJETREV || SExist.MAILREJETJUST != param.MAILREJETJUST
                         || SExist.MAILPI != param.MAILPI || SExist.MAILPE != param.MAILPE || SExist.MAILPV != param.MAILPV || SExist.MAILPP != param.MAILPP || SExist.MAILPB != param.MAILPB)
                     {
                         SExist.MAILTE = param.MAILTE;
                         SExist.MAILTV = param.MAILTV;
+                        SExist.MAILSIIG = param.MAILSIIG;
                         SExist.MAILPI = param.MAILPI;
                         SExist.MAILPE = param.MAILPE;
                         SExist.MAILPV = param.MAILPV;
                         SExist.MAILPP = param.MAILPP;
+                        SExist.MAILREJET = param.MAILREJET;
+                        SExist.MAILREJETPAIE = param.MAILREJETPAIE;
+
+                        SExist.MAILTEA = param.MAILTEA;
+                        SExist.MAILTVA = param.MAILTVA;
+                        SExist.MAILSIIGA = param.MAILSIIGA;
+                        SExist.MAILREJETA = param.MAILREJETA;
+
+                        SExist.MAILJ0 = param.MAILJ0;
+                        SExist.MAILJ1 = param.MAILJ1;
+                        SExist.MAILJ2 = param.MAILJ2;
+                        SExist.MAILJ3 = param.MAILJ3;
+                        SExist.MAILREJETJUST = param.MAILREJETJUST;
+                        SExist.MAILREJETREV = param.MAILREJETREV;
 
                         db.SaveChanges();
 
@@ -869,14 +900,29 @@ namespace apptab.Controllers
                         {
                             MAILTE = param.MAILTE,
                             MAILTV = param.MAILTV,
+                            MAILSIIG = param.MAILSIIG,
                             MAILPI = param.MAILPI,
                             MAILPE = param.MAILPE,
                             MAILPV = param.MAILPV,
                             MAILPP = param.MAILPP,
+                            MAILREJET = param.MAILREJET,
+                            MAILREJETPAIE = param.MAILREJETPAIE,
                             IDPROJET = IdS,
                             CREATIONDATE = DateTime.Now,
                             IDUSER = exist.ID,
-                            IDPARENT = SExist.ID
+                            IDPARENT = SExist.ID,
+
+                            MAILTEA = param.MAILTEA,
+                            MAILTVA = param.MAILTVA,
+                            MAILSIIGA = param.MAILSIIGA,
+                            MAILREJETA = param.MAILREJETA,
+
+                            MAILJ0 = param.MAILJ0,
+                            MAILJ1 = param.MAILJ1,
+                            MAILJ2 = param.MAILJ2,
+                            MAILJ3 = param.MAILJ3,
+                            MAILREJETREV = param.MAILREJETREV,
+                            MAILREJETJUST = param.MAILREJETJUST,
                         };
                         db.HSI_MAIL.Add(newElemH);
                         db.SaveChanges();
@@ -890,32 +936,64 @@ namespace apptab.Controllers
                     {
                         MAILTE = param.MAILTE,
                         MAILTV = param.MAILTV,
+                        MAILSIIG = param.MAILSIIG,
                         MAILPI = param.MAILPI,
                         MAILPE = param.MAILPE,
                         MAILPV = param.MAILPV,
                         MAILPP = param.MAILPP,
+                        MAILREJET = param.MAILREJET,
+                        MAILREJETPAIE = param.MAILREJETPAIE,
                         IDPROJET = IdS,
                         CREATIONDATE = DateTime.Now,
-                        IDUSER = exist.ID
+                        IDUSER = exist.ID,
+
+                        MAILTEA = param.MAILTEA,
+                        MAILTVA = param.MAILTVA,
+                        MAILSIIGA = param.MAILSIIGA,
+                        MAILREJETA = param.MAILREJETA,
+
+                        MAILJ0 = param.MAILJ0,
+                        MAILJ1 = param.MAILJ1,
+                        MAILJ2 = param.MAILJ2,
+                        MAILJ3 = param.MAILJ3,
+                        MAILREJETREV = param.MAILREJETREV,
+                        MAILREJETJUST = param.MAILREJETJUST,
                     };
 
                     db.SI_MAIL.Add(newPara);
                     db.SaveChanges();
 
-                    var isElemH = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.MAILTE == param.MAILTE && a.MAILTV == param.MAILTV && a.MAILPI == param.MAILPI
-                    && a.MAILPE == param.MAILPE && a.MAILPV == param.MAILPV && a.MAILPP == param.MAILPP && a.DELETIONDATE == null);
+                    var isElemH = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.MAILTE == param.MAILTE && a.MAILTV == param.MAILTV && a.MAILSIIG == param.MAILSIIG && a.MAILREJET == param.MAILREJET
+                    && a.MAILTEA == param.MAILTEA && a.MAILTVA == param.MAILTVA && a.MAILSIIGA == param.MAILSIIGA && a.MAILREJETA == param.MAILREJETA
+                    && a.MAILJ0 == param.MAILJ0 && a.MAILJ1 == param.MAILJ1 && a.MAILJ2 == param.MAILJ2 && a.MAILJ3 == param.MAILJ3 && a.MAILREJETREV == param.MAILREJETREV && a.MAILREJETJUST == param.MAILREJETJUST
+                    && a.MAILPE == param.MAILPE && a.MAILPV == param.MAILPV && a.MAILPP == param.MAILPP && a.MAILPI == param.MAILPI && a.DELETIONDATE == null);
                     var newElemH = new HSI_MAIL()
                     {
                         MAILTE = isElemH.MAILTE,
                         MAILTV = isElemH.MAILTV,
+                        MAILSIIG = isElemH.MAILSIIG,
                         MAILPI = isElemH.MAILPI,
                         MAILPE = isElemH.MAILPE,
                         MAILPV = isElemH.MAILPV,
                         MAILPP = isElemH.MAILPP,
+                        MAILREJET = param.MAILREJET,
+                        MAILREJETPAIE = param.MAILREJETPAIE,
                         IDPROJET = IdS,
                         CREATIONDATE = isElemH.CREATIONDATE,
                         IDUSER = isElemH.IDUSER,
-                        IDPARENT = isElemH.ID
+                        IDPARENT = isElemH.ID,
+
+                        MAILTEA = param.MAILTEA,
+                        MAILTVA = param.MAILTVA,
+                        MAILSIIGA = param.MAILSIIGA,
+                        MAILREJETA = param.MAILREJETA,
+
+                        MAILJ0 = param.MAILJ0,
+                        MAILJ1 = param.MAILJ1,
+                        MAILJ2 = param.MAILJ2,
+                        MAILJ3 = param.MAILJ3,
+                        MAILREJETREV = param.MAILREJETREV,
+                        MAILREJETJUST = param.MAILREJETJUST,
                     };
                     db.HSI_MAIL.Add(newElemH);
                     db.SaveChanges();
@@ -938,14 +1016,15 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public ActionResult DetailsDelais(SI_USERS suser)
+        public ActionResult DetailsDelais(SI_USERS suser, int iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             try
             {
-                int crpt = exist.IDPROJET.Value;
+                int crpt = iProjet;
+
                 var crpto = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
                 if (crpto != null)
                 {
@@ -963,27 +1042,35 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateDelais(SI_USERS suser, SI_DELAISTRAITEMENT param)
+        public JsonResult UpdateDelais(SI_USERS suser, SI_DELAISTRAITEMENT param, int iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             try
             {
-                int IdS = exist.IDPROJET.Value;
+                int IdS = iProjet;
                 var SExist = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null);
 
                 if (SExist != null)
                 {
-                    if (SExist.DELTV != param.DELTV || SExist.DELSIIGFP != param.DELSIIGFP
+                    if (SExist.DELTV != param.DELTV || SExist.DELSIIGFP != param.DELSIIGFP || SExist.DELENVOISIIGFP != param.DELENVOISIIGFP || SExist.DELRAF != param.DELRAF
+                        || SExist.DELAV != param.DELAV || SExist.DELASIIGFP != param.DELASIIGFP || SExist.DELAENVOISIIGFP != param.DELAENVOISIIGFP || SExist.DELARAF != param.DELARAF
                         || SExist.DELPE != param.DELPE || SExist.DELPV != param.DELPV || SExist.DELPP != param.DELPP || SExist.DELPB != param.DELPB)
                     {
+                        SExist.DELRAF = param.DELRAF;//Tris par le RAF
                         SExist.DELTV = param.DELTV;//Validation mandat
+                        SExist.DELENVOISIIGFP = param.DELENVOISIIGFP;//Transfert SIIGFP
                         SExist.DELSIIGFP = param.DELSIIGFP;//Traitement SIIGFP
                         SExist.DELPE = param.DELPE;//ENVOI POUR VALIDATION PAIEMENT
                         SExist.DELPV = param.DELPV;//VALIDATION PAIEMENT
                         SExist.DELPP = param.DELPP;//PAIEMENT
                         SExist.DELPB = param.DELPB;//TRAITEMENT BANQUE
+
+                        SExist.DELARAF = param.DELARAF;//Tris par le RAF AVANCE
+                        SExist.DELAV = param.DELAV;//Validation mandat AVANCE
+                        SExist.DELAENVOISIIGFP = param.DELAENVOISIIGFP;//Transfert SIIGFP AVANCE
+                        SExist.DELASIIGFP = param.DELASIIGFP;//Traitement SIIGFP AVANCE
 
                         db.SaveChanges();
 
@@ -996,7 +1083,9 @@ namespace apptab.Controllers
 
                         var newElemH = new HSI_DELAISTRAITEMENT()
                         {
+                            DELRAF = param.DELRAF,
                             DELTV = param.DELTV,
+                            DELENVOISIIGFP = param.DELENVOISIIGFP,
                             DELSIIGFP = param.DELSIIGFP,
                             DELPE = param.DELPE,
                             DELPV = param.DELPV,
@@ -1005,7 +1094,12 @@ namespace apptab.Controllers
                             IDPROJET = IdS,
                             CREATIONDATE = DateTime.Now,
                             IDUSER = exist.ID,
-                            IDPARENT = SExist.ID
+                            IDPARENT = SExist.ID,
+
+                            DELARAF = param.DELARAF,
+                            DELAV = param.DELAV,
+                            DELAENVOISIIGFP = param.DELAENVOISIIGFP,
+                            DELASIIGFP = param.DELASIIGFP,
                         };
                         db.HSI_DELAISTRAITEMENT.Add(newElemH);
                         db.SaveChanges();
@@ -1017,7 +1111,9 @@ namespace apptab.Controllers
                 {
                     var newPara = new SI_DELAISTRAITEMENT()
                     {
+                        DELRAF = param.DELRAF,
                         DELTV = param.DELTV,
+                        DELENVOISIIGFP = param.DELENVOISIIGFP,
                         DELSIIGFP = param.DELSIIGFP,
                         DELPE = param.DELPE,
                         DELPV = param.DELPV,
@@ -1025,7 +1121,12 @@ namespace apptab.Controllers
                         DELPB = param.DELPB,
                         IDPROJET = IdS,
                         CREATIONDATE = DateTime.Now,
-                        IDUSER = exist.ID
+                        IDUSER = exist.ID,
+
+                        DELARAF = param.DELARAF,
+                        DELAV = param.DELAV,
+                        DELAENVOISIIGFP = param.DELAENVOISIIGFP,
+                        DELASIIGFP = param.DELASIIGFP,
                     };
 
                     db.SI_DELAISTRAITEMENT.Add(newPara);
@@ -1035,7 +1136,9 @@ namespace apptab.Controllers
                     && a.DELPV == param.DELPV && a.DELPP == param.DELPP && a.DELPB == param.DELPB && a.DELETIONDATE == null);
                     var newElemH = new HSI_DELAISTRAITEMENT()
                     {
+                        DELRAF = param.DELRAF,
                         DELTV = isElemH.DELTV,
+                        DELENVOISIIGFP = isElemH.DELENVOISIIGFP,
                         DELSIIGFP = isElemH.DELSIIGFP,
                         DELPE = isElemH.DELPE,
                         DELPV = isElemH.DELPV,
@@ -1044,7 +1147,12 @@ namespace apptab.Controllers
                         IDPROJET = IdS,
                         CREATIONDATE = isElemH.CREATIONDATE,
                         IDUSER = isElemH.IDUSER,
-                        IDPARENT = isElemH.ID
+                        IDPARENT = isElemH.ID,
+
+                        DELARAF = param.DELARAF,
+                        DELAV = param.DELAV,
+                        DELAENVOISIIGFP = param.DELAENVOISIIGFP,
+                        DELASIIGFP = param.DELASIIGFP,
                     };
                     db.HSI_DELAISTRAITEMENT.Add(newElemH);
                     db.SaveChanges();
@@ -1103,16 +1211,49 @@ namespace apptab.Controllers
 
                 if (SExist != null)
                 {
-                    if (SExist.MT0 != param.MT0 || SExist.MT1 != param.MT1 || SExist.MT2 != param.MT2
-                        || SExist.MP1 != param.MP1 || SExist.MP2 != param.MP2 || SExist.MP3 != param.MP3 || SExist.MP4 != param.MP4)
+                    if (SExist.MTNON != param.MTNON || SExist.MT0 != param.MT0 || SExist.MT1 != param.MT1 || SExist.MT2 != param.MT2
+                        || SExist.MD0 != param.MD0 || SExist.MD1 != param.MD1 || SExist.MD2 != param.MD2 || SExist.MD3 != param.MD3
+                        || SExist.MOP0 != param.MOP0 || SExist.MOP1 != param.MOP1 || SExist.MOP2 != param.MOP2
+                        || SExist.MP1 != param.MP1 || SExist.MP2 != param.MP2 || SExist.MP3 != param.MP3 || SExist.MP4 != param.MP4
+                        || SExist.TDB0 != param.TDB0 || SExist.TDB1 != param.TDB1 || SExist.TDB2 != param.TDB2 || SExist.TDB3 != param.TDB3 || SExist.TDB4 != param.TDB4
+                        || SExist.TDB5 != param.TDB5 || SExist.TDB6 != param.TDB6 || SExist.TDB7 != param.TDB7 || SExist.TDB8 != param.TDB8
+                        || SExist.J0 != param.J0 || SExist.J1 != param.J1 || SExist.J2 != param.J2 || SExist.J3 != param.J3 || SExist.JR != param.JR || SExist.JRA != param.JRA)
                     {
+                        SExist.MTNON = param.MTNON;
                         SExist.MT0 = param.MT0;
                         SExist.MT1 = param.MT1;
+                        SExist.MT2 = param.MT2;
                         SExist.MT2 = param.MT2;
                         SExist.MP1 = param.MP1;
                         SExist.MP2 = param.MP2;
                         SExist.MP3 = param.MP3;
                         SExist.MP4 = param.MP4;
+
+                        SExist.MD0 = param.MD0;
+                        SExist.MD1 = param.MD1;
+                        SExist.MD2 = param.MD2;
+                        SExist.MD3 = param.MD3;
+
+                        SExist.MOP0 = param.MOP0;
+                        SExist.MOP1 = param.MOP1;
+                        SExist.MOP2 = param.MOP2;
+
+                        SExist.TDB0 = param.TDB0;
+                        SExist.TDB1 = param.TDB1;
+                        SExist.TDB2 = param.TDB2;
+                        SExist.TDB3 = param.TDB3;
+                        SExist.TDB4 = param.TDB4;
+                        SExist.TDB5 = param.TDB5;
+                        SExist.TDB6 = param.TDB6;
+                        SExist.TDB7 = param.TDB7;
+                        SExist.TDB8 = param.TDB8;
+
+                        SExist.J0 = param.J0;
+                        SExist.J1 = param.J1;
+                        SExist.J2 = param.J2;
+                        SExist.J3 = param.J3;
+                        SExist.JR = param.JR;
+                        SExist.JRA = param.JRA;
 
                         db.SaveChanges();
                     }
@@ -1123,6 +1264,7 @@ namespace apptab.Controllers
                 {
                     var newPara = new SI_MENU()
                     {
+                        MTNON = param.MTNON,
                         MT0 = param.MT0,
                         MT1 = param.MT1,
                         MT2 = param.MT2,
@@ -1130,6 +1272,33 @@ namespace apptab.Controllers
                         MP2 = param.MP2,
                         MP3 = param.MP3,
                         MP4 = param.MP4,
+
+                        MD0 = param.MD0,
+                        MD1 = param.MD1,
+                        MD2 = param.MD2,
+                        MD3 = param.MD3,
+
+                        MOP0 = param.MOP0,
+                        MOP1 = param.MOP1,
+                        MOP2 = param.MOP2,
+
+                        TDB0 = param.TDB0,
+                        TDB1 = param.TDB1,
+                        TDB2 = param.TDB2,
+                        TDB3 = param.TDB3,
+                        TDB4 = param.TDB4,
+                        TDB5 = param.TDB5,
+                        TDB6 = param.TDB6,
+                        TDB7 = param.TDB7,
+                        TDB8 = param.TDB8,
+
+                        J0 = param.J0,
+                        J1 = param.J1,
+                        J2 = param.J2,
+                        J3 = param.J3,
+                        JR = param.JR,
+                        JRA = param.JRA,
+
                         CREATIONDATE = DateTime.Now
                     };
 

@@ -1,7 +1,4 @@
-﻿let User;
-let Origin;
-
-$(document).ready(() => {
+﻿$(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
@@ -10,8 +7,6 @@ $(document).ready(() => {
     GetListSociete();
 });
 
-
-////let urlOrigin = "http://softwell.cloud/OPAVI";
 function GetListSociete() {
     let formData = new FormData();
 
@@ -27,9 +22,14 @@ function GetListSociete() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -90,6 +90,12 @@ $(`[data-action="AddnewSociete"]`).click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -111,7 +117,7 @@ $(`[data-action="AddnewSociete"]`).click(function () {
 });
 function deleteSoa(id) {
     //alert("eto");
-    if (!confirm("Etes-vous sûr de vouloir supprimer le mappage du PROJET ?")) return;
+    if (!confirm("Voulez-vous supprimer le SOA ?")) return;
     let formData = new FormData();
 
     formData.append("suser.LOGIN", User.LOGIN);
@@ -128,9 +134,14 @@ function deleteSoa(id) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -140,8 +151,10 @@ function deleteSoa(id) {
                 alert(Datas.msg);
                 window.location = window.location.origin;
                 return;
+            } if (Datas.type == "success") {
+                alert(Datas.msg);
             }
-
+          
             $(`[data-societeId="${id}"]`).remove();
         },
         error: function () {

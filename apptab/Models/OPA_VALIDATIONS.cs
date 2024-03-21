@@ -1,4 +1,4 @@
-namespace apptab.Models
+﻿namespace apptab.Models
 {
     using System;
     using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace apptab.Models
     {
         public int ID { get; set; }
 
-        public decimal? IDREGLEMENT { get; set; }
+        public string IDREGLEMENT { get; set; }
 
         public int? ETAT { get; set; }
 
@@ -33,7 +33,8 @@ namespace apptab.Models
         [StringLength(50)]
         public string Journal { get; set; }
 
-        public string dateOrdre { get; set; }
+        [Column(TypeName = "smalldatetime")]
+        public DateTime? dateOrdre { get; set; }
 
         [StringLength(50)]
         public string NoPiece { get; set; }
@@ -93,5 +94,22 @@ namespace apptab.Models
 
         [StringLength(10)]
         public string Devise { get; set; }
+
+        public int? IDUSCREA { get; set; }
+
+        public int? IDUSSEND { get; set; }
+
+        public int? IDUSVAL { get; set; }
+
+        public int? IDUSANNUL { get; set; }
+
+        public bool? AVANCE { get; set; }
+
+        [Column(TypeName = "numeric")]
+        public decimal? MONTANT { get; set; }
+
+        public string NUMEROLIQUIDATION { get; set; }
+        [NotMapped]
+        public bool? isLATE { get; set; }
     }
 }

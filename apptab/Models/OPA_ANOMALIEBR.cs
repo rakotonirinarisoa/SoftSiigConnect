@@ -1,4 +1,4 @@
-namespace apptab
+namespace apptab.Models
 {
     using System;
     using System.Collections.Generic;
@@ -8,7 +8,9 @@ namespace apptab
 
     public partial class OPA_ANOMALIEBR
     {
-        [Key]
+        public int ID { get; set; }
+
+        [Required]
         [StringLength(100)]
         public string NUM { get; set; }
 

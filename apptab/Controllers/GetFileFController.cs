@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.Sockets;
-using System.Runtime;
-using System.Web;
 using System.Web.Mvc;
-using apptab;
 using Newtonsoft.Json;
 
 namespace apptab.Controllers

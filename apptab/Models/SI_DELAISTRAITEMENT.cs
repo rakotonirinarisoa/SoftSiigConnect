@@ -1,10 +1,7 @@
-namespace apptab
+﻿namespace apptab
 {
     using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
     public partial class SI_DELAISTRAITEMENT
     {
@@ -15,9 +12,21 @@ namespace apptab
         [Column(TypeName = "smalldatetime")]
         public DateTime? DELETIONDATE { get; set; }
 
+        public int? DELRAF { get; set; }
+
         public int? DELTV { get; set; }
 
+        public int? DELENVOISIIGFP { get; set; }
+
         public int? DELSIIGFP { get; set; }
+
+        public int? DELARAF { get; set; }
+
+        public int? DELAV { get; set; }
+
+        public int? DELAENVOISIIGFP { get; set; }
+
+        public int? DELASIIGFP { get; set; }
 
         public int? DELPE { get; set; }
 

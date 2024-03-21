@@ -5,6 +5,7 @@
     /*Layout = "~/Views/Shared/_Layout.cshtml";*/
 }
 
+
 <div class="form-row">
     <div class="input-group mb-3 col">
         <div class="input-group-prepend custom-label">
@@ -70,7 +71,9 @@
 </div>
 
 <!-- USer.js -->
-<script src="~/Assets/js/RoleDetails.js"></script>
+<script src="~/Assets/js/RoleDetails.js?version=@Session["VERSION"]"></script>
+<script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
+<script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
 
 <script>
     const togglePassword = document

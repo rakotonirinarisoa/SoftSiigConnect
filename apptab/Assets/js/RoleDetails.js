@@ -1,8 +1,4 @@
-﻿/// <reference path="mappaguserdetails.js" />
-let User;
-let Origin;
-
-$(document).ready(() => {
+﻿$(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
@@ -13,7 +9,6 @@ $(document).ready(() => {
     GetListProjet();
 });
 
-//let urlOrigin = "http://softwell.cloud/OPAVI";
 function GetListRole() {
     let formData = new FormData();
 
@@ -29,9 +24,14 @@ function GetListRole() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -76,9 +76,14 @@ function GetListProjet() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -102,7 +107,6 @@ function GetListProjet() {
             GetUsers();
         },
         error: function (e) {
-            console.log(e);
             alert("Problème de connexion. ");
         }
     })
@@ -125,9 +129,14 @@ function GetUsers() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -138,12 +147,12 @@ function GetUsers() {
                 window.location = window.location.origin;
                 return;
             }
-            
+
             $("#Login").val(Datas.data.LOGIN);
-            
+
             $("#Role").val(`${Datas.data.ROLE}`);
 
-            $("#PROJET").val([...Datas.data.PROJET]).change();
+            $("#PROJET").val([...Datas.data.PROJET]).trigger('change');
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -179,9 +188,14 @@ function GetUsers() {
 //        cache: false,
 //        contentType: false,
 //        processData: false,
+// beforeSend: function () {
+//     loader.removeClass('display-none');
+// },
+// complete: function () {
+//     loader.addClass('display-none');
+// },
 //        success: function (result) {
 //            var Datas = JSON.parse(result);
-//            console.log(Datas);
 
 //            if (Datas.type == "error") {
 //                alert(Datas.msg);
@@ -207,7 +221,7 @@ function GetUsers() {
 $(`[data-action="UpdateUser"]`).click(function () {
     let newpwd = $(`#MDP`).val();
     let newpwdConf = $(`#MDPC`).val();
-    if(newpwd != newpwdConf){
+    if (newpwd != newpwdConf) {
         alert("Les mots de passe ne correspondent pas. ");
         return;
     }
@@ -233,7 +247,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("UserId", getUrlParameter("UserId"));
 
     formData.append("listProjet", $("#PROJET").val());
-    
+
     $.ajax({
         type: "POST",
         url: Origin + '/User/UpdateUser',
@@ -241,6 +255,12 @@ $(`[data-action="UpdateUser"]`).click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 

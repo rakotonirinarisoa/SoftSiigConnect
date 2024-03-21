@@ -1,20 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace apptab.Extension
 {
     public class DataListTompro
     {
         public decimal No { get; set; }
-        public string DateOrdre { get; set; }
+        public DateTime dateOrdre { get; set; }
         public string NoPiece { get; set; }
         public string Compte { get; set; }
         public string Libelle { get; set; }
         public decimal Debit { get; set; }
         public decimal Credit { get; set; }
+        public decimal Montant { get; set; }
         public decimal MontantDevise { get; set; }
+        public string Auxi { get; set; }
         public string Mon { get; set; }
         public string Rang { get; set; }
         public string Poste { get; set; }
@@ -24,5 +23,6 @@ namespace apptab.Extension
         public string Journal { get; set; }
         public string Marche { get; set; }
         public string Statut { get; set; }
+        public bool Avance { get; set; }
     }
 }

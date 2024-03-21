@@ -1,9 +1,9 @@
-﻿@{ 
+﻿@{
     Layout = null;
 }
 
 <!DOCTYPE html>
-<html lang="fr-fr">
+<html lang="fr-fr" style="overflow: hidden;">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,9 +17,11 @@
     <link rel="stylesheet" href="~/Assets/admlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="~/Assets/admlte/dist/css/adminlte.min.css">
-    <link href="~/Assets/css/style.css" rel="stylesheet" />
+    <link href="~/Assets/css/style.css" rel="stylesheet" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Assets/css/loader.css" asp-append-version="true" />
 </head>
-<body class="hold-transition login-page">
+
+<body class="hold-transition login-page" scroll="no" style="overflow: hidden">
     <div id="loader" class="lds-dual-ring display-none overlay"></div>
     <div class="auth-login">
         <div class="login-box">
@@ -54,7 +56,13 @@
                         <div class="row">
                             <!-- /.col -->
                             <div class="col-12">
-                                <div class="btn bg-gradient-olive btn-block btn-flat" login_connect @*id="btnCon"*@>Se connecter</div>
+                                <div class="button type--B" style="cursor: pointer;" @*id="btnCon"*@ login_connect>
+                                    <div class="button__line"></div>
+                                    <div class="button__line"></div>
+                                    <span class="button__text">Se connecter</span>
+                                    <div class="button__drow1"></div>
+                                    <div class="button__drow2"></div>
+                                </div>
                             </div>
                             <!-- /.col -->
                         </div>
@@ -74,7 +82,7 @@
         <!-- /.login-box -->
         <!-- jQuery -->
     </div>
-        
+
     <script src="~/Assets/admlte/plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
     <script src="~/Assets/admlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -82,20 +90,8 @@
     <script src="~/Assets/admlte/dist/js/adminlte.min.js"></script>
 
     <!-- Login.js -->
-    <script src="~/Assets/js/Login.js"></script>
-
-    @*<script type="text/javascript">
-            function googleTranslateElementInit() {
-                new google.translate.TranslateElement({ pageLanguage: 'en' }, 'login_user');
-                new google.translate.TranslateElement({ pageLanguage: 'en' }, 'login_mdp');
-                /*new google.translate.TranslateElement({ pageLanguage: 'en' }, 'btnCon');*/
-            }
-        </script>
-
-        <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>*@
-
+    <script src="~/Assets/js/Login.js" asp-append-version="true"></script>
 </body>
-
 </html>
 
 

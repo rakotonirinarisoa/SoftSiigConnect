@@ -1,7 +1,4 @@
-﻿let User;
-let Origin;
-
-$(document).ready(() => {
+﻿$(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
@@ -10,7 +7,6 @@ $(document).ready(() => {
     GetListSociete();
 });
 
-////let urlOrigin = "http://softwell.cloud/OPAVI";
 function GetListSociete() {
     let formData = new FormData();
 
@@ -21,14 +17,19 @@ function GetListSociete() {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/SuperAdmin/FillTable',
+        url: Origin + '/Projects/GetAllProjects',
         data: formData,
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -100,11 +101,17 @@ $(`[data-action="AddnewSociete"]`).click(function () {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/SuperAdmin/AddSociete',
+        url: Origin + '/Projects/AddProject',
         data: formData,
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -115,7 +122,7 @@ $(`[data-action="AddnewSociete"]`).click(function () {
             }
             if (Datas.type == "success") {
                 alert(Datas.msg);
-                window.location = Origin + "/SuperAdmin/ProjetList";
+                window.location = Origin + "/Projects/AllProjects";
             }
             if (Datas.type == "login") {
                 alert(Datas.msg);
@@ -128,7 +135,7 @@ $(`[data-action="AddnewSociete"]`).click(function () {
 });
 
 function updateProject(id) {
-    window.location = Origin + "/Projects/Details?id=" + id;
+    window.location = Origin + "/Projects/ProjectDetails?id=" + id;
 }
 
 function deleteProject(id) {
@@ -142,15 +149,20 @@ function deleteProject(id) {
 
     $.ajax({
         type: 'POST',
-        url: Origin + '/Projects/Delete',
+        url: Origin + '/Projects/DeleteProject',
         data: formData,
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
-            console.log(Datas);
             alert(Datas.msg);
             $(`[data-project-id="${id}"]`).remove();
         }

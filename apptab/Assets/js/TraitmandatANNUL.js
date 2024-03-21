@@ -18,6 +18,7 @@ function modalREJET(id) {
     formData.append("suser.IDPROJET", User.IDPROJET);
 
     formData.append("IdF", clickedANN);
+    formData.append("iProjet", $("#proj").val());
 
     $.ajax({
         type: "POST",
@@ -26,9 +27,14 @@ function modalREJET(id) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -53,7 +59,7 @@ function modalREJET(id) {
             $(`[data-id="MOTIF-list"]`).append(code);
         },
         error: function () {
-            alert("Problème de connexion. ");
+            alert("Problï¿½me de connexion. ");
         }
     });
 
@@ -65,7 +71,7 @@ function modalREJET(id) {
 $(`[data-action="ANNULMANDAT"]`).click(function () {
     let user = $("#Motif").val();
     if (!user) {
-        alert("Veuillez renseigner le motf du rejet avant l'annulation du mandat. ");
+        alert("Veuillez renseigner le motif du rejet avant l'annulation du mandat. ");
         return;
     }
 
@@ -79,6 +85,7 @@ $(`[data-action="ANNULMANDAT"]`).click(function () {
     formData.append("IdF", clickedANN);
     formData.append("Comm", $(`#Commentaire`).val());
     formData.append("Motif", user);
+    formData.append("iProjet", $("#proj").val());
 
     $.ajax({
         type: "POST",
@@ -87,25 +94,32 @@ $(`[data-action="ANNULMANDAT"]`).click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
-                return;
-            }
-            if (Datas.type == "success") {
-                alert(Datas.msg);
-
-                $(`[compteG-id="${clickedANN}"]`).remove();
-                
-                $("#annuler-modal").modal("toggle");
                 
                 return;
             }
             if (Datas.type == "login") {
                 alert(Datas.msg);
                 window.location = window.location.origin;
+            }
+            if (Datas.type == "success") {
+                alert(Datas.msg);
+
+                $(`[compteG-id="${clickedANN}"]`).remove();
+
+                $("#annuler-modal").modal("toggle");
+
+                return;
             }
         },
     });

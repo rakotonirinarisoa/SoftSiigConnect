@@ -1,19 +1,14 @@
-﻿let User;
-let Origin;
-
-$(document).ready(async() => {
+﻿$(document).ready(async () => {
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
 
     $(`[data-id="username"]`).text(User.LOGIN);
-    
+
     await GetListProjet();
     await GetUsers(undefined);
     await GetListMANDATP();
 });
-//let urlOrigin = Origin;
-//let urlOrigin = "http://softwell.cloud/OPAVI";
 async function GetUsers(id) {
     let formData = new FormData();
 
@@ -29,12 +24,18 @@ async function GetUsers(id) {
 
     $.ajax({
         type: "POST",
-        async : true,
+        async: true,
         url: Origin + '/Etat/DetailsInfoPro',
         data: formData,
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 
@@ -72,9 +73,14 @@ async function GetListProjet() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -97,7 +103,6 @@ async function GetListProjet() {
 
         },
         error: function (e) {
-            console.log(e);
             alert("Problème de connexion. ");
         }
     });
@@ -123,9 +128,14 @@ $('#proj').on('change', async () => {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -300,9 +310,14 @@ async function GetListMANDATP() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -382,7 +397,7 @@ async function GetListMANDATP() {
                     //    `
                     //    }
                     //}
-                    
+
                 });
 
                 $('.traitementPROJET').empty();
@@ -436,9 +451,14 @@ $('[data-action="SearchPROJET"]').click(async function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -532,9 +552,14 @@ function deleteUser(id) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "success") {
                 alert(Datas.msg);

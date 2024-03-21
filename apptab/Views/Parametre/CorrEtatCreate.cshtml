@@ -8,21 +8,100 @@
 <div class="form-row">
     <div class="input-group mb-3 col">
         <div class="input-group-prepend custom-label">
-            <span class="input-group-text text-bold" id="inputGroup-sizing-default">DEF</span>
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">PROJET</span>
         </div>
-        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="defC">
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="proj" data-id="proj-list">
+        </select>
+    </div>
+</div>
+
+<h5>Traitements engagements</h5>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Intitulé statut 1</span>
+        </div>
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="stat1" data-id="stat1-list">
+        </select>
     </div>
     <div class="input-group mb-3 col">
         <div class="input-group-prepend custom-label">
-            <span class="input-group-text text-bold" id="inputGroup-sizing-default">TEF</span>
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Intitulé statut 2</span>
         </div>
-        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="tefC">
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="stat2" data-id="stat2-list">
+        </select>
     </div>
     <div class="input-group mb-3 col">
         <div class="input-group-prepend custom-label">
-            <span class="input-group-text text-bold" id="inputGroup-sizing-default">BE</span>
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Intitulé statut 3</span>
         </div>
-        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="beC">
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="stat3" data-id="stat3-list">
+        </select>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Numéro statut 1</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="defC" readonly>
+    </div>
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Numéro statut 2</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="tefC" readonly>
+    </div>
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Numéro statut 3</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="beC" readonly>
+    </div>
+</div>
+
+<h5>Traitements avances</h5>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Intitulé statut 1</span>
+        </div>
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="stata1" data-id="stata1-list">
+        </select>
+    </div>
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Intitulé statut 2</span>
+        </div>
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="stata2" data-id="stata2-list">
+        </select>
+    </div>
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Intitulé statut 3</span>
+        </div>
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="stata3" data-id="stata3-list">
+        </select>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Numéro statut 1</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="defCA" readonly>
+    </div>
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Numéro statut 2</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="tefCA" readonly>
+    </div>
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Numéro statut 3</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="beCA" readonly>
     </div>
 </div>
 
@@ -35,6 +114,6 @@
 </div>
 
 <!-- Droit.js -->
-<script src="~/Assets/js/CorrEtat.js"></script>
+<script src="~/Assets/js/CorrEtat.js?version=@Session["VERSION"]"></script>
 
 

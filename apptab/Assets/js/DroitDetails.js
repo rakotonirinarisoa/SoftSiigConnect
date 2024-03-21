@@ -1,7 +1,4 @@
-﻿let User;
-let Origin;
-
-$(document).ready(() => {
+﻿$(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
@@ -15,8 +12,7 @@ $(document).ready(() => {
 
     GetUsers();
 });
-//let urlOrigin = Origin;
-//let urlOrigin = "http://softwell.cloud/OPAVI";
+
 function GetListUser() {
     let formData = new FormData();
 
@@ -32,9 +28,14 @@ function GetListUser() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -66,12 +67,9 @@ function GetListUser() {
 
         },
         error: function (e) {
-            console.log(e);
             alert("Problème de connexion. ");
         }
     })//.done(function (/*x*/) {
-    //    //alert("");
-    //    //console.log(x); return
     //    $.ajax({
     //        type: "POST",
     //        url: urlOrigin + '/Admin/GetAllUser',
@@ -79,9 +77,14 @@ function GetListUser() {
     //        cache: false,
     //        contentType: false,
     //        processData: false,
+                // beforeSend: function () {
+                //     loader.removeClass('display-none');
+                // },
+                // complete: function () {
+                //     loader.addClass('display-none');
+                // },
     //        success: function (result) {
     //            var Datas = JSON.parse(result);
-    //            console.log(Datas);
 
     //            if (Datas.type == "error") {
     //                alert(Datas.msg);
@@ -129,9 +132,14 @@ function GetDB(instanceID, id) {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -183,9 +191,14 @@ function GetUsers() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -207,7 +220,6 @@ function GetUsers() {
         }
     }).done(function (x) {
         var Datas = JSON.parse(x);
-        console.log(Datas)
         let instanceID = $(`[data-id="Instance-list"]`).val();
 
         GetDB(instanceID, Datas.data.id)
@@ -252,6 +264,12 @@ $(`[data-action="UpdateUser"]`).click(function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
         success: function (result) {
             var Datas = JSON.parse(result);
 

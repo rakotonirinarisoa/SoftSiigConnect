@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace apptab.Extension
 {
@@ -31,5 +28,7 @@ namespace apptab.Extension
         public string CompteBanque { get; set; }
         public string CleRIB { get; set; }
         public string Agence { get; set; }
+        public bool Avance { get; set; }
+        public string Mandat { get; set; }
     }
 }
