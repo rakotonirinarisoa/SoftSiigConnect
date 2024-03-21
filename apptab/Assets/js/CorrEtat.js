@@ -40,6 +40,12 @@ function GetUsers() {
                 $("#defCA").val("");
                 $("#tefCA").val("");
                 $("#beCA").val("");
+                $("#stat1").val("");
+                $("#stat2").val("");
+                $("#stat3").val("");
+                $("#stata1").val("");
+                $("#stata2").val("");
+                $("#stata3").val("");
                 return;
             }
             if (Datas.type == "login") {
@@ -48,17 +54,50 @@ function GetUsers() {
                 return;
             }
 
-            $("#defC").val(Datas.data.DEF);
-            $("#tefC").val(Datas.data.TEF);
-            $("#beC").val(Datas.data.BE);
-            $("#defCA").val(Datas.data.DEFA);
-            $("#tefCA").val(Datas.data.TEFA);
-            $("#beCA").val(Datas.data.BEA);
-
-            if (Datas.data.IDPROJET != 0)
-                $("#proj").val(`${Datas.data.IDPROJET}`);
+            if (Datas.data.crpto.IDPROJET != 0)
+                $("#proj").val(`${Datas.data.crpto.IDPROJET}`);
             else
                 $("#proj").val("");
+
+            $(`[data-id="stat1-list"]`).text("");
+            $(`[data-id="stat2-list"]`).text("");
+            $(`[data-id="stat3-list"]`).text("");
+            var code1 = ``;
+            $.each(Datas.data.etat, function (k, v) {
+                code1 += `
+                    <option value="${v.NUM}">${v.NOM}</option>
+                `;
+            });
+            $(`[data-id="stat1-list"]`).append(code1);
+            $(`[data-id="stat2-list"]`).append(code1);
+            $(`[data-id="stat3-list"]`).append(code1);
+
+            $(`[data-id="stata1-list"]`).text("");
+            $(`[data-id="stata2-list"]`).text("");
+            $(`[data-id="stata3-list"]`).text("");
+            var code2 = ``;
+            $.each(Datas.data.etatAvance, function (k, v) {
+                code2 += `
+                    <option value="${v.NUM}">${v.NOM}</option>
+                `;
+            });
+            $(`[data-id="stata1-list"]`).append(code2);
+            $(`[data-id="stata2-list"]`).append(code2);
+            $(`[data-id="stata3-list"]`).append(code2);
+
+            $("#defC").val(Datas.data.crpto.DEF);
+            $("#tefC").val(Datas.data.crpto.TEF);
+            $("#beC").val(Datas.data.crpto.BE);
+            $("#defCA").val(Datas.data.crpto.DEFA);
+            $("#tefCA").val(Datas.data.crpto.TEFA);
+            $("#beCA").val(Datas.data.crpto.BEA);
+
+            $("#stat1").val(Datas.data.crpto.DEF);
+            $("#stat2").val(Datas.data.crpto.TEF);
+            $("#stat3").val(Datas.data.crpto.BE);
+            $("#stata1").val(Datas.data.crpto.DEFA);
+            $("#stata2").val(Datas.data.crpto.TEFA);
+            $("#stata3").val(Datas.data.crpto.BEA);
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -69,6 +108,32 @@ function GetUsers() {
 $('#proj').on('change', () => {
     const id = $('#proj').val();
     GetUsers(id);
+});
+
+$('#stat1').on('change', () => {
+    const id = $('#stat1').val();
+    $("#defC").val(id);
+});
+$('#stat2').on('change', () => {
+    const id = $('#stat2').val();
+    $("#tefC").val(id);
+});
+$('#stat3').on('change', () => {
+    const id = $('#stat3').val();
+    $("#beC").val(id);
+});
+
+$('#stata1').on('change', () => {
+    const id = $('#stata1').val();
+    $("#defCA").val(id);
+});
+$('#stata2').on('change', () => {
+    const id = $('#stata2').val();
+    $("#tefCA").val(id);
+});
+$('#stata3').on('change', () => {
+    const id = $('#stata3').val();
+    $("#beCA").val(id);
 });
 
 $(`[data-action="UpdateUser"]`).click(function () {

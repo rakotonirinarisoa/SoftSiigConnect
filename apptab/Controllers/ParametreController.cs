@@ -1098,9 +1098,19 @@ namespace apptab.Controllers
                 int crpt = iProjet;
 
                 var crpto = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+
+                if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
+
+                SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
+                var etat = tom.CPTADMIN_CHAINETRAITEMENT.ToList();
+                var etatAvance = tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.ToList();
+
                 if (crpto != null)
                 {
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = crpto }, settings));
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { crpto = crpto, etat = etat, etatAvance = etatAvance } }, settings));
                 }
                 else
                 {
