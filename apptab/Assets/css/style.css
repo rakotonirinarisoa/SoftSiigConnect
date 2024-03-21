@@ -279,7 +279,7 @@ a.nav-link.Fnav {
 }
 
 .cancel-max-height-0 {
-    max-height: 15em !important;
+    max-height: 500px !important;
 }
 
 [data-menu-accordion-child] {
