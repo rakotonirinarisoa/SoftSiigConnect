@@ -544,10 +544,10 @@ $('[data-action="SaveV"]').click(function () {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDSOCIETE);
 
-    formData.append("listCompte", list);
+    /*formData.append("listCompte", list);*/
 
-    formData.append("DateDebut", $('#dateD').val());
-    formData.append("DateFin", $('#dateF').val());
+    //formData.append("DateDebut", $('#dateD').val());
+    //formData.append("DateFin", $('#dateF').val());
 
     formData.append("iProjet", $("#projMANDAT").val());
 
