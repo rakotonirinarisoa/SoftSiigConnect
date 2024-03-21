@@ -278,8 +278,18 @@ a.nav-link.Fnav {
     width: calc(200px - 0.1rem * 2) !important;
 }
 
+.cancel-max-height-0 {
+    max-height: 15em !important;
+}
+
+[data-menu-accordion-child] {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.75s;
+}
+
 /*MENU ACCORDEON*/
-#menu-accordeon li li {
+/*#menu-accordeon li li {
     max-height: 0;
     overflow: hidden;
     transition: all 1.5s;
@@ -291,8 +301,7 @@ a.nav-link.Fnav {
 
 #menu-accordeon li:hover li {
     max-height: 15em;
-}
-
+}*/
 .custom-label span#inputGroup-sizing-default {
     display: flex;
     justify-content: flex-start;
