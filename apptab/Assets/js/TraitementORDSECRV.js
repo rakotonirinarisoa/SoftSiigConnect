@@ -172,6 +172,16 @@ function GetListLOAD() {
                             },
                             orderable: false
                         },
+                        {
+                            data: 'rejeter',
+                            render: function (_, _, row, _) {
+                                return `
+                                    <div onclick="modalREJET('${row.id}')">
+                                        <i class="fa fa-times fa-lg text-dark elerfr"></i>
+                                    </div>
+                                `;
+                            }
+                        },
                         { data: 'soa' },
                         { data: 'projet' },
                         { data: 'ref' },
@@ -213,16 +223,6 @@ function GetListLOAD() {
                                 return `
                                     <div onclick="modalLIAS('${row.id}')">
                                         <i class="fa fa-tags fa-lg text-info elerfr"></i>
-                                    </div>
-                                `;
-                            }
-                        },
-                        {
-                            data: 'rejeter',
-                            render: function (_, _, row, _) {
-                                return `
-                                    <div onclick="modalREJET('${row.id}')">
-                                        <i class="fa fa-times fa-lg text-dark elerfr"></i>
                                     </div>
                                 `;
                             }
@@ -294,7 +294,7 @@ function GetListLOAD() {
                 });
 
                 $('#TBD_PROJET_ORDSEC tfoot th').each(function (i) {
-                    if (i == 0 || i >= 14) {
+                    if (i == 0 || i == 1 || i >= 17) {
                         $(this).addClass("NOTVISIBLE");
                     }
                 });
@@ -414,6 +414,16 @@ $('[data-action="GenereSIIG"]').click(function () {
                             },
                             orderable: false
                         },
+                        {
+                            data: 'rejeter',
+                            render: function (_, _, row, _) {
+                                return `
+                                    <div onclick="modalREJET('${row.id}')">
+                                        <i class="fa fa-times fa-lg text-dark elerfr"></i>
+                                    </div>
+                                `;
+                            }
+                        },
                         { data: 'soa' },
                         { data: 'projet' },
                         { data: 'ref' },
@@ -455,16 +465,6 @@ $('[data-action="GenereSIIG"]').click(function () {
                                 return `
                                     <div onclick="modalLIAS('${row.id}')">
                                         <i class="fa fa-tags fa-lg text-info elerfr"></i>
-                                    </div>
-                                `;
-                            }
-                        },
-                        {
-                            data: 'rejeter',
-                            render: function (_, _, row, _) {
-                                return `
-                                    <div onclick="modalREJET('${row.id}')">
-                                        <i class="fa fa-times fa-lg text-dark elerfr"></i>
                                     </div>
                                 `;
                             }
@@ -536,7 +536,7 @@ $('[data-action="GenereSIIG"]').click(function () {
                 });
 
                 $('#TBD_PROJET_ORDSEC tfoot th').each(function (i) {
-                    if (i == 0 || i >= 14) {
+                    if (i == 0 || i == 1 || i >= 17) {
                         $(this).addClass("NOTVISIBLE");
                     }
                 });
