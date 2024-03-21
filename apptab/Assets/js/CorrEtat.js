@@ -111,29 +111,29 @@ $('#proj').on('change', () => {
 });
 
 $('#stat1').on('change', () => {
-    const id = $('#stat1').val();
-    $("#defC").val(id);
+    const id1 = $('#stat1').val();
+    $("#defC").val(id1);
 });
 $('#stat2').on('change', () => {
-    const id = $('#stat2').val();
-    $("#tefC").val(id);
+    const id2 = $('#stat2').val();
+    $("#tefC").val(id2);
 });
 $('#stat3').on('change', () => {
-    const id = $('#stat3').val();
-    $("#beC").val(id);
+    const id3 = $('#stat3').val();
+    $("#beC").val(id3);
 });
 
 $('#stata1').on('change', () => {
-    const id = $('#stata1').val();
-    $("#defCA").val(id);
+    const id11 = $('#stata1').val();
+    $("#defCA").val(id11);
 });
 $('#stata2').on('change', () => {
-    const id = $('#stata2').val();
-    $("#tefCA").val(id);
+    const id22 = $('#stata2').val();
+    $("#tefCA").val(id22);
 });
 $('#stata3').on('change', () => {
-    const id = $('#stata3').val();
-    $("#beCA").val(id);
+    const id33 = $('#stata3').val();
+    $("#beCA").val(id33);
 });
 
 $(`[data-action="UpdateUser"]`).click(function () {
