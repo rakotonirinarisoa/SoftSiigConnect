@@ -59,14 +59,18 @@ function isNullOrUndefined(input) {
     return input === null || input === undefined;
 } 
 
-function exportTableToPdf(tableId, filename) {
+function exportTableToPdf(tableId, filename, columnsIndexesToHide = []) {
     $('body').append(`
         <div id="tmp" style="display: none;" ></div >
     `);
 
     const tmpDiv = $('body').find('#tmp');
 
-    $('#tmp').html($(`#${tableId}`).parent().html());
+    const id = Date.now();
+
+    tmpDiv.html($(`#${tableId}`).parent().attr('id', 'bar').html());
+
+    tmpDiv.find('table').attr('id', id);
 
     tmpDiv.find('.dt-search').remove();
     tmpDiv.find('.btn-group').remove();
@@ -75,8 +79,9 @@ function exportTableToPdf(tableId, filename) {
     tmpDiv.find('tfoot').remove();
     tmpDiv.find('.dt-column-order').remove();
     tmpDiv.find('table').css({
-        'width': '100%',
-        'fontSize': '9px'
+        'width': 'auto',
+        'fontSize': '9px',
+        'border': '0px'
     });
 
     const htmlContent = tmpDiv.html();
@@ -87,7 +92,10 @@ function exportTableToPdf(tableId, filename) {
 
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
+
+    formData.append('id', String(id));
     formData.append('element', htmlContent);
+    formData.append('columnsIndexes', JSON.stringify(columnsIndexesToHide));
     formData.append('filename', filename);
 
     $.ajax({
