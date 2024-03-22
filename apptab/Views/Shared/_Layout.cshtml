@@ -798,7 +798,8 @@
 
         <script>
             function myFunction(id) {
-                //var x = document.getElementById(id);
+                $(`[data-parent-id]`).removeClass('w3-show');
+
                 const element = $(`[data-parent-id="${id}"]`);
 
                 if (!element.hasClass('w3-show')) {
