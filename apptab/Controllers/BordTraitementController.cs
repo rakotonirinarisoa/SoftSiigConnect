@@ -358,7 +358,7 @@ namespace apptab.Controllers
                                            {
                                                soas.SOA
                                            }).FirstOrDefault();
-                                var paiement = db.OPA_VALIDATIONS.Where(pai => pai.ETAT == 3 && pai.IDPROJET == crpt && pai.IDREGLEMENT == x.REF).FirstOrDefault();
+                                var paiement = db.OPA_VALIDATIONS.Where(pai => pai.ETAT == 3 && pai.IDPROJET == crpt && pai.IDREGLEMENT == x.REF && pai.AVANCE == true).FirstOrDefault();
                                 if (paiement != null)
                                 {
                                     list.Add(new TxLISTETRAIT
@@ -391,7 +391,6 @@ namespace apptab.Controllers
                                         TYPE = "Avance",
                                     });
                                 }
-                               
                             }
                         }
                     }
