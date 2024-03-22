@@ -62,9 +62,27 @@
                 return;
             }
 
+            const columnsIndexesToHide = @ViewData["ColumnsIndexesToHide"];
+
             const str = `@ViewData["DomElement"]`.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"');
 
             $('#dom').html(str);
+
+            const table = new DataTable($('#dom').find(`#@ViewData["TableId"]`), {
+                dom: 'Bfrtip',
+                searching: false,
+                paging: false,
+                initComplete: function () {
+                    $(`thead td`).removeClass('dt-orderable-asc').removeClass('dt-orderable-desc');
+                }
+            });
+
+            $('#dom').find('.dt-info').remove();
+
+            for (let i = 0; i < columnsIndexesToHide.length; i += 1) {
+                table.column(columnsIndexesToHide[i]).visible(false);
+                //table.column(columnsIndexesToHide[i]).remove();
+            }
 
             const { jsPDF } = window.jspdf;
 
