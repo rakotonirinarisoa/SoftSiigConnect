@@ -56,9 +56,15 @@ $('aside a[href="../Home/TdbAccueil"]').on('click', () => {
 });
 
 $('[data-menu-accordion]').on('click', (e) => {
-    $(`ul[data-menu-accordion-child]`).removeClass('cancel-max-height-0');
-
     const dataMenuAccordionChild = $(e.currentTarget).find(`ul[data-menu-accordion-child]`);
 
-    dataMenuAccordionChild.addClass(`cancel-max-height-0`);
+    if (dataMenuAccordionChild.hasClass(`cancel-max-height-0`)) {
+        $(`ul[data-menu-accordion-child]`).removeClass('cancel-max-height-0');
+
+        dataMenuAccordionChild.removeClass(`cancel-max-height-0`);
+    } else {
+        $(`ul[data-menu-accordion-child]`).removeClass('cancel-max-height-0');
+
+        dataMenuAccordionChild.addClass(`cancel-max-height-0`);
+    }
 });
