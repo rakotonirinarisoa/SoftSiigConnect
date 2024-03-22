@@ -954,3 +954,13 @@ div.dt-container .dt-paging .dt-paging-button {
     background-color: #338B85;
     height: 75%;
 }
+
+.custombutton-collection-pdf {
+    margin-left: 10px !important;
+    /*border-radius: 4px !important;*/
+    background: #ffc107 linear-gradient(180deg, #ffca2c, #ffc107) repeat-x !important;
+    color: #1f2d3d;
+    border-radius: 0;
+    border-width: 0px !important;
+    box-shadow: none;
+}

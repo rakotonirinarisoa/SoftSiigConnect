@@ -227,7 +227,8 @@ function GetListLOADOTHER() {
                     dom: 'Bfrtip',
                     buttons: ['colvis',
                         {
-                            text: 'Exporter en PDF',
+                            text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
+                            className: 'custombutton-collection-pdf',
                             customize: function (doc) {
                                 // Personnalisation du document PDF ici
                                 // Par exemple, tu peux définir les largeurs des colonnes comme suit :
