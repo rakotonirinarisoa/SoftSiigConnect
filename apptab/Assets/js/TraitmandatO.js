@@ -225,7 +225,27 @@ function GetListLOADOTHER() {
                     },
                     deferRender: true,
                     dom: 'Bfrtip',
-                    buttons: ['colvis'],
+                    buttons: ['colvis',
+                        {
+                            text: 'Exporter en PDF',
+                            customize: function (doc) {
+                                // Personnalisation du document PDF ici
+                                // Par exemple, tu peux définir les largeurs des colonnes comme suit :
+                                doc.content[1].table.widths =
+                                    Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+
+                                // Ajouter des couleurs de fond aux cellules, etc.
+                                let body = doc.content[1].table.body;
+                                body.forEach(function (row, index) {
+                                    // Ignorer l'en-tête du tableau
+                                    if (index === 0) return;
+
+                                    // Appliquer la couleur de fond à la première cellule de chaque ligne
+                                    row[0].fillColor = '#f0f0f0';
+                                });
+                            }
+                        }
+                    ],
                     initComplete: function () {
                         $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
 
