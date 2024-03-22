@@ -312,20 +312,39 @@ namespace apptab.Controllers
                                            {
                                                soas.SOA
                                            }).FirstOrDefault();
-
-                                list.Add(new TxLISTETRAIT
+                                var paiement = db.OPA_VALIDATIONS.Where(pai => pai.ETAT == 3 && pai.IDPROJET == crpt && pai.IDREGLEMENT == x.REF).FirstOrDefault();
+                                if (paiement != null)
                                 {
-                                    No = x.No,
-                                    REF = x.REF,
-                                    BENEF = x.TITUL,
-                                    DATENGAGEMENT = x.DATEMANDAT != null ? x.DATEMANDAT : null,
-                                    MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
-                                    DATEPAIE = DateTime.Now.Date,
-                                    MONTPAIE = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
-                                    SOA = soa != null ? soa.SOA : "",
-                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                    TYPE = "Engagement",
-                                });
+                                    list.Add(new TxLISTETRAIT
+                                    {
+                                        No = x.No,
+                                        REF = x.REF,
+                                        BENEF = x.TITUL,
+                                        DATENGAGEMENT = x.DATEMANDAT != null ? x.DATEMANDAT : null,
+                                        MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                        DATEPAIE = paiement.DATEVAL,
+                                        MONTPAIE = paiement.MONTANT.ToString(),
+                                        SOA = soa != null ? soa.SOA : "",
+                                        PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                        TYPE = "Engagement",
+                                    });
+                                }
+                                else
+                                {
+                                    list.Add(new TxLISTETRAIT
+                                    {
+                                        No = x.No,
+                                        REF = x.REF,
+                                        BENEF = x.TITUL,
+                                        DATENGAGEMENT = x.DATEMANDAT != null ? x.DATEMANDAT : null,
+                                        MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                        DATEPAIE = null,
+                                        MONTPAIE = "",
+                                        SOA = soa != null ? soa.SOA : "",
+                                        PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                        TYPE = "Engagement",
+                                    });
+                                }
                             }
                         }
                         if (db.SI_TRAITAVANCE.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
@@ -339,20 +358,40 @@ namespace apptab.Controllers
                                            {
                                                soas.SOA
                                            }).FirstOrDefault();
-
-                                list.Add(new TxLISTETRAIT
+                                var paiement = db.OPA_VALIDATIONS.Where(pai => pai.ETAT == 3 && pai.IDPROJET == crpt && pai.IDREGLEMENT == x.REF).FirstOrDefault();
+                                if (paiement != null)
                                 {
-                                    No = x.No,
-                                    REF = x.REF,
-                                    BENEF = x.TITUL,
-                                    DATENGAGEMENT = x.DATEMANDAT != null ? x.DATEMANDAT : null,
-                                    MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
-                                    DATEPAIE = DateTime.Now.Date,
-                                    MONTPAIE = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
-                                    SOA = soa != null ? soa.SOA : "",
-                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                    TYPE = "Avance",
-                                });
+                                    list.Add(new TxLISTETRAIT
+                                    {
+                                        No = x.No,
+                                        REF = x.REF,
+                                        BENEF = x.TITUL,
+                                        DATENGAGEMENT = x.DATEMANDAT != null ? x.DATEMANDAT : null,
+                                        MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                        DATEPAIE = paiement.DATEVAL,
+                                        MONTPAIE = paiement.MONTANT.ToString(),
+                                        SOA = soa != null ? soa.SOA : "",
+                                        PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                        TYPE = "Avance",
+                                    });
+                                }
+                                else
+                                {
+                                    list.Add(new TxLISTETRAIT
+                                    {
+                                        No = x.No,
+                                        REF = x.REF,
+                                        BENEF = x.TITUL,
+                                        DATENGAGEMENT = x.DATEMANDAT != null ? x.DATEMANDAT : null,
+                                        MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                        DATEPAIE = null,
+                                        MONTPAIE = "",
+                                        SOA = soa != null ? soa.SOA : "",
+                                        PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                        TYPE = "Avance",
+                                    });
+                                }
+                               
                             }
                         }
                     }
