@@ -798,14 +798,16 @@
 
         <script>
             function myFunction(id) {
-                $(`[data-parent-id]`).removeClass('w3-show');
-
                 const element = $(`[data-parent-id="${id}"]`);
 
                 if (!element.hasClass('w3-show')) {
+                    $(`[data-parent-id]`).removeClass('w3-show');
                     element.addClass('w3-show');
+
                 } else {
                     element.removeClass('w3-show');
+
+                    $(`[data-parent-id]`).removeClass('w3-show');
                 }
             }
         </script>
