@@ -1,0 +1,93 @@
+@{
+    Layout = null;
+}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+    <title>PDF Preview</title>
+
+    <link rel="stylesheet" href="~/Assets/admlte/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="~/Assets/admlte/dist/css/adminlte.css">
+
+    <link rel="stylesheet" href="~/Assets/css/style.css?version=@Session["VERSION"]" />
+    <link rel="stylesheet" href="~/Assets/css/loader.css?version=@Session["VERSION"]" />
+    <link href="~/Assets/css/acco.css?version=@Session["VERSION"]" rel="stylesheet" />
+
+    <link href="~/Assets/otherCSS/datatables.min.css?version=@Session["VERSION"]" rel="stylesheet" />
+    <link href="~/Assets/otherCSS/buttons.dataTables.min.css?version=@Session["VERSION"]" rel="stylesheet" />
+
+    <script src="~/Assets/admlte/plugins/jquery/jquery.min.js"></script>
+    <script src="~/Assets/js/script.js?version=@Session["VERSION"]"></script>
+
+    <script src="~/Assets/otherJs/jquery-3.7.0.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/otherJs/datatables.min.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/otherJs/dataTables.rowsGroup.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/otherJs/buttons.colVis.min.js?version=@Session["VERSION"]"></script>
+
+    <script src="~/Assets/admlte/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+    <script>
+        $.widget.bridge('uibutton', $.ui.button)
+    </script>
+
+    <script src="~/Assets/admlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/Assets/admlte/dist/js/adminlte.js"></script>
+
+    <script src="~/Assets/otherJs/html2canvas.min.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/otherJs/jspdf.umd.min.js?version=@Session["VERSION"]"></script>
+</head>
+
+<body>
+    <div id="pdf-body" style="height: auto;">
+        <h1>SoftSiigConnect header</h1>
+
+        <div id="dom">
+
+        </div>
+
+        <h2>footer test</h2>
+    </div>
+
+    <script defer>
+        $(document).ready(() => {
+            if (`@ViewData["DomElement"]` === '') {
+                $('body').html(`
+                    <h1 style="font-size: 128px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">404<h1>
+                `);
+
+                return;
+            }
+
+            const str = `@ViewData["DomElement"]`.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"');
+
+            $('#dom').html(str);
+
+            const { jsPDF } = window.jspdf;
+
+            const width = $('#dom').find('table').width() + 100;
+            const height = 600;
+
+            const doc = new jsPDF('l', 'px', [width, height]);
+
+            doc.html(document.getElementById('pdf-body'), {
+                callback: function (doc) {
+                    let totalPages = doc.internal.getNumberOfPages();
+
+                    for (let i = 2; i <= totalPages; i += 1) {
+                        doc.setPage(i);
+                        doc.deletePage(i);
+                        i += -1;
+                        totalPages -= 1;
+                    }
+
+                    doc.save(`@ViewData["Filename"]` + '.pdf');
+                },
+                margin: [60, 60, 60, 60],
+            });
+        });
+    </script>
+</body>

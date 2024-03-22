@@ -58,3 +58,64 @@ function tableToExcel(tableId, name, callback = undefined) {
 function isNullOrUndefined(input) {
     return input === null || input === undefined;
 } 
+
+function exportTableToPdf(tableId, filename) {
+    $('body').append(`
+        <div id="tmp" style="display: none;" ></div >
+    `);
+
+    const tmpDiv = $('body').find('#tmp');
+
+    $('#tmp').html($(`#${tableId}`).parent().html());
+
+    tmpDiv.find('.dt-search').remove();
+    tmpDiv.find('.btn-group').remove();
+    tmpDiv.find('.dt-info').remove();
+    tmpDiv.find('ul.pagination').remove();
+    tmpDiv.find('tfoot').remove();
+    tmpDiv.find('.dt-column-order').remove();
+    tmpDiv.find('table').css({
+        'width': '100%',
+        'fontSize': '9px'
+    });
+
+    const htmlContent = tmpDiv.html();
+
+    tmpDiv.remove();
+
+    const formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append('element', htmlContent);
+    formData.append('filename', filename);
+
+    $.ajax({
+        type: 'POST',
+        url: Origin + '/Pdf/ExportToPdf',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var res = JSON.parse(result);
+
+            if (res.type === 'error') {
+                alert(res.msg);
+
+                return;
+            }
+
+            window.location.href = Origin + 'Pdf/Index';
+        },
+        error: function () {
+            alert('Problème de connexion!');
+        }
+    });
+}
