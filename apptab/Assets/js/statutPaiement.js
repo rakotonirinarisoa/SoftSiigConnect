@@ -92,7 +92,7 @@ function emptyTable() {
         table.destroy();
     }
 
-    table = $('#TBD_PROJET_ORDSEC').DataTable({
+    table = $('#TDB_Pai').DataTable({
         data,
         colReorder: {
             enable: false,
@@ -100,7 +100,7 @@ function emptyTable() {
         },
         deferRender: true,
         dom: 'Bfrtip',
-        buttons: ['colvis'],
+        buttons: ['colvis']
     });
 }
 
