@@ -273,7 +273,7 @@ function GetListLOADOTHER() {
                                         if (data == null) {
                                             return data;
                                         }
-                                        if (column === 9) {
+                                        if (column === 10) {
                                             var arr = data.split(',');
                                             arr[0] = arr[0].toString().replace(/[\.]/g, "");
                                             if (arr[0] > '' || arr[1] > '') {
@@ -565,7 +565,7 @@ $('[data-action="GenereR"]').click(async function () {
                                         if (data == null) {
                                             return data;
                                         }
-                                        if (column === 9) {
+                                        if (column === 10) {
                                             var arr = data.split(',');
                                             arr[0] = arr[0].toString().replace(/[\.]/g, "");
                                             if (arr[0] > '' || arr[1] > '') {
@@ -713,7 +713,7 @@ function emptyTableTRM() {
     table = $('#TBD_PROJET_MANDAT').DataTable({
         data,
         colReorder: {
-            enable: true,
+            enable: false,
             fixedColumnsLeft: 1
         },
         deferRender: true,

@@ -645,7 +645,7 @@ function emptyTable() {
     table = $('#TBD_PROJET_OTHER').DataTable({
         data,
         colReorder: {
-            enable: true,
+            enable: false,
             fixedColumnsLeft: 1
         },
         deferRender: true,

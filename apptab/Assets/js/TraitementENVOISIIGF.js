@@ -732,7 +732,7 @@ function emptyTable() {
     table = $('#TBD_PROJET_ORDSEC').DataTable({
         data,
         colReorder: {
-            enable: true,
+            enable: false,
             fixedColumnsLeft: 1
         },
         deferRender: true,

@@ -323,7 +323,7 @@ namespace apptab.Controllers
                                         DATENGAGEMENT = x.DATEMANDAT != null ? x.DATEMANDAT : null,
                                         MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                         DATEPAIE = paiement.DATEVAL,
-                                        MONTPAIE = paiement.MONTANT.ToString(),
+                                        MONTPAIE = string.Format("{0:0.00}", Math.Round(paiement.MONTANT.Value)),
                                         SOA = soa != null ? soa.SOA : "",
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                         TYPE = "Engagement",
@@ -369,7 +369,7 @@ namespace apptab.Controllers
                                         DATENGAGEMENT = x.DATEMANDAT != null ? x.DATEMANDAT : null,
                                         MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                         DATEPAIE = paiement.DATEVAL,
-                                        MONTPAIE = paiement.MONTANT.ToString(),
+                                        MONTPAIE = string.Format("{0:0.00}", Math.Round(paiement.MONTANT.Value)),
                                         SOA = soa != null ? soa.SOA : "",
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                         TYPE = "Avance",
@@ -391,13 +391,12 @@ namespace apptab.Controllers
                                         TYPE = "Avance",
                                     });
                                 }
-                               
                             }
                         }
                     }
                 }
 
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list.OrderByDescending(a => a.isLATE).ToList() }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list.OrderByDescending(a => a.DATENGAGEMENT).ToList() }, settings));
             }
             catch (Exception e)
             {
@@ -1199,7 +1198,7 @@ namespace apptab.Controllers
         }
         public ActionResult TraitementsPaiement()
         {
-            ViewBag.Controller = "Traitements des paiements";
+            ViewBag.Controller = "Suvi des délais de traitement des paiements";
             return View();
         }
         [HttpPost]
@@ -1359,7 +1358,7 @@ namespace apptab.Controllers
         }
         public ActionResult TraitementPaiementSoufrance()
         {
-            ViewBag.Controller = "Traitements des paiements en souffrance";
+            ViewBag.Controller = "Liste des traitements en souffrance(par rapport au délai moyen)";
             return View();
         }
         [HttpPost]
@@ -1550,7 +1549,7 @@ namespace apptab.Controllers
         }
         public ActionResult TraitementPaiementRejet()
         {
-            ViewBag.Controller = "Traitements des paiements réjéter";
+            ViewBag.Controller = "Liste des paiements rejetés";
             return View();
         }
         [HttpPost]

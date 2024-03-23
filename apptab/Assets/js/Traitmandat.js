@@ -710,7 +710,7 @@ function emptyTableTRM() {
     table = $('#TBD_PROJET_MANDAT').DataTable({
         data,
         colReorder: {
-            enable: true,
+            enable: false,
             fixedColumnsLeft: 1
         },
         deferRender: true,

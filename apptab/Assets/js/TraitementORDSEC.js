@@ -287,7 +287,7 @@ function GetListLOAD() {
                                         if (data == null) {
                                             return data;
                                         }
-                                        if (column === 9) {
+                                        if (column === 10) {
                                             var arr = data.split(',');
                                             arr[0] = arr[0].toString().replace(/[\.]/g, "");
                                             if (arr[0] > '' || arr[1] > '') {
@@ -589,7 +589,7 @@ $('[data-action="GenereSIIG"]').click(function () {
                                         if (data == null) {
                                             return data;
                                         }
-                                        if (column === 9) {
+                                        if (column === 10) {
                                             var arr = data.split(',');
                                             arr[0] = arr[0].toString().replace(/[\.]/g, "");
                                             if (arr[0] > '' || arr[1] > '') {
@@ -780,7 +780,7 @@ function emptyTable() {
     table = $('#TBD_PROJET_ORDSEC').DataTable({
         data,
         colReorder: {
-            enable: true,
+            enable: false,
             fixedColumnsLeft: 1
         },
         deferRender: true,

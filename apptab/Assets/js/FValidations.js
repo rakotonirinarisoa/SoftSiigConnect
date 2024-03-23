@@ -766,7 +766,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             }
                         ],
                         colReorder: {
-                            enable: true,
+                            enable: false,
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
@@ -937,7 +937,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             }
                         ],
                         colReorder: {
-                            enable: true,
+                            enable: false,
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
@@ -1098,7 +1098,7 @@ $('[data-action="GetElementChecked"]').click(function () {
                         { data: 'status' }
                     ],
                     colReorder: {
-                        enable: true,
+                        enable: false,
                         // fixedColumnsLeft: 1
                     },
                     deferRender: true,
