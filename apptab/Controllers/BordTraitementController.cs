@@ -633,7 +633,8 @@ namespace apptab.Controllers
                                     COMMENTAIRE = isRejet != null ? isRejet.COMMENTAIRE : "",
 
                                     SOA = soa != null ? soa.SOA : "",
-                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    TYPE = "Engagement"
                                     //isLATE = isLate
                                 });
                             }
@@ -674,7 +675,8 @@ namespace apptab.Controllers
                                     COMMENTAIRE = isRejet != null ? isRejet.COMMENTAIRE : "",
 
                                     SOA = soa != null ? soa.SOA : "",
-                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    TYPE = "Avance"
                                     //isLATE = isLate
                                 });
                             }
@@ -693,7 +695,7 @@ namespace apptab.Controllers
         //Suivi des délais de traitement des engagements et avances//
         public ActionResult DelaisTraitementEngagements()
         {
-            ViewBag.Controller = "Suvi des délais de traitement des engagements";
+            ViewBag.Controller = "Suvi des délais de traitement des engagements et avances";
 
             return View();
         }
