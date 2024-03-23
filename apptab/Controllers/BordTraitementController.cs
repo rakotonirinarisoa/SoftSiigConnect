@@ -1283,6 +1283,7 @@ namespace apptab.Controllers
                     {
                         result[lastIndex].TraitementPaiementDetails.Add(new TraitementPaiementDetails
                         {
+                            PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
                             NUM_ENGAGEMENT = paielst[j].NUM,
                             BENEFICIAIRE = paielst[j].BENEFICIAIRE,
                             MONTENGAGEMENT = paielst[j].MONTANT.ToString(),
@@ -1339,6 +1340,7 @@ namespace apptab.Controllers
                     {
                         result[lastIndex].TraitementPaiementDetails.Add(new TraitementPaiementDetails
                         {
+                            PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
                             NUM_ENGAGEMENT = paielst[j].NUM.ToString(),
                             BENEFICIAIRE = paielst[j].BENEFICIAIRE,
                             MONTENGAGEMENT = paielst[j].MONTANT.ToString(),
