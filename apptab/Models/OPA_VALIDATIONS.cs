@@ -33,9 +33,6 @@
         [StringLength(50)]
         public string Journal { get; set; }
 
-        [Column(TypeName = "smalldatetime")]
-        public DateTime? dateOrdre { get; set; }
-
         [StringLength(50)]
         public string NoPiece { get; set; }
 
@@ -109,7 +106,12 @@
         public decimal? MONTANT { get; set; }
 
         public string NUMEROLIQUIDATION { get; set; }
+
+        [Column(TypeName = "smalldatetime")]
+        public DateTime? dateOrdre { get; set; }
+
+        public int? NUMEREG { get; set; }
         [NotMapped]
-        public bool? isLATE { get; set; }
+        public bool isLATE { get; set; }
     }
 }

@@ -449,8 +449,7 @@ $('[data-action="ChargerJs"]').click(function () {
                     listResult = Datas.data;
 
                     const data = [];
-
-                    arr = data;
+                   
 
                     $.each(listResult, function (_, v) {
                         data.push({
@@ -473,9 +472,11 @@ $('[data-action="ChargerJs"]').click(function () {
                             journal: isNullOrUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             estAvance: v.Avance,
-                            numeroliquidations: isNullOrUndefined(v.NUMEROLIQUIDATION) ? '' : v.NUMEROLIQUIDATION 
+                            numeroliquidations: isNullOrUndefined(v.NUMEROLIQUIDATION) ? '' : v.NUMEROLIQUIDATION,
+                            numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });
                     });
+                    arr = data;
 
                     if (table !== undefined) {
                         table.destroy();
@@ -642,7 +643,6 @@ $('[data-action="ChargerJs"]').click(function () {
 
                     const data = [];
 
-                    arr = data;
 
                     $.each(listResult, function (_, v) {
                         console.log(v);
@@ -667,9 +667,12 @@ $('[data-action="ChargerJs"]').click(function () {
                             journal: isNullOrUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             estAvance: v.Avance,
-                            numeroliquidations: v.Mandat 
+                            numeroliquidations: v.Mandat,
+                            numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
                         });
                     });
+
+                    arr = data;
 
                     if (table !== undefined) {
                         table.destroy();
@@ -798,7 +801,8 @@ $('[data-action="GetElementChecked"]').on('click', () => {
             const item = arr.find(item => item.id === Number(id));
             list.push({
                 id,
-                estAvance: item.estAvance
+                estAvance: item.estAvance,
+                numereg : item.numereg
             });
         }
     } else {
@@ -808,7 +812,8 @@ $('[data-action="GetElementChecked"]').on('click', () => {
             const item = arr.find(item => item.id === id);
             list.push({
                 id,
-                estAvance: item.estAvance
+                estAvance: item.estAvance,
+                numereg: item.numereg
             });
         }
     }

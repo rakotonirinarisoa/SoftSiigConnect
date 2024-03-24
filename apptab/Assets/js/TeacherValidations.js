@@ -197,7 +197,7 @@ function ChargeLoad() {
                     listResult = Datas.data;
 
                     const data = [];
-                    arr = data;
+                    
                     $.each(listResult, function (k, v) {
                         console.log(v);
 
@@ -225,9 +225,11 @@ function ChargeLoad() {
                             estAvance: v.AVANCE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             type: v.AVANCE ? 'Avance' : 'Paiement',
-                            idprojet: codeproject
+                            idprojet: codeproject,
+                            numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
                         });
                     });
+                    arr = data;
 
                     if (table !== undefined) {
                         table.destroy();
@@ -803,7 +805,7 @@ $('[data-action="ChargerJs"]').click(function () {
                     listResult = Datas.data;
 
                     const data = [];
-                    arr = data;
+                    
                     $.each(listResult, function (_, v) {
                         console.log(v.Montant);
 
@@ -830,9 +832,12 @@ $('[data-action="ChargerJs"]').click(function () {
                             isLATE: v.IsLATE,
                             estAvance: v.AVANCE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
-                            type: v.AVANCE ? 'Avance' : 'Paiement'
+                            type: v.AVANCE ? 'Avance' : 'Paiement',
+                            numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });
                     });
+
+                    arr = data;
 
                     if (table !== undefined) {
                         table.destroy();
@@ -1013,7 +1018,7 @@ $('[data-action="ChargerJs"]').click(function () {
                     content = ``;
 
                     const data = [];
-                    arr = data;
+                    
                     $.each(listResult, function (_, v) {
                         data.push({
                             checkbox: '',
@@ -1038,9 +1043,12 @@ $('[data-action="ChargerJs"]').click(function () {
                             isLATE: v.IsLATE,
                             estAvance: v.AVANCE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
-                            type: v.AVANCE ? 'Avance' : 'Paiement'
+                            type: v.AVANCE ? 'Avance' : 'Paiement',
+                            numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });
                     });
+
+                    arr = data;
 
                     if (table !== undefined) {
                         table.destroy();
@@ -1189,7 +1197,8 @@ $('[data-action="GetElementChecked"]').click(function () {
             const item = arr.find(item => item.id === Number(id));
             list.push({
                 id,
-                estAvance: item.estAvance
+                estAvance: item.estAvance,
+                numereg: item.numereg
             });
         }
     } else {
@@ -1199,7 +1208,8 @@ $('[data-action="GetElementChecked"]').click(function () {
             const item = arr.find(item => item.id === id);
             list.push({
                 id,
-                estAvance: item.estAvance
+                estAvance: item.estAvance,
+                numereg: item.numereg
             });
         }
     }

@@ -203,11 +203,14 @@ namespace apptab.Controllers
             return File(source, System.Net.Mime.MediaTypeNames.Application.Octet);
         }
         [HttpPost]
-        public ActionResult CreateZipFile(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName)
+        public ActionResult CreateZipFile(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte)
         {
             AFB160 aFB160 = new AFB160();
+
             var send = "";
             int PROJECTID = int.Parse(codeproject);
+            var list = JsonConvert.DeserializeObject<List<AvanceDetails>>(listCompte);
+
             var ps = db.SI_USERS.Where(x => x.LOGIN == suser.LOGIN /*&& x.IDPROJET == PROJECTID*/ && x.PWD == suser.PWD).Select(x => x.PWD).FirstOrDefault();
 
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
@@ -266,7 +269,8 @@ namespace apptab.Controllers
             }
             else
             {
-                var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser, codeproject);
+                var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser, codeproject,list);
+
                 if (avalider != null)
                 {
                     foreach (var item in avalider)
@@ -430,9 +434,22 @@ namespace apptab.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Votre RIB du journal " + journal + " est incomplet ", data = "" }, settings));
             }
-            var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID && x.ComptaG == comptaG && x.Journal == journal).Select(x => x.IDREGLEMENT.ToString()).ToArray();
+            //var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID && x.ComptaG == comptaG && x.Journal == journal).Select(x => x.IDREGLEMENT.ToString()).ToArray();
 
-            var list = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID).Where(x => !hstSiig.Contains(x.No.ToString())).ToList();
+           // var list = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID).Where(x => !hstSiig.Contains(x.No.ToString())).ToList();
+            
+            var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID && x.ComptaG == comptaG && x.Journal == journal).Select(x => new
+            {
+                IDREGLEMENT = x.IDREGLEMENT.ToString(),
+                NUMEREG = x.NUMEREG,
+            }).ToList();
+            List<DataListTomOP> list = new List<DataListTomOP>();
+
+           
+            foreach (var item in hstSiig)
+            {
+                list.AddRange(afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID).Where(x => x.No != item.IDREGLEMENT && x.NUMEREG != item.NUMEREG ).ToList());
+            }
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list }, settings));
 
         }
@@ -590,7 +607,7 @@ namespace apptab.Controllers
             }
 
             if (string.IsNullOrEmpty(listCompte))
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès.", data = "" }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Veuillez Séléctionner un ecriture.", data = "" }, settings));
 
             //List<string> list = listCompte.Split(',').ToList();
             var list = JsonConvert.DeserializeObject<List<AvanceDetails>>(listCompte);
@@ -706,7 +723,8 @@ namespace apptab.Controllers
                 var hst = db.OPA_HISTORIQUE.Select(x => x.NUMENREG.ToString()).ToArray();
                 foreach (var h in list)
                 {
-                    var listA = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID).Where(x => x.No.ToString() == h.Id).ToList();
+                    int a = int.Parse(h.Numereg);
+                    var listA = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID).Where(x => x.No.ToString() == h.Id && x.NUMEREG == a).ToList();
                     foreach (var item in listA)
                     {
                         avalider.IDREGLEMENT = item.No;
@@ -736,6 +754,7 @@ namespace apptab.Controllers
                         avalider.IDUSCREA = exist.ID;
                         avalider.AVANCE = item.Avance;
                         avalider.NUMEROLIQUIDATION = item.Mandat;
+                        avalider.NUMEREG = item.NUMEREG;
                         try
                         {
                             db.OPA_VALIDATIONS.Add(avalider);
@@ -928,6 +947,7 @@ namespace apptab.Controllers
                         isLATE = isLate,
                         AVANCE = item.AVANCE,
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
+                        NUMEREG = item.NUMEREG,
                     });
                 }
                 //var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == suser.IDPROJET && ecriture.ETAT == 0).ToList();
@@ -966,6 +986,7 @@ namespace apptab.Controllers
                             isLATE = isLate,
                             AVANCE = item.AVANCE,
                             NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
+                            NUMEREG = item.NUMEREG,
                         });
                     }
                     else
@@ -990,6 +1011,7 @@ namespace apptab.Controllers
                             isLATE = isLate,
                             AVANCE = item.AVANCE,
                             NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
+                            NUMEREG = item.NUMEREG,
                         });
                     }
                 }
@@ -1188,6 +1210,7 @@ namespace apptab.Controllers
                         isLATE = isLate,
                         AVANCE = item.AVANCE,
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
+                        NUMEREG = item.NUMEREG,
                     });
                 }
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = list }, settings));
@@ -1223,6 +1246,7 @@ namespace apptab.Controllers
                         isLATE = isLate,
                         AVANCE = item.AVANCE,
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
+                        NUMEREG = item.NUMEREG,
                     });
                 }
 
@@ -1279,6 +1303,7 @@ namespace apptab.Controllers
                         isLATE = isLate,
                         AVANCE = item.AVANCE,
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
+                        NUMEREG = item.NUMEREG,
                     });
                 }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
@@ -1315,6 +1340,7 @@ namespace apptab.Controllers
                         isLATE = isLate,
                         AVANCE = item.AVANCE,
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
+                        NUMEREG = item.NUMEREG,
                     });
                 }
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
@@ -1362,7 +1388,7 @@ namespace apptab.Controllers
             }
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = "" }, settings));
         }
-        //======================================================================================================EnvoyerValidations===============================================================
+        //======================================================================================================EnvoyerValidations============================================================
 
         [HttpPost]
         public JsonResult EnvoyeValidatioF(string ChoixBase, string codeproject, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP, string journal, string etat, bool devise, SI_USERS suser)
@@ -1447,7 +1473,7 @@ namespace apptab.Controllers
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.  ", data = list }, settings));
             }
         }
-        //======================================================================================================ValidationsEcrituresF===============================================================
+        //======================================================================================================ValidationsEcrituresF=========================================================
 
         [HttpPost]
         public JsonResult ValidationsEcrituresF(string baseName, string codeproject, string listCompte, SI_USERS suser)
@@ -1624,7 +1650,7 @@ namespace apptab.Controllers
 
         }
         //END ETAT = 1
-        //======================================================================================================Fvalidations===============================================================
+        //======================================================================================================Fvalidations=================================================================
         [HttpPost]
         public JsonResult LoadValidateEcriture(SI_USERS suser, string codeproject)
         {
@@ -1670,6 +1696,7 @@ namespace apptab.Controllers
                         Commune = item.Commune,
                         Marche = item.Marche,
                         isLATE = isLate,
+                        NUMEREG = item.NUMEREG,
                     });
                 }
             }
@@ -1703,12 +1730,13 @@ namespace apptab.Controllers
                         Commune = item.Commune,
                         Marche = item.Marche,
                         isLATE = isLate,
+                        NUMEREG = item.NUMEREG,
                     });
                 }
             }
             return Json(JsonConvert.SerializeObject(new { type = "Success", msg = "Connexion avec success. ", data = list }, settings));
         }
-        //======================================================================================================Cancel===============================================================
+        //======================================================================================================Cancel========================================================================
         [HttpPost]
         public JsonResult CancelEcriture(string id, string motif, string commentaire, SI_USERS suser, string codeproject)
         {
@@ -1817,7 +1845,7 @@ namespace apptab.Controllers
             }
 
         }
-        //======================================================================================================GetAnomalieBack===============================================================
+        //======================================================================================================GetAnomalieBack================================================================
         public JsonResult GetAnomalieBack(SI_USERS suser, string baseName)
         {
             AFB160 Afb = new AFB160();
@@ -1889,7 +1917,14 @@ namespace apptab.Controllers
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
             }
         }
-        //======================================================================================================FTP===============================================================
+        //========================================================================================================GGetListAFB===================================================================
+        [HttpPost]
+        public JsonResult GetListAFB(string listCompte,SI_USERS suser,int PROJECTID)
+        {
+
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "" }, settings));
+        }
+        //======================================================================================================FTP=============================================================================
 
         public void SENDFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE)
         {
