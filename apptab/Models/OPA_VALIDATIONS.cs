@@ -111,6 +111,11 @@
         public DateTime? dateOrdre { get; set; }
 
         public int? NUMEREG { get; set; }
+
+        [Column(TypeName = "smalldatetime")]
+        public DateTime? DATETRANS { get; set; }
+
+        public int? IDUSTRANS { get; set; }
         [NotMapped]
         public bool isLATE { get; set; }
     }

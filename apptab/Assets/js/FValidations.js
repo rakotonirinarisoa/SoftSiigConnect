@@ -303,6 +303,7 @@ function getelementTXT(a , list) {
         },
         complete: function () {
             loader.addClass('display-none');
+            window.location.reload();
         },
         success: function (result) {
             console.log(result);
@@ -313,7 +314,8 @@ function getelementTXT(a , list) {
         },
         error: function () {
             alert("Problème de connexion. ");
-        }
+        },
+        
     });
 }
 //==============================================================================================Get All Project===================================================================================
@@ -667,15 +669,93 @@ $(`[data-action="CreateTxt"]`).click(function () {
 });
 
 $(`[data-action="CreateTxtCrypter"]`).click(function () {
-    getelementTXT(1);
+    let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
+    let list = [];
+
+    if (baseName == "2") {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
+
+            const item = arr.find(item => item.id === Number(id));
+            list.push({
+                id,
+                estAvance: item.estAvance,
+                numereg: item.numereg
+            });
+        }
+    } else {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
+
+            const item = arr.find(item => item.id === id);
+            list.push({
+                id,
+                estAvance: item.estAvance,
+                numereg: item.numereg
+            });
+        }
+    }
+    getelementTXT(1,list);
 });
 
 $(`[data-action="CreateTxtSend"]`).click(function () {
-    getelementTXT(2);
+    let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
+    let list = [];
+
+    if (baseName == "2") {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
+
+            const item = arr.find(item => item.id === Number(id));
+            list.push({
+                id,
+                estAvance: item.estAvance,
+                numereg: item.numereg
+            });
+        }
+    } else {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
+
+            const item = arr.find(item => item.id === id);
+            list.push({
+                id,
+                estAvance: item.estAvance,
+                numereg: item.numereg
+            });
+        }
+    }
+    getelementTXT(2,list);
 });
 
 $(`[data-action="CreateTxtFTPCrypter"]`).click(function () {
-    getelementTXT(3);
+    let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
+    let list = [];
+
+    if (baseName == "2") {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
+
+            const item = arr.find(item => item.id === Number(id));
+            list.push({
+                id,
+                estAvance: item.estAvance,
+                numereg: item.numereg
+            });
+        }
+    } else {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
+
+            const item = arr.find(item => item.id === id);
+            list.push({
+                id,
+                estAvance: item.estAvance,
+                numereg: item.numereg
+            });
+        }
+    }
+    getelementTXT(3,list);
 });
 
 $('.Checkall').change(function () {
@@ -823,7 +903,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             }
                         ],
                         colReorder: {
-                            enable: true,
+                            enable: false,
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
@@ -1007,7 +1087,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             }
                         ],
                         colReorder: {
-                            enable: true,
+                            enable: false,
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,

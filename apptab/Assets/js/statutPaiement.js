@@ -92,15 +92,15 @@ function emptyTable() {
         table.destroy();
     }
 
-    table = $('#TBD_PROJET_ORDSEC').DataTable({
+    table = $('#TDB_Pai').DataTable({
         data,
         colReorder: {
-            enable: true,
+            enable: false,
             fixedColumnsLeft: 1
         },
         deferRender: true,
         dom: 'Bfrtip',
-        buttons: ['colvis'],
+        buttons: ['colvis']
     });
 }
 
@@ -205,6 +205,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                         },
                         { data: 'soa' },
                         { data: 'projet' },
+                        { data: 'type' },
                         { data: 'numeroEngagement' },
                         { data: 'benef' },
                         { data: 'montant' },
@@ -212,7 +213,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                         { data: 'dateValidation' },
                         { data: 'datePaie' },
                         { data: 'dateTraitBanque' },
-                        { data: 'type' }
+                        
                     ],
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
@@ -222,11 +223,11 @@ $('[data-action="GenereLISTE"]').click(function () {
                         //    $(row).attr('style', "background-color: #FF7F7F !important;");
                         //}
                     },
-                    //columnDefs: [
-                    //    {
-                    //        targets: [-4, -3, -2, -1]
-                    //    }
-                    //],
+                    columnDefs: [
+                        {
+                            targets: [-4, -3, -2, -1]
+                        }
+                    ],
                     colReorder: {
                         enable: false,
                         fixedColumnsLeft: 1
@@ -234,6 +235,63 @@ $('[data-action="GenereLISTE"]').click(function () {
                     deferRender: true,
                     dom: 'Bfrtip',
                     buttons: ['colvis'],
+                    caption: 'SOFT - SIIG CONNECT ' + new Date().toLocaleDateString(),
+                    buttons: ['colvis',
+                        {
+                            extend: 'pdfHtml5',
+                            title: 'STATUTS DES PAIEMENTS',
+                            messageTop: 'Liste des statuts des paiements',
+                            text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
+                            orientation: 'landscape',
+                            pageSize: 'A4',
+                            charset: "utf-8",
+                            bom: true,
+                            className: 'custombutton-collection-pdf',
+                            exportOptions: {
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                            },
+                            customize: function (doc) {
+                                doc.defaultStyle.alignment = 'left';
+                                //doc.defaultStyle.margin = [12, 12, 12, 12];
+                            },
+                            download: 'open'
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            title: 'STATUTS DES PAIEMENTS',
+                            messageTop: 'Liste des statuts des paiements',
+                            text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
+                            orientation: 'landscape',
+                            pageSize: 'A4',
+                            charset: "utf-8",
+                            bom: true,
+                            className: 'custombutton-collection-excel',
+                            exportOptions: {
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (typeof data === 'undefined') {
+                                            return;
+                                        }
+                                        if (data == null) {
+                                            return data;
+                                        }
+                                        if (column === 5) {
+                                            var arr = data.split(',');
+                                            arr[0] = arr[0].toString().replace(/[\.]/g, "");
+                                            if (arr[0] > '' || arr[1] > '') {
+                                                data = arr[0] + '.' + arr[1];
+                                            } else {
+                                                return '';
+                                            }
+                                            return data.toString().replace(/[^\d.-]/g, "");
+                                        }
+                                        return data;
+                                    }
+                                }
+                            },
+                        }
+                    ],
                     initComplete: function () {
                         $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
 

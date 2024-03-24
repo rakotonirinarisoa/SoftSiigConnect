@@ -1667,7 +1667,7 @@ namespace apptab.Controllers
                                 SOA = soa.FirstOrDefault().SOA,
                                 PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                 isLATE = isLate,
-                                isAvance = true
+                                isAvance = "Avance"
                             });
                         }
                     }
@@ -1708,7 +1708,7 @@ namespace apptab.Controllers
                                 SOA = soa.FirstOrDefault().SOA,
                                 PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                 isLATE = isLate,
-                                isAvance = false
+                                isAvance = "Engagement"
                             });
                         }
                     }

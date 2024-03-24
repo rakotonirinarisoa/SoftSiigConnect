@@ -323,7 +323,7 @@ function emptyTable() {
     table = $('#TDB_OPA').DataTable({
         data,
         colReorder: {
-            enable: true,
+            enable: false,
             fixedColumnsLeft: 1
         },
         deferRender: true,
@@ -524,7 +524,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             }
                         ],
                         colReorder: {
-                            enable: true,
+                            enable: false,
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
@@ -720,7 +720,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             }
                         ],
                         colReorder: {
-                            enable: true,
+                            enable: false,
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,

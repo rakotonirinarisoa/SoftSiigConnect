@@ -87,6 +87,8 @@ function parseList(array) {
                 result.push({
                     rowNumber,
                     soa: array[i].SOA,
+                    projet: array[i].TraitementPaiementDetails[j].PROJET,
+                    type: array[i].TraitementPaiementDetails[j].TYPE,
                     num: array[i].TraitementPaiementDetails[j].NUM_ENGAGEMENT,
                     etape,
                     beneficiaire,
@@ -94,7 +96,7 @@ function parseList(array) {
                     agent,
                     dateTraitement,
                     dureeTraitement,
-                    type: array[i].TraitementPaiementDetails[j].AVANCE ? 'Avance' : 'Paiement'
+                    
                 });
 
                 rowNumber += 1;
@@ -119,6 +121,13 @@ function setDataTable() {
                 data: 'soa'
             },
             {
+                data: 'projet'
+            },
+
+            {
+                data: 'type'
+            },
+            {
                 data: 'num'
             },
             {
@@ -139,9 +148,6 @@ function setDataTable() {
             {
                 data: 'dureeTraitement'
             },
-            {
-                data: 'type'
-            }
         ],
         lengthChange: false,
         paging: false,
@@ -157,7 +163,7 @@ function setDataTable() {
             }
 
             if (data.rowNumber % NUMBER_OF_ROWS === NUMBER_OF_ROWS - 1) {
-                $('td:eq(3)', row).attr('colspan', 3).css({ 'text-align': 'center' });
+                $('td:eq(3)', row).attr('colspan', 4).css({ 'text-align': 'center' });
                 $('td:eq(3)', row).text('Durée totale');
 
                 $('td:eq(4)', row).text(data.dateTraitement);
@@ -165,6 +171,7 @@ function setDataTable() {
                 $('td:eq(5)', row).text(data.dureeTraitement);
                 $('td:eq(6)', row).text('').css({ 'display': 'none' });
                 $('td:eq(7)', row).text('').css({ 'display': 'none' });
+                $('td:eq(8)', row).text('').css({ 'display': 'none' });
             }
         }
     });
@@ -256,7 +263,7 @@ $(document).ready(async () => {
 $('#export-excel-btn').on('click', () => {
     $(`td.delete-td`).remove();
 
-    tableToExcel('dashboard', 'DELAIS DE TRAITEMENT ENGAGEMENTS', setDataTable);
+    tableToExcel('dashboard', 'DELAIS DE TRAITEMENT PAIEMENTS', setDataTable);
 });
 
 $('#proj').on('change', () => {
@@ -343,6 +350,9 @@ function emptyTable() {
         paging: false,
         ordering: false,
         info: false,
-        colReorder: false
+        colReorder: false,
+        deferRender: true,
+        dom: 'Bfrtip',
+        buttons: ['colvis'],
     });
 }

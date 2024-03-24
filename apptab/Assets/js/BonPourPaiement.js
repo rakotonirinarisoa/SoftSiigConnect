@@ -296,7 +296,7 @@ function chargeLoad() {
                             }
                         ],
                         colReorder: {
-                            enable: true,
+                            enable: false,
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
@@ -480,7 +480,7 @@ function chargeLoad() {
                             }
                         ],
                         colReorder: {
-                            enable: true,
+                            enable: false,
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
@@ -1023,7 +1023,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             }
                         ],
                         colReorder: {
-                            enable: true,
+                            enable: false,
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
@@ -1224,7 +1224,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             }
                         ],
                         colReorder: {
-                            enable: true,
+                            enable: false,
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,

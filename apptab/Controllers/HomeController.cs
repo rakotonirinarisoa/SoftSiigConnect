@@ -217,7 +217,13 @@ namespace apptab.Controllers
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             var pswftp = db.OPA_CRYPTO.Where(x => x.IDPROJET == PROJECTID && x.IDUSER == suser.ID && x.DELETIONDATE != null).Select(x => x.CRYPTOPWD).FirstOrDefault();
-            var avalider = db.OPA_VALIDATIONS.Where(a => a.IDPROJET == PROJECTID && a.ETAT == 2).ToList();
+            List<OPA_VALIDATIONS> avalider = new List<OPA_VALIDATIONS>();
+            foreach (var item in list)
+            {
+                int b = int.Parse(item.Numereg);
+                avalider.AddRange(db.OPA_VALIDATIONS.Where(a => a.IDPROJET == PROJECTID && a.ETAT == 2 && a.IDREGLEMENT == item.Id && a.NUMEREG == b).ToList());
+            };
+
             if (baseName == "2")
             {
                 var pathfile = aFB160.CreateTOMPROAFB160(devise, codeJ, suser, codeproject);
@@ -252,8 +258,9 @@ namespace apptab.Controllers
                     {
                         try
                         {
-                            item.DATEVAL = DateTime.Now;
-                            item.IDUSVAL = exist.ID;
+                            item.DATETRANS = DateTime.Now;
+
+                            item.IDUSTRANS = exist.ID;
                             item.ETAT = 3;
                             db.SaveChanges();
                         }
@@ -277,8 +284,8 @@ namespace apptab.Controllers
                     {
                         try
                         {
-                            item.DATEVAL = DateTime.Now;
-                            item.IDUSVAL = exist.ID;
+                            item.DATETRANS = DateTime.Now;
+                            item.IDUSTRANS = exist.ID;
                             item.ETAT = 3;
                             db.SaveChanges();
                         }
@@ -444,11 +451,16 @@ namespace apptab.Controllers
                 NUMEREG = x.NUMEREG,
             }).ToList();
             List<DataListTomOP> list = new List<DataListTomOP>();
-
-           
-            foreach (var item in hstSiig)
+            if (hstSiig.Count != 0)
             {
-                list.AddRange(afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID).Where(x => x.No != item.IDREGLEMENT && x.NUMEREG != item.NUMEREG ).ToList());
+                foreach (var item in hstSiig)
+                {
+                    list.AddRange(afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID).Where(x => x.No != item.IDREGLEMENT && x.NUMEREG != item.NUMEREG).ToList());
+                }
+            }
+            else
+            {
+                list.AddRange(afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID).ToList());
             }
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list }, settings));
 
@@ -897,7 +909,7 @@ namespace apptab.Controllers
             }
 
         }
-    
+
         [HttpPost]
         public JsonResult GetElementAvaliderLoad(SI_USERS suser, string codeproject)
         {
@@ -1066,7 +1078,7 @@ namespace apptab.Controllers
             {
                 foreach (var item in AvaliderList)
                 {
-                    aFB160.SaveValideSelectEcritureBR(numBR, item.Journal, item.ETAT.ToString(), devise, suser, PROJECTID, (bool)item.AVANCE);
+                    aFB160.SaveValideSelectEcritureBR(item.IDREGLEMENT, item.Journal, item.ETAT.ToString(), devise, suser, PROJECTID, (bool)item.AVANCE);
                 }
 
             }

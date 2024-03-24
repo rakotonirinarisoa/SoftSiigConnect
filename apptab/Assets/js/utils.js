@@ -1,9 +1,18 @@
 function formatCurrency(amount) {
-    return new Intl.NumberFormat("fr", {
-        style: "decimal",
-        minimumFractionDigits: 2,
-        currencySign: "accounting",
-    }).format(amount);
+    let nombre = amount.toLocaleString("fr-FR",{
+                style: 'decimal',
+                minimumFractionDigits: 2,
+                currencySign: "accounting",
+    });
+
+    nombre += '';
+    var sep = ' ';
+    var reg = /(\d+)(\d{3})/;
+    while (reg.test(nombre)) {
+        nombre = nombre.replace(reg, '$1' + sep + '$2');
+    }
+
+    return nombre.toString().replace('.',',');
 }
 
 function formatDate(date) {

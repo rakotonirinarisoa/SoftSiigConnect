@@ -323,7 +323,7 @@ namespace apptab.Controllers
                                         DATENGAGEMENT = x.DATEMANDAT != null ? x.DATEMANDAT : null,
                                         MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                         DATEPAIE = paiement.DATEVAL,
-                                        MONTPAIE = paiement.MONTANT.ToString(),
+                                        MONTPAIE = string.Format("{0:0.00}", Math.Round(paiement.MONTANT.Value)),
                                         SOA = soa != null ? soa.SOA : "",
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                         TYPE = "Engagement",
@@ -369,7 +369,7 @@ namespace apptab.Controllers
                                         DATENGAGEMENT = x.DATEMANDAT != null ? x.DATEMANDAT : null,
                                         MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                         DATEPAIE = paiement.DATEVAL,
-                                        MONTPAIE = paiement.MONTANT.ToString(),
+                                        MONTPAIE = string.Format("{0:0.00}", Math.Round(paiement.MONTANT.Value)),
                                         SOA = soa != null ? soa.SOA : "",
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                         TYPE = "Avance",
@@ -396,7 +396,7 @@ namespace apptab.Controllers
                     }
                 }
 
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list.OrderByDescending(a => a.isLATE).ToList() }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list.OrderByDescending(a => a.DATENGAGEMENT).ToList() }, settings));
             }
             catch (Exception e)
             {
@@ -633,7 +633,8 @@ namespace apptab.Controllers
                                     COMMENTAIRE = isRejet != null ? isRejet.COMMENTAIRE : "",
 
                                     SOA = soa != null ? soa.SOA : "",
-                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    TYPE = "Engagement"
                                     //isLATE = isLate
                                 });
                             }
@@ -674,7 +675,8 @@ namespace apptab.Controllers
                                     COMMENTAIRE = isRejet != null ? isRejet.COMMENTAIRE : "",
 
                                     SOA = soa != null ? soa.SOA : "",
-                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    TYPE = "Avance"
                                     //isLATE = isLate
                                 });
                             }
@@ -693,7 +695,7 @@ namespace apptab.Controllers
         //Suivi des délais de traitement des engagements et avances//
         public ActionResult DelaisTraitementEngagements()
         {
-            ViewBag.Controller = "Suvi des délais de traitement des engagements";
+            ViewBag.Controller = "Suvi des délais de traitement des engagements et avances";
 
             return View();
         }
@@ -1117,7 +1119,8 @@ namespace apptab.Controllers
                                    NUM = r.NUM,
                                    DATECREA = v.DATECREA != null ? v.DATECREA : null,
                                    DATESEND = v.DATESEND != null ? v.DATESEND : null,
-                                   DATEVAL = v.DATEVAL != null ? v.DATEVAL : null,
+                                   DATETRANS = v.DATETRANS != null ? v.DATETRANS : null,
+                                   TYPE = v.AVANCE == true ? "Avance" : "Réglement"
                                }
                            ).ToList();
 
@@ -1139,9 +1142,10 @@ namespace apptab.Controllers
                                     MONTANT = item.MONTANT.ToString(),
                                     DATEVALIDATIONOP = item.DATECREA,
                                     DATEVALIDATIONAC = item.DATESEND,
-                                    DATEPAIEBANQUE = item.DATEVAL,
+                                    DATEPAIEBANQUE = item.DATETRANS,
                                     SOA = soa.SOA != null ? soa.SOA : "",
-                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    TYPE = item.TYPE == "1" ? "Avance" : "Réglement"
                                 });
                             }
                         }
@@ -1158,7 +1162,8 @@ namespace apptab.Controllers
                                    NUM = r.NUM,
                                    DATECREA = v.DATECREA != null ? v.DATECREA : null,
                                    DATESEND = v.DATESEND != null ? v.DATESEND : null,
-                                   DATEVAL = v.DATEVAL != null ? v.DATEVAL : null,
+                                   DATETRANS = v.DATETRANS != null ? v.DATETRANS : null,
+                                   TYPE = v.AVANCE == true ? "Avance" : "Réglement",
                                }
                            ).ToList();
 
@@ -1180,9 +1185,10 @@ namespace apptab.Controllers
                                     MONTANT = item.MONTANT.ToString(),
                                     DATEVALIDATIONOP = item.DATECREA,
                                     DATEVALIDATIONAC = item.DATESEND,
-                                    DATEPAIEBANQUE = item.DATEVAL,
+                                    DATEPAIEBANQUE = item.DATETRANS,
                                     SOA = soa.SOA != null ? soa.SOA : "",
-                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    TYPE = item.TYPE == "1" ? "Avance" : "Réglement"
                                 });
                             }
                         }
@@ -1198,7 +1204,7 @@ namespace apptab.Controllers
         }
         public ActionResult TraitementsPaiement()
         {
-            ViewBag.Controller = "Traitements des paiements";
+            ViewBag.Controller = "Suvi des délais de traitement des paiements";
             return View();
         }
         [HttpPost]
@@ -1266,6 +1272,7 @@ namespace apptab.Controllers
                                        IDUSCREA = v.IDUSCREA != null ? v.IDUSCREA : null,
                                        IDUSSEND = v.IDUSSEND != null ? v.IDUSSEND : null,
                                        IDUSVAL = v.IDUSVAL != null ? v.IDUSVAL : null,
+                                       TYPE = v.AVANCE == true ? "Avance" : "Réglement",
                                    }
                                ).ToList();
 
@@ -1281,6 +1288,7 @@ namespace apptab.Controllers
                     {
                         result[lastIndex].TraitementPaiementDetails.Add(new TraitementPaiementDetails
                         {
+                            PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
                             NUM_ENGAGEMENT = paielst[j].NUM,
                             BENEFICIAIRE = paielst[j].BENEFICIAIRE,
                             MONTENGAGEMENT = paielst[j].MONTANT.ToString(),
@@ -1291,7 +1299,8 @@ namespace apptab.Controllers
                             DATESENDSIIG = paielst[j].DATESEND,
                             SENDSIIGAGENT = await GetAgent(paielst[j].IDUSSEND),
                             DUREETRAITEMENTTRANSFERTRAF = Date.GetDifference(paielst[j].DATECREA, paielst[j].DATESEND),
-                            DUREETRAITEMENTVALORDSEC = Date.GetDifference(paielst[j].DATESEND, paielst[j].DATEVAL)
+                            DUREETRAITEMENTVALORDSEC = Date.GetDifference(paielst[j].DATESEND, paielst[j].DATEVAL),
+                            TYPE  = paielst[j].TYPE,
                         });
                     }
                 }
@@ -1322,6 +1331,7 @@ namespace apptab.Controllers
                                        IDUSCREA = v.IDUSCREA != null ? v.IDUSCREA : null,
                                        IDUSSEND = v.IDUSSEND != null ? v.IDUSSEND : null,
                                        IDUSVAL = v.IDUSVAL != null ? v.IDUSVAL : null,
+                                       TYPE = v.AVANCE == true ? "Avance" : "Réglement",
                                    }
                                ).ToList();
 
@@ -1337,6 +1347,7 @@ namespace apptab.Controllers
                     {
                         result[lastIndex].TraitementPaiementDetails.Add(new TraitementPaiementDetails
                         {
+                            PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
                             NUM_ENGAGEMENT = paielst[j].NUM.ToString(),
                             BENEFICIAIRE = paielst[j].BENEFICIAIRE,
                             MONTENGAGEMENT = paielst[j].MONTANT.ToString(),
@@ -1347,7 +1358,8 @@ namespace apptab.Controllers
                             DATESENDSIIG = paielst[j].DATESEND,
                             SENDSIIGAGENT = await GetAgent(paielst[j].IDUSSEND),
                             DUREETRAITEMENTTRANSFERTRAF = Date.GetDifference(paielst[j].DATECREA, paielst[j].DATESEND),
-                            DUREETRAITEMENTVALORDSEC = Date.GetDifference(paielst[j].DATESEND, paielst[j].DATEVAL)
+                            DUREETRAITEMENTVALORDSEC = Date.GetDifference(paielst[j].DATESEND, paielst[j].DATEVAL),
+                            TYPE = db.OPA_VALIDATIONS.Where(a => a.ID == projectId && a.IDREGLEMENT == paielst[j].NUM.ToString() && a.NUMEREG == int.Parse(paielst[j].TYPE)).FirstOrDefault().AVANCE == true ? "Avance" : "Réglement",
                         });
                     }
                 }
@@ -1358,7 +1370,7 @@ namespace apptab.Controllers
         }
         public ActionResult TraitementPaiementSoufrance()
         {
-            ViewBag.Controller = "Traitements des paiements en souffrance";
+            ViewBag.Controller = "Liste des traitements en souffrance(par rapport au délai moyen)";
             return View();
         }
         [HttpPost]
@@ -1549,7 +1561,7 @@ namespace apptab.Controllers
         }
         public ActionResult TraitementPaiementRejet()
         {
-            ViewBag.Controller = "Traitements des paiements réjéter";
+            ViewBag.Controller = "Liste des paiements rejetés";
             return View();
         }
         [HttpPost]

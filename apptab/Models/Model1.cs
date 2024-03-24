@@ -12,19 +12,31 @@ namespace apptab.Models
     public partial class Model1 : DbContext
     {
         public Model1()
-            : base("name=Model12")
+            : base("name=Model13")
         {
         }
 
-        public virtual DbSet<OPA_REGLEMENTBR> OPA_REGLEMENTBR { get; set; }
+        public virtual DbSet<OPA_VALIDATIONS> OPA_VALIDATIONS { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<OPA_REGLEMENTBR>()
-                .Property(e => e.ID)
+            modelBuilder.Entity<OPA_VALIDATIONS>()
+                .Property(e => e.Debit)
                 .HasPrecision(18, 0);
 
-            modelBuilder.Entity<OPA_REGLEMENTBR>()
+            modelBuilder.Entity<OPA_VALIDATIONS>()
+                .Property(e => e.Credit)
+                .HasPrecision(18, 0);
+
+            modelBuilder.Entity<OPA_VALIDATIONS>()
+                .Property(e => e.MontantDevise)
+                .HasPrecision(18, 0);
+
+            modelBuilder.Entity<OPA_VALIDATIONS>()
+                .Property(e => e.Devise)
+                .IsFixedLength();
+
+            modelBuilder.Entity<OPA_VALIDATIONS>()
                 .Property(e => e.MONTANT)
                 .HasPrecision(18, 0);
         }
