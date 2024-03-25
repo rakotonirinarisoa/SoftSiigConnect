@@ -207,7 +207,7 @@ function setDataTable() {
         buttons: ['colvis',
             {
                 extend: 'pdfHtml5',
-                title: 'TRAITEMENTS EN SOUFFRANCE (PAR RAPPORT AU DELAIS MAOYEN)',
+                title: 'TRAITEMENTS EN SOUFFRANCE (PAR RAPPORT AU DELAI MOYEN)',
                 messageTop: 'Liste des traitements en souffrance (par rapport au délai moyen)',
                 text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
                 orientation: 'landscape',
@@ -226,7 +226,7 @@ function setDataTable() {
             },
             {
                 extend: 'excelHtml5',
-                title: 'TRAITEMENTS EN SOUFFRANCE (PAR RAPPORT AU DELAIS MAOYEN)',
+                title: 'TRAITEMENTS EN SOUFFRANCE (PAR RAPPORT AU DELAI MOYEN)',
                 messageTop: 'Liste des traitements en souffrance (par rapport au délai moyen)',
                 text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
                 orientation: 'landscape',

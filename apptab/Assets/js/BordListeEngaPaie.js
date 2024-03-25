@@ -101,6 +101,7 @@ function emptyTable() {
         deferRender: true,
         dom: 'Bfrtip',
         buttons: ['colvis'],
+        pageLength: 25,
     });
 }
 
@@ -237,6 +238,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                     deferRender: true,
                     dom: 'Bfrtip',
                     buttons: ['colvis'],
+                    pageLength: 25,
                     caption: 'SOFT - SIIG CONNECT ' + new Date().toLocaleDateString(),
                     buttons: ['colvis',
                         {
@@ -250,7 +252,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-pdf',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                             },
                             customize: function (doc) {
                                 doc.defaultStyle.alignment = 'left';

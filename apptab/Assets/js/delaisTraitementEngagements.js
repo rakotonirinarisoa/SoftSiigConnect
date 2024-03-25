@@ -169,6 +169,7 @@ function setDataTable() {
         deferRender: true,
         dom: 'Bfrtip',
         buttons: ['colvis'],
+        //pageLength: 25,
         caption: 'SOFT - SIIG CONNECT ' + new Date().toLocaleDateString(),
         buttons: ['colvis',
             {
@@ -408,5 +409,6 @@ function emptyTable() {
         deferRender: true,
         dom: 'Bfrtip',
         buttons: ['colvis'],
+        pageLength: 25,
     });
 }
