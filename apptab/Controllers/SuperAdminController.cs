@@ -825,7 +825,7 @@ namespace apptab.Controllers
 
             bool MAILTE = new Data.Extension().TestMail(param.MAILTE);
             bool MAILTV = new Data.Extension().TestMail(param.MAILTV);
-            bool MAILSIIG = new Data.Extension().TestMail(param.MAILSIIG);
+            //bool MAILSIIG = new Data.Extension().TestMail(param.MAILSIIG);
             bool MAILPI = new Data.Extension().TestMail(param.MAILPI);
             bool MAILPE = new Data.Extension().TestMail(param.MAILPE);
             bool MAILPV = new Data.Extension().TestMail(param.MAILPV);
@@ -835,7 +835,7 @@ namespace apptab.Controllers
 
             bool MAILTEA = new Data.Extension().TestMail(param.MAILTEA);
             bool MAILTVA = new Data.Extension().TestMail(param.MAILTVA);
-            bool MAILSIIGA = new Data.Extension().TestMail(param.MAILSIIGA);
+            //bool MAILSIIGA = new Data.Extension().TestMail(param.MAILSIIGA);
             bool MAILREJETA = new Data.Extension().TestMail(param.MAILREJETA);
 
             bool MAILJ0 = new Data.Extension().TestMail(param.MAILJ0);
@@ -847,7 +847,7 @@ namespace apptab.Controllers
 
             //bool MAILPB = new Extension().TestMAIL(param.MAILPB);
 
-            if (MAILTE == false || MAILTV == false || MAILSIIG == false || MAILTEA == false || MAILTVA == false || MAILSIIGA == false
+            if (MAILTE == false || MAILTV == false /*|| MAILSIIG == false*/ || MAILTEA == false || MAILTVA == false /*|| MAILSIIGA == false*/
                 || MAILREJET == false || MAILREJETPAIE == false || MAILREJETA == false
                 || MAILPI == false || MAILPE == false || MAILPV == false || MAILPP == false/* || MAILPB == false*/
                 || MAILJ0 == false || MAILJ1 == false || MAILJ2 == false || MAILJ3 == false || MAILREJETJUST == false || MAILREJETREV == false)

@@ -117,7 +117,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let JR = $("#JR").val();
     let JRA = $("#JRA").val();
 
-    if (!ParaV0 || !ParaV || !ParaS || !ParaSiig || !ParaPe || !ParaPv || !ParaPp || !ParaPb || !Md0 || !Md1 || !Md2 || !Md3 || !Mop0 || !Mop1 || !Mop2
+    if (!ParaV0 || !ParaV || !ParaS /*|| !ParaSiig*/ || !ParaPe || !ParaPv || !ParaPp || !ParaPb || !Md0 || !Md1 || !Md2 /*|| !Md3*/ || !Mop0 || !Mop1 || !Mop2
         || !Tdb0 || !Tdb1 || !Tdb2 || !Tdb3 || !Tdb4 || !Tdb5 || !Tdb6 || !Tdb7 || !Tdb8
         || !J0 || !J1 || !J2 || !J3 || !JR || !JRA) {
         alert("Veuillez renseigner les intitulés des menus. ");

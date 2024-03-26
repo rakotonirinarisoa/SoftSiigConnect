@@ -652,7 +652,7 @@ namespace apptab.Controllers
                                            }).FirstOrDefault();
 
                                 var isRejet = (from user in db.SI_USERS
-                                               join rejet in db.SI_TRAITANNUL on user.ID equals rejet.IDUSER
+                                               join rejet in db.SI_TRAITANNULAVANCE on user.ID equals rejet.IDUSER
                                                where rejet.IDPROJET == crpt && rejet.No == x.No
                                                orderby rejet.DATEANNUL descending
                                                select new

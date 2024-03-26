@@ -128,7 +128,8 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let MAILREJETREV = $("#MAILREJETREV").val();
     let MAILREJETJUST = $("#MAILREJETJUST").val();
     //let ParaPb = $("#ParaPb").val();
-    if (!ParaT || !ParaV || !ParaSiig || !ParaREJET || !ParaPi || !ParaPe || !ParaPv || !ParaPp || !ParaREJETPAIE /*|| !ParaPb*/ || !ParaTA || !ParaVA || !ParaSiigA || !ParaREJETA
+
+    if (!ParaT || !ParaV /*|| !ParaSiig*/ || !ParaREJET || !ParaPi || !ParaPe || !ParaPv || !ParaPp || !ParaREJETPAIE /*|| !ParaPb*/ || !ParaTA || !ParaVA /*|| !ParaSiigA*/ || !ParaREJETA
         || !MailJ0 || !MailJ1 || !MailJ2 || !MailJ3 || !MAILREJETJUST || !MAILREJETREV) {
         alert("Veuillez renseigner les mails. ");
         return;

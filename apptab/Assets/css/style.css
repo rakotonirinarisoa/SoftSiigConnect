@@ -939,20 +939,24 @@ div.dt-container .dt-paging .dt-paging-button {
     margin-left: 0px !important;
 }
 .small-box.tdbinitier {
-    background-color: #4970cb;
+    background-color: #427ed7 /*#4970cb*/;
     height: 75%;
+    opacity: 80%;
 }
 .small-box.tbdattente {
-    background-color: #FFD463;
+    background-color: #0a5cb8 /*#FFD463*/;
     height: 75%;
+    opacity: 80%;
 }
 .small-box.tdbvalider {
-    background-color: #eb7575;
+    background-color: #005187 /*#eb7575*/;
     height: 75%;
+    opacity: 80%;
 }
 .small-box.tdblast {
-    background-color: #338B85;
+    background-color: #2f2c79 /*#338B85*/;
     height: 75%;
+    opacity: 80%;
 }
 
 .custombutton-collection-pdf {
