@@ -154,7 +154,7 @@ function setDataTable() {
         ordering: false,
         info: false,
         colReorder: false,
-        rowsGroup: [0, 1],
+        rowsGroup: [0, 1, 2],
         order: [['desc']],
         createdRow: function (row, data, _) {
             if (data.rowNumber !== 0) {
@@ -166,12 +166,12 @@ function setDataTable() {
                 $('td:eq(3)', row).attr('colspan', 4).css({ 'text-align': 'center' });
                 $('td:eq(3)', row).text('Durée totale');
 
-                $('td:eq(4)', row).text(data.dateTraitement);
+                $('td:eq(5)', row).text(data.dateTraitement);
 
-                $('td:eq(5)', row).text(data.dureeTraitement);
-                $('td:eq(6)', row).text('').css({ 'display': 'none' });
+                $('td:eq(6)', row).text(data.dureeTraitement);
                 $('td:eq(7)', row).text('').css({ 'display': 'none' });
                 $('td:eq(8)', row).text('').css({ 'display': 'none' });
+                $('td:eq(9)', row).text('').css({ 'display': 'none' });
             }
         }
     });
