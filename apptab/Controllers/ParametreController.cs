@@ -1420,5 +1420,86 @@ namespace apptab.Controllers
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur d'enregistrement de l'information. " }, settings));
             }
         }
+
+        //TYPE FLOW//
+        public ActionResult TypeFlowCreate()
+        {
+            ViewBag.Controller = "Paramétrage processus";
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult DetailsTypeFlow(SI_USERS suser, int iProjet)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                int crpt = iProjet;
+
+                var crpto = db.SI_TYPEPROCESSUS.FirstOrDefault(a => a.DELETIONDATE == null && a.IDPROJET == crpt);
+                if (crpto != null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = crpto }, settings));
+                }
+                else
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le processus. " }, settings));
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
+
+        [HttpPost]
+        public JsonResult UpdateTypeFlow(SI_USERS suser, SI_TYPEPROCESSUS param, int iProjet)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                int IdS = iProjet;
+                var SExist = db.SI_TYPEPROCESSUS.FirstOrDefault(a => a.DELETIONDATE == null && a.IDPROJET == IdS);
+
+                if (SExist != null)
+                {
+                    if (SExist.VALDEPENSES != param.VALDEPENSES || SExist.VALPAIEMENTS != param.VALPAIEMENTS)
+                    {
+                        SExist.VALDEPENSES = param.VALDEPENSES;
+                        SExist.VALPAIEMENTS = param.VALPAIEMENTS;
+                        SExist.IDUSER = exist.ID;
+                        SExist.CREATIONDATE = DateTime.Now;
+                        db.SaveChanges();
+                    }
+
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Enregistrement avec succès. ", data = param }, settings));
+                }
+                else
+                {
+                    var newPara = new SI_TYPEPROCESSUS()
+                    {
+                        VALDEPENSES = param.VALDEPENSES,
+                        VALPAIEMENTS = param.VALPAIEMENTS,
+                        IDPROJET = IdS,
+                        CREATIONDATE = DateTime.Now,
+                        IDUSER = exist.ID
+                    };
+
+                    db.SI_TYPEPROCESSUS.Add(newPara);
+                    db.SaveChanges();
+
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Enregistrement avec succès. ", data = param }, settings));
+                }
+            }
+            catch (Exception)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur d'enregistrement de l'information. " }, settings));
+            }
+        }
     }
 }

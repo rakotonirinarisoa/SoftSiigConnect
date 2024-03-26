@@ -331,6 +331,7 @@
     <Compile Include="Models\SI_TRAITJUSTIF.cs" />
     <Compile Include="Models\SI_TRAITANNULREVERS.cs" />
     <Compile Include="Models\SI_TRAITREVERS.cs" />
+    <Compile Include="Models\SI_TYPEPROCESSUS.cs" />
     <Compile Include="SOFTCONNECTOM.cs" />
     <Compile Include="SOFTCONNECTSIIG.cs" />
     <Compile Include="Models\TP_MPIECES_JUSTIFICATIVES.cs" />
@@ -2461,6 +2462,7 @@
     <Content Include="Assets\js\TraitmandatModalT.js" />
     <Content Include="Assets\js\TraitmandatOA.js" />
     <Content Include="Assets\js\TraitmandatO.js" />
+    <Content Include="Assets\js\TypeProc.js" />
     <Content Include="Assets\js\TypeC.js" />
     <Content Include="Assets\js\TeacherValidations.js" />
     <Content Include="Assets\js\Crypto.js" />
@@ -4894,6 +4896,7 @@
     <Content Include="Views\BordTraitement\StatutJR.cshtml" />
     <Content Include="Views\BordTraitement\StatutJRA.cshtml" />
     <Content Include="Web.config" />
+    <Content Include="Views\Parametre\TypeFlowCreate.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
