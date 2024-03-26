@@ -28,7 +28,7 @@ namespace apptab.Controllers
         //Traitement mandats PROJET//
         public ActionResult TraitementPROJET()
         {
-            ViewBag.Controller = "Tris des engagements par le RAF";
+            ViewBag.Controller = "Tris des engagements";
 
             return View();
         }
@@ -403,7 +403,7 @@ namespace apptab.Controllers
         //Traitement mandats ORDSEC//
         public ActionResult TraitementORDSEC()
         {
-            ViewBag.Controller = "Validation des engagements par ORDESEC";
+            ViewBag.Controller = "Validation des engagements";
 
             return View();
         }

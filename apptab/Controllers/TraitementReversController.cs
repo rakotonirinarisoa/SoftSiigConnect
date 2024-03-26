@@ -24,7 +24,7 @@ namespace apptab.Controllers
         //Traitement justificatifs PROJET//
         public ActionResult TraitementPROJET()
         {
-            ViewBag.Controller = "Tris des reversements par le RAF";
+            ViewBag.Controller = "Tris des reversements";
 
             return View();
         }
@@ -747,7 +747,7 @@ namespace apptab.Controllers
         //Traitement justificatifs ORDSEC//
         public ActionResult TraitementORDSEC()
         {
-            ViewBag.Controller = "Validation des reversements par ORDESEC";
+            ViewBag.Controller = "Validation des reversements";
 
             return View();
         }
