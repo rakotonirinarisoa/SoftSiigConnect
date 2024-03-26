@@ -1,0 +1,49 @@
+﻿
+@{
+    ViewBag.Title = "Paramétrage processus";
+    ViewData["Controller"] = "Paramétrage processus";
+    /*Layout = "~/Views/Shared/_Layout.cshtml";*/
+}
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">PROJET</span>
+        </div>
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="proj" data-id="proj-list">
+        </select>
+    </div>
+</div>
+
+<h5>Validateur des dépenses</h5>
+<div class="btn-group btn-group-toggle mb-3 d-flex flex-wrap" data-toggle="buttons" style="width:100%">
+    <label class="btn btn-outline-info mandarfr">
+        <input type="radio" name="options1" id="option1" autocomplete="off" data-id1="1"> NON APPLICABLE
+    </label>
+    <label class="btn btn-outline-danger mandarfr">
+        <input type="radio" name="options1" id="option2" autocomplete="off" data-id1="2"> APPLICABLE
+    </label>
+</div>
+
+<h5>Validateur des paiements</h5>
+<div class="btn-group btn-group-toggle mb-3 d-flex flex-wrap" data-toggle="buttons" style="width:100%">
+    <label class="btn btn-outline-info mandarfr">
+        <input type="radio" name="options2" id="option11" autocomplete="off" data-id2="1"> NON APPLICABLE
+    </label>
+    <label class="btn btn-outline-danger mandarfr">
+        <input type="radio" name="options2" id="option22" autocomplete="off" data-id2="2"> APPLICABLE
+    </label>
+</div>
+
+<div class="form-row">
+    <div class="mb-3 col">
+        <div class="btn btn-flat bg-gradient-olive col-12" data-action="UpdateUser">
+            <i class="fa fa-save"></i> Enregistrer
+        </div>
+    </div>
+</div>
+
+<!-- Droit.js -->
+<script src="~/Assets/js/TypeProc.js?version=@Session["VERSION"]"></script>
+
+

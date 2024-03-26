@@ -19,7 +19,7 @@ function GetUsers() {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/Parametre/DetailsTypeE',
+        url: Origin + '/Parametre/DetailsTypeFlow',
         data: formData,
         cache: false,
         contentType: false,
@@ -44,7 +44,8 @@ function GetUsers() {
                 return;
             }
 
-            $(`input[data-id="${Datas.data.TYPE}"]`).click();
+            $(`input[data-id1="${Datas.data.VALDEPENSES}"]`).click();
+            $(`input[data-id2="${Datas.data.VALPAIEMENTS}"]`).click();
 
             if (Datas.data.IDPROJET != 0)
                 $("#proj").val(`${Datas.data.IDPROJET}`);
@@ -63,10 +64,11 @@ $('#proj').on('change', () => {
 });
 
 $(`[data-action="UpdateUser"]`).click(function () {
-    let user = $("input[type='radio']:checked").attr("data-id");
+    let user = $("input[name='options1']:checked").attr("data-id1");
+    let user2 = $("input[name='options2']:checked").attr("data-id2");
 
-    if (!user) {
-        alert("Veuillez renseigner le type d'écriture. ");
+    if (!user || !user2) {
+        alert("Veuillez renseigner les processus. ");
         return;
     }
 
@@ -83,13 +85,14 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
 
-    formData.append("param.TYPE", $("input[type='radio']:checked").attr("data-id"));
+    formData.append("param.VALDEPENSES", $("input[name='options1']:checked").attr("data-id1"));
+    formData.append("param.VALPAIEMENTS", $("input[name='options2']:checked").attr("data-id2"));
 
     formData.append("iProjet", $("#proj").val());
 
     $.ajax({
         type: "POST",
-        url: Origin + '/Parametre/UpdateTypeE',
+        url: Origin + '/Parametre/UpdateTypeFlow',
         data: formData,
         cache: false,
         contentType: false,
