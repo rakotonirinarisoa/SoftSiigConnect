@@ -85,7 +85,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let ParaV0 = $("#ParaV0").val();
     let ParaV = $("#ParaV").val();
     let ParaS = $("#ParaS").val();
-    let ParaSiig = $("#ParaSiig").val();
+    //let ParaSiig = $("#ParaSiig").val();
     let ParaPe = $("#ParaPe").val();
     let ParaPv = $("#ParaPv").val();
     let ParaPp = $("#ParaPp").val();
@@ -94,7 +94,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let Md0 = $("#Md0").val();
     let Md1 = $("#Md1").val();
     let Md2 = $("#Md2").val();
-    let Md3 = $("#Md3").val();
+    //let Md3 = $("#Md3").val();
 
     let Mop0 = $("#Mop0").val();
     let Mop1 = $("#Mop1").val();
@@ -134,7 +134,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("param.MTNON", $(`#ParaV0`).val());
     formData.append("param.MT0", $(`#ParaV`).val());
     formData.append("param.MT1", $(`#ParaS`).val());
-    formData.append("param.MT2", $(`#ParaSiig`).val());
+    //formData.append("param.MT2", $(`#ParaSiig`).val());
     formData.append("param.MP1", $(`#ParaPe`).val());
     formData.append("param.MP2", $(`#ParaPv`).val());
     formData.append("param.MP3", $(`#ParaPp`).val());
@@ -143,7 +143,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("param.MD0", $(`#Md0`).val());
     formData.append("param.MD1", $(`#Md1`).val());
     formData.append("param.MD2", $(`#Md2`).val());
-    formData.append("param.MD3", $(`#Md3`).val());
+    //formData.append("param.MD3", $(`#Md3`).val());
 
     formData.append("param.MOP0", $(`#Mop0`).val());
     formData.append("param.MOP1", $(`#Mop1`).val());
@@ -188,7 +188,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
             }
             if (Datas.type == "success") {
                 alert(Datas.msg);
-                return;
+                window.location = window.location.origin;
             }
             if (Datas.type == "login") {
                 alert(Datas.msg);

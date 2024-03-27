@@ -471,8 +471,8 @@ namespace SOFTCONNECT.Controllers
                 var test = db.SI_USERS.FirstOrDefault(x => x.LOGIN == Users.LOGIN && x.PWD == Users.PWD && x.DELETIONDATE == null);
                 if (test == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vérifiez vos identifiants. " }, settings));
 
-                Session["PROCESDEPS"] = 1;//1 NON et 1 APPLICABLE
-                Session["PROCESPAIE"] = 1;//1 NON et 1 APPLICABLE
+                Session["PROCESDEPS"] = 1;//1 NON et 2 APPLICABLE
+                Session["PROCESPAIE"] = 1;//1 NON et 2 APPLICABLE
 
                 if (test.ROLE != Role.SAdministrateur && test.ROLE != Role.Organe_de_Suivi && test.ROLE != Role.Validateur_paiements)
                 {
@@ -482,8 +482,8 @@ namespace SOFTCONNECT.Controllers
                         {
                             var isProcess = db.SI_TYPEPROCESSUS.FirstOrDefault(a => a.DELETIONDATE == null && a.IDPROJET == test.IDPROJET);
 
-                            Session["PROCESDEPS"] = isProcess.VALDEPENSES;//1 NON et 1 APPLICABLE
-                            Session["PROCESPAIE"] = isProcess.VALPAIEMENTS;//1 NON et 1 APPLICABLE
+                            Session["PROCESDEPS"] = isProcess.VALDEPENSES;//1 NON et 2 APPLICABLE
+                            Session["PROCESPAIE"] = isProcess.VALPAIEMENTS;//1 NON et 2 APPLICABLE
                         }
 
                         if (String.IsNullOrEmpty(test.IDPROJET.ToString()) || !db.SI_PROJETS.Any(a => a.ID == test.IDPROJET && a.DELETIONDATE == null))
