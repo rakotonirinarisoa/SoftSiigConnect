@@ -471,8 +471,8 @@ namespace SOFTCONNECT.Controllers
                 var test = db.SI_USERS.FirstOrDefault(x => x.LOGIN == Users.LOGIN && x.PWD == Users.PWD && x.DELETIONDATE == null);
                 if (test == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vérifiez vos identifiants. " }, settings));
 
-                Session["PROCESDEPS"] = 1;//1 NON et 2 APPLICABLE
-                Session["PROCESPAIE"] = 1;//1 NON et 2 APPLICABLE
+                Session["PROCESDEPS"] = 2;//1 NON et 2 APPLICABLE
+                Session["PROCESPAIE"] = 2;//1 NON et 2 APPLICABLE
 
                 if (test.ROLE != Role.SAdministrateur && test.ROLE != Role.Organe_de_Suivi && test.ROLE != Role.Validateur_paiements)
                 {

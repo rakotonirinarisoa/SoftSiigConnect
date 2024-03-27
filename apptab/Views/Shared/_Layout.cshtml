@@ -506,15 +506,17 @@
                                             </a>
                                         </li>
 
-                                        <li class="nav-item">
-                                            <a href="../TraitementJustif/TraitementORDSEC" class="nav-link" data-child-id="3">
-                                                <i class="nav-icon fas fa-th-list" style="color: #FFC107"></i>
-                                                <p>
-                                                    @Session["J1"]
-                                                </p>
-                                            </a>
-                                        </li>
-
+                                        @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
+                                        {
+                                            <li class="nav-item">
+                                                <a href="../TraitementJustif/TraitementORDSEC" class="nav-link" data-child-id="3">
+                                                    <i class="nav-icon fas fa-th-list" style="color: #FFC107"></i>
+                                                    <p>
+                                                        @Session["J1"]
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
                                         <li class="nav-item">
                                             <a href="../TraitementRevers/TraitementPROJET" class="nav-link" data-child-id="3">
                                                 <i class="nav-icon fas fa-list-ol" style="color: #DF4857"></i>
@@ -523,16 +525,19 @@
                                                 </p>
                                             </a>
                                         </li>
+                                        @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
+                                        {
+                                            <li class="nav-item">
+                                                <a href="../TraitementRevers/TraitementORDSEC" class="nav-link" data-child-id="3">
+                                                    <i class="nav-icon fas fa-tasks" style="color: #3EB059"></i>
+                                                    <p>
+                                                        @Session["J3"]
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
 
-                                        <li class="nav-item">
-                                            <a href="../TraitementRevers/TraitementORDSEC" class="nav-link" data-child-id="3">
-                                                <i class="nav-icon fas fa-tasks" style="color: #3EB059"></i>
-                                                <p>
-                                                    @Session["J3"]
-                                                </p>
-                                            </a>
-                                        </li>
-                                    </ul>
+                                        </ul>
                                 </li>
                             </ul>
                         </div>
