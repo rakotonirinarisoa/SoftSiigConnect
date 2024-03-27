@@ -825,7 +825,7 @@ namespace apptab.Controllers
 
             bool MAILTE = new Data.Extension().TestMail(param.MAILTE);
             bool MAILTV = new Data.Extension().TestMail(param.MAILTV);
-            bool MAILSIIG = new Data.Extension().TestMail(param.MAILSIIG);
+            //bool MAILSIIG = new Data.Extension().TestMail(param.MAILSIIG);
             bool MAILPI = new Data.Extension().TestMail(param.MAILPI);
             bool MAILPE = new Data.Extension().TestMail(param.MAILPE);
             bool MAILPV = new Data.Extension().TestMail(param.MAILPV);
@@ -835,7 +835,7 @@ namespace apptab.Controllers
 
             bool MAILTEA = new Data.Extension().TestMail(param.MAILTEA);
             bool MAILTVA = new Data.Extension().TestMail(param.MAILTVA);
-            bool MAILSIIGA = new Data.Extension().TestMail(param.MAILSIIGA);
+            //bool MAILSIIGA = new Data.Extension().TestMail(param.MAILSIIGA);
             bool MAILREJETA = new Data.Extension().TestMail(param.MAILREJETA);
 
             bool MAILJ0 = new Data.Extension().TestMail(param.MAILJ0);
@@ -847,7 +847,7 @@ namespace apptab.Controllers
 
             //bool MAILPB = new Extension().TestMAIL(param.MAILPB);
 
-            if (MAILTE == false || MAILTV == false || MAILSIIG == false || MAILTEA == false || MAILTVA == false || MAILSIIGA == false
+            if (MAILTE == false || MAILTV == false /*|| MAILSIIG == false*/ || MAILTEA == false || MAILTVA == false /*|| MAILSIIGA == false*/
                 || MAILREJET == false || MAILREJETPAIE == false || MAILREJETA == false
                 || MAILPI == false || MAILPE == false || MAILPV == false || MAILPP == false/* || MAILPB == false*/
                 || MAILJ0 == false || MAILJ1 == false || MAILJ2 == false || MAILJ3 == false || MAILREJETJUST == false || MAILREJETREV == false)
@@ -1211,8 +1211,8 @@ namespace apptab.Controllers
 
                 if (SExist != null)
                 {
-                    if (SExist.MTNON != param.MTNON || SExist.MT0 != param.MT0 || SExist.MT1 != param.MT1 || SExist.MT2 != param.MT2
-                        || SExist.MD0 != param.MD0 || SExist.MD1 != param.MD1 || SExist.MD2 != param.MD2 || SExist.MD3 != param.MD3
+                    if (SExist.MTNON != param.MTNON || SExist.MT0 != param.MT0 || SExist.MT1 != param.MT1 /*|| SExist.MT2 != param.MT2*/
+                        || SExist.MD0 != param.MD0 || SExist.MD1 != param.MD1 || SExist.MD2 != param.MD2 /*|| SExist.MD3 != param.MD3*/
                         || SExist.MOP0 != param.MOP0 || SExist.MOP1 != param.MOP1 || SExist.MOP2 != param.MOP2
                         || SExist.MP1 != param.MP1 || SExist.MP2 != param.MP2 || SExist.MP3 != param.MP3 || SExist.MP4 != param.MP4
                         || SExist.TDB0 != param.TDB0 || SExist.TDB1 != param.TDB1 || SExist.TDB2 != param.TDB2 || SExist.TDB3 != param.TDB3 || SExist.TDB4 != param.TDB4
@@ -1222,8 +1222,7 @@ namespace apptab.Controllers
                         SExist.MTNON = param.MTNON;
                         SExist.MT0 = param.MT0;
                         SExist.MT1 = param.MT1;
-                        SExist.MT2 = param.MT2;
-                        SExist.MT2 = param.MT2;
+                        //SExist.MT2 = param.MT2;
                         SExist.MP1 = param.MP1;
                         SExist.MP2 = param.MP2;
                         SExist.MP3 = param.MP3;
@@ -1232,7 +1231,7 @@ namespace apptab.Controllers
                         SExist.MD0 = param.MD0;
                         SExist.MD1 = param.MD1;
                         SExist.MD2 = param.MD2;
-                        SExist.MD3 = param.MD3;
+                        //SExist.MD3 = param.MD3;
 
                         SExist.MOP0 = param.MOP0;
                         SExist.MOP1 = param.MOP1;
@@ -1267,7 +1266,7 @@ namespace apptab.Controllers
                         MTNON = param.MTNON,
                         MT0 = param.MT0,
                         MT1 = param.MT1,
-                        MT2 = param.MT2,
+                        //MT2 = param.MT2,
                         MP1 = param.MP1,
                         MP2 = param.MP2,
                         MP3 = param.MP3,
@@ -1276,7 +1275,7 @@ namespace apptab.Controllers
                         MD0 = param.MD0,
                         MD1 = param.MD1,
                         MD2 = param.MD2,
-                        MD3 = param.MD3,
+                        //MD3 = param.MD3,
 
                         MOP0 = param.MOP0,
                         MOP1 = param.MOP1,

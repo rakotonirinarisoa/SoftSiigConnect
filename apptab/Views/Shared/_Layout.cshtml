@@ -321,7 +321,7 @@
                                     </li>
 
                                     <li class="nav-item" data-io>
-                                        <a href="../SuperAdmin/MailCreate" class="nav-link" data-child-id="1">
+                                        <a href="../SuperAdmin/MAILCreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-envelope"></i>
                                             <p>
                                                 Gestion des mails
@@ -399,23 +399,27 @@
                                         </p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a href="../Traitement/TraitementORDSEC" class="nav-link" data-child-id="2">
-                                        <i class="nav-icon fas fa-list-ol" style="color: #eb7575"></i>
-                                        <p>
-                                            @Session["MT1"]
-                                        </p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
+                                @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
+                                {
+                                    <li class="nav-item">
+                                        <a href="../Traitement/TraitementORDSEC" class="nav-link" data-child-id="2">
+                                            <i class="nav-icon fas fa-list-ol" style="color: #eb7575"></i>
+                                            <p>
+                                                @Session["MT1"]
+                                            </p>
+                                        </a>
+                                    </li>
+                                }
+                                @*<li class="nav-item">
                                     <a href="../Traitement/TraitementSENDSIIGFP" class="nav-link" data-child-id="2">
                                         <i class="nav-icon fas fa-tasks" style="color: #338B85"></i>
                                         <p>
                                             @Session["MT2"]
                                         </p>
                                     </a>
-                                </li>
-                            </ul>
+                                </li>*@
+
+                               </ul>
                         </div>
 
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
@@ -460,23 +464,27 @@
                                             </a>
                                         </li>
 
-                                        <li class="nav-item">
-                                            <a href="../TraitementAvance/TraitementORDSEC" class="nav-link" data-child-id="3">
-                                                <i class="nav-icon fas fa-list-ol" style="color: #eb7575"></i>
-                                                <p>
-                                                    @Session["MD2"]
-                                                </p>
-                                            </a>
-                                        </li>
+                                        @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
+                                        {
+                                            <li class="nav-item">
+                                                <a href="../TraitementAvance/TraitementORDSEC" class="nav-link" data-child-id="3">
+                                                    <i class="nav-icon fas fa-list-ol" style="color: #eb7575"></i>
+                                                    <p>
+                                                        @Session["MD2"]
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
 
-                                        <li class="nav-item">
+                                        @*<li class="nav-item">
                                             <a href="../TraitementAvance/TraitementSENDSIIGFP" class="nav-link" data-child-id="3">
                                                 <i class="nav-icon fas fa-tasks" style="color: #338B85"></i>
                                                 <p>
                                                     @Session["MD3"]
                                                 </p>
                                             </a>
-                                        </li>
+                                        </li>*@
+
                                     </ul>
                                 </li>
 

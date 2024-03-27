@@ -97,7 +97,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let ParaPb = $("#ParaPb").val();
     let ParaRAF = $("#ParaRAF").val();
     let ParaRAFA = $("#ParaRAFA").val();
-    if (!ParaV || !ParaS || !ParaSiig || !ParaPe || !ParaPv || !ParaPp || !ParaPb || !ParaRAF || !ParaVA || !ParaSA || !ParaSiigA || !ParaRAFA) {
+    if (!ParaV /*|| !ParaS || !ParaSiig*/ || !ParaPe || !ParaPv || !ParaPp || !ParaPb || !ParaRAF || !ParaVA /*|| !ParaSA || !ParaSiigA*/ || !ParaRAFA) {
         alert("Veuillez renseigner les délais de traitement. ");
         return;
     }

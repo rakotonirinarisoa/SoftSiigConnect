@@ -112,7 +112,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
             }
             if (Datas.type == "success") {
                 alert(Datas.msg);
-                return;
+                window.location = window.location.origin;
             }
             if (Datas.type == "login") {
                 alert(Datas.msg);

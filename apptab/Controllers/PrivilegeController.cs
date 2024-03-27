@@ -94,7 +94,7 @@ namespace apptab.Controllers
                 }
                 else
                 {
-                    var users = db.SI_USERS.Where(x => x.ROLE != Role.SAdministrateur && x.ROLE != Role.Organe_de_Suivi && x.ROLE != Role.Agent_Comptable && x.IDPROJET == exist.IDPROJET && x.DELETIONDATE == null).Select(a => new
+                    var users = db.SI_USERS.Where(x => x.ROLE != Role.SAdministrateur && x.ROLE != Role.Organe_de_Suivi && x.ROLE != Role.Validateur_paiements && x.IDPROJET == exist.IDPROJET && x.DELETIONDATE == null).Select(a => new
                     {
                         LOGIN = a.LOGIN,
                         ROLE = a.ROLE.ToString(),
