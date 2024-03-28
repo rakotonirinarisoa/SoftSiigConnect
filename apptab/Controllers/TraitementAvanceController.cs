@@ -24,7 +24,7 @@ namespace apptab.Controllers
         //Traitement mandats PROJET//
         public ActionResult TraitementPROJET()
         {
-            ViewBag.Controller = "Tris des avances par le RAF";
+            ViewBag.Controller = "Tris des avances";
 
             return View();
         }
@@ -399,7 +399,7 @@ namespace apptab.Controllers
         //Traitement mandats ORDSEC//
         public ActionResult TraitementORDSEC()
         {
-            ViewBag.Controller = "Validation des avances par ORDESEC";
+            ViewBag.Controller = "Validation des avances";
 
             return View();
         }
@@ -578,6 +578,8 @@ namespace apptab.Controllers
 
             var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET;
 
+            int ordsec = int.Parse(Session["PROCESDEPS"].ToString());
+
             var listCompteS = listCompte.Split(',');
             foreach (var SAV in listCompteS)
             {
@@ -597,6 +599,14 @@ namespace apptab.Controllers
                         ismod.DATECRE = DateTime.Now;
                         ismod.DATEANNUL = null;
                         ismod.IDUSERANNUL = null;
+
+                        //SANS ORDSEC//
+                        if (ordsec == 1)
+                        {
+                            ismod.ETAT = 1;
+                            ismod.DATEVALIDATION = DateTime.Now;
+                            ismod.IDUSERVALIDATE = exist.ID;
+                        }
 
                         db.SaveChanges();
                     }
@@ -645,6 +655,13 @@ namespace apptab.Controllers
                                 IDUSERCREATE = exist.ID
                             };
 
+                            if (ordsec == 1)
+                            {
+                                newT.ETAT = 1;
+                                newT.DATEVALIDATION = DateTime.Now;
+                                newT.IDUSERVALIDATE = exist.ID;
+                            }
+
                             db.SI_TRAITAVANCE.Add(newT);
                             db.SaveChanges();
                         }
@@ -690,6 +707,13 @@ namespace apptab.Controllers
                 mail.IsBodyHtml = true;
                 mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " pièces en attente de validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
                     "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+
+                if (ordsec == 1)
+                {
+                    mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " pièces validées pour le compte du projet " + ProjetIntitule + " et en attente de transfert vers SIIGFP.<br/><br>" +
+                        "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+
+                }
 
                 smtp.Port = 587;
                 smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);

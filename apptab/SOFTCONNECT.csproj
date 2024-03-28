@@ -332,6 +332,7 @@
     <Compile Include="Models\SI_TRAITJUSTIF.cs" />
     <Compile Include="Models\SI_TRAITANNULREVERS.cs" />
     <Compile Include="Models\SI_TRAITREVERS.cs" />
+    <Compile Include="Models\SI_TYPEPROCESSUS.cs" />
     <Compile Include="SOFTCONNECTOM.cs" />
     <Compile Include="SOFTCONNECTSIIG.cs" />
     <Compile Include="Models\TP_MPIECES_JUSTIFICATIVES.cs" />
@@ -2462,6 +2463,7 @@
     <Content Include="Assets\js\TraitmandatModalT.js" />
     <Content Include="Assets\js\TraitmandatOA.js" />
     <Content Include="Assets\js\TraitmandatO.js" />
+    <Content Include="Assets\js\TypeProc.js" />
     <Content Include="Assets\js\TypeC.js" />
     <Content Include="Assets\js\TeacherValidations.js" />
     <Content Include="Assets\js\Crypto.js" />
@@ -2517,11 +2519,17 @@
     <Content Include="Assets\otherCSS\datatables.min.css" />
     <Content Include="Assets\otherCSS\fixedColumns.dataTables.css" />
     <Content Include="Assets\otherJs\buttons.colVis.min.js" />
+    <Content Include="Assets\otherJs\buttons.dataTables.js" />
+    <Content Include="Assets\otherJs\buttons.html5.min.js" />
+    <Content Include="Assets\otherJs\dataTables.buttons.js" />
     <Content Include="Assets\otherJs\datatables.min.js" />
     <Content Include="Assets\otherJs\dataTables.rowsGroup.js" />
     <Content Include="Assets\otherJs\html2canvas.min.js" />
     <Content Include="Assets\otherJs\jquery-3.7.0.js" />
     <Content Include="Assets\otherJs\jspdf.umd.min.js" />
+    <Content Include="Assets\otherJs\jszip.min.js" />
+    <Content Include="Assets\otherJs\pdfmake.min.js" />
+    <Content Include="Assets\otherJs\vfs_fonts.js" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -4892,6 +4900,7 @@
     <Content Include="Views\BordTraitement\StatutJRA.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Views\Pdf\Index.cshtml" />
+    <Content Include="Views\Parametre\TypeFlowCreate.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

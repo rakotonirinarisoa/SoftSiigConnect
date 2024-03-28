@@ -51,15 +51,15 @@ function modalLIAS(id) {
                 contentpaie = ``;
                 if (ListResult.REF != "" || ListResult.OBJ != "" || ListResult.TITUL != "") {
                     contentpaie += `<tr class="select-text">
-                                        <td style="font-weight: bold; text-align:center">DEF</td>
+                                        <td style="font-weight: bold; text-align:center">STATUT 1</td>
                                         <td style="font-weight: bold; text-align:center"><a href="${ListResult.REF}" target="_blank">${ListResult.REF}</a></td>
                                     </tr>
                                     <tr class="select-text">
-                                        <td style="font-weight: bold; text-align:center">TEF</td>
+                                        <td style="font-weight: bold; text-align:center">STATUT 2</td>
                                         <td style="font-weight: bold; text-align:center"><a href="${ListResult.OBJ}" target="_blank">${ListResult.OBJ}</a></td>
                                     </tr>
                                     <tr class="select-text">
-                                        <td style="font-weight: bold; text-align:center">BE</td>
+                                        <td style="font-weight: bold; text-align:center">STATUT 3</td>
                                         <td style="font-weight: bold; text-align:center"><a href="${ListResult.TITUL}" target="_blank">${ListResult.TITUL}</a></td>
                                     </tr>`;
                 }

@@ -343,6 +343,9 @@ function emptyTable() {
         paging: false,
         ordering: false,
         info: false,
-        colReorder: false
+        colReorder: false,
+        deferRender: true,
+        dom: 'Bfrtip',
+        buttons: ['colvis'],
     });
 }
