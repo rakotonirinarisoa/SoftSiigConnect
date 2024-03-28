@@ -81,7 +81,8 @@ function exportTableToPdf(tableId, filename, columnsIndexesToHide = []) {
     tmpDiv.find('table').css({
         'width': 'auto',
         'fontSize': '9px',
-        'border': '0px'
+        'border': '0px',
+        'overflow-x': 'hidden'
     });
 
     const htmlContent = tmpDiv.html();
