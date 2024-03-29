@@ -546,6 +546,16 @@ namespace SOFTCONNECT.Controllers
                 test.LASTCONNEXTION = DateTime.Now;
                 db.SaveChanges();
 
+                var elem = new SI_USERSHISTO()
+                {
+                    IDUSER = test.ID,
+                    IDPROJET = test.IDPROJET,
+                    CONNEX = DateTime.Now
+                };
+                //var histo = db.SI_USERSHISTO.FirstOrDefault(x => x.IDUSER == test.ID);
+                db.SI_USERSHISTO.Add(elem);
+                db.SaveChanges();
+
                 Session["VERSIONCONNNECT"] = "1.0.0";
                 Session["VERSION"] = "1.3.26";
 

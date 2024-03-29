@@ -358,7 +358,7 @@ namespace apptab.Controllers
                                            {
                                                soas.SOA
                                            }).FirstOrDefault();
-                                var paiement = db.OPA_VALIDATIONS.Where(pai => pai.ETAT == 3 && pai.IDPROJET == crpt && pai.IDREGLEMENT == x.REF).FirstOrDefault();
+                                var paiement = db.OPA_VALIDATIONS.Where(pai => pai.ETAT == 3 && pai.IDPROJET == crpt && pai.IDREGLEMENT == x.REF && pai.AVANCE == true).FirstOrDefault();
                                 if (paiement != null)
                                 {
                                     list.Add(new TxLISTETRAIT
@@ -1119,7 +1119,8 @@ namespace apptab.Controllers
                                    NUM = r.NUM,
                                    DATECREA = v.DATECREA != null ? v.DATECREA : null,
                                    DATESEND = v.DATESEND != null ? v.DATESEND : null,
-                                   DATEVAL = v.DATEVAL != null ? v.DATEVAL : null,
+                                   DATETRANS = v.DATETRANS != null ? v.DATETRANS : null,
+                                   TYPE = v.AVANCE == true ? "Avance" : "Réglement"
                                }
                            ).ToList();
 
@@ -1141,9 +1142,10 @@ namespace apptab.Controllers
                                     MONTANT = item.MONTANT.ToString(),
                                     DATEVALIDATIONOP = item.DATECREA,
                                     DATEVALIDATIONAC = item.DATESEND,
-                                    DATEPAIEBANQUE = item.DATEVAL,
+                                    DATEPAIEBANQUE = item.DATETRANS,
                                     SOA = soa.SOA != null ? soa.SOA : "",
-                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    TYPE = item.TYPE == "1" ? "Avance" : "Réglement"
                                 });
                             }
                         }
@@ -1160,7 +1162,8 @@ namespace apptab.Controllers
                                    NUM = r.NUM,
                                    DATECREA = v.DATECREA != null ? v.DATECREA : null,
                                    DATESEND = v.DATESEND != null ? v.DATESEND : null,
-                                   DATEVAL = v.DATEVAL != null ? v.DATEVAL : null,
+                                   DATETRANS = v.DATETRANS != null ? v.DATETRANS : null,
+                                   TYPE = v.AVANCE == true ? "Avance" : "Réglement",
                                }
                            ).ToList();
 
@@ -1182,9 +1185,10 @@ namespace apptab.Controllers
                                     MONTANT = item.MONTANT.ToString(),
                                     DATEVALIDATIONOP = item.DATECREA,
                                     DATEVALIDATIONAC = item.DATESEND,
-                                    DATEPAIEBANQUE = item.DATEVAL,
+                                    DATEPAIEBANQUE = item.DATETRANS,
                                     SOA = soa.SOA != null ? soa.SOA : "",
-                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    TYPE = item.TYPE == "1" ? "Avance" : "Réglement"
                                 });
                             }
                         }
@@ -1268,6 +1272,7 @@ namespace apptab.Controllers
                                        IDUSCREA = v.IDUSCREA != null ? v.IDUSCREA : null,
                                        IDUSSEND = v.IDUSSEND != null ? v.IDUSSEND : null,
                                        IDUSVAL = v.IDUSVAL != null ? v.IDUSVAL : null,
+                                       TYPE = v.AVANCE == true ? "Avance" : "Réglement",
                                    }
                                ).ToList();
 
@@ -1294,7 +1299,8 @@ namespace apptab.Controllers
                             DATESENDSIIG = paielst[j].DATESEND,
                             SENDSIIGAGENT = await GetAgent(paielst[j].IDUSSEND),
                             DUREETRAITEMENTTRANSFERTRAF = Date.GetDifference(paielst[j].DATECREA, paielst[j].DATESEND),
-                            DUREETRAITEMENTVALORDSEC = Date.GetDifference(paielst[j].DATESEND, paielst[j].DATEVAL)
+                            DUREETRAITEMENTVALORDSEC = Date.GetDifference(paielst[j].DATESEND, paielst[j].DATEVAL),
+                            TYPE  = paielst[j].TYPE,
                         });
                     }
                 }
@@ -1325,6 +1331,7 @@ namespace apptab.Controllers
                                        IDUSCREA = v.IDUSCREA != null ? v.IDUSCREA : null,
                                        IDUSSEND = v.IDUSSEND != null ? v.IDUSSEND : null,
                                        IDUSVAL = v.IDUSVAL != null ? v.IDUSVAL : null,
+                                       TYPE = v.AVANCE == true ? "Avance" : "Réglement",
                                    }
                                ).ToList();
 
@@ -1351,7 +1358,8 @@ namespace apptab.Controllers
                             DATESENDSIIG = paielst[j].DATESEND,
                             SENDSIIGAGENT = await GetAgent(paielst[j].IDUSSEND),
                             DUREETRAITEMENTTRANSFERTRAF = Date.GetDifference(paielst[j].DATECREA, paielst[j].DATESEND),
-                            DUREETRAITEMENTVALORDSEC = Date.GetDifference(paielst[j].DATESEND, paielst[j].DATEVAL)
+                            DUREETRAITEMENTVALORDSEC = Date.GetDifference(paielst[j].DATESEND, paielst[j].DATEVAL),
+                            TYPE = db.OPA_VALIDATIONS.Where(a => a.ID == projectId && a.IDREGLEMENT == paielst[j].NUM.ToString() && a.NUMEREG == int.Parse(paielst[j].TYPE)).FirstOrDefault().AVANCE == true ? "Avance" : "Réglement",
                         });
                     }
                 }

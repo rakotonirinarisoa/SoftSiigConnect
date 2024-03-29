@@ -6,7 +6,7 @@ $(document).ready(() => {
     Origin = User.origin;
 
     $(`[data-id="username"]`).text(User.LOGIN);
-
+    
     GetListProjet();
 
     $(`[data-widget="pushmenu"]`).on('click', () => {
@@ -14,13 +14,13 @@ $(document).ready(() => {
     });
 });
 
-$('#proj').on('change', () => {
-    emptyTable();
-});
-
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
+
+$('#proj').on('change', () => {
+    GetListLOADOTHER();
+});
 
 function GetListProjet() {
     let formData = new FormData();
@@ -32,7 +32,7 @@ function GetListProjet() {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/BordTraitement/GetAllPROJET',
+        url: Origin + '/Etat/GetAllPROJET',
         data: formData,
         cache: false,
         contentType: false,
@@ -48,11 +48,14 @@ function GetListProjet() {
 
             if (Datas.type == "error") {
                 alert(Datas.msg);
+
                 return;
             }
             if (Datas.type == "login") {
                 alert(Datas.msg);
+
                 window.location = window.location.origin;
+
                 return;
             }
 
@@ -67,6 +70,8 @@ function GetListProjet() {
             $(`[data-id="proj-list"]`).append(code);
 
             $("#proj").val([...Datas.data.PROJET]).trigger('change');
+            
+            //GetListLOADOTHER();
         },
         error: function (e) {
             alert("Problème de connexion. ");
@@ -74,44 +79,7 @@ function GetListProjet() {
     })
 }
 
-$('.Checkall').change(function () {
-
-    if ($('.Checkall').prop("checked") == true) {
-
-        $('[compteg-ischecked]').prop("checked", true);
-    } else {
-        $('[compteg-ischecked]').prop("checked", false);
-    }
-
-});
-
-function emptyTable() {
-    const data = [];
-
-    if (table !== undefined) {
-        table.destroy();
-    }
-
-    table = $('#TDB_Pai').DataTable({
-        data,
-        colReorder: {
-            enable: false,
-            fixedColumnsLeft: 1
-        },
-        deferRender: true,
-        dom: 'Bfrtip',
-        buttons: ['colvis']
-    });
-}
-
-$('[data-action="GenereLISTE"]').click(function () {
-    let dd = $("#dateD").val();
-    let df = $("#dateF").val();
-    if (!dd || !df) {
-        alert("Veuillez renseigner les dates afin de générer la liste. ");
-        return;
-    }
-
+function GetListLOADOTHER() {
     let pr = $("#proj").val();
     if (!pr) {
         alert("Veuillez sélectionner au moins un projet. ");
@@ -125,14 +93,11 @@ $('[data-action="GenereLISTE"]').click(function () {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDSOCIETE);
 
-    formData.append("DateDebut", $('#dateD').val());
-    formData.append("DateFin", $('#dateF').val());
-
     formData.append("listProjet", $("#proj").val());
 
     $.ajax({
         type: "POST",
-        url: Origin + '/BordTraitement/GenereSTATPAIEMENT',
+        url: Origin + '/Etat/LOADHistoUsers',
         data: formData,
         cache: false,
         contentType: false,
@@ -167,23 +132,19 @@ $('[data-action="GenereLISTE"]').click(function () {
                 return;
             }
             if (Datas.type == "success") {
-                listResult = Datas.data
+                listResult = Datas.data.$values;
 
                 const data = [];
 
-                $.each(listResult, function (_, v) {
+                $.each(listResult, function (k, v) {
                     data.push({
-                        id: v.No,
+                        id: v.IDUSERHISTO,
                         soa: v.SOA,
                         projet: v.PROJET,
-                        numeroEngagement: v.No,
-                        benef: v.BENEF,
-                        montant: formatCurrency(String(v.MONTANT).replace(",", ".")),
-                        dateTransfert: formatDate(v.DATEVALIDATIONOP),
-                        dateValidation: formatDate(v.DATEVALIDATIONAC),
-                        datePaie: formatDate(v.DATEPAIEBANQUE),
-                        dateTraitBanque: formatDate(v.DATEPAIEBANQUE),
-                        type: v.AVANCE ? 'Avance' : 'Paiement'
+                        utilisateur: v.REF,
+                        statut: v.isLATE,
+                        dateDEF: formatDate(v.DATEDEF),
+                        dateTEF: formatDate(v.DATETEF)
                     });
                 });
 
@@ -191,41 +152,46 @@ $('[data-action="GenereLISTE"]').click(function () {
                     table.destroy();
                 }
 
-                table = $('#TDB_Pai').DataTable({
+                table = $('#TBD_PROJET_OTHER').DataTable({
                     data,
                     columns: [
-                        {
-                            data: 'id',
-                            render: function (data, _, _, _) {
-                                return `
-                                    <input type="checkbox" name="checkprod" compteg-ischecked class="chk" onchange="checkdel('${data}')" />
-                                `;
-                            },
-                            orderable: false
-                        },
+                        //{
+                        //    data: 'id',
+                        //    render: function (data, _, _, _) {
+                        //        return `
+                        //            <input type="checkbox" name="checkprod" compteg-ischecked class="chk" onchange="checkdel('${data}')" />
+                        //        `;
+                        //    },
+                        //    orderable: false
+                        //},
                         { data: 'soa' },
                         { data: 'projet' },
-                        { data: 'type' },
-                        { data: 'numeroEngagement' },
-                        { data: 'benef' },
-                        { data: 'montant' },
-                        { data: 'dateTransfert' },
-                        { data: 'dateValidation' },
-                        { data: 'datePaie' },
-                        { data: 'dateTraitBanque' },
-                        
+                        { data: 'utilisateur' },
+                        {
+                            data: 'statut',
+                            render: function (data, _, row, _) {
+                                if (data == true) {
+                                    return `
+                                    <div>
+                                        <i class="fa fa-check-square fa-lg text-success"></i>
+                                    </div>
+                                `;
+                                }
+                                return `
+                                    <div></div>
+                                `;
+                            }
+                        },
+                        { data: 'dateDEF' },
+                        { data: 'dateTEF' }
                     ],
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
                         $(row).addClass('select-text');
-
-                        //if (data.isLATE) {
-                        //    $(row).attr('style', "background-color: #FF7F7F !important;");
-                        //}
                     },
                     columnDefs: [
                         {
-                            targets: [-4, -3, -2, -1]
+                            targets: [-3, -2, -1]
                         }
                     ],
                     colReorder: {
@@ -235,13 +201,12 @@ $('[data-action="GenereLISTE"]').click(function () {
                     deferRender: true,
                     dom: 'Bfrtip',
                     pageLength: 25,
-                    buttons: ['colvis'],
                     caption: 'SOFT - SIIG CONNECT ' + new Date().toLocaleDateString(),
                     buttons: ['colvis',
                         {
                             extend: 'pdfHtml5',
-                            title: 'STATUTS DES PAIEMENTS',
-                            messageTop: 'Liste des statuts des paiements',
+                            title: 'HISTORIQUE UTILISATEUR',
+                            messageTop: 'Historique de connexion des utilisateurs',
                             text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
@@ -249,7 +214,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-pdf',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                                columns: [0, 1, 2, 3, 4, 5]
                             },
                             customize: function (doc) {
                                 doc.defaultStyle.alignment = 'left';
@@ -259,8 +224,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                         },
                         {
                             extend: 'excelHtml5',
-                            title: 'STATUTS DES PAIEMENTS',
-                            messageTop: 'Liste des statuts des paiements',
+                            title: 'HISTORIQUE UTILISATEUR',
+                            messageTop: 'Historique de connexion des utilisateurs',
                             text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
@@ -268,34 +233,13 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-excel',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                                format: {
-                                    body: function (data, row, column, node) {
-                                        if (typeof data === 'undefined') {
-                                            return;
-                                        }
-                                        if (data == null) {
-                                            return data;
-                                        }
-                                        if (column === 5) {
-                                            var arr = data.split(',');
-                                            arr[0] = arr[0].toString().replace(/[\.]/g, "");
-                                            if (arr[0] > '' || arr[1] > '') {
-                                                data = arr[0] + '.' + arr[1];
-                                            } else {
-                                                return '';
-                                            }
-                                            return data.toString().replace(/[^\d.-]/g, "");
-                                        }
-                                        return data;
-                                    }
-                                }
+                                columns: [0, 1, 2, 3, 4, 5]
                             },
                         }
                     ],
                     initComplete: function () {
                         $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
-
+                        
                         count = 0;
                         this.api().columns().every(function () {
                             var title = this.header();
@@ -341,16 +285,40 @@ $('[data-action="GenereLISTE"]').click(function () {
                         });
                     }
                 });
-
-                $('#TDB_Pai tfoot th').each(function (i) {
-                    if (i == 0) {
-                        $(this).addClass("NOTVISIBLE");
-                    }
-                });
             }
         },
         error: function () {
             alert("Problème de connexion. ");
         }
     });
+}
+
+$('.Checkall').change(function () {
+
+    if ($('.Checkall').prop("checked") == true) {
+
+        $('[compteg-ischecked]').prop("checked", true);
+    } else {
+        $('[compteg-ischecked]').prop("checked", false);
+    }
+
 });
+
+function emptyTable() {
+    const data = [];
+    
+    if (table !== undefined) {
+        table.destroy();
+    }
+
+    table = $('#TBD_PROJET_OTHER').DataTable({
+        data,
+        colReorder: {
+            enable: false,
+            fixedColumnsLeft: 1
+        },
+        deferRender: true,
+        dom: 'Bfrtip',
+        buttons: ['colvis'],
+    });
+}

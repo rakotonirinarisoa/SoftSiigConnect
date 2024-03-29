@@ -269,7 +269,7 @@ function GetFileNameAnarana(blobUrl) {
         }
     });
 }
-function getelementTXT(a) {
+function getelementTXT(a , list) {
     let formData = new FormData();
 
     let codeproject = $("#Fproject").val();
@@ -284,6 +284,8 @@ function getelementTXT(a) {
     formData.append("codeJ", $('#commercial').val());
     formData.append("devise", false);
     formData.append("intbasetype", a);
+
+    formData.append("listCompte", JSON.stringify(list));
 
     $.ajax({
         type: "POST",
@@ -301,6 +303,7 @@ function getelementTXT(a) {
         },
         complete: function () {
             loader.addClass('display-none');
+            window.location.reload();
         },
         success: function (result) {
             console.log(result);
@@ -311,7 +314,8 @@ function getelementTXT(a) {
         },
         error: function () {
             alert("Problème de connexion. ");
-        }
+        },
+        
     });
 }
 //==============================================================================================Get All Project===================================================================================
@@ -403,6 +407,7 @@ function LoadValidate() {
 
             $.each(reglementresult, function (_, v) {
                 data.push({
+                    checkbox: '',
                     id: v.IDREGLEMENT,
                     dateOrdre: v.dateOrdre === null ? '' : v.dateOrdre,
                     noPiece: isNullOrUndefined(v.NoPiece) ? '' : v.NoPiece,
@@ -419,15 +424,28 @@ function LoadValidate() {
                     plan: isNullOrUndefined(v.Plan6) ? '' : v.Plan6,
                     journal: isNullOrUndefined(v.Journal) ? '' : v.Journal,
                     marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
-                    isLATE: v.isLATE
+                    isLATE: v.isLATE,
+                    numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                 });
             });
+
+            arr = data;
+
             if (table !== undefined) {
                 table.destroy();
             }
             table = $('#TDB').DataTable({
                 data,
                 columns: [
+                    {
+                        data: 'checkbox',
+                        render: function () {
+                            return `
+                                        <input type="checkbox" name="checkprod" compteg-ischecked onchange="checkdel()" />
+                                    `;
+                        },
+                        orderable: false
+                    },
                     { data: 'id' },
                     { data: 'dateOrdre' },
                     { data: 'noPiece' },
@@ -465,6 +483,7 @@ function LoadValidate() {
                     fixedColumnsLeft: 1
                 },
                 deferRender: true,
+                pageLength: 25,
                 dom: 'Bfrtip',
                 buttons: ['colvis'],
                 initComplete: function () {
@@ -620,19 +639,124 @@ $(document).on("click", "[data-target]", function () {
 });
 
 $(`[data-action="CreateTxt"]`).click(function () {
-    getelementTXT(0);
+    let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
+    let list = [];
+
+    if (baseName == "2") {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
+
+            const item = arr.find(item => item.id === Number(id));
+            list.push({
+                id,
+                estAvance: item.estAvance,
+                numereg: item.numereg
+            });
+        }
+    } else {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
+
+            const item = arr.find(item => item.id === id);
+            list.push({
+                id,
+                estAvance: item.estAvance,
+                numereg: item.numereg
+            });
+        }
+    }
+    console.log(list);
+    getelementTXT(0,list);
 });
 
 $(`[data-action="CreateTxtCrypter"]`).click(function () {
-    getelementTXT(1);
+    let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
+    let list = [];
+
+    if (baseName == "2") {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
+
+            const item = arr.find(item => item.id === Number(id));
+            list.push({
+                id,
+                estAvance: item.estAvance,
+                numereg: item.numereg
+            });
+        }
+    } else {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
+
+            const item = arr.find(item => item.id === id);
+            list.push({
+                id,
+                estAvance: item.estAvance,
+                numereg: item.numereg
+            });
+        }
+    }
+    getelementTXT(1,list);
 });
 
 $(`[data-action="CreateTxtSend"]`).click(function () {
-    getelementTXT(2);
+    let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
+    let list = [];
+
+    if (baseName == "2") {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
+
+            const item = arr.find(item => item.id === Number(id));
+            list.push({
+                id,
+                estAvance: item.estAvance,
+                numereg: item.numereg
+            });
+        }
+    } else {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
+
+            const item = arr.find(item => item.id === id);
+            list.push({
+                id,
+                estAvance: item.estAvance,
+                numereg: item.numereg
+            });
+        }
+    }
+    getelementTXT(2,list);
 });
 
 $(`[data-action="CreateTxtFTPCrypter"]`).click(function () {
-    getelementTXT(3);
+    let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
+    let list = [];
+
+    if (baseName == "2") {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
+
+            const item = arr.find(item => item.id === Number(id));
+            list.push({
+                id,
+                estAvance: item.estAvance,
+                numereg: item.numereg
+            });
+        }
+    } else {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
+
+            const item = arr.find(item => item.id === id);
+            list.push({
+                id,
+                estAvance: item.estAvance,
+                numereg: item.numereg
+            });
+        }
+    }
+    getelementTXT(3,list);
 });
 
 $('.Checkall').change(function () {
@@ -710,6 +834,7 @@ $('[data-action="ChargerJs"]').click(function () {
 
                     $.each(ListResult, function (_, v) {
                         data.push({
+                            checkbox: '',
                             id: v.IDREGLEMENT,
                             dateOrdre: v.dateOrdre === null ? '' : v.dateOrdre,
                             noPiece: isNullOrUndefined(v.NoPiece) ? '' : v.NoPiece,
@@ -726,15 +851,28 @@ $('[data-action="ChargerJs"]').click(function () {
                             plan: isNullOrUndefined(v.Plan6) ? '' : v.Plan6,
                             journal: isNullOrUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
-                            isLATE: v.isLATE
+                            isLATE: v.isLATE,
+                            numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });
                     });
+
+                    arr = data;
+
                     if (table !== undefined) {
                         table.destroy();
                     }
                     table = $('#TDB').DataTable({
                         data,
                         columns: [
+                            {
+                                data: 'checkbox',
+                                render: function () {
+                                    return `
+                                        <input type="checkbox" name="checkprod" compteg-ischecked onchange="checkdel()" />
+                                    `;
+                                },
+                                orderable: false
+                            },
                             { data: 'id' },
                             { data: 'dateOrdre' },
                             { data: 'noPiece' },
@@ -770,6 +908,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
+                        pageLength: 25,
                         dom: 'Bfrtip',
                         buttons: ['colvis'],
                         initComplete: function () {
@@ -878,6 +1017,7 @@ $('[data-action="ChargerJs"]').click(function () {
 
                     $.each(ListResult, function (_, v) {
                         data.push({
+                            checkbox: '',
                             id: v.IDREGLEMENT,
                             dateOrdre: v.dateOrdre === null ? '' : v.dateOrdre,
                             noPiece: isNullOrUndefined(v.NoPiece) ? '' : v.NoPiece,
@@ -894,9 +1034,12 @@ $('[data-action="ChargerJs"]').click(function () {
                             plan: isNullOrUndefined(v.Plan6) ? '' : v.Plan6,
                             journal: isNullOrUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
-                            isLATE: v.isLATE
+                            isLATE: v.isLATE,
+                            numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });
                     });
+
+                    arr = data;
 
                     if (table !== undefined) {
                         table.destroy();
@@ -904,6 +1047,15 @@ $('[data-action="ChargerJs"]').click(function () {
                     table = $('#TDB').DataTable({
                         data,
                         columns: [
+                            {
+                                data: 'checkbox',
+                                render: function () {
+                                    return `
+                                        <input type="checkbox" name="checkprod" compteg-ischecked onchange="checkdel()" />
+                                    `;
+                                },
+                                orderable: false
+                            },
                             { data: 'id' },
                             { data: 'dateOrdre' },
                             { data: 'noPiece' },
@@ -941,6 +1093,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
+                        pageLength: 25,
                         dom: 'Bfrtip',
                         buttons: ['colvis'],
                         initComplete: function () {
@@ -1007,31 +1160,45 @@ $('[data-action="GetElementChecked"]').click(function () {
     let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
     let list = [];
 
-    $.each(checkList, (_, v) => {
-        list.push($(v).attr("compteG-id"));
-    });
+    if (baseName == "2") {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
+
+            const item = arr.find(item => item.id === Number(id));
+            list.push({
+                id,
+                estAvance: item.estAvance,
+                numereg: item.numereg
+            });
+        }
+    } else {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
+
+            const item = arr.find(item => item.id === id);
+            list.push({
+                id,
+                estAvance: item.estAvance,
+                numereg: item.numereg
+            });
+        }
+    }
 
     let formData = new FormData();
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
+
     formData.append("listCompte", list);
     formData.append("baseName", baseName);
-    formData.append("journal", $('#commercial').val());
-    formData.append("devise", false);
-    let listid = list.splice(',');
-    formData.append("datein", $('#Pdu').val());
-    formData.append("dateout", $('#Pau').val());
-    formData.append("comptaG", $('#comptaG').val());
-    formData.append("auxi", $('#auxi').val());
-    formData.append("auxi1", $('#auxi').val());
-    formData.append("dateP", $('#Pay').val());
-    formData.append("etat", $('#etat').val());
+
+    let codeproject = $("#Fproject").val();
+    formData.append("PROJECTID", codeproject);
 
     $.ajax({
         type: "POST",
-        url: Origin + '/Home/ValidationsEcrituresF',
+        url: Origin + '/Home/GetListAFB',
         data: formData,
         cache: false,
         contentType: false,
@@ -1051,65 +1218,6 @@ $('[data-action="GetElementChecked"]').click(function () {
             for (let i = 0; i < checkList.length; i += 1) {
                 table.row($(checkList[i])).remove().draw();
             }
-
-            $.each(listid, function (_, x) {
-                $.each(reglementresult, function (_, v) {
-                    if (v != null) {
-                        if (v.No == x) {
-                            data.push({
-                                id: v.IDREGLEMENT,
-                                dateOrdre: v.dateOrdre ? '' : v.dateOrdre,
-                                noPiece: isNullOrUndefined(v.NoPiece) ? '' : v.NoPiece,
-                                compte: isNullOrUndefined(v.Compte) ? '' : v.Compte,
-                                libelle: isNullOrUndefined(v.Libelle) ? '' : v.Libelle,
-                                debit: isNullOrUndefined(v.Debit) ? '' : v.Debit,
-                                credit: isNullOrUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
-                                montant: isNullOrUndefined(v.Montant) ? '' : formatCurrency(String(v.Montant).replace(",", ".")),
-                                montantDevise: v.MontantDevise === 0 ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
-                                mon: isNullOrUndefined(v.Mon) ? '' : v.Mon,
-                                rang: isNullOrUndefined(v.Rang) ? '' : v.Rang,
-                                financementCategorie: isNullOrUndefined(v.FinancementCategorie) ? '' : v.FinancementCategorie,
-                                commune: isNullOrUndefined(v.Commune) ? '' : v.Commune,
-                                plan: isNullOrUndefined(v.Plan6) ? '' : v.Plan6,
-                                journal: isNullOrUndefined(v.Journal) ? '' : v.Journal,
-                                marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
-                                isLATE: v.isLATE
-                            });
-                        }
-                    }
-                });
-
-                table = $('#TDB').DataTable({
-                    data,
-                    columns: [
-                        { data: 'id' },
-                        { data: 'date' },
-                        { data: 'noPiece' },
-                        { data: 'compte' },
-                        { data: 'libelle' },
-                        { data: 'montantDevise' },
-                        { data: 'mon' },
-                        { data: 'rang' },
-                        { data: 'financementCategorie' },
-                        { data: 'commune' },
-                        { data: 'plan' },
-                        { data: 'journal' },
-                        { data: 'marche' },
-                        { data: 'status' }
-                    ],
-                    colReorder: {
-                        enable: false,
-                        // fixedColumnsLeft: 1
-                    },
-                    deferRender: true,
-                    createdRow: function (row, data, _) {
-                        $(row).attr('compteG-id', data.id);
-                    },
-                    // initComplete: function () {
-                    //     $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
-                    // }
-                });
-            });
         },
         error: function () {
             alert("Problème de connexion. ");

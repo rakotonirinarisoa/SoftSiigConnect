@@ -247,6 +247,7 @@
     <Compile Include="Models\GA_AVANCE_MOUVEMENT.cs" />
     <Compile Include="Data\Entities\GA_AVANCE_DETAILS.cs" />
     <Compile Include="Models\ListPaimentV.cs" />
+    <Compile Include="Models\Model1.cs" />
     <Compile Include="Models\TxtPAIEMENT.cs" />
     <Compile Include="Models\TxLISTETRAIT.cs" />
     <Compile Include="Models\DATATRPROJET.cs" />
@@ -333,6 +334,7 @@
     <Compile Include="Models\SI_TRAITANNULREVERS.cs" />
     <Compile Include="Models\SI_TRAITREVERS.cs" />
     <Compile Include="Models\SI_TYPEPROCESSUS.cs" />
+    <Compile Include="Models\SI_USERSHISTO.cs" />
     <Compile Include="SOFTCONNECTOM.cs" />
     <Compile Include="SOFTCONNECTSIIG.cs" />
     <Compile Include="Models\TP_MPIECES_JUSTIFICATIVES.cs" />
@@ -2438,6 +2440,7 @@
     <Content Include="Assets\js\TraitmandatLIASRV.js" />
     <Content Include="Assets\js\TraitmandatModalORV.js" />
     <Content Include="Assets\js\TraitmandatModalRV.js" />
+    <Content Include="Assets\js\UserHisto.js" />
     <Content Include="Assets\js\TraitmandatRV.js" />
     <Content Include="Assets\js\TraitmandatJU.js" />
     <Content Include="Assets\js\TraitmandatA.js" />
@@ -4901,6 +4904,7 @@
     <Content Include="Web.config" />
     <Content Include="Views\Pdf\Index.cshtml" />
     <Content Include="Views\Parametre\TypeFlowCreate.cshtml" />
+    <Content Include="Views\Etat\HistoUsers.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -6,6 +6,7 @@ namespace apptab.Data.Entities
     {
         public string PROJET { get; set; }
         public string NUM_ENGAGEMENT { get; set; }
+        public string TYPE { get; set; }
         public string BENEFICIAIRE { get; set; }
         public string MONTENGAGEMENT { get; set; }
         public DateTime? DATENGAGEMENT { get; set; }

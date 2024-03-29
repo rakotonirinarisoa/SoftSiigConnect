@@ -58,7 +58,7 @@ namespace apptab
         public virtual DbSet<SI_TRAITJUSTIF> SI_TRAITJUSTIF { get; set; }
         public virtual DbSet<SI_TRAITANNULREVERS> SI_TRAITANNULREVERS { get; set; }
         public virtual DbSet<SI_TRAITREVERS> SI_TRAITREVERS { get; set; }
-
+        public virtual DbSet<SI_USERSHISTO> SI_USERSHISTO { get; set; }
 
         public virtual DbSet<HSI_PROSOA> HSI_PROSOA { get; set; }
         public virtual DbSet<HSI_ACTIVITE> HSI_ACTIVITE { get; set; }

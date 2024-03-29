@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "Historique de connexion des utilisateurs";
+    ViewData["Controller"] = "Historique de connexion des utilisateurs";
+    /*Layout = "~/Views/Shared/_Layout.cshtml";*/
+}
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">PROJET</span>
+        </div>
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="proj" data-id="proj-list" multiple="multiple">
+        </select>
+    </div>
+</div>
+
+<div class="table-responsive mb-3" @*style=" max-height: calc(600px - 0.6rem * 2  );"*@ tab="ordsecOTHER">
+    <table class="table table-hover table-striped table-bordered" display responsive nowrap" width="100%" id="TBD_PROJET_OTHER">
+        <thead style="position:sticky">
+            <tr class="thead-accueil1" style="white-space: nowrap;">
+                @*<td style="text-align:center">
+                    <input type="checkbox" class="Checkall" />
+                </td>*@
+                <td style="font-weight:bold; text-align:center">SOA</td>
+                <td style="font-weight:bold; text-align:center">Projet</td>
+                <td style="font-weight:bold; text-align:center">Utilisateur</td>
+                <td style="font-weight: bold; text-align: center">Statut</td>
+                <td style="font-weight: bold; text-align: center">Date de connexion</td>
+                <td style="font-weight: bold; text-align: center">Date de déconnexion</td>
+            </tr>
+        </thead>
+        <tbody class="traitementORDSECOTHER"></tbody>
+        <tfoot style="opacity:50%">
+            <tr>
+                @*<th></th>*@
+                <th>SOA</th>
+                <th>Projet</th>
+                <th>Utilisateur</th>
+                <th>Statut</th>
+                <th>Date connexion</th>
+                <th>Date déconnexion</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<script src="~/Assets/js/UserHisto.js?version=@Session["VERSION"]"></script>
+<script src="~/Assets/js/utils.js?version=@Session["VERSION"]"></script>
+
+<script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
+<script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
+
+<script>
+    $("#proj").select2({
+        tags: true,
+        tokenSeparators: [',', ' ']
+    })
+</script>

@@ -24,5 +24,6 @@ namespace apptab.Extension
         public string Marche { get; set; }
         public string Statut { get; set; }
         public bool Avance { get; set; }
+        public int NUMEREG { get; set; }
     }
 }

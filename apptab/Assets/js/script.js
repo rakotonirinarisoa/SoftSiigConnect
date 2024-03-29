@@ -1,6 +1,32 @@
 ﻿function disconnect() {
-    sessionStorage.setItem("user", null);
-    window.location = window.location.origin;
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDSOCIETE);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Etat/DisconHisto',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            sessionStorage.setItem("user", null);
+            window.location = window.location.origin;
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
 }
 
 function getUrlParameter(sParam) {
