@@ -1703,7 +1703,7 @@ namespace apptab.Controllers
 
             foreach (var item in list)
             {
-                AvaliderList.Add(db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.Id && a.ETAT == 0).FirstOrDefault());
+                AvaliderList.Add(db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.Id && a.ETAT == 1).FirstOrDefault());
             }
 
             OPA_VALIDATIONS avalider = new OPA_VALIDATIONS();

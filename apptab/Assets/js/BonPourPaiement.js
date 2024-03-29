@@ -300,6 +300,7 @@ function chargeLoad() {
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
+                        pageLength: 25,
                         dom: 'Bfrtip',
                         buttons: ['colvis'],
                         
@@ -484,6 +485,7 @@ function chargeLoad() {
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
+                        pageLength: 25,
                         dom: 'Bfrtip',
                         buttons: ['colvis'],
                         initComplete: function () {
@@ -1027,6 +1029,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
+                        pageLength: 25,
                         dom: 'Bfrtip',
                         buttons: ['colvis'],
                        
@@ -1228,6 +1231,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             fixedColumnsLeft: 1
                         },
                         deferRender: true,
+                        pageLength: 25,
                         dom: 'Bfrtip',
                         buttons: ['colvis'],
                         initComplete: function () {
