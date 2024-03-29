@@ -1254,7 +1254,7 @@ namespace apptab.Controllers
                                 listRegBR__.Add(listRegBR.Where(a => a.No == item.Id).FirstOrDefault());
                             }
                         }
-                        countTraitement++;
+                        //countTraitement++;
                     }
                 }
                 else
@@ -1297,7 +1297,7 @@ namespace apptab.Controllers
                                 listRegBR__.Add(listRegBR.Where(a => a.No == item.IDREGLEMENT).FirstOrDefault());
                             }
                         }
-                        countTraitement++;
+                        //countTraitement++;
                     }
                 }
             }
@@ -1697,6 +1697,13 @@ namespace apptab.Controllers
             else
             {
                 listRegBR = aFB160.getREGLEMENTBR(suser, PROJECTID);
+            }
+
+            var AvaliderList = new List<OPA_VALIDATIONS>();
+
+            foreach (var item in list)
+            {
+                AvaliderList.Add(db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.Id && a.ETAT == 0).FirstOrDefault());
             }
 
             OPA_VALIDATIONS avalider = new OPA_VALIDATIONS();
