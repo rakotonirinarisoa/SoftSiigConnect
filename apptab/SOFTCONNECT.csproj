@@ -247,6 +247,7 @@
     <Compile Include="Models\GA_AVANCE_MOUVEMENT.cs" />
     <Compile Include="Data\Entities\GA_AVANCE_DETAILS.cs" />
     <Compile Include="Models\ListPaimentV.cs" />
+    <Compile Include="Models\SI_USERSHISTO.cs" />
     <Compile Include="Models\TxtPAIEMENT.cs" />
     <Compile Include="Models\TxLISTETRAIT.cs" />
     <Compile Include="Models\DATATRPROJET.cs" />
@@ -2513,6 +2514,7 @@
     <Content Include="Assets\js\Traitmandat.js" />
     <Content Include="Assets\js\Privilege.js" />
     <Content Include="Assets\js\User.js" />
+    <Content Include="Assets\js\UserHisto.js" />
     <Content Include="Assets\js\utils.js" />
     <Content Include="Assets\otherCSS\buttons.dataTables.min.css" />
     <Content Include="Assets\otherCSS\dataTables.dataTables.css" />
@@ -4901,6 +4903,7 @@
     <Content Include="Web.config" />
     <Content Include="Views\Pdf\Index.cshtml" />
     <Content Include="Views\Parametre\TypeFlowCreate.cshtml" />
+    <Content Include="Views\Etat\HistoUsers.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
