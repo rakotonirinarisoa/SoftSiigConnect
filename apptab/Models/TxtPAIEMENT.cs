@@ -11,6 +11,7 @@ namespace apptab
         public string No { get; set; }
         public string BENEF { get; set; }
         public string MONTANT { get; set; }
+        public string TYPE { get; set; }
         public DateTime? DATEVALIDATIONOP { get; set; }
         public DateTime? DATEVALIDATIONAC { get; set; }
         public DateTime? DATEPAIEBANQUE { get; set; }

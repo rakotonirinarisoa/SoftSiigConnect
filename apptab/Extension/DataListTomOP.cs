@@ -30,5 +30,6 @@ namespace apptab.Extension
         public string Agence { get; set; }
         public bool Avance { get; set; }
         public string Mandat { get; set; }
+        public int NUMEREG { get; set; }
     }
 }

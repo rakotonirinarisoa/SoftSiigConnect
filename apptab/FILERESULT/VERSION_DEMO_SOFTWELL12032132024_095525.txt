@@ -1,0 +1,14 @@
+0302                     21034SOFTWELLVersiondémoSOFTW000007                          0000774097130002                                               00005      
+0602              510100000038ENTREPRISE MAMY         MCB MADAGASCAR                  00001000010466080000000035000000AV0006AV000                    00006      
+0702              510100000038ENTREPRISE MAMY         MCB MADAGASCAR                  000010000104660800000000000000006                              00006      
+0602              510100000039GATE COMPANY GROUP      BNI MADAGASCAR                  00065735076200010000000500000000Z002TEST AV                    00005      
+0702              510100000039GATE COMPANY GROUP      BNI MADAGASCAR                  00065735076200010000000000000000ANCE RADO 2                    00005      
+0602              510100000040ENTREPRISE MAMY         MCB MADAGASCAR                  00001000010466080000000035000000AV0006AV000                    00006      
+0702              510100000040ENTREPRISE MAMY         MCB MADAGASCAR                  000010000104660800000000000000006                              00006      
+0602              510100000041GATE COMPANY GROUP      BNI MADAGASCAR                  00065735076200010000000500000000Z002TEST AV                    00005      
+0702              510100000041GATE COMPANY GROUP      BNI MADAGASCAR                  00065735076200010000000000000000ANCE RADO 2                    00005      
+0602              510100000042ENTREPRISE MAMY         MCB MADAGASCAR                  00001000010466080000000035000000AV0006AV000                    00006      
+0702              510100000042ENTREPRISE MAMY         MCB MADAGASCAR                  000010000104660800000000000000006                              00006      
+0602              510100000043GATE COMPANY GROUP      BNI MADAGASCAR                  00065735076200010000000500000000Z002TEST AV                    00005      
+0702              510100000043GATE COMPANY GROUP      BNI MADAGASCAR                  00065735076200010000000000000000ANCE RADO 2                    00005      
+0802                                                                                                  0000001605000000                                          

@@ -205,6 +205,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                         },
                         { data: 'soa' },
                         { data: 'projet' },
+                        { data: 'type' },
                         { data: 'numeroEngagement' },
                         { data: 'benef' },
                         { data: 'montant' },
@@ -212,7 +213,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                         { data: 'dateValidation' },
                         { data: 'datePaie' },
                         { data: 'dateTraitBanque' },
-                        { data: 'type' }
+                        
                     ],
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);

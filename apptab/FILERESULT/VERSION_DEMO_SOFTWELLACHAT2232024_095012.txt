@@ -1,0 +1,6 @@
+0302                     22034SOFTWELLVersiondémoSOFTW000010                          0720023172790005                                               00009      
+0602              BBOA00000030RAKOTOARISON Fanomezants                                00470050012088730000000025000000AV0006AV000                    00008      
+0702              BBOA00000030RAKOTOARISON Fanomezants                                004700500120887300000000000000006                              00008      
+0602              BBOA00000031RAKOTOARISON Fanomezants                                004700500120887300000005450000000002Prestat                    00008      
+0702              BBOA00000031RAKOTOARISON Fanomezants                                00470050012088730000000000000000ion de serv                    00008      
+0802                                                                                                  0000000570000000                                          

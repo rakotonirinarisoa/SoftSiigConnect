@@ -392,7 +392,7 @@ namespace apptab.Extension
                                                                           //	}
                                                                           //}
         }
-        public AFB CreateBRAFB160(bool devise, string codeJ, SI_USERS user, string codeproject)
+        public AFB CreateBRAFB160(bool devise, string codeJ, SI_USERS user, string codeproject,List<AvanceDetails> list)
         {
             int PROJECTID = int.Parse(codeproject);
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
@@ -453,14 +453,15 @@ namespace apptab.Extension
             texteAFB160 += this.formaterTexte(6, " ");
             texteAFB160 += "\r\n";
             /********              0602        ******/
-            var beneficiaires = (from dordre in db.OPA_REGLEMENTBR
-                                 where dordre.IDSOCIETE == PROJECTID && dordre.APPLICATION == "BR" && dordre.ETAT == "0"
+            List<OPA_REGLEMENTBR> beneficiaires = new List<OPA_REGLEMENTBR>();
+            foreach (var item in list)
+            {
+                beneficiaires = (from dordre in db.OPA_REGLEMENTBR
+                                 where dordre.IDSOCIETE == PROJECTID && dordre.NUM == item.Id && dordre.APPLICATION == "BR" && dordre.ETAT == "0"
                                  select dordre).ToList();
+            }
 
-            var nums = (from ecrt in db.OPA_REGLEMENTBR
-                        where ecrt.IDSOCIETE == PROJECTID && ecrt.APPLICATION == "BR" && ecrt.ETAT == "0"
-                        select ecrt).ToList();
-            var nums_2 = nums;
+            var nums_2 = beneficiaires;
             foreach (var bnfcr in beneficiaires)
             {
                 bnfcr.ETAT = "1";
@@ -1324,7 +1325,8 @@ namespace apptab.Extension
                                                 Journal = reglement.JL,
                                                 Marche = reglement.MARCHE,
                                                 Statut = status,
-                                                Avance = false
+                                                Avance = false,
+                                                NUMEREG = 0
                                             });
                                         }
                                         else
@@ -1351,7 +1353,8 @@ namespace apptab.Extension
                                                 Journal = reglement.JL,
                                                 Marche = reglement.MARCHE,
                                                 Statut = status,
-                                                Avance = false
+                                                Avance = false,
+                                                NUMEREG = 0
                                             });
                                         }
                                     }
@@ -1390,7 +1393,8 @@ namespace apptab.Extension
                                             Plan6 = reglement.PLAN6,
                                             Journal = reglement.JL,
                                             Marche = reglement.MARCHE,
-                                            Avance = false
+                                            Avance = false,
+                                            NUMEREG = 0
                                         });
                                     }
                                     else
@@ -1416,7 +1420,8 @@ namespace apptab.Extension
                                             Plan6 = reglement.PLAN6,
                                             Journal = reglement.JL,
                                             Marche = reglement.MARCHE,
-                                            Avance = false
+                                            Avance = false,
+                                            NUMEREG = 0
                                         });
                                     }
                                 }
@@ -1468,7 +1473,8 @@ namespace apptab.Extension
                                         Plan6 = reglement.PLAN6,
                                         Journal = reglement.JL,
                                         Marche = reglement.MARCHE,
-                                        Avance = false
+                                        Avance = false,
+                                        NUMEREG = 0
                                     });
                                 }
                                 else
@@ -1494,7 +1500,8 @@ namespace apptab.Extension
                                         Plan6 = reglement.PLAN6,
                                         Journal = reglement.JL,
                                         Marche = reglement.MARCHE,
-                                        Avance = false
+                                        Avance = false,
+                                        NUMEREG = 0
                                     });
                                 }
                             }
@@ -1549,7 +1556,8 @@ namespace apptab.Extension
                                         Plan6 = reglement.PLAN6,
                                         Journal = reglement.JL,
                                         Marche = reglement.MARCHE,
-                                        Avance = false
+                                        Avance = false,
+                                        NUMEREG = 0
                                     });
                                 }
                                 else
@@ -1574,7 +1582,8 @@ namespace apptab.Extension
                                         Plan6 = reglement.PLAN6,
                                         Journal = reglement.JL,
                                         Marche = reglement.MARCHE,
-                                        Avance = false
+                                        Avance = false,
+                                        NUMEREG = 0
                                     });
                                 }
 
@@ -1632,7 +1641,8 @@ namespace apptab.Extension
                                         Plan6 = reglement.PLAN6,
                                         Journal = reglement.JL,
                                         Marche = reglement.MARCHE,
-                                        Avance = false
+                                        Avance = false,
+                                        NUMEREG = 0
                                     });
                                 }
                                 else
@@ -1658,7 +1668,8 @@ namespace apptab.Extension
                                         Plan6 = reglement.PLAN6,
                                         Journal = reglement.JL,
                                         Marche = reglement.MARCHE,
-                                        Avance = false
+                                        Avance = false,
+                                        NUMEREG = 0
                                     });
                                 }
                             }
@@ -1904,6 +1915,7 @@ namespace apptab.Extension
                         DATEREJET = mo.DATEREJET,
                         OBSERVATIONREJET = mo.OBSERVATIONREJET,
                         MONTANTRETENUE = mo.MONTANTRETENUE,
+                        NUMEREG = mo.NUMENREG,
                     }
                 );
 
@@ -1938,7 +1950,7 @@ namespace apptab.Extension
                 #region Chargement liste écriture
                 if (compteG == "" || compteG == "Tous")
                 {
-                    if (auxi == "")
+                    if (auxi == "" || auxi == "Tous")
                     {
                         List<MOPFOP> lNoOp = lNoOPS;
                         List<GA_AVANCE_DETAILS> lnoOpAVS = lNoOpsAV;
@@ -1947,31 +1959,41 @@ namespace apptab.Extension
                         {
                             try
                             {
+                                //var reglement = (from mcpt in tom.MOP
+                                //                 where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.COGE == djournal.COMPTEASSOCIE
+                                //                 select mcpt).Single(); 
+                                
                                 var reglement = (from mcpt in tom.MOP
-                                                 where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.COGE == djournal.COMPTEASSOCIE
-                                                 select mcpt).Single();
-                                list.Add(new DataListTomOP()
+                                                 where mcpt.NUMEROOP == nord.NUMEROOP  && mcpt.NUMENREG == nord.NUMENREG /*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
+                                                 select mcpt).ToList();
+                                if (reglement != null)
                                 {
-                                    No = reglement.NUMEROOP,
-                                    Date = reglement.DATEFACTURE.Value,
-                                    Auxi = reglement.AUXI,
-                                    NoPiece = reglement.NUMEROFACTURE,
-                                    Compte = reglement.COGE,
-                                    Libelle = reglement.LIBELLE,
-                                    Montant = reglement.MONTANTLOC.Value,
-                                    MontantDevise = reglement.MONTANTDEV.Value,
-                                    Mon = "",
-                                    Rang = reglement.ACTI,
-                                    Poste = reglement.POSTE,
-                                    FinancementCategorie = reglement.CONVENTION + " " + reglement.CATEGORIE,
-                                    Commune = reglement.GEO,
-                                    Plan6 = reglement.PLAN6,
-                                    Journal = journal,
-                                    Marche = "",
-                                    Status = etat,
-                                    Mandat = nord.NUMEROLIQUIDATION
-                                });
-
+                                    foreach (var item in reglement)
+                                    {
+                                        list.Add(new DataListTomOP()
+                                        {
+                                            No = item.NUMEROOP,
+                                            Date = item.DATEFACTURE.Value,
+                                            Auxi = item.AUXI,
+                                            NoPiece = item.NUMEROFACTURE,
+                                            Compte = item.COGE,
+                                            Libelle = item.LIBELLE,
+                                            Montant = item.MONTANTLOC.Value,
+                                            MontantDevise = item.MONTANTDEV.Value,
+                                            Mon = "",
+                                            Rang = item.ACTI,
+                                            Poste = item.POSTE,
+                                            FinancementCategorie = item.CONVENTION + " " + item.CATEGORIE,
+                                            Commune = item.GEO,
+                                            Plan6 = item.PLAN6,
+                                            Journal = journal,
+                                            Marche = "",
+                                            Status = etat,
+                                            Mandat = nord.NUMEROLIQUIDATION,
+                                            NUMEREG = item.NUMENREG,
+                                        });
+                                    }
+                                }
                             }
                             catch (Exception) { }
 
@@ -2025,31 +2047,39 @@ namespace apptab.Extension
                         {
                             try
                             {
+                                //var reglement = (from mcpt in tom.MOP
+                                //                 where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.COGE == djournal.COMPTEASSOCIE
+                                //                 select mcpt).Single();
                                 var reglement = (from mcpt in tom.MOP
-                                                 where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.COGE == djournal.COMPTEASSOCIE
-                                                 select mcpt).Single();
-                                list.Add(new DataListTomOP()
+                                                 where mcpt.NUMEROOP == nord.NUMEROOP /*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
+                                                 select mcpt).ToList();
+                                if (reglement != null)
                                 {
-                                    No = reglement.NUMEROOP,
-                                    Date = reglement.DATEFACTURE.Value,
-                                    Auxi = reglement.AUXI,
-                                    NoPiece = reglement.NUMEROFACTURE,
-                                    Compte = reglement.COGE,
-                                    Libelle = reglement.LIBELLE,
-                                    Montant = reglement.MONTANTLOC.Value,
-                                    MontantDevise = reglement.MONTANTDEV.Value,
-                                    Mon = "",
-                                    Rang = reglement.ACTI,
-                                    Poste = reglement.POSTE,
-                                    FinancementCategorie = reglement.CONVENTION + " " + reglement.CATEGORIE,
-                                    Commune = reglement.GEO,
-                                    Plan6 = reglement.PLAN6,
-                                    Journal = journal,
-                                    Marche = "",
-                                    Status = etat,
-                                    Mandat = nord.NUMEROLIQUIDATION
-                                });
-
+                                    foreach (var item in reglement)
+                                    {
+                                        list.Add(new DataListTomOP()
+                                        {
+                                            No = item.NUMEROOP,
+                                            Date = item.DATEFACTURE.Value,
+                                            Auxi = item.AUXI,
+                                            NoPiece = item.NUMEROFACTURE,
+                                            Compte = item.COGE,
+                                            Libelle = item.LIBELLE,
+                                            Montant = item.MONTANTLOC.Value,
+                                            MontantDevise = item.MONTANTDEV.Value,
+                                            Mon = "",
+                                            Rang = item.ACTI,
+                                            Poste = item.POSTE,
+                                            FinancementCategorie = item.CONVENTION + " " + item.CATEGORIE,
+                                            Commune = item.GEO,
+                                            Plan6 = item.PLAN6,
+                                            Journal = journal,
+                                            Marche = "",
+                                            Status = etat,
+                                            Mandat = nord.NUMEROLIQUIDATION
+                                        });
+                                    }
+                                }
                             }
                             catch (Exception) { }
                         }
@@ -2097,32 +2127,39 @@ namespace apptab.Extension
                         {
                             try
                             {
+                                //var reglement = (from mcpt in tom.MOP
+                                //                 where mcpt.NUMEROOP == nord.NUMEROOP /*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
+                                //                 select mcpt).Single();
                                 var reglement = (from mcpt in tom.MOP
-                                                 where mcpt.NUMEROOP == nord.NUMEROOP /*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
-                                                 select mcpt).Single();
-
-                                list.Add(new DataListTomOP()
+                                                 where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.NUMENREG == nord.NUMENREG /*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
+                                                 select mcpt).FirstOrDefault();
+                                if (reglement != null)
                                 {
-                                    No = reglement.NUMEROOP,
-                                    Date = reglement.DATEFACTURE.Value,
-                                    Auxi = reglement.AUXI,
-                                    NoPiece = reglement.NUMEROFACTURE,
-                                    Compte = reglement.COGE,
-                                    Libelle = reglement.LIBELLE,
-                                    Montant = reglement.MONTANTLOC.Value,
-                                    MontantDevise = reglement.MONTANTDEV.Value,
-                                    Mon = "",
-                                    Rang = reglement.ACTI,
-                                    Poste = reglement.POSTE,
-                                    FinancementCategorie = reglement.CONVENTION + " " + reglement.CATEGORIE,
-                                    Commune = reglement.GEO,
-                                    Plan6 = reglement.PLAN6,
-                                    Journal = journal,
-                                    Marche = "",
-                                    Status = etat,
-                                    Avance = false,
-                                    Mandat = nord.NUMEROLIQUIDATION
-                                });
+                                    list.Add(new DataListTomOP()
+                                    {
+                                        No = reglement.NUMEROOP,
+                                        Date = reglement.DATEFACTURE.Value,
+                                        Auxi = reglement.AUXIFOURNISSEUR,
+                                        NoPiece = reglement.NUMEROFACTURE,
+                                        Compte = reglement.COGE,
+                                        Libelle = reglement.LIBELLE,
+                                        Montant = reglement.MONTANTLOC.Value,
+                                        MontantDevise = reglement.MONTANTDEV.Value,
+                                        Mon = "",
+                                        Rang = reglement.ACTI,
+                                        Poste = reglement.POSTE,
+                                        FinancementCategorie = reglement.CONVENTION + " " + reglement.CATEGORIE,
+                                        Commune = reglement.GEO,
+                                        Plan6 = reglement.PLAN6,
+                                        Journal = journal,
+                                        Marche = "",
+                                        Status = etat,
+                                        Avance = false,
+                                        Mandat = nord.NUMEROLIQUIDATION,
+                                        NUMEREG = reglement.NUMENREG,
+                                    });
+                                }
+                                
                             }
                             catch (Exception) { }
 
@@ -2145,19 +2182,21 @@ namespace apptab.Extension
                                 try
                                 {
                                     var reglement = (from mcpt in tom.MOP
-                                                     where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.COGE == djournal.COMPTEASSOCIE
-                                                     select mcpt).SingleOrDefault();
+                                                     where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.NUMENREG == nord.NUMENREG/*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
+                                                     select mcpt).FirstOrDefault();
+
                                     //246610 246340  BR N°00022/01 246610
                                     //var reglement = (from mcpt in tom.MOP
                                     //                 where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.COGE == djournal.COMPTEASSOCIE
                                     //                 select mcpt).Single();
+
                                     if (reglement != null)
                                     {
                                         list.Add(new DataListTomOP()
                                         {
                                             No = reglement.NUMEROOP,
                                             Date = reglement.DATEFACTURE.Value,
-                                            Auxi = reglement.AUXI,
+                                            Auxi = reglement.AUXIFOURNISSEUR,
                                             NoPiece = reglement.NUMEROFACTURE,
                                             Compte = reglement.COGE,
                                             Libelle = reglement.LIBELLE,
@@ -2172,7 +2211,8 @@ namespace apptab.Extension
                                             Journal = journal,
                                             Marche = "",
                                             Status = etat,
-                                            Mandat = nord.NUMEROLIQUIDATION
+                                            Mandat = nord.NUMEROLIQUIDATION,
+                                            NUMEREG = reglement.NUMENREG,
 
                                         });
                                     }
@@ -2438,235 +2478,247 @@ namespace apptab.Extension
             string textdate = day + mounth + year;
             return this.couperText(5, textdate);
         }
-        public void SaveValideSelectEcritureBR(List<AvanceDetails> numBR, string journal, string etat, bool devise, SI_USERS user, int PROJECTID, bool avance)
+        public void SaveValideSelectEcritureBR(string numBR, string journal, string etat, bool devise, SI_USERS user, int PROJECTID, bool avance)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
             //bool test = false;
             List<int> supprLignes = new List<int>();
+
             RJL1 djournal = (from jrnl in tom.RJL1
                              where jrnl.CODE == journal
                              select jrnl).Single();
             if (avance == true)
             {
-                foreach (var row in numBR)
+                //foreach (var row in numBR)
+                //{
+
+
+
+
+                //}
+                //string num = row.Id;
+                
+                try
                 {
-
-                    string num = row.Id;
-                    try
+                    var ecriture = tom.GA_AVANCE.Where(a => a.NUMERO == numBR).Join(tom.GA_AVANCE_MOUVEMENT, ga => ga.NUMERO, av => av.NUMERO, (ga, av) => new
                     {
-                        var ecriture = tom.GA_AVANCE.Where(a => a.NUMERO == row.Id).Join(tom.GA_AVANCE_MOUVEMENT, ga => ga.NUMERO, av => av.NUMERO, (ga, av) => new
+                        No = ga.NUMERO,
+                        Date = ga.DATE.Value,
+                        NoPiece = ga.NUMERO_PIECE,
+                        Compte = ga.COGE,
+                        Libelle = ga.LIBELLE,
+                        Montant = av.MONTANT,
+                        MontantDevise = 0,
+                        Mon = "",
+                        Rang = av.ACTI,
+                        Poste = av.POSTE,
+                        FinancementCategorie = av.CONVENTION + " " + av.CATEGORIE,
+                        Commune = av.GEO,
+                        Plan6 = av.PLAN6,
+                        Journal = journal,
+                        Marche = "",
+                        Auxi = ga.AUXI
+                    }).FirstOrDefault();
+
+                    var beneficiaire = (from bn in tom.RTIERS
+                                        where bn.AUXI == ecriture.Auxi && bn.COGE == ecriture.Compte
+                                        select new
+                                        {
+                                            BENEFICIAIRE = bn.NOM,
+                                            BANQUE = bn.BQNOM,
+                                            COMPTE_BANQUE = bn.RIB1,
+                                            DOM1 = bn.DOM1,
+                                            DOM2 = bn.DOM2,
+                                            GUICHET = bn.RIBGUICHET,
+                                            CLE = bn.RIBCLE,
+                                            ETABLISMENT = bn.RIB2,
+
+                                        }
+                                      ).FirstOrDefault();
+
+                    #region Sauve REGELEMENT & ANOMALIE
+
+                    if (beneficiaire.COMPTE_BANQUE == null || beneficiaire.BENEFICIAIRE == null)
+                    {
+                        OPA_ANOMALIEBR panomalie = new OPA_ANOMALIEBR();
+                        panomalie.NUM = ecriture.No;
+                        panomalie.IDSOCIETE = PROJECTID;
+
+                        try
                         {
-                            No = ga.NUMERO,
-                            Date = ga.DATE.Value,
-                            NoPiece = ga.NUMERO_PIECE,
-                            Compte = ga.COGE,
-                            Libelle = ga.LIBELLE,
-                            Montant = av.MONTANT,
-                            MontantDevise = 0,
-                            Mon = "",
-                            Rang = av.ACTI,
-                            Poste = av.POSTE,
-                            FinancementCategorie = av.CONVENTION + " " + av.CATEGORIE,
-                            Commune = av.GEO,
-                            Plan6 = av.PLAN6,
-                            Journal = journal,
-                            Marche = "",
-                            Auxi = ga.AUXI
-                        }).FirstOrDefault();
+                            db.OPA_ANOMALIEBR.Add(panomalie);
+                            db.SaveChanges();
+                        }
+                        catch (Exception) { }
+                    }
+                    else
+                    {
+                        OPA_REGLEMENTBR preg = new OPA_REGLEMENTBR();
+                        preg.NUM = ecriture.No;
+                        preg.DATE = ecriture.Date;
+                        preg.BENEFICIAIRE = beneficiaire.BENEFICIAIRE;
+                        preg.BANQUE = beneficiaire.BANQUE;
+                        //preg.GUICHET = this.RIB(beneficiaire.COMPTE_BANQUE)[1];
+                        preg.GUICHET = beneficiaire.GUICHET;
+                        //preg.RIB = this.RIB(beneficiaire.COMPTE_BANQUE)[2];
+                        preg.RIB = beneficiaire.COMPTE_BANQUE.TrimEnd(' ').TrimStart(' ');
+                        preg.ETAT = etat;
+                        preg.NUMEREG = 0;
 
-                        var beneficiaire = (from bn in tom.RTIERS
-                                            where bn.AUXI == ecriture.Auxi && bn.COGE == ecriture.Compte
-                                            select new
-                                            {
-                                                BENEFICIAIRE = bn.NOM,
-                                                BANQUE = bn.BQNOM,
-                                                COMPTE_BANQUE = bn.RIB1,
-                                                DOM1 = bn.DOM1,
-                                                DOM2 = bn.DOM2,
-                                                GUICHET = bn.RIBGUICHET,
-                                                CLE = bn.RIBCLE,
-                                                ETABLISMENT = bn.RIB2,
-
-                                            }
-                                          ).FirstOrDefault();
-
-                        #region Sauve REGELEMENT & ANOMALIE
-
-                        if (beneficiaire.COMPTE_BANQUE == null || beneficiaire.BENEFICIAIRE == null)
+                        if (devise)
                         {
-                            OPA_ANOMALIEBR panomalie = new OPA_ANOMALIEBR();
-                            panomalie.NUM = ecriture.No;
-                            panomalie.IDSOCIETE = PROJECTID;
-
-                            try
-                            {
-                                db.OPA_ANOMALIEBR.Add(panomalie);
-                                db.SaveChanges();
-                            }
-                            catch (Exception) { }
+                            preg.MONTANT = ecriture.Montant;
                         }
                         else
                         {
-                            OPA_REGLEMENTBR preg = new OPA_REGLEMENTBR();
-                            preg.NUM = ecriture.No;
-                            preg.DATE = ecriture.Date;
-                            preg.BENEFICIAIRE = beneficiaire.BENEFICIAIRE;
-                            preg.BANQUE = beneficiaire.BANQUE;
-                            //preg.GUICHET = this.RIB(beneficiaire.COMPTE_BANQUE)[1];
-                            preg.GUICHET = beneficiaire.GUICHET;
-                            //preg.RIB = this.RIB(beneficiaire.COMPTE_BANQUE)[2];
-                            preg.RIB = beneficiaire.COMPTE_BANQUE;
-                            preg.ETAT = etat;
-
-                            if (devise)
-                            {
-                                preg.MONTANT = ecriture.Montant;
-                            }
-                            else
-                            {
-                                preg.MONTANT = ecriture.Montant;
-                            }
-
-                            preg.LIBELLE = this.formaterTexte(100, ecriture.No + ecriture.Libelle);
-                            //preg.NUM_ETABLISSEMENT = this.RIB(beneficiaire.COMPTE_BANQUE)[0];
-                            preg.NUM_ETABLISSEMENT = beneficiaire.ETABLISMENT;
-                            preg.CODE_J = journal;
-                            preg.DOM1 = beneficiaire.DOM1;
-                            preg.DOM2 = beneficiaire.DOM2;
-                            //preg.CATEGORIE = beneficiaire.CATEGORIE;
-                            preg.APPLICATION = "BR";
-                            preg.IDSOCIETE = PROJECTID;
-                            try
-                            {
-                                db.OPA_REGLEMENTBR.Add(preg);
-                                db.SaveChanges();
-                            }
-                            catch (Exception)
-                            {
-                            }
+                            preg.MONTANT = ecriture.Montant;
                         }
-                        #endregion
-                        //test = true;
-                    }
-                    catch (Exception)
-                    {
-                        //test = false;
-                    }
 
+                        preg.LIBELLE = this.formaterTexte(100, ecriture.No + ecriture.Libelle);
+                        //preg.NUM_ETABLISSEMENT = this.RIB(beneficiaire.COMPTE_BANQUE)[0];
+                        preg.NUM_ETABLISSEMENT = beneficiaire.ETABLISMENT;
+                        preg.CODE_J = journal;
+                        preg.DOM1 = beneficiaire.DOM1;
+                        preg.DOM2 = beneficiaire.DOM2;
+                        //preg.CATEGORIE = beneficiaire.CATEGORIE;
+                        preg.APPLICATION = "BR";
+                        preg.IDSOCIETE = PROJECTID;
 
+                        try
+                        {
+                            db.OPA_REGLEMENTBR.Add(preg);
+                            db.SaveChanges();
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+                    #endregion
+                    //test = true;
+                }
+                catch (Exception)
+                {
+                    //test = false;
                 }
             }
             else
             {
-                foreach (var row in numBR)
+                //foreach (var row in numBR)
+                //{
+
+                //}
+                //string num = row.Id;
+                try
                 {
+                    var ecriture = (from mcpt in tom.MOP
+                                    where mcpt.NUMEROOP == numBR /*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
+                                    select new DataListTomOP()
+                                    {
+                                        No = mcpt.NUMEROOP,
+                                        Date = mcpt.DATEFACTURE.Value,
+                                        NoPiece = mcpt.NUMEROFACTURE,
+                                        Compte = mcpt.COGEFOURNISSEUR,
+                                        Libelle = mcpt.LIBELLE,
+                                        Montant = mcpt.MONTANTLOC.Value,
+                                        MontantDevise = mcpt.MONTANTDEV.Value,
+                                        Mon = "",
+                                        Rang = mcpt.ACTI,
+                                        Poste = mcpt.POSTE,
+                                        FinancementCategorie = mcpt.CONVENTION + " " + mcpt.CATEGORIE,
+                                        Commune = mcpt.GEO,
+                                        Plan6 = mcpt.PLAN6,
+                                        Journal = journal,
+                                        Marche = "",
+                                        Auxi = mcpt.AUXIFOURNISSEUR,
+                                        NUMEREG = mcpt.NUMENREG
+                                    }).FirstOrDefault();
 
-                    string num = row.Id;
-                    try
-                    {
-                        var ecriture = (from mcpt in tom.MOP
-                                        where mcpt.NUMEROOP == row.Id /*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
-                                        select new DataListTomOP()
+                    var beneficiaire = (from bn in tom.RTIERS
+                                        where bn.AUXI == ecriture.Auxi && bn.COGE == ecriture.Compte
+                                        select new
                                         {
-                                            No = mcpt.NUMEROOP,
-                                            Date = mcpt.DATEFACTURE.Value,
-                                            NoPiece = mcpt.NUMEROFACTURE,
-                                            Compte = mcpt.COGEFOURNISSEUR,
-                                            Libelle = mcpt.LIBELLE,
-                                            Montant = mcpt.MONTANTLOC.Value,
-                                            MontantDevise = mcpt.MONTANTDEV.Value,
-                                            Mon = "",
-                                            Rang = mcpt.ACTI,
-                                            Poste = mcpt.POSTE,
-                                            FinancementCategorie = mcpt.CONVENTION + " " + mcpt.CATEGORIE,
-                                            Commune = mcpt.GEO,
-                                            Plan6 = mcpt.PLAN6,
-                                            Journal = journal,
-                                            Marche = "",
-                                            Auxi = mcpt.AUXIFOURNISSEUR
-                                        }).FirstOrDefault();
+                                            BENEFICIAIRE = bn.NOM,
+                                            BANQUE = bn.BQNOM,
+                                            COMPTE_BANQUE = bn.RIB1,
+                                            DOM1 = bn.DOM1,
+                                            DOM2 = bn.DOM2,
+                                            GUICHET = bn.RIBGUICHET,
+                                            CLE = bn.RIBCLE,
+                                            ETABLISMENT = bn.RIB2,
+                                        }
+                                      ).FirstOrDefault();
 
-                        var beneficiaire = (from bn in tom.RTIERS
-                                            where bn.AUXI == ecriture.Auxi && bn.COGE == ecriture.Compte
-                                            select new
-                                            {
-                                                BENEFICIAIRE = bn.NOM,
-                                                BANQUE = bn.BQNOM,
-                                                COMPTE_BANQUE = bn.RIB1,
-                                                DOM1 = bn.DOM1,
-                                                DOM2 = bn.DOM2,
-                                                GUICHET = bn.RIBGUICHET,
-                                                CLE = bn.RIBCLE,
-                                                ETABLISMENT = bn.RIB2,
-                                            }
-                                          ).FirstOrDefault();
+                    #region Sauve REGELEMENT & ANOMALIE
 
-                        #region Sauve REGELEMENT & ANOMALIE
+                    if (beneficiaire.COMPTE_BANQUE == null || beneficiaire.BENEFICIAIRE == null)
+                    {
+                        OPA_ANOMALIEBR panomalie = new OPA_ANOMALIEBR();
+                        panomalie.NUM = ecriture.No;
+                        panomalie.IDSOCIETE = PROJECTID;
 
-                        if (beneficiaire.COMPTE_BANQUE == null || beneficiaire.BENEFICIAIRE == null)
+                        try
                         {
-                            OPA_ANOMALIEBR panomalie = new OPA_ANOMALIEBR();
-                            panomalie.NUM = ecriture.No;
-                            panomalie.IDSOCIETE = PROJECTID;
+                            db.OPA_ANOMALIEBR.Add(panomalie);
+                            db.SaveChanges();
+                        }
+                        catch (Exception) { }
+                    }
+                    else
+                    {
+                        OPA_REGLEMENTBR preg = new OPA_REGLEMENTBR();
+                        preg.NUM = ecriture.No;
+                        preg.DATE = ecriture.Date;
+                        preg.BENEFICIAIRE = beneficiaire.BENEFICIAIRE;
+                        preg.BANQUE = beneficiaire.BANQUE;
+                        preg.GUICHET = beneficiaire.GUICHET;
+                        //preg.GUICHET = this.RIB(beneficiaire.COMPTE_BANQUE)[1];
+                        preg.RIB = beneficiaire.COMPTE_BANQUE.TrimEnd(' ').TrimStart(' ');
+                        //preg.RIB = this.RIB(beneficiaire.COMPTE_BANQUE)[2];
+                        preg.ETAT = etat;
+                        preg.NUMEREG = ecriture.NUMEREG;
 
-                            try
-                            {
-                                db.OPA_ANOMALIEBR.Add(panomalie);
-                                db.SaveChanges();
-                            }
-                            catch (Exception) { }
+                        if (devise)
+                        {
+                            preg.MONTANT = ecriture.Montant;
                         }
                         else
                         {
-                            OPA_REGLEMENTBR preg = new OPA_REGLEMENTBR();
-                            preg.NUM = ecriture.No;
-                            preg.DATE = ecriture.Date;
-                            preg.BENEFICIAIRE = beneficiaire.BENEFICIAIRE;
-                            preg.BANQUE = beneficiaire.BANQUE;
-                            preg.GUICHET = beneficiaire.GUICHET;
-                            //preg.GUICHET = this.RIB(beneficiaire.COMPTE_BANQUE)[1];
-                            preg.RIB = beneficiaire.COMPTE_BANQUE;
-                            //preg.RIB = this.RIB(beneficiaire.COMPTE_BANQUE)[2];
-                            preg.ETAT = etat;
-
-                            if (devise)
-                            {
-                                preg.MONTANT = ecriture.Montant;
-                            }
-                            else
-                            {
-                                preg.MONTANT = ecriture.Montant;
-                            }
-
-                            preg.LIBELLE = this.formaterTexte(100, ecriture.No + ecriture.Libelle);
-                            //preg.NUM_ETABLISSEMENT = this.RIB(beneficiaire.COMPTE_BANQUE)[0];
-                            preg.NUM_ETABLISSEMENT = beneficiaire.ETABLISMENT;
-                            preg.CODE_J = journal;
-                            preg.DOM1 = beneficiaire.DOM1;
-                            preg.DOM2 = beneficiaire.DOM2;
-                            //preg.CATEGORIE = beneficiaire.CATEGORIE;
-                            preg.APPLICATION = "BR";
-                            preg.IDSOCIETE = PROJECTID;
-                            try
-                            {
-                                db.OPA_REGLEMENTBR.Add(preg);
-                                db.SaveChanges();
-                            }
-                            catch (Exception)
-                            {
-                            }
+                            preg.MONTANT = ecriture.Montant;
                         }
-                        #endregion
-                        //test = true;
+                        if (ecriture.No.Length > 10)
+                        {
+                            preg.LIBELLE = this.formaterTexte(100, ecriture.No);
+                        }
+                        else
+                        {
+                            preg.LIBELLE = this.formaterTexte(100, ecriture.No + ecriture.Libelle);
+                        }
+                        //preg.NUM_ETABLISSEMENT = this.RIB(beneficiaire.COMPTE_BANQUE)[0];
+                        preg.NUM_ETABLISSEMENT = beneficiaire.ETABLISMENT;
+                        preg.CODE_J = journal;
+                        preg.DOM1 = beneficiaire.DOM1;
+                        preg.DOM2 = beneficiaire.DOM2;
+                        //preg.CATEGORIE = beneficiaire.CATEGORIE;
+                        preg.APPLICATION = "BR";
+                        preg.IDSOCIETE = PROJECTID;
+                        try
+                        {
+                            db.OPA_REGLEMENTBR.Add(preg);
+                            db.SaveChanges();
+                        }
+                        catch (Exception)
+                        {
+                        }
                     }
-                    catch (Exception)
-                    {
-                        //test = false;
-                    }
-
-
+                    #endregion
+                    //test = true;
                 }
+                catch (Exception)
+                {
+                    //test = false;
+                }
+
             }
 
 
