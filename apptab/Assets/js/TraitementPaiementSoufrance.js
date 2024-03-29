@@ -64,7 +64,7 @@ function parseList(array) {
 
                         break;
                     case 1:
-                        etape = 'Envoi AGENT COMPTABLE';
+                        etape = 'Envoi pour validation';
                         dateTraitement = array[i].TraitementPaiementDetails[j].DATEVALORDSEC === undefined ? '' : formatDate(array[i].TraitementPaiementDetails[j].DATEVALORDSEC);
                         beneficiaire = dateTraitement === '' ? '' : array[i].TraitementPaiementDetails[j].BENEFICIAIRE;
                         montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementPaiementDetails[j].MONTENGAGEMENT).replace(',', '.'));
@@ -75,7 +75,7 @@ function parseList(array) {
 
                         break;
                     case 2:
-                        etape = 'Validation AGENT COMPTABLE';
+                        etape = 'Validation';
                         dateTraitement = array[i].TraitementPaiementDetails[j].DATESENDSIIG === undefined ? '' : formatDate(array[i].TraitementPaiementDetails[j].DATESENDSIIG);
                         beneficiaire = dateTraitement === '' ? '' : array[i].TraitementPaiementDetails[j].BENEFICIAIRE;
                         montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementPaiementDetails[j].MONTENGAGEMENT).replace(',', '.'));
