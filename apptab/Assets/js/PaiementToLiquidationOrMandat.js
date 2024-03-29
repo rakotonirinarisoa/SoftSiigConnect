@@ -155,6 +155,7 @@ function fillTable() {
                     },
                     deferRender: true,
                     dom: 'Bfrtip',
+                    pageLength: 25,
                     buttons: ['colvis'],
                     caption: 'SOFT - SIIG CONNECT ' + new Date().toLocaleDateString(),
                     buttons: ['colvis',

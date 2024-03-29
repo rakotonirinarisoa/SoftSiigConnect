@@ -225,6 +225,7 @@ function GetListLOADOTHER() {
                     },
                     deferRender: true,
                     dom: 'Bfrtip',
+                    pageLength: 25,
                     buttons: ['colvis'],
                     caption: 'SOFT - SIIG CONNECT ' + new Date().toLocaleDateString(),
                     buttons: ['colvis',
@@ -504,6 +505,7 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                     deferRender: true,
                     dom: 'Bfrtip',
                     buttons: ['colvis'],
+                    pageLength: 25,
                     caption: 'SOFT - SIIG CONNECT ' + new Date().toLocaleDateString(),
                     buttons: ['colvis',
                         {
