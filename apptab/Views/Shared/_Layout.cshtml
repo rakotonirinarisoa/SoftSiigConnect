@@ -574,15 +574,17 @@
                                         </p>
                                     </a>
                                 </li>
-
-                                <li class="nav-item">
-                                    <a href="../Home/BonPourPaiement" class="nav-link" data-child-id="4">
-                                        <i class="nav-icon fas fa-list-ol" style="color: #eb7575"></i>
-                                        <p>
-                                            @Session["MP3"]
-                                        </p>
-                                    </a>
-                                </li>
+                                @if (int.Parse(Session["PROCESPAIE"].ToString()) == 2)
+                                 {
+                                    <li class="nav-item">
+                                        <a href="../Home/BonPourPaiement" class="nav-link" data-child-id="4">
+                                            <i class="nav-icon fas fa-list-ol" style="color: #eb7575"></i>
+                                            <p>
+                                                @Session["MP3"]
+                                            </p>
+                                        </a>
+                                    </li>
+                                 }
 
                                 <li class="nav-item">
                                     <a href="../Home/FValidation" class="nav-link" data-child-id="4">
