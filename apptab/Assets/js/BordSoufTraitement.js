@@ -2,7 +2,8 @@ var table = undefined;
 
 let list = [];
 
-const NUMBER_OF_ROWS = 5;
+//const NUMBER_OF_ROWS = 5;
+const NUMBER_OF_ROWS = 3;
 
 function parseList(array) {
     const result = [];
@@ -25,7 +26,7 @@ function parseList(array) {
 
                 switch (k) {
                     case 0:
-                        etape = 'Transfert et Validation RAF';
+                        etape = 'Transfert et Validation';
 
                         dateTraitement = array[i].TraitementsEngagementsDetails[j].DATETRANSFERTRAF === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATETRANSFERTRAF);
 
@@ -38,7 +39,7 @@ function parseList(array) {
 
                         break;
                     case 1:
-                        etape = 'Validation ORDESEC';
+                        etape = 'Validation';
 
                         dateTraitement = array[i].TraitementsEngagementsDetails[j].DATEVALORDSEC === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATEVALORDSEC);
 
@@ -50,32 +51,32 @@ function parseList(array) {
                         depassement = array[i].TraitementsEngagementsDetails[j].DEPASVALIDATION;
 
                         break;
-                    case 2:
-                        etape = 'Transféré SIIGFP';
+                    //case 2:
+                    //    etape = 'Transféré SIIGFP';
 
-                        dateTraitement = array[i].TraitementsEngagementsDetails[j].DATESENDSIIG === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATESENDSIIG);
+                    //    dateTraitement = array[i].TraitementsEngagementsDetails[j].DATESENDSIIG === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATESENDSIIG);
 
-                        dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTSENDSIIG;
-                        beneficiaire = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
-                        montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
-                        agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].SENDSIIGAGENT;
-                        dureePrevu = array[i].TraitementsEngagementsDetails[j].DURPREVUTRANSFSIIG;
-                        depassement = array[i].TraitementsEngagementsDetails[j].DEPASTRANSFSIIG;
+                    //    dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTSENDSIIG;
+                    //    beneficiaire = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
+                    //    montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
+                    //    agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].SENDSIIGAGENT;
+                    //    dureePrevu = array[i].TraitementsEngagementsDetails[j].DURPREVUTRANSFSIIG;
+                    //    depassement = array[i].TraitementsEngagementsDetails[j].DEPASTRANSFSIIG;
 
-                        break;
-                    case 3:
-                        etape = 'Intégré SIIGFP';
+                    //    break;
+                    //case 3:
+                    //    etape = 'Intégré SIIGFP';
 
-                        dateTraitement = array[i].TraitementsEngagementsDetails[j].DATESIIGFP === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATESIIGFP);
+                    //    dateTraitement = array[i].TraitementsEngagementsDetails[j].DATESIIGFP === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATESIIGFP);
 
-                        dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTSIIGFP;
-                        beneficiaire = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
-                        montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
-                        agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].SIIGFPAGENT;
-                        dureePrevu = array[i].TraitementsEngagementsDetails[j].DURPREVUSIIG;
-                        depassement = array[i].TraitementsEngagementsDetails[j].DEPASSIIG;
+                    //    dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTSIIGFP;
+                    //    beneficiaire = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
+                    //    montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
+                    //    agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].SIIGFPAGENT;
+                    //    dureePrevu = array[i].TraitementsEngagementsDetails[j].DURPREVUSIIG;
+                    //    depassement = array[i].TraitementsEngagementsDetails[j].DEPASSIIG;
 
-                        break;
+                    //    break;
                     default:
                         break;
                 }
