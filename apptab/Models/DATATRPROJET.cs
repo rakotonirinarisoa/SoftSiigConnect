@@ -28,5 +28,7 @@ namespace apptab
         public string PROJET { get; set; }
         public bool? isLATE { get; set; }
         public string isAvance { get; set; }
+
+        public int IDUSERHISTO { get; set; }
     }
 }
