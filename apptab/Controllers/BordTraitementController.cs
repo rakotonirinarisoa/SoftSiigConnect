@@ -323,7 +323,7 @@ namespace apptab.Controllers
                                         DATENGAGEMENT = x.DATEMANDAT != null ? x.DATEMANDAT : null,
                                         MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                         DATEPAIE = paiement.DATEVAL,
-                                        MONTPAIE = paiement.MONTANT.ToString(),
+                                        MONTPAIE = string.Format("{0:0.00}", Math.Round(paiement.MONTANT.Value)),
                                         SOA = soa != null ? soa.SOA : "",
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                         TYPE = "Engagement",
@@ -369,7 +369,7 @@ namespace apptab.Controllers
                                         DATENGAGEMENT = x.DATEMANDAT != null ? x.DATEMANDAT : null,
                                         MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                         DATEPAIE = paiement.DATEVAL,
-                                        MONTPAIE = paiement.MONTANT.ToString(),
+                                        MONTPAIE = string.Format("{0:0.00}", Math.Round(paiement.MONTANT.Value)),
                                         SOA = soa != null ? soa.SOA : "",
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                         TYPE = "Avance",
@@ -391,13 +391,12 @@ namespace apptab.Controllers
                                         TYPE = "Avance",
                                     });
                                 }
-                               
                             }
                         }
                     }
                 }
 
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list.OrderByDescending(a => a.isLATE).ToList() }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list.OrderByDescending(a => a.DATENGAGEMENT).ToList() }, settings));
             }
             catch (Exception e)
             {
@@ -634,7 +633,8 @@ namespace apptab.Controllers
                                     COMMENTAIRE = isRejet != null ? isRejet.COMMENTAIRE : "",
 
                                     SOA = soa != null ? soa.SOA : "",
-                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    TYPE = "Engagement"
                                     //isLATE = isLate
                                 });
                             }
@@ -652,7 +652,7 @@ namespace apptab.Controllers
                                            }).FirstOrDefault();
 
                                 var isRejet = (from user in db.SI_USERS
-                                               join rejet in db.SI_TRAITANNUL on user.ID equals rejet.IDUSER
+                                               join rejet in db.SI_TRAITANNULAVANCE on user.ID equals rejet.IDUSER
                                                where rejet.IDPROJET == crpt && rejet.No == x.No
                                                orderby rejet.DATEANNUL descending
                                                select new
@@ -675,7 +675,8 @@ namespace apptab.Controllers
                                     COMMENTAIRE = isRejet != null ? isRejet.COMMENTAIRE : "",
 
                                     SOA = soa != null ? soa.SOA : "",
-                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    TYPE = "Avance"
                                     //isLATE = isLate
                                 });
                             }
@@ -694,7 +695,7 @@ namespace apptab.Controllers
         //Suivi des délais de traitement des engagements et avances//
         public ActionResult DelaisTraitementEngagements()
         {
-            ViewBag.Controller = "Suvi des délais de traitement des engagements";
+            ViewBag.Controller = "Suvi des délais de traitement des engagements et avances";
 
             return View();
         }
@@ -1199,7 +1200,7 @@ namespace apptab.Controllers
         }
         public ActionResult TraitementsPaiement()
         {
-            ViewBag.Controller = "Traitements des paiements";
+            ViewBag.Controller = "Suvi des délais de traitement des paiements";
             return View();
         }
         [HttpPost]
@@ -1282,6 +1283,7 @@ namespace apptab.Controllers
                     {
                         result[lastIndex].TraitementPaiementDetails.Add(new TraitementPaiementDetails
                         {
+                            PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
                             NUM_ENGAGEMENT = paielst[j].NUM,
                             BENEFICIAIRE = paielst[j].BENEFICIAIRE,
                             MONTENGAGEMENT = paielst[j].MONTANT.ToString(),
@@ -1338,6 +1340,7 @@ namespace apptab.Controllers
                     {
                         result[lastIndex].TraitementPaiementDetails.Add(new TraitementPaiementDetails
                         {
+                            PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
                             NUM_ENGAGEMENT = paielst[j].NUM.ToString(),
                             BENEFICIAIRE = paielst[j].BENEFICIAIRE,
                             MONTENGAGEMENT = paielst[j].MONTANT.ToString(),
@@ -1359,7 +1362,7 @@ namespace apptab.Controllers
         }
         public ActionResult TraitementPaiementSoufrance()
         {
-            ViewBag.Controller = "Traitements des paiements en souffrance";
+            ViewBag.Controller = "Liste des traitements en souffrance(par rapport au délai moyen)";
             return View();
         }
         [HttpPost]
@@ -1550,7 +1553,7 @@ namespace apptab.Controllers
         }
         public ActionResult TraitementPaiementRejet()
         {
-            ViewBag.Controller = "Traitements des paiements réjéter";
+            ViewBag.Controller = "Liste des paiements rejetés";
             return View();
         }
         [HttpPost]

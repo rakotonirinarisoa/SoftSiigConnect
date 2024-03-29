@@ -215,7 +215,8 @@ function GetListLOADOTHER() {
                         $(row).addClass('select-text');
 
                         if (data.isLATE) {
-                            $(row).attr('style', "background-color: #FF7F7F !important;");
+                            //$(row).attr('style', "background-color: #FF7F7F !important;");
+                            $(row).addClass("demoRayure");
                         }
                     },
 
@@ -230,7 +231,64 @@ function GetListLOADOTHER() {
                     },
                     deferRender: true,
                     dom: 'Bfrtip',
-                    buttons: ['colvis'],
+                    pageLength: 25,
+                    caption: 'SOFT - SIIG CONNECT ' + new Date().toLocaleDateString(),
+                    buttons: ['colvis',
+                        {
+                            extend: 'pdfHtml5',
+                            title: 'MANDATS A ENVOYER POUR VALIDATION',
+                            messageTop: 'Liste des mandats en attente envoi pour validation',
+                            text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
+                            orientation: 'landscape',
+                            pageSize: 'A4',
+                            charset: "utf-8",
+                            bom: true,
+                            className: 'custombutton-collection-pdf',
+                            exportOptions: {
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                            },
+                            customize: function (doc) {
+                                doc.defaultStyle.alignment = 'left';
+                                //doc.defaultStyle.margin = [12, 12, 12, 12];
+                            },
+                            download: 'open'
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            title: 'MANDATS A ENVOYER POUR VALIDATION',
+                            messageTop: 'Liste des mandats en attente envoi pour validation',
+                            text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
+                            orientation: 'landscape',
+                            pageSize: 'A4',
+                            charset: "utf-8",
+                            bom: true,
+                            className: 'custombutton-collection-excel',
+                            exportOptions: {
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (typeof data === 'undefined') {
+                                            return;
+                                        }
+                                        if (data == null) {
+                                            return data;
+                                        }
+                                        if (column === 9) {
+                                            var arr = data.split(',');
+                                            arr[0] = arr[0].toString().replace(/[\.]/g, "");
+                                            if (arr[0] > '' || arr[1] > '') {
+                                                data = arr[0] + '.' + arr[1];
+                                            } else {
+                                                return '';
+                                            }
+                                            return data.toString().replace(/[^\d.-]/g, "");
+                                        }
+                                        return data;
+                                    }
+                                }
+                            },
+                        }
+                    ],
                     initComplete: function () {
                         $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
 
@@ -448,7 +506,8 @@ $('[data-action="GenereR"]').click(async function () {
                         $(row).addClass('select-text');
 
                         if (data.isLATE) {
-                            $(row).attr('style', "background-color: #FF7F7F !important;");
+                            /*$(row).attr('style', "background-color: #FF7F7F !important;");*/
+                            $(row).addClass("demoRayure");
                         }
                     },
 
@@ -463,7 +522,64 @@ $('[data-action="GenereR"]').click(async function () {
                     },
                     deferRender: true,
                     dom: 'Bfrtip',
-                    buttons: ['colvis'],
+                    pageLength: 25,
+                    caption: 'SOFT - SIIG CONNECT ' + new Date().toLocaleDateString(),
+                    buttons: ['colvis',
+                        {
+                            extend: 'pdfHtml5',
+                            title: 'MANDATS A ENVOYER POUR VALIDATION',
+                            messageTop: 'Liste des mandats en attente envoi pour validation',
+                            text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
+                            orientation: 'landscape',
+                            pageSize: 'A4',
+                            charset: "utf-8",
+                            bom: true,
+                            className: 'custombutton-collection-pdf',
+                            exportOptions: {
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                            },
+                            customize: function (doc) {
+                                doc.defaultStyle.alignment = 'left';
+                                //doc.defaultStyle.margin = [12, 12, 12, 12];
+                            },
+                            download: 'open'
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            title: 'MANDATS A ENVOYER POUR VALIDATION',
+                            messageTop: 'Liste des mandats en attente envoi pour validation',
+                            text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
+                            orientation: 'landscape',
+                            pageSize: 'A4',
+                            charset: "utf-8",
+                            bom: true,
+                            className: 'custombutton-collection-excel',
+                            exportOptions: {
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (typeof data === 'undefined') {
+                                            return;
+                                        }
+                                        if (data == null) {
+                                            return data;
+                                        }
+                                        if (column === 9) {
+                                            var arr = data.split(',');
+                                            arr[0] = arr[0].toString().replace(/[\.]/g, "");
+                                            if (arr[0] > '' || arr[1] > '') {
+                                                data = arr[0] + '.' + arr[1];
+                                            } else {
+                                                return '';
+                                            }
+                                            return data.toString().replace(/[^\d.-]/g, "");
+                                        }
+                                        return data;
+                                    }
+                                }
+                            },
+                        }
+                    ],
                     initComplete: function () {
                         $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
 
@@ -596,7 +712,7 @@ function emptyTableTRM() {
     table = $('#TBD_PROJET_MANDAT').DataTable({
         data,
         colReorder: {
-            enable: true,
+            enable: false,
             fixedColumnsLeft: 1
         },
         deferRender: true,

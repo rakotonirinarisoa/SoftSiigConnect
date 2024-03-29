@@ -58,7 +58,7 @@ namespace SOFTCONNECT.Controllers
                 }
                 else
                 {
-                    var users = db.SI_USERS.Where(x => x.ROLE != Role.SAdministrateur && x.ROLE != Role.Organe_de_Suivi && x.ROLE != Role.Agent_Comptable && x.IDPROJET == exist.IDPROJET && x.DELETIONDATE == null).Select(a => new
+                    var users = db.SI_USERS.Where(x => x.ROLE != Role.SAdministrateur && x.ROLE != Role.Organe_de_Suivi && x.ROLE != Role.Validateur_paiements && x.IDPROJET == exist.IDPROJET && x.DELETIONDATE == null).Select(a => new
                     {
                         a.LOGIN,
                         a.PWD,
@@ -123,7 +123,7 @@ namespace SOFTCONNECT.Controllers
             {
                 foreach (var item in enumlist)
                 {
-                    if (item.ToString() != "SAdministrateur" && item.ToString() != "Organe_de_Suivi" && item.ToString() != "Agent_Comptable")
+                    if (item.ToString() != "SAdministrateur" && item.ToString() != "Organe_de_Suivi" && item.ToString() != "Validateur_paiements")
                         roles.Add((int)item, Enum.GetName(typeof(Role), item));
                 }
             }
@@ -471,10 +471,21 @@ namespace SOFTCONNECT.Controllers
                 var test = db.SI_USERS.FirstOrDefault(x => x.LOGIN == Users.LOGIN && x.PWD == Users.PWD && x.DELETIONDATE == null);
                 if (test == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vérifiez vos identifiants. " }, settings));
 
-                if (test.ROLE != Role.SAdministrateur && test.ROLE != Role.Organe_de_Suivi && test.ROLE != Role.Agent_Comptable)
+                Session["PROCESDEPS"] = 2;//1 NON et 2 APPLICABLE
+                Session["PROCESPAIE"] = 2;//1 NON et 2 APPLICABLE
+
+                if (test.ROLE != Role.SAdministrateur && test.ROLE != Role.Organe_de_Suivi && test.ROLE != Role.Validateur_paiements)
                 {
                     if (test.IDPROJET != 0)
                     {
+                        if (db.SI_TYPEPROCESSUS.Any(a => a.DELETIONDATE == null && a.IDPROJET == test.IDPROJET))
+                        {
+                            var isProcess = db.SI_TYPEPROCESSUS.FirstOrDefault(a => a.DELETIONDATE == null && a.IDPROJET == test.IDPROJET);
+
+                            Session["PROCESDEPS"] = isProcess.VALDEPENSES;//1 NON et 2 APPLICABLE
+                            Session["PROCESPAIE"] = isProcess.VALPAIEMENTS;//1 NON et 2 APPLICABLE
+                        }
+
                         if (String.IsNullOrEmpty(test.IDPROJET.ToString()) || !db.SI_PROJETS.Any(a => a.ID == test.IDPROJET && a.DELETIONDATE == null))
                         {
                             return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vous n'êtes pas rattaché à un projet actif. " }, settings));
@@ -485,10 +496,6 @@ namespace SOFTCONNECT.Controllers
                 Session["userSession"] = test;
 
                 Session["UserName"] = test.LOGIN;
-
-                Session["VERSIONCONNNECT"] = "1.0.0";
-                Session["VERSION"] = "1.3.219";
-
 
                 if (db.SI_MENU.Any())
                 {
@@ -538,6 +545,9 @@ namespace SOFTCONNECT.Controllers
 
                 test.LASTCONNEXTION = DateTime.Now;
                 db.SaveChanges();
+
+                Session["VERSIONCONNNECT"] = "1.0.0";
+                Session["VERSION"] = "1.3.26";
 
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", Data = new { test.ROLE, test.IDPROJET } }, settings));
             }

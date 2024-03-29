@@ -1,57 +1,67 @@
 ﻿<!DOCTYPE html>
 <html lang="en" style="overflow-x:hidden;">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-        <title>SOFT - SIIG CONNECT</title>
+    <title>SOFT - SIIG CONNECT</title>
 
-        @*<!--CACHE VERSIONING JS et CSS*@
-        @*<script src="~/Assets/js/AAACache.js"></script>*@
+    @*<!--CACHE VERSIONING JS et CSS*@
+    @*<script src="~/Assets/js/AAACache.js"></script>*@
 
-        <!-- Font Awesome -->
-        <link rel="stylesheet" href="~/Assets/admlte/plugins/fontawesome-free/css/all.min.css">
-        <!-- Tempusdominus Bootstrap 4 -->
-        <link rel="stylesheet" href="~/Assets/admlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
-        <!-- iCheck -->
-        <link rel="stylesheet" href="~/Assets/admlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-        <!-- JQVMap -->
-        <link rel="stylesheet" href="~/Assets/admlte/plugins/jqvmap/jqvmap.min.css">
-        <!-- Theme style -->
-        <link rel="stylesheet" href="~/Assets/admlte/dist/css/adminlte.css">
-        <!-- overlayScrollbars -->
-        <link rel="stylesheet" href="~/Assets/admlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-        <!-- Daterange picker -->
-        <link rel="stylesheet" href="~/Assets/admlte/plugins/daterangepicker/daterangepicker.css">
-        <!-- summernote -->
-        <link rel="stylesheet" href="~/Assets/admlte/plugins/summernote/summernote-bs4.min.css">
-        <link rel="stylesheet" href="~/Assets/admlte/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/Assets/admlte/plugins/fontawesome-free/css/all.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="~/Assets/admlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="~/Assets/admlte/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="~/Assets/admlte/plugins/jqvmap/jqvmap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/Assets/admlte/dist/css/adminlte.css">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="~/Assets/admlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="~/Assets/admlte/plugins/daterangepicker/daterangepicker.css">
+    <!-- summernote -->
+    <link rel="stylesheet" href="~/Assets/admlte/plugins/summernote/summernote-bs4.min.css">
+    <link rel="stylesheet" href="~/Assets/admlte/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
 
-        <link rel="stylesheet" href="~/Assets/otherCSS/datatables.min.css?version=@Session["VERSION"]" />
+    <link rel="stylesheet" href="~/Assets/otherCSS/datatables.min.css?version=@Session["VERSION"]" />
 
-        <link href="~/Assets/admlte/plugins/select2/css/select2.css" rel="stylesheet" />
-        <link href="~/Assets/admlte/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
+    <link href="~/Assets/admlte/plugins/select2/css/select2.css" rel="stylesheet" />
+    <link href="~/Assets/admlte/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" />
 
-        <link rel="stylesheet" href="~/Assets/css/style.css?version=@Session["VERSION"]" />
-        <link rel="stylesheet" href="~/Assets/css/loader.css?version=@Session["VERSION"]" />
-        <link href="~/Assets/css/acco.css?version=@Session["VERSION"]" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Assets/css/style.css?version=@Session["VERSION"]" />
+    <link rel="stylesheet" href="~/Assets/css/loader.css?version=@Session["VERSION"]" />
+    <link href="~/Assets/css/acco.css?version=@Session["VERSION"]" rel="stylesheet" />
 
-        <script src="~/Assets/admlte/plugins/jquery/jquery.min.js"></script>
-        <script src="~/Assets/admlte/plugins/sweetalert2/sweetalert2.all.min.js"></script>
-        <script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
-        <script src="~/Assets/js/script.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/admlte/plugins/jquery/jquery.min.js"></script>
+    <script src="~/Assets/admlte/plugins/sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
+    <script src="~/Assets/js/script.js?version=@Session["VERSION"]"></script>
 
-        <link href="~/Assets/otherCSS/datatables.min.css?version=@Session["VERSION"]" rel="stylesheet" />
-        <link href="~/Assets/otherCSS/buttons.dataTables.min.css?version=@Session["VERSION"]" rel="stylesheet" />
+    <link href="~/Assets/otherCSS/datatables.min.css?version=@Session["VERSION"]" rel="stylesheet" />
+    <link href="~/Assets/otherCSS/buttons.dataTables.min.css?version=@Session["VERSION"]" rel="stylesheet" />
 
-        <script src="~/Assets/otherJs/jquery-3.7.0.js?version=@Session["VERSION"]"></script>
-        <script src="~/Assets/otherJs/datatables.min.js?version=@Session["VERSION"]"></script>
-        <script src="~/Assets/otherJs/dataTables.rowsGroup.js?version=@Session["VERSION"]"></script>
-        <script src="~/Assets/otherJs/buttons.colVis.min.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/otherJs/jquery-3.7.0.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/otherJs/datatables.min.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/otherJs/dataTables.rowsGroup.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/otherJs/buttons.colVis.min.js?version=@Session["VERSION"]"></script>
 
-        @*https://www.svgrepo.com/collection/market-and-economics/*@
-    </head>
+    <script src="~/Assets/otherJs/buttons.dataTables.js?version=@Session["VERSION"]"></script>
+    @*<script src="~/Assets/otherJs/buttons.html5.min.js?version=@Session["VERSION"]"></script>*@
+    <script src="~/Assets/otherJs/dataTables.buttons.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/otherJs/jszip.min.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/otherJs/pdfmake.min.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/otherJs/vfs_fonts.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/otherJs/buttons.html5.min.js?version=@Session["VERSION"]"></script>
+
+
+
+    @*https://www.svgrepo.com/collection/market-and-economics/*@
+</head>
 
     <body class="hold-transition sidebar-mini layout-fixed" style="background-color: #f4f6f9;">
         <div id="loader" class="lds-dual-ring display-none overlay"></div>
@@ -311,7 +321,7 @@
                                     </li>
 
                                     <li class="nav-item" data-io>
-                                        <a href="../SuperAdmin/MailCreate" class="nav-link" data-child-id="1">
+                                        <a href="../SuperAdmin/MAILCreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-envelope"></i>
                                             <p>
                                                 Gestion des mails
@@ -342,6 +352,15 @@
                                             <i class="nav-icon fa fa-exclamation-triangle"></i>
                                             <p>
                                                 Type d'écriture
+                                            </p>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item" data-io>
+                                        <a href="../Parametre/TypeFlowCreate" class="nav-link" data-child-id="1">
+                                            <i class="nav-icon fa fa-question-circle"></i>
+                                            <p>
+                                                Processus
                                             </p>
                                         </a>
                                     </li>
@@ -380,23 +399,27 @@
                                         </p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a href="../Traitement/TraitementORDSEC" class="nav-link" data-child-id="2">
-                                        <i class="nav-icon fas fa-list-ol" style="color: #eb7575"></i>
-                                        <p>
-                                            @Session["MT1"]
-                                        </p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
+                                @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
+                                {
+                                    <li class="nav-item">
+                                        <a href="../Traitement/TraitementORDSEC" class="nav-link" data-child-id="2">
+                                            <i class="nav-icon fas fa-list-ol" style="color: #eb7575"></i>
+                                            <p>
+                                                @Session["MT1"]
+                                            </p>
+                                        </a>
+                                    </li>
+                                }
+                                @*<li class="nav-item">
                                     <a href="../Traitement/TraitementSENDSIIGFP" class="nav-link" data-child-id="2">
                                         <i class="nav-icon fas fa-tasks" style="color: #338B85"></i>
                                         <p>
                                             @Session["MT2"]
                                         </p>
                                     </a>
-                                </li>
-                            </ul>
+                                </li>*@
+
+                               </ul>
                         </div>
 
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
@@ -441,23 +464,27 @@
                                             </a>
                                         </li>
 
-                                        <li class="nav-item">
-                                            <a href="../TraitementAvance/TraitementORDSEC" class="nav-link" data-child-id="3">
-                                                <i class="nav-icon fas fa-list-ol" style="color: #eb7575"></i>
-                                                <p>
-                                                    @Session["MD2"]
-                                                </p>
-                                            </a>
-                                        </li>
+                                        @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
+                                        {
+                                            <li class="nav-item">
+                                                <a href="../TraitementAvance/TraitementORDSEC" class="nav-link" data-child-id="3">
+                                                    <i class="nav-icon fas fa-list-ol" style="color: #eb7575"></i>
+                                                    <p>
+                                                        @Session["MD2"]
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
 
-                                        <li class="nav-item">
+                                        @*<li class="nav-item">
                                             <a href="../TraitementAvance/TraitementSENDSIIGFP" class="nav-link" data-child-id="3">
                                                 <i class="nav-icon fas fa-tasks" style="color: #338B85"></i>
                                                 <p>
                                                     @Session["MD3"]
                                                 </p>
                                             </a>
-                                        </li>
+                                        </li>*@
+
                                     </ul>
                                 </li>
 
@@ -479,15 +506,17 @@
                                             </a>
                                         </li>
 
-                                        <li class="nav-item">
-                                            <a href="../TraitementJustif/TraitementORDSEC" class="nav-link" data-child-id="3">
-                                                <i class="nav-icon fas fa-th-list" style="color: #FFC107"></i>
-                                                <p>
-                                                    @Session["J1"]
-                                                </p>
-                                            </a>
-                                        </li>
-
+                                        @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
+                                        {
+                                            <li class="nav-item">
+                                                <a href="../TraitementJustif/TraitementORDSEC" class="nav-link" data-child-id="3">
+                                                    <i class="nav-icon fas fa-th-list" style="color: #FFC107"></i>
+                                                    <p>
+                                                        @Session["J1"]
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
                                         <li class="nav-item">
                                             <a href="../TraitementRevers/TraitementPROJET" class="nav-link" data-child-id="3">
                                                 <i class="nav-icon fas fa-list-ol" style="color: #DF4857"></i>
@@ -496,16 +525,19 @@
                                                 </p>
                                             </a>
                                         </li>
+                                        @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
+                                        {
+                                            <li class="nav-item">
+                                                <a href="../TraitementRevers/TraitementORDSEC" class="nav-link" data-child-id="3">
+                                                    <i class="nav-icon fas fa-tasks" style="color: #3EB059"></i>
+                                                    <p>
+                                                        @Session["J3"]
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
 
-                                        <li class="nav-item">
-                                            <a href="../TraitementRevers/TraitementORDSEC" class="nav-link" data-child-id="3">
-                                                <i class="nav-icon fas fa-tasks" style="color: #3EB059"></i>
-                                                <p>
-                                                    @Session["J3"]
-                                                </p>
-                                            </a>
-                                        </li>
-                                    </ul>
+                                        </ul>
                                 </li>
                             </ul>
                         </div>

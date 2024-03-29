@@ -12,6 +12,11 @@ $(document).ready(() => {
     $(`[data-widget="pushmenu"]`).on('click', () => {
         $(`[data-action="SaveV"]`).toggleClass('custom-fixed-btn');
     });
+
+    //$("#TBD_PROJET_OTHER tfoot th").each(function () {
+    //    var title = $(this).text();
+    //    $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+    //});
 });
 
 function checkdel(id) {
@@ -225,10 +230,67 @@ function GetListLOADOTHER() {
                     },
                     deferRender: true,
                     dom: 'Bfrtip',
-                    buttons: ['colvis'],
+                    pageLength: 25,
+                    caption: 'SOFT - SIIG CONNECT ' + new Date().toLocaleDateString(),
+                    buttons: ['colvis',
+                        {
+                            extend: 'pdfHtml5',
+                            title: 'DEPENSES INITIEES',
+                            messageTop: 'La liste des dépenses initiées dans TOM²PRO',
+                            text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
+                            orientation: 'landscape',
+                            pageSize: 'A4',
+                            charset: "utf-8",
+                            bom: true,
+                            className: 'custombutton-collection-pdf',
+                            exportOptions: {
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                            },
+                            customize: function (doc) {
+                                doc.defaultStyle.alignment = 'left';
+                                //doc.defaultStyle.margin = [12, 12, 12, 12];
+                            },
+                            download: 'open'
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            title: 'DEPENSES INITIEES',
+                            messageTop: 'La liste des dépenses initiées dans TOM²PRO',
+                            text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
+                            orientation: 'landscape',
+                            pageSize: 'A4',
+                            charset: "utf-8",
+                            bom: true,
+                            className: 'custombutton-collection-excel',
+                            exportOptions: {
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (typeof data === 'undefined') {
+                                            return;
+                                        }
+                                        if (data == null) {
+                                            return data;
+                                        }
+                                        if (column === 9) {                   
+                                            var arr = data.split(',');
+                                            arr[0] = arr[0].toString().replace(/[\.]/g, "");
+                                            if (arr[0] > '' || arr[1] > '') {
+                                                data = arr[0] + '.' + arr[1];
+                                            } else {
+                                                return '';
+                                            }
+                                            return data.toString().replace(/[^\d.-]/g, "");
+                                        }
+                                        return data;
+                                    }
+                                }
+                            },
+                        }
+                    ],
                     initComplete: function () {
                         $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
-
+                        
                         count = 0;
                         this.api().columns().every(function () {
                             var title = this.header();
@@ -275,11 +337,20 @@ function GetListLOADOTHER() {
                     }
                 });
 
+                /*var footer = $("#TBD_PROJET_OTHER tfoot tr");*/
                 $('#TBD_PROJET_OTHER tfoot th').each(function (i) {
                     if (i == 0 || i >= 13) {
+                        /*$("#TBD_PROJET_OTHER thead").append(footer);*/
                         $(this).addClass("NOTVISIBLE");
                     }
                 });
+
+                //// Apply the search
+                //$("#TBD_PROJET_OTHER thead").on("keyup", "input", function () {
+                //    table.column($(this).parent().index())
+                //        .search(this.value)
+                //        .draw();
+                //});
             }
         },
         error: function () {
@@ -333,7 +404,6 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
             if (Datas.type == "login") {
                 alert(Datas.msg);
                 window.location = window.location.origin;
-
                 return;
             }
             if (Datas.type == "PEtat") {
@@ -446,7 +516,64 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                     },
                     deferRender: true,
                     dom: 'Bfrtip',
-                    buttons: ['colvis'],
+                    pageLength: 25,
+                    caption: 'SOFT - SIIG CONNECT ' + new Date().toLocaleDateString(),
+                    buttons: ['colvis',
+                        {
+                            extend: 'pdfHtml5',
+                            title: 'DEPENSES INITIEES',
+                            messageTop: 'La liste des dépenses initiées dans TOM²PRO',
+                            text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
+                            orientation: 'landscape',
+                            pageSize: 'A4',
+                            charset: "utf-8",
+                            bom: true,
+                            className: 'custombutton-collection-pdf',
+                            exportOptions: {
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                            },
+                            customize: function (doc) {
+                                doc.defaultStyle.alignment = 'left';
+                                //doc.defaultStyle.margin = [12, 12, 12, 12];
+                            },
+                            download: 'open'
+                        },
+                        {
+                            extend: 'excelHtml5',
+                            title: 'DEPENSES INITIEES',
+                            messageTop: 'La liste des dépenses initiées dans TOM²PRO',
+                            text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
+                            orientation: 'landscape',
+                            pageSize: 'A4',
+                            charset: "utf-8",
+                            bom: true,
+                            className: 'custombutton-collection-excel',
+                            exportOptions: {
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        if (typeof data === 'undefined') {
+                                            return;
+                                        }
+                                        if (data == null) {
+                                            return data;
+                                        }
+                                        if (column === 9) {
+                                            var arr = data.split(',');
+                                            arr[0] = arr[0].toString().replace(/[\.]/g, "");
+                                            if (arr[0] > '' || arr[1] > '') {
+                                                data = arr[0] + '.' + arr[1];
+                                            } else {
+                                                return '';
+                                            }
+                                            return data.toString().replace(/[^\d.-]/g, "");
+                                        }
+                                        return data;
+                                    }
+                                }
+                            }
+                        }
+                    ],
                     initComplete: function () {
                         $(`thead td[data-column-index="${0}"]`).removeClass('sorting_asc').removeClass('sorting_desc');
 
@@ -496,8 +623,10 @@ $('[data-action="GenereSIIGOTHER"]').click(function () {
                     }
                 });
 
+                //var footer = $("#TBD_PROJET_OTHER tfoot tr");
                 $('#TBD_PROJET_OTHER tfoot th').each(function (i) {
                     if (i == 0 || i >= 13) {
+                        //$("#TBD_PROJET_OTHER thead").append(footer);
                         $(this).addClass("NOTVISIBLE");
                     }
                 });
@@ -531,7 +660,7 @@ function emptyTable() {
     table = $('#TBD_PROJET_OTHER').DataTable({
         data,
         colReorder: {
-            enable: true,
+            enable: false,
             fixedColumnsLeft: 1
         },
         deferRender: true,

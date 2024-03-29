@@ -2,7 +2,8 @@ var table = undefined;
 
 let list = [];
 
-const NUMBER_OF_ROWS = 5;
+//const NUMBER_OF_ROWS = 5;
+const NUMBER_OF_ROWS = 3;
 
 function parseList(array) {
     const result = [];
@@ -25,7 +26,7 @@ function parseList(array) {
 
                 switch (k) {
                     case 0:
-                        etape = 'Transfert et Validation RAF';
+                        etape = 'Transfert et Validation';
 
                         dateTraitement = array[i].TraitementsEngagementsDetails[j].DATETRANSFERTRAF === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATETRANSFERTRAF);
 
@@ -38,7 +39,7 @@ function parseList(array) {
 
                         break;
                     case 1:
-                        etape = 'Validation ORDESEC';
+                        etape = 'Validation';
 
                         dateTraitement = array[i].TraitementsEngagementsDetails[j].DATEVALORDSEC === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATEVALORDSEC);
 
@@ -50,32 +51,32 @@ function parseList(array) {
                         depassement = array[i].TraitementsEngagementsDetails[j].DEPASVALIDATION;
 
                         break;
-                    case 2:
-                        etape = 'Transféré SIIGFP';
+                    //case 2:
+                    //    etape = 'Transféré SIIGFP';
 
-                        dateTraitement = array[i].TraitementsEngagementsDetails[j].DATESENDSIIG === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATESENDSIIG);
+                    //    dateTraitement = array[i].TraitementsEngagementsDetails[j].DATESENDSIIG === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATESENDSIIG);
 
-                        dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTSENDSIIG;
-                        beneficiaire = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
-                        montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
-                        agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].SENDSIIGAGENT;
-                        dureePrevu = array[i].TraitementsEngagementsDetails[j].DURPREVUTRANSFSIIG;
-                        depassement = array[i].TraitementsEngagementsDetails[j].DEPASTRANSFSIIG;
+                    //    dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTSENDSIIG;
+                    //    beneficiaire = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
+                    //    montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
+                    //    agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].SENDSIIGAGENT;
+                    //    dureePrevu = array[i].TraitementsEngagementsDetails[j].DURPREVUTRANSFSIIG;
+                    //    depassement = array[i].TraitementsEngagementsDetails[j].DEPASTRANSFSIIG;
 
-                        break;
-                    case 3:
-                        etape = 'Intégré SIIGFP';
+                    //    break;
+                    //case 3:
+                    //    etape = 'Intégré SIIGFP';
 
-                        dateTraitement = array[i].TraitementsEngagementsDetails[j].DATESIIGFP === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATESIIGFP);
+                    //    dateTraitement = array[i].TraitementsEngagementsDetails[j].DATESIIGFP === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATESIIGFP);
 
-                        dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTSIIGFP;
-                        beneficiaire = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
-                        montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
-                        agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].SIIGFPAGENT;
-                        dureePrevu = array[i].TraitementsEngagementsDetails[j].DURPREVUSIIG;
-                        depassement = array[i].TraitementsEngagementsDetails[j].DEPASSIIG;
+                    //    dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTSIIGFP;
+                    //    beneficiaire = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
+                    //    montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
+                    //    agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].SIIGFPAGENT;
+                    //    dureePrevu = array[i].TraitementsEngagementsDetails[j].DURPREVUSIIG;
+                    //    depassement = array[i].TraitementsEngagementsDetails[j].DEPASSIIG;
 
-                        break;
+                    //    break;
                     default:
                         break;
                 }
@@ -199,7 +200,67 @@ function setDataTable() {
                 $('td:eq(10)', row).text('').css({ 'display': 'none' });
                 $('td:eq(11)', row).text('').css({ 'display': 'none' });
             }
-        }
+        },
+        deferRender: true,
+        dom: 'Bfrtip',
+        buttons: ['colvis'],
+        caption: 'SOFT - SIIG CONNECT ' + new Date().toLocaleDateString(),
+        buttons: ['colvis',
+            {
+                extend: 'pdfHtml5',
+                title: 'TRAITEMENTS EN SOUFFRANCE (PAR RAPPORT AU DELAI MOYEN)',
+                messageTop: 'Liste des traitements en souffrance (par rapport au délai moyen)',
+                text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
+                orientation: 'landscape',
+                pageSize: 'A4',
+                charset: "utf-8",
+                bom: true,
+                className: 'custombutton-collection-pdf',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                },
+                customize: function (doc) {
+                    doc.defaultStyle.alignment = 'left';
+                    //doc.defaultStyle.margin = [12, 12, 12, 12];
+                },
+                download: 'open'
+            },
+            {
+                extend: 'excelHtml5',
+                title: 'TRAITEMENTS EN SOUFFRANCE (PAR RAPPORT AU DELAI MOYEN)',
+                messageTop: 'Liste des traitements en souffrance (par rapport au délai moyen)',
+                text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
+                orientation: 'landscape',
+                pageSize: 'A4',
+                charset: "utf-8",
+                bom: true,
+                className: 'custombutton-collection-excel',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                    format: {
+                        body: function (data, row, column, node) {
+                            if (typeof data === 'undefined') {
+                                return;
+                            }
+                            if (data == null) {
+                                return data;
+                            }
+                            if (column === 6) {
+                                var arr = data.split(',');
+                                arr[0] = arr[0].toString().replace(/[\.]/g, "");
+                                if (arr[0] > '' || arr[1] > '') {
+                                    data = arr[0] + '.' + arr[1];
+                                } else {
+                                    return '';
+                                }
+                                return data.toString().replace(/[^\d.-]/g, "");
+                            }
+                            return data;
+                        }
+                    }
+                },
+            }
+        ],
     });
 }
 
@@ -378,6 +439,10 @@ function emptyTable() {
         paging: false,
         ordering: false,
         info: false,
-        colReorder: false
+        colReorder: false,
+
+        deferRender: true,
+        dom: 'Bfrtip',
+        buttons: ['colvis'],
     });
 }
