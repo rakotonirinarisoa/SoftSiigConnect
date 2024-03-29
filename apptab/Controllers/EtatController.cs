@@ -1,4 +1,5 @@
-﻿using apptab.Data.Entities;
+﻿using apptab.Data;
+using apptab.Data.Entities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace apptab.Controllers
 {
@@ -168,7 +170,7 @@ namespace apptab.Controllers
 
         //GET ALL PROJET//
         [HttpPost]
-        public async Task<ActionResult> GetAllPROJET(SI_USERS suser)
+        public ActionResult GetAllPROJET(SI_USERS suser)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -176,43 +178,60 @@ namespace apptab.Controllers
             try
             {
                 var test = db.SI_USERS.Where(x => x.LOGIN == exist.LOGIN && x.PWD == exist.PWD && x.DELETIONDATE == null).FirstOrDefault();
+                var proj = new List<int>();
+
                 if (test.ROLE == (int)Role.SAdministrateur)
                 {
-                    var user = await db.SI_PROJETS.Select(a => new
+                    var user = db.SI_PROJETS.Select(a => new
                     {
                         PROJET = a.PROJET,
                         ID = a.ID,
                         DELETIONDATE = a.DELETIONDATE,
-                    }).Where(a => a.DELETIONDATE == null).ToListAsync();
+                    }).Where(a => a.DELETIONDATE == null).ToList();
 
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+                    foreach (var x in user)
+                    {
+                        proj.Add(x.ID);
+                    }
+
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { List = user, PROJET = proj } }, settings));
                 }
                 else
                 {
                     if (test.IDPROJET != 0)
                     {
-                        var user = await db.SI_PROJETS.Select(a => new
+                        var user = db.SI_PROJETS.Select(a => new
                         {
                             PROJET = a.PROJET,
                             ID = a.ID,
                             DELETIONDATE = a.DELETIONDATE,
-                        }).Where(a => a.DELETIONDATE == null && a.ID == test.IDPROJET).ToListAsync();
+                        }).Where(a => a.DELETIONDATE == null && a.ID == test.IDPROJET).ToList();
 
-                        return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+                        foreach (var x in user)
+                        {
+                            proj.Add(x.ID);
+                        }
+
+                        return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { List = user, PROJET = proj } }, settings));
                     }
                     else
                     {
                         var user = (from usr in db.SI_PROJETS
                                     join prj in db.SI_MAPUSERPROJET on usr.ID equals prj.IDPROJET
                                     where prj.IDUS == test.ID && usr.DELETIONDATE == null
-                                    select new
+                                    select new SI_PROJETS
                                     {
                                         PROJET = usr.PROJET,
                                         ID = usr.ID,
                                         DELETIONDATE = usr.DELETIONDATE,
                                     }).ToList();
 
-                        return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+                        foreach (var x in user)
+                        {
+                            proj.Add(x.ID);
+                        }
+
+                        return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { List = user, PROJET = proj } }, settings));
                     }
                 }
             }
@@ -487,6 +506,202 @@ namespace apptab.Controllers
                 {
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = "message" }, settings));
                 }
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
+
+        //Historique de connexion des users//
+        public ActionResult HistoUsers()
+        {
+            ViewBag.Controller = "Historique de connexion des utilisateurs";
+
+            return View();
+        }
+
+        //GENERATION SIIGLOADOTHER//
+        [HttpPost]
+        public JsonResult LOADHistoUsers(SI_USERS suser, string listProjet)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                List<DATATRPROJET> list = new List<DATATRPROJET>();
+
+                string[] separators = { "," };
+                var pro = listProjet;
+                if (pro != null)
+                {
+                    string listUser = pro.ToString();
+                    string[] lst = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                    foreach (var idP in lst)
+                    {
+                        int crpt = int.Parse(idP);
+
+                        if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
+                    }
+
+                    var test = db.SI_USERS.Where(x => x.LOGIN == exist.LOGIN && x.PWD == exist.PWD && x.DELETIONDATE == null).FirstOrDefault();
+
+                    if (test.ROLE == (int)Role.SAdministrateur)
+                    {
+                        if (db.SI_USERSHISTO.Any())
+                        {
+                            foreach (var x in db.SI_USERSHISTO.OrderByDescending(a => a.CONNEX).ToList())
+                            {
+                                var soa = "MULTIPLE";
+                                if (x.IDPROJET != 0)
+                                {
+                                    soa = (from soas in db.SI_SOAS
+                                           join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                           where prj.IDPROJET == x.IDPROJET && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                           select new
+                                           {
+                                               soas.SOA
+                                           }).FirstOrDefault().SOA;
+                                }
+
+                                var isUser = db.SI_USERS.FirstOrDefault(a => a.DELETIONDATE == null && a.ID == x.IDUSER);
+
+                                list.Add(new DATATRPROJET
+                                {
+                                    IDUSERHISTO = x.ID,
+                                    SOA = soa,
+                                    PROJET = x.IDPROJET != 0 ? db.SI_PROJETS.Where(a => a.ID == x.IDPROJET && a.DELETIONDATE == null).FirstOrDefault().PROJET : "MULTIPLE",
+                                    REF = isUser != null ? isUser.LOGIN : "",
+                                    DATEDEF = x.CONNEX != null ? x.CONNEX : null,
+                                    DATETEF = x.DISCONNEX != null ? x.DISCONNEX : null,
+
+                                    isLATE = x.DISCONNEX != null ? false : true
+                                });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (test.IDPROJET != 0)
+                        {
+                            var user = db.SI_PROJETS.Select(a => new
+                            {
+                                PROJET = a.PROJET,
+                                ID = a.ID,
+                                DELETIONDATE = a.DELETIONDATE,
+                            }).Where(a => a.DELETIONDATE == null && a.ID == test.IDPROJET).ToList();
+
+                            foreach (var us in user)
+                            {
+                                if (db.SI_USERSHISTO.Any(a => a.IDPROJET == us.ID))
+                                {
+                                    foreach (var x in db.SI_USERSHISTO.Where(a => a.IDPROJET == us.ID).OrderByDescending(a => a.CONNEX).ToList())
+                                    {
+                                        var soa = "MULTIPLE";
+                                        if (x.IDPROJET != 0)
+                                        {
+                                            soa = (from soas in db.SI_SOAS
+                                                   join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                   where prj.IDPROJET == us.ID && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                   select new
+                                                   {
+                                                       soas.SOA
+                                                   }).FirstOrDefault().SOA;
+                                        }
+
+                                        var isUser = db.SI_USERS.FirstOrDefault(a => a.DELETIONDATE == null && a.ID == x.IDUSER);
+
+                                        list.Add(new DATATRPROJET
+                                        {
+                                            IDUSERHISTO = x.ID,
+                                            SOA = soa,
+                                            PROJET = x.IDPROJET != 0 ? db.SI_PROJETS.Where(a => a.ID == us.ID && a.DELETIONDATE == null).FirstOrDefault().PROJET : "MULTIPLE",
+                                            REF = isUser != null ? isUser.LOGIN : "",
+                                            DATEDEF = x.CONNEX != null ? x.CONNEX : null,
+                                            DATETEF = x.DISCONNEX != null ? x.DISCONNEX : null,
+
+                                            isLATE = x.DISCONNEX != null ? false : true
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var user = (from usr in db.SI_PROJETS
+                                        join prj in db.SI_MAPUSERPROJET on usr.ID equals prj.IDPROJET
+                                        where prj.IDUS == test.ID && usr.DELETIONDATE == null
+                                        select new SI_PROJETS
+                                        {
+                                            PROJET = usr.PROJET,
+                                            ID = usr.ID,
+                                            DELETIONDATE = usr.DELETIONDATE,
+                                        }).ToList();
+
+                            foreach (var us in user)
+                            {
+                                if (db.SI_USERSHISTO.Any(a => a.IDPROJET == us.ID))
+                                {
+                                    foreach (var x in db.SI_USERSHISTO.Where(a => a.IDPROJET == us.ID).OrderByDescending(a => a.CONNEX).ToList())
+                                    {
+                                        var soa = "MULTIPLE";
+                                        if (x.IDPROJET != 0)
+                                        {
+                                            soa = (from soas in db.SI_SOAS
+                                                   join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                   where prj.IDPROJET == us.ID && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                   select new
+                                                   {
+                                                       soas.SOA
+                                                   }).FirstOrDefault().SOA;
+                                        }
+
+                                        var isUser = db.SI_USERS.FirstOrDefault(a => a.DELETIONDATE == null && a.ID == x.IDUSER);
+
+                                        list.Add(new DATATRPROJET
+                                        {
+                                            IDUSERHISTO = x.ID,
+                                            SOA = soa,
+                                            PROJET = x.IDPROJET != 0 ? db.SI_PROJETS.Where(a => a.ID == us.ID && a.DELETIONDATE == null).FirstOrDefault().PROJET : "MULTIPLE",
+                                            REF = isUser != null ? isUser.LOGIN : "",
+                                            DATEDEF = x.CONNEX != null ? x.CONNEX : null,
+                                            DATETEF = x.DISCONNEX != null ? x.DISCONNEX : null,
+
+                                            isLATE = x.DISCONNEX != null ? false : true
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list.OrderByDescending(a => a.isLATE) }, settings));
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
+
+        [HttpPost]
+        public JsonResult DisconHisto(SI_USERS suser)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+
+            try
+            {
+                if (db.SI_USERSHISTO.Any(x => x.IDUSER == exist.ID))
+                {
+                    var histo = db.SI_USERSHISTO.Where(x => x.IDUSER == exist.ID).OrderByDescending(a => a.ID).FirstOrDefault();
+                    histo.DISCONNEX = DateTime.Now;
+                    db.SaveChanges();
+                }
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. " }, settings));
             }
             catch (Exception e)
             {
