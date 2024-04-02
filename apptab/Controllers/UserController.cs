@@ -493,10 +493,7 @@ namespace SOFTCONNECT.Controllers
                     }
                 }
 
-                Session["userSession"] = test;
-
-                Session["UserName"] = test.LOGIN;
-
+                //MENU//
                 if (db.SI_MENU.Any())
                 {
                     var isMenu = db.SI_MENU.FirstOrDefault();
@@ -537,6 +534,110 @@ namespace SOFTCONNECT.Controllers
                     Session["JRA"] = isMenu.JRA;
                 }
 
+                //PRIVILEGES//
+                Session["RMENUPAR1"] = 0;
+                Session["RMENUPAR2"] = 0;
+                Session["RMENUPAR3"] = 0;
+                Session["RMENUPAR4"] = 0;
+                Session["RMENUPAR5"] = 0;
+                Session["RMENUPAR6"] = 0;
+                Session["RMENUPAR7"] = 0;
+                Session["RMENUPAR8"] = 0;
+                Session["RMENUPAR9"] = 0;
+                Session["RMENUPAR10"] = 0;
+
+                Session["RMTNON"] = 0;
+                Session["RMT0"] = 0;
+                Session["RMT1"] = 0;
+                Session["RMT2"] = 0;
+                Session["RMP1"] = 0;
+                Session["RMP2"] = 0;
+                Session["RMP3"] = 0;
+                Session["RMP4"] = 0;
+
+                Session["RMD0"] = 0;
+                Session["RMD1"] = 0;
+                Session["RMD2"] = 0;
+                Session["RMD3"] = 0;
+
+                Session["RMOP0"] = 0;
+                Session["RMOP1"] = 0;
+                Session["RMOP2"] = 0;
+
+                Session["RTDB0"] = 0;
+                Session["RTDB1"] = 0;
+                Session["RTDB2"] = 0;
+                Session["RTDB3"] = 0;
+                Session["RTDB4"] = 0;
+                Session["RTDB5"] = 0;
+                Session["RTDB6"] = 0;
+                Session["RTDB7"] = 0;
+                Session["RTDB8"] = 0;
+
+                Session["RJ0"] = 0;
+                Session["RJ1"] = 0;
+                Session["RJ2"] = 0;
+                Session["RJ3"] = 0;
+
+                Session["RJR"] = 0;
+                Session["RJRA"] = 0;
+
+                Session["RGED"] = 0;
+
+                if (db.SI_PRIVILEGE.Any(a => a.IDUSERPRIV == test.ID))
+                {
+                    var isMenu = db.SI_PRIVILEGE.FirstOrDefault(a => a.IDUSERPRIV == test.ID);
+
+                    Session["RMENUPAR1"] = isMenu.MENUPAR1;
+                    Session["RMENUPAR2"] = isMenu.MENUPAR2;
+                    Session["RMENUPAR3"] = isMenu.MENUPAR3;
+                    Session["RMENUPAR4"] = isMenu.MENUPAR4;
+                    Session["RMENUPAR5"] = isMenu.MENUPAR5;
+                    Session["RMENUPAR6"] = isMenu.MENUPAR6;
+                    Session["RMENUPAR7"] = isMenu.MENUPAR7;
+                    Session["RMENUPAR8"] = isMenu.MENUPAR8;
+                    Session["RMENUPAR9"] = isMenu.MENUPAR9;
+                    Session["RMENUPAR10"] = isMenu.MENUPAR10;
+
+                    Session["RMTNON"] = isMenu.MTNON;
+                    Session["RMT0"] = isMenu.MT0;
+                    Session["RMT1"] = isMenu.MT1;
+                    Session["RMT2"] = isMenu.MT2;
+                    Session["RMP1"] = isMenu.MP1;
+                    Session["RMP2"] = isMenu.MP2;
+                    Session["RMP3"] = isMenu.MP3;
+                    Session["RMP4"] = isMenu.MP4;
+
+                    Session["RMD0"] = isMenu.MD0;
+                    Session["RMD1"] = isMenu.MD1;
+                    Session["RMD2"] = isMenu.MD2;
+                    Session["RMD3"] = isMenu.MD3;
+
+                    Session["RMOP0"] = isMenu.MOP0;
+                    Session["RMOP1"] = isMenu.MOP1;
+                    Session["RMOP2"] = isMenu.MOP2;
+
+                    Session["RTDB0"] = isMenu.TDB0;
+                    Session["RTDB1"] = isMenu.TDB1;
+                    Session["RTDB2"] = isMenu.TDB2;
+                    Session["RTDB3"] = isMenu.TDB3;
+                    Session["RTDB4"] = isMenu.TDB4;
+                    Session["RTDB5"] = isMenu.TDB5;
+                    Session["RTDB6"] = isMenu.TDB6;
+                    Session["RTDB7"] = isMenu.TDB7;
+                    Session["RTDB8"] = isMenu.TDB8;
+
+                    Session["RJ0"] = isMenu.J0;
+                    Session["RJ1"] = isMenu.J1;
+                    Session["RJ2"] = isMenu.J2;
+                    Session["RJ3"] = isMenu.J3;
+
+                    Session["RJR"] = isMenu.JR;
+                    Session["RJRA"] = isMenu.JRA;
+
+                    Session["RGED"] = isMenu.GED;
+                }
+
                 if (db.SI_GEDLIEN.Any())
                 {
                     var isMenu = db.SI_GEDLIEN.FirstOrDefault();
@@ -552,9 +653,11 @@ namespace SOFTCONNECT.Controllers
                     IDPROJET = test.IDPROJET,
                     CONNEX = DateTime.Now
                 };
-                //var histo = db.SI_USERSHISTO.FirstOrDefault(x => x.IDUSER == test.ID);
                 db.SI_USERSHISTO.Add(elem);
                 db.SaveChanges();
+
+                Session["userSession"] = test;
+                Session["UserName"] = test.LOGIN;
 
                 Session["VERSIONCONNNECT"] = "1.0.0";
                 Session["VERSION"] = "1.3.26";

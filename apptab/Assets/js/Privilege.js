@@ -88,6 +88,16 @@ function GetListUser() {
                 if (v.MENUPAR8 == 1) MENUPAR8R = "checked";
                 if (v.MENUPAR8 == 2) MENUPAR8A = "checked";
 
+                let MENUPAR9N = "", MENUPAR9R = "", MENUPAR9A = "";
+                if (v.MENUPAR9 == 0) MENUPAR9N = "checked";
+                if (v.MENUPAR9 == 1) MENUPAR9R = "checked";
+                if (v.MENUPAR9 == 2) MENUPAR9A = "checked";
+
+                let MENUPAR10N = "", MENUPAR10R = "", MENUPAR10A = "";
+                if (v.MENUPAR10 == 0) MENUPAR10N = "checked";
+                if (v.MENUPAR10 == 1) MENUPAR10R = "checked";
+                if (v.MENUPAR10 == 2) MENUPAR10A = "checked";
+
                 let MTNONN = "", MTNONR = "", MTNONA = "";
                 if (v.MTNON == 0) MTNONN = "checked";
                 if (v.MTNON == 1) MTNONR = "checked";
@@ -342,6 +352,30 @@ function GetListUser() {
                             </div></br>
                             <div class="form-check form-check-inline">
                                 <input type="radio" id="writeMENUPAR8${v.ID}" name="droneMENUPAR8${v.ID}" value="2" ${MENUPAR8A}/><label class="ml-1" for="writeMENUPAR8${v.ID}" style="font-weight:normal">All</label>
+                            </div>
+                        </td>
+
+                        <td text-align:center>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="noneMENUPAR9${v.ID}" name="droneMENUPAR9${v.ID}" value="0" ${MENUPAR9N}/><label class="ml-1" for="noneMENUPAR9${v.ID}" style="font-weight:normal">None</label>
+                            </div></br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="readMENUPAR9${v.ID}" name="droneMENUPAR9${v.ID}" value="1" ${MENUPAR9R}/><label class="ml-1" for="readMENUPAR9${v.ID}" style="font-weight:normal">Read</label>
+                            </div></br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="writeMENUPAR9${v.ID}" name="droneMENUPAR9${v.ID}" value="2" ${MENUPAR9A}/><label class="ml-1" for="writeMENUPAR9${v.ID}" style="font-weight:normal">All</label>
+                            </div>
+                        </td>
+
+                        <td text-align:center>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="noneMENUPAR10${v.ID}" name="droneMENUPAR10${v.ID}" value="0" ${MENUPAR10N}/><label class="ml-1" for="noneMENUPAR10${v.ID}" style="font-weight:normal">None</label>
+                            </div></br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="readMENUPAR10${v.ID}" name="droneMENUPAR10${v.ID}" value="1" ${MENUPAR10R}/><label class="ml-1" for="readMENUPAR10${v.ID}" style="font-weight:normal">Read</label>
+                            </div></br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="writeMENUPAR10${v.ID}" name="droneMENUPAR10${v.ID}" value="2" ${MENUPAR10A}/><label class="ml-1" for="writeMENUPAR10${v.ID}" style="font-weight:normal">All</label>
                             </div>
                         </td>
 
@@ -749,6 +783,8 @@ function SavePRIV(id) {
     formData.append("privilege.MENUPAR6", $(`input[name="droneMENUPAR6${id}"]:checked`).val());
     formData.append("privilege.MENUPAR7", $(`input[name="droneMENUPAR7${id}"]:checked`).val());
     formData.append("privilege.MENUPAR8", $(`input[name="droneMENUPAR8${id}"]:checked`).val());
+    formData.append("privilege.MENUPAR9", $(`input[name="droneMENUPAR9${id}"]:checked`).val());
+    formData.append("privilege.MENUPAR10", $(`input[name="droneMENUPAR10${id}"]:checked`).val());
 
     formData.append("privilege.MTNON", $(`input[name="droneMTNON${id}"]:checked`).val());
     formData.append("privilege.MT0", $(`input[name="droneMT0${id}"]:checked`).val());
