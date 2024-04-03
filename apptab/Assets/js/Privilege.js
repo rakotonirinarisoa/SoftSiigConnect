@@ -48,55 +48,55 @@ function GetListUser() {
             var code = ``;
             $.each(Datas.data, function (k, v) {
 
-                let MENUPAR1N = "", MENUPAR1R = "", MENUPAR1A = "";
-                if (v.MENUPAR1 == 0) MENUPAR1N = "checked";
-                if (v.MENUPAR1 == 1) MENUPAR1R = "checked";
-                if (v.MENUPAR1 == 2) MENUPAR1A = "checked";
+                //let MENUPAR1N = "", MENUPAR1R = "", MENUPAR1A = "";
+                //if (v.MENUPAR1 == 0) MENUPAR1N = "checked";
+                //if (v.MENUPAR1 == 1) MENUPAR1R = "checked";
+                //if (v.MENUPAR1 == 2) MENUPAR1A = "checked";
 
-                let MENUPAR2N = "", MENUPAR2R = "", MENUPAR2A = "";
-                if (v.MENUPAR2 == 0) MENUPAR2N = "checked";
-                if (v.MENUPAR2 == 1) MENUPAR2R = "checked";
-                if (v.MENUPAR2 == 2) MENUPAR2A = "checked";
+                //let MENUPAR2N = "", MENUPAR2R = "", MENUPAR2A = "";
+                //if (v.MENUPAR2 == 0) MENUPAR2N = "checked";
+                //if (v.MENUPAR2 == 1) MENUPAR2R = "checked";
+                //if (v.MENUPAR2 == 2) MENUPAR2A = "checked";
 
-                let MENUPAR3N = "", MENUPAR3R = "", MENUPAR3A = "";
-                if (v.MENUPAR3 == 0) MENUPAR3N = "checked";
-                if (v.MENUPAR3 == 1) MENUPAR3R = "checked";
-                if (v.MENUPAR3 == 2) MENUPAR3A = "checked";
+                //let MENUPAR3N = "", MENUPAR3R = "", MENUPAR3A = "";
+                //if (v.MENUPAR3 == 0) MENUPAR3N = "checked";
+                //if (v.MENUPAR3 == 1) MENUPAR3R = "checked";
+                //if (v.MENUPAR3 == 2) MENUPAR3A = "checked";
 
-                let MENUPAR4N = "", MENUPAR4R = "", MENUPAR4A = "";
-                if (v.MENUPAR4 == 0) MENUPAR4N = "checked";
-                if (v.MENUPAR4 == 1) MENUPAR4R = "checked";
-                if (v.MENUPAR4 == 2) MENUPAR4A = "checked";
+                //let MENUPAR4N = "", MENUPAR4R = "", MENUPAR4A = "";
+                //if (v.MENUPAR4 == 0) MENUPAR4N = "checked";
+                //if (v.MENUPAR4 == 1) MENUPAR4R = "checked";
+                //if (v.MENUPAR4 == 2) MENUPAR4A = "checked";
 
-                let MENUPAR5N = "", MENUPAR5R = "", MENUPAR5A = "";
-                if (v.MENUPAR5 == 0) MENUPAR5N = "checked";
-                if (v.MENUPAR5 == 1) MENUPAR5R = "checked";
-                if (v.MENUPAR5 == 2) MENUPAR5A = "checked";
+                //let MENUPAR5N = "", MENUPAR5R = "", MENUPAR5A = "";
+                //if (v.MENUPAR5 == 0) MENUPAR5N = "checked";
+                //if (v.MENUPAR5 == 1) MENUPAR5R = "checked";
+                //if (v.MENUPAR5 == 2) MENUPAR5A = "checked";
 
-                let MENUPAR6N = "", MENUPAR6R = "", MENUPAR6A = "";
-                if (v.MENUPAR6 == 0) MENUPAR6N = "checked";
-                if (v.MENUPAR6 == 1) MENUPAR6R = "checked";
-                if (v.MENUPAR6 == 2) MENUPAR6A = "checked";
+                //let MENUPAR6N = "", MENUPAR6R = "", MENUPAR6A = "";
+                //if (v.MENUPAR6 == 0) MENUPAR6N = "checked";
+                //if (v.MENUPAR6 == 1) MENUPAR6R = "checked";
+                //if (v.MENUPAR6 == 2) MENUPAR6A = "checked";
 
-                let MENUPAR7N = "", MENUPAR7R = "", MENUPAR7A = "";
-                if (v.MENUPAR7 == 0) MENUPAR7N = "checked";
-                if (v.MENUPAR7 == 1) MENUPAR7R = "checked";
-                if (v.MENUPAR7 == 2) MENUPAR7A = "checked";
+                //let MENUPAR7N = "", MENUPAR7R = "", MENUPAR7A = "";
+                //if (v.MENUPAR7 == 0) MENUPAR7N = "checked";
+                //if (v.MENUPAR7 == 1) MENUPAR7R = "checked";
+                //if (v.MENUPAR7 == 2) MENUPAR7A = "checked";
 
-                let MENUPAR8N = "", MENUPAR8R = "", MENUPAR8A = "";
-                if (v.MENUPAR8 == 0) MENUPAR8N = "checked";
-                if (v.MENUPAR8 == 1) MENUPAR8R = "checked";
-                if (v.MENUPAR8 == 2) MENUPAR8A = "checked";
+                //let MENUPAR8N = "", MENUPAR8R = "", MENUPAR8A = "";
+                //if (v.MENUPAR8 == 0) MENUPAR8N = "checked";
+                //if (v.MENUPAR8 == 1) MENUPAR8R = "checked";
+                //if (v.MENUPAR8 == 2) MENUPAR8A = "checked";
 
-                let MENUPAR9N = "", MENUPAR9R = "", MENUPAR9A = "";
-                if (v.MENUPAR9 == 0) MENUPAR9N = "checked";
-                if (v.MENUPAR9 == 1) MENUPAR9R = "checked";
-                if (v.MENUPAR9 == 2) MENUPAR9A = "checked";
+                //let MENUPAR9N = "", MENUPAR9R = "", MENUPAR9A = "";
+                //if (v.MENUPAR9 == 0) MENUPAR9N = "checked";
+                //if (v.MENUPAR9 == 1) MENUPAR9R = "checked";
+                //if (v.MENUPAR9 == 2) MENUPAR9A = "checked";
 
-                let MENUPAR10N = "", MENUPAR10R = "", MENUPAR10A = "";
-                if (v.MENUPAR10 == 0) MENUPAR10N = "checked";
-                if (v.MENUPAR10 == 1) MENUPAR10R = "checked";
-                if (v.MENUPAR10 == 2) MENUPAR10A = "checked";
+                //let MENUPAR10N = "", MENUPAR10R = "", MENUPAR10A = "";
+                //if (v.MENUPAR10 == 0) MENUPAR10N = "checked";
+                //if (v.MENUPAR10 == 1) MENUPAR10R = "checked";
+                //if (v.MENUPAR10 == 2) MENUPAR10A = "checked";
 
                 let MTNONN = "", MTNONR = "", MTNONA = "";
                 if (v.MTNON == 0) MTNONN = "checked";
@@ -259,7 +259,7 @@ function GetListUser() {
                         <td>${v.LOGIN}</td>
                         <td>${v.ROLE}</td>
 
-                        <td text-align:center>
+                        @*<td text-align:center>
                             <div class="form-check form-check-inline">
                                 <input type="radio" id="noneMENUPAR1${v.ID}" name="droneMENUPAR1${v.ID}" value="0" ${MENUPAR1N}/><label class="ml-1" for="noneMENUPAR1${v.ID}" style="font-weight:normal">None</label>
                             </div></br>
@@ -377,7 +377,7 @@ function GetListUser() {
                             <div class="form-check form-check-inline">
                                 <input type="radio" id="writeMENUPAR10${v.ID}" name="droneMENUPAR10${v.ID}" value="2" ${MENUPAR10A}/><label class="ml-1" for="writeMENUPAR10${v.ID}" style="font-weight:normal">All</label>
                             </div>
-                        </td>
+                        </td>*@
 
                         <td text-align:center>
                             <div class="form-check form-check-inline">
@@ -775,16 +775,16 @@ function SavePRIV(id) {
 
     formData.append("UserId", id);
 
-    formData.append("privilege.MENUPAR1", $(`input[name="droneMENUPAR1${id}"]:checked`).val());
-    formData.append("privilege.MENUPAR2", $(`input[name="droneMENUPAR2${id}"]:checked`).val());
-    formData.append("privilege.MENUPAR3", $(`input[name="droneMENUPAR3${id}"]:checked`).val());
-    formData.append("privilege.MENUPAR4", $(`input[name="droneMENUPAR4${id}"]:checked`).val());
-    formData.append("privilege.MENUPAR5", $(`input[name="droneMENUPAR5${id}"]:checked`).val());
-    formData.append("privilege.MENUPAR6", $(`input[name="droneMENUPAR6${id}"]:checked`).val());
-    formData.append("privilege.MENUPAR7", $(`input[name="droneMENUPAR7${id}"]:checked`).val());
-    formData.append("privilege.MENUPAR8", $(`input[name="droneMENUPAR8${id}"]:checked`).val());
-    formData.append("privilege.MENUPAR9", $(`input[name="droneMENUPAR9${id}"]:checked`).val());
-    formData.append("privilege.MENUPAR10", $(`input[name="droneMENUPAR10${id}"]:checked`).val());
+    //formData.append("privilege.MENUPAR1", $(`input[name="droneMENUPAR1${id}"]:checked`).val());
+    //formData.append("privilege.MENUPAR2", $(`input[name="droneMENUPAR2${id}"]:checked`).val());
+    //formData.append("privilege.MENUPAR3", $(`input[name="droneMENUPAR3${id}"]:checked`).val());
+    //formData.append("privilege.MENUPAR4", $(`input[name="droneMENUPAR4${id}"]:checked`).val());
+    //formData.append("privilege.MENUPAR5", $(`input[name="droneMENUPAR5${id}"]:checked`).val());
+    //formData.append("privilege.MENUPAR6", $(`input[name="droneMENUPAR6${id}"]:checked`).val());
+    //formData.append("privilege.MENUPAR7", $(`input[name="droneMENUPAR7${id}"]:checked`).val());
+    //formData.append("privilege.MENUPAR8", $(`input[name="droneMENUPAR8${id}"]:checked`).val());
+    //formData.append("privilege.MENUPAR9", $(`input[name="droneMENUPAR9${id}"]:checked`).val());
+    //formData.append("privilege.MENUPAR10", $(`input[name="droneMENUPAR10${id}"]:checked`).val());
 
     formData.append("privilege.MTNON", $(`input[name="droneMTNON${id}"]:checked`).val());
     formData.append("privilege.MT0", $(`input[name="droneMT0${id}"]:checked`).val());
