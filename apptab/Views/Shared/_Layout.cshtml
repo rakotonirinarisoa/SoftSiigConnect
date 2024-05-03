@@ -191,9 +191,9 @@
                                     }
 
                                     @*@if (int.Parse(Session["RMENUPAR1"].ToString()) != 0)
-                    {
+                            {
 
-                    }*@
+                            }*@
                                     <li class="nav-item SuperAd" data-io data-menu-accordion="2">
                                         <a class="nav-link">
                                             <i class="nav-icon fas fa-cogs"></i>
@@ -289,9 +289,9 @@
 
                                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
                                     @*@if (int.Parse(Session["RMENUPAR2"].ToString()) != 0)
-                    {
+                            {
 
-                    }*@
+                            }*@
                                     <li class="nav-item" data-io>
                                         <a href="../User/List" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-users"></i>
@@ -301,9 +301,9 @@
                                         </a>
                                     </li>
                                     @*@if (int.Parse(Session["RMENUPAR3"].ToString()) != 0)
-                    {
+                            {
 
-                    }*@
+                            }*@
                                     <li class="nav-item" data-io>
                                         <a href="../Privilege/List" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-flag-checkered"></i>
@@ -313,9 +313,9 @@
                                         </a>
                                     </li>
                                     @*@if (int.Parse(Session["RMENUPAR4"].ToString()) != 0)
-                    {
+                            {
 
-                    }*@
+                            }*@
                                     <li class="nav-item" data-io>
                                         <a href="../Parametre/CorrEtatCreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-cog"></i>
@@ -325,9 +325,9 @@
                                         </a>
                                     </li>
                                     @*@if (int.Parse(Session["RMENUPAR5"].ToString()) != 0)
-                    {
+                            {
 
-                    }*@
+                            }*@
                                     <li class="nav-item" data-io>
                                         <a href="../SuperAdmin/DelaisCreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-clock"></i>
@@ -337,9 +337,9 @@
                                         </a>
                                     </li>
                                     @*@if (int.Parse(Session["RMENUPAR6"].ToString()) != 0)
-                    {
+                            {
 
-                    }*@
+                            }*@
                                     <li class="nav-item" data-io>
                                         <a href="../SuperAdmin/MAILCreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-envelope"></i>
@@ -349,9 +349,9 @@
                                         </a>
                                     </li>
                                     @*@if (int.Parse(Session["RMENUPAR7"].ToString()) != 0)
-                    {
+                            {
 
-                    }*@
+                            }*@
                                     <li class="nav-item" data-io>
                                         <a href="../Crypto/CryptoCreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-key"></i>
@@ -361,9 +361,9 @@
                                         </a>
                                     </li>
                                     @*@if (int.Parse(Session["RMENUPAR8"].ToString()) != 0)
-                    {
+                            {
 
-                    }*@
+                            }*@
                                     <li class="nav-item" data-io>
                                         <a href="../FTP/FtpCreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-paper-plane"></i>
@@ -373,9 +373,9 @@
                                         </a>
                                     </li>
                                     @*@if (int.Parse(Session["RMENUPAR9"].ToString()) != 0)
-                    {
+                            {
 
-                    }*@
+                            }*@
                                     <li class="nav-item" data-io>
                                         <a href="../Parametre/TypeECreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fa fa-exclamation-triangle"></i>
@@ -385,9 +385,9 @@
                                         </a>
                                     </li>
                                     @*@if (int.Parse(Session["RMENUPAR10"].ToString()) != 0)
-                    {
+                            {
 
-                    }*@
+                            }*@
                                     <li class="nav-item" data-io>
                                         <a href="../Parametre/TypeFlowCreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fa fa-question-circle"></i>
@@ -456,16 +456,16 @@
                                         }
                                     }
                                     @*@if (int.Parse(Session["RMT2"].ToString()) != 0)
-                    {
-                        <li class="nav-item">
-                            <a href="../Traitement/TraitementSENDSIIGFP" class="nav-link" data-child-id="2">
-                                <i class="nav-icon fas fa-tasks" style="color: #338B85"></i>
-                                <p>
-                                    @Session["MT2"]
-                                </p>
-                            </a>
-                        </li>
-                    }*@
+                            {
+                                <li class="nav-item">
+                                    <a href="../Traitement/TraitementSENDSIIGFP" class="nav-link" data-child-id="2">
+                                        <i class="nav-icon fas fa-tasks" style="color: #338B85"></i>
+                                        <p>
+                                            @Session["MT2"]
+                                        </p>
+                                    </a>
+                                </li>
+                            }*@
                                 </ul>
                             </div>
                         }
@@ -490,7 +490,7 @@
                                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;" id="menu-accordeon">
                                     @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
                                         || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD0"].ToString()) != 0 || int.Parse(Session["RMD1"].ToString()) != 0 || int.Parse(Session["RMD2"].ToString()) != 0 || int.Parse(Session["RMD3"].ToString()) != 0)))
-                                     {
+                                    {
                                         <li class="nav-item SuperAd" data-io data-menu-accordion="3">
 
                                             <a class="nav-link">
@@ -541,16 +541,16 @@
                                                     }
                                                 }
                                                 @*@if (int.Parse(Session["RMD3"].ToString()) != 0)
-                                {
-                                    <li class="nav-item">
-                                        <a href="../TraitementAvance/TraitementSENDSIIGFP" class="nav-link" data-child-id="3">
-                                            <i class="nav-icon fas fa-tasks" style="color: #338B85"></i>
-                                            <p>
-                                                @Session["MD3"]
-                                            </p>
-                                        </a>
-                                    </li>
-                                }*@
+                                        {
+                                            <li class="nav-item">
+                                                <a href="../TraitementAvance/TraitementSENDSIIGFP" class="nav-link" data-child-id="3">
+                                                    <i class="nav-icon fas fa-tasks" style="color: #338B85"></i>
+                                                    <p>
+                                                        @Session["MD3"]
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }*@
                                             </ul>
                                         </li>
                                     }
@@ -721,16 +721,16 @@
                             <div data-parent-id="5" class="w3-hide">
                                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;" id="menu-accordeon" data-menu-accordion="5">
                                     @*@if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur)
-                    {
-                        <li class="nav-item">
-                            <a href="../Calendar/Index" class="nav-link">
-                                <i class="nav-icon fas fa-calendar-alt" style="color: #4970cb"></i>
-                                <p>
-                                    Evénements
-                                </p>
-                            </a>
-                        </li>
-                    }*@
+                            {
+                                <li class="nav-item">
+                                    <a href="../Calendar/Index" class="nav-link">
+                                        <i class="nav-icon fas fa-calendar-alt" style="color: #4970cb"></i>
+                                        <p>
+                                            Evénements
+                                        </p>
+                                    </a>
+                                </li>
+                            }*@
                                     <li class="nav-item">
                                         <a href="../Etat/HistoUsers" class="nav-link" data-child-id="5">
                                             <i class="nav-icon fa fa-exclamation"></i>
@@ -904,7 +904,10 @@
                     </nav>
                 </div>
 
-                <img src="~/Assets/img/logo-soft.png?version=@Session["VERSION"]" alt="AdminLTE Logo" class="brand-image elevation-0 imageHoverLogo" style="opacity: .7; bottom: 0; position: absolute; width: 60%; padding-bottom: 15%;" />
+                <a href="https://www.softwell.mg" target="_blank">
+                    <img src="~/Assets/img/logo-soft.png?version=@Session["VERSION"]" alt="AdminLTE Logo" class="brand-image elevation-0 imageHoverLogo" style="opacity: .7; bottom: 0; position: absolute; width: 60%; padding-bottom: 15%;" />
+                </a>
+                
             </aside>
 
             <div class="content-wrapper">

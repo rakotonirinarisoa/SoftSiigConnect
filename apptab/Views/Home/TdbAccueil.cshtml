@@ -18,95 +18,17 @@
     || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMTNON"].ToString()) != 0 || int.Parse(Session["RMT0"].ToString()) != 0 || int.Parse(Session["RMT1"].ToString()) != 0 || int.Parse(Session["RMT2"].ToString()) != 0)))
 {
     <h1>Mandats</h1>
-    <div class="row">
-        @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && int.Parse(Session["RMTNON"].ToString()) != 0))
-        {
-            <div class="col-lg-4 col-6" style="cursor:pointer" show-create-user-modal>
-                <a href="../Traitement/TraitementORDSECOTHER">
-                    <div class="small-box tdbinitier">
-                        <div class="inner">
-                            <h3 id="MandatT">0</h3>
-                            <p>Dépenses initées</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fa fa-exclamation"></i>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        }
-        @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && int.Parse(Session["RMT0"].ToString()) != 0))
-        {
-            <div class="col-lg-4 col-6" style="cursor:pointer">
-                <a href="../Traitement/TraitementPROJET">
-                    <div class="small-box tbdattente">
-                        <div class="inner">
-                            <h3 id="MandatA">0</h3>
-                            <p>En attente tris</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-ellipsis-h"></i>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        }
-        @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
-        {
-            if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-               || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && int.Parse(Session["RMT1"].ToString()) != 0))
-            {
-                <div class="col-lg-4 col-6" style="cursor:pointer">
-                    <a href="../Traitement/TraitementORDSEC">
-                        <div class="small-box tdbvalider">
-                            <div class="inner">
-                                <h3 id="MandatV">0</h3>
-                                <p>En attente validation</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-check"></i>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            }
-        }
-        @*<div class="col-lg-3 col-6" style="cursor:pointer">
-                <a href="../Traitement/TraitementSENDSIIGFP">
-                    <div class="small-box tdblast">
-                        <div class="inner">
-                            <h3 id="MandatTR">0</h3>
-                            <p>En attente transfert vers SIIGFP</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-paper-plane"></i>
-                        </div>
-                    </div>
-                </a>
-            </div>*@
-    </div>
-}
-
-@if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD0"].ToString()) != 0 || int.Parse(Session["RMD1"].ToString()) != 0 || int.Parse(Session["RMD2"].ToString()) != 0 || int.Parse(Session["RMD3"].ToString()) != 0 ||
-    int.Parse(Session["RJ0"].ToString()) != 0 || int.Parse(Session["RJ1"].ToString()) != 0 || int.Parse(Session["RJ2"].ToString()) != 0 || int.Parse(Session["RJ3"].ToString()) != 0)))
-{
-    if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD0"].ToString()) != 0 || int.Parse(Session["RMD1"].ToString()) != 0 || int.Parse(Session["RMD2"].ToString()) != 0 || int.Parse(Session["RMD3"].ToString()) != 0)))
-    {
-        <h1>Avances</h1>
+    <div class="container-fluid">
         <div class="row">
             @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD0"].ToString()) != 0)))
+        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && int.Parse(Session["RMTNON"].ToString()) != 0))
             {
-                <div class="col-lg-4 col-6" style="cursor:pointer" show-create-user-modal>
-                    <a href="../TraitementAvance/TraitementORDSECOTHER">
+                <div @*class="col-md-offset-1 col-md-2 col-sm-3 col-xs-4"*@class="col-lg-12 col-6" style="cursor:pointer" show-create-user-modal>
+                    <a href="../Traitement/TraitementORDSECOTHER">
                         <div class="small-box tdbinitier">
                             <div class="inner">
-                                <h3 id="MandatTA">0</h3>
-                                <p>Avances initiées</p>
+                                <h3 id="MandatT">0</h3>
+                                <p>Dépenses initées</p>
                             </div>
                             <div class="icon">
                                 <i class="fa fa-exclamation"></i>
@@ -116,13 +38,13 @@
                 </div>
             }
             @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD1"].ToString()) != 0)))
+        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && int.Parse(Session["RMT0"].ToString()) != 0))
             {
-                <div class="col-lg-4 col-6" style="cursor:pointer">
-                    <a href="../TraitementAvance/TraitementPROJET">
+                <div @*class="col-md-offset-1 col-md-2 col-sm-3 col-xs-4"*@class="col-lg-12 col-6" style="cursor:pointer">
+                    <a href="../Traitement/TraitementPROJET">
                         <div class="small-box tbdattente">
                             <div class="inner">
-                                <h3 id="MandatAA">0</h3>
+                                <h3 id="MandatA">0</h3>
                                 <p>En attente tris</p>
                             </div>
                             <div class="icon">
@@ -135,13 +57,13 @@
             @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
             {
                 if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                   || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD2"].ToString()) != 0)))
+                   || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && int.Parse(Session["RMT1"].ToString()) != 0))
                 {
-                    <div class="col-lg-4 col-6" style="cursor:pointer">
-                        <a href="../TraitementAvance/TraitementORDSEC">
+                    <div @*class="col-md-offset-1 col-md-2 col-sm-3 col-xs-4"*@class="col-lg-12 col-6" style="cursor:pointer">
+                        <a href="../Traitement/TraitementORDSEC">
                             <div class="small-box tdbvalider">
                                 <div class="inner">
-                                    <h3 id="MandatVA">0</h3>
+                                    <h3 id="MandatV">0</h3>
                                     <p>En attente validation</p>
                                 </div>
                                 <div class="icon">
@@ -153,199 +75,279 @@
                 }
             }
             @*<div class="col-lg-3 col-6" style="cursor:pointer">
-                    <a href="../TraitementAvance/TraitementSENDSIIGFP">
-                        <div class="small-box tdblast">
-                            <div class="inner">
-                                <h3 id="MandatTRA">0</h3>
-                                <p>En attente transfert vers SIIGFP</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-paper-plane"></i>
-                            </div>
-                        </div>
-                    </a>
-                </div>*@
-        </div>
-    }
-
-    if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ0"].ToString()) != 0 || int.Parse(Session["RJ1"].ToString()) != 0 || int.Parse(Session["RJ2"].ToString()) != 0 || int.Parse(Session["RJ3"].ToString()) != 0)))
-    {
-        <h1>Justificatifs et Reversements</h1>
-        <div class="row">
-            @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ0"].ToString()) != 0)))
-            {
-                <div class="col-lg-3 col-6" style="cursor:pointer" show-create-user-modal>
-                    <a href="../TraitementJustif/TraitementPROJET">
-                        <div class="small-box tdbinitier">
-                            <div class="inner">
-                                <h3 id="J0">0</h3>
-                                <p>Justificatifs en attente tris</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fa fa-exclamation"></i>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            }
-            @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
-            {
-                if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                   || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ1"].ToString()) != 0)))
-                {
-                    <div class="col-lg-3 col-6" style="cursor:pointer">
-                        <a href="../TraitementJustif/TraitementORDSEC">
-                            <div class="small-box tbdattente">
-                                <div class="inner">
-                                    <h3 id="J1">0</h3>
-                                    <p>Justificatifs en attente validation</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="fas fa-ellipsis-h"></i>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                }
-            }
-            @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ2"].ToString()) != 0)))
-            {
-                <div class="col-lg-3 col-6" style="cursor:pointer">
-                    <a href="../TraitementRevers/TraitementPROJET">
-                        <div class="small-box tdbvalider">
-                            <div class="inner">
-                                <h3 id="J2">0</h3>
-                                <p>Reversements en attente tris</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-exclamation"></i>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            }
-            @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
-            {
-                if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                   || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ3"].ToString()) != 0)))
-                {
-                    <div class="col-lg-3 col-6" style="cursor:pointer">
-                        <a href="../TraitementRevers/TraitementORDSEC">
-                            <div class="small-box tdblast">
-                                <div class="inner">
-                                    <h3 id="J3">0</h3>
-                                    <p>Reversements en attente validation</p>
-                                </div>
-                                <div class="icon">
-                                    <i class="fas fa-ellipsis-h"></i>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                }
-            }
-        </div>
-    }
-}
-
-@if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMP2"].ToString()) != 0 || int.Parse(Session["RMP3"].ToString()) != 0 || int.Parse(Session["RMP4"].ToString()) != 0)))
-{
-    <h1>Paiements</h1>
-    <div class="row">
-        @*<div class="col-lg-2 col-6" style="cursor:pointer" show-create-user-modal>
-            <div class="small-box bg-info">
-                <div class="inner">
-                    <h3 id="PaieR">0</h3>
-                    <p>Paiement récupérés</p>
-                </div>
-                <div class="icon">
-                    <i class="fas fa-list"></i>
-                </div>
-            </div>
-        </div>*@
-        @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMP2"].ToString()) != 0)))
-        {
-            <div class="col-lg-4 col-6" style="cursor:pointer" show-create-user-modal>
-                <a href="../Home/TeacherValidation">
-                    <div class="small-box tdbinitier">
+                <a href="../Traitement/TraitementSENDSIIGFP">
+                    <div class="small-box tdblast">
                         <div class="inner">
-                            <h3 id="PaieR">0</h3>
-                            <p>Paiements en attente de validation</p>
+                            <h3 id="MandatTR">0</h3>
+                            <p>En attente transfert vers SIIGFP</p>
                         </div>
                         <div class="icon">
-                            <i class="fas fa-ellipsis-h"></i>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        }
-        @*<div class="col-lg-3 col-6" style="cursor:pointer">
-            <div class="small-box bg-danger">
-                <div class="inner">
-                    <h3 id="PaieA">0</h3>
-                    <p>Paiements rejetés</p>
-                </div>
-                <div class="icon">
-                    <i class="fas fa-times"></i>
-                </div>
-            </div>
-        </div>*@
-        @if (int.Parse(Session["PROCESPAIE"].ToString()) == 2)
-        {
-            if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-               || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMP3"].ToString()) != 0)))
-            {
-                <div class="col-lg-4 col-6" style="cursor:pointer">
-                    <a href="../Home/BonPourPaiement">
-                        <div class="small-box tbdattente">
-                            <div class="inner">
-                                <h3 id="PaieT">0</h3>
-                                <p>Paiements validés</p>
-                            </div>
-                            <div class="icon">
-                                <i class="fas fa-check"></i>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            }
-        }
-        @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMP4"].ToString()) != 0)))
-        {
-            <div class="col-lg-4 col-6" style="cursor:pointer">
-                <a href="../Home/FValidation">
-                    <div class="small-box tdbvalider">
-                        <div class="inner">
-                            <h3 id="PaieV">0</h3>
-                            <p>Paiements finalisés</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-check-double"></i>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        }
-            @*<div class="col-lg-3 col-6" style="cursor:pointer">
-                <a href="#">
-                    <div class="small-box bg-gradient-cyan">
-                        <div class="inner">
-                            <h3 id="PaieF">0</h3>
-                            <p>Fichier AFB  à récupérer</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fas fa-check-double"></i>
+                            <i class="fas fa-paper-plane"></i>
                         </div>
                     </div>
                 </a>
             </div>*@
+        </div>
     </div>
 }
 
-<script src="~/Assets/js/AACUL.js?version=@Session["VERSION"]"></script>
+        @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD0"].ToString()) != 0 || int.Parse(Session["RMD1"].ToString()) != 0 || int.Parse(Session["RMD2"].ToString()) != 0 || int.Parse(Session["RMD3"].ToString()) != 0 ||
+            int.Parse(Session["RJ0"].ToString()) != 0 || int.Parse(Session["RJ1"].ToString()) != 0 || int.Parse(Session["RJ2"].ToString()) != 0 || int.Parse(Session["RJ3"].ToString()) != 0)))
+        {
+            if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD0"].ToString()) != 0 || int.Parse(Session["RMD1"].ToString()) != 0 || int.Parse(Session["RMD2"].ToString()) != 0 || int.Parse(Session["RMD3"].ToString()) != 0)))
+            {
+                <h1>Avances</h1>
+                <div class="row">
+                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD0"].ToString()) != 0)))
+                    {
+                        <div class="col-lg-4 col-6" style="cursor:pointer" show-create-user-modal>
+                            <a href="../TraitementAvance/TraitementORDSECOTHER">
+                                <div class="small-box tdbinitier">
+                                    <div class="inner">
+                                        <h3 id="MandatTA">0</h3>
+                                        <p>Avances initiées</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa fa-exclamation"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD1"].ToString()) != 0)))
+                    {
+                        <div class="col-lg-4 col-6" style="cursor:pointer">
+                            <a href="../TraitementAvance/TraitementPROJET">
+                                <div class="small-box tbdattente">
+                                    <div class="inner">
+                                        <h3 id="MandatAA">0</h3>
+                                        <p>En attente tris</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                    @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
+                    {
+                        if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                           || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD2"].ToString()) != 0)))
+                        {
+                            <div class="col-lg-4 col-6" style="cursor:pointer">
+                                <a href="../TraitementAvance/TraitementORDSEC">
+                                    <div class="small-box tdbvalider">
+                                        <div class="inner">
+                                            <h3 id="MandatVA">0</h3>
+                                            <p>En attente validation</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    }
+                    @*<div class="col-lg-3 col-6" style="cursor:pointer">
+                            <a href="../TraitementAvance/TraitementSENDSIIGFP">
+                                <div class="small-box tdblast">
+                                    <div class="inner">
+                                        <h3 id="MandatTRA">0</h3>
+                                        <p>En attente transfert vers SIIGFP</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>*@
+                </div>
+            }
+
+            if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ0"].ToString()) != 0 || int.Parse(Session["RJ1"].ToString()) != 0 || int.Parse(Session["RJ2"].ToString()) != 0 || int.Parse(Session["RJ3"].ToString()) != 0)))
+            {
+                <h1>Justificatifs et Reversements</h1>
+                <div class="row">
+                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ0"].ToString()) != 0)))
+                    {
+                        <div class="col-lg-3 col-6" style="cursor:pointer" show-create-user-modal>
+                            <a href="../TraitementJustif/TraitementPROJET">
+                                <div class="small-box tdbinitier">
+                                    <div class="inner">
+                                        <h3 id="J0">0</h3>
+                                        <p>Justificatifs en attente tris</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fa fa-exclamation"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                    @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
+                    {
+                        if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                           || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ1"].ToString()) != 0)))
+                        {
+                            <div class="col-lg-3 col-6" style="cursor:pointer">
+                                <a href="../TraitementJustif/TraitementORDSEC">
+                                    <div class="small-box tbdattente">
+                                        <div class="inner">
+                                            <h3 id="J1">0</h3>
+                                            <p>Justificatifs en attente validation</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fas fa-ellipsis-h"></i>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    }
+                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ2"].ToString()) != 0)))
+                    {
+                        <div class="col-lg-3 col-6" style="cursor:pointer">
+                            <a href="../TraitementRevers/TraitementPROJET">
+                                <div class="small-box tdbvalider">
+                                    <div class="inner">
+                                        <h3 id="J2">0</h3>
+                                        <p>Reversements en attente tris</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-exclamation"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                    @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
+                    {
+                        if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                           || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ3"].ToString()) != 0)))
+                        {
+                            <div class="col-lg-3 col-6" style="cursor:pointer">
+                                <a href="../TraitementRevers/TraitementORDSEC">
+                                    <div class="small-box tdblast">
+                                        <div class="inner">
+                                            <h3 id="J3">0</h3>
+                                            <p>Reversements en attente validation</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fas fa-ellipsis-h"></i>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    }
+                </div>
+            }
+        }
+
+        @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMP2"].ToString()) != 0 || int.Parse(Session["RMP3"].ToString()) != 0 || int.Parse(Session["RMP4"].ToString()) != 0)))
+        {
+            <h1>Paiements</h1>
+            <div class="row">
+                @*<div class="col-lg-2 col-6" style="cursor:pointer" show-create-user-modal>
+                        <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3 id="PaieR">0</h3>
+                                <p>Paiement récupérés</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-list"></i>
+                            </div>
+                        </div>
+                    </div>*@
+                @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMP2"].ToString()) != 0)))
+                {
+                    <div class="col-lg-4 col-6" style="cursor:pointer" show-create-user-modal>
+                        <a href="../Home/TeacherValidation">
+                            <div class="small-box tdbinitier">
+                                <div class="inner">
+                                    <h3 id="PaieR">0</h3>
+                                    <p>Paiements en attente de validation</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+                @*<div class="col-lg-3 col-6" style="cursor:pointer">
+                        <div class="small-box bg-danger">
+                            <div class="inner">
+                                <h3 id="PaieA">0</h3>
+                                <p>Paiements rejetés</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-times"></i>
+                            </div>
+                        </div>
+                    </div>*@
+                @if (int.Parse(Session["PROCESPAIE"].ToString()) == 2)
+                {
+                    if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                       || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMP3"].ToString()) != 0)))
+                    {
+                        <div class="col-lg-4 col-6" style="cursor:pointer">
+                            <a href="../Home/BonPourPaiement">
+                                <div class="small-box tbdattente">
+                                    <div class="inner">
+                                        <h3 id="PaieT">0</h3>
+                                        <p>Paiements validés</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                }
+                @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMP4"].ToString()) != 0)))
+                {
+                    <div class="col-lg-4 col-6" style="cursor:pointer">
+                        <a href="../Home/FValidation">
+                            <div class="small-box tdbvalider">
+                                <div class="inner">
+                                    <h3 id="PaieV">0</h3>
+                                    <p>Paiements finalisés</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-check-double"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+                @*<div class="col-lg-3 col-6" style="cursor:pointer">
+                        <a href="#">
+                            <div class="small-box bg-gradient-cyan">
+                                <div class="inner">
+                                    <h3 id="PaieF">0</h3>
+                                    <p>Fichier AFB  à récupérer</p>
+                                </div>
+                                <div class="icon">
+                                    <i class="fas fa-check-double"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </div>*@
+            </div>
+        }
+
+        <script src="~/Assets/js/AACUL.js?version=@Session["VERSION"]"></script>
