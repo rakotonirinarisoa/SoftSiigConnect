@@ -9,8 +9,8 @@
 
     <title>PDF Preview</title>
 
-    <link rel="stylesheet" href="~/Assets/admlte/plugins/fontawesome-free/css/all.min.css">
-    <link rel="stylesheet" href="~/Assets/admlte/dist/css/adminlte.css">
+    <link rel="stylesheet" href="~/Assets/admlte/plugins/fontawesome-free/css/all.min.css?version=@Session["VERSION"]">
+    <link rel="stylesheet" href="~/Assets/admlte/dist/css/adminlte.css?version=@Session["VERSION"]">
 
     <link rel="stylesheet" href="~/Assets/css/style.css?version=@Session["VERSION"]" />
     <link rel="stylesheet" href="~/Assets/css/loader.css?version=@Session["VERSION"]" />
@@ -19,7 +19,7 @@
     <link href="~/Assets/otherCSS/datatables.min.css?version=@Session["VERSION"]" rel="stylesheet" />
     <link href="~/Assets/otherCSS/buttons.dataTables.min.css?version=@Session["VERSION"]" rel="stylesheet" />
 
-    <script src="~/Assets/admlte/plugins/jquery/jquery.min.js"></script>
+    <script src="~/Assets/admlte/plugins/jquery/jquery.min.js?version=@Session["VERSION"]"></script>
     <script src="~/Assets/js/script.js?version=@Session["VERSION"]"></script>
 
     <script src="~/Assets/otherJs/jquery-3.7.0.js?version=@Session["VERSION"]"></script>
@@ -27,18 +27,32 @@
     <script src="~/Assets/otherJs/dataTables.rowsGroup.js?version=@Session["VERSION"]"></script>
     <script src="~/Assets/otherJs/buttons.colVis.min.js?version=@Session["VERSION"]"></script>
 
-    <script src="~/Assets/admlte/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <script src="~/Assets/admlte/plugins/bootstrap/js/bootstrap.bundle.min.js?version=@Session["VERSION"]"></script>
 
-    <script>
-        $.widget.bridge('uibutton', $.ui.button)
-    </script>
-
-    <script src="~/Assets/admlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <script src="~/Assets/admlte/dist/js/adminlte.js"></script>
+    <script src="~/Assets/admlte/dist/js/adminlte.js?version=@Session["VERSION"]"></script>
 
     <script src="~/Assets/otherJs/html2canvas.min.js?version=@Session["VERSION"]"></script>
     <script src="~/Assets/otherJs/jspdf.umd.min.js?version=@Session["VERSION"]"></script>
+
+    <script src="~/Assets/otherJs/jspdf.umd.min.js?version=@Session["VERSION"]"></script>
+
+    <script src="~/Assets/js/utils.js?version=@Session["VERSION"]"></script>
+
+    <style>
+        table {
+            border: none !important;
+        }
+
+        thead {
+            position: initial !important;
+            width: auto;
+        }
+
+        td:not(td[tabindex]), tr[compteg-id], table.table.dataTable.table-striped > tbody > tr:nth-of-type(2n+1) > * {
+            background-color: #ffffff !important;
+            box-shadow: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -49,7 +63,7 @@
 
         </div>
 
-        <h2>footer test</h2>
+        <h2 id="footer">footer test</h2>
     </div>
 
     <script defer>
@@ -62,50 +76,40 @@
                 return;
             }
 
-            const columnsIndexesToHide = @ViewData["ColumnsIndexesToHide"];
+            try {
+                const str = `@ViewData["DomElement"]`.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"');
 
-            const str = `@ViewData["DomElement"]`.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"');
+                $('#dom').html(str);
 
-            $('#dom').html(str);
+                const { jsPDF } = window.jspdf;
 
-            const table = new DataTable($('#dom').find(`#@ViewData["TableId"]`), {
-                dom: 'Bfrtip',
-                searching: false,
-                paging: false,
-                initComplete: function () {
-                    $(`thead td`).removeClass('dt-orderable-asc').removeClass('dt-orderable-desc');
-                }
-            });
+                const width = $('#dom').find('table').width() + 120;
+                const height = $('#dom').find('table').height() * 2 + 120;
 
-            $('#dom').find('.dt-info').remove();
+                const doc = new jsPDF('l', 'px', [width, height]);
 
-            for (let i = 0; i < columnsIndexesToHide.length; i += 1) {
-                table.column(columnsIndexesToHide[i]).visible(false);
-                //table.column(columnsIndexesToHide[i]).remove();
+                doc.html(document.getElementById('pdf-body'), {
+                    callback: function (doc) {
+                        let totalPages = doc.internal.getNumberOfPages();
+
+                        for (let i = 2; i <= totalPages; i += 1) {
+                            doc.setPage(i);
+                            doc.deletePage(i);
+                            i += -1;
+                            totalPages -= 1;
+                        }
+
+                        doc.save(`@ViewData["Filename"]` + '.pdf');
+                    },
+                    margin: [60, 60, 60, 60],
+                });
+
+            } catch (err) {
+                console.log(err);
+
+                display404();
             }
 
-            const { jsPDF } = window.jspdf;
-
-            const width = $('#dom').find('table').width() + 100;
-            const height = 600;
-
-            const doc = new jsPDF('l', 'px', [width, height]);
-
-            doc.html(document.getElementById('pdf-body'), {
-                callback: function (doc) {
-                    let totalPages = doc.internal.getNumberOfPages();
-
-                    for (let i = 2; i <= totalPages; i += 1) {
-                        doc.setPage(i);
-                        doc.deletePage(i);
-                        i += -1;
-                        totalPages -= 1;
-                    }
-
-                    doc.save(`@ViewData["Filename"]` + '.pdf');
-                },
-                margin: [60, 60, 60, 60],
-            });
         });
     </script>
 </body>
