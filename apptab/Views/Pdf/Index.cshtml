@@ -34,8 +34,6 @@
     <script src="~/Assets/otherJs/html2canvas.min.js?version=@Session["VERSION"]"></script>
     <script src="~/Assets/otherJs/jspdf.umd.min.js?version=@Session["VERSION"]"></script>
 
-    <script src="~/Assets/otherJs/jspdf.umd.min.js?version=@Session["VERSION"]"></script>
-
     <script src="~/Assets/js/utils.js?version=@Session["VERSION"]"></script>
 
     <style>
@@ -83,25 +81,27 @@
 
                 const { jsPDF } = window.jspdf;
 
-                const width = $('#dom').find('table').width() + 120;
-                const height = $('#dom').find('table').height() * 2 + 120;
-
-                const doc = new jsPDF('l', 'px', [width, height]);
+                const doc = new jsPDF('l', 'mm', 'a4');
 
                 doc.html(document.getElementById('pdf-body'), {
-                    callback: function (doc) {
-                        let totalPages = doc.internal.getNumberOfPages();
-
-                        for (let i = 2; i <= totalPages; i += 1) {
-                            doc.setPage(i);
-                            doc.deletePage(i);
-                            i += -1;
-                            totalPages -= 1;
-                        }
-
-                        doc.save(`@ViewData["Filename"]` + '.pdf');
+                    html2canvas: {
+                        scale: 0.25 
                     },
-                    margin: [60, 60, 60, 60],
+                    margin: [18, 18, 18, 30], // left, top, right, bottom
+                    callback: function (pdf) {
+                        //let totalPages = pdf.internal.getNumberOfPages();
+
+                        //for (let i = 2; i <= totalPages; i += 1) {
+                        //    pdf.setPage(i);
+                        //    pdf.deletePage(i);
+                        //    i += -1;
+                        //    totalPages -= 1;
+                        //}
+
+                        //window.open(pdf.output('bloburl'));
+
+                        pdf.save(`@ViewData["Filename"]` + '.pdf');
+                    }
                 });
 
             } catch (err) {
