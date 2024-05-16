@@ -217,7 +217,8 @@ function setDataTable() {
                 bom: true,
                 className: 'custombutton-collection-pdf',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                    //grouped_array_index: [1] //note the brackets, i think this is so you can group by multiple columns.
                 },
                 customize: function (doc) {
                     doc.defaultStyle.alignment = 'left';
@@ -261,6 +262,9 @@ function setDataTable() {
                 },
             }
         ],
+        //rowgroup: {
+        //    datasrc: 1
+        //}
     });
 }
 
