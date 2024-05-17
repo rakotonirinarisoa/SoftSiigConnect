@@ -1,12 +1,7 @@
 ﻿using System.Web.Mvc;
 using Newtonsoft.Json;
-using System.Linq;
 using System.Threading.Tasks;
-using apptab.Data.Entities;
 using System.Data.Entity;
-using System;
-using System.Runtime;
-using System.Collections.Generic;
 
 namespace apptab.Controllers
 {
@@ -15,10 +10,11 @@ namespace apptab.Controllers
         private readonly SOFTCONNECTSIIG _db;
         private readonly JsonSerializerSettings _settings;
 
-        private static string tableId = "";
-        private static string columnsIndexesToHide = "";
-        private static string domElement = "";
-        private static string pdfFilename = "";
+        private static string s_tableId = "";
+        private static string s_domElement = "";
+        private static string s_pdfFilename = "";
+        private static string s_header = "";
+        private static string s_footer = "";
 
         public PdfController()
         {
@@ -32,7 +28,7 @@ namespace apptab.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public async Task<ActionResult> ExportToPdf(SI_USERS suser, string Id, string columnsIndexes, string element, string filename)
+        public async Task<ActionResult> ExportToPdf(SI_USERS suser, string Id, string element, string filename, string header, string footer)
         {
             var currentUser = await _db.SI_USERS.FirstOrDefaultAsync(u => u.LOGIN == suser.LOGIN && u.PWD == suser.PWD && u.DELETIONDATE == null);
 
@@ -41,20 +37,22 @@ namespace apptab.Controllers
                 return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion!" }, _settings));
             }
 
-            tableId = Id;
-            columnsIndexesToHide = columnsIndexes;
-            domElement = element;
-            pdfFilename = filename;
+            s_tableId = Id;
+            s_domElement = element;
+            s_pdfFilename = filename;
+            s_header = header;
+            s_footer = footer;
 
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Suppression avec succès." }, _settings));
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "PDF en cours de génération..." }, _settings));
         }
 
         public ActionResult Index()
         {
-            ViewData["TableId"] = tableId;
-            ViewData["ColumnsIndexesToHide"] = columnsIndexesToHide;
-            ViewData["DomElement"] = domElement;
-            ViewData["Filename"] = pdfFilename;
+            ViewData["TableId"] = s_tableId;
+            ViewData["DomElement"] = s_domElement;
+            ViewData["Filename"] = s_pdfFilename;
+            ViewData["Header"] = s_header;
+            ViewData["Footer"] = s_footer;
 
             return View();
         }

@@ -1,5 +1,4 @@
-﻿using apptab.Data;
-using apptab.Data.Entities;
+﻿using apptab.Data.Entities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,7 +6,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace apptab.Controllers
 {

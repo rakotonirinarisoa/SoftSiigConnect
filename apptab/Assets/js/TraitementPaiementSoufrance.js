@@ -2,7 +2,8 @@ var table = undefined;
 
 let list = [];
 
-const NUMBER_OF_ROWS = 5;
+//const NUMBER_OF_ROWS = 5;
+const NUMBER_OF_ROWS = 4;
 
 
 function setSum(array, startIndex, endIndex) {
@@ -64,7 +65,8 @@ function parseList(array) {
 
                         break;
                     case 1:
-                        etape = 'Envoi pour validation';
+                        //etape = 'Envoi pour validation';
+                        etape = 'Validation';
                         dateTraitement = array[i].TraitementPaiementDetails[j].DATEVALORDSEC === undefined ? '' : formatDate(array[i].TraitementPaiementDetails[j].DATEVALORDSEC);
                         beneficiaire = dateTraitement === '' ? '' : array[i].TraitementPaiementDetails[j].BENEFICIAIRE;
                         montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementPaiementDetails[j].MONTENGAGEMENT).replace(',', '.'));
@@ -74,18 +76,19 @@ function parseList(array) {
                         depassement = array[i].TraitementPaiementDetails[j].DEPASSEMENTAC;
 
                         break;
-                    case 2:
-                        etape = 'Validation';
-                        dateTraitement = array[i].TraitementPaiementDetails[j].DATESENDSIIG === undefined ? '' : formatDate(array[i].TraitementPaiementDetails[j].DATESENDSIIG);
-                        beneficiaire = dateTraitement === '' ? '' : array[i].TraitementPaiementDetails[j].BENEFICIAIRE;
-                        montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementPaiementDetails[j].MONTENGAGEMENT).replace(',', '.'));
-                        agent = dateTraitement === '' ? '' : array[i].TraitementPaiementDetails[j].SENDSIIGAGENT;
-                        dureeTraitement = array[i].TraitementPaiementDetails[j].DUREETRAITEMENTTRANSFERTBK;
-                        dureePrevu = array[i].TraitementPaiementDetails[j].DUREETRAITEMENTPREVUEBK;
-                        depassement = array[i].TraitementPaiementDetails[j].DEPASSEMENTBK;
+                    //case 2:
+                    //    etape = 'Validation';
+                    //    dateTraitement = array[i].TraitementPaiementDetails[j].DATESENDSIIG === undefined ? '' : formatDate(array[i].TraitementPaiementDetails[j].DATESENDSIIG);
+                    //    beneficiaire = dateTraitement === '' ? '' : array[i].TraitementPaiementDetails[j].BENEFICIAIRE;
+                    //    montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementPaiementDetails[j].MONTENGAGEMENT).replace(',', '.'));
+                    //    agent = dateTraitement === '' ? '' : array[i].TraitementPaiementDetails[j].SENDSIIGAGENT;
+                    //    dureeTraitement = array[i].TraitementPaiementDetails[j].DUREETRAITEMENTTRANSFERTBK;
+                    //    dureePrevu = array[i].TraitementPaiementDetails[j].DUREETRAITEMENTPREVUEBK;
+                    //    depassement = array[i].TraitementPaiementDetails[j].DEPASSEMENTBK;
 
-                        break;
-                    case 3:
+                    //    break;
+                    //case 3:
+                    case 2:
                         etape = 'Envoi Fichier BANQUE';
                         dateTraitement = array[i].TraitementPaiementDetails[j].DATESIIGFP === undefined ? '' : formatDate(array[i].TraitementPaiementDetails[j].DATESIIGFP);
                         beneficiaire = dateTraitement === '' ? '' : array[i].TraitementPaiementDetails[j].BENEFICIAIRE;

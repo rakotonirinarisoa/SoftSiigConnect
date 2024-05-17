@@ -121,7 +121,7 @@
                             </ul>
 
                             <div data-parent-id="1" class="w3-hide" @*class="panel"*@>
-                                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;" id="menu-accordeon" >
+                                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;" id="menu-accordeon">
                                     @if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur)
                                     {
                                         <li class="nav-item SuperAd" data-io data-menu-accordion="1">
@@ -190,6 +190,10 @@
                                         </li>
                                     }
 
+                                    @*@if (int.Parse(Session["RMENUPAR1"].ToString()) != 0)
+                            {
+
+                            }*@
                                     <li class="nav-item SuperAd" data-io data-menu-accordion="2">
                                         <a class="nav-link">
                                             <i class="nav-icon fas fa-cogs"></i>
@@ -270,7 +274,7 @@
                                                     </p>
                                                 </a>
                                             </li>
-                                            
+
                                             <li class="nav-item">
                                                 <a href="../Parametre/ActCreate" class="nav-link" data-child-id="1">
                                                     <i class="nav-icon fas fa-bookmark"></i>
@@ -284,6 +288,10 @@
                                 </ul>
 
                                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
+                                    @*@if (int.Parse(Session["RMENUPAR2"].ToString()) != 0)
+                            {
+
+                            }*@
                                     <li class="nav-item" data-io>
                                         <a href="../User/List" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-users"></i>
@@ -292,7 +300,10 @@
                                             </p>
                                         </a>
                                     </li>
+                                    @*@if (int.Parse(Session["RMENUPAR3"].ToString()) != 0)
+                            {
 
+                            }*@
                                     <li class="nav-item" data-io>
                                         <a href="../Privilege/List" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-flag-checkered"></i>
@@ -301,7 +312,10 @@
                                             </p>
                                         </a>
                                     </li>
+                                    @*@if (int.Parse(Session["RMENUPAR4"].ToString()) != 0)
+                            {
 
+                            }*@
                                     <li class="nav-item" data-io>
                                         <a href="../Parametre/CorrEtatCreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-cog"></i>
@@ -310,7 +324,10 @@
                                             </p>
                                         </a>
                                     </li>
+                                    @*@if (int.Parse(Session["RMENUPAR5"].ToString()) != 0)
+                            {
 
+                            }*@
                                     <li class="nav-item" data-io>
                                         <a href="../SuperAdmin/DelaisCreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-clock"></i>
@@ -319,7 +336,10 @@
                                             </p>
                                         </a>
                                     </li>
+                                    @*@if (int.Parse(Session["RMENUPAR6"].ToString()) != 0)
+                            {
 
+                            }*@
                                     <li class="nav-item" data-io>
                                         <a href="../SuperAdmin/MAILCreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-envelope"></i>
@@ -328,7 +348,10 @@
                                             </p>
                                         </a>
                                     </li>
+                                    @*@if (int.Parse(Session["RMENUPAR7"].ToString()) != 0)
+                            {
 
+                            }*@
                                     <li class="nav-item" data-io>
                                         <a href="../Crypto/CryptoCreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-key"></i>
@@ -337,7 +360,10 @@
                                             </p>
                                         </a>
                                     </li>
+                                    @*@if (int.Parse(Session["RMENUPAR8"].ToString()) != 0)
+                            {
 
+                            }*@
                                     <li class="nav-item" data-io>
                                         <a href="../FTP/FtpCreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-paper-plane"></i>
@@ -346,7 +372,10 @@
                                             </p>
                                         </a>
                                     </li>
+                                    @*@if (int.Parse(Session["RMENUPAR9"].ToString()) != 0)
+                            {
 
+                            }*@
                                     <li class="nav-item" data-io>
                                         <a href="../Parametre/TypeECreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fa fa-exclamation-triangle"></i>
@@ -355,7 +384,10 @@
                                             </p>
                                         </a>
                                     </li>
+                                    @*@if (int.Parse(Session["RMENUPAR10"].ToString()) != 0)
+                            {
 
+                            }*@
                                     <li class="nav-item" data-io>
                                         <a href="../Parametre/TypeFlowCreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fa fa-question-circle"></i>
@@ -364,405 +396,518 @@
                                             </p>
                                         </a>
                                     </li>
-
                                 </ul>
                             </div>
                         }
 
-                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
-                            <li class="nav-item menu-open" onclick="myFunction('2')">
-                                <hr />
-                                <a class="nav-link active" style="background: #005187 ">
-                                    <img src="~/Assets/icons/document-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
-                                    <p>
-                                        MANDATS
-                                    </p>
-                                </a>
-                            </li>
-                        </ul>
-
-                        <div data-parent-id="2" class="w3-hide">
-                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;" id="menu-accordeon" data-menu-accordion="2">
-                                <li class="nav-item">
-                                    <a href="../Traitement/TraitementORDSECOTHER" class="nav-link" data-child-id="2">
-                                        <i class="nav-icon fas fa-list" style="color: #4970cb"></i>
+                        @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMTNON"].ToString()) != 0 || int.Parse(Session["RMT0"].ToString()) != 0 || int.Parse(Session["RMT1"].ToString()) != 0 || int.Parse(Session["RMT2"].ToString()) != 0)))
+                        {
+                            <hr />
+                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
+                                <li class="nav-item menu-open" onclick="myFunction('2')">
+                                    <a class="nav-link active" style="background: #005187 ">
+                                        <img src="~/Assets/icons/document-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
                                         <p>
-                                            @Session["MTNON"]
+                                            MANDATS
                                         </p>
                                     </a>
                                 </li>
+                            </ul>
+                            <div data-parent-id="2" class="w3-hide">
+                                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;" id="menu-accordeon" data-menu-accordion="2">
+                                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && int.Parse(Session["RMTNON"].ToString()) != 0))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="../Traitement/TraitementORDSECOTHER" class="nav-link" data-child-id="2">
+                                                <i class="nav-icon fas fa-list" style="color: #4970cb"></i>
+                                                <p>
+                                                    @Session["MTNON"]
+                                                </p>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && int.Parse(Session["RMT0"].ToString()) != 0))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="../Traitement/TraitementPROJET" class="nav-link" data-child-id="2">
+                                                <i class="nav-icon fas fa-th-list" style="color: #FFD463"></i>
+                                                <p>
+                                                    @Session["MT0"]
+                                                </p>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
+                                    {
+                                        if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                           || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && int.Parse(Session["RMT1"].ToString()) != 0))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="../Traitement/TraitementORDSEC" class="nav-link" data-child-id="2">
+                                                    <i class="nav-icon fas fa-list-ol" style="color: #eb7575"></i>
+                                                    <p>
+                                                        @Session["MT1"]
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
+                                    }
+                                    @*@if (int.Parse(Session["RMT2"].ToString()) != 0)
+                            {
                                 <li class="nav-item">
-                                    <a href="../Traitement/TraitementPROJET" class="nav-link" data-child-id="2">
-                                        <i class="nav-icon fas fa-th-list" style="color: #FFD463"></i>
-                                        <p>
-                                            @Session["MT0"]
-                                        </p>
-                                    </a>
-                                </li>
-                                @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
-                                {
-                                    <li class="nav-item">
-                                        <a href="../Traitement/TraitementORDSEC" class="nav-link" data-child-id="2">
-                                            <i class="nav-icon fas fa-list-ol" style="color: #eb7575"></i>
-                                            <p>
-                                                @Session["MT1"]
-                                            </p>
-                                        </a>
-                                    </li>
-                                }
-                                @*<li class="nav-item">
                                     <a href="../Traitement/TraitementSENDSIIGFP" class="nav-link" data-child-id="2">
                                         <i class="nav-icon fas fa-tasks" style="color: #338B85"></i>
                                         <p>
                                             @Session["MT2"]
                                         </p>
                                     </a>
-                                </li>*@
+                                </li>
+                            }*@
+                                </ul>
+                            </div>
+                        }
 
-                               </ul>
-                        </div>
+                        @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD0"].ToString()) != 0 || int.Parse(Session["RMD1"].ToString()) != 0 || int.Parse(Session["RMD2"].ToString()) != 0 || int.Parse(Session["RMD3"].ToString()) != 0 ||
+                            int.Parse(Session["RJ0"].ToString()) != 0 || int.Parse(Session["RJ1"].ToString()) != 0 || int.Parse(Session["RJ2"].ToString()) != 0 || int.Parse(Session["RJ3"].ToString()) != 0)))
+                        {
+                            <hr />
+                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
+                                <li class="nav-item menu-open" onclick="myFunction('3')">
+                                    <a class="nav-link active" style="background: #0a5cb8 ">
+                                        <img src="~/Assets/icons/coin-cash-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
 
-                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
-                            <li class="nav-item menu-open" onclick="myFunction('3')">
-                                <hr />
-                                <a class="nav-link active" style="background: #0a5cb8 ">
-                                    <img src="~/Assets/icons/coin-cash-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
-
-                                    <p>
-                                        AVANCES
-                                    </p>
-                                </a>
-                            </li>
-                        </ul>
-
-                        <div data-parent-id="3" class="w3-hide" @*class="panel"*@>
-                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;" id="menu-accordeon">
-                                <li class="nav-item SuperAd" data-io data-menu-accordion="3">
-                                    <a class="nav-link">
-                                        <i class="nav-icon fa fa-edit"></i>
                                         <p>
-                                            Initiation des avances
+                                            AVANCES
                                         </p>
                                     </a>
+                                </li>
+                            </ul>
+                            <div data-parent-id="3" class="w3-hide" @*class="panel"*@>
+                                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;" id="menu-accordeon">
+                                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD0"].ToString()) != 0 || int.Parse(Session["RMD1"].ToString()) != 0 || int.Parse(Session["RMD2"].ToString()) != 0 || int.Parse(Session["RMD3"].ToString()) != 0)))
+                                    {
+                                        <li class="nav-item SuperAd" data-io data-menu-accordion="3">
 
-                                    <ul style="list-style-type: none; display: block;" class="nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" data-menu-accordion-child="3">
+                                            <a class="nav-link">
+                                                <i class="nav-icon fa fa-edit"></i>
+                                                <p>
+                                                    Initiation des avances
+                                                </p>
+                                            </a>
+
+                                            <ul style="list-style-type: none; display: block;" class="nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" data-menu-accordion-child="3">
+                                                @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                                    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD0"].ToString()) != 0)))
+                                                {
+                                                    <li class="nav-item">
+                                                        <a href="../TraitementAvance/TraitementORDSECOTHER" class="nav-link" data-child-id="3">
+                                                            <i class="nav-icon fas fa-list" style="color: #4970cb"></i>
+                                                            <p>
+                                                                @Session["MD0"]
+                                                            </p>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                                    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD1"].ToString()) != 0)))
+                                                {
+                                                    <li class="nav-item">
+                                                        <a href="../TraitementAvance/TraitementPROJET" class="nav-link" data-child-id="3">
+                                                            <i class="nav-icon fas fa-th-list" style="color: #FFD463"></i>
+                                                            <p>
+                                                                @Session["MD1"]
+                                                            </p>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
+                                                {
+                                                    if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                                       || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD2"].ToString()) != 0)))
+                                                    {
+                                                        <li class="nav-item">
+                                                            <a href="../TraitementAvance/TraitementORDSEC" class="nav-link" data-child-id="3">
+                                                                <i class="nav-icon fas fa-list-ol" style="color: #eb7575"></i>
+                                                                <p>
+                                                                    @Session["MD2"]
+                                                                </p>
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                }
+                                                @*@if (int.Parse(Session["RMD3"].ToString()) != 0)
+                                        {
+                                            <li class="nav-item">
+                                                <a href="../TraitementAvance/TraitementSENDSIIGFP" class="nav-link" data-child-id="3">
+                                                    <i class="nav-icon fas fa-tasks" style="color: #338B85"></i>
+                                                    <p>
+                                                        @Session["MD3"]
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }*@
+                                            </ul>
+                                        </li>
+                                    }
+                                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ0"].ToString()) != 0 || int.Parse(Session["RJ1"].ToString()) != 0 || int.Parse(Session["RJ2"].ToString()) != 0 || int.Parse(Session["RJ3"].ToString()) != 0)))
+                                    {
+                                        <li class="nav-item SuperAd" data-io data-menu-accordion="4">
+
+                                            <a class="nav-link">
+                                                <i class="nav-icon fa fa-check-square"></i>
+                                                <p>
+                                                    Justificatifs et reversements
+                                                </p>
+                                            </a>
+
+                                            <ul style="list-style-type: none; display: block;" class="nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" data-menu-accordion-child="4">
+                                                @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                                    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ0"].ToString()) != 0)))
+                                                {
+                                                    <li class="nav-item">
+                                                        <a href="../TraitementJustif/TraitementPROJET" class="nav-link" data-child-id="3">
+                                                            <i class="nav-icon fas fa-list" style="color: #17A2B8"></i>
+                                                            <p>
+                                                                @Session["J0"]
+                                                            </p>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
+                                                {
+                                                    if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                                       || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ1"].ToString()) != 0)))
+                                                    {
+                                                        <li class="nav-item">
+                                                            <a href="../TraitementJustif/TraitementORDSEC" class="nav-link" data-child-id="3">
+                                                                <i class="nav-icon fas fa-th-list" style="color: #FFC107"></i>
+                                                                <p>
+                                                                    @Session["J1"]
+                                                                </p>
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                }
+                                                @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                                    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ2"].ToString()) != 0)))
+                                                {
+                                                    <li class="nav-item">
+                                                        <a href="../TraitementRevers/TraitementPROJET" class="nav-link" data-child-id="3">
+                                                            <i class="nav-icon fas fa-list-ol" style="color: #DF4857"></i>
+                                                            <p>
+                                                                @Session["J2"]
+                                                            </p>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
+                                                {
+                                                    if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                                       || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ3"].ToString()) != 0)))
+                                                    {
+                                                        <li class="nav-item">
+                                                            <a href="../TraitementRevers/TraitementORDSEC" class="nav-link" data-child-id="3">
+                                                                <i class="nav-icon fas fa-tasks" style="color: #3EB059"></i>
+                                                                <p>
+                                                                    @Session["J3"]
+                                                                </p>
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                }
+
+                                            </ul>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+
+                        @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMP1"].ToString()) != 0 || int.Parse(Session["RMP2"].ToString()) != 0 || int.Parse(Session["RMP3"].ToString()) != 0 || int.Parse(Session["RMP4"].ToString()) != 0)))
+                        {
+                            <hr />
+                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;;">
+                                <li class="nav-item menu-open" onclick="myFunction('4')">
+                                    <a class="nav-link active" style="background: #427ed7 ">
+                                        <img src="~/Assets/icons/pound-sterling-pound-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
+                                        <p>
+                                            PAIEMENTS
+                                        </p>
+                                    </a>
+                                </li>
+                            </ul>
+
+                            <div data-parent-id="4" class="w3-hide">
+                                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;" id="menu-accordeon" data-menu-accordion="4" data-child-id="4">
+                                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMP1"].ToString()) != 0)))
+                                    {
                                         <li class="nav-item">
-                                            <a href="../TraitementAvance/TraitementORDSECOTHER" class="nav-link" data-child-id="3">
+                                            <a href="../Home/PaiementValidation" class="nav-link" data-child-id="4">
                                                 <i class="nav-icon fas fa-list" style="color: #4970cb"></i>
                                                 <p>
-                                                    @Session["MD0"]
+                                                    @Session["MP1"]
                                                 </p>
                                             </a>
                                         </li>
-
+                                    }
+                                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMP2"].ToString()) != 0)))
+                                    {
                                         <li class="nav-item">
-                                            <a href="../TraitementAvance/TraitementPROJET" class="nav-link" data-child-id="3">
+                                            <a href="../Home/TeacherValidation" class="nav-link" data-child-id="4">
                                                 <i class="nav-icon fas fa-th-list" style="color: #FFD463"></i>
                                                 <p>
-                                                    @Session["MD1"]
+                                                    @Session["MP2"]
                                                 </p>
                                             </a>
                                         </li>
-
-                                        @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
+                                    }
+                                    @if (int.Parse(Session["PROCESPAIE"].ToString()) == 2)
+                                    {
+                                        if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                           || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMP3"].ToString()) != 0)))
                                         {
                                             <li class="nav-item">
-                                                <a href="../TraitementAvance/TraitementORDSEC" class="nav-link" data-child-id="3">
+                                                <a href="../Home/BonPourPaiement" class="nav-link" data-child-id="4">
                                                     <i class="nav-icon fas fa-list-ol" style="color: #eb7575"></i>
                                                     <p>
-                                                        @Session["MD2"]
+                                                        @Session["MP3"]
                                                     </p>
                                                 </a>
                                             </li>
                                         }
-
-                                        @*<li class="nav-item">
-                                            <a href="../TraitementAvance/TraitementSENDSIIGFP" class="nav-link" data-child-id="3">
+                                    }
+                                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMP4"].ToString()) != 0)))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="../Home/FValidation" class="nav-link" data-child-id="4">
                                                 <i class="nav-icon fas fa-tasks" style="color: #338B85"></i>
                                                 <p>
-                                                    @Session["MD3"]
-                                                </p>
-                                            </a>
-                                        </li>*@
-
-                                    </ul>
-                                </li>
-
-                                <li class="nav-item SuperAd" data-io data-menu-accordion="4">
-                                    <a class="nav-link">
-                                        <i class="nav-icon fa fa-check-square"></i>
-                                        <p>
-                                            Justificatifs et reversements
-                                        </p>
-                                    </a>
-
-                                    <ul style="list-style-type: none; display: block;" class="nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" data-menu-accordion-child="4">
-                                        <li class="nav-item">
-                                            <a href="../TraitementJustif/TraitementPROJET" class="nav-link" data-child-id="3">
-                                                <i class="nav-icon fas fa-list" style="color: #17A2B8"></i>
-                                                <p>
-                                                    @Session["J0"]
+                                                    @Session["MP4"]
                                                 </p>
                                             </a>
                                         </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
 
-                                        @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
-                                        {
-                                            <li class="nav-item">
-                                                <a href="../TraitementJustif/TraitementORDSEC" class="nav-link" data-child-id="3">
-                                                    <i class="nav-icon fas fa-th-list" style="color: #FFC107"></i>
-                                                    <p>
-                                                        @Session["J1"]
-                                                    </p>
-                                                </a>
-                                            </li>
-                                        }
+                        @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB0"].ToString()) != 0 || int.Parse(Session["RJR"].ToString()) != 0 || int.Parse(Session["RJRA"].ToString()) != 0 || int.Parse(Session["RTDB1"].ToString()) != 0 ||
+                            int.Parse(Session["RTDB2"].ToString()) != 0 || int.Parse(Session["RTDB3"].ToString()) != 0 || int.Parse(Session["RTDB4"].ToString()) != 0 || int.Parse(Session["RTDB5"].ToString()) != 0 ||
+                            int.Parse(Session["RTDB6"].ToString()) != 0 || int.Parse(Session["RTDB7"].ToString()) != 0 || int.Parse(Session["RTDB8"].ToString()) != 0)))
+                        {
+                            <hr />
+                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
+                                <li class="nav-item menu-open" onclick="myFunction('5')">
+                                    <a class="nav-link active" style="background: #4a9ae9 ">
+                                        <img src="~/Assets/icons/analytics-data-analytics-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
+                                        <p>
+                                            TABLEAUX DE BORD
+                                        </p>
+                                    </a>
+                                </li>
+                            </ul>
 
+                            <div data-parent-id="5" class="w3-hide">
+                                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;" id="menu-accordeon" data-menu-accordion="5">
+                                    @*@if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur)
+                            {
+                                <li class="nav-item">
+                                    <a href="../Calendar/Index" class="nav-link">
+                                        <i class="nav-icon fas fa-calendar-alt" style="color: #4970cb"></i>
+                                        <p>
+                                            Evénements
+                                        </p>
+                                    </a>
+                                </li>
+                            }*@
+                                    <li class="nav-item">
+                                        <a href="../Etat/HistoUsers" class="nav-link" data-child-id="5">
+                                            <i class="nav-icon fa fa-exclamation"></i>
+                                            <p>
+                                                Historiques de connexion
+                                            </p>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a href="../Etat/InfoProCreate" class="nav-link" data-child-id="5">
+                                            <i class="nav-icon fa fa-info"></i>
+                                            <p>
+                                                Informations PROJET
+                                            </p>
+                                        </a>
+                                    </li>
+                                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB0"].ToString()) != 0)))
+                                    {
                                         <li class="nav-item">
-                                            <a href="../TraitementRevers/TraitementPROJET" class="nav-link" data-child-id="3">
-                                                <i class="nav-icon fas fa-list-ol" style="color: #DF4857"></i>
+                                            <a href="../BordTraitement/BordListeEngaPaie" class="nav-link" data-child-id="5">
+                                                <i class="nav-icon fas fa-archive" style="color: #FFD463"></i>
                                                 <p>
-                                                    @Session["J2"]
+                                                    @Session["TDB0"]@*Liste des engagements, avances et paiements*@
                                                 </p>
                                             </a>
                                         </li>
+                                    }
+                                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJR"].ToString()) != 0)))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="../BordTraitement/StatutJR" class="nav-link" data-child-id="5">
+                                                <i class="nav-icon fas fa-file-alt" style="color: #FFD463"></i>
+                                                <p>
+                                                    @Session["JR"]@*Statut Justificatifs et Reversements*@
+                                                </p>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJRA"].ToString()) != 0)))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="../BordTraitement/StatutJRA" class="nav-link" data-child-id="5">
+                                                <i class="nav-icon fas fa-file-alt" style="color: #FFD463"></i>
+                                                <p>
+                                                    @Session["JRA"]@*Justificatifs et Reversements annulés*@
+                                                </p>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB1"].ToString()) != 0)))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="../BordTraitement/StatutEngagements" class="nav-link" data-child-id="5">
+                                                <i class="nav-icon fas fa-file-alt" style="color: #eb7575"></i>
+                                                <p>
+                                                    @Session["TDB1"]@*Statut des engagements et avances*@
+                                                </p>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB2"].ToString()) != 0)))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="../BordTraitement/DelaisTraitementEngagements" class="nav-link" data-child-id="5">
+                                                <i class="nav-icon fas fa-file-alt" style="color: #eb7575"></i>
+                                                <p>
+                                                    @Session["TDB2"]@*Délais de traitement des engagements et avances*@
+                                                </p>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB3"].ToString()) != 0)))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="../BordTraitement/SoufTraitement" class="nav-link" data-child-id="5">
+                                                <i class="nav-icon fas fa-file-alt" style="color: #eb7575"></i>
+                                                <p>
+                                                    @Session["TDB3"]@*Traitements des engagements et avances en souffrance (par rapport au délai moyen)*@
+                                                </p>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB4"].ToString()) != 0)))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="../BordTraitement/EngagementsREJETE" class="nav-link" data-child-id="5">
+                                                <i class="nav-icon fas fa-file-alt" style="color: #eb7575"></i>
+                                                <p>
+                                                    @Session["TDB4"]@*Engagements et avances rejetés*@
+                                                </p>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB5"].ToString()) != 0)))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="../BordTraitement/StatutPaiement" class="nav-link" data-child-id="5">
+                                                <i class="nav-icon fa fa-file" style="color: #338B85"></i>
+                                                <p>
+                                                    @Session["TDB5"]@*Statut des paiements*@
+                                                </p>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB6"].ToString()) != 0)))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="../BordTraitement/TraitementsPaiement" class="nav-link" data-child-id="5">
+                                                <i class="nav-icon fa fa-file" style="color: #338B85"></i>
+                                                <p>
+                                                    @Session["TDB6"]@*Délais de traitement des paiements*@
+                                                </p>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB7"].ToString()) != 0)))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="../BordTraitement/TraitementPaiementSoufrance" class="nav-link" data-child-id="5">
+                                                <i class="nav-icon fa fa-file" style="color: #338B85"></i>
+                                                <p>
+                                                    @Session["TDB7"]@*Traitement des paiements en souffrance (par rapport au délai moyen)*@
+                                                </p>
+                                            </a>
+                                        </li>
+                                    }
+                                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB8"].ToString()) != 0)))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="../BordTraitement/TraitementPaiementRejet" class="nav-link" data-child-id="5">
+                                                <i class="nav-icon fa fa-file" style="color: #338B85"></i>
+                                                <p>
+                                                    @Session["TDB8"]@*Paiements rejetés*@
+                                                </p>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
 
-                                        @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
-                                        {
-                                            <li class="nav-item">
-                                                <a href="../TraitementRevers/TraitementORDSEC" class="nav-link" data-child-id="3">
-                                                    <i class="nav-icon fas fa-tasks" style="color: #3EB059"></i>
-                                                    <p>
-                                                        @Session["J3"]
-                                                    </p>
-                                                </a>
-                                            </li>
-                                        }
-
-                                        </ul>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <hr />
-
-                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;;">
-                            <li class="nav-item menu-open" onclick="myFunction('4')">
-                                <a class="nav-link active" style="background: #427ed7 ">
-                                    <img src="~/Assets/icons/pound-sterling-pound-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
-                                    <p>
-                                        PAIEMENTS
-                                    </p>
-                                </a>
-                            </li>
-                        </ul>
-
-                        <div data-parent-id="4" class="w3-hide">
-                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;" id="menu-accordeon" data-menu-accordion="4" data-child-id="4">
-                                <li class="nav-item">
-                                    <a href="../Home/PaiementValidation" class="nav-link" data-child-id="4">
-                                        <i class="nav-icon fas fa-list" style="color: #4970cb"></i>
+                        @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RGED"].ToString()) != 0)))
+                        {
+                            <hr />
+                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
+                                <li class="nav-item menu-open">
+                                    <a href="@Session["GED"]" class="nav-link active bg-gradient-success" target="_blank">
+                                        <img src="~/Assets/icons/analytics-statistics-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
                                         <p>
-                                            @Session["MP1"]
-                                        </p>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a href="../Home/TeacherValidation" class="nav-link" data-child-id="4">
-                                        <i class="nav-icon fas fa-th-list" style="color: #FFD463"></i>
-                                        <p>
-                                            @Session["MP2"]
-                                        </p>
-                                    </a>
-                                </li>
-                                @if (int.Parse(Session["PROCESPAIE"].ToString()) == 2)
-                                 {
-                                    <li class="nav-item">
-                                        <a href="../Home/BonPourPaiement" class="nav-link" data-child-id="4">
-                                            <i class="nav-icon fas fa-list-ol" style="color: #eb7575"></i>
-                                            <p>
-                                                @Session["MP3"]
-                                            </p>
-                                        </a>
-                                    </li>
-                                 }
-
-                                <li class="nav-item">
-                                    <a href="../Home/FValidation" class="nav-link" data-child-id="4">
-                                        <i class="nav-icon fas fa-tasks" style="color: #338B85"></i>
-                                        <p>
-                                            @Session["MP4"]
-                                        </p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <hr />
-
-                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
-                            <li class="nav-item menu-open" onclick="myFunction('5')">
-                                <a class="nav-link active" style="background: #4a9ae9 ">
-                                    <img src="~/Assets/icons/analytics-data-analytics-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
-                                    <p>
-                                        TABLEAUX DE BORD
-                                    </p>
-                                </a>
-                            </li>
-                        </ul>
-
-                        <div data-parent-id="5" class="w3-hide">
-                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;" id="menu-accordeon" data-menu-accordion="5">
-                                @*@if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur)
-                                {
-                                    <li class="nav-item">
-                                        <a href="../Calendar/Index" class="nav-link">
-                                            <i class="nav-icon fas fa-calendar-alt" style="color: #4970cb"></i>
-                                            <p>
-                                                Evénements
-                                            </p>
-                                        </a>
-                                    </li>
-                                }*@
-                                <li class="nav-item">
-                                    <a href="../Etat/HistoUsers" class="nav-link" data-child-id="5">
-                                        <i class="nav-icon fa fa-exclamation"></i>
-                                        <p>
-                                            Historiques de connexion
-                                        </p>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a href="../Etat/InfoProCreate" class="nav-link" data-child-id="5">
-                                        <i class="nav-icon fa fa-info"></i>
-                                        <p>
-                                            Informations PROJET
-                                        </p>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a href="../BordTraitement/BordListeEngaPaie" class="nav-link" data-child-id="5">
-                                        <i class="nav-icon fas fa-archive" style="color: #FFD463"></i>
-                                        <p>
-                                            @Session["TDB0"]@*Liste des engagements, avances et paiements*@
-                                        </p>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a href="../BordTraitement/StatutJR" class="nav-link" data-child-id="5">
-                                        <i class="nav-icon fas fa-file-alt" style="color: #FFD463"></i>
-                                        <p>
-                                            @Session["JR"]@*Statut Justificatifs et Reversements*@
-                                        </p>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a href="../BordTraitement/StatutJRA" class="nav-link" data-child-id="5">
-                                        <i class="nav-icon fas fa-file-alt" style="color: #FFD463"></i>
-                                        <p>
-                                            @Session["JRA"]@*Justificatifs et Reversements annulés*@
-                                        </p>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a href="../BordTraitement/StatutEngagements" class="nav-link" data-child-id="5">
-                                        <i class="nav-icon fas fa-file-alt" style="color: #eb7575"></i>
-                                        <p>
-                                            @Session["TDB1"]@*Statut des engagements et avances*@
-                                        </p>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a href="../BordTraitement/DelaisTraitementEngagements" class="nav-link" data-child-id="5">
-                                        <i class="nav-icon fas fa-file-alt" style="color: #eb7575"></i>
-                                        <p>
-                                            @Session["TDB2"]@*Délais de traitement des engagements et avances*@
-                                        </p>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a href="../BordTraitement/SoufTraitement" class="nav-link" data-child-id="5">
-                                        <i class="nav-icon fas fa-file-alt" style="color: #eb7575"></i>
-                                        <p>
-                                            @Session["TDB3"]@*Traitements des engagements et avances en souffrance (par rapport au délai moyen)*@
-                                        </p>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a href="../BordTraitement/EngagementsREJETE" class="nav-link" data-child-id="5">
-                                        <i class="nav-icon fas fa-file-alt" style="color: #eb7575"></i>
-                                        <p>
-                                            @Session["TDB4"]@*Engagements et avances rejetés*@
-                                        </p>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a href="../BordTraitement/StatutPaiement" class="nav-link" data-child-id="5">
-                                        <i class="nav-icon fa fa-file" style="color: #338B85"></i>
-                                        <p>
-                                            @Session["TDB5"]@*Statut des paiements*@
-                                        </p>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a href="../BordTraitement/TraitementsPaiement" class="nav-link" data-child-id="5">
-                                        <i class="nav-icon fa fa-file" style="color: #338B85"></i>
-                                        <p>
-                                            @Session["TDB6"]@*Délais de traitement des paiements*@
-                                        </p>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a href="../BordTraitement/TraitementPaiementSoufrance" class="nav-link" data-child-id="5">
-                                        <i class="nav-icon fa fa-file" style="color: #338B85"></i>
-                                        <p>
-                                            @Session["TDB7"]@*Traitement des paiements en souffrance (par rapport au délai moyen)*@
-                                        </p>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a href="../BordTraitement/TraitementPaiementRejet" class="nav-link" data-child-id="5">
-                                        <i class="nav-icon fa fa-file" style="color: #338B85"></i>
-                                        <p>
-                                            @Session["TDB8"]@*Paiements rejetés*@
+                                            GED
                                         </p>
                                     </a>
                                 </li>
                             </ul>
-                        </div>
-
-                        <hr />
-
-                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
-                            <li class="nav-item menu-open">
-                                <a href="@Session["GED"]" class="nav-link active bg-gradient-success" target="_blank">
-                                    <img src="~/Assets/icons/analytics-statistics-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
-                                    <p>
-                                        GED
-                                    </p>
-                                </a>
-                            </li>
-                        </ul>
-
+                        }
                         @*<img src="~/Assets/img/logo-soft.png" alt="AdminLTE Logo" class="brand-image elevation-0 imageHoverLogo" style="opacity: .7; bottom: 0; position: absolute; width: 60%; padding-bottom: 15%;">*@
 
                     </nav>
                 </div>
 
-                <img src="~/Assets/img/logo-soft.png?version=@Session["VERSION"]" alt="AdminLTE Logo" class="brand-image elevation-0 imageHoverLogo" style="opacity: .7; bottom: 0; position: absolute; width: 60%; padding-bottom: 15%;" />
+                <a href="https://www.softwell.mg" target="_blank">
+                    <img src="~/Assets/img/logo-soft.png?version=@Session["VERSION"]" alt="AdminLTE Logo" class="brand-image elevation-0 imageHoverLogo" style="opacity: .7; bottom: 0; position: absolute; width: 60%; padding-bottom: 15%;" />
+                </a>
+                
             </aside>
 
             <div class="content-wrapper">

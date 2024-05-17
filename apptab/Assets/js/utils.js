@@ -68,7 +68,7 @@ function isNullOrUndefined(input) {
     return input === null || input === undefined;
 } 
 
-function exportTableToPdf(tableId, filename, columnsIndexesToHide = []) {
+function exportTableToPdf(tableId, filename, header, footer, columnsIndexesToHide = []) {
     $('body').append(`
         <div id="tmp" style="display: none;" ></div >
     `);
@@ -81,22 +81,45 @@ function exportTableToPdf(tableId, filename, columnsIndexesToHide = []) {
 
     tmpDiv.find('table').attr('id', id);
 
+    const table = new DataTable(tmpDiv.find(`#${id}`), {
+        dom: 'Bfrtip',
+        searching: false,
+        paging: false,
+        ordering: false,
+        initComplete: function () {
+            $(`thead td`).removeClass('dt-orderable-asc').removeClass('dt-orderable-desc');
+        }
+    });
+
+    for (let i = 0; i < columnsIndexesToHide.length; i += 1) {
+        table.column(columnsIndexesToHide[i]).visible(false);
+    }
+
     tmpDiv.find('.dt-search').remove();
     tmpDiv.find('.btn-group').remove();
     tmpDiv.find('.dt-info').remove();
     tmpDiv.find('ul.pagination').remove();
     tmpDiv.find('tfoot').remove();
     tmpDiv.find('.dt-column-order').remove();
+    tmpDiv.find('.dt-buttons').remove();
     tmpDiv.find('table').css({
         'width': 'auto',
         'fontSize': '9px',
         'border': '0px',
         'overflow-x': 'hidden'
     });
+    tmpDiv.find('.dt-info').remove();
+    tmpDiv.find('caption').remove();
 
-    const htmlContent = tmpDiv.html();
+    tmpDiv.find('tr').each(function (_) {
+        $(this).removeClass('select-text demoRayure');
+    });
 
-    tmpDiv.remove();
+    tmpDiv.find('colgroup').each(function (i) {
+        if (i !== 0) {
+            $(this).remove();
+        }
+    });
 
     const formData = new FormData();
 
@@ -104,9 +127,10 @@ function exportTableToPdf(tableId, filename, columnsIndexesToHide = []) {
     formData.append("suser.PWD", User.PWD);
 
     formData.append('id', String(id));
-    formData.append('element', htmlContent);
-    formData.append('columnsIndexes', JSON.stringify(columnsIndexesToHide));
+    formData.append('element', tmpDiv.html());
     formData.append('filename', filename);
+    formData.append('header', header);
+    formData.append('footer', footer);
 
     $.ajax({
         type: 'POST',
@@ -130,10 +154,22 @@ function exportTableToPdf(tableId, filename, columnsIndexesToHide = []) {
                 return;
             }
 
+            $('body').find('#tmp').remove();
+
             window.location.href = Origin + 'Pdf/Index';
         },
         error: function () {
-            alert('Problème de connexion!');
+            alert('Problï¿½me de connexion!');
         }
     });
+}
+
+function display404() {
+    $('body').html(`
+        <h1 style="font-size: 128px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">404</h1>
+    `);
+}
+
+function sanitizeHTML(input) {
+    return input.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"');
 }

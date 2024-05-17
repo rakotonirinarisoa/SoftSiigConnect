@@ -15,6 +15,8 @@
         public int? MENUPAR6 { get; set; }
         public int? MENUPAR7 { get; set; }
         public int? MENUPAR8 { get; set; }
+        public int? MENUPAR9 { get; set; }
+        public int? MENUPAR10 { get; set; }
         public int? MTNON { get; set; }
         public int? MT0 { get; set; }
         public int? MT1 { get; set; }

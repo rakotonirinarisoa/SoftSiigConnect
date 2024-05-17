@@ -2,10 +2,10 @@
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03">
 <CstmrCdtTrfInitn>
   <GrpHdr>
-    <MsgId>17054SOFTWELLVersiondémoSOFTW000073</MsgId>
-    <CreDtTm>2024-05-17T15:21:43.6044326+03:00</CreDtTm>
+    <MsgId>17054SOFTWELLVersiondémoSOFTW000074</MsgId>
+    <CreDtTm>2024-05-17T16:44:09.156143+03:00</CreDtTm>
     <NbOfTxs>1</NbOfTxs>
-    <CtrlSum>250000.000000</CtrlSum>
+    <CtrlSum>5450000.000000</CtrlSum>
     <InitgPty>
       <Nm>SOFTWELLVersiondémoSOFTW </Nm>
       <Id>
@@ -18,15 +18,15 @@
     </InitgPty>
   </GrpHdr>
   <PmtInf>
-    <PmtInfId>17054SOFTWELLVersiondémoSOFTW000073</PmtInfId>
+    <PmtInfId>17054SOFTWELLVersiondémoSOFTW000074</PmtInfId>
     <PmtMtd>TRF</PmtMtd>
     <BtchBookg>false</BtchBookg>
     <NbOfTxs>1</NbOfTxs>
-    <CtrlSum>250000</CtrlSum>
+    <CtrlSum>5450000</CtrlSum>
     <PmtTpInf>
       <InstrPrty>NORM</InstrPrty>
     </PmtTpInf>
-    <ReqdExctnDt>2024-05-17T15:21:43.6044326+03:00</ReqdExctnDt>
+    <ReqdExctnDt>2024-05-17T16:44:09.156143+03:00</ReqdExctnDt>
     <Dbtr>
       <Nm>SOFTWELLVersiondémoSOFTW</Nm>
       <PstlAdr>
