@@ -85,13 +85,15 @@
 
                 const { jsPDF } = window.jspdf;
 
-                const doc = new jsPDF('l', 'mm', 'a4');
+                const doc = new jsPDF('p', 'px', 'a4');
 
-                doc.html(document.getElementById('pdf-body'), {
+                let isPdf = document.getElementById('pdf-body');
+
+                doc.html(isPdf, {
                     html2canvas: {
-                        scale: 0.24
+                        scale: 0.38
                     },
-                    margin: [5, 15, 18, 30], // left, top, right, bottom
+                    margin: [10, 10, 20, 20], // top, left, bottom, left
                     
                     callback: function (pdf) {
                         //let totalPages = pdf.internal.getNumberOfPages();
@@ -106,7 +108,10 @@
                         //window.open(pdf.output('bloburl'));
 
                         pdf.save(`@ViewData["Filename"]` + '.pdf');
-                    }
+                    },
+
+                    //x: 12,
+                    //y: 12
                 });
 
             } catch (err) {
@@ -114,7 +119,6 @@
 
                 display404();
             }
-
         });
     </script>
 </body>

@@ -90,6 +90,7 @@
 
 <script defer>
     $('#export-to-pdf-btn').on('click', () => {
-        exportTableToPdf('dashboard', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);
+        exportTableToPdf('dashboard', 'TRAITEMENTS EN SOUFFRANCE-PDF', `<p style="font-weight: bold /*text-align:center*/;">TRAITEMENTS EN SOUFFRANCE (PAR RAPPORT AU DELAI MOYEN)</p><p> Liste des traitements en souffrance(par rapport au délai moyen)</p>`, `<p style="font-weight: bold;"">SOFT - SIIG CONNECT </p>`, []);
+        /*exportTableToPdf('dashboard', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);*/
     });
 </script>
