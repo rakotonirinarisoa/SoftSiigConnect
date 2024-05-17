@@ -85,9 +85,10 @@
 
                 doc.html(document.getElementById('pdf-body'), {
                     html2canvas: {
-                        scale: 0.25 
+                        scale: 0.24
                     },
-                    margin: [18, 18, 18, 30], // left, top, right, bottom
+                    margin: [5, 15, 18, 30], // left, top, right, bottom
+                    
                     callback: function (pdf) {
                         //let totalPages = pdf.internal.getNumberOfPages();
 
