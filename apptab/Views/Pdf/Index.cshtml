@@ -54,30 +54,34 @@
 </head>
 
 <body>
-    <div id="pdf-body" style="height: auto;">
-        <h1>SoftSiigConnect header</h1>
+    <div id="pdf-body">
+        <div id="header"></div>
 
-        <div id="dom">
+        <div id="dom"></div>
 
-        </div>
-
-        <h2 id="footer">footer test</h2>
+        <div id="footer"></div>
     </div>
 
     <script defer>
         $(document).ready(() => {
             if (`@ViewData["DomElement"]` === '') {
-                $('body').html(`
-                    <h1 style="font-size: 128px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">404<h1>
-                `);
+                display404();
 
                 return;
             }
 
             try {
-                const str = `@ViewData["DomElement"]`.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"');
+                const tableHTML = sanitizeHTML(`@ViewData["DomElement"]`);
 
-                $('#dom').html(str);
+                $('#dom').html(tableHTML);
+
+                const headerHTML = sanitizeHTML(`@ViewData["Header"]`);
+
+                $('#header').html(headerHTML);
+
+                const footerHTML = sanitizeHTML(`@ViewData["Footer"]`);
+
+                $('#footer').html(footerHTML);
 
                 const { jsPDF } = window.jspdf;
 
@@ -85,7 +89,7 @@
 
                 doc.html(document.getElementById('pdf-body'), {
                     html2canvas: {
-                        scale: 0.25 
+                        scale: 0.24
                     },
                     margin: [18, 18, 18, 30], // left, top, right, bottom
                     callback: function (pdf) {

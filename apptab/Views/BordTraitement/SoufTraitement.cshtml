@@ -90,6 +90,6 @@
 
 <script defer>
     $('#export-to-pdf-btn').on('click', () => {
-        exportTableToPdf('dashboard', 'SiigConnect PDF', []);
+        exportTableToPdf('dashboard', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);
     });
 </script>
