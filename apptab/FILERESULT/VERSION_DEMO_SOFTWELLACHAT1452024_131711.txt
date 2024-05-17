@@ -1,0 +1,6 @@
+0302                     14054SOFTWELLVERSIONDEMOSOFTW000038                          0720023172790005                                               00009      
+0602              BBOA00000055RAKOTOARISON Fanomezants                                004700500120887300000005450000000002Prestation de service de  00008      
+0602              BBOA00000056S.M.O.I ABC Construction                                07000189211000020000000001000000BRTESTBRTEST                  00009      
+0602              BBOA00000057RAKOTOARISON Fanomezants                                00470050012088730000000200000000OP LIQ0006Rémunération LIQ000 00008      
+0602              BBOA00000058S.M.O.I ABC Construction                                07000189211000020000000010000000OP0001test2                   00009      
+0802                                                                                                  0000000756000000                                          

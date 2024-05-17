@@ -61,5 +61,14 @@ namespace apptab.Models
         public int? IDSOCIETE { get; set; }
 
         public int? NUMEREG { get; set; }
+
+        [StringLength(50)]
+        public string AUXI { get; set; }
+
+        [StringLength(50)]
+        public string AD1 { get; set; }
+
+        [StringLength(50)]
+        public string AD2 { get; set; }
     }
 }

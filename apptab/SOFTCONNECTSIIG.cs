@@ -84,6 +84,20 @@ namespace apptab
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<OPA_REGLEMENTBR>()
+                .Property(e => e.ID)
+                .HasPrecision(18, 0);
+
+            modelBuilder.Entity<OPA_REGLEMENTBR>()
+                .Property(e => e.MONTANT)
+                .HasPrecision(18, 0);
+            modelBuilder.Entity<OPA_DONNEURORDRE>()
+              .Property(e => e.MONNAIELOCAL)
+              .IsFixedLength();
+
+            modelBuilder.Entity<OPA_DONNEURORDRE>()
+                .Property(e => e.PAYS)
+                .IsFixedLength();
             modelBuilder.Entity<OPA_ANOMALIE>()
                .Property(e => e.ID)
                .HasPrecision(18, 0);

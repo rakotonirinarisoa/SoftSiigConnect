@@ -446,6 +446,7 @@ $('[data-action="ChargerJs"]').click(function () {
                 }
 
                 if (Datas.type == "success") {
+                    //alert(Datas.msg);
                     listResult = Datas.data;
 
                     const data = [];
@@ -638,6 +639,7 @@ $('[data-action="ChargerJs"]').click(function () {
                 }
 
                 if (Datas.type == "success") {
+                    //alert(Datas.msg);
                     listResult = Datas.data
                     content = ``;
 
@@ -854,6 +856,8 @@ $('[data-action="GetElementChecked"]').on('click', () => {
             loader.addClass('display-none');
         },
         success: function () {
+            var Datas = JSON.parse(result);
+            alert(Datas.msg);
             for (let i = 0; i < checkList.length; i += 1) {
                 table.row($(checkList[i])).remove().draw();
             }

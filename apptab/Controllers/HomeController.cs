@@ -174,6 +174,30 @@ namespace apptab.Controllers
             {
                 return null;
             }
+        } 
+        public FileResult CreateFileAFBXML(string pathchemin, string pathfiles)
+        {
+            try
+            {
+                string pth = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\";
+
+                if (!Directory.Exists(pth))
+                {
+                    Directory.CreateDirectory(pth);
+                }
+                StreamWriter sw = null;
+
+                sw = new StreamWriter(pth + pathchemin);
+                sw.Write(pathfiles);
+                sw.Close();
+                byte[] source = System.IO.File.ReadAllBytes(pth + pathchemin);
+                string s = "application/xml";
+                return File(source, System.Net.Mime.MediaTypeNames.Application.Octet, pathfiles);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
         public FileResult CreateAFBTXTArch(string pathchemin, string pathfiles, string psw)
         {
@@ -322,6 +346,57 @@ namespace apptab.Controllers
                 }
 
             }
+        } 
+        [HttpPost]
+        public ActionResult CreateZipFileISO2022(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte)
+        {
+            AFB160 aFB160 = new AFB160();
+
+            var send = "";
+            int PROJECTID = int.Parse(codeproject);
+            var list = JsonConvert.DeserializeObject<List<AvanceDetails>>(listCompte);
+
+            var ps = db.SI_USERS.Where(x => x.LOGIN == suser.LOGIN /*&& x.IDPROJET == PROJECTID*/ && x.PWD == suser.PWD).Select(x => x.PWD).FirstOrDefault();
+
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            var pswftp = db.OPA_CRYPTO.Where(x => x.IDPROJET == PROJECTID && x.IDUSER == suser.ID && x.DELETIONDATE != null).Select(x => x.CRYPTOPWD).FirstOrDefault();
+            List<OPA_VALIDATIONS> avalider = new List<OPA_VALIDATIONS>();
+            foreach (var item in list)
+            {
+                int b = int.Parse(item.Numereg);
+                avalider.AddRange(db.OPA_VALIDATIONS.Where(a => a.IDPROJET == PROJECTID && a.ETAT == 2 && a.IDREGLEMENT == item.Id && a.NUMEREG == b).ToList());
+            };
+            if (avalider != null)
+            {
+                var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject,list);
+
+                if (avalider != null)
+                {
+                    foreach (var item in avalider)
+                    {
+                        try
+                        {
+                            item.DATETRANS = DateTime.Now;
+                            item.IDUSTRANS = exist.ID;
+                            item.ETAT = 3;
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                            throw;
+                        }
+                    }
+                }
+                if (intbasetype == 0)
+                {
+                    Anarana = pathfile.Chemin;
+                    return CreateFileAFBXML(pathfile.Chemin, pathfile.Fichier);
+                }
+            }
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archivage avec succès. ", data = send }, settings));
         }
         [HttpPost]
         public JsonResult FileName()
@@ -401,7 +476,7 @@ namespace apptab.Controllers
             //var hst = db.OPA_HISTORIQUE.Select(x => x.NUMENREG.ToString()).ToArray();
             var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID).Select(x => x.IDREGLEMENT.ToString()).ToArray();
             var list = afb160.getListEcritureCompta(journal, PROJECTID, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => !hstSiig.Contains(x.No.ToString())).ToList();
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list }, settings));
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = list }, settings));
 
         }
         [HttpPost]
@@ -462,7 +537,7 @@ namespace apptab.Controllers
             {
                 list.AddRange(afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID).ToList());
             }
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list }, settings));
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = list }, settings));
 
         }
         [HttpPost]
@@ -619,7 +694,7 @@ namespace apptab.Controllers
             }
 
             if (string.IsNullOrEmpty(listCompte))
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Veuillez Séléctionner un ecriture.", data = "" }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez Séléctionner un ecriture.", data = "" }, settings));
 
             //List<string> list = listCompte.Split(',').ToList();
             var list = JsonConvert.DeserializeObject<List<AvanceDetails>>(listCompte);
@@ -822,7 +897,7 @@ namespace apptab.Controllers
                     catch (Exception) { }
                 }
             }
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = "" }, settings));
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Tratement avec succès. ", data = "" }, settings));
         }
         //=========================================================================================TeacherValidation======================================================================
         [HttpPost]
@@ -870,7 +945,7 @@ namespace apptab.Controllers
                     });
                 }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = list }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés. ", data = list }, settings));
             }
             else
             {
@@ -905,7 +980,7 @@ namespace apptab.Controllers
                     });
                 }
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = list }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés. ", data = list }, settings));
             }
 
         }
@@ -964,7 +1039,7 @@ namespace apptab.Controllers
                 }
                 //var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == suser.IDPROJET && ecriture.ETAT == 0).ToList();
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = list }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés.", data = list }, settings));
             }
             else
             {
@@ -1028,7 +1103,7 @@ namespace apptab.Controllers
                     }
                 }
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.", data = list }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés.", data = list }, settings));
             }
 
         }
@@ -1350,7 +1425,7 @@ namespace apptab.Controllers
                 try { smtp.Send(mail); }
                 catch (Exception) { }
             }
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = "" }, settings));
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés. ", data = "" }, settings));
         }
         //ETAT = 1
         //=========================================================================================TeacherValidation======================================================================
@@ -1403,7 +1478,7 @@ namespace apptab.Controllers
                         NUMEREG = item.NUMEREG,
                     });
                 }
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = list }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés. ", data = list }, settings));
             }
             else
             {
@@ -1440,7 +1515,7 @@ namespace apptab.Controllers
                     });
                 }
 
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = list }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés. ", data = list }, settings));
             }
         }
         [HttpPost]
@@ -1497,7 +1572,7 @@ namespace apptab.Controllers
                     });
                 }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = list }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés. ", data = list }, settings));
             }
             else
             {
@@ -1534,7 +1609,7 @@ namespace apptab.Controllers
                     });
                 }
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = list }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés. ", data = list }, settings));
             }
         }
 
@@ -1576,7 +1651,7 @@ namespace apptab.Controllers
                     }
                 }
             }
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = "" }, settings));
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés. ", data = "" }, settings));
         }
         //======================================================================================================EnvoyerValidations============================================================
 
@@ -1627,7 +1702,7 @@ namespace apptab.Controllers
                     });
                 }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = list }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés. ", data = list }, settings));
             }
             else
             {
@@ -1660,7 +1735,7 @@ namespace apptab.Controllers
                         isLATE = isLate,
                     });
                 }
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés.  ", data = list }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés.  ", data = list }, settings));
             }
         }
         //======================================================================================================ValidationsEcrituresF=========================================================
@@ -1838,11 +1913,11 @@ namespace apptab.Controllers
 
             if (baseName == "2")
             {
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = listReg__ }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés. ", data = listReg__ }, settings));
             }
             else
             {
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = listRegBR__ }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés. ", data = listRegBR__ }, settings));
             }
 
         }
@@ -1931,7 +2006,7 @@ namespace apptab.Controllers
                     });
                 }
             }
-            return Json(JsonConvert.SerializeObject(new { type = "Success", msg = "Connexion avec success. ", data = list }, settings));
+            return Json(JsonConvert.SerializeObject(new { type = "Success", msg = "Traitement avec success. ", data = list }, settings));
         }
         //======================================================================================================Cancel========================================================================
         [HttpPost]
@@ -2008,7 +2083,7 @@ namespace apptab.Controllers
                         catch (Exception) { }
                     }
 
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés. ", data = "" }, settings));
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés. ", data = "" }, settings));
                 }
                 else
                 {
@@ -2016,12 +2091,12 @@ namespace apptab.Controllers
                 }
             }
 
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succés .", data = "" }, settings));
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés .", data = "" }, settings));
         }
         public JsonResult GetCheckedComptePaie(string baseName, int mois, int annee, string listCompte, string matriculeD, string matriculeF, bool devise, DateTime dateP, string journal, SI_USERS suser)
         {
             if (string.IsNullOrEmpty(listCompte))
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = "" }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = "" }, settings));
 
             List<OPA_REGLEMENTBR> brResult = new List<OPA_REGLEMENTBR>();
             List<string> listReg = new List<string>();
@@ -2033,7 +2108,7 @@ namespace apptab.Controllers
                 aFB160.SaveValideSelectEcriturePaie(listReg, journal, devise, suser);
                 //var zz = aFB160.getListEcriturePaie(journal, mois, annee, matriculeD, matriculeF, dateP, suser);
                 var listePaie = aFB160.getREGLEMENTPaie(suser);
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = listePaie }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = listePaie }, settings));
             }
             catch (Exception ex)
             {
@@ -2050,13 +2125,13 @@ namespace apptab.Controllers
             {
                 //var anom = db.OPA_ANOMALIEBR.ToList();
                 var resultAnomalies = Afb.getListAnomalieBR(suser);
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = resultAnomalies }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = resultAnomalies }, settings));
             }
             else
             {
                 //var anom = db.OPA_ANOMALIE.ToList();
                 var resultAnomalies = Afb.getListAnomalie(suser);
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = resultAnomalies }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = resultAnomalies }, settings));
             }
 
         }
@@ -2078,7 +2153,7 @@ namespace apptab.Controllers
                         DELETIONDATE = a.DELETIONDATE,
                     }).Where(a => a.DELETIONDATE == null).ToList();
 
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès.", data = user }, settings));
                 }
                 else
                 {
@@ -2091,7 +2166,7 @@ namespace apptab.Controllers
                             DELETIONDATE = a.DELETIONDATE,
                         }).Where(a => a.DELETIONDATE == null && a.ID == test.IDPROJET).ToList();
 
-                        return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+                        return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès.", data = user }, settings));
                     }
                     else
                     {
@@ -2105,7 +2180,7 @@ namespace apptab.Controllers
                                         DELETIONDATE = usr.DELETIONDATE,
                                     }).ToList();
 
-                        return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+                        return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès.", data = user }, settings));
                     }
                 }
             }
@@ -2119,7 +2194,7 @@ namespace apptab.Controllers
         public JsonResult GetListAFB(string listCompte,SI_USERS suser,int PROJECTID)
         {
 
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "" }, settings));
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès." }, settings));
         }
         //======================================================================================================FTP=============================================================================
 
@@ -2260,7 +2335,7 @@ namespace apptab.Controllers
                 })
                 .OrderBy(x => x.DATE).ToList();
 
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = query, databr = queryBr }, settings));
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = query, databr = queryBr }, settings));
         }
         public JsonResult GetCancel(SI_USERS suser, string listCompte)
         {
@@ -2310,7 +2385,7 @@ namespace apptab.Controllers
                 }
                 sftpClient.Dispose();
             }
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = "" }, settings));
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = "" }, settings));
         }
 
         private ConnectionInfo getSftpConnection(string hOTE, string uSERFTP, int v, string sOURCE)

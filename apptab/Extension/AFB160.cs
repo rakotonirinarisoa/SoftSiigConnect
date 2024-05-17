@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+using System.Diagnostics.Contracts;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 using apptab.apptab;
 using apptab.Data.Entities;
@@ -11,6 +15,317 @@ namespace apptab.Extension
 {
     public class AFB160
     {
+        public AFB CreateISO20022(bool devise, string codeJ, SI_USERS user, string codeproject, List<AvanceDetails> list)
+        {
+            
+            int PROJECTID = int.Parse(codeproject);
+            SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
+            SOFTCONNECTOM tom = new SOFTCONNECTOM();
+            var OP = db.OPA_VALIDATIONS.Where(a => a.IDPROJET == PROJECTID).FirstOrDefault();
+            dynamic mont;
+            SI_USERS usr = (from u in db.SI_USERS
+                            where u.LOGIN == user.LOGIN
+                            select u).FirstOrDefault();
+            SI_MAPPAGES dbt = db.SI_MAPPAGES.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
+
+            string texteAFB160 = "";
+            OPA_HISTORIQUEBR historique;
+
+            /********              0302        ******/
+
+            var donneurOrde = db.OPA_DONNEURORDRE.Where(x => x.IDSOCIETE == PROJECTID && x.APPLICATION == "BR").FirstOrDefault();
+            /***********************NOM de fichier************************/
+
+            string nom2 = tom.RPROJET.Select(x => x.NOM).FirstOrDefault();
+            //string nom2 = "test test/test.test;";
+            nom2 = this.traitementNomFichier(nom2);
+            DateTime dateAFB = DateTime.Now;
+            string fileName = nom2 + codeJ + recupDate((DateTime)donneurOrde.DATE_PAIEMENT) + "_" + this.formatTime(dateAFB.Hour) + this.formatTime(dateAFB.Minute) + this.formatTime(dateAFB.Second);
+            int i = 0;
+            int y = 0;
+            try
+            {
+                var incr = (from incrmentation in db.OPA_BASE
+                            where incrmentation.IDSOCIETE == PROJECTID
+                            select incrmentation).FirstOrDefault();
+                if (incr != null)
+                {
+                    i = (int)incr.INCREMENTATION;
+                    y = (int)incr.INCRORDREVIR;
+                }
+                else
+                {
+                    i = 0;
+                    y = 0;
+                    db.OPA_BASE.Add(new OPA_BASE() { NOMBASE = dbt.DBASE, INCREMENTATION = i, INCRORDREVIR = y, IDSOCIETE = PROJECTID });
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception) { }
+            y++;
+            string infdonneurOrdre = "";
+
+            //infdonneurOrdre += this.formaterTexte(21, "                        ");
+            infdonneurOrdre += this.formaterDatePaie((DateTime)donneurOrde.DATE_PAIEMENT);
+            infdonneurOrdre += this.formaterTexte(24, donneurOrde.DONNEUR_ORDRE);
+
+            infdonneurOrdre += this.formaterTexte(6, this.ajouter0(6, y.ToString()));//réference ordre de virement
+            //infdonneurOrdre += this.formaterTexte(26, "                    ");
+            //infdonneurOrdre += this.formaterTexte(5, donneurOrde.CODE_GUICHET);
+            //infdonneurOrdre += this.formaterTexte(11, donneurOrde.NUM_COMPTE);
+            //infdonneurOrdre += this.formaterTexte(47, "      ");
+            //infdonneurOrdre += this.formaterTexte(5, donneurOrde.CODE_BANQUE);
+            //infdonneurOrdre += this.formaterTexte(6, " ");
+
+            /********              0602        ******/
+            List<OPA_REGLEMENTBR> beneficiaires = new List<OPA_REGLEMENTBR>();
+            foreach (var item in list)
+            {
+                beneficiaires.AddRange((from dordre in db.OPA_REGLEMENTBR
+                                 where dordre.IDSOCIETE == PROJECTID && dordre.NUM == item.Id && dordre.APPLICATION == "BR" && dordre.ETAT == "0"
+                                 select dordre).ToList());
+            }
+
+            var nums_2 = beneficiaires;
+            foreach (var bnfcr in beneficiaires)
+            {
+                bnfcr.ETAT = "1";
+                db.SaveChanges();
+                var opp = db.OPA_VALIDATIONS.Where(e => e.IDREGLEMENT == bnfcr.NUM).FirstOrDefault();
+                historique = new OPA_HISTORIQUEBR();
+                if (opp != null)
+                {
+                    if (opp.AVANCE == true)
+                    {
+                        mont = tom.GA_AVANCE_MOUVEMENT.Where(a => a.NUMERO == bnfcr.NUM).FirstOrDefault();
+                    }
+                    else
+                    {
+                        mont = (from bul in tom.MOP
+                                where bul.NUMEROOP == bnfcr.NUM
+                                select bul).FirstOrDefault();
+                    }
+                    //var jrnl = "jrnl";
+                    var jrnl = (from mct in tom.FOP
+                                where mct.NUMEROOP == bnfcr.NUM
+                                select mct.JOURNAL).FirstOrDefault();
+                    if (jrnl == null)
+                    {
+                        jrnl = tom.GA_AVANCE.Where(x => x.NUMERO == bnfcr.NUM).Select(x => x.JOURNAL).FirstOrDefault();
+                    }
+                    i++;
+                    //MessageBox.Show(fact.MONTANT.ToString());
+
+                    if (bnfcr.LIBELLE.Length > 11)
+                    {
+                        historique.NUMENREG = bnfcr.NUM;
+                        historique.DATEAFB = DateTime.Now;
+                        historique.IDUSER = usr.ID;
+                        historique.AFB = fileName;
+                        historique.IDSOCIETE = PROJECTID;
+                    }
+                    else
+                    {
+                        historique.NUMENREG = bnfcr.NUM;
+                        historique.DATEAFB = DateTime.Now;
+                        historique.IDUSER = usr.ID;
+                        historique.AFB = fileName;
+                        historique.IDSOCIETE = PROJECTID;
+                    }
+                    db.OPA_HISTORIQUEBR.Add(historique);
+
+                    db.SaveChanges();
+                }
+            }
+            try
+            {
+                OPA_BASE pbase = (from pb in db.OPA_BASE
+                                  where pb.IDSOCIETE == PROJECTID
+                                  select pb).First();
+                pbase.INCREMENTATION = i;
+                pbase.INCRORDREVIR = y;
+                db.SaveChanges();
+            }
+            catch (Exception) { }
+
+            /********              0802       *********/
+            decimal? montant = 0;
+
+            foreach (var num in nums_2)
+            {
+                var pop = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == num.NUM).FirstOrDefault();
+                if (pop.AVANCE == true)
+                {
+                    mont = tom.GA_AVANCE.Where(a => a.NUMERO == num.NUM).Join(tom.GA_AVANCE_MOUVEMENT, ga => ga.NUMERO, av => av.NUMERO, (ga, av) => new
+                    {
+                        MONTANT = av.MONTANT
+                    }).FirstOrDefault();
+                    if (devise)
+                    {
+                        montant += mont.MONTANT; //à voir avec Faramalala
+                    }
+                    else
+                    {
+                        montant += mont.MONTANT;
+                    }
+                }
+                else
+                {
+
+                    mont = (from mn in tom.MOP
+                            where mn.NUMEROOP == num.NUM
+                            select mn).FirstOrDefault();
+                    if (devise)
+                    {
+                        montant += mont.MONTANTDEV; //à voir avec Faramalala
+                    }
+                    else
+                    {
+                        montant += mont.MONTANTLOC;
+                    }
+                }
+            }
+            DateTime dtcrdt = DateTime.Now;
+            string xmlconst = "";
+            int iteration = 1;
+                string path = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" +nom2 +".xml";
+                try
+                {
+                    // Create the file, or overwrite if the file exists.
+                    using (FileStream fs = File.Create(path))
+                    {
+                        byte[] info = new UTF8Encoding(true).GetBytes("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\r\n");
+                        // Add some information to the file.
+
+                        fs.Write(info, 0, info.Length);
+
+                        info = new UTF8Encoding(true).GetBytes("<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.001.001.03\">\r\n");
+
+                        //info = new UTF8Encoding(true).GetBytes("<CstmrCdtTrfInitn>\r\n");
+
+                        int globaliteration = beneficiaires.Count();
+
+
+                    XElement contacts = new XElement("CstmrCdtTrfInitn",
+                                 new XElement("GrpHdr",
+                                new XElement("MsgId", infdonneurOrdre),
+                                new XElement("CreDtTm", dtcrdt),
+                                new XElement("NbOfTxs", globaliteration),//a etudier
+                                new XElement("CtrlSum", montant),
+
+                                new XElement("InitgPty",
+                                    new XElement("Nm", donneurOrde.DONNEUR_ORDRE.TrimEnd(' ') + " "),
+                                    new XElement("Id",
+                                    new XElement("OrgId",
+                                        new XElement("Othr",
+                                            new XElement("Id", donneurOrde.CODE_BANQUE.TrimEnd(' '))
+                                        )
+                                )))));
+                    var  bnfr = beneficiaires.FirstOrDefault();
+                        var op = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == bnfr.NUM).FirstOrDefault();
+
+                         contacts.Add(new XElement("PmtInf",
+                            new XElement("PmtInfId", infdonneurOrdre),
+                            new XElement("PmtMtd", "TRF"),
+                            new XElement("BtchBookg", false),
+                            new XElement("NbOfTxs", iteration),
+                            new XElement("CtrlSum", bnfr.MONTANT),
+
+                            new XElement("PmtTpInf",
+                            new XElement("InstrPrty", "NORM")),//a saisir selon l'utilisateur
+                            new XElement("ReqdExctnDt", dtcrdt),
+                            new XElement("Dbtr",
+                                new XElement("Nm", donneurOrde.DONNEUR_ORDRE),
+                                new XElement("PstlAdr",
+                                    new XElement("StrtNm", donneurOrde.ADDRESSE1),
+                                    new XElement("TwnNm", donneurOrde.VILLE),
+                                    new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' '))
+                            ),
+                            new XElement("Id",
+                            new XElement("OrgId",
+                                new XElement("Othr",
+                                new XElement("Id", donneurOrde.NIF)//NIF a sauvegarder a opa_donneurdordre
+                                )))
+                             ),
+                            new XElement("DbtrAcct",
+                                new XElement("Id",
+                                    new XElement("Othr",
+                                        new XElement("Id", bnfr.RIB))),//RIB RJL1 // beneficiaire.rib
+                                new XElement("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' '))
+                            ),
+                            new XElement("DbtrAgt",
+                            new XElement("FinInstnId",
+                            new XElement("BIC", op.auxi.TrimEnd(' ')),
+                            new XElement("PstlAdr", new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' '))))),
+                            new XElement("ChrgBr", "SHAR")));
+
+                    //// Add some information to the file.
+                    ///
+                    if (beneficiaires.Count() > 1)
+                    {
+                        foreach (var item in beneficiaires)
+                        {
+                            var opop = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.NUM).FirstOrDefault();
+                            //eto no miverina virment
+                            contacts.Add(new XElement("CdtTrfTxInf",
+                            new XElement("PmtId",
+                            new XElement("InstrId", formaterTexte(35, item.LIBELLE.TrimEnd(' ') + item.BENEFICIAIRE.TrimEnd(' ') + opop.auxi.TrimEnd(' '))),
+                            new XElement("EndToEndId", formaterTexte(16, opop.auxi.TrimEnd(' '))
+
+                            ),
+                            new XElement("Amt", new XElement("InstdAmt", new XAttribute("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ')), montant)
+                            ),
+                            new XElement("CdtrAgt",
+                                new XElement("FinInstnId",
+                                new XElement("BIC", item.AUXI),
+                                new XElement("PstlAdr", new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' '))))),
+                            new XElement("Cdtr",
+                                new XElement("Nm", item.BENEFICIAIRE),
+                                new XElement("PstlAdr",
+                                    new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ')),
+                                    new XElement("AdrLine", item.AD1),
+                                    new XElement("AdrLine", item.AD2))
+                                ),
+                              new XElement("CdtrAcct",
+                                new XElement("Id",
+                                    new XElement("Othr",
+                                        new XElement("Id", item.RIB)
+                                    ))
+                                ))));
+                            iteration = iteration + 1;
+                        }
+                    }
+                    
+                    fs.Write(info, 0, info.Length);
+                    info = new UTF8Encoding(true).GetBytes(contacts.ToString());
+                    fs.Write(info, 0, info.Length);
+
+                    //info = new UTF8Encoding(true).GetBytes("<\r\n/CstmrCdtTrfInitn>\r\n");
+
+                    info = new UTF8Encoding(true).GetBytes("\r\n</Document>");
+                        //// Add some information to the file.
+
+                        fs.Write(info, 0, info.Length);
+                    }
+
+                    // Open the stream and read it back.
+                    using (StreamReader sr = File.OpenText(path))
+                    {
+                        string s = "";
+                        while ((s = sr.ReadLine()) != null)
+                        {
+                            Console.WriteLine(s);
+                        }
+                    }
+                }
+
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            
+            return new AFB() { Fichier = "", Chemin = xmlconst };
+        }
         public AFB CreateTOMPROAFB160(bool devise, string codeJ, SI_USERS user, string codeproject)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
@@ -442,7 +757,7 @@ namespace apptab.Extension
             texteAFB160 += "0302";
             texteAFB160 += this.formaterTexte(21, "                        ");
             texteAFB160 += this.formaterDatePaie((DateTime)donneurOrde.DATE_PAIEMENT);
-            texteAFB160 += this.formaterTexte(24, donneurOrde.DONNEUR_ORDRE);
+            texteAFB160 += this.formaterTexte(24, traitementNomFichier(donneurOrde.DONNEUR_ORDRE));
 
             texteAFB160 += this.formaterTexte(6, this.ajouter0(6, y.ToString()));//réference ordre de virement
             texteAFB160 += this.formaterTexte(26, "                    ");
@@ -456,9 +771,9 @@ namespace apptab.Extension
             List<OPA_REGLEMENTBR> beneficiaires = new List<OPA_REGLEMENTBR>();
             foreach (var item in list)
             {
-                beneficiaires = (from dordre in db.OPA_REGLEMENTBR
+                beneficiaires.AddRange(from dordre in db.OPA_REGLEMENTBR
                                  where dordre.IDSOCIETE == PROJECTID && dordre.NUM == item.Id && dordre.APPLICATION == "BR" && dordre.ETAT == "0"
-                                 select dordre).ToList();
+                                 select dordre);
             }
 
             var nums_2 = beneficiaires;
@@ -509,26 +824,26 @@ namespace apptab.Extension
                         {
                             texteAFB160 += this.formaterChiffre(16, mont.MONTANTLOC.ToString());
                         }
-                        texteAFB160 += this.formaterTexte(11, bnfcr.LIBELLE);
-                        texteAFB160 += this.formaterTexte(20, " ");
+                        texteAFB160 += this.formaterTexte(29, bnfcr.LIBELLE);
+                        texteAFB160 += this.formaterTexte(2, " ");
                         texteAFB160 += this.formaterTexte(5, bnfcr.NUM_ETABLISSEMENT);
                         texteAFB160 += this.formaterTexte(6, " ");
                         texteAFB160 += "\r\n";
 
-                        texteAFB160 += "0702";
-                        texteAFB160 += this.formaterTexte(14, "                      ");
-                        texteAFB160 += this.formaterTexte(4, jrnl.ToString()) + this.ajouter0(8, i.ToString());
-                        texteAFB160 += this.formaterTexte(24, bnfcr.BENEFICIAIRE);
-                        texteAFB160 += this.formaterTexte(14, bnfcr.BANQUE);
-                        texteAFB160 += this.formaterTexte(18, " ");
-                        texteAFB160 += this.formaterTexte(5, bnfcr.GUICHET);
-                        texteAFB160 += this.formaterTexte(11, bnfcr.RIB);
-                        texteAFB160 += this.formaterChiffre(16, "0000");
-                        texteAFB160 += this.formatLibelle0702(bnfcr.LIBELLE);
-                        texteAFB160 += this.formaterTexte(20, " ");
-                        texteAFB160 += this.formaterTexte(5, bnfcr.NUM_ETABLISSEMENT);
-                        texteAFB160 += this.formaterTexte(6, " ");
-                        texteAFB160 += "\r\n";
+                        //texteAFB160 += "0702";
+                        //texteAFB160 += this.formaterTexte(14, "                      ");
+                        //texteAFB160 += this.formaterTexte(4, jrnl.ToString()) + this.ajouter0(8, i.ToString());
+                        //texteAFB160 += this.formaterTexte(24, bnfcr.BENEFICIAIRE);
+                        //texteAFB160 += this.formaterTexte(14, bnfcr.BANQUE);
+                        //texteAFB160 += this.formaterTexte(18, " ");
+                        //texteAFB160 += this.formaterTexte(5, bnfcr.GUICHET);
+                        //texteAFB160 += this.formaterTexte(11, bnfcr.RIB);
+                        //texteAFB160 += this.formaterChiffre(16, "0000");
+                        //texteAFB160 += this.formatLibelle0702(bnfcr.LIBELLE);
+                        //texteAFB160 += this.formaterTexte(20, " ");
+                        //texteAFB160 += this.formaterTexte(5, bnfcr.NUM_ETABLISSEMENT);
+                        //texteAFB160 += this.formaterTexte(6, " ");
+                        //texteAFB160 += "\r\n";
                         historique.NUMENREG = bnfcr.NUM;
                         historique.DATEAFB = DateTime.Now;
                         historique.IDUSER = usr.ID;
@@ -1203,7 +1518,13 @@ namespace apptab.Extension
                           {
                               SIGLE = prjt.SIGLE,
                               NOM = prjt.NOM,
-                              BASE = prjt.NOM2
+                              BASE = prjt.NOM2,
+                              NIF = prjt.NIF,
+                              MONNAIElOC = prjt.MONNAIELOC,
+                              VILLE = prjt.VILLE,
+                              ADDRESSE2 = prjt.ADRESSE2,
+                              ADDRESSE1 = prjt.ADRESSE1,
+                              PAYS = prjt.PAYS,
                           }).FirstOrDefault();
             string dordre = "";
             dordre = projet.SIGLE + projet.NOM;
@@ -1218,6 +1539,12 @@ namespace apptab.Extension
                 tdonneur1.CODE_BANQUE = couperText(5, djournal.AGENCE);
                 tdonneur1.BASE = couperText(100, projet.BASE);
                 tdonneur1.APPLICATION = "BR";
+                tdonneur1.NIF = projet.NIF;
+                tdonneur1.MONNAIELOCAL = projet.MONNAIElOC;
+                tdonneur1.VILLE = projet.VILLE;
+                tdonneur1.ADDRESSE1 = projet.ADDRESSE1;
+                tdonneur1.ADDRESSE2 = projet.ADDRESSE2;
+                tdonneur1.PAYS = projet.PAYS;
             }
             catch (Exception)
             {
@@ -1231,6 +1558,13 @@ namespace apptab.Extension
                 donordre.NUM_COMPTE = couperText(11, djournal.RIB);
                 donordre.CODE_BANQUE = couperText(5, djournal.BANQUE);
                 donordre.APPLICATION = "BR";
+                donordre.NIF = projet.NIF;
+                donordre.MONNAIELOCAL = projet.MONNAIElOC;
+                donordre.VILLE = projet.VILLE;
+                donordre.ADDRESSE1 = projet.ADDRESSE1;
+                donordre.ADDRESSE2 = projet.ADDRESSE2;
+                donordre.PAYS = projet.PAYS;
+
                 db.OPA_DONNEURORDRE.Add(donordre);
 
             }
@@ -2533,7 +2867,9 @@ namespace apptab.Extension
                                             GUICHET = bn.RIBGUICHET,
                                             CLE = bn.RIBCLE,
                                             ETABLISMENT = bn.RIB2,
-
+                                            AUXI = bn.AUXI,
+                                            AD1 = bn.AD1,
+                                            AD2 = bn.AD2,
                                         }
                                       ).FirstOrDefault();
 
@@ -2565,6 +2901,9 @@ namespace apptab.Extension
                         preg.RIB = beneficiaire.COMPTE_BANQUE.TrimEnd(' ').TrimStart(' ');
                         preg.ETAT = etat;
                         preg.NUMEREG = 0;
+                        preg.AUXI = beneficiaire.AUXI;
+                        preg.AD1 = beneficiaire.AD1;
+                        preg.AD2 = beneficiaire.AD2;
 
                         if (devise)
                         {
@@ -2646,6 +2985,9 @@ namespace apptab.Extension
                                             GUICHET = bn.RIBGUICHET,
                                             CLE = bn.RIBCLE,
                                             ETABLISMENT = bn.RIB2,
+                                            AUXI = bn.AUXI,
+                                            AD1 = bn.AD1,
+                                            AD2 = bn.AD2,
                                         }
                                       ).FirstOrDefault();
 
@@ -2677,6 +3019,9 @@ namespace apptab.Extension
                         //preg.RIB = this.RIB(beneficiaire.COMPTE_BANQUE)[2];
                         preg.ETAT = etat;
                         preg.NUMEREG = ecriture.NUMEREG;
+                        preg.AUXI = beneficiaire.AUXI;
+                        preg.AD1 = beneficiaire.AD1;
+                        preg.AD2 = beneficiaire.AD2;
 
                         if (devise)
                         {
