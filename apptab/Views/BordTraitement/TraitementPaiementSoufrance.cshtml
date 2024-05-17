@@ -87,6 +87,6 @@
     });
 
     $('#export-to-pdf-btn').on('click', () => {
-        exportTableToPdf('dashboard', 'Souffrance', []);
+        exportTableToPdf('dashboard', 'Souffrance', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);
     });
 </script>

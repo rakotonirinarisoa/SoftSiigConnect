@@ -68,7 +68,7 @@ function isNullOrUndefined(input) {
     return input === null || input === undefined;
 } 
 
-function exportTableToPdf(tableId, filename, columnsIndexesToHide = []) {
+function exportTableToPdf(tableId, filename, header, footer, columnsIndexesToHide = []) {
     $('body').append(`
         <div id="tmp" style="display: none;" ></div >
     `);
@@ -129,6 +129,8 @@ function exportTableToPdf(tableId, filename, columnsIndexesToHide = []) {
     formData.append('id', String(id));
     formData.append('element', tmpDiv.html());
     formData.append('filename', filename);
+    formData.append('header', header);
+    formData.append('footer', footer);
 
     $.ajax({
         type: 'POST',
@@ -157,7 +159,7 @@ function exportTableToPdf(tableId, filename, columnsIndexesToHide = []) {
             window.location.href = Origin + 'Pdf/Index';
         },
         error: function () {
-            alert('Problème de connexion!');
+            alert('Problï¿½me de connexion!');
         }
     });
 }
@@ -166,4 +168,8 @@ function display404() {
     $('body').html(`
         <h1 style="font-size: 128px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">404</h1>
     `);
+}
+
+function sanitizeHTML(input) {
+    return input.replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"');
 }
