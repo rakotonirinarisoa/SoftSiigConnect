@@ -863,7 +863,7 @@ namespace apptab.Controllers
 
                 if (SExist != null)
                 {
-                    if (SExist.MAILTE != param.MAILTE || SExist.MAILTV != param.MAILTV || SExist.MAILSIIG != param.MAILSIIG || SExist.MAILTEA != param.MAILTEA || SExist.MAILTVA != param.MAILTVA || SExist.MAILSIIGA != param.MAILSIIGA
+                    if (SExist.MAILTE != param.MAILTE || SExist.MAILTV != param.MAILTV /*|| SExist.MAILSIIG != param.MAILSIIG*/ || SExist.MAILTEA != param.MAILTEA || SExist.MAILTVA != param.MAILTVA /*|| SExist.MAILSIIGA != param.MAILSIIGA*/
                         || SExist.MAILREJET != param.MAILREJET || SExist.MAILREJETA != param.MAILREJETA
                         || SExist.MAILJ0 != param.MAILJ0 || SExist.MAILJ1 != param.MAILJ1 || SExist.MAILJ3 != param.MAILJ3 || SExist.MAILJ2 != param.MAILJ2 || SExist.MAILREJETREV != param.MAILREJETREV || SExist.MAILREJETJUST != param.MAILREJETJUST
                         || SExist.MAILPI != param.MAILPI || SExist.MAILPE != param.MAILPE || SExist.MAILPV != param.MAILPV || SExist.MAILPP != param.MAILPP || SExist.MAILPB != param.MAILPB
@@ -871,7 +871,7 @@ namespace apptab.Controllers
                     {
                         SExist.MAILTE = param.MAILTE;
                         SExist.MAILTV = param.MAILTV;
-                        SExist.MAILSIIG = param.MAILSIIG;
+                        //SExist.MAILSIIG = param.MAILSIIG;
                         SExist.MAILPI = param.MAILPI;
                         SExist.MAILPE = param.MAILPE;
                         SExist.MAILPV = param.MAILPV;
@@ -881,7 +881,7 @@ namespace apptab.Controllers
 
                         SExist.MAILTEA = param.MAILTEA;
                         SExist.MAILTVA = param.MAILTVA;
-                        SExist.MAILSIIGA = param.MAILSIIGA;
+                        //SExist.MAILSIIGA = param.MAILSIIGA;
                         SExist.MAILREJETA = param.MAILREJETA;
 
                         SExist.MAILJ0 = param.MAILJ0;
@@ -907,7 +907,7 @@ namespace apptab.Controllers
                         {
                             MAILTE = param.MAILTE,
                             MAILTV = param.MAILTV,
-                            MAILSIIG = param.MAILSIIG,
+                            //MAILSIIG = param.MAILSIIG,
                             MAILPI = param.MAILPI,
                             MAILPE = param.MAILPE,
                             MAILPV = param.MAILPV,
@@ -921,7 +921,7 @@ namespace apptab.Controllers
 
                             MAILTEA = param.MAILTEA,
                             MAILTVA = param.MAILTVA,
-                            MAILSIIGA = param.MAILSIIGA,
+                            //MAILSIIGA = param.MAILSIIGA,
                             MAILREJETA = param.MAILREJETA,
 
                             MAILJ0 = param.MAILJ0,
@@ -946,7 +946,7 @@ namespace apptab.Controllers
                     {
                         MAILTE = param.MAILTE,
                         MAILTV = param.MAILTV,
-                        MAILSIIG = param.MAILSIIG,
+                        //MAILSIIG = param.MAILSIIG,
                         MAILPI = param.MAILPI,
                         MAILPE = param.MAILPE,
                         MAILPV = param.MAILPV,
@@ -959,7 +959,7 @@ namespace apptab.Controllers
 
                         MAILTEA = param.MAILTEA,
                         MAILTVA = param.MAILTVA,
-                        MAILSIIGA = param.MAILSIIGA,
+                        //MAILSIIGA = param.MAILSIIGA,
                         MAILREJETA = param.MAILREJETA,
 
                         MAILJ0 = param.MAILJ0,
@@ -976,15 +976,15 @@ namespace apptab.Controllers
                     db.SI_MAIL.Add(newPara);
                     db.SaveChanges();
 
-                    var isElemH = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.MAILTE == param.MAILTE && a.MAILTV == param.MAILTV && a.MAILSIIG == param.MAILSIIG && a.MAILREJET == param.MAILREJET
-                    && a.MAILTEA == param.MAILTEA && a.MAILTVA == param.MAILTVA && a.MAILSIIGA == param.MAILSIIGA && a.MAILREJETA == param.MAILREJETA
+                    var isElemH = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.MAILTE == param.MAILTE && a.MAILTV == param.MAILTV /*&& a.MAILSIIG == param.MAILSIIG*/ && a.MAILREJET == param.MAILREJET
+                    && a.MAILTEA == param.MAILTEA && a.MAILTVA == param.MAILTVA /*&& a.MAILSIIGA == param.MAILSIIGA*/ && a.MAILREJETA == param.MAILREJETA
                     && a.MAILJ0 == param.MAILJ0 && a.MAILJ1 == param.MAILJ1 && a.MAILJ2 == param.MAILJ2 && a.MAILJ3 == param.MAILJ3 && a.MAILREJETREV == param.MAILREJETREV && a.MAILREJETJUST == param.MAILREJETJUST
                     && a.MAILPE == param.MAILPE && a.MAILPV == param.MAILPV && a.MAILPP == param.MAILPP && a.MAILPI == param.MAILPI && a.SENDMAIL == param.SENDMAIL && a.SENDPWD == param.SENDPWD && a.DELETIONDATE == null);
                     var newElemH = new HSI_MAIL()
                     {
                         MAILTE = isElemH.MAILTE,
                         MAILTV = isElemH.MAILTV,
-                        MAILSIIG = isElemH.MAILSIIG,
+                        //MAILSIIG = isElemH.MAILSIIG,
                         MAILPI = isElemH.MAILPI,
                         MAILPE = isElemH.MAILPE,
                         MAILPV = isElemH.MAILPV,
@@ -998,7 +998,7 @@ namespace apptab.Controllers
 
                         MAILTEA = param.MAILTEA,
                         MAILTVA = param.MAILTVA,
-                        MAILSIIGA = param.MAILSIIGA,
+                        //MAILSIIGA = param.MAILSIIGA,
                         MAILREJETA = param.MAILREJETA,
 
                         MAILJ0 = param.MAILJ0,
