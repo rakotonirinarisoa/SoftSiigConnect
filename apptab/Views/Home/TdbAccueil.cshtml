@@ -23,7 +23,7 @@
             @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
         || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && int.Parse(Session["RMTNON"].ToString()) != 0))
             {
-                <div @*class="col-md-offset-1 col-md-2 col-sm-3 col-xs-4"*@class="col-lg-12 col-6" style="cursor:pointer" show-create-user-modal>
+                <div @*class="col-md-offset-1 col-md-2 col-sm-3 col-xs-4"*@class="col-lg-4 col-6" style="cursor:pointer" show-create-user-modal>
                     <a href="../Traitement/TraitementORDSECOTHER">
                         <div class="small-box tdbinitier">
                             <div class="inner">
@@ -40,7 +40,7 @@
             @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
         || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && int.Parse(Session["RMT0"].ToString()) != 0))
             {
-                <div @*class="col-md-offset-1 col-md-2 col-sm-3 col-xs-4"*@class="col-lg-12 col-6" style="cursor:pointer">
+                <div @*class="col-md-offset-1 col-md-2 col-sm-3 col-xs-4"*@class="col-lg-4 col-6" style="cursor:pointer">
                     <a href="../Traitement/TraitementPROJET">
                         <div class="small-box tbdattente">
                             <div class="inner">
@@ -59,7 +59,7 @@
                 if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
                    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && int.Parse(Session["RMT1"].ToString()) != 0))
                 {
-                    <div @*class="col-md-offset-1 col-md-2 col-sm-3 col-xs-4"*@class="col-lg-12 col-6" style="cursor:pointer">
+                    <div @*class="col-md-offset-1 col-md-2 col-sm-3 col-xs-4"*@class="col-lg-4 col-6" style="cursor:pointer">
                         <a href="../Traitement/TraitementORDSEC">
                             <div class="small-box tdbvalider">
                                 <div class="inner">
@@ -272,7 +272,7 @@
                 @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
             || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMP2"].ToString()) != 0)))
                 {
-                    <div class="col-lg-4 col-6" style="cursor:pointer" show-create-user-modal>
+                    <div class="col-lg-4 col-6" style="cursor:pointer" @*show-create-user-modal*@>
                         <a href="../Home/TeacherValidation">
                             <div class="small-box tdbinitier">
                                 <div class="inner">
