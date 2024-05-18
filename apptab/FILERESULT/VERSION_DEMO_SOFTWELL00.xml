@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03">
+<CstmrCdtTrfInitn>
+  <GrpHdr>
+    <MsgId>                     16054SOFTWELLVersiondémoSOFTW000056                          0720023172790005                                               00009      </MsgId>
+    <CreDtTm>2024-05-16T17:15:04.5827412+03:00</CreDtTm>
+    <NbOfTxs>1</NbOfTxs>
+    <CtrlSum>250000.000000</CtrlSum>
+    <InitgPty>
+      <Nm>SOFTWELLVersiondémoSOFTW </Nm>
+      <Id>
+        <OrgId>
+          <Othr>
+            <Id>00009</Id>
+          </Othr>
+        </OrgId>
+      </Id>
+    </InitgPty>
+  </GrpHdr>
+  <PmtInf>
+    <PmtInfId>                     16054SOFTWELLVersiondémoSOFTW000056                          0720023172790005                                               00009      </PmtInfId>
+    <PmtMtd>TRF</PmtMtd>
+    <BtchBookg>false</BtchBookg>
+    <NbOfTxs>1</NbOfTxs>
+    <CtrlSum>250000.000000</CtrlSum>
+    <PmtTpInf>
+      <InstrPrty>NORM</InstrPrty>
+    </PmtTpInf>
+    <ReqdExctnDt>2024-05-16T17:15:04.5827412+03:00</ReqdExctnDt>
+    <Dbtr>
+      <Nm>SOFTWELLVersiondémoSOFTW</Nm>
+      <PstlAdr>
+        <StrtNm>3ème Etage Porte 315 MATP Anosy  </StrtNm>
+        <TwnNm>ANTANANARIVO</TwnNm>
+        <Ctry>MDG</Ctry>
+      </PstlAdr>
+      <Id>
+        <OrgId>
+          <Othr>
+            <Id />
+          </Othr>
+        </OrgId>
+      </Id>
+    </Dbtr>
+    <DbtrAcct>
+      <Id>
+        <Othr>
+          <Id>05001208873</Id>
+        </Othr>
+      </Id>
+      <Ccy>MGA</Ccy>
+    </DbtrAcct>
+    <DbtrAgt>
+      <FinInstnId>
+        <BIC>FANO</BIC>
+        <PstlAdr>
+          <Ctry>MDG</Ctry>
+        </PstlAdr>
+      </FinInstnId>
+    </DbtrAgt>
+    <ChrgBr>SHAR</ChrgBr>
+    <CdtTrfTxInf>
+      <PmtId>
+        <InstrId>AV0006AV0006RAKOTOARISON Fanomezant</InstrId>
+        <EndToEndId>FANO            </EndToEndId>
+        <Amt>
+          <InstdAmt Ccy="MGA">250000.000000</InstdAmt>
+        </Amt>
+        <CdtrAgt>
+          <FinInstnId>
+            <BIC>FANO</BIC>
+            <PstlAdr>
+              <Ctry>MDG</Ctry>
+            </PstlAdr>
+          </FinInstnId>
+        </CdtrAgt>
+        <Cdtr>
+          <Nm>RAKOTOARISON Fanomezantsoa</Nm>
+          <PstlAdr>
+            <Ctry>MDG</Ctry>
+            <AdrLine>Lot D 268 Ambodivondava</AdrLine>
+            <AdrLine />
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <Othr>
+              <Id>05001208873</Id>
+            </Othr>
+          </Id>
+        </CdtrAcct>
+      </PmtId>
+    </CdtTrfTxInf>
+  </PmtInf>
+</CstmrCdtTrfInitn>
+</Document>

@@ -63,7 +63,7 @@
     @*https://www.svgrepo.com/collection/market-and-economics/*@
 </head>
 
-    <body class="hold-transition sidebar-mini layout-fixed" style="background-color: #f4f6f9;">
+    <body class="hold-transition sidebar-mini layout-fixed" style="background-color: #f4f6f9;"onbeforeunload="return mydisco()">
         <div id="loader" class="lds-dual-ring display-none overlay"></div>
 
         <div class="wrapper">
@@ -1000,6 +1000,13 @@
                     $(`[data-parent-id]`).removeClass('w3-show');
                 }
             }
+            function mydisco() {
+                alert("deco");
+                window.onbeforeunload = function () {
+                   
+                }
+            }
+           
         </script>
     </body>
 </html>

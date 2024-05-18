@@ -1,7 +1,10 @@
-namespace apptab
+namespace apptab.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
 
     public partial class OPA_DONNEURORDRE
     {
@@ -34,5 +37,23 @@ namespace apptab
 
         [StringLength(100)]
         public string APPLICATION { get; set; }
+
+        [StringLength(50)]
+        public string NIF { get; set; }
+
+        [StringLength(10)]
+        public string MONNAIELOCAL { get; set; }
+
+        [StringLength(50)]
+        public string VILLE { get; set; }
+
+        [StringLength(50)]
+        public string ADDRESSE1 { get; set; }
+
+        [StringLength(50)]
+        public string ADDRESSE2 { get; set; }
+
+        [StringLength(10)]
+        public string PAYS { get; set; }
     }
 }

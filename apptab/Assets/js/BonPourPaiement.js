@@ -1364,6 +1364,7 @@ $('[data-action="GetElementChecked"]').click(function () {
         },
         success: function (result) {
             var Datas = JSON.parse(result);
+            alert(Datas.msg);
             reglementresult = ``;
             reglementresult = Datas.data;
 

@@ -1,0 +1,5 @@
+0302                      14054SOFTWELLVERSIONDEMOSOFTW000039                          0720023172790005                                               00009      
+0602              BBOA00000059S.M.O.I ABC Construction                                07000189211000020000000001000000BRTEST1BRTEST1                00009      
+0602              BBOA00000060AEQUO.MG SARL                                           05605222276800020000000015000000OPTESTPaiement Eau et Elactri 00009      
+0602              BBOA00000061DIRECTION DE LA LEPROSER                                00320210001059870000000356400000OV 1775-MGA/24                00008      
+0802                                                                                                  0000000372400000                                          
