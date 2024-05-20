@@ -97,10 +97,15 @@
         </div>
     </div>
     @*<div class="input-group mb-3 col">
-        <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TBD_PROJET_MANDAT', 'REVERSEMENTS')">
-            <i class="fa fa-file-excel"></i> Exporter
+            <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TBD_PROJET_MANDAT', 'REVERSEMENTS')">
+                <i class="fa fa-file-excel"></i> Exporter
+            </div>
+        </div>*@
+    <div class="input-group mb-3 col">
+        <div class="btn btn-flat bg-gradient-red col-12" id="export-to-pdf-btn">
+            <i class="fa fa-file-pdf"></i> Export PDF
         </div>
-    </div>*@
+    </div>
 </div>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="password-modal">
@@ -185,3 +190,10 @@
 
 <script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
 <script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
+
+<script defer>
+    $('#export-to-pdf-btn').on('click', () => {
+        exportTableToPdf('TBD_PROJET_MANDAT', 'REVERSEMENTS A ENVOYER POUR VALIDATION-PDF', `<p style="font-weight: bold /*text-align:center*/;">REVERSEMENTS A ENVOYER POUR VALIDATION</p><p>Liste des reversements en attente envoi pour validation</p>`, `<p style="font-weight: bold;"">SOFT - SIIG CONNECT </p>`, [0, 14, 15, 16]);
+        /*exportTableToPdf('dashboard', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);*/
+    });
+</script>

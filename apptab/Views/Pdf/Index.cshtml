@@ -85,15 +85,15 @@
 
                 const { jsPDF } = window.jspdf;
 
-                const doc = new jsPDF('p', 'px', 'a4');
+                const doc = new jsPDF('l', 'px', 'a4');
 
                 let isPdf = document.getElementById('pdf-body');
 
                 doc.html(isPdf, {
                     html2canvas: {
-                        scale: 0.38
+                        scale: 0.50
                     },
-                    margin: [10, 10, 20, 20], // top, left, bottom, left
+                    margin: [10, 20, 20, 20], // top, right, bottom, left
                     
                     callback: function (pdf) {
                         //let totalPages = pdf.internal.getNumberOfPages();
