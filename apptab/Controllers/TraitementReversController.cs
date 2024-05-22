@@ -23,7 +23,7 @@ namespace apptab.Controllers
         //Traitement justificatifs PROJET//
         public ActionResult TraitementPROJET()
         {
-            ViewBag.Controller = "Tris des reversements";
+            ViewBag.Controller = "Tris et validation des reversements";
 
             return View();
         }

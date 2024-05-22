@@ -24,7 +24,7 @@ namespace apptab.Controllers
         //Traitement mandats PROJET//
         public ActionResult TraitementPROJET()
         {
-            ViewBag.Controller = "Tris des avances";
+            ViewBag.Controller = "Tris et validation des avances";
 
             return View();
         }
