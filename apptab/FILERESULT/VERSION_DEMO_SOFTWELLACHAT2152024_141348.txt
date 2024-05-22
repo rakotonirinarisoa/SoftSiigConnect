@@ -1,0 +1,4 @@
+0302                     21054SOFTWELLVERSIONDEMOSOFTW000078                          0720023172790005                                               00009      
+0602              BBOA00000125S_M_O_I_ABC_CONSTRUCTION                                07000189211000020000000001000000BRTESTBRTEST                   00009      
+0702              BBOA00000125S_M_O_I_ABC_CONSTRUCTION                                07000189211000020000000000000000T                              00009      
+0802                                                                                                  0000000001000000                                          

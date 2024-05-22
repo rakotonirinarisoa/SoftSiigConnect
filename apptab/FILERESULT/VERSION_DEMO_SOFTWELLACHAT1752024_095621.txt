@@ -1,0 +1,4 @@
+0302                     17054SOFTWELLVersiondémoSOFTW000075                          0720023172790005                                               00009      
+0602              BBOA00000122S.M.O.I ABC Construction                                07000189211000020000000001000000BRTESTBRTES                    00009      
+0702              BBOA00000122S.M.O.I ABC Construction                                07000189211000020000000000000000T                              00009      
+0802                                                                                                  0000000001000000                                          

@@ -6,6 +6,21 @@ let arr = [];
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
+window.onbeforeunload = function (event) {
+    alert("deconnect");
+    event = event || window.event;
+
+    var confirmClose = 'Are you sure?';
+
+    // For IE and Firefox 
+    if (event) {
+        event.returnValue = confirmClose;
+    }
+
+    // For Safari
+    return confirmClose;
+
+}
 
 function GetTypeP() {
     let formData = new FormData();
@@ -305,6 +320,11 @@ $(document).ready(() => {
     $(`[data-id="username"]`).text(User.LOGIN);
     emptyTable();
     GetAllProjectUser();
+    window.onbeforeunload = function (e) {
+        var e = e || window.event;
+        if (e) e.returnValue = 'Browser is being closed, is it okay?';//for IE & Firefox
+        return 'Browser is being closed, is it okay?';// for Safari and Chrome
+    };
 });
 
 $(document).on("change", "[code-project]", () => {
@@ -849,13 +869,13 @@ $('[data-action="GetElementChecked"]').on('click', () => {
         cache: false,
         contentType: false,
         processData: false,
-        beforeSend: function () {
+        beforeSend: function (result) {
             loader.removeClass('display-none');
         },
-        complete: function () {
+        complete: function (result) {
             loader.addClass('display-none');
         },
-        success: function () {
+        success: function (result) {
             var Datas = JSON.parse(result);
             alert(Datas.msg);
             for (let i = 0; i < checkList.length; i += 1) {

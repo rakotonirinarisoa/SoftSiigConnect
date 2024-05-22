@@ -295,7 +295,6 @@ namespace apptab.Extension
                             iteration = iteration + 1;
                         }
                     }
-                    
                     fs.Write(info, 0, info.Length);
                     info = new UTF8Encoding(true).GetBytes(contacts.ToString());
                     fs.Write(info, 0, info.Length);
@@ -303,9 +302,8 @@ namespace apptab.Extension
                     //info = new UTF8Encoding(true).GetBytes("<\r\n/CstmrCdtTrfInitn>\r\n");
 
                     info = new UTF8Encoding(true).GetBytes("\r\n</Document>");
-                        //// Add some information to the file.
-
-                        fs.Write(info, 0, info.Length);
+                    //// Add some information to the file.
+                    ///fs.Write(info, 0, info.Length);
                     }
 
                     // Open the stream and read it back.
@@ -324,7 +322,7 @@ namespace apptab.Extension
                     Console.WriteLine(ex.ToString());
                 }
             
-            return new AFB() { Fichier = "", Chemin = xmlconst };
+            return new AFB() { Fichier = path, Chemin = path };
         }
         public AFB CreateTOMPROAFB160(bool devise, string codeJ, SI_USERS user, string codeproject)
         {
@@ -757,7 +755,7 @@ namespace apptab.Extension
             texteAFB160 += "0302";
             texteAFB160 += this.formaterTexte(21, "                        ");
             texteAFB160 += this.formaterDatePaie((DateTime)donneurOrde.DATE_PAIEMENT);
-            texteAFB160 += this.formaterTexte(24, traitementNomFichier(donneurOrde.DONNEUR_ORDRE));
+            texteAFB160 += this.formaterTexte(24, donneurOrde.DONNEUR_ORDRE);
 
             texteAFB160 += this.formaterTexte(6, this.ajouter0(6, y.ToString()));//réference ordre de virement
             texteAFB160 += this.formaterTexte(26, "                    ");
@@ -806,12 +804,12 @@ namespace apptab.Extension
                     i++;
                     //MessageBox.Show(fact.MONTANT.ToString());
 
-                    if (bnfcr.LIBELLE.Length > 11)
+                    if (bnfcr.LIBELLE.Length > 31)//11
                     {
                         texteAFB160 += "0602";
                         texteAFB160 += this.formaterTexte(14, "                      ");
                         texteAFB160 += this.formaterTexte(4, jrnl) + this.ajouter0(8, i.ToString());
-                        texteAFB160 += this.formaterTexte(24, bnfcr.BENEFICIAIRE);
+                        texteAFB160 += this.formaterTexte(24, traitementNomFichier(bnfcr.BENEFICIAIRE));
                         texteAFB160 += this.formaterTexte(14, bnfcr.BANQUE);
                         texteAFB160 += this.formaterTexte(18, " ");
                         texteAFB160 += this.formaterTexte(5, bnfcr.GUICHET);
@@ -824,8 +822,9 @@ namespace apptab.Extension
                         {
                             texteAFB160 += this.formaterChiffre(16, mont.MONTANTLOC.ToString());
                         }
-                        texteAFB160 += this.formaterTexte(29, bnfcr.LIBELLE);
-                        texteAFB160 += this.formaterTexte(2, " ");
+                        //texteAFB160 += this.formaterTexte(11, bnfcr.LIBELLE);
+                        texteAFB160 += this.formaterTexte(31, bnfcr.LIBELLE);
+                        //texteAFB160 += this.formaterTexte(20, " ");
                         texteAFB160 += this.formaterTexte(5, bnfcr.NUM_ETABLISSEMENT);
                         texteAFB160 += this.formaterTexte(6, " ");
                         texteAFB160 += "\r\n";
@@ -833,7 +832,7 @@ namespace apptab.Extension
                         //texteAFB160 += "0702";
                         //texteAFB160 += this.formaterTexte(14, "                      ");
                         //texteAFB160 += this.formaterTexte(4, jrnl.ToString()) + this.ajouter0(8, i.ToString());
-                        //texteAFB160 += this.formaterTexte(24, bnfcr.BENEFICIAIRE);
+                        //texteAFB160 += this.formaterTexte(24, traitementNomFichier(bnfcr.BENEFICIAIRE));
                         //texteAFB160 += this.formaterTexte(14, bnfcr.BANQUE);
                         //texteAFB160 += this.formaterTexte(18, " ");
                         //texteAFB160 += this.formaterTexte(5, bnfcr.GUICHET);
@@ -844,6 +843,7 @@ namespace apptab.Extension
                         //texteAFB160 += this.formaterTexte(5, bnfcr.NUM_ETABLISSEMENT);
                         //texteAFB160 += this.formaterTexte(6, " ");
                         //texteAFB160 += "\r\n";
+
                         historique.NUMENREG = bnfcr.NUM;
                         historique.DATEAFB = DateTime.Now;
                         historique.IDUSER = usr.ID;
@@ -855,14 +855,14 @@ namespace apptab.Extension
                         texteAFB160 += "0602";
                         texteAFB160 += this.formaterTexte(14, "                      ");
                         texteAFB160 += this.formaterTexte(4, jrnl.ToString()) + this.ajouter0(8, i.ToString());
-                        texteAFB160 += this.formaterTexte(24, bnfcr.BENEFICIAIRE);
+                        texteAFB160 += this.formaterTexte(24, traitementNomFichier(bnfcr.BENEFICIAIRE));
                         texteAFB160 += this.formaterTexte(14, bnfcr.BANQUE);
                         texteAFB160 += this.formaterTexte(18, " ");
                         texteAFB160 += this.formaterTexte(5, bnfcr.GUICHET);
                         texteAFB160 += this.formaterTexte(11, bnfcr.RIB);
                         texteAFB160 += this.formaterChiffre(16, mont.MONTANTLOC.ToString());
-                        texteAFB160 += this.formaterTexte(11, bnfcr.LIBELLE);
-                        texteAFB160 += this.formaterTexte(20, " ");
+                        texteAFB160 += this.formaterTexte(31, bnfcr.LIBELLE);
+                        //texteAFB160 += this.formaterTexte(20, " ");
                         texteAFB160 += this.formaterTexte(5, bnfcr.NUM_ETABLISSEMENT);
                         texteAFB160 += this.formaterTexte(6, " ");
                         texteAFB160 += "\r\n";
@@ -1504,7 +1504,7 @@ namespace apptab.Extension
 
             return test;
         }
-        public bool saveDonneurOrdreBR(SI_USERS user, RJL1 djournal, DateTime dateP, int PROJECTID)
+        public bool saveDonneurOrdreBR(SI_USERS user, RJL1 djournal,string Ordbanque, DateTime dateP, int PROJECTID)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -1527,12 +1527,20 @@ namespace apptab.Extension
                               PAYS = prjt.PAYS,
                           }).FirstOrDefault();
             string dordre = "";
-            dordre = projet.SIGLE + projet.NOM;
+            if (Ordbanque != "" && Ordbanque != null )
+            {
+                dordre = Ordbanque;
+            }
+            else
+            {
+                dordre = projet.SIGLE /*+ projet.NOM*/;
+            }
+
             try
             {
                 //tdonneur1.CODE_J = djournal.CODE;
                 tdonneur1.DATE_PAIEMENT = dateP;
-                tdonneur1.DONNEUR_ORDRE = couperText(24, dordre.Replace(" ", ""));
+                tdonneur1.DONNEUR_ORDRE = couperText(24, traitementNomFichier(dordre.Replace(" ", "")));
                 tdonneur1.CODE_GUICHET = couperText(5, djournal.GUICHET);
                 tdonneur1.NUM_COMPTE = couperText(11, djournal.RIB);
                 var testss = djournal.RIB;
@@ -1553,7 +1561,7 @@ namespace apptab.Extension
                 donordre.CODE_J = djournal.CODE;
                 donordre.IDSOCIETE = PROJECTID;
                 donordre.DATE_PAIEMENT = dateP;
-                donordre.DONNEUR_ORDRE = couperText(24, dordre);
+                donordre.DONNEUR_ORDRE = couperText(24, traitementNomFichier(dordre.Replace(" ", "")));
                 donordre.CODE_GUICHET = couperText(5, djournal.GUICHET);
                 donordre.NUM_COMPTE = couperText(11, djournal.RIB);
                 donordre.CODE_BANQUE = couperText(5, djournal.BANQUE);
@@ -2602,7 +2610,11 @@ namespace apptab.Extension
                 }
                 #endregion
                 #region Enregistrement donneur d'ordre
-                bool test = saveDonneurOrdreBR(user, djournal, dateP, PROJECTID);
+                foreach (var item in list)
+                {
+                    bool test = saveDonneurOrdreBR(user, djournal,item.Banque, dateP, PROJECTID);
+                }
+                //bool test = saveDonneurOrdreBR(user, djournal, dateP, PROJECTID);
                 #endregion
                 /*var afficheDOrdre = (from dord in db.OPA_DONNEURORDRE
                                      where dord.IDSOCIETE == user.IDSOCIETE
