@@ -1,0 +1,7 @@
+0302                     22054SOFTWELL                000084                          0720023172790005                                               00009      
+0602              BBOA00000130RAKOTOARISON_FANOMEZANTS                                004700500120887300000005450000000002Prestation de service de co00008      
+0602              BBOA00000131S_M_O_I_ABC_CONSTRUCTION                                07000189211000020000000001000000BRTESTBRTEST                   00009      
+0602              BBOA00000132S_M_O_I_ABC_CONSTRUCTION                                07000189211000020000000001000000BRTESTBRTEST                   00009      
+0602              BBOA00000133S_M_O_I_ABC_CONSTRUCTION                                07000189211000020000000001000000BRTEST1BRTEST1                 00009      
+0602              BBOA00000134S_M_O_I_ABC_CONSTRUCTION                                07000189211000020000000001000000BRTEST1BRTEST1                 00009      
+0802                                                                                                  0000000549000000                                          
