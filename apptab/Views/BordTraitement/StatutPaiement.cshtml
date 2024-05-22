@@ -60,8 +60,8 @@
 
 
                 @*<td style="font-weight: bold; text-align: center">Imputation</td>
-        <td style="font-weight: bold; text-align: center">Pièce justificative</td>
-        <td style="font-weight: bold; text-align: center">Document</td>*@
+                    <td style="font-weight: bold; text-align: center">Pièce justificative</td>
+                    <td style="font-weight: bold; text-align: center">Document</td>*@
             </tr>
         </thead>
         <tbody class="traitementORDSEC"></tbody>
@@ -84,13 +84,21 @@
     </table>
 </div>
 
-@*<div class="form-row">
+<div class="form-row">
     <div class="input-group mb-3 col">
-        <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TDB_Pai', 'STATUT DES PAIEMENTS')">
-            <i class="fa fa-file-excel"></i> Exporter
+        <div class="btn btn-flat bg-gradient-red col-12" id="export-to-pdf-btn">
+            <i class="fa fa-file-pdf"></i> Export PDF
         </div>
     </div>
-</div>*@
+</div>
+
+@*<div class="form-row">
+        <div class="input-group mb-3 col">
+            <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TDB_Pai', 'STATUT DES PAIEMENTS')">
+                <i class="fa fa-file-excel"></i> Exporter
+            </div>
+        </div>
+    </div>*@
 
 <div class="modal fade" tabindex="-1" role="dialog" id="password-modal">
     <div class="modal-dialog modal-xl" role="document" @*style="width:fit-content"*@>
@@ -186,3 +194,9 @@
     })
 </script>
 
+<script defer>
+    $('#export-to-pdf-btn').on('click', () => {
+        exportTableToPdf('TDB_Pai', 'STATUTS DES PAIEMENTS-PDF', `<p style="font-weight: bold /*text-align:center*/;">STATUTS DES PAIEMENTS</p><p>Liste des statuts des paiements</p>`, `<p style="font-weight: bold;"">SOFT - SIIG CONNECT </p>`, [0]);
+        /*exportTableToPdf('dashboard', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);*/
+    });
+</script>

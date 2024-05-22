@@ -83,6 +83,14 @@
     </table>
 </div>
 
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="btn btn-flat bg-gradient-red col-12" id="export-to-pdf-btn">
+            <i class="fa fa-file-pdf"></i> Export PDF
+        </div>
+    </div>
+</div>
+
 @*<div class="form-row">
     <div class="input-group mb-3 col">
         <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TBD_PROJET_ORDSEC', 'LISTE JUSTIFICATIFS ET REVERSEMENTS REJETES')">
@@ -183,4 +191,11 @@
         tags: true,
         tokenSeparators: [',', ' ']
     })
+</script>
+
+<script defer>
+    $('#export-to-pdf-btn').on('click', () => {
+        exportTableToPdf('TBD_PROJET_ORDSEC', 'JUSTIFICATIFS et REVERSEMENTS REJETES-PDF', `<p style="font-weight: bold /*text-align:center*/;">JUSTIFICATIFS et REVERSEMENTS REJETES</p><p>Liste des justifcatifs et reversements rejetés</p>`, `<p style="font-weight: bold;"">SOFT - SIIG CONNECT </p>`, [0]);
+        /*exportTableToPdf('dashboard', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);*/
+    });
 </script>

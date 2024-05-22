@@ -65,6 +65,11 @@
             <i class="fa fa-file-excel"></i> Exporter
         </div>
     </div>
+    <div class="input-group mb-3 col">
+        <div class="btn btn-flat bg-gradient-red col-12" id="export-to-pdf-btn">
+            <i class="fa fa-file-pdf"></i> Export PDF
+        </div>
+    </div>
 </div>
 
 <script src="~/Assets/js/utils.js?version=@Session["VERSION"]"></script>
@@ -78,4 +83,11 @@
         tags: true,
         tokenSeparators: [',', ' ']
     })
+</script>
+
+<script defer>
+    $('#export-to-pdf-btn').on('click', () => {
+        exportTableToPdf('dashboard', 'DELAIS DE TRAITEMENT DES ENGAGEMENTS et AVANCES-PDF', `<p style="font-weight: bold /*text-align:center*/;">DELAIS DE TRAITEMENT DES ENGAGEMENTS et AVANCES</p><p>Suvi des délais de traitement des engagements et avances</p>`, `<p style="font-weight: bold;"">SOFT - SIIG CONNECT </p>`, []);
+        /*exportTableToPdf('dashboard', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);*/
+    });
 </script>
