@@ -56,6 +56,9 @@ function GetUsers() {
                 $("#MAILREJETJUST").val("");
                 $("#MAILREJETREV").val("");
 
+                $("#EMM").val("");
+                $("#EMP").val("");
+
                 return;
             }
             if (Datas.type == "login") {
@@ -86,6 +89,9 @@ function GetUsers() {
             $("#MailJ3").val(Datas.data.MAILJ3);
             $("#MAILREJETJUST").val(Datas.data.MAILREJETJUST);
             $("#MAILREJETREV").val(Datas.data.MAILREJETREV);
+
+            $("#EMM").val(Datas.data.SENDMAIL);
+            $("#EMP").val(Datas.data.SENDPWD);
             //$("#ParaPb").val(Datas.data.MAILPB);
 
             if (Datas.data.IDPROJET != 0)
@@ -127,10 +133,13 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let MailJ3 = $("#MailJ3").val();
     let MAILREJETREV = $("#MAILREJETREV").val();
     let MAILREJETJUST = $("#MAILREJETJUST").val();
+
+    let EMM = $("#EMM").val();
+    let EMP = $("#EMP").val();
     //let ParaPb = $("#ParaPb").val();
 
     if (!ParaT || !ParaV /*|| !ParaSiig*/ || !ParaREJET || !ParaPi || !ParaPe || !ParaPv || !ParaPp || !ParaREJETPAIE /*|| !ParaPb*/ || !ParaTA || !ParaVA /*|| !ParaSiigA*/ || !ParaREJETA
-        || !MailJ0 || !MailJ1 || !MailJ2 || !MailJ3 || !MAILREJETJUST || !MAILREJETREV) {
+        || !MailJ0 || !MailJ1 || !MailJ2 || !MailJ3 || !MAILREJETJUST || !MAILREJETREV || !EMM || !EMP) {
         alert("Veuillez renseigner les mails. ");
         return;
     }
@@ -170,6 +179,9 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("param.MAILJ3", $(`#MailJ3`).val());
     formData.append("param.MAILREJETJUST", $(`#MAILREJETJUST`).val());
     formData.append("param.MAILREJETREV", $(`#MAILREJETREV`).val());
+
+    formData.append("param.SENDMAIL", $(`#EMM`).val());
+    formData.append("param.SENDPWD", $(`#EMP`).val());
     //formData.append("param.MAILPB", $(`#ParaPb`).val());
 
     formData.append("iProjet", $("#proj").val());

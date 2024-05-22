@@ -401,7 +401,7 @@
                         }
 
                         @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMTNON"].ToString()) != 0 || int.Parse(Session["RMT0"].ToString()) != 0 || int.Parse(Session["RMT1"].ToString()) != 0 || int.Parse(Session["RMT2"].ToString()) != 0)))
+                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMTNON"].ToString()) != 0 || int.Parse(Session["RMT0"].ToString()) != 0 || int.Parse(Session["RMT1"].ToString()) != 0 /*|| int.Parse(Session["RMT2"].ToString()) != 0*/)))
                         {
                             <hr />
                             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
@@ -471,7 +471,7 @@
                         }
 
                         @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD0"].ToString()) != 0 || int.Parse(Session["RMD1"].ToString()) != 0 || int.Parse(Session["RMD2"].ToString()) != 0 || int.Parse(Session["RMD3"].ToString()) != 0 ||
+                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD0"].ToString()) != 0 || int.Parse(Session["RMD1"].ToString()) != 0 || int.Parse(Session["RMD2"].ToString()) != 0 /*|| int.Parse(Session["RMD3"].ToString()) != 0*/ ||
                             int.Parse(Session["RJ0"].ToString()) != 0 || int.Parse(Session["RJ1"].ToString()) != 0 || int.Parse(Session["RJ2"].ToString()) != 0 || int.Parse(Session["RJ3"].ToString()) != 0)))
                         {
                             <hr />
@@ -489,7 +489,7 @@
                             <div data-parent-id="3" class="w3-hide" @*class="panel"*@>
                                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;" id="menu-accordeon">
                                     @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD0"].ToString()) != 0 || int.Parse(Session["RMD1"].ToString()) != 0 || int.Parse(Session["RMD2"].ToString()) != 0 || int.Parse(Session["RMD3"].ToString()) != 0)))
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD0"].ToString()) != 0 || int.Parse(Session["RMD1"].ToString()) != 0 || int.Parse(Session["RMD2"].ToString()) != 0 /*|| int.Parse(Session["RMD3"].ToString()) != 0*/)))
                                     {
                                         <li class="nav-item SuperAd" data-io data-menu-accordion="3">
 

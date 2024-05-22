@@ -549,7 +549,7 @@ namespace SOFTCONNECT.Controllers
                 Session["RMTNON"] = 0;
                 Session["RMT0"] = 0;
                 Session["RMT1"] = 0;
-                Session["RMT2"] = 0;
+                //Session["RMT2"] = 0;
                 Session["RMP1"] = 0;
                 Session["RMP2"] = 0;
                 Session["RMP3"] = 0;
@@ -558,7 +558,7 @@ namespace SOFTCONNECT.Controllers
                 Session["RMD0"] = 0;
                 Session["RMD1"] = 0;
                 Session["RMD2"] = 0;
-                Session["RMD3"] = 0;
+                //Session["RMD3"] = 0;
 
                 Session["RMOP0"] = 0;
                 Session["RMOP1"] = 0;
@@ -602,7 +602,7 @@ namespace SOFTCONNECT.Controllers
                     Session["RMTNON"] = isMenu.MTNON;
                     Session["RMT0"] = isMenu.MT0;
                     Session["RMT1"] = isMenu.MT1;
-                    Session["RMT2"] = isMenu.MT2;
+                    //Session["RMT2"] = isMenu.MT2;
                     Session["RMP1"] = isMenu.MP1;
                     Session["RMP2"] = isMenu.MP2;
                     Session["RMP3"] = isMenu.MP3;
@@ -611,7 +611,7 @@ namespace SOFTCONNECT.Controllers
                     Session["RMD0"] = isMenu.MD0;
                     Session["RMD1"] = isMenu.MD1;
                     Session["RMD2"] = isMenu.MD2;
-                    Session["RMD3"] = isMenu.MD3;
+                    //Session["RMD3"] = isMenu.MD3;
 
                     Session["RMOP0"] = isMenu.MOP0;
                     Session["RMOP1"] = isMenu.MOP1;

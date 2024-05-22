@@ -55,7 +55,7 @@ namespace apptab.Controllers
 
                         MT0 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT0 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT0 : 0,
                         MT1 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT1 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT1 : 0,
-                        MT2 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT2 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT2 : 0,
+                        //MT2 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT2 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT2 : 0,
                         MTNON = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MTNON != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MTNON : 0,
 
                         MP1 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MP1 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MP1 : 0,
@@ -66,11 +66,11 @@ namespace apptab.Controllers
                         MD0 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MD0 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MD0 : 0,
                         MD1 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MD1 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MD1 : 0,
                         MD2 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MD2 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MD2 : 0,
-                        MD3 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MD3 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MD3 : 0,
+                        //MD3 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MD3 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MD3 : 0,
 
-                        MOP0 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP0 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP0 : 0,
-                        MOP1 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP1 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP1 : 0,
-                        MOP2 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP2 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP2 : 0,
+                        //MOP0 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP0 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP0 : 0,
+                        //MOP1 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP1 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP1 : 0,
+                        //MOP2 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP2 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP2 : 0,
 
                         TDB0 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB0 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB0 : 0,
                         TDB1 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB1 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB1 : 0,
@@ -118,7 +118,7 @@ namespace apptab.Controllers
 
                         MT0 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT0 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT0 : 0,
                         MT1 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT1 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT1 : 0,
-                        MT2 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT2 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT2 : 0,
+                        //MT2 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT2 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MT2 : 0,
                         MTNON = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MTNON != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MTNON : 0,
 
                         MP1 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MP1 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MP1 : 0,
@@ -129,11 +129,11 @@ namespace apptab.Controllers
                         MD0 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MD0 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MD0 : 0,
                         MD1 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MD1 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MD1 : 0,
                         MD2 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MD2 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MD2 : 0,
-                        MD3 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MD3 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MD3 : 0,
+                        //MD3 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MD3 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MD3 : 0,
 
-                        MOP0 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP0 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP0 : 0,
-                        MOP1 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP1 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP1 : 0,
-                        MOP2 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP2 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP2 : 0,
+                        //MOP0 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP0 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP0 : 0,
+                        //MOP1 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP1 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP1 : 0,
+                        //MOP2 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP2 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP2 : 0,
 
                         TDB0 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB0 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB0 : 0,
                         TDB1 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB1 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB1 : 0,
@@ -197,7 +197,7 @@ namespace apptab.Controllers
 
                 MT0 = privilege.MT0,
                 MT1 = privilege.MT1,
-                MT2 = privilege.MT2,
+                //MT2 = privilege.MT2,
                 MTNON = privilege.MTNON,
 
                 MP1 = privilege.MP1,
@@ -208,11 +208,11 @@ namespace apptab.Controllers
                 MD0 = privilege.MD0,
                 MD1 = privilege.MD1,
                 MD2 = privilege.MD2,
-                MD3 = privilege.MD3,
+                //MD3 = privilege.MD3,
 
-                MOP0 = privilege.MOP0,
-                MOP1 = privilege.MOP1,
-                MOP2 = privilege.MOP2,
+                //MOP0 = privilege.MOP0,
+                //MOP1 = privilege.MOP1,
+                //MOP2 = privilege.MOP2,
 
                 TDB0 = privilege.TDB0,
                 TDB1 = privilege.TDB1,

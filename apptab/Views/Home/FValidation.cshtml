@@ -174,60 +174,61 @@
     </div>
 
     @*<div class="form-row">
-        <div class="input-group mb-3 col-sm-12 col-md-6">
-            <div class="input-group-prepend">
-                <span class="input-group-text text-bold" id="inputGroup-sizing-default">Nombre de ligne</span>
-            </div>
-            <input type="text" class="form-control" value="0" disabled />
-        </div>
-        <div class="input-group mb-3 col-sm-12 col-md-6">
-            <div class="input-group-prepend">
-                <span class="input-group-text text-bold" id="inputGroup-sizing-default">Montant Total</span>
-            </div>
-            <input type="text" class="form-control" value="0" disabled />
-        </div>
-    </div>*@
-
-    <div class="form-row mb-3">
-        <div class="input-group mb-3 col-md-12">
-        </div>
-        <div class="mb-3 col col-sm-12 col-md-2">
-            <div class="btn btn-flat bg-gradient-green col-12" data-action="ISO2022">
-                <i class="fa fa-download"></i> Créer ISO2022
-            </div>
-        </div>
-        <div class="mb-3 col col-sm-12 col-md-2">
-            <div class="btn btn-flat bg-gradient-green col-12" data-action="CreateTxt">
-                <i class="fa fa-download"></i> Créer fichier AFB
-            </div>
-        </div>
-        <div class="mb-3 col col-sm-12 col-md-2">
-            <div class="btn btn-flat bg-gradient-success col-12" data-action="CreateTxtCrypter">
-                <i class="fa fa-file-archive"></i> Créer fichier AFB crypter
-            </div>
-        </div>
-        <div class="mb-3 col col-sm-12 col-md-2">
-            <div class="btn btn-flat bg-gradient-primary col-12" data-action="CreateTxtSend">
-                <i class="fa fa-paper-plane"></i> Envoyer FTP fichier AFB
-            </div>
-        </div>
-        <div class="mb-3 col col-sm-12 col-md-2">
-            <div class="btn btn-flat bg-gradient-primary col-12" data-action="CreateTxtFTPCrypter">
-                <i class="fa fa-paper-plane"></i> Envoyer FTP AFB crypter
-            </div>
-        </div>
-        <div class="mb-3 col col-sm-12 col-md-4">
-            <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TDB', 'PAIEMENTS VALIDER')">
-                <i class="fa fa-file-excel"></i> Exporter
-            </div>
-        </div>
-
-        @*<div class="mb-3 col col-sm-12 col-md-2">
-                <div class="btn btn-flat bg-gradient-red col-12">
-                    <i class="fa fa-times"></i> Effacer
+            <div class="input-group mb-3 col-sm-12 col-md-6">
+                <div class="input-group-prepend">
+                    <span class="input-group-text text-bold" id="inputGroup-sizing-default">Nombre de ligne</span>
                 </div>
-            </div>*@
+                <input type="text" class="form-control" value="0" disabled />
+            </div>
+            <div class="input-group mb-3 col-sm-12 col-md-6">
+                <div class="input-group-prepend">
+                    <span class="input-group-text text-bold" id="inputGroup-sizing-default">Montant Total</span>
+                </div>
+                <input type="text" class="form-control" value="0" disabled />
+            </div>
+        </div>*@
+    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+|| (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMP4"].ToString()) != 0)))
+    {
+        <div class="form-row">
+            <div class="mb-3 col">
+                <div class="btn btn-flat bg-gradient-primary col-12" data-action="ISO2022">
+                    <i class="fa fa-download"></i> Créer ISO2022
+                </div>
+            </div>
+            <div class="mb-3 col">
+                <div class="btn btn-flat bg-gradient-primary col-12" data-action="CreateTxt">
+                    <i class="fa fa-download"></i> Créer fichier AFB
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="mb-3 col">
+                <div class="btn btn-flat bg-gradient-red col-12" data-action="CreateTxtCrypter">
+                    <i class="fa fa-file-archive"></i> Créer fichier AFB crypté
+                </div>
+            </div>
+            <div class="mb-3 col">
+                <div class="btn btn-flat bg-gradient-red col-12" data-action="CreateTxtSend">
+                    <i class="fa fa-paper-plane"></i> Envoyer FTP fichier AFB
+                </div>
+            </div>
+            <div class="mb-3 col">
+                <div class="btn btn-flat bg-gradient-red col-12" data-action="CreateTxtFTPCrypter">
+                    <i class="fa fa-paper-plane"></i> Envoyer FTP fichier AFB crypté
+                </div>
+            </div>
+        </div>
+    }
+    <div class="form-row">
+        <div class="mb-3 col">
+            <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TDB', 'PAIEMENTS VALIDER')">
+                <i class="fa fa-file-excel"></i> Exporter EXCEL
+            </div>
+        </div>
     </div>
+
 </div>
 
 <div id="tdetail" data-type="tab" style="display:none">

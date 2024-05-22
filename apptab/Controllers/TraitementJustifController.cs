@@ -23,7 +23,7 @@ namespace apptab.Controllers
         //Traitement justificatifs PROJET//
         public ActionResult TraitementPROJET()
         {
-            ViewBag.Controller = "Tris des justificatifs";
+            ViewBag.Controller = "Tris et validation des justificatifs";
 
             return View();
         }
@@ -502,6 +502,7 @@ namespace apptab.Controllers
 
                 mail.Subject = "Attente validation justificatifs du projet " + ProjetIntitule;
                 mail.IsBodyHtml = true;
+
                 mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " justificatifs en attente de validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
                     "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
 

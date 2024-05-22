@@ -103,7 +103,8 @@ function GetListProjet() {
 
             $(`[data-id="proj-list"]`).text("");
             var code = ``;
-            $.each(Datas.data, function (k, v) {
+            $.each(Datas.data.List, function (k, v) {
+                //alert(v.ID + ',' + v.PROJET);
                 code += `
                     <option value="${v.ID}">${v.PROJET}</option>
                 `;

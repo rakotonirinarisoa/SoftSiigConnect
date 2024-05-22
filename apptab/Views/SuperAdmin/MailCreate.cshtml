@@ -15,6 +15,25 @@
     </div>
 </div>
 
+<h5>Emetteur des notifications et alertes</h5>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Mail de l'émetteur</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="EMM">
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Mot de passe mail de l'émetteur</span>
+        </div>
+        <input type="password" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="EMP">
+        <i class="far fa-eye fa-lg" id="togglePassword" style="margin: 10px; cursor: pointer;"></i>
+    </div>
+</div>
+
 <h5>Traitements engagements</h5>
 <div class="form-row">
     <div class="input-group mb-3 col">
@@ -35,14 +54,14 @@
     </div>
 </div>
 @*<div class="form-row">
-    <div class="input-group mb-3 col">
-        <div class="input-group-prepend custom-label">
-            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Transfert SIIGFP</span>
+        <div class="input-group mb-3 col">
+            <div class="input-group-prepend custom-label">
+                <span class="input-group-text text-bold" id="inputGroup-sizing-default">Transfert SIIGFP</span>
+            </div>
+            <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaSiig">
+            <span class="input-group-text">séparateur " ; "</span>
         </div>
-        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaSiig">
-        <span class="input-group-text">séparateur " ; "</span>
-    </div>
-</div>*@
+    </div>*@
 <div class="form-row">
     <div class="input-group mb-3 col">
         <div class="input-group-prepend custom-label">
@@ -73,14 +92,14 @@
     </div>
 </div>
 @*<div class="form-row">
-    <div class="input-group mb-3 col">
-        <div class="input-group-prepend custom-label">
-            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Transfert SIIGFP</span>
+        <div class="input-group mb-3 col">
+            <div class="input-group-prepend custom-label">
+                <span class="input-group-text text-bold" id="inputGroup-sizing-default">Transfert SIIGFP</span>
+            </div>
+            <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaSiigA">
+            <span class="input-group-text">séparateur " ; "</span>
         </div>
-        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaSiigA">
-        <span class="input-group-text">séparateur " ; "</span>
-    </div>
-</div>*@
+    </div>*@
 <div class="form-row">
     <div class="input-group mb-3 col">
         <div class="input-group-prepend custom-label">
@@ -196,14 +215,14 @@
     </div>
 </div>
 @*<div class="form-row">
-    <div class="input-group mb-3 col">
-        <div class="input-group-prepend custom-label">
-            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Retour banque</span>
+        <div class="input-group mb-3 col">
+            <div class="input-group-prepend custom-label">
+                <span class="input-group-text text-bold" id="inputGroup-sizing-default">Retour banque</span>
+            </div>
+            <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaPb">
+            <span class="input-group-text">séparateur " ; "</span>
         </div>
-        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaPb">
-        <span class="input-group-text">séparateur " ; "</span>
-    </div>
-</div>*@
+    </div>*@
 
 <div class="form-row">
     <div class="mb-3 col">
@@ -216,4 +235,18 @@
 <!-- Droit.js -->
 <script src="~/Assets/js/Mail.js?version=@Session["VERSION"]"></script>
 
-
+<script>
+    const togglePassword = document
+        .querySelector('#togglePassword');
+    const password = document.querySelector('#EMP');
+    togglePassword.addEventListener('click', () => {
+        // Toggle the type attribute using
+        // getAttribure() method
+        const type = password
+            .getAttribute('type') === 'password' ?
+            'text' : 'password';
+        password.setAttribute('type', type);
+        // Toggle the eye and bi-eye icon
+        this.classList.toggle('bi-eye');
+    });
+</script>

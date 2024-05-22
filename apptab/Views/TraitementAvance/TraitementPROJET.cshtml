@@ -1,6 +1,6 @@
 ﻿@{
-    ViewBag.Title = "Tris des avances";
-    ViewData["Controller"] = "Tris des avances";
+    ViewBag.Title = "Tris et validation des avances";
+    ViewData["Controller"] = "Tris et validation des avances";
     /*Layout = "~/Views/Shared/_Layout.cshtml";*/
 }
 
@@ -89,17 +89,26 @@
 </div>
 
 <div class="form-row">
-    <div class="input-group mb-3 col">
-        <div class="btn btn-flat bg-gradient-red col-12" data-action="SaveV">
-            <i class="fa fa-check-double"></i> Enregistrer et envoyer pour validation
+    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMD1"].ToString()) != 0)))
+    {
+        <div class="input-group mb-3 col">
+            <div class="btn btn-flat bg-gradient-red col-12" data-action="SaveV">
+                <i class="fa fa-check-double"></i> Enregistrer et valider
+            </div>
+        </div>
+    }
+        @*<div class="input-group mb-3 col">
+                <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TBD_PROJET_MANDAT', 'AVANCES TRIEES')">
+                    <i class="fa fa-file-excel"></i> Exporter
+                </div>
+            </div>*@
+        <div class="input-group mb-3 col">
+            <div class="btn btn-flat bg-gradient-red col-12" id="export-to-pdf-btn">
+                <i class="fa fa-file-pdf"></i> Export PDF
+            </div>
         </div>
     </div>
-    @*<div class="input-group mb-3 col">
-        <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TBD_PROJET_MANDAT', 'AVANCES TRIEES')">
-            <i class="fa fa-file-excel"></i> Exporter
-        </div>
-    </div>*@
-</div>
 
 <script src="~/Assets/js/TraitmandatA.js?version=@Session["VERSION"]"></script>
 <script src="~/Assets/js/utils.js?version=@Session["VERSION"]"></script>
@@ -191,3 +200,10 @@
 
 <script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
 <script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
+
+<script defer>
+    $('#export-to-pdf-btn').on('click', () => {
+        exportTableToPdf('TBD_PROJET_MANDAT', 'AVANCES A ENVOYER POUR VALIDATION-PDF', `<p style="font-weight: bold /*text-align:center*/;">AVANCES A ENVOYER POUR VALIDATION</p><p>Liste des avances en attente envoi pour validation</p>`, `<p style="font-weight: bold;"">SOFT - SIIG CONNECT </p>`, [0, 13, 14, 15]);
+        /*exportTableToPdf('dashboard', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);*/
+    });
+</script>

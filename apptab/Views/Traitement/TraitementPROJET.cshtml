@@ -1,6 +1,6 @@
 ﻿@{
-    ViewBag.Title = "Tris des engagements";
-    ViewData["Controller"] = "Tris des engagements";
+    ViewBag.Title = "Tris et validation des engagements";
+    ViewData["Controller"] = "Tris et validation des engagements";
     /*Layout = "~/Views/Shared/_Layout.cshtml";*/
 }
 
@@ -89,16 +89,20 @@
 </div>
 
 <div class="form-row">
-    <div class="input-group mb-3 col">
-        <div class="btn btn-flat bg-gradient-red col-12" data-action="SaveV">
-            <i class="fa fa-check-double"></i> Enregistrer et envoyer pour validation
+    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && int.Parse(Session["RMT0"].ToString()) != 0))
+    {
+        <div class="input-group mb-3 col">
+            <div class="btn btn-flat bg-gradient-red col-12" data-action="SaveV">
+                <i class="fa fa-check-double"></i> Enregistrer et valider
+            </div>
         </div>
-    </div>
+    }
     @*<div class="input-group mb-3 col">
-        <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TBD_PROJET_MANDAT', 'MANDATS TRIES')">
-            <i class="fa fa-file-excel"></i> Exporter
-        </div>
-    </div>*@
+            <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TBD_PROJET_MANDAT', 'MANDATS TRIES')">
+                <i class="fa fa-file-excel"></i> Exporter
+            </div>
+        </div>*@
     <div class="input-group mb-3 col">
         <div class="btn btn-flat bg-gradient-red col-12" id="export-to-pdf-btn">
             <i class="fa fa-file-pdf"></i> Export PDF
@@ -199,6 +203,7 @@
 
 <script defer>
     $('#export-to-pdf-btn').on('click', () => {
-        exportTableToPdf('TBD_PROJET_MANDAT', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, [0, 13, 14, 15]);
+        exportTableToPdf('TBD_PROJET_MANDAT', 'MANDATS A ENVOYER POUR VALIDATION-PDF', `<p style="font-weight: bold /*text-align:center*/;">MANDATS A ENVOYER POUR VALIDATION</p><p>Liste des mandats en attente envoi pour validation</p>`, `<p style="font-weight: bold;"">SOFT - SIIG CONNECT </p>`, [0,13,14,15]);
+        /*exportTableToPdf('dashboard', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);*/
     });
 </script>
