@@ -580,6 +580,20 @@ namespace apptab.Controllers
             int crpt = iProjet;
             var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
 
+            //SEND MAIL ALERT et NOTIFICATION//
+            string MailAdresse = "";
+            string mdpMail = "";
+
+            if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).SENDMAIL != null && db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).SENDPWD != null)
+            {
+                MailAdresse = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).SENDMAIL;
+                mdpMail = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).SENDPWD;
+            }
+            else
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mail émetteur (Notifications et Alertes)" }, settings));
+            }
+
             var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET;
 
             int ordsec = int.Parse(Session["PROCESDEPS"].ToString());
@@ -681,10 +695,6 @@ namespace apptab.Controllers
                 }
             }
 
-            //SEND MAIL ALERT et NOTIFICATION//
-            string MailAdresse = "serviceinfo@softwell.mg";
-            string mdpMail = "09eYpçç0601";
-
             using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
             {
                 SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
@@ -744,6 +754,20 @@ namespace apptab.Controllers
             int crpt = iProjet;
             var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
 
+            //SEND MAIL ALERT et NOTIFICATION//
+            string MailAdresse = "";
+            string mdpMail = "";
+
+            if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).SENDMAIL != null && db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).SENDPWD != null)
+            {
+                MailAdresse = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).SENDMAIL;
+                mdpMail = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).SENDPWD;
+            }
+            else
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mail émetteur (Notifications et Alertes)" }, settings));
+            }
+
             var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET;
 
             var listCompteS = listCompte.Split(',');
@@ -775,10 +799,6 @@ namespace apptab.Controllers
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
                 }
             }
-
-            //SEND MAIL ALERT et NOTIFICATION//
-            string MailAdresse = "serviceinfo@softwell.mg";
-            string mdpMail = "09eYpçç0601";
 
             using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
             {
@@ -996,6 +1016,20 @@ namespace apptab.Controllers
 
                 var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
 
+                //SEND MAIL ALERT et NOTIFICATION//
+                string MailAdresse = "";
+                string mdpMail = "";
+
+                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null).SENDMAIL != null && db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null).SENDPWD != null)
+                {
+                    MailAdresse = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null).SENDMAIL;
+                    mdpMail = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null).SENDPWD;
+                }
+                else
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mail émetteur (Notifications et Alertes)" }, settings));
+                }
+
                 var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == IdS && a.DELETIONDATE == null).FirstOrDefault().PROJET;
 
                 if (db.SI_TRAITPROJET.FirstOrDefault(a => a.No == IdF && a.IDPROJET == IdS) != null)
@@ -1020,10 +1054,6 @@ namespace apptab.Controllers
                 };
                 db.SI_TRAITANNUL.Add(newElemH);
                 db.SaveChanges();
-
-                //SEND MAIL ALERT et NOTIFICATION//
-                string MailAdresse = "serviceinfo@softwell.mg";
-                string mdpMail = "09eYpçç0601";
 
                 using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
                 {
@@ -1515,6 +1545,20 @@ namespace apptab.Controllers
             int crpt = iProjet;
             var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
 
+            //SEND MAIL ALERT et NOTIFICATION//
+            string MailAdresse = "";
+            string mdpMail = "";
+
+            if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).SENDMAIL != null && db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).SENDPWD != null)
+            {
+                MailAdresse = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).SENDMAIL;
+                mdpMail = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).SENDPWD;
+            }
+            else
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mail émetteur (Notifications et Alertes)" }, settings));
+            }
+
             var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET;
 
             var listCompteS = listCompte.Split(',');
@@ -1547,10 +1591,6 @@ namespace apptab.Controllers
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
                 }
             }
-
-            //SEND MAIL ALERT et NOTIFICATION//
-            string MailAdresse = "serviceinfo@softwell.mg";
-            string mdpMail = "09eYpçç0601";
 
             using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
             {
