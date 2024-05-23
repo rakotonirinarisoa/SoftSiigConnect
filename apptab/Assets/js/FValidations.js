@@ -475,6 +475,9 @@ function LoadValidate() {
                     journal: isNullOrUndefined(v.Journal) ? '' : v.Journal,
                     marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                     isLATE: v.isLATE,
+                    numeroliquidations: v.NUMEROLIQUIDATION,
+                    type: v.AVANCE ? 'Avance' : 'Engagement',
+                    idprojet: codeproject,
                     numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                 });
             });
@@ -512,6 +515,17 @@ function LoadValidate() {
                     { data: 'plan' },
                     { data: 'journal' },
                     { data: 'marche' },
+                    {
+                        data: 'numeroliquidations',
+                        render: function (data, _, row, _) {
+                            return `
+                                        <div onclick="showLiquidationModal('${codeproject}', '${row.numeroliquidations}', '${row.estAvance}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
+                                            ${data}
+                                        </div>
+                                    `;
+                        }
+                    },
+                    { data: 'type' },
                 ],
                
                 createdRow: function (row, data, _) {
@@ -932,6 +946,9 @@ $('[data-action="ChargerJs"]').click(function () {
                             journal: isNullOrUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             isLATE: v.isLATE,
+                            numeroliquidations: v.NUMEROLIQUIDATION,
+                            type: v.AVANCE ? 'Avance' : 'Engagement',
+                            idprojet: codeproject,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });
                     });
@@ -968,6 +985,17 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'plan' },
                             { data: 'journal' },
                             { data: 'marche' },
+                            {
+                                data: 'numeroliquidations',
+                                render: function (data, _, row, _) {
+                                    return `
+                                        <div onclick="showLiquidationModal('${codeproject}', '${row.numeroliquidations}', '${row.estAvance}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
+                                            ${data}
+                                        </div>
+                                    `;
+                                }
+                            },
+                            { data: 'type' },
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
@@ -1115,6 +1143,9 @@ $('[data-action="ChargerJs"]').click(function () {
                             journal: isNullOrUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             isLATE: v.isLATE,
+                            numeroliquidations: v.NUMEROLIQUIDATION,
+                            type: v.AVANCE ? 'Avance' : 'Engagement',
+                            idprojet: codeproject,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });
                     });
@@ -1152,6 +1183,17 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'plan' },
                             { data: 'journal' },
                             { data: 'marche' },
+                            {
+                                data: 'numeroliquidations',
+                                render: function (data, _, row, _) {
+                                    return `
+                                        <div onclick="showLiquidationModal('${codeproject}', '${row.numeroliquidations}', '${row.estAvance}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
+                                            ${data}
+                                        </div>
+                                    `;
+                                }
+                            },
+                            { data: 'type' },
                         ],
                         
                         createdRow: function (row, data, _) {

@@ -277,7 +277,16 @@ function chargeLoad() {
                             { data: 'plan' },
                             { data: 'journal' },
                             { data: 'marche' },
-                            { data: 'numeroliquidations' },
+                            {
+                                data: 'numeroliquidations',
+                                render: function (data, _, row, _) {
+                                    return `
+                                        <div onclick="showLiquidationModal('${codeproject}', '${row.numeroliquidations}', '${row.estAvance}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
+                                            ${data}
+                                        </div>
+                                    `;
+                                }
+                            },
                             { data: 'type' },
                             
                         ],
@@ -467,7 +476,16 @@ function chargeLoad() {
                             { data: 'plan' },
                             { data: 'journal' },
                             { data: 'marche' },
-                            { data: 'numeroliquidations' },
+                            {
+                                data: 'numeroliquidations',
+                                render: function (data, _, row, _) {
+                                    return `
+                                        <div onclick="showLiquidationModal('${codeproject}', '${row.numeroliquidations}', '${row.estAvance}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
+                                            ${data}
+                                        </div>
+                                    `;
+                                }
+                            },
                             { data: 'type' },
                             
                         ],
@@ -1208,7 +1226,16 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'plan' },
                             { data: 'journal' },
                             { data: 'marche' },
-                            { data: 'numeroliquidations' },
+                            {
+                                data: 'numeroliquidations',
+                                render: function (data, _, row, _) {
+                                    return `
+                                        <div onclick="showLiquidationModal('${codeproject}', '${row.numeroliquidations}', '${row.estAvance}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
+                                            ${data}
+                                        </div>
+                                    `;
+                                }
+                            },
                             { data: 'type' },
                             
                         ],

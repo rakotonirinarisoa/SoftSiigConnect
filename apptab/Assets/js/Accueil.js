@@ -21,7 +21,56 @@ window.onbeforeunload = function (event) {
     return confirmClose;
 
 }
+function showLiquidationModal(id, numeroliquidations, estAvance) {
+    let formData = new FormData();
 
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
+
+    formData.append("IdF", id);
+    formData.append("numeroliquidations", numeroliquidations);
+    formData.append("estAvance", estAvance);
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Traitement/SetGlobalStates',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            $('#loader').removeClass('display-none');
+        },
+        complete: function () {
+            $('#loader').addClass('display-none');
+        },
+        success: function (result) {
+            var { type, msg } = JSON.parse(result);
+
+            if (type === "error") {
+                alert(msg);
+
+                return;
+            }
+
+            if (type === "login") {
+                alert(msg);
+
+                window.location = window.location.origin;
+
+                return;
+            }
+
+            if (type == "success") {
+                window.location = Origin + '/Traitement/GenerationPAIEMENTIndex';
+            }
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
 function GetTypeP() {
     let formData = new FormData();
 
@@ -532,7 +581,17 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'plan' },
                             { data: 'journal' },
                             { data: 'marche' },
-                            { data: 'numeroliquidations' }
+                            {
+                                data: 'numeroliquidations',
+                                render: function (data, _, row, _) {
+                                    return `
+                                        <div onclick="showLiquidationModal('${codeproject}', '${row.numeroliquidations}', '${row.estAvance}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
+                                            ${data}
+                                        </div>
+                                    `;
+                                }
+                            },
+                            { data: 'type' },
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
@@ -735,7 +794,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 data: 'numeroliquidations',
                                 render: function (data, _, row, _) {
                                     return `
-                                        <div onclick="showLiquidationModal('${row.id}', '${row.numeroliquidations}', '${row.estAvance}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
+                                        <div onclick="showLiquidationModal('${codeproject}', '${row.numeroliquidations}', '${row.estAvance}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
                                             ${data}
                                         </div>
                                     `;

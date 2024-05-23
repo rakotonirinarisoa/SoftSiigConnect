@@ -2016,6 +2016,7 @@ namespace apptab.Controllers
                         Marche = item.Marche,
                         isLATE = isLate,
                         NUMEREG = item.NUMEREG,
+                        NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                     });
                 }
             }
@@ -2050,6 +2051,7 @@ namespace apptab.Controllers
                         Marche = item.Marche,
                         isLATE = isLate,
                         NUMEREG = item.NUMEREG,
+                        NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                     });
                 }
             }

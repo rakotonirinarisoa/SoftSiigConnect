@@ -268,7 +268,7 @@ function ChargeLoad() {
                                 data: 'numeroliquidations',
                                 render: function (data, _, row, _) {
                                     return `
-                                        <div onclick="showLiquidationModal('${row.idprojet}', '${row.numeroliquidations}', '${row.estAvance}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
+                                        <div onclick="showLiquidationModal('${codeproject}', '${row.numeroliquidations}', '${row.estAvance}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
                                             ${data}
                                         </div>
                                     `;
