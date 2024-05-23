@@ -689,6 +689,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             journal: isNullOrUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             estAvance: v.Avance,
+                            numeroliquidations: v.NUMEROLIQUIDATION,
+                            type: v.Avance ? 'Avance' : 'Engagement',
                             numeroliquidations: v.Mandat,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
                         });
@@ -729,7 +731,17 @@ $('[data-action="ChargerJs"]').click(function () {
                             { data: 'plan' },
                             { data: 'journal' },
                             { data: 'marche' },
-                            { data: 'numeroliquidations' }
+                            {
+                                data: 'numeroliquidations',
+                                render: function (data, _, row, _) {
+                                    return `
+                                        <div onclick="showLiquidationModal('${row.id}', '${row.numeroliquidations}', '${row.estAvance}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
+                                            ${data}
+                                        </div>
+                                    `;
+                                }
+                            },
+                            { data: 'type' },
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);

@@ -200,8 +200,10 @@
     <Compile Include="Controllers\TraitementJustifController.cs" />
     <Compile Include="Controllers\TraitementReversController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Data\AUTRE8OPERATION.cs" />
     <Compile Include="Data\Entities\AvanceDetails.cs" />
     <Compile Include="Data\Entities\MOPFOP.cs" />
+    <Compile Include="Models\CPTADMIN_FAUTREOPERATION.cs" />
     <Compile Include="Models\GA_AVANCE_JUSTIFICATIF.cs" />
     <Compile Include="Models\GA_AVANCE_REVERSEMENT.cs" />
     <Compile Include="Models\CPTADMIN_CHAINETRAITEMENT_AVANCE.cs" />

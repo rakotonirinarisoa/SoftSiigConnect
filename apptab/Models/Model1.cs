@@ -12,21 +12,33 @@ namespace apptab.Models
     public partial class Model1 : DbContext
     {
         public Model1()
-            : base("name=Model19")
+            : base("name=Model110")
         {
         }
 
-        public virtual DbSet<OPA_REGLEMENTBR> OPA_REGLEMENTBR { get; set; }
+        public virtual DbSet<CPTADMIN_FAUTREOPERATION> CPTADMIN_FAUTREOPERATION { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<OPA_REGLEMENTBR>()
-                .Property(e => e.ID)
-                .HasPrecision(18, 0);
+            modelBuilder.Entity<CPTADMIN_FAUTREOPERATION>()
+                .Property(e => e.COURSDEVISE)
+                .HasPrecision(30, 12);
 
-            modelBuilder.Entity<OPA_REGLEMENTBR>()
-                .Property(e => e.MONTANT)
-                .HasPrecision(18, 0);
+            modelBuilder.Entity<CPTADMIN_FAUTREOPERATION>()
+                .Property(e => e.COURSRAPPORT)
+                .HasPrecision(30, 12);
+
+            modelBuilder.Entity<CPTADMIN_FAUTREOPERATION>()
+                .Property(e => e.MONTANTLOCAL)
+                .HasPrecision(30, 12);
+
+            modelBuilder.Entity<CPTADMIN_FAUTREOPERATION>()
+                .Property(e => e.MONTANTRAPPORT)
+                .HasPrecision(30, 12);
+
+            modelBuilder.Entity<CPTADMIN_FAUTREOPERATION>()
+                .Property(e => e.MONTANTDEVISE)
+                .HasPrecision(30, 12);
         }
     }
 }

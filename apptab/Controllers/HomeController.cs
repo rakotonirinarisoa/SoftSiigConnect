@@ -837,7 +837,7 @@ namespace apptab.Controllers
                         avalider.NoPiece = item.NoPiece;
                         avalider.Compte = item.Compte;
                         avalider.Libelle = item.Libelle;
-                        avalider.MONTANT = item.Montant;
+                        avalider.MONTANT = Convert.ToDecimal(couperText(18, item.Montant.ToString()));
                         avalider.MontantDevise = item.MontantDevise;
                         avalider.Mon = item.Mon;
                         avalider.Rang = item.Rang;
@@ -2461,6 +2461,31 @@ namespace apptab.Controllers
              {
         privateKeyAuthenticationMethod
              };
+        }
+        private string couperText(int x, string str)
+        {
+            string s = "";
+            int n = 0;
+            try
+            {
+                if (str != null)
+                {
+                    n = str.Length;
+                }
+
+            }
+            catch (Exception) { }
+
+            if (n > x)
+            {
+                int y = n - x;
+                s = str.Remove(x, y);
+            }
+            else
+            {
+                s = str;
+            }
+            return s;
         }
     }
 }

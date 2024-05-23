@@ -224,7 +224,7 @@ function ChargeLoad() {
                             isLATE: v.IsLATE,
                             estAvance: v.AVANCE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
-                            type: v.AVANCE ? 'Avance' : 'Paiement',
+                            type: v.AVANCE ? 'Avance' : 'Engagement',
                             idprojet: codeproject,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
                         });
@@ -833,7 +833,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             isLATE: v.IsLATE,
                             estAvance: v.AVANCE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
-                            type: v.AVANCE ? 'Avance' : 'Paiement',
+                            type: v.AVANCE ? 'Avance' : 'Engagement',
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });
                     });
@@ -1045,7 +1045,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             isLATE: v.IsLATE,
                             estAvance: v.AVANCE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
-                            type: v.AVANCE ? 'Avance' : 'Paiement',
+                            type: v.AVANCE ? 'Avance' : 'Engagement',
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });
                     });

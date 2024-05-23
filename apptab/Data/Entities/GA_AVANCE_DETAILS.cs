@@ -36,5 +36,6 @@ namespace apptab
         public string CATEGORIE { get; set; }
         public string ACTI { get; set; }
         public string GEO { get; set; }
+        public string NUMEROLIQUIDATION { get; set; }
     }
 }

@@ -55,8 +55,29 @@ namespace apptab
         public virtual DbSet<tpa_preparations> tpa_preparations { get; set; }
         public virtual DbSet<tpa_salaries> tpa_salaries { get; set; }
 
+        public virtual DbSet<CPTADMIN_FAUTREOPERATION> CPTADMIN_FAUTREOPERATION { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<CPTADMIN_FAUTREOPERATION>()
+               .Property(e => e.COURSDEVISE)
+               .HasPrecision(30, 12);
+
+            modelBuilder.Entity<CPTADMIN_FAUTREOPERATION>()
+                .Property(e => e.COURSRAPPORT)
+                .HasPrecision(30, 12);
+
+            modelBuilder.Entity<CPTADMIN_FAUTREOPERATION>()
+                .Property(e => e.MONTANTLOCAL)
+                .HasPrecision(30, 12);
+
+            modelBuilder.Entity<CPTADMIN_FAUTREOPERATION>()
+                .Property(e => e.MONTANTRAPPORT)
+                .HasPrecision(30, 12);
+
+            modelBuilder.Entity<CPTADMIN_FAUTREOPERATION>()
+                .Property(e => e.MONTANTDEVISE)
+                .HasPrecision(30, 12);
+
             modelBuilder.Entity<CPTADMIN_FLIQUIDATION>()
                 .Property(e => e.COURSDEVISE)
                 .HasPrecision(30, 12);

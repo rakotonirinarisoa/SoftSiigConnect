@@ -8,6 +8,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using apptab.apptab;
+using apptab.Data;
 using apptab.Data.Entities;
 using apptab.Models;
 
@@ -2205,9 +2206,11 @@ namespace apptab.Extension
 
             List<string> DjournalFop = tom.FOP.Where(x => x.JOURNAL == journal && (x.ETAPE1USER == etat || x.ETAPE2USER == etat || x.ETAPE3USER == etat || x.ETAPE4USER == etat || x.ETAPE5USER == etat || x.ETAPE6USER == etat || x.ETAPE7USER == etat || x.ETAPE8USER == etat || x.ETAPE9USER == etat || x.ETAPE10USER == etat)).Select(x => x.NUMEROOP).ToList();
             List<string> DjournalAvance = tom.GA_AVANCE.Where(x => x.JOURNAL == journal && x.COGE == compteG).Select(x => x.NUMERO).ToList();
+            List<string> DjournalOP = tom.CPTADMIN_FAUTREOPERATION.Where(x => x.JOURNALRECEPTION == journal ).Select(x => x.NUMEROOPERATION).ToList();
 
             List<MOPFOP> lNoOPS = new List<MOPFOP>();
             List<GA_AVANCE_DETAILS> lNoOpsAV = new List<GA_AVANCE_DETAILS>();
+            List<AUTRE8OPERATION> lNoOpsAOP = new List<AUTRE8OPERATION>();
 
             foreach (string num in DjournalFop)
             {
@@ -2258,6 +2261,7 @@ namespace apptab.Extension
                         OBSERVATIONREJET = mo.OBSERVATIONREJET,
                         MONTANTRETENUE = mo.MONTANTRETENUE,
                         NUMEREG = mo.NUMENREG,
+                        TYPE = fo.TYPE_OPERATION,
                     }
                 );
 
@@ -2283,10 +2287,30 @@ namespace apptab.Extension
                     CATEGORIE = z.CATEGORIE,
                     ACTI = z.ACTI,
                     GEO = z.GEO,
+                    TYPE = a.TYPE,
 
                 }).ToList());
             }
-
+            foreach(string numOpr in DjournalOP)
+            {
+                lNoOpsAOP.AddRange(tom.CPTADMIN_FAUTREOPERATION.Where(x => x.NUMEROOPERATION == numOpr).Select(x => new AUTRE8OPERATION
+                {
+                    NUMEROOPERATION = x.NUMEROOPERATION,
+                    DATEOPERATION = x.DATEOPERATION,
+                    MONTANTLOCAL = x.MONTANTLOCAL,
+                    JOURNAL = x.JOURNALRECEPTION,
+                    NORDPAIEMENT = x.NORDPAIEMENT,
+                    DATEMAJ = x.DATEMAJ,
+                    LIBELLE = x.DESCRIPTION,
+                    MONTANTDEVISE = x.MONTANTDEVISE,
+                    MONTANTRAPPORT = x.MONTANTRAPPORT,
+                    FINANCEMENT = x.FINANCEMENT,
+                    MARCHER = x.CODEMARCHE,
+                    CATEGORIE = x.CATEGORIE,
+                    ACTIVITER = x.ACTIVITE,
+                    TYPE = x.TYPEOPERATION,
+                }).ToList());
+            }
             if (djournal.RIB != null && djournal.RIB != "")
             {
                 #region Chargement liste écriture
@@ -2296,6 +2320,7 @@ namespace apptab.Extension
                     {
                         List<MOPFOP> lNoOp = lNoOPS;
                         List<GA_AVANCE_DETAILS> lnoOpAVS = lNoOpsAV;
+                        List<AUTRE8OPERATION> lNoOpsAOPS = lNoOpsAOP;
 
                         foreach (var nord in lNoOp)
                         {
@@ -2332,6 +2357,7 @@ namespace apptab.Extension
                                             Marche = "",
                                             Status = etat,
                                             Mandat = nord.NUMEROLIQUIDATION,
+                                            Avance = nord.TYPE != null ? false : true,
                                             NUMEREG = item.NUMENREG,
                                         });
                                     }
@@ -2367,7 +2393,41 @@ namespace apptab.Extension
                                     Plan6 = nordAV.PLAN6,
                                     Journal = journal,
                                     Marche = "",
+                                    Avance = nordAV.TYPE != null ? false : true,
                                     Status = etat,
+                                    Mandat = ""
+                                });
+
+                            }
+                            catch (Exception) { }
+
+
+                        }
+
+                        foreach (var nordAOPS in lNoOpsAOPS)
+                        {
+                            try
+                            {
+                                list.Add(new DataListTomOP()
+                                {
+                                    No = nordAOPS.NUMEROOPERATION,
+                                    Date = nordAOPS.DATEOPERATION.Value,
+                                    Auxi = "",
+                                    NoPiece = nordAOPS.NUMEROOPERATION,
+                                    Compte = "",
+                                    Libelle = nordAOPS.LIBELLE,
+                                    Montant = nordAOPS.MONTANTLOCAL.Value,
+                                    MontantDevise = nordAOPS.MONTANTDEVISE.Value,
+                                    Mon = "",
+                                    Rang = "",
+                                    Poste = "",
+                                    FinancementCategorie = nordAOPS.FINANCEMENT + " " + nordAOPS.CATEGORIE,
+                                    Commune = "",
+                                    Plan6 = "",
+                                    Journal = nordAOPS.JOURNAL,
+                                    Marche = nordAOPS.MARCHER,
+                                    Status = "",
+                                    Avance = nordAOPS.TYPE != null ? false : true,
                                     Mandat = ""
                                 });
 
@@ -2436,6 +2496,8 @@ namespace apptab.Extension
                     List<GA_AVANCE_DETAILS> lOPCOGEAV = (from m in lNoOpsAV
                                                          where m.COGE == compteG
                                                          select m).ToList();
+
+                    List<AUTRE8OPERATION> lNoOpsAOPS = lNoOpsAOP;
 
                     if (auxi == "" || auxi == "Tous")
                     {
@@ -2507,6 +2569,38 @@ namespace apptab.Extension
 
 
                         }
+
+                        foreach (var nordAOPS in lNoOpsAOPS)
+                        {
+                            try
+                            {
+                                list.Add(new DataListTomOP()
+                                {
+                                    No = nordAOPS.NUMEROOPERATION,
+                                    Date = nordAOPS.DATEOPERATION.Value,
+                                    Auxi = "",
+                                    NoPiece = nordAOPS.NUMEROOPERATION,
+                                    Compte = "",
+                                    Libelle = nordAOPS.LIBELLE,
+                                    Montant = nordAOPS.MONTANTLOCAL.Value,
+                                    MontantDevise = nordAOPS.MONTANTDEVISE.Value,
+                                    Mon = "",
+                                    Rang = "",
+                                    Poste = "",
+                                    FinancementCategorie = nordAOPS.FINANCEMENT + " " + nordAOPS.CATEGORIE,
+                                    Commune = "",
+                                    Plan6 = "",
+                                    Journal = nordAOPS.JOURNAL,
+                                    Marche = nordAOPS.MARCHER,
+                                    Status = "",
+                                    Mandat = ""
+                                });
+
+                            }
+                            catch (Exception) { }
+
+
+                        }
                     }
                     else
                     {
@@ -2517,6 +2611,7 @@ namespace apptab.Extension
                         List<GA_AVANCE_DETAILS> lNoOpAV = (from m in lNoOpsAV
                                                            where m.AUXI == auxi
                                                            select m).ToList();
+
                         if (lNoOp != null)
                         {
                             foreach (var nord in lNoOp)
@@ -2604,6 +2699,38 @@ namespace apptab.Extension
                                 }
                                 catch (Exception) { }
                             }
+                        }
+
+                        foreach (var nordAOPS in lNoOpsAOPS)
+                        {
+                            try
+                            {
+                                list.Add(new DataListTomOP()
+                                {
+                                    No = nordAOPS.NUMEROOPERATION,
+                                    Date = nordAOPS.DATEOPERATION.Value,
+                                    Auxi = "",
+                                    NoPiece = nordAOPS.NUMEROOPERATION,
+                                    Compte = "",
+                                    Libelle = nordAOPS.LIBELLE,
+                                    Montant = nordAOPS.MONTANTLOCAL.Value,
+                                    MontantDevise = nordAOPS.MONTANTDEVISE.Value,
+                                    Mon = "",
+                                    Rang = "",
+                                    Poste = "",
+                                    FinancementCategorie = nordAOPS.FINANCEMENT + " " + nordAOPS.CATEGORIE,
+                                    Commune = "",
+                                    Plan6 = "",
+                                    Journal = nordAOPS.JOURNAL,
+                                    Marche = nordAOPS.MARCHER,
+                                    Status = "",
+                                    Mandat = ""
+                                });
+
+                            }
+                            catch (Exception) { }
+
+
                         }
 
                     }
