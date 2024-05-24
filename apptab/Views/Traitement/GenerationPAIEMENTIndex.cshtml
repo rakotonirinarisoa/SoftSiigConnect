@@ -60,17 +60,25 @@
     </table>
 </div>
 
-<div class="form-row">
+<!--<div class="form-row">
     <div class="input-group mb-3 col">
         <div class="btn btn-flat bg-gradient-red col-12 custom-fixed-btn" data-action="SaveSIIG">
             <i class="fa fa-check-double"></i> Enregistrer et valider
         </div>
-    </div>
+    </div>-->
     @*<div class="input-group mb-3 col">
         <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TBD_PROJET_ORDSEC', 'ENGAGEMENTS ou AVANCES par PAIEMENT')">
             <i class="fa fa-file-excel"></i> Exporter
         </div>
     </div>*@
+<!--</div>-->
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="btn btn-flat bg-gradient-red col-12" id="export-to-pdf-btn">
+            <i class="fa fa-file-pdf"></i> Export PDF
+        </div>
+    </div>
 </div>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="password-modal">
@@ -170,4 +178,11 @@
     });
 
     fillTable();
+</script>
+
+<script defer>
+    $('#export-to-pdf-btn').on('click', () => {
+        exportTableToPdf('TBD_PROJET_ORDSEC', 'LISTE MANDATS ou AVANCES-PDF', `<p style="font-weight: bold /*text-align:center*/;">LISTE MANDATS ou AVANCES</p><p>Liste des mandats ou avances</p>`, `<p style="font-weight: bold;"">SOFT - SIIG CONNECT </p>`, [0, 16, 17, 18]);
+        /*exportTableToPdf('dashboard', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);*/
+    });
 </script>
