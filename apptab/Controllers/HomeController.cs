@@ -2017,6 +2017,7 @@ namespace apptab.Controllers
                         isLATE = isLate,
                         NUMEREG = item.NUMEREG,
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
+                        AVANCE = item.AVANCE,
                     });
                 }
             }
@@ -2052,6 +2053,7 @@ namespace apptab.Controllers
                         isLATE = isLate,
                         NUMEREG = item.NUMEREG,
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
+                        AVANCE = item.AVANCE,
                     });
                 }
             }

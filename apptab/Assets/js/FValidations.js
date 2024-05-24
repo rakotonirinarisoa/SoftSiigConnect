@@ -160,7 +160,56 @@ function GetListCompG() {
         }
     });
 }
+function showLiquidationModal(id, numeroliquidations, estAvance) {
+    let formData = new FormData();
 
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
+
+    formData.append("IdF", id);
+    formData.append("numeroliquidations", numeroliquidations);
+    formData.append("estAvance", estAvance);
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Traitement/SetGlobalStates',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            $('#loader').removeClass('display-none');
+        },
+        complete: function () {
+            $('#loader').addClass('display-none');
+        },
+        success: function (result) {
+            var { type, msg } = JSON.parse(result);
+
+            if (type === "error") {
+                alert(msg);
+
+                return;
+            }
+
+            if (type === "login") {
+                alert(msg);
+
+                window.location = window.location.origin;
+
+                return;
+            }
+
+            if (type == "success") {
+                window.location = Origin + '/Traitement/GenerationPAIEMENTIndex';
+            }
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
 function FillAUXI() {
     var list = ListCompteG.filter(x => x.COGE == $(`[compG-list]`).val()).pop();
     let code = `<option value="Tous"> Tous</option> `;
@@ -475,6 +524,7 @@ function LoadValidate() {
                     journal: isNullOrUndefined(v.Journal) ? '' : v.Journal,
                     marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                     isLATE: v.isLATE,
+                    estAvance: v.AVANCE,
                     numeroliquidations: v.NUMEROLIQUIDATION,
                     type: v.AVANCE ? 'Avance' : 'Engagement',
                     idprojet: codeproject,
@@ -1144,6 +1194,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             isLATE: v.isLATE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
+                            estAvance:v.AVANCE,
                             type: v.AVANCE ? 'Avance' : 'Engagement',
                             idprojet: codeproject,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
