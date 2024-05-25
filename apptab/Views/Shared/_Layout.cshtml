@@ -721,16 +721,16 @@
                             <div data-parent-id="5" class="w3-hide">
                                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;" id="menu-accordeon" data-menu-accordion="5">
                                     @*@if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur)
-                            {
-                                <li class="nav-item">
-                                    <a href="../Calendar/Index" class="nav-link">
-                                        <i class="nav-icon fas fa-calendar-alt" style="color: #4970cb"></i>
-                                        <p>
-                                            Evénements
-                                        </p>
-                                    </a>
-                                </li>
-                            }*@
+        {
+            <li class="nav-item">
+                <a href="../Calendar/Index" class="nav-link">
+                    <i class="nav-icon fas fa-calendar-alt" style="color: #4970cb"></i>
+                    <p>
+                        Evénements
+                    </p>
+                </a>
+            </li>
+        }*@
                                     <li class="nav-item">
                                         <a href="../Etat/HistoUsers" class="nav-link" data-child-id="5">
                                             <i class="nav-icon fa fa-exclamation"></i>
@@ -880,6 +880,16 @@
                                             </a>
                                         </li>
                                     }
+
+                                    <li class="nav-item">
+                                        <a href="../BordTraitement/BudgetCreditOuvert" class="nav-link" data-child-id="5">
+                                            <i class="nav-icon fa fa-exclamation"></i>
+                                            <p>
+                                                Suivi budgétaire et crédit ouvert@*@Session["TDB8"] Suivi budgétaire et crédit ouvert*@
+                                            </p>
+                                        </a>
+                                    </li>
+
                                 </ul>
                             </div>
                         }
