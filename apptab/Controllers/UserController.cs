@@ -532,6 +532,10 @@ namespace SOFTCONNECT.Controllers
 
                     Session["JR"] = isMenu.JR;
                     Session["JRA"] = isMenu.JRA;
+
+                    Session["RSF"] = isMenu.RSF;
+                    Session["RSFT"] = isMenu.RSFT;
+                    Session["TDB9"] = isMenu.TDB9;
                 }
 
                 //PRIVILEGES//
@@ -584,6 +588,10 @@ namespace SOFTCONNECT.Controllers
 
                 Session["RGED"] = 0;
 
+                Session["RRSF"] = 0;
+                Session["RRSFT"] = 0;
+                Session["RTDB9"] = 0;
+
                 if (db.SI_PRIVILEGE.Any(a => a.IDUSERPRIV == test.ID))
                 {
                     var isMenu = db.SI_PRIVILEGE.FirstOrDefault(a => a.IDUSERPRIV == test.ID);
@@ -617,7 +625,7 @@ namespace SOFTCONNECT.Controllers
                     Session["RMOP1"] = isMenu.MOP1;
                     Session["RMOP2"] = isMenu.MOP2;
 
-                    Session["RTDB0"] = isMenu.TDB0;
+                    //Session["RTDB0"] = isMenu.TDB0;
                     Session["RTDB1"] = isMenu.TDB1;
                     Session["RTDB2"] = isMenu.TDB2;
                     Session["RTDB3"] = isMenu.TDB3;
@@ -636,6 +644,10 @@ namespace SOFTCONNECT.Controllers
                     Session["RJRA"] = isMenu.JRA;
 
                     Session["RGED"] = isMenu.GED;
+
+                    Session["RRSF"] = isMenu.RSF;
+                    Session["RRSFT"] = isMenu.RSFT;
+                    Session["RTDB9"] = isMenu.TDB9;
                 }
 
                 if (db.SI_GEDLIEN.Any())

@@ -138,6 +138,21 @@ function GetListUser() {
                 if (v.MP4 == 1) MP4R = "checked";
                 if (v.MP4 == 2) MP4A = "checked";
 
+                let RSFN = "", RSFR = "", RSFA = "";
+                if (v.RSF == 0) RSFN = "checked";
+                if (v.RSF == 1) RSFR = "checked";
+                if (v.RSF == 2) RSFA = "checked";
+
+                let RSFTN = "", RSFTR = "", RSFTA = "";
+                if (v.RSFT == 0) RSFTN = "checked";
+                if (v.RSFT == 1) RSFTR = "checked";
+                if (v.RSFT == 2) RSFTA = "checked";
+
+                let TDB9N = "", TDB9R = "", TDB9A = "";
+                if (v.TDB9 == 0) TDB9N = "checked";
+                if (v.TDB9 == 1) TDB9R = "checked";
+                if (v.TDB9 == 2) TDB9A = "checked";
+
                 let TDB0N = "", TDB0R = "", TDB0A = "";
                 if (v.TDB0 == 0) TDB0N = "checked";
                 if (v.TDB0 == 1) TDB0R = "checked";
@@ -429,6 +444,42 @@ function GetListUser() {
 
                         <td text-align:center>
                             <div class="form-check form-check-inline">
+                                <input type="radio" id="noneRSF${v.ID}" name="droneRSF${v.ID}" value="0" ${RSFN}/><label class="ml-1" for="noneRSF${v.ID}" style="font-weight:normal">None</label>
+                            </div></br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="readRSF${v.ID}" name="droneRSF${v.ID}" value="1" ${RSFR}/><label class="ml-1" for="readRSF${v.ID}" style="font-weight:normal">Read</label>
+                            </div></br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="writeRSF${v.ID}" name="droneRSF${v.ID}" value="2" ${RSFA}/><label class="ml-1" for="writeRSF${v.ID}" style="font-weight:normal">All</label>
+                            </div>
+                        </td>
+
+                        <td text-align:center>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="noneRSFT${v.ID}" name="droneRSFT${v.ID}" value="0" ${RSFTN}/><label class="ml-1" for="noneRSFT${v.ID}" style="font-weight:normal">None</label>
+                            </div></br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="readRSFT${v.ID}" name="droneRSFT${v.ID}" value="1" ${RSFTR}/><label class="ml-1" for="readRSFT${v.ID}" style="font-weight:normal">Read</label>
+                            </div></br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="writeRSFT${v.ID}" name="droneRSFT${v.ID}" value="2" ${RSFTA}/><label class="ml-1" for="writeRSFT${v.ID}" style="font-weight:normal">All</label>
+                            </div>
+                        </td>
+
+                        <td text-align:center>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="noneTDB9${v.ID}" name="droneTDB9${v.ID}" value="0" ${TDB9N}/><label class="ml-1" for="noneTDB9${v.ID}" style="font-weight:normal">None</label>
+                            </div></br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="readTDB9${v.ID}" name="droneTDB9${v.ID}" value="1" ${TDB9R}/><label class="ml-1" for="readTDB9${v.ID}" style="font-weight:normal">Read</label>
+                            </div></br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="writeTDB9${v.ID}" name="droneTDB9${v.ID}" value="2" ${TDB9A}/><label class="ml-1" for="writeTDB9${v.ID}" style="font-weight:normal">All</label>
+                            </div>
+                        </td>
+
+                        <td text-align:center>
+                            <div class="form-check form-check-inline">
                                 <input type="radio" id="noneTDB0${v.ID}" name="droneTDB0${v.ID}" value="0" ${TDB0N}/><label class="ml-1" for="noneTDB0${v.ID}" style="font-weight:normal">None</label>
                             </div></br>
                             <div class="form-check form-check-inline">
@@ -641,6 +692,10 @@ function SavePRIV(id) {
     formData.append("privilege.TDB8", $(`input[name="droneTDB8${id}"]:checked`).val());
     formData.append("privilege.JR", $(`input[name="droneJR${id}"]:checked`).val());
     formData.append("privilege.JRA", $(`input[name="droneJRA${id}"]:checked`).val());
+
+    formData.append("privilege.RSF", $(`input[name="droneRSF${id}"]:checked`).val());
+    formData.append("privilege.RSFT", $(`input[name="droneRSFT${id}"]:checked`).val());
+    formData.append("privilege.TDB9", $(`input[name="droneTDB9${id}"]:checked`).val());
 
     formData.append("privilege.GED", $(`input[name="droneGED${id}"]:checked`).val());
 

@@ -49,8 +49,9 @@
         public int? J3 { get; set; }
         public int? JR { get; set; }
         public int? JRA { get; set; }
-
-
+        public int? RSF { get; set; }
+        public int? RSFT { get; set; }
+        public int? TDB9 { get; set; }
         public int? IDUSER { get; set; }
 
         [Column(TypeName = "smalldatetime")]

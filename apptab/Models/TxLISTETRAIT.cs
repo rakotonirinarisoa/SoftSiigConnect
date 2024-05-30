@@ -34,5 +34,8 @@ namespace apptab
         public string MOTIF { get; set; }
         public string COMMENTAIRE { get; set; }
         public string TYPE { get; set; }
+        public string INTITUT { get; set; }
+
+        public int? IDRSF { get; set; }
     }
 }

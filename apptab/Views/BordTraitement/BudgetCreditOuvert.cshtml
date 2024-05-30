@@ -1,6 +1,6 @@
 ﻿@{
-    ViewBag.Title = "Suivi budgétaire et crédit ouvert";
-    ViewData["Controller"] = "Suivi budgétaire et crédit ouvert";
+    ViewBag.Title = "Suivi budgétaire";
+    ViewData["Controller"] = "Suivi budgétaire";
 }
 
 <meta charset="utf-8" />
@@ -11,7 +11,17 @@
         <div class="input-group-prepend custom-label">
             <span class="input-group-text text-bold" id="inputGroup-sizing-default">PROJET</span>
         </div>
-        <select class="form-control selectTOO" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="proj" data-id="proj-list" multiple="multiple">
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="proj" data-id="proj-list">
+        </select>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Budget</span>
+        </div>
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="budget" data-id="budget-list">
         </select>
     </div>
 </div>
@@ -49,12 +59,13 @@
                 <td style="font-weight:bold; text-align:center">SOA</td>
                 <td style="font-weight:bold; text-align:center">Projet</td>
                 <td style="font-weight:bold; text-align:center">PCOP</td>
-                <td style="font-weight:bold; text-align:center">Crédit ouvert</td>
+                <td style="font-weight:bold; text-align:center">Intitulé PCOP</td>
+                <td style="font-weight:bold; text-align:center">Montant PAD</td>
                 <td style="font-weight: bold; text-align: center">Montant PTBA</td>
                 <td style="font-weight: bold; text-align: center">Montant engagé</td>
                 <td style="font-weight: bold; text-align: center">Montant payé</td>
-                <td style="font-weight: bold; text-align: center">Solde sur crédit ouvert</td>
-                <td style="font-weight: bold; text-align: center">% sur crédit ouvert</td>
+                <td style="font-weight: bold; text-align: center">Solde sur PAD</td>
+                <td style="font-weight: bold; text-align: center">% sur PAD</td>
                 <td style="font-weight: bold; text-align: center">Solde sur PTBA</td>
                 <td style="font-weight: bold; text-align: center">% sur PTBA</td>
             </tr>
@@ -66,12 +77,13 @@
                 <th>SOA</th>
                 <th>Projet</th>
                 <th>PCOP</th>
-                <th>Crédit ouvert</th>
+                <th>Intitulé PCOP</th>
+                <th>Montant PAD</th>
                 <th>Montant PTBA</th>
                 <th>Montant engagé</th>
                 <th>Montant payé</th>
-                <th>Solde sur crédit ouvert</th>
-                <th>% sur crédit ouvert</th>
+                <th>Solde sur PAD</th>
+                <th>% sur PAD</th>
                 <th>Solde surr PTBA</th>
                 <th>% sur PTBA</th>
             </tr>
@@ -93,16 +105,16 @@
 <script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
 <script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
 
-<script>
+@*<script>
     $("#proj").select2({
         tags: true,
         tokenSeparators: [',', ' ']
     })
-</script>
+</script>*@
 
 <script defer>
     $('#export-to-pdf-btn').on('click', () => {
-        exportTableToPdf('TBD_PROJET_ORDSEC', 'SUIVI BUDGETAIRE ET CREDIT OUVERT-PDF', `<p style="font-weight: bold /*text-align:center*/;">SUIVI BUDGETAIRE ET CREDIT OUVERT</p><p>Suivi budgétaire et crédit ouvert</p>`, `<p style="font-weight: bold;">SOFT - SIIG CONNECT </p>`, [0]);
+        exportTableToPdf('TBD_PROJET_ORDSEC', 'SUIVI BUDGETAIRE-PDF', `<p style="font-weight: bold /*text-align:center*/;">SUIVI BUDGETAIRE</p><p>Suivi budgétaire</p>`, `<p style="font-weight: bold;">SOFT - SIIG CONNECT </p>`, [0]);
         /*exportTableToPdf('dashboard', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);*/
     });
 </script>

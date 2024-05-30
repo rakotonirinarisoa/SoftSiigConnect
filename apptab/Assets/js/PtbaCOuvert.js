@@ -16,6 +16,8 @@ $(document).ready(() => {
 
 $('#proj').on('change', () => {
     emptyTable();
+
+    GetUsers();
 });
 
 function checkdel(id) {
@@ -67,6 +69,8 @@ function GetListProjet() {
             $(`[data-id="proj-list"]`).append(code);
 
             $("#proj").val([...Datas.data.PROJET]).trigger('change');
+
+            GetUsers();
         },
         error: function (e) {
             alert("Problème de connexion. ");
@@ -74,6 +78,58 @@ function GetListProjet() {
     })
 }
 
+function GetUsers() {
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+
+    formData.append("iProjet", $("#proj").val());
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/BordTraitement/DetailsBUDGET',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+
+            $(`[data-id="budget-list"]`).text("");
+            var code = ``;
+            $.each(Datas.data.List, function (k, v) {
+                code += `
+                    <option value="${v.ID}">${v.BUDGET}</option>
+                `;
+            });
+
+            $(`[data-id="budget-list"]`).append(code);
+
+            //$("#budget").val([...Datas.data.PROJET]).trigger('change');
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
 $('.Checkall').change(function () {
 
     if ($('.Checkall').prop("checked") == true) {
@@ -131,6 +187,8 @@ $('[data-action="GenereLISTE"]').click(function () {
 
     formData.append("listProjet", $("#proj").val());
 
+    formData.append("numbud", $("#budget").val());
+
     $.ajax({
         type: "POST",
         url: Origin + '/BordTraitement/GenerePTBA',
@@ -174,10 +232,10 @@ $('[data-action="GenereLISTE"]').click(function () {
 
                 $.each(listResult, function (_, v) {
                     data.push({
-                        id: v.No,
                         SOA: v.SOA,
                         PROJET: v.PROJET,
                         PCOP: v.REF,
+                        INTITUT: v.INTITUT,
                         CREDITOUVERT: formatCurrency(String(v.BENEF).replace(",", ".")),
                         MTNPTBA: formatCurrency(String(v.MONTENGAGEMENT).replace(",", ".")),
                         MTNANGAGE: formatCurrency(String(v.MONTPAIE).replace(",", ".")),
@@ -197,7 +255,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                     data,
                     columns: [
                         {
-                            data: 'id',
+                            data: 'PCOP',
                             render: function (data, _, _, _) {
                                 return `
                                     <input type="checkbox" name="checkprod" compteg-ischecked class="chk" onchange="checkdel('${data}')" />
@@ -208,6 +266,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                         { data: 'SOA' },
                         { data: 'PROJET' },
                         { data: 'PCOP' },
+                        { data: 'INTITUT' },
                         { data: 'CREDITOUVERT' },
                         { data: 'MTNPTBA' },
                         { data: 'MTNANGAGE' },
@@ -242,8 +301,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                     buttons: ['colvis',
                         {
                             extend: 'pdfHtml5',
-                            title: 'SUIVI BUDGETAIRE ET CREDIT OUVERT',
-                            messageTop: 'Suivi budgétaire et crédit ouvert',
+                            title: 'SUIVI BUDGETAIRE',
+                            messageTop: 'Suivi budgétaire',
                             text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
@@ -251,7 +310,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-pdf',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                             },
                             customize: function (doc) {
                                 doc.defaultStyle.alignment = 'left';
@@ -261,8 +320,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                         },
                         {
                             extend: 'excelHtml5',
-                            title: 'SUIVI BUDGETAIRE ET CREDIT OUVERT',
-                            messageTop: 'Suivi budgétaire et crédit ouvert',
+                            title: 'SUIVI BUDGETAIRE',
+                            messageTop: 'Suivi budgétaire',
                             text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
@@ -270,7 +329,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-excel',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (typeof data === 'undefined') {
@@ -279,8 +338,10 @@ $('[data-action="GenereLISTE"]').click(function () {
                                         if (data == null) {
                                             return data;
                                         }
-                                        if (column === 4 || column === 5 || column === 6 || column === 7 || column === 8 || column === 10) {
+                                        if (column === 5 || column === 6 || column === 7 || column === 8 || column === 9 || column === 10 || column === 11 || column === 12) {
                                             var arr = data.split(',');
+                                            if (arr.length == 1) { return data; }
+
                                             arr[0] = arr[0].toString().replace(/[\.]/g, "");
                                             if (arr[0] > '' || arr[1] > '') {
                                                 data = arr[0] + '.' + arr[1];

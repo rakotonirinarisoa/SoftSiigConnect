@@ -1468,10 +1468,13 @@ namespace apptab.Controllers
 
                 if (SExist != null)
                 {
-                    if (SExist.VALDEPENSES != param.VALDEPENSES || SExist.VALPAIEMENTS != param.VALPAIEMENTS)
+                    if (SExist.VALDEPENSES != param.VALDEPENSES || SExist.VALPAIEMENTS != param.VALPAIEMENTS
+                        || SExist.PAD != param.PAD || SExist.PCOP != param.PCOP)
                     {
                         SExist.VALDEPENSES = param.VALDEPENSES;
                         SExist.VALPAIEMENTS = param.VALPAIEMENTS;
+                        SExist.PAD = param.PAD;
+                        SExist.PCOP = param.PCOP;
                         SExist.IDUSER = exist.ID;
                         SExist.CREATIONDATE = DateTime.Now;
                         db.SaveChanges();
@@ -1485,6 +1488,8 @@ namespace apptab.Controllers
                     {
                         VALDEPENSES = param.VALDEPENSES,
                         VALPAIEMENTS = param.VALPAIEMENTS,
+                        PAD = param.PAD,
+                        PCOP = param.PCOP,
                         IDPROJET = IdS,
                         CREATIONDATE = DateTime.Now,
                         IDUSER = exist.ID
@@ -1499,6 +1504,52 @@ namespace apptab.Controllers
             catch (Exception)
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur d'enregistrement de l'information. " }, settings));
+            }
+        }
+
+        //GET ALL PAD//
+        [HttpPost]
+        public ActionResult GetAllPAD(SI_USERS suser)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                var user = db.SI_PAD.Select(a => new
+                {
+                    PAD = a.PAD,
+                    ID = a.ID
+                }).OrderBy(a => a.PAD).ToList();
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
+
+        //GET ALL PCOP//
+        [HttpPost]
+        public ActionResult GetAllPCOP(SI_USERS suser)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                var user = db.SI_PCOP.Select(a => new
+                {
+                    PCOP = a.PCOP,
+                    ID = a.ID
+                }).OrderBy(a => a.PCOP).ToList();
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
             }
         }
     }

@@ -194,6 +194,7 @@
     <Compile Include="Controllers\PrivilegeController.cs" />
     <Compile Include="Controllers\PdfController.cs" />
     <Compile Include="Controllers\ProjectsController.cs" />
+    <Compile Include="Controllers\RSFController.cs" />
     <Compile Include="Controllers\SuperAdminController.cs" />
     <Compile Include="Controllers\TraitementAvanceController.cs" />
     <Compile Include="Controllers\TraitementController.cs" />
@@ -203,6 +204,9 @@
     <Compile Include="Data\AUTRE8OPERATION.cs" />
     <Compile Include="Data\Entities\AvanceDetails.cs" />
     <Compile Include="Data\Entities\MOPFOP.cs" />
+    <Compile Include="Models\MBUDALLOC.cs" />
+    <Compile Include="Models\MBUDGET.cs" />
+    <Compile Include="Models\HSI_RSF.cs" />
     <Compile Include="Models\CPTADMIN_FAUTREOPERATION.cs" />
     <Compile Include="Models\GA_AVANCE_JUSTIFICATIF.cs" />
     <Compile Include="Models\GA_AVANCE_REVERSEMENT.cs" />
@@ -337,6 +341,25 @@
     <Compile Include="Models\SI_TRAITANNULREVERS.cs" />
     <Compile Include="Models\SI_TRAITREVERS.cs" />
     <Compile Include="Models\SI_TYPEPROCESSUS.cs" />
+    <Compile Include="Models\SI_RSF.cs" />
+    <Compile Include="Models\SI_RSFPERIOD.cs" />
+    <Compile Include="Models\SI_RSFTYPE.cs" />
+    <Compile Include="Models\RBUDGET.cs" />
+    <Compile Include="Models\RPOST1.cs" />
+    <Compile Include="Models\RREP.cs" />
+    <Compile Include="Models\RREPACTI.cs" />
+    <Compile Include="Models\RREPACTIFINCATEG.cs" />
+    <Compile Include="Models\RREPFIN.cs" />
+    <Compile Include="Models\RREPGEO.cs" />
+    <Compile Include="Models\RREPPLAN6.cs" />
+    <Compile Include="Models\RREPPOSTE.cs" />
+    <Compile Include="Models\SI_PAD.cs" />
+    <Compile Include="Models\SI_PCOP.cs" />
+    <Compile Include="Models\RACTI1.cs" />
+    <Compile Include="Models\RCATEGORIE.cs" />
+    <Compile Include="Models\RCONVENTION.cs" />
+    <Compile Include="Models\RGEO1.cs" />
+    <Compile Include="Models\RPLAN6.cs" />
     <Compile Include="SOFTCONNECTOM.cs" />
     <Compile Include="SOFTCONNECTSIIG.cs" />
     <Compile Include="Models\TP_MPIECES_JUSTIFICATIVES.cs" />
@@ -2400,7 +2423,11 @@
     <Content Include="Assets\fullcalendar-6.1.11\packages\web-component\index.global.min.js" />
     <Content Include="Assets\img\bgo.png" />
     <Content Include="Assets\img\LogoS1.png" />
+    <Content Include="Assets\js\BordRSF.js" />
     <Content Include="Assets\js\BordJRA.js" />
+    <Content Include="Assets\js\RSFDetails.js" />
+    <Content Include="Assets\js\RSFCreate.js" />
+    <Content Include="Assets\js\RSF.js" />
     <Content Include="Assets\js\PtbaCOuvert.js" />
     <Content Include="Assets\js\BordStatutJR.js" />
     <Content Include="Assets\js\currentRoute.js" />
@@ -4920,6 +4947,10 @@
     <Content Include="Views\Parametre\TypeFlowCreate.cshtml" />
     <Content Include="Views\Etat\HistoUsers.cshtml" />
     <Content Include="Views\BordTraitement\BudgetCreditOuvert.cshtml" />
+    <Content Include="Views\RSF\Index.cshtml" />
+    <Content Include="Views\RSF\Create.cshtml" />
+    <Content Include="Views\RSF\Details.cshtml" />
+    <Content Include="Views\BordTraitement\RSF.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
