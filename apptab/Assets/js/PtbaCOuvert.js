@@ -243,7 +243,14 @@ $('[data-action="GenereLISTE"]').click(function () {
                         SOLDECREDITOUVERT: formatCurrency(String(v.NPIECE).replace(",", ".")),
                         PCREDITOUVERT: formatCurrency(String(v.AGENTREJETE).replace(",", ".")),
                         SOLDEPTBA: formatCurrency(String(v.MOTIF).replace(",", ".")),
-                        PPTBA: formatCurrency(String(v.COMMENTAIRE).replace(",", "."))
+                        PPTBA: formatCurrency(String(v.COMMENTAIRE).replace(",", ".")),
+
+                        SoldPadPayé: formatCurrency(String(v.SoldPadPayé).replace(",", ".")),
+                        SoldPadPayéP: formatCurrency(String(v.SoldPadPayéP).replace(",", ".")),
+                        SoldPtbaPayé: formatCurrency(String(v.SoldPtbaPayé).replace(",", ".")),
+                        SoldPtbaPayéP: formatCurrency(String(v.SoldPtbaPayéP).replace(",", ".")),
+
+                        PayeEngage: formatCurrency(String(v.PayeEngage).replace(",", ".")),
                     });
                 });
 
@@ -275,6 +282,13 @@ $('[data-action="GenereLISTE"]').click(function () {
                         { data: 'PCREDITOUVERT' },
                         { data: 'SOLDEPTBA' },
                         { data: 'PPTBA' },
+
+                        { data: 'SoldPadPayé' },
+                        { data: 'SoldPadPayéP' },
+                        { data: 'SoldPtbaPayé' },
+                        { data: 'SoldPtbaPayéP' },
+
+                        { data: 'PayeEngage' },
                     ],
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
@@ -310,7 +324,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-pdf',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
                             },
                             customize: function (doc) {
                                 doc.defaultStyle.alignment = 'left';
@@ -329,7 +343,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-excel',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (typeof data === 'undefined') {
@@ -338,7 +352,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                                         if (data == null) {
                                             return data;
                                         }
-                                        if (column === 5 || column === 6 || column === 7 || column === 8 || column === 9 || column === 10 || column === 11 || column === 12) {
+                                        if (column === 5 || column === 6 || column === 7 || column === 8 || column === 9 || column === 10 || column === 11 || column === 12 || column === 13 || column === 14 || column === 15 || column === 16 || column === 17) {
                                             var arr = data.split(',');
                                             if (arr.length == 1) { return data; }
 

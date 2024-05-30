@@ -188,7 +188,7 @@ $(`[data-action="AddnewUser"]`).click(function () {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/RSF/Details',
+        url: Origin + '/RSF/Create',
         data: formData,
         cache: false,
         contentType: false,
