@@ -20,7 +20,7 @@ function GetListUser() {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/SuperAdmin/GetAllPROJET',
+        url: Origin + '/BordTraitement/GetAllPROJET',
         data: formData,
         cache: false,
         contentType: false,
@@ -46,7 +46,7 @@ function GetListUser() {
 
             $(`[data-id="societe-list"]`).text("");
             var code = ``;
-            $.each(Datas.data, function (k, v) {
+            $.each(Datas.data.List, function (k, v) {
                 code += `
                     <option value="${v.ID}">${v.PROJET}</option>
                 `;
