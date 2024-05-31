@@ -25,6 +25,7 @@ namespace apptab.Data
         public string CATEGORIE {  get; set; }
         public string TYPE {  get; set; }
         public string NUMEROLIQUIDATION {  get; set; }
+        public string NUMEROREG{  get; set; }
 
         public DateTime? DATEMAJ {  get; set; }
     }

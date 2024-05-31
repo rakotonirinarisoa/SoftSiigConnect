@@ -2,35 +2,35 @@
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03">
 <CstmrCdtTrfInitn>
   <GrpHdr>
-    <MsgId>17054SOFTWELLVersiondémoSOFTW000074</MsgId>
-    <CreDtTm>2024-05-17T16:44:09.156143+03:00</CreDtTm>
-    <NbOfTxs>1</NbOfTxs>
-    <CtrlSum>5450000.000000</CtrlSum>
+    <MsgId>27054SOFTWELL                000015</MsgId>
+    <CreDtTm>2024-05-27T16:12:27.9559852+03:00</CreDtTm>
+    <NbOfTxs>2</NbOfTxs>
+    <CtrlSum>190000.000000</CtrlSum>
     <InitgPty>
-      <Nm>SOFTWELLVersiondémoSOFTW </Nm>
+      <Nm>SOFTWELL </Nm>
       <Id>
         <OrgId>
           <Othr>
-            <Id>00009</Id>
+            <Id>00006</Id>
           </Othr>
         </OrgId>
       </Id>
     </InitgPty>
   </GrpHdr>
   <PmtInf>
-    <PmtInfId>17054SOFTWELLVersiondémoSOFTW000074</PmtInfId>
+    <PmtInfId>27054SOFTWELL                000015</PmtInfId>
     <PmtMtd>TRF</PmtMtd>
     <BtchBookg>false</BtchBookg>
     <NbOfTxs>1</NbOfTxs>
-    <CtrlSum>5450000</CtrlSum>
+    <CtrlSum>90000</CtrlSum>
     <PmtTpInf>
       <InstrPrty>NORM</InstrPrty>
     </PmtTpInf>
-    <ReqdExctnDt>2024-05-17T16:44:09.156143+03:00</ReqdExctnDt>
+    <ReqdExctnDt>2024-05-27T16:12:27.9559852+03:00</ReqdExctnDt>
     <Dbtr>
-      <Nm>SOFTWELLVersiondémoSOFTW</Nm>
+      <Nm>SOFTWELL</Nm>
       <PstlAdr>
-        <StrtNm>3ème Etage Porte 315 MATP Anosy  </StrtNm>
+        <StrtNm />
         <TwnNm>ANTANANARIVO</TwnNm>
         <Ctry>MDG</Ctry>
       </PstlAdr>
@@ -45,14 +45,14 @@
     <DbtrAcct>
       <Id>
         <Othr>
-          <Id>05001208873</Id>
+          <Id>21010014369</Id>
         </Othr>
       </Id>
       <Ccy>MGA</Ccy>
     </DbtrAcct>
     <DbtrAgt>
       <FinInstnId>
-        <BIC>FANO</BIC>
+        <BIC>018</BIC>
         <PstlAdr>
           <Ctry>MDG</Ctry>
         </PstlAdr>
@@ -60,5 +60,68 @@
     </DbtrAgt>
     <ChrgBr>SHAR</ChrgBr>
   </PmtInf>
+  <CdtTrfTxInf>
+    <PmtId>
+      <InstrId>00089TESTTEST CFAO MOTORS018       </InstrId>
+      <EndToEndId>018             </EndToEndId>
+      <Amt>
+        <InstdAmt Ccy="MGA">190000.000000</InstdAmt>
+      </Amt>
+      <CdtrAgt>
+        <FinInstnId>
+          <BIC>018</BIC>
+          <PstlAdr>
+            <Ctry>MDG</Ctry>
+          </PstlAdr>
+        </FinInstnId>
+      </CdtrAgt>
+      <Cdtr>
+        <Nm> CFAO MOTORS</Nm>
+        <PstlAdr>
+          <Ctry>MDG</Ctry>
+          <AdrLine>2 eme étage immeuble trade Tower</AdrLine>
+          <AdrLine />
+        </PstlAdr>
+      </Cdtr>
+      <CdtrAcct>
+        <Id>
+          <Othr>
+            <Id>21010014369</Id>
+          </Othr>
+        </Id>
+      </CdtrAcct>
+    </PmtId>
+  </CdtTrfTxInf>
+  <CdtTrfTxInf>
+    <PmtId>
+      <InstrId>001ACHAT MEDICAMENT LIQ0010 CFAO MO</InstrId>
+      <EndToEndId>                </EndToEndId>
+      <Amt>
+        <InstdAmt Ccy="MGA">190000.000000</InstdAmt>
+      </Amt>
+      <CdtrAgt>
+        <FinInstnId>
+          <BIC>018</BIC>
+          <PstlAdr>
+            <Ctry>MDG</Ctry>
+          </PstlAdr>
+        </FinInstnId>
+      </CdtrAgt>
+      <Cdtr>
+        <Nm> CFAO MOTORS</Nm>
+        <PstlAdr>
+          <Ctry>MDG</Ctry>
+          <AdrLine>2 eme étage immeuble trade Tower</AdrLine>
+          <AdrLine />
+        </PstlAdr>
+      </Cdtr>
+      <CdtrAcct>
+        <Id>
+          <Othr>
+            <Id>21010014369</Id>
+          </Othr>
+        </Id>
+      </CdtrAcct>
+    </PmtId>
+  </CdtTrfTxInf>
 </CstmrCdtTrfInitn>
-</Document>
