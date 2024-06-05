@@ -1,0 +1,134 @@
+﻿@{
+    ViewBag.Title = "Suivi budgétaire";
+    ViewData["Controller"] = "Suivi budgétaire";
+}
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">PROJET</span>
+        </div>
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="proj" data-id="proj-list">
+        </select>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Budget</span>
+        </div>
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="budget" data-id="budget-list">
+        </select>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Date début</span>
+        </div>
+        <input type="date" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="dateD">
+    </div>
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Date fin</span>
+        </div>
+        <input type="date" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="dateF">
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="btn btn-flat bg-gradient-success col-12" data-action="GenereLISTE">
+            <i class="fa fa-download"></i> Générer
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive mb-3" @*style=" max-height: calc(600px - 0.6rem * 2  );"*@ tab="ordsec">
+    <table class="table table-hover table-striped table-bordered" display responsive nowrap" width="100%" id="TBD_PROJET_ORDSEC">
+        <thead style="position:sticky">
+            <tr class="thead-accueil1" style="white-space: nowrap;">
+                <td style="text-align:center">
+                    <input type="checkbox" class="Checkall" />
+                </td>
+                <td style="font-weight:bold; text-align:center">SOA</td>
+                <td style="font-weight:bold; text-align:center">Projet</td>
+                <td style="font-weight:bold; text-align:center">PCOP</td>
+                <td style="font-weight:bold; text-align:center">Intitulé PCOP</td>
+                <td style="font-weight:bold; text-align:center">Montant PAD</td>
+                <td style="font-weight: bold; text-align: center">Montant PTBA</td>
+                <td style="font-weight: bold; text-align: center">Montant engagé</td>
+                <td style="font-weight: bold; text-align: center">Montant payé</td>
+                <td style="font-weight: bold; text-align: center">Solde sur PAD / Engagé</td>
+                <td style="font-weight: bold; text-align: center">% sur PAD / Engagé</td>
+                <td style="font-weight: bold; text-align: center">Solde sur PTBA / Engagé</td>
+                <td style="font-weight: bold; text-align: center">% sur PTBA / Engagé</td>
+
+                <td style="font-weight: bold; text-align: center">Solde sur PAD / Payé</td>
+                <td style="font-weight: bold; text-align: center">% sur PAD / Payé</td>
+                <td style="font-weight: bold; text-align: center">Solde sur PTBA / Payé</td>
+                <td style="font-weight: bold; text-align: center">% sur PTBA / Payé</td>
+
+                <td style="font-weight: bold; text-align: center">% sur Payé / Engagé</td>
+            </tr>
+        </thead>
+        <tbody class="traitementORDSEC"></tbody>
+        <tfoot style="opacity:50%">
+            <tr>
+                <th></th>
+                <th>SOA</th>
+                <th>Projet</th>
+                <th>PCOP</th>
+                <th>Intitulé PCOP</th>
+                <th>Montant PAD</th>
+                <th>Montant PTBA</th>
+                <th>Montant engagé</th>
+                <th>Montant payé</th>
+                <th>Solde sur PAD / Engagé</th>
+                <th>% sur PAD / Engagé</th>
+                <th>Solde surr PTBA / Engagé</th>
+                <th>% sur PTBA / Engagé</th>
+
+                <th>Solde sur PAD / Payé</th>
+                <th>% sur PAD / Payé</th>
+                <th>Solde surr PTBA / Payé</th>
+                <th>% sur PTBA / Payé</th>
+
+                <th>% sur Payé / Engagé</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="btn btn-flat bg-gradient-red col-12" id="export-to-pdf-btn">
+            <i class="fa fa-file-pdf"></i> Export PDF
+        </div>
+    </div>
+</div>
+
+<script src="~/Assets/js/PtbaCOuvert.js?version=@Session["VERSION"]"></script>
+<script src="~/Assets/js/utils.js?version=@Session["VERSION"]"></script>
+
+<script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
+<script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
+
+@*<script>
+    $("#proj").select2({
+        tags: true,
+        tokenSeparators: [',', ' ']
+    })
+</script>*@
+
+<script defer>
+    $('#export-to-pdf-btn').on('click', () => {
+        exportTableToPdf('TBD_PROJET_ORDSEC', 'SUIVI BUDGETAIRE-PDF', `<p style="font-weight: bold /*text-align:center*/;">SUIVI BUDGETAIRE</p><p>Suivi budgétaire</p>`, `<p style="font-weight: bold;">SOFT - SIIG CONNECT </p>`, [0]);
+        /*exportTableToPdf('dashboard', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);*/
+    });
+</script>

@@ -89,6 +89,10 @@ namespace apptab.Controllers
                         JR = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JR != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JR : 0,
                         JRA = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JRA != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JRA : 0,
 
+                        RSF = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).RSF != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).RSF : 0,
+                        RSFT = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).RSFT != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).RSFT : 0,
+                        TDB9 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB9 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB9 : 0,
+
                         GED = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).GED != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).GED : 0
 
                     }).Where(a => a.PROJET != null && a.DELETONDATE == null).OrderBy(a => a.PROJET).OrderBy(a => a.CREAT).ToList();
@@ -135,7 +139,7 @@ namespace apptab.Controllers
                         //MOP1 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP1 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP1 : 0,
                         //MOP2 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP2 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).MOP2 : 0,
 
-                        TDB0 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB0 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB0 : 0,
+                        //TDB0 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB0 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB0 : 0,
                         TDB1 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB1 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB1 : 0,
                         TDB2 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB2 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB2 : 0,
                         TDB3 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB3 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB3 : 0,
@@ -151,6 +155,10 @@ namespace apptab.Controllers
                         J3 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J3 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J3 : 0,
                         JR = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JR != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JR : 0,
                         JRA = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JRA != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JRA : 0,
+
+                        RSF = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).RSF != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).RSF : 0,
+                        RSFT = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).RSFT != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).RSFT : 0,
+                        TDB9 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB9 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB9 : 0,
 
                         GED = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).GED != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).GED : 0
 
@@ -214,7 +222,7 @@ namespace apptab.Controllers
                 //MOP1 = privilege.MOP1,
                 //MOP2 = privilege.MOP2,
 
-                TDB0 = privilege.TDB0,
+                //TDB0 = privilege.TDB0,
                 TDB1 = privilege.TDB1,
                 TDB2 = privilege.TDB2,
                 TDB3 = privilege.TDB3,
@@ -230,6 +238,10 @@ namespace apptab.Controllers
                 J3 = privilege.J3,
                 JR = privilege.JR,
                 JRA = privilege.JRA,
+
+                RSF = privilege.RSF,
+                RSFT = privilege.RSFT,
+                TDB9 = privilege.TDB9,
 
                 GED = privilege.GED
             };

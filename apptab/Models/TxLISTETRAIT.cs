@@ -34,5 +34,14 @@ namespace apptab
         public string MOTIF { get; set; }
         public string COMMENTAIRE { get; set; }
         public string TYPE { get; set; }
+        public string INTITUT { get; set; }
+
+        public int? IDRSF { get; set; }
+
+        public string SoldPadPayé { get; set; }
+        public string SoldPadPayéP { get; set; }
+        public string SoldPtbaPayé { get; set; }
+        public string SoldPtbaPayéP { get; set; }
+        public string PayeEngage { get; set; }
     }
 }

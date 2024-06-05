@@ -1,4 +1,4 @@
-namespace apptab
+﻿namespace apptab
 {
     using System;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -20,5 +20,9 @@ namespace apptab
 
         [Column(TypeName = "smalldatetime")]
         public DateTime? CREATIONDATE { get; set; }
+
+        public int? PAD { get; set; }
+
+        public int? PCOP { get; set; }
     }
 }

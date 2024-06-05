@@ -217,7 +217,7 @@ namespace apptab.Controllers
                         var user = (from usr in db.SI_PROJETS
                                     join prj in db.SI_MAPUSERPROJET on usr.ID equals prj.IDPROJET
                                     where prj.IDUS == test.ID && usr.DELETIONDATE == null
-                                    select new SI_PROJETS
+                                    select new
                                     {
                                         PROJET = usr.PROJET,
                                         ID = usr.ID,

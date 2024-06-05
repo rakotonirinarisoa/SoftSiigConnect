@@ -54,8 +54,24 @@ namespace apptab
         public virtual DbSet<tpa_BanqueSalaries> tpa_BanqueSalaries { get; set; }
         public virtual DbSet<tpa_preparations> tpa_preparations { get; set; }
         public virtual DbSet<tpa_salaries> tpa_salaries { get; set; }
-
         public virtual DbSet<CPTADMIN_FAUTREOPERATION> CPTADMIN_FAUTREOPERATION { get; set; }
+
+        public virtual DbSet<MBUDALLOC> MBUDALLOC { get; set; }
+        public virtual DbSet<MBUDGET> MBUDGET { get; set; }
+        public virtual DbSet<RBUDGET> RBUDGET { get; set; }
+        public virtual DbSet<RPOST1> RPOST1 { get; set; }
+        public virtual DbSet<RREP> RREP { get; set; }
+        public virtual DbSet<RREPACTI> RREPACTI { get; set; }
+        public virtual DbSet<RREPACTIFINCATEG> RREPACTIFINCATEG { get; set; }
+        public virtual DbSet<RREPFIN> RREPFIN { get; set; }
+        public virtual DbSet<RREPGEO> RREPGEO { get; set; }
+        public virtual DbSet<RREPPLAN6> RREPPLAN6 { get; set; }
+        public virtual DbSet<RREPPOSTE> RREPPOSTE { get; set; }
+        public virtual DbSet<RACTI1> RACTI1 { get; set; }
+        public virtual DbSet<RCATEGORIE> RCATEGORIE { get; set; }
+        public virtual DbSet<RCONVENTION> RCONVENTION { get; set; }
+        public virtual DbSet<RGEO1> RGEO1 { get; set; }
+        public virtual DbSet<RPLAN6> RPLAN6 { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CPTADMIN_FAUTREOPERATION>()
@@ -934,6 +950,256 @@ namespace apptab
             modelBuilder.Entity<GA_AVANCE_REVERSEMENT>()
                 .Property(e => e.MONTANT)
                 .HasPrecision(18, 6);
+
+            modelBuilder.Entity<MBUDALLOC>()
+                .Property(e => e.NUMBUD)
+                .HasPrecision(10, 0);
+
+            modelBuilder.Entity<MBUDALLOC>()
+                .Property(e => e.NUMENREG)
+                .HasPrecision(30, 0);
+
+            modelBuilder.Entity<MBUDALLOC>()
+                .Property(e => e.MONTANT)
+                .HasPrecision(19, 4);
+
+            modelBuilder.Entity<MBUDALLOC>()
+                .Property(e => e.IMPORTID)
+                .HasPrecision(18, 0);
+
+            modelBuilder.Entity<MBUDGET>()
+                .Property(e => e.NUMBUD)
+                .HasPrecision(10, 0);
+
+            modelBuilder.Entity<MBUDGET>()
+                .Property(e => e.NUMENREG)
+                .HasPrecision(30, 0);
+
+            modelBuilder.Entity<MBUDGET>()
+                .Property(e => e.QUO)
+                .HasPrecision(30, 6);
+
+            modelBuilder.Entity<MBUDGET>()
+                .Property(e => e.PUO)
+                .HasPrecision(19, 4);
+
+            modelBuilder.Entity<MBUDGET>()
+                .Property(e => e.REPARTITION)
+                .HasPrecision(5, 0);
+
+            modelBuilder.Entity<MBUDGET>()
+                .Property(e => e.MONTBUDGET)
+                .HasPrecision(19, 4);
+
+            modelBuilder.Entity<MBUDGET>()
+                .Property(e => e.NBRREPF)
+                .HasPrecision(5, 0);
+
+            modelBuilder.Entity<MBUDGET>()
+                .Property(e => e.NBRREPD)
+                .HasPrecision(5, 0);
+
+            modelBuilder.Entity<MBUDGET>()
+                .Property(e => e.IMPORTID)
+                .HasPrecision(18, 0);
+
+            modelBuilder.Entity<RBUDGET>()
+                .Property(e => e.NUMBUD)
+                .HasPrecision(10, 0);
+
+            modelBuilder.Entity<RBUDGET>()
+                .Property(e => e.COURS)
+                .HasPrecision(30, 6);
+
+            modelBuilder.Entity<RBUDGET>()
+                .Property(e => e.NIVPOST)
+                .HasPrecision(10, 0);
+
+            modelBuilder.Entity<RBUDGET>()
+                .Property(e => e.NIVACTI)
+                .HasPrecision(10, 0);
+
+            modelBuilder.Entity<RBUDGET>()
+                .Property(e => e.NIVGEO)
+                .HasPrecision(10, 0);
+
+            modelBuilder.Entity<RBUDGET>()
+                .Property(e => e.NIVCOGE)
+                .HasPrecision(10, 0);
+
+            modelBuilder.Entity<RBUDGET>()
+                .Property(e => e.NIVFIN)
+                .HasPrecision(10, 0);
+
+            modelBuilder.Entity<RBUDGET>()
+                .Property(e => e.NIVPLAN6)
+                .HasPrecision(10, 0);
+
+            modelBuilder.Entity<RBUDGET>()
+                .Property(e => e.LIMITE)
+                .HasPrecision(18, 0);
+
+            modelBuilder.Entity<RBUDGET>()
+                .HasMany(e => e.MBUDGET)
+                .WithRequired(e => e.RBUDGET)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<RPOST1>()
+                .Property(e => e.NIVEAU)
+                .HasPrecision(10, 0);
+
+            modelBuilder.Entity<RPOST1>()
+                .Property(e => e.STATUT)
+                .HasPrecision(2, 0);
+
+            modelBuilder.Entity<RPOST1>()
+                .Property(e => e.PU)
+                .HasPrecision(30, 6);
+
+            modelBuilder.Entity<RPOST1>()
+                .Property(e => e.IMPORTID)
+                .HasPrecision(18, 0);
+
+            modelBuilder.Entity<RPOST1>()
+                .HasMany(e => e.MBUDGET)
+                .WithOptional(e => e.RPOST1)
+                .HasForeignKey(e => e.POSTE);
+
+            modelBuilder.Entity<RREP>()
+                .Property(e => e.MONTREP1)
+                .HasPrecision(30, 6);
+
+            modelBuilder.Entity<RREP>()
+                .Property(e => e.MONTREP2)
+                .HasPrecision(30, 6);
+
+            modelBuilder.Entity<RREPACTI>()
+                .Property(e => e.MONTREP1)
+                .HasPrecision(25, 5);
+
+            modelBuilder.Entity<RREPACTI>()
+                .Property(e => e.MONTREP2)
+                .HasPrecision(25, 5);
+
+            modelBuilder.Entity<RREPACTIFINCATEG>()
+                .Property(e => e.MONTREP1)
+                .HasPrecision(30, 6);
+
+            modelBuilder.Entity<RREPACTIFINCATEG>()
+                .Property(e => e.MONTREP2)
+                .HasPrecision(30, 6);
+
+            modelBuilder.Entity<RREPACTIFINCATEG>()
+                .Property(e => e.MONTLOC1)
+                .HasPrecision(30, 6);
+
+            modelBuilder.Entity<RREPACTIFINCATEG>()
+                .Property(e => e.MONTLOC2)
+                .HasPrecision(30, 6);
+
+            modelBuilder.Entity<RREPFIN>()
+                .Property(e => e.MONTREP1)
+                .HasPrecision(25, 5);
+
+            modelBuilder.Entity<RREPFIN>()
+                .Property(e => e.MONTREP2)
+                .HasPrecision(25, 5);
+
+            modelBuilder.Entity<RREPGEO>()
+                .Property(e => e.MONTREP1)
+                .HasPrecision(25, 5);
+
+            modelBuilder.Entity<RREPGEO>()
+                .Property(e => e.MONTREP2)
+                .HasPrecision(25, 5);
+
+            modelBuilder.Entity<RREPPLAN6>()
+                .Property(e => e.MONTREP1)
+                .HasPrecision(25, 5);
+
+            modelBuilder.Entity<RREPPLAN6>()
+                .Property(e => e.MONTREP2)
+                .HasPrecision(25, 5);
+
+            modelBuilder.Entity<RREPPOSTE>()
+                .Property(e => e.MONTREP1)
+                .HasPrecision(25, 5);
+
+            modelBuilder.Entity<RREPPOSTE>()
+                .Property(e => e.MONTREP2)
+                .HasPrecision(25, 5);
+
+            modelBuilder.Entity<RACTI1>()
+                .Property(e => e.NIVEAU)
+                .HasPrecision(10, 0);
+
+            modelBuilder.Entity<RACTI1>()
+                .Property(e => e.PU)
+                .HasPrecision(30, 6);
+
+            modelBuilder.Entity<RACTI1>()
+                .Property(e => e.IMPORTID)
+                .HasPrecision(18, 0);
+
+            modelBuilder.Entity<RCATEGORIE>()
+                .Property(e => e.TAXE)
+                .HasPrecision(2, 0);
+
+            modelBuilder.Entity<RCATEGORIE>()
+                .Property(e => e.MONTSEUILLOC)
+                .HasPrecision(30, 6);
+
+            modelBuilder.Entity<RCATEGORIE>()
+                .Property(e => e.MONTSEUILDEV)
+                .HasPrecision(30, 6);
+
+            modelBuilder.Entity<RCONVENTION>()
+                .Property(e => e.TAUXDRF)
+                .HasPrecision(30, 6);
+
+            modelBuilder.Entity<RCONVENTION>()
+                .Property(e => e.TAUXSUIVI1)
+                .HasPrecision(30, 6);
+
+            modelBuilder.Entity<RCONVENTION>()
+                .Property(e => e.TAUXSUIVI2)
+                .HasPrecision(30, 6);
+
+            modelBuilder.Entity<RCONVENTION>()
+                .Property(e => e.TAUXDPD)
+                .HasPrecision(30, 6);
+
+            modelBuilder.Entity<RCONVENTION>()
+                .Property(e => e.TAUXSUIVI1DPD)
+                .HasPrecision(30, 6);
+
+            modelBuilder.Entity<RCONVENTION>()
+                .Property(e => e.TAUXSUIVI2DPD)
+                .HasPrecision(30, 6);
+
+            modelBuilder.Entity<RGEO1>()
+                .Property(e => e.NIVEAU)
+                .HasPrecision(10, 0);
+
+            modelBuilder.Entity<RGEO1>()
+                .Property(e => e.PU)
+                .HasPrecision(30, 6);
+
+            modelBuilder.Entity<RGEO1>()
+                .Property(e => e.IMPORTID)
+                .HasPrecision(18, 0);
+
+            modelBuilder.Entity<RPLAN6>()
+                .Property(e => e.NIVEAU)
+                .HasPrecision(10, 0);
+
+            modelBuilder.Entity<RPLAN6>()
+                .Property(e => e.PU)
+                .HasPrecision(30, 6);
+
+            modelBuilder.Entity<RPLAN6>()
+                .Property(e => e.IMPORTID)
+                .HasPrecision(18, 0);
         }
     }
 }

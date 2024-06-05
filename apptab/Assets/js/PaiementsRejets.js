@@ -315,6 +315,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                                         }
                                         if (column === 5) {
                                             var arr = data.split(',');
+                                            if (arr.length == 1) { return data; }
+
                                             arr[0] = arr[0].toString().replace(/[\.]/g, "");
                                             if (arr[0] > '' || arr[1] > '') {
                                                 data = arr[0] + '.' + arr[1];

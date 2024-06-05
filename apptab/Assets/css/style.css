@@ -39,7 +39,7 @@
 }
 @media only screen and (min-width: 1880px) and (max-width: 2100px) {
     .table-responsive.mb-3 {
-        height: calc(62vh - 0.6rem * 2) !important;
+        height: calc(58vh - 0.6rem * 2) !important;
     }
 }
 @media only screen and (min-width: 2101px) and (max-width: 2199px) {
@@ -54,7 +54,7 @@
 }
 @media only screen and (min-width: 2400px) and (max-width: 2540px) {
     .table-responsive.mb-3 {
-        height: calc(68vh - 0.6rem * 2) !important;
+        height: calc(66vh - 0.6rem * 2) !important;
     }
 }
 @media only screen and (min-width: 2541px) and (max-width: 2740px) {

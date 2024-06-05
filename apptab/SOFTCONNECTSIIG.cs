@@ -80,7 +80,12 @@ namespace apptab
         public virtual DbSet<OPA_VALIDATIONS> OPA_VALIDATIONS { get; set; }
         public virtual DbSet<OPA_HCANCEL> OPA_HCANCEL { get; set; }
         public virtual DbSet<HSI_SOAS> HSI_SOAS { get; set; }
-
+        public virtual DbSet<HSI_RSF> HSI_RSF { get; set; }
+        public virtual DbSet<SI_RSF> SI_RSF { get; set; }
+        public virtual DbSet<SI_RSFPERIOD> SI_RSFPERIOD { get; set; }
+        public virtual DbSet<SI_RSFTYPE> SI_RSFTYPE { get; set; }
+        public virtual DbSet<SI_PAD> SI_PAD { get; set; }
+        public virtual DbSet<SI_PCOP> SI_PCOP { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

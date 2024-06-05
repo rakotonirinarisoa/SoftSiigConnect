@@ -1,0 +1,122 @@
+﻿@{
+    ViewBag.Title = "Liste des RSF";
+    ViewData["Controller"] = "Liste des RSF";
+}
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">PROJET</span>
+        </div>
+        <select class="form-control selectTOO" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="proj" data-id="proj-list" multiple="multiple">
+        </select>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Année</span>
+        </div>
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Years" data-id="years-list">
+        </select>
+    </div>
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Mois</span>
+        </div>
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Months" data-id="months-list">
+        </select>
+    </div>
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Période</span>
+        </div>
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Periode" data-id="periode-list">
+        </select>
+    </div>
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Type</span>
+        </div>
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Type" data-id="type-list">
+        </select>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="btn btn-flat bg-gradient-success col-12" data-action="GenereLISTE">
+            <i class="fa fa-download"></i> Générer
+        </div>
+    </div>
+</div>
+
+<div class="table-responsive mb-3" @*style=" max-height: calc(600px - 0.6rem * 2  );"*@ tab="ordsec">
+    <table class="table table-hover table-striped table-bordered" display responsive nowrap" width="100%" id="TBD_PROJET_ORDSEC">
+        <thead style="position:sticky">
+            <tr class="thead-accueil1" style="white-space: nowrap;">
+                <td style="text-align:center">
+                    <input type="checkbox" class="Checkall" />
+                </td>
+                <td style="font-weight:bold; text-align:center">SOA</td>
+                <td style="font-weight:bold; text-align:center">Projet</td>
+                <td style="font-weight:bold; text-align:center">Titre du document</td>
+                <td style="font-weight:bold; text-align:center">Type</td>
+                <td style="font-weight:bold; text-align:center">Année</td>
+                <td style="font-weight:bold; text-align:center">Mois</td>
+                <td style="font-weight: bold; text-align: center">Période</td>
+                <td style="font-weight: bold; text-align: center">Lien</td>
+
+                @*<td style="font-weight: bold; text-align: center">Imputation</td>
+                    <td style="font-weight: bold; text-align: center">Pièce justificative</td>
+                    <td style="font-weight: bold; text-align: center">Document</td>*@
+            </tr>
+        </thead>
+        <tbody class="traitementORDSEC"></tbody>
+        <tfoot style="opacity:50%">
+            <tr>
+                <th></th>
+                <th>SOA</th>
+                <th>Projet</th>
+                <th>Titre du document</th>
+                <th>Type</th>
+                <th>Année</th>
+                <th>Mois</th>
+                <th>Période</th>
+                <th>Lien</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="btn btn-flat bg-gradient-red col-12" id="export-to-pdf-btn">
+            <i class="fa fa-file-pdf"></i> Export PDF
+        </div>
+    </div>
+</div>
+
+<script src="~/Assets/js/BordRSF.js?version=@Session["VERSION"]"></script>
+<script src="~/Assets/js/utils.js?version=@Session["VERSION"]"></script>
+
+<script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
+<script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
+
+<script>
+    $("#proj").select2({
+        tags: true,
+        tokenSeparators: [',', ' ']
+    })
+</script>
+
+<script defer>
+    $('#export-to-pdf-btn').on('click', () => {
+        exportTableToPdf('TBD_PROJET_ORDSEC', 'LISTE RSF-PDF', `<p style="font-weight: bold /*text-align:center*/;">LISTE RSF</p><p>Liste des RSF</p>`, `<p style="font-weight: bold;">SOFT - SIIG CONNECT </p>`, [0]);
+        /*exportTableToPdf('dashboard', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);*/
+    });
+</script>
