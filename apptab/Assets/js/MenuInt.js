@@ -58,7 +58,7 @@ function GetUsers() {
             //$("#Mop1").val(Datas.data.MOP1);
             //$("#Mop2").val(Datas.data.MOP2);
 
-            //$("#Tdb0").val(Datas.data.TDB0);
+            $("#Tdb0").val(Datas.data.TDB0);
             $("#Tdb1").val(Datas.data.TDB1);
             $("#Tdb2").val(Datas.data.TDB2);
             $("#Tdb3").val(Datas.data.TDB3);
@@ -106,7 +106,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
     //let Mop1 = $("#Mop1").val();
     //let Mop2 = $("#Mop2").val();
 
-    //let Tdb0 = $("#Tdb0").val();
+    let Tdb0 = $("#Tdb0").val();
     let Tdb1 = $("#Tdb1").val();
     let Tdb2 = $("#Tdb2").val();
     let Tdb3 = $("#Tdb3").val();
@@ -128,7 +128,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let Tdb9 = $("#Tdb9").val();
 
     if (!ParaV0 || !ParaV || !ParaS /*|| !ParaSiig*/ || !ParaPe || !ParaPv || !ParaPp || !ParaPb || !Md0 || !Md1 || !Md2 /*|| !Md3 || !Mop0 || !Mop1 || !Mop2*/
-        /*|| !Tdb0*/ || !Tdb1 || !Tdb2 || !Tdb3 || !Tdb4 || !Tdb5 || !Tdb6 || !Tdb7 || !Tdb8
+        || !Tdb0 || !Tdb1 || !Tdb2 || !Tdb3 || !Tdb4 || !Tdb5 || !Tdb6 || !Tdb7 || !Tdb8
         || !J0 || !J1 || !J2 || !J3 || !JR || !JRA || !RSF || !RSFT || !Tdb9) {
         alert("Veuillez renseigner les intitulés des menus. ");
         return;
@@ -159,7 +159,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
     //formData.append("param.MOP1", $(`#Mop1`).val());
     //formData.append("param.MOP2", $(`#Mop2`).val());
 
-    //formData.append("param.TDB0", $(`#Tdb0`).val());
+    formData.append("param.TDB0", $(`#Tdb0`).val());
     formData.append("param.TDB1", $(`#Tdb1`).val());
     formData.append("param.TDB2", $(`#Tdb2`).val());
     formData.append("param.TDB3", $(`#Tdb3`).val());

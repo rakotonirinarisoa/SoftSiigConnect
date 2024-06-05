@@ -14,7 +14,7 @@ $(document).ready(() => {
     GetListProjet();
     GetListPeriode();
     GetListYears();
-    GetListMonths();
+    //GetListMonths();
     GetListType();
 });
 
@@ -275,7 +275,7 @@ $('[data-action="GenereLISTE"]').click(function () {
     }
 
     let Annee = $(`#Years`).val();
-    let Mois = $(`#Months`).val();
+    //let Mois = $(`#Months`).val();
     let Periode = $(`#Periode`).val();
     let Type = $(`#Type`).val();
 
@@ -289,7 +289,7 @@ $('[data-action="GenereLISTE"]').click(function () {
     formData.append("listProjet", $("#proj").val());
 
     formData.append("Annee", Annee);
-    formData.append("Mois", Mois);
+    //formData.append("Mois", Mois);
     formData.append("Periode", Periode);
     formData.append("Type", Type);
 
