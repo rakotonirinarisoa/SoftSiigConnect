@@ -1953,6 +1953,8 @@ namespace apptab.Controllers
                 List<TxLISTETRAIT> list = new List<TxLISTETRAIT>();
                 var pro = listProjet;
 
+                List<string> autrePCOP = new List<string>();
+
                 if (pro != null)
                 {
                     int crpt = int.Parse(pro);
@@ -1988,8 +1990,32 @@ namespace apptab.Controllers
                     //ACTI//
                     if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "ACTI")
                     {
+                        foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList())
+                        {
+                            foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No).ToList())
+                            {
+                                if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "ACTI")
+                                {
+                                    foreach (var yy in tom.CPTADMIN_MLIQUIDATION.Where(a => a.IDLIQUIDATION == xx.ID).ToList())
+                                    {
+                                        if (tom.MBUDGET.Where(a => a.NUMBUD == numbud && a.ACTI == yy.ACTI).Count() == 0)
+                                        {
+                                            if (!autrePCOP.Contains(yy.ACTI) && !String.IsNullOrEmpty(yy.ACTI))
+                                                autrePCOP.Add(yy.ACTI);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                         if (tom.MBUDGET.Any(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)))
                         {
+                            foreach (var x in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)).Select(a => a.ACTI).Distinct().ToList())
+                            {
+                                if (!autrePCOP.Contains(x))
+                                    autrePCOP.Add(x);
+                            }
+
                             //TOTAL PTBA
                             decimal MTNTOTALPeriodeT = 0;
                             //TOTAL PAD
@@ -2007,13 +2033,13 @@ namespace apptab.Controllers
                             //TOTAL PAD
                             decimal MTNTOTALPADTP = 0;
 
-                            foreach (var x in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)).Select(a => a.ACTI).Distinct().ToList())
+                            foreach (var x in autrePCOP.Distinct().ToList())
                             {
                                 //PTBA
                                 decimal MTNTOTALPeriode = 0;
                                 //PCOP et INTITULE PCOP//
-                                var PCOP = "";
-                                var PCOPINTITUL = "";
+                                var PCOP = x;
+                                var PCOPINTITUL = tom.RACTI1.FirstOrDefault(a => a.CODE == x).LIBELLE;
                                 //PAD
                                 decimal MTNTOTALPAD = 0;
                                 //Montant engagé (Liquidation + Justif validé SET//
@@ -2026,12 +2052,11 @@ namespace apptab.Controllers
                                 {
                                     //PAD
                                     if (MTNTOTALPAD == 0) if (tom.RREPACTI.Any(a => a.CODE == s.ACTI)) MTNTOTALPAD = tom.RREPACTI.FirstOrDefault(a => a.CODE == s.ACTI).MONTREP1.Value;
-                                    //PCOP et INTITULE PCOP//
-                                    if (PCOP == "") PCOP = s.ACTI; PCOPINTITUL = tom.RACTI1.FirstOrDefault(a => a.CODE == s.ACTI).LIBELLE;
 
+                                    //PTBA
                                     foreach (var y in tom.MBUDALLOC.Where(a => a.NUMBUD == numbud && a.NUMENREG == s.NUMENREG && (a.MOIS >= DateDebut && a.MOIS <= DateFin) && listAnnee.Contains(a.ANNEE)).ToList())
                                     {
-                                        MTNTOTALPeriode += y.MONTANT.Value;//PTBA
+                                        MTNTOTALPeriode += y.MONTANT.Value;
                                     }
                                 }
 
@@ -2176,8 +2201,32 @@ namespace apptab.Controllers
                     //GEO//
                     if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "GEO")
                     {
+                        foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList())
+                        {
+                            foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No).ToList())
+                            {
+                                if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "GEO")
+                                {
+                                    foreach (var yy in tom.CPTADMIN_MLIQUIDATION.Where(a => a.IDLIQUIDATION == xx.ID).ToList())
+                                    {
+                                        if (tom.MBUDGET.Where(a => a.NUMBUD == numbud && a.GEO == yy.GEO).Count() == 0)
+                                        {
+                                            if (!autrePCOP.Contains(yy.GEO) && !String.IsNullOrEmpty(yy.GEO))
+                                                autrePCOP.Add(yy.GEO);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                         if (tom.MBUDGET.Any(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)))
                         {
+                            foreach (var x in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)).Select(a => a.GEO).Distinct().ToList())
+                            {
+                                if (!autrePCOP.Contains(x))
+                                    autrePCOP.Add(x);
+                            }
+
                             //TOTAL PTBA
                             decimal MTNTOTALPeriodeT = 0;
                             //TOTAL PAD
@@ -2191,13 +2240,13 @@ namespace apptab.Controllers
                             //TOTAL % sur PTBA (% Solde sur PTBA)
                             decimal PTBAT = 0;
 
-                            foreach (var x in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)).Select(a => a.GEO).Distinct().ToList())
+                            foreach (var x in autrePCOP.Distinct().ToList())
                             {
                                 //PTBA
                                 decimal MTNTOTALPeriode = 0;
                                 //PCOP et INTITULE PCOP//
-                                var PCOP = "";
-                                var PCOPINTITUL = "";
+                                var PCOP = x;
+                                var PCOPINTITUL = tom.RGEO1.FirstOrDefault(a => a.CODE == x).LIBELLE;
                                 //PAD
                                 decimal MTNTOTALPAD = 0;
                                 //Montant engagé (Liquidation + Justif validé SET//
@@ -2210,12 +2259,10 @@ namespace apptab.Controllers
                                 {
                                     //PAD
                                     if (MTNTOTALPAD == 0) if (tom.RREPGEO.Any(a => a.CODE == s.GEO)) MTNTOTALPAD = tom.RREPGEO.FirstOrDefault(a => a.CODE == s.GEO).MONTREP1.Value;
-                                    //PCOP et INTITULE PCOP//
-                                    if (PCOP == "") PCOP = s.GEO; PCOPINTITUL = tom.RGEO1.FirstOrDefault(a => a.CODE == s.GEO).LIBELLE;
-
+                                    //PTBA
                                     foreach (var y in tom.MBUDALLOC.Where(a => a.NUMBUD == numbud && a.NUMENREG == s.NUMENREG && (a.MOIS >= DateDebut && a.MOIS <= DateFin) && listAnnee.Contains(a.ANNEE)).ToList())
                                     {
-                                        MTNTOTALPeriode += y.MONTANT.Value;//PTBA
+                                        MTNTOTALPeriode += y.MONTANT.Value;
                                     }
                                 }
 
@@ -2360,8 +2407,32 @@ namespace apptab.Controllers
                     //PLAN6//
                     if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "PLAN6")
                     {
+                        foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList())
+                        {
+                            foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No).ToList())
+                            {
+                                if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "PLAN6")
+                                {
+                                    foreach (var yy in tom.CPTADMIN_MLIQUIDATION.Where(a => a.IDLIQUIDATION == xx.ID).ToList())
+                                    {
+                                        if (tom.MBUDGET.Where(a => a.NUMBUD == numbud && a.PLAN6 == yy.PLAN6).Count() == 0)
+                                        {
+                                            if (!autrePCOP.Contains(yy.PLAN6) && !String.IsNullOrEmpty(yy.PLAN6))
+                                                autrePCOP.Add(yy.PLAN6);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                         if (tom.MBUDGET.Any(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)))
                         {
+                            foreach (var x in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)).Select(a => a.PLAN6).Distinct().ToList())
+                            {
+                                if (!autrePCOP.Contains(x))
+                                    autrePCOP.Add(x);
+                            }
+
                             //TOTAL PTBA
                             decimal MTNTOTALPeriodeT = 0;
                             //TOTAL PAD
@@ -2375,13 +2446,13 @@ namespace apptab.Controllers
                             //TOTAL % sur PTBA (% Solde sur PTBA)
                             decimal PTBAT = 0;
 
-                            foreach (var x in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)).Select(a => a.PLAN6).Distinct().ToList())
+                            foreach (var x in autrePCOP.Distinct().ToList())
                             {
                                 //PTBA
                                 decimal MTNTOTALPeriode = 0;
                                 //PCOP et INTITULE PCOP//
-                                var PCOP = "";
-                                var PCOPINTITUL = "";
+                                var PCOP = x;
+                                var PCOPINTITUL = tom.RPLAN6.FirstOrDefault(a => a.CODE == x).LIBELLE;
                                 //PAD
                                 decimal MTNTOTALPAD = 0;
                                 //Montant engagé (Liquidation + Justif validé SET//
@@ -2394,12 +2465,10 @@ namespace apptab.Controllers
                                 {
                                     //PAD
                                     if (MTNTOTALPAD == 0) if (tom.RREPPLAN6.Any(a => a.CODE == s.PLAN6)) MTNTOTALPAD = tom.RREPPLAN6.FirstOrDefault(a => a.CODE == s.PLAN6).MONTREP1.Value;
-                                    //PCOP et INTITULE PCOP//
-                                    if (PCOP == "") PCOP = s.PLAN6; PCOPINTITUL = tom.RPLAN6.FirstOrDefault(a => a.CODE == s.PLAN6).LIBELLE;
-
+                                    //PTBA
                                     foreach (var y in tom.MBUDALLOC.Where(a => a.NUMBUD == numbud && a.NUMENREG == s.NUMENREG && (a.MOIS >= DateDebut && a.MOIS <= DateFin) && listAnnee.Contains(a.ANNEE)).ToList())
                                     {
-                                        MTNTOTALPeriode += y.MONTANT.Value;//PTBA
+                                        MTNTOTALPeriode += y.MONTANT.Value;
                                     }
                                 }
 
@@ -2544,8 +2613,33 @@ namespace apptab.Controllers
                     //POSTE//
                     if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "POSTE")
                     {
+                        foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList())
+                        {
+                            foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No).ToList())
+                            {
+                                if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "POSTE")
+                                {
+                                    foreach (var yy in tom.CPTADMIN_MLIQUIDATION.Where(a => a.IDLIQUIDATION == xx.ID).ToList())
+                                    {
+                                        if (tom.MBUDGET.Where(a => a.NUMBUD == numbud && a.POSTE == yy.POSTE).Count() == 0)
+                                        {
+                                            if (!autrePCOP.Contains(yy.POSTE) && !String.IsNullOrEmpty(yy.POSTE))
+                                                autrePCOP.Add(yy.POSTE);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+
                         if (tom.MBUDGET.Any(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)))
                         {
+                            foreach (var x in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)).Select(a => a.POSTE).Distinct().ToList())
+                            {
+                                if (!autrePCOP.Contains(x))
+                                    autrePCOP.Add(x);
+                            }
+
                             //TOTAL PTBA
                             decimal MTNTOTALPeriodeT = 0;
                             //TOTAL PAD
@@ -2559,13 +2653,14 @@ namespace apptab.Controllers
                             //TOTAL % sur PTBA (% Solde sur PTBA)
                             decimal PTBAT = 0;
 
-                            foreach (var x in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)).Select(a => a.POSTE).Distinct().ToList())
+                            foreach (var x in autrePCOP.Distinct().ToList())
                             {
                                 //PTBA
                                 decimal MTNTOTALPeriode = 0;
                                 //PCOP et INTITULE PCOP//
-                                var PCOP = "";
-                                var PCOPINTITUL = "";
+                                var PCOP = x;
+                                var PCOPINTITUL = tom.RPOST1.FirstOrDefault(a => a.CODE == x).LIBELLE;
+
                                 //PAD
                                 decimal MTNTOTALPAD = 0;
                                 //Montant engagé (Liquidation + Justif validé SET//
@@ -2578,12 +2673,10 @@ namespace apptab.Controllers
                                 {
                                     //PAD
                                     if (MTNTOTALPAD == 0) if (tom.RREPPOSTE.Any(a => a.CODE == s.POSTE)) MTNTOTALPAD = tom.RREPPOSTE.FirstOrDefault(a => a.CODE == s.POSTE).MONTREP1.Value;
-                                    //PCOP et INTITULE PCOP//
-                                    if (PCOP == "") PCOP = s.POSTE; PCOPINTITUL = tom.RPLAN6.FirstOrDefault(a => a.CODE == s.POSTE).LIBELLE;
-
+                                    //PTBA
                                     foreach (var y in tom.MBUDALLOC.Where(a => a.NUMBUD == numbud && a.NUMENREG == s.NUMENREG && (a.MOIS >= DateDebut && a.MOIS <= DateFin) && listAnnee.Contains(a.ANNEE)).ToList())
                                     {
-                                        MTNTOTALPeriode += y.MONTANT.Value;//PTBA
+                                        MTNTOTALPeriode += y.MONTANT.Value;
                                     }
                                 }
 
