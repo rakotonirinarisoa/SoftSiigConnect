@@ -625,7 +625,7 @@ namespace SOFTCONNECT.Controllers
                     Session["RMOP1"] = isMenu.MOP1;
                     Session["RMOP2"] = isMenu.MOP2;
 
-                    //Session["RTDB0"] = isMenu.TDB0;
+                    Session["RTDB0"] = isMenu.TDB0;
                     Session["RTDB1"] = isMenu.TDB1;
                     Session["RTDB2"] = isMenu.TDB2;
                     Session["RTDB3"] = isMenu.TDB3;

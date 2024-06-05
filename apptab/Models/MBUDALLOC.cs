@@ -1,4 +1,4 @@
-namespace apptab
+﻿namespace apptab
 {
     using System;
     using System.Collections.Generic;
@@ -50,7 +50,7 @@ namespace apptab
         [Column(TypeName = "numeric")]
         public decimal? IMPORTID { get; set; }
 
-        [StringLength(36)]
-        public string TABLEID { get; set; }
+        //[StringLength(36)]
+        //public string TABLEID { get; set; }
     }
 }

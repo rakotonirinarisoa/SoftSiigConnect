@@ -2059,7 +2059,7 @@ namespace apptab.Controllers
                                         {
                                             foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.ACTI == PCOP).ToList())
                                             {
-                                                MTNENGA += yy.MONTANT.Value;
+                                                MTNENGA += xx.MONTANT.Value;
                                             }
                                         }
                                     }
@@ -2243,7 +2243,7 @@ namespace apptab.Controllers
                                         {
                                             foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.GEO == PCOP).ToList())
                                             {
-                                                MTNENGA += yy.MONTANT.Value;
+                                                MTNENGA += xx.MONTANT.Value;
                                             }
                                         }
                                     }
@@ -2427,7 +2427,7 @@ namespace apptab.Controllers
                                         {
                                             foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.PLAN6 == PCOP).ToList())
                                             {
-                                                MTNENGA += yy.MONTANT.Value;
+                                                MTNENGA += xx.MONTANT.Value;
                                             }
                                         }
                                     }
@@ -2611,7 +2611,7 @@ namespace apptab.Controllers
                                         {
                                             foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.POSTE == PCOP).ToList())
                                             {
-                                                MTNENGA += yy.MONTANT.Value;
+                                                MTNENGA += xx.MONTANT.Value;
                                             }
                                         }
                                     }
@@ -2817,7 +2817,7 @@ namespace apptab.Controllers
 
         //Genere Liste RSF//
         [HttpPost]
-        public JsonResult GenereRSF(SI_USERS suser, string listProjet, string Annee, string Mois, string Periode, string Type)
+        public JsonResult GenereRSF(SI_USERS suser, string listProjet, string Annee/*, string Mois*/, string Periode, string Type)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -2868,10 +2868,10 @@ namespace apptab.Controllers
                     {
                         list = list.Where(a => a.NPIECE == Annee.ToString()).ToList();
                     }
-                    if (Mois != "Tous")
-                    {
-                        list = list.Where(a => a.BENEF == Mois).ToList();
-                    }
+                    //if (Mois != "Tous")
+                    //{
+                    //    list = list.Where(a => a.BENEF == Mois).ToList();
+                    //}
                     if (Periode.ToString() != "Tous")
                     {
                         list = list.Where(a => a.COMMENTAIRE == Periode).ToList();
