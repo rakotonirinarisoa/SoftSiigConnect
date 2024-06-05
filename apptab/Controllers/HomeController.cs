@@ -532,7 +532,6 @@ namespace apptab.Controllers
                         list.AddRange(sss);
                     }
                 }
-               
             }
             else
             {
