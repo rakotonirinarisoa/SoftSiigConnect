@@ -1,4 +1,4 @@
-namespace apptab
+﻿namespace apptab
 {
     using System;
     using System.Collections.Generic;
@@ -45,77 +45,77 @@ namespace apptab
         [StringLength(3)]
         public string CATEGORIE { get; set; }
 
-        [StringLength(3)]
-        public string SOUSCATEGORIE { get; set; }
+        //[StringLength(3)]
+        //public string SOUSCATEGORIE { get; set; }
 
         [StringLength(20)]
         public string PLAN6 { get; set; }
 
-        [StringLength(10)]
-        public string UO { get; set; }
+        //[StringLength(10)]
+        //public string UO { get; set; }
 
-        [Column(TypeName = "numeric")]
-        public decimal? QUO { get; set; }
+        //[Column(TypeName = "numeric")]
+        //public decimal? QUO { get; set; }
 
-        [Column(TypeName = "numeric")]
-        public decimal? PUO { get; set; }
+        //[Column(TypeName = "numeric")]
+        //public decimal? PUO { get; set; }
 
-        [StringLength(100)]
-        public string LIBELLE { get; set; }
+        //[StringLength(100)]
+        //public string LIBELLE { get; set; }
 
-        [Column(TypeName = "numeric")]
-        public decimal? REPARTITION { get; set; }
+        //[Column(TypeName = "numeric")]
+        //public decimal? REPARTITION { get; set; }
 
-        [Column(TypeName = "numeric")]
-        public decimal? MONTBUDGET { get; set; }
+        //[Column(TypeName = "numeric")]
+        //public decimal? MONTBUDGET { get; set; }
 
-        [StringLength(1)]
-        public string TYPEBUDGET { get; set; }
+        //[StringLength(1)]
+        //public string TYPEBUDGET { get; set; }
 
-        [Column(TypeName = "numeric")]
-        public decimal? NBRREPF { get; set; }
+        //[Column(TypeName = "numeric")]
+        //public decimal? NBRREPF { get; set; }
 
-        [Column(TypeName = "numeric")]
-        public decimal? NBRREPD { get; set; }
+        //[Column(TypeName = "numeric")]
+        //public decimal? NBRREPD { get; set; }
 
-        [StringLength(100)]
-        public string LIBELLEM { get; set; }
+        //[StringLength(100)]
+        //public string LIBELLEM { get; set; }
 
-        [StringLength(15)]
-        public string CODEDP { get; set; }
+        //[StringLength(15)]
+        //public string CODEDP { get; set; }
 
-        public bool REGIE { get; set; }
+        //public bool REGIE { get; set; }
 
-        public DateTime? DATECRE { get; set; }
+        //public DateTime? DATECRE { get; set; }
 
-        public DateTime? DATEMAJ { get; set; }
+        //public DateTime? DATEMAJ { get; set; }
 
-        [StringLength(10)]
-        public string USERCRE { get; set; }
+        //[StringLength(10)]
+        //public string USERCRE { get; set; }
 
-        [StringLength(10)]
-        public string USERMAJ { get; set; }
+        //[StringLength(10)]
+        //public string USERMAJ { get; set; }
 
-        [StringLength(1)]
-        public string NATSOURCE { get; set; }
+        //[StringLength(1)]
+        //public string NATSOURCE { get; set; }
 
-        [StringLength(50)]
-        public string SIGLE { get; set; }
+        //[StringLength(50)]
+        //public string SIGLE { get; set; }
 
-        [StringLength(25)]
-        public string NUMLIGNEBUD { get; set; }
+        //[StringLength(25)]
+        //public string NUMLIGNEBUD { get; set; }
 
-        [StringLength(20)]
-        public string PLAN7 { get; set; }
+        //[StringLength(20)]
+        //public string PLAN7 { get; set; }
 
-        [Column(TypeName = "numeric")]
-        public decimal? IMPORTID { get; set; }
+        //[Column(TypeName = "numeric")]
+        //public decimal? IMPORTID { get; set; }
 
-        [StringLength(20)]
-        public string PLAN8 { get; set; }
+        //[StringLength(20)]
+        //public string PLAN8 { get; set; }
 
-        [StringLength(36)]
-        public string TABLEID { get; set; }
+        //[StringLength(36)]
+        //public string TABLEID { get; set; }
 
         public virtual RBUDGET RBUDGET { get; set; }
 

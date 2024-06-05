@@ -975,33 +975,33 @@ namespace apptab
                 .Property(e => e.NUMENREG)
                 .HasPrecision(30, 0);
 
-            modelBuilder.Entity<MBUDGET>()
-                .Property(e => e.QUO)
-                .HasPrecision(30, 6);
+            //modelBuilder.Entity<MBUDGET>()
+            //    .Property(e => e.QUO)
+            //    .HasPrecision(30, 6);
 
-            modelBuilder.Entity<MBUDGET>()
-                .Property(e => e.PUO)
-                .HasPrecision(19, 4);
+            //modelBuilder.Entity<MBUDGET>()
+            //    .Property(e => e.PUO)
+            //    .HasPrecision(19, 4);
 
-            modelBuilder.Entity<MBUDGET>()
-                .Property(e => e.REPARTITION)
-                .HasPrecision(5, 0);
+            //modelBuilder.Entity<MBUDGET>()
+            //    .Property(e => e.REPARTITION)
+            //    .HasPrecision(5, 0);
 
-            modelBuilder.Entity<MBUDGET>()
-                .Property(e => e.MONTBUDGET)
-                .HasPrecision(19, 4);
+            //modelBuilder.Entity<MBUDGET>()
+            //    .Property(e => e.MONTBUDGET)
+            //    .HasPrecision(19, 4);
 
-            modelBuilder.Entity<MBUDGET>()
-                .Property(e => e.NBRREPF)
-                .HasPrecision(5, 0);
+            //modelBuilder.Entity<MBUDGET>()
+            //    .Property(e => e.NBRREPF)
+            //    .HasPrecision(5, 0);
 
-            modelBuilder.Entity<MBUDGET>()
-                .Property(e => e.NBRREPD)
-                .HasPrecision(5, 0);
+            //modelBuilder.Entity<MBUDGET>()
+            //    .Property(e => e.NBRREPD)
+            //    .HasPrecision(5, 0);
 
-            modelBuilder.Entity<MBUDGET>()
-                .Property(e => e.IMPORTID)
-                .HasPrecision(18, 0);
+            //modelBuilder.Entity<MBUDGET>()
+            //    .Property(e => e.IMPORTID)
+            //    .HasPrecision(18, 0);
 
             modelBuilder.Entity<RBUDGET>()
                 .Property(e => e.NUMBUD)

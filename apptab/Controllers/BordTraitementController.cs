@@ -2059,7 +2059,7 @@ namespace apptab.Controllers
                                         {
                                             foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.ACTI == PCOP).ToList())
                                             {
-                                                MTNENGA += yy.MONTANT.Value;
+                                                MTNENGA += xx.MONTANT.Value;
                                             }
                                         }
                                     }
@@ -2243,7 +2243,7 @@ namespace apptab.Controllers
                                         {
                                             foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.GEO == PCOP).ToList())
                                             {
-                                                MTNENGA += yy.MONTANT.Value;
+                                                MTNENGA += xx.MONTANT.Value;
                                             }
                                         }
                                     }
@@ -2427,7 +2427,7 @@ namespace apptab.Controllers
                                         {
                                             foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.PLAN6 == PCOP).ToList())
                                             {
-                                                MTNENGA += yy.MONTANT.Value;
+                                                MTNENGA += xx.MONTANT.Value;
                                             }
                                         }
                                     }
@@ -2611,7 +2611,7 @@ namespace apptab.Controllers
                                         {
                                             foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.POSTE == PCOP).ToList())
                                             {
-                                                MTNENGA += yy.MONTANT.Value;
+                                                MTNENGA += xx.MONTANT.Value;
                                             }
                                         }
                                     }
