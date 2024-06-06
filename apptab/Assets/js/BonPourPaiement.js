@@ -229,7 +229,8 @@ function chargeLoad() {
                             rejeter: '',
                             isLATE: v.IsLATE,
                             estAvance: v.AVANCE,
-                            type: v.AVANCE ? 'Avance' : 'Paiement',
+                            //type: v.AVANCE ? 'Avance' : 'Paiement',
+                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });
@@ -427,7 +428,8 @@ function chargeLoad() {
                             rejeter: '',
                             isLATE: v.IsLATE,
                             estAvance: v.AVANCE,
-                            type: v.AVANCE ? 'Avance':'Paiement',                            
+                            //type: v.AVANCE ? 'Avance':'Paiement',                            
+                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });
@@ -964,7 +966,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             isLATE: v.IsLATE ,
                             estAvance : v.AVANCE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
-                            type: v.AVANCE ? 'Avance' : 'Paiement',
+                            //type: v.AVANCE ? 'Avance' : 'Paiement',
+                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });
                     });
@@ -1176,7 +1179,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             isLATE: v.IsLATE,
                             estAvance: v.AVANCE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
-                            type: v.AVANCE ? 'Avance' : 'Paiement',
+                            //type: v.AVANCE ? 'Avance' : 'Paiement',
+                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });
                     });

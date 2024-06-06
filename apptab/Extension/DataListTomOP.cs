@@ -31,5 +31,8 @@ namespace apptab.Extension
         public bool Avance { get; set; }
         public string Mandat { get; set; }
         public int NUMEREG { get; set; }
+        public string CogeFourniseur { get; set; }
+        public string JOURNALPAYEMENT { get; set; }
+        public bool AUTREOPERATIONS { get; set; }
     }
 }

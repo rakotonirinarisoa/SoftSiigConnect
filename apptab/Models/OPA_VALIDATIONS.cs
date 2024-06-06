@@ -1,8 +1,10 @@
 ﻿namespace apptab.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
 
     public partial class OPA_VALIDATIONS
     {
@@ -114,6 +116,8 @@
         public DateTime? DATETRANS { get; set; }
 
         public int? IDUSTRANS { get; set; }
+
+        public bool? AUTREOP { get; set; }
         [NotMapped]
         public bool isLATE { get; set; }
     }

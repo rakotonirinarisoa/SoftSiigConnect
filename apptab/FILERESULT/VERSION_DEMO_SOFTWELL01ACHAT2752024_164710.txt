@@ -1,0 +1,4 @@
+0302                     27054SOFTWELL                000016                          0250305076540076                                               00006      
+0602              01ID00000105_CFAO_MOTORS            SOCIETE GENERA                  0000521010014369000000000900000000089TESTTEST                  00008      
+0602              01ID00000106_CFAO_MOTORS            SOCIETE GENERA                  00005210100143690000000010000000001ACHAT MEDICAMENT LIQ0010    00008      
+0802                                                                                                  0000000019000000                                          

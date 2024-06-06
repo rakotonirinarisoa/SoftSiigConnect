@@ -749,7 +749,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             estAvance: v.Avance,
                             numeroliquidations: v.NUMEROLIQUIDATION,
-                            type: v.Avance ? 'Avance' : 'Engagement',
+                            //type: v.Avance ? 'Avance' : 'Engagement',
+                            type: v.Avance ? 'Avance' : (v.AUTREOPERATIONS ? 'Autre Opérations' : 'Engagement'),
                             numeroliquidations: v.Mandat,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
                         });

@@ -792,16 +792,20 @@ namespace apptab.Extension
                     {
                         mont = (from bul in tom.MOP
                                 where bul.NUMEROOP == bnfcr.NUM
-                                select bul).FirstOrDefault();
+                                select bul).FirstOrDefault();//Changer OPAVALIDATION A l'avenir
+
                     }
                     //var jrnl = "jrnl";
-                    var jrnl = (from mct in tom.FOP
-                                where mct.NUMEROOP == bnfcr.NUM
-                                select mct.JOURNAL).FirstOrDefault();
+                    //var jrnl = (from mct in tom.FOP
+                    //            where mct.NUMEROOP == bnfcr.NUM
+                    //            select mct.JOURNAL).FirstOrDefault();
+                    var jrnl = opp.Journal;
+
                     if (jrnl == null)
                     {
                         jrnl = tom.GA_AVANCE.Where(x => x.NUMERO == bnfcr.NUM).Select(x => x.JOURNAL).FirstOrDefault();
                     }
+
                     i++;
                     //MessageBox.Show(fact.MONTANT.ToString());
 
@@ -818,6 +822,10 @@ namespace apptab.Extension
                         if (opp.AVANCE == true)
                         {
                             texteAFB160 += this.formaterChiffre(16, mont.MONTANT.ToString());
+                        }else if(opp.auxi == "" && opp.ComptaG == null && opp.Compte == "" && opp.Rang == "")
+                        {
+                           
+                            texteAFB160 += this.formaterChiffre(16, opp.MONTANT.ToString());
                         }
                         else
                         {
@@ -930,9 +938,14 @@ namespace apptab.Extension
                     mont = (from mn in tom.MOP
                             where mn.NUMEROOP == num.NUM
                             select mn).FirstOrDefault();
+                    var oppa = db.OPA_VALIDATIONS.Where(x => x.IDREGLEMENT == num.NUM).FirstOrDefault();
                     if (devise)
                     {
                         montant += mont.MONTANTDEV; //à voir avec Faramalala
+                    }
+                    else if (oppa.auxi =="" && oppa.ComptaG == null)
+                    {
+                        montant += oppa.MONTANT;
                     }
                     else
                     {
@@ -1271,10 +1284,37 @@ namespace apptab.Extension
                                                        Auxi = mcpt.AUXIFOURNISSEUR,
                                                        Status = num.ETAT
                                                    }).FirstOrDefault();
-                        listEcritureSelect.Add(ligneRegs);
+                        //ETo tohizana 
+                        DataListTomOP ligneRegsOP = tom.CPTADMIN_FAUTREOPERATION.Where(mcpt => mcpt.NUMEROOPERATION == num.NUM).Select(x => new DataListTomOP()
+                        {
+                            No = x.NUMEROOPERATION,
+                            Date = x.DATEOPERATION.Value,
+                            NoPiece = "",
+                            Compte = "",
+                            Libelle = x.DESCRIPTION,
+                            Montant = x.MONTANTLOCAL.Value,
+                            MontantDevise = x.MONTANTDEVISE.Value,
+                            Mon = "",
+                            Rang = "",
+                            Poste = "",
+                            FinancementCategorie = x.FINANCEMENT,
+                            Commune = "",
+                            Plan6 = "",
+                            Marche = x.CODEMARCHE,
+                            Auxi = "",
+                            Status = num.ETAT,
+                        }).FirstOrDefault();
+
+                        if (ligneRegs != null)
+                        {
+                            listEcritureSelect.Add(ligneRegs);
+                        }
+                        if (ligneRegsOP != null)
+                        {
+                            listEcritureSelect.Add(ligneRegsOP);
+                        }
                     }
                 }
-               
             }
             return listEcritureSelect;
         }
@@ -2262,6 +2302,7 @@ namespace apptab.Extension
                         MONTANTRETENUE = mo.MONTANTRETENUE,
                         NUMEREG = mo.NUMENREG,
                         TYPE = fo.TYPE_OPERATION,
+                        MARCHE = fo.CODE,
                     }
                 );
 
@@ -2309,6 +2350,8 @@ namespace apptab.Extension
                     CATEGORIE = x.CATEGORIE,
                     ACTIVITER = x.ACTIVITE,
                     TYPE = x.TYPEOPERATION,
+                    NUMEROREG = null,
+                    AUTREOP = true,
                 }).ToList());
             }
             if (djournal.RIB != null && djournal.RIB != "")
@@ -2354,11 +2397,13 @@ namespace apptab.Extension
                                             Commune = item.GEO,
                                             Plan6 = item.PLAN6,
                                             Journal = journal,
-                                            Marche = "",
+                                            Marche = nord.MARCHE,
                                             Status = etat,
                                             Mandat = nord.NUMEROLIQUIDATION,
                                             Avance = nord.TYPE != null ? false : true,
                                             NUMEREG = item.NUMENREG,
+                                            CogeFourniseur = item.COGEFOURNISSEUR,
+                                            AUTREOPERATIONS = false,
                                         });
                                     }
                                 }
@@ -2395,7 +2440,8 @@ namespace apptab.Extension
                                     Marche = "",
                                     Avance = nordAV.TYPE != null ? false : true,
                                     Status = etat,
-                                    Mandat = ""
+                                    Mandat = "",
+                                    AUTREOPERATIONS = false,
                                 });
 
                             }
@@ -2428,7 +2474,9 @@ namespace apptab.Extension
                                     Marche = nordAOPS.MARCHER,
                                     Status = "",
                                     Avance = nordAOPS.TYPE != null ? false : true,
-                                    Mandat = ""
+                                    Mandat = "",
+                                    NUMEREG = 0,
+                                    AUTREOPERATIONS = true,
                                 });
 
                             }
@@ -2524,7 +2572,8 @@ namespace apptab.Extension
                                 Marche = reglementAV.MARCHE,
                                 Status = etat,
                                 Avance = true,
-                                Mandat = ""
+                                Mandat = "",
+                                AUTREOPERATIONS = false,
                             });
                         }
                         foreach (var nord in lOPCOGE)
@@ -2556,11 +2605,13 @@ namespace apptab.Extension
                                         Commune = reglement.GEO,
                                         Plan6 = reglement.PLAN6,
                                         Journal = journal,
-                                        Marche = "",
+                                        Marche = nord.MARCHE,
                                         Status = etat,
                                         Avance = false,
                                         Mandat = nord.NUMEROLIQUIDATION,
                                         NUMEREG = reglement.NUMENREG,
+                                        CogeFourniseur = reglement.COGEFOURNISSEUR,
+                                        AUTREOPERATIONS = false,
                                     });
                                 }
                                 
@@ -2593,7 +2644,9 @@ namespace apptab.Extension
                                     Journal = nordAOPS.JOURNAL,
                                     Marche = nordAOPS.MARCHER,
                                     Status = "",
-                                    Mandat = ""
+                                    Mandat = "",
+                                    NUMEREG = 0,
+                                    AUTREOPERATIONS = true,
                                 });
 
                             }
@@ -2646,11 +2699,11 @@ namespace apptab.Extension
                                             Commune = reglement.GEO,
                                             Plan6 = reglement.PLAN6,
                                             Journal = journal,
-                                            Marche = "",
+                                            Marche = nord.MARCHE,
                                             Status = etat,
                                             Mandat = nord.NUMEROLIQUIDATION,
                                             NUMEREG = reglement.NUMENREG,
-
+                                            CogeFourniseur = reglement.COGEFOURNISSEUR,
                                         });
                                     }
 
@@ -2724,7 +2777,9 @@ namespace apptab.Extension
                                     Journal = nordAOPS.JOURNAL,
                                     Marche = nordAOPS.MARCHER,
                                     Status = "",
-                                    Mandat = ""
+                                    Mandat = "",
+                                    NUMEREG = 0,
+                                    AUTREOPERATIONS = true,
                                 });
 
                             }
@@ -2963,14 +3018,6 @@ namespace apptab.Extension
                              select jrnl).Single();
             if (avance == true)
             {
-                //foreach (var row in numBR)
-                //{
-
-
-
-
-                //}
-                //string num = row.Id;
                 
                 try
                 {
@@ -2993,6 +3040,8 @@ namespace apptab.Extension
                         Marche = "",
                         Auxi = ga.AUXI
                     }).FirstOrDefault();
+
+                   
 
                     var beneficiaire = (from bn in tom.RTIERS
                                         where bn.AUXI == ecriture.Auxi && bn.COGE == ecriture.Compte
@@ -3112,6 +3161,30 @@ namespace apptab.Extension
                                         NUMEREG = mcpt.NUMENREG
                                     }).FirstOrDefault();
 
+                    var AutreOP = tom.CPTADMIN_FAUTREOPERATION.Where(a => a.NUMEROOPERATION == numBR).Select(x => new DataListTomOP()
+                    {
+                        No = x.NUMEROOPERATION,
+                        Date = x.DATEOPERATION.Value,
+                        NoPiece = "",
+                        Compte = "",
+                        Libelle = x.DESCRIPTION,
+                        Montant = x.MONTANTLOCAL.Value,
+                        MontantDevise = x.MONTANTDEVISE.Value,
+                        Mon = "",
+                        Rang = "",
+                        Poste = "",
+                        FinancementCategorie = x.FINANCEMENT,
+                        Commune = "",
+                        Plan6 = "",
+                        Journal = x.JOURNALRECEPTION,
+                        JOURNALPAYEMENT = x.JOURNALPAIEMENT,
+                        Marche = x.CODEMARCHE,
+                        Auxi = "",
+
+                    }).FirstOrDefault();
+
+                    if (ecriture == null) ecriture = AutreOP;
+
                     var beneficiaire = (from bn in tom.RTIERS
                                         where bn.AUXI == ecriture.Auxi && bn.COGE == ecriture.Compte
                                         select new
@@ -3130,6 +3203,23 @@ namespace apptab.Extension
                                         }
                                       ).FirstOrDefault();
 
+                    if (beneficiaire == null)//à regler selon les regles
+                    {
+                        beneficiaire = tom.RJL1.Where(code => code.CODE == AutreOP.JOURNALPAYEMENT).Select(x => new
+                        {
+                            BENEFICIAIRE = x.LIBELLE,
+                            BANQUE = x.BANQUE,//BOA//SG//BNI
+                            COMPTE_BANQUE = x.RIB,
+                            DOM1 = "",
+                            DOM2 = "",
+                            GUICHET = x.GUICHET,
+                            CLE = x.CLE,
+                            ETABLISMENT = x.AGENCE,
+                            AUXI = "",
+                            AD1 = "",
+                            AD2 = "",
+                        }).FirstOrDefault();
+                    }
                     #region Sauve REGELEMENT & ANOMALIE
 
                     if (beneficiaire.COMPTE_BANQUE == null || beneficiaire.BENEFICIAIRE == null)
@@ -3195,6 +3285,7 @@ namespace apptab.Extension
                         {
                         }
                     }
+                    
                     #endregion
                     //test = true;
                 }
