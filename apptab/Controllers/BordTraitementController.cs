@@ -2012,7 +2012,7 @@ namespace apptab.Controllers
                         {
                             foreach (var x in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)).Select(a => a.ACTI).Distinct().ToList())
                             {
-                                if (!autrePCOP.Contains(x))
+                                if (!autrePCOP.Contains(x) && !String.IsNullOrEmpty(x))
                                     autrePCOP.Add(x);
                             }
 
@@ -2039,7 +2039,7 @@ namespace apptab.Controllers
                                 decimal MTNTOTALPeriode = 0;
                                 //PCOP et INTITULE PCOP//
                                 var PCOP = x;
-                                var PCOPINTITUL = tom.RACTI1.FirstOrDefault(a => a.CODE == x).LIBELLE;
+                                var PCOPINTITUL = !String.IsNullOrEmpty(x) ? tom.RACTI1.FirstOrDefault(a => a.CODE == x).LIBELLE : "";
                                 //PAD
                                 decimal MTNTOTALPAD = 0;
                                 //Montant engagé (Liquidation + Justif validé SET//
@@ -2223,7 +2223,7 @@ namespace apptab.Controllers
                         {
                             foreach (var x in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)).Select(a => a.GEO).Distinct().ToList())
                             {
-                                if (!autrePCOP.Contains(x))
+                                if (!autrePCOP.Contains(x) && !String.IsNullOrEmpty(x))
                                     autrePCOP.Add(x);
                             }
 
@@ -2246,7 +2246,7 @@ namespace apptab.Controllers
                                 decimal MTNTOTALPeriode = 0;
                                 //PCOP et INTITULE PCOP//
                                 var PCOP = x;
-                                var PCOPINTITUL = tom.RGEO1.FirstOrDefault(a => a.CODE == x).LIBELLE;
+                                var PCOPINTITUL = !String.IsNullOrEmpty(x) ? tom.RGEO1.FirstOrDefault(a => a.CODE == x).LIBELLE : "";
                                 //PAD
                                 decimal MTNTOTALPAD = 0;
                                 //Montant engagé (Liquidation + Justif validé SET//
@@ -2429,7 +2429,7 @@ namespace apptab.Controllers
                         {
                             foreach (var x in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)).Select(a => a.PLAN6).Distinct().ToList())
                             {
-                                if (!autrePCOP.Contains(x))
+                                if (!autrePCOP.Contains(x) && !String.IsNullOrEmpty(x))
                                     autrePCOP.Add(x);
                             }
 
@@ -2452,7 +2452,7 @@ namespace apptab.Controllers
                                 decimal MTNTOTALPeriode = 0;
                                 //PCOP et INTITULE PCOP//
                                 var PCOP = x;
-                                var PCOPINTITUL = tom.RPLAN6.FirstOrDefault(a => a.CODE == x).LIBELLE;
+                                var PCOPINTITUL = !String.IsNullOrEmpty(x) ? tom.RPLAN6.FirstOrDefault(a => a.CODE == x).LIBELLE : "";
                                 //PAD
                                 decimal MTNTOTALPAD = 0;
                                 //Montant engagé (Liquidation + Justif validé SET//
@@ -2631,12 +2631,11 @@ namespace apptab.Controllers
                             }
                         }
 
-
                         if (tom.MBUDGET.Any(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)))
                         {
                             foreach (var x in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)).Select(a => a.POSTE).Distinct().ToList())
                             {
-                                if (!autrePCOP.Contains(x))
+                                if (!autrePCOP.Contains(x) && !String.IsNullOrEmpty(x))
                                     autrePCOP.Add(x);
                             }
 
@@ -2659,7 +2658,7 @@ namespace apptab.Controllers
                                 decimal MTNTOTALPeriode = 0;
                                 //PCOP et INTITULE PCOP//
                                 var PCOP = x;
-                                var PCOPINTITUL = tom.RPOST1.FirstOrDefault(a => a.CODE == x).LIBELLE;
+                                var PCOPINTITUL = !String.IsNullOrEmpty(x) ? tom.RPOST1.FirstOrDefault(a => a.CODE == x).LIBELLE : "";
 
                                 //PAD
                                 decimal MTNTOTALPAD = 0;
