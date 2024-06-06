@@ -33,5 +33,6 @@ namespace apptab.Extension
         public int NUMEREG { get; set; }
         public string CogeFourniseur { get; set; }
         public string JOURNALPAYEMENT { get; set; }
+        public bool AUTREOPERATIONS { get; set; }
     }
 }

@@ -2351,6 +2351,7 @@ namespace apptab.Extension
                     ACTIVITER = x.ACTIVITE,
                     TYPE = x.TYPEOPERATION,
                     NUMEROREG = null,
+                    AUTREOP = true,
                 }).ToList());
             }
             if (djournal.RIB != null && djournal.RIB != "")
@@ -2402,6 +2403,7 @@ namespace apptab.Extension
                                             Avance = nord.TYPE != null ? false : true,
                                             NUMEREG = item.NUMENREG,
                                             CogeFourniseur = item.COGEFOURNISSEUR,
+                                            AUTREOPERATIONS = false,
                                         });
                                     }
                                 }
@@ -2438,7 +2440,8 @@ namespace apptab.Extension
                                     Marche = "",
                                     Avance = nordAV.TYPE != null ? false : true,
                                     Status = etat,
-                                    Mandat = ""
+                                    Mandat = "",
+                                    AUTREOPERATIONS = false,
                                 });
 
                             }
@@ -2473,6 +2476,7 @@ namespace apptab.Extension
                                     Avance = nordAOPS.TYPE != null ? false : true,
                                     Mandat = "",
                                     NUMEREG = 0,
+                                    AUTREOPERATIONS = true,
                                 });
 
                             }
@@ -2568,7 +2572,8 @@ namespace apptab.Extension
                                 Marche = reglementAV.MARCHE,
                                 Status = etat,
                                 Avance = true,
-                                Mandat = ""
+                                Mandat = "",
+                                AUTREOPERATIONS = false,
                             });
                         }
                         foreach (var nord in lOPCOGE)
@@ -2606,6 +2611,7 @@ namespace apptab.Extension
                                         Mandat = nord.NUMEROLIQUIDATION,
                                         NUMEREG = reglement.NUMENREG,
                                         CogeFourniseur = reglement.COGEFOURNISSEUR,
+                                        AUTREOPERATIONS = false,
                                     });
                                 }
                                 
@@ -2640,6 +2646,7 @@ namespace apptab.Extension
                                     Status = "",
                                     Mandat = "",
                                     NUMEREG = 0,
+                                    AUTREOPERATIONS = true,
                                 });
 
                             }
@@ -2772,6 +2779,7 @@ namespace apptab.Extension
                                     Status = "",
                                     Mandat = "",
                                     NUMEREG = 0,
+                                    AUTREOPERATIONS = true,
                                 });
 
                             }

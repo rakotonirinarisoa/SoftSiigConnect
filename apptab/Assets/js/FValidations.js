@@ -526,7 +526,8 @@ function LoadValidate() {
                     isLATE: v.isLATE,
                     estAvance: v.AVANCE,
                     numeroliquidations: v.NUMEROLIQUIDATION,
-                    type: v.AVANCE ? 'Avance' : 'Engagement',
+                    //type: v.AVANCE ? 'Avance' : 'Engagement',
+                    type: v.AVANCE ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
                     idprojet: codeproject,
                     numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                 });
@@ -997,7 +998,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             isLATE: v.isLATE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
-                            type: v.AVANCE ? 'Avance' : 'Engagement',
+                            //type: v.AVANCE ? 'Avance' : 'Engagement',
+                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
                             idprojet: codeproject,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });
@@ -1195,7 +1197,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             isLATE: v.isLATE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             estAvance:v.AVANCE,
-                            type: v.AVANCE ? 'Avance' : 'Engagement',
+                            //type: v.AVANCE ? 'Avance' : 'Engagement',
+                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
                             idprojet: codeproject,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });

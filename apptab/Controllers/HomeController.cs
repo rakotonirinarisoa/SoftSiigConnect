@@ -858,6 +858,7 @@ namespace apptab.Controllers
                         avalider.AVANCE = item.Avance;
                         avalider.NUMEROLIQUIDATION = item.Mandat;
                         avalider.NUMEREG = item.NUMEREG;
+                        avalider.AUTREOP = item.AUTREOPERATIONS;
                         try
                         {
                             db.OPA_VALIDATIONS.Add(avalider);
@@ -971,6 +972,7 @@ namespace apptab.Controllers
                         isLATE = isLate,
                         AVANCE = item.AVANCE,
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
+                        AUTREOP = item.AUTREOP,
                     });
                 }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
@@ -1007,6 +1009,7 @@ namespace apptab.Controllers
                         isLATE = isLate,
                         AVANCE = item.AVANCE,
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
+                        AUTREOP = item.AUTREOP,
                     });
                 }
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
@@ -1106,6 +1109,7 @@ namespace apptab.Controllers
                             AVANCE = item.AVANCE,
                             NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                             NUMEREG = item.NUMEREG,
+                            AUTREOP = item.AUTREOP,
                         });
                     }
                     else
@@ -1133,6 +1137,7 @@ namespace apptab.Controllers
                             AVANCE = item.AVANCE,
                             NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                             NUMEREG = item.NUMEREG,
+                            AUTREOP = item.AUTREOP,
                         });
                     }
                 }
@@ -1523,6 +1528,7 @@ namespace apptab.Controllers
                         AVANCE = item.AVANCE,
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                         NUMEREG = item.NUMEREG,
+                        AUTREOP = item.AUTREOP,
                     });
                 }
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés. ", data = list }, settings));
@@ -1559,6 +1565,7 @@ namespace apptab.Controllers
                         AVANCE = item.AVANCE,
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                         NUMEREG = item.NUMEREG,
+                        AUTREOP = item.AUTREOP,
                     });
                 }
 
@@ -1616,6 +1623,7 @@ namespace apptab.Controllers
                         AVANCE = item.AVANCE,
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                         NUMEREG = item.NUMEREG,
+                        AUTREOP = item.AUTREOP,
                     });
                 }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
@@ -1653,6 +1661,7 @@ namespace apptab.Controllers
                         AVANCE = item.AVANCE,
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                         NUMEREG = item.NUMEREG,
+                        AUTREOP = item.AUTREOP,
                     });
                 }
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
@@ -1746,6 +1755,7 @@ namespace apptab.Controllers
                         Commune = item.Commune,
                         Marche = item.Marche,
                         isLATE = isLate,
+                        AVANCE = item.AVANCE,
                     });
                 }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
@@ -1780,6 +1790,7 @@ namespace apptab.Controllers
                         Commune = item.Commune,
                         Marche = item.Marche,
                         isLATE = isLate,
+                        AVANCE = item.AVANCE,
                     });
                 }
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés.  ", data = list }, settings));
@@ -2030,6 +2041,7 @@ namespace apptab.Controllers
                         NUMEREG = item.NUMEREG,
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                         AVANCE = item.AVANCE,
+                        AUTREOP = item.AUTREOP,
                     });
                 }
             }
@@ -2066,6 +2078,7 @@ namespace apptab.Controllers
                         NUMEREG = item.NUMEREG,
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                         AVANCE = item.AVANCE,
+                        AUTREOP = item.AUTREOP,
                     });
                 }
             }

@@ -224,7 +224,8 @@ function ChargeLoad() {
                             isLATE: v.IsLATE,
                             estAvance: v.AVANCE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
-                            type: v.AVANCE ? 'Avance' : 'Engagement',
+                            //type: v.AVANCE ? 'Avance' : 'Engagement',
+                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
                             idprojet: codeproject,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
                         });
@@ -833,7 +834,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             isLATE: v.IsLATE,
                             estAvance: v.AVANCE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
-                            type: v.AVANCE ? 'Avance' : 'Engagement',
+                            //type: v.AVANCE ? 'Avance' : 'Engagement',
+                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });
                     });
@@ -1045,7 +1047,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             isLATE: v.IsLATE,
                             estAvance: v.AVANCE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
-                            type: v.AVANCE ? 'Avance' : 'Engagement',
+                            //type: v.AVANCE ? 'Avance' : 'Engagement',
+                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });
                     });
