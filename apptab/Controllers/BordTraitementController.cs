@@ -2033,7 +2033,7 @@ namespace apptab.Controllers
                             //TOTAL PAD
                             decimal MTNTOTALPADTP = 0;
 
-                            foreach (var x in autrePCOP.Distinct().ToList())
+                            foreach (var x in autrePCOP.Distinct().OrderBy(x => x).ToList())
                             {
                                 //PTBA
                                 decimal MTNTOTALPeriode = 0;
@@ -2240,7 +2240,7 @@ namespace apptab.Controllers
                             //TOTAL % sur PTBA (% Solde sur PTBA)
                             decimal PTBAT = 0;
 
-                            foreach (var x in autrePCOP.Distinct().ToList())
+                            foreach (var x in autrePCOP.OrderBy(x => x).Distinct().ToList())
                             {
                                 //PTBA
                                 decimal MTNTOTALPeriode = 0;
@@ -2446,7 +2446,7 @@ namespace apptab.Controllers
                             //TOTAL % sur PTBA (% Solde sur PTBA)
                             decimal PTBAT = 0;
 
-                            foreach (var x in autrePCOP.Distinct().ToList())
+                            foreach (var x in autrePCOP.OrderBy(x => x).Distinct().ToList())
                             {
                                 //PTBA
                                 decimal MTNTOTALPeriode = 0;
@@ -2653,7 +2653,7 @@ namespace apptab.Controllers
                             //TOTAL % sur PTBA (% Solde sur PTBA)
                             decimal PTBAT = 0;
 
-                            foreach (var x in autrePCOP.Distinct().ToList())
+                            foreach (var x in autrePCOP.OrderBy(x => x).Distinct().ToList())
                             {
                                 //PTBA
                                 decimal MTNTOTALPeriode = 0;
