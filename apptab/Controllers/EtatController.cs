@@ -694,9 +694,11 @@ namespace apptab.Controllers
             {
                 if (db.SI_USERSHISTO.Any(x => x.IDUSER == exist.ID))
                 {
-                    var histo = db.SI_USERSHISTO.Where(x => x.IDUSER == exist.ID).OrderByDescending(a => a.ID).FirstOrDefault();
-                    histo.DISCONNEX = DateTime.Now;
-                    db.SaveChanges();
+                    foreach (var x in db.SI_USERSHISTO.Where(x => x.IDUSER == exist.ID).OrderByDescending(a => a.ID).ToList())
+                    {
+                        x.DISCONNEX = DateTime.Now;
+                        db.SaveChanges();
+                    }
                 }
 
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. " }, settings));
