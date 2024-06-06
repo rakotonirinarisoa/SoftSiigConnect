@@ -1110,11 +1110,11 @@ namespace apptab.Controllers
 
                 if (crpto != null)
                 {
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { crpto = crpto, etat = etat, etatAvance = etatAvance } }, settings));
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { crpto = crpto, etat = etat, etatAvance = etatAvance, IDP = crpt } }, settings));
                 }
                 else
                 {
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez créer une nouvelle correspondance des états. " }, settings));
+                    return Json(JsonConvert.SerializeObject(new { type = "notYet", msg = "Veuillez créer une nouvelle correspondance des états. ", data = new { crpto = crpto, etat = etat, etatAvance = etatAvance, IDP = crpt } }, settings));
                 }
             }
             catch (Exception e)

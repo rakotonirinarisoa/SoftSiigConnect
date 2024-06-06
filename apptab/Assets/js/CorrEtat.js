@@ -48,14 +48,62 @@ function GetUsers() {
                 $("#stata3").val("");
                 return;
             }
+            if (Datas.type == "notYet") {
+                alert(Datas.msg);
+
+                if (Datas.data.IDP != 0)
+                    $("#proj").val(`${Datas.data.IDP}`);
+                else
+                    $("#proj").val("");
+
+                $(`[data-id="stat1-list"]`).text("");
+                $(`[data-id="stat2-list"]`).text("");
+                $(`[data-id="stat3-list"]`).text("");
+                var code1 = ``;
+                $.each(Datas.data.etat, function (k, v) {
+                    code1 += `
+                    <option value="${v.NUM}">${v.NOM}</option>
+                `;
+                });
+                $(`[data-id="stat1-list"]`).append(code1);
+                $(`[data-id="stat2-list"]`).append(code1);
+                $(`[data-id="stat3-list"]`).append(code1);
+
+                $(`[data-id="stata1-list"]`).text("");
+                $(`[data-id="stata2-list"]`).text("");
+                $(`[data-id="stata3-list"]`).text("");
+                var code2 = ``;
+                $.each(Datas.data.etatAvance, function (k, v) {
+                    code2 += `
+                    <option value="${v.NUM}">${v.NOM}</option>
+                `;
+                });
+                $(`[data-id="stata1-list"]`).append(code2);
+                $(`[data-id="stata2-list"]`).append(code2);
+                $(`[data-id="stata3-list"]`).append(code2);
+
+                $("#defC").val("");
+                $("#tefC").val("");
+                $("#beC").val("");
+                $("#defCA").val("");
+                $("#tefCA").val("");
+                $("#beCA").val("");
+                $("#stat1").val("");
+                $("#stat2").val("");
+                $("#stat3").val("");
+                $("#stata1").val("");
+                $("#stata2").val("");
+                $("#stata3").val("");
+                return;
+            }
             if (Datas.type == "login") {
                 alert(Datas.msg);
                 window.location = window.location.origin;
                 return;
             }
 
-            if (Datas.data.crpto.IDPROJET != 0)
-                $("#proj").val(`${Datas.data.crpto.IDPROJET}`);
+            if (Datas.data.IDP != 0)
+                $("#proj").val(`${Datas.data.IDP}`);
             else
                 $("#proj").val("");
 
