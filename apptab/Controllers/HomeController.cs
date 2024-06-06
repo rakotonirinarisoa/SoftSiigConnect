@@ -1730,7 +1730,7 @@ namespace apptab.Controllers
             if (ChoixBase == "2")
             {
                 var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG).ToArray();
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && ecriture.ComptaG == comptaG  && ecriture.Journal == journal && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && (ecriture.ComptaG == comptaG || ecriture.ComptaG == null) && ecriture.Journal == journal && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
@@ -1756,6 +1756,7 @@ namespace apptab.Controllers
                         Marche = item.Marche,
                         isLATE = isLate,
                         AVANCE = item.AVANCE,
+                        AUTREOP = item.AUTREOP,
                     });
                 }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
@@ -1764,7 +1765,7 @@ namespace apptab.Controllers
             else
             {
                 var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG.ToString()).ToArray();
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && ecriture.ComptaG == comptaG  && ecriture.Journal == journal && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && (ecriture.ComptaG == comptaG || ecriture.ComptaG == null) && ecriture.Journal == journal && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
                 foreach (var item in avalider)
                 {
@@ -1791,6 +1792,7 @@ namespace apptab.Controllers
                         Marche = item.Marche,
                         isLATE = isLate,
                         AVANCE = item.AVANCE,
+                        AUTREOP = item.AUTREOP,
                     });
                 }
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés.  ", data = list }, settings));
