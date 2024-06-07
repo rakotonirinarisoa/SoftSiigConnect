@@ -29,9 +29,9 @@ namespace apptab.Data
                     var dbase = isPS.DBASE;
 
                     if (auth == 0)
-                        CONN = "Data Source=" + instance + ";Initial Catalog=" + dbase + ";Integrated Security=True";
+                        CONN = "Data Source=" + instance + ";Initial Catalog=" + dbase + ";Integrated Security=True;MultipleActiveResultSets=true;";
                     else
-                        CONN = "Data Source=" + instance + ";Initial Catalog=" + dbase + ";User ID=" + connex + ";Password=" + connexPWD + ";";
+                        CONN = "Data Source=" + instance + ";Initial Catalog=" + dbase + ";User ID=" + connex + ";Password=" + connexPWD + ";MultipleActiveResultSets=true;";
                 }
             }
 
