@@ -118,6 +118,7 @@
         public int? IDUSTRANS { get; set; }
 
         public bool? AUTREOP { get; set; }
+
         [NotMapped]
         public bool isLATE { get; set; }
     }

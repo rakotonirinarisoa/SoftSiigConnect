@@ -1138,17 +1138,17 @@ namespace apptab.Controllers
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
             if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == param.DEF) == null)
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état DEF n'est pas présent sur TOM²PRO (Liquidation). " }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état du STATUT 1 n'est pas présent sur TOM²PRO (Liquidation). " }, settings));
             if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == param.TEF) == null)
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état TEF n'est pas présent sur TOM²PRO (Liquidation). " }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état du STATUT 2 n'est pas présent sur TOM²PRO (Liquidation). " }, settings));
             if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == param.BE) == null)
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état BE n'est pas présent sur TOM²PRO (Liquidation). " }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état du STATUT 3 n'est pas présent sur TOM²PRO (Liquidation). " }, settings));
             if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == param.DEFA) == null)
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état DEF n'est pas présent sur TOM²PRO (Avance). " }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état du STATUT 1 n'est pas présent sur TOM²PRO (Avance). " }, settings));
             if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == param.TEFA) == null)
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état TEF n'est pas présent sur TOM²PRO (Avance). " }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état du STATUT 2 n'est pas présent sur TOM²PRO (Avance). " }, settings));
             if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == param.BEA) == null)
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état BE n'est pas présent sur TOM²PRO (Avance). " }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'état du STATUT 3 n'est pas présent sur TOM²PRO (Avance). " }, settings));
 
             try
             {
