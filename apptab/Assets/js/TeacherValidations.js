@@ -832,6 +832,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             //rejeter: '',
                             isLATE: v.IsLATE,
+                            AUTREOP : v.AUTREOP,
                             estAvance: v.AVANCE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             //type: v.AVANCE ? 'Avance' : 'Engagement',
@@ -902,7 +903,12 @@ $('[data-action="ChargerJs"]').click(function () {
 
                             $(row).addClass('select-text');
                             if (data.isLATE) {
-                                $(row).attr('style', "background-color: #FF7F7F !important;");
+                                //$(row).attr('style', "background-color: #FF7F7F !important;");
+                                $(row).addClass("demoRayure");
+                            }
+                            if (data.AUTREOP) {
+                                //$(row).attr('style', "background-color: #0bd21e !important;")
+                                $(row).addClass("demoRayureAUTREOP");
                             }
                         },
 
@@ -1045,6 +1051,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             //rejeter: '',
                             isLATE: v.IsLATE,
+                            AUTREOP: v.AUTREOP,
                             estAvance: v.AVANCE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             //type: v.AVANCE ? 'Avance' : 'Engagement',
@@ -1114,7 +1121,12 @@ $('[data-action="ChargerJs"]').click(function () {
                             $(row).attr('compteG-id', data.id);
                             $(row).addClass('select-text');
                             if (data.isLATE) {
-                                $(row).attr('style', "background-color: #FF7F7F !important;");
+                                //$(row).attr('style', "background-color: #FF7F7F !important;");
+                                $(row).addClass("demoRayure");
+                            }
+                            if (data.AUTREOP) {
+                                //$(row).attr('style', "background-color: #0bd21e !important;")
+                                $(row).addClass("demoRayureAUTREOP");
                             }
                         },
                         columnDefs: [

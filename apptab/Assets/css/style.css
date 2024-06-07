@@ -1003,3 +1003,8 @@ div.dt-container .dt-paging .dt-paging-button {
     background-size: 30px 30px !important;
     background-position: 50px 50px !important;
 }
+.demoRayureAUTREOP {
+    background: linear-gradient(45deg, #0bd21e 0%, #fff 0%, #fff 50%, #0bd21e 50%, #0bd21e 51%, #fff 0%, #fff 100%, #0bd21e 100%) !important;
+    background-size: 30px 30px !important;
+    background-position: 50px 50px !important;
+}

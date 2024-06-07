@@ -296,7 +296,12 @@ function chargeLoad() {
 
                             $(row).addClass('select-text');
                             if (data.isLATE) {
-                                $(row).attr('style', "background-color: #FF7F7F !important;");
+                                //$(row).attr('style', "background-color: #FF7F7F !important;");
+                                $(row).addClass("demoRayure");
+                            }
+                            if (data.AUTREOP) {
+                                //$(row).attr('style', "background-color: #0bd21e !important;")
+                                $(row).addClass("demoRayureAUTREOP");
                             }
                         },
                         columnDefs: [
@@ -427,6 +432,7 @@ function chargeLoad() {
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             rejeter: '',
                             isLATE: v.IsLATE,
+                            AUTREOP : v.AUTREOP,
                             estAvance: v.AVANCE,
                             //type: v.AVANCE ? 'Avance':'Paiement',                            
                             type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
@@ -493,6 +499,16 @@ function chargeLoad() {
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
+
+                            $(row).addClass('select-text');
+                            if (data.isLATE) {
+                                //$(row).attr('style', "background-color: #FF7F7F !important;");
+                                $(row).addClass("demoRayure");
+                            }
+                            if (data.AUTREOP) {
+                                //$(row).attr('style', "background-color: #0bd21e !important;")
+                                $(row).addClass("demoRayureAUTREOP");
+                            }
                         },
                         columnDefs: [
                             {
@@ -963,7 +979,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             journal: isNullOrUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             rejeter: '',
-                            isLATE: v.IsLATE ,
+                            isLATE: v.IsLATE,
+                            AUTREOP : v.AUTREOP,
                             estAvance : v.AVANCE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             //type: v.AVANCE ? 'Avance' : 'Paiement',
@@ -1035,7 +1052,12 @@ $('[data-action="ChargerJs"]').click(function () {
 
                             $(row).addClass('select-text');
                             if (data.isLATE) {
-                                $(row).attr('style', "background-color: #FF7F7F !important;");
+                                //$(row).attr('style', "background-color: #FF7F7F !important;");
+                                $(row).addClass("demoRayure");
+                            }
+                            if (data.AUTREOP) {
+                                //$(row).attr('style', "background-color: #0bd21e !important;")
+                                $(row).addClass("demoRayureAUTREOP");
                             }
                         },
 
@@ -1178,6 +1200,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             rejeter: '',
                             isLATE: v.IsLATE,
                             estAvance: v.AVANCE,
+                            AUTREOP:v.AUTREOP,
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             //type: v.AVANCE ? 'Avance' : 'Paiement',
                             type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
@@ -1248,7 +1271,12 @@ $('[data-action="ChargerJs"]').click(function () {
 
                             $(row).addClass('select-text');
                             if (data.isLATE) {
-                                $(row).attr('style', "background-color: #FF7F7F !important;");
+                                //$(row).attr('style', "background-color: #FF7F7F !important;");
+                                $(row).addClass("demoRayure");
+                            }
+                            if (data.AUTREOP) {
+                                //$(row).attr('style', "background-color: #0bd21e !important;")
+                                $(row).addClass("demoRayureAUTREOP");
                             }
                         },
                         columnDefs: [

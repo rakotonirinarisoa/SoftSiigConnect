@@ -525,6 +525,7 @@ function LoadValidate() {
                     marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                     isLATE: v.isLATE,
                     estAvance: v.AVANCE,
+                    AUTREOP:v.AUTREOP,
                     numeroliquidations: v.NUMEROLIQUIDATION,
                     //type: v.AVANCE ? 'Avance' : 'Engagement',
                     type: v.AVANCE ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
@@ -584,7 +585,12 @@ function LoadValidate() {
 
                     $(row).addClass('select-text');
                     if (data.isLATE) {
-                        $(row).attr('style', "background-color: #FF7F7F !important;");
+                        //$(row).attr('style', "background-color: #FF7F7F !important;");
+                        $(row).addClass("demoRayure");
+                    }
+                    if (data.AUTREOP) {
+                        //$(row).attr('style', "background-color: #0bd21e !important;")
+                        $(row).addClass("demoRayureAUTREOP");
                     }
                 },
                 columnDefs: [
@@ -997,6 +1003,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             journal: isNullOrUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             isLATE: v.isLATE,
+                            AUTREOP:v.AUTREOP,
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             //type: v.AVANCE ? 'Avance' : 'Engagement',
                             type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
@@ -1054,7 +1061,12 @@ $('[data-action="ChargerJs"]').click(function () {
 
                             $(row).addClass('select-text');
                             if (data.isLATE) {
-                                $(row).attr('style', "background-color: #FF7F7F !important;");
+                                //$(row).attr('style', "background-color: #FF7F7F !important;");
+                                $(row).addClass("demoRayure");
+                            }
+                            if (data.AUTREOP) {
+                                //$(row).attr('style', "background-color: #0bd21e !important;")
+                                $(row).addClass("demoRayureAUTREOP");
                             }
                         },
                         columnDefs: [
@@ -1195,6 +1207,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             journal: isNullOrUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             isLATE: v.isLATE,
+                            AUTREOP : v.AUTREOP,
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             estAvance:v.AVANCE,
                             //type: v.AVANCE ? 'Avance' : 'Engagement',
@@ -1255,7 +1268,12 @@ $('[data-action="ChargerJs"]').click(function () {
 
                             $(row).addClass('select-text');
                             if (data.isLATE) {
-                                $(row).attr('style', "background-color: #FF7F7F !important;");
+                                //$(row).attr('style', "background-color: #FF7F7F !important;");
+                                $(row).addClass("demoRayure");
+                            }
+                            if (data.AUTREOP) {
+                                //$(row).attr('style', "background-color: #0bd21e !important;")
+                                $(row).addClass("demoRayureAUTREOP");
                             }
                         },
                         columnDefs: [
