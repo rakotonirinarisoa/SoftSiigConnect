@@ -2090,11 +2090,12 @@ namespace apptab.Controllers
                                     }
                                 }
                                 //Montant payé (OPA_VALIDATIONS (MONTANT, ETAT = 2, dateOrdre)//
+                                var ListTraitement = db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList();
                                 foreach (var opaV in db.OPA_VALIDATIONS.Where(a => a.ETAT == 2 && a.dateOrdre >= DateDebut && a.dateOrdre <= DateFin && a.NUMEROLIQUIDATION != null))
                                 {
                                     if (opaV.AVANCE == false)
                                     {
-                                        foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && a.REF == opaV.NUMEROLIQUIDATION).ToList())
+                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION).ToList())
                                         {
                                             foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No).ToList())
                                             {
@@ -2110,7 +2111,7 @@ namespace apptab.Controllers
                                     }
                                     else
                                     {
-                                        foreach (var z in db.SI_TRAITJUSTIF.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && a.REF == opaV.NUMEROLIQUIDATION).ToList())
+                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION).ToList())
                                         {
                                             foreach (var xx in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == z.No.ToString()).ToList())
                                             {
@@ -2296,11 +2297,12 @@ namespace apptab.Controllers
                                     }
                                 }
                                 //Montant payé (OPA_VALIDATIONS (MONTANT, ETAT = 2, dateOrdre)//
+                                var ListTraitement = db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList();
                                 foreach (var opaV in db.OPA_VALIDATIONS.Where(a => a.ETAT == 2 && a.dateOrdre >= DateDebut && a.dateOrdre <= DateFin && a.NUMEROLIQUIDATION != null))
                                 {
                                     if (opaV.AVANCE == false)
                                     {
-                                        foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && a.REF == opaV.NUMEROLIQUIDATION).ToList())
+                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION).ToList())
                                         {
                                             foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No).ToList())
                                             {
@@ -2316,7 +2318,7 @@ namespace apptab.Controllers
                                     }
                                     else
                                     {
-                                        foreach (var z in db.SI_TRAITJUSTIF.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && a.REF == opaV.NUMEROLIQUIDATION).ToList())
+                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION).ToList())
                                         {
                                             foreach (var xx in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == z.No.ToString()).ToList())
                                             {
@@ -2502,11 +2504,12 @@ namespace apptab.Controllers
                                     }
                                 }
                                 //Montant payé (OPA_VALIDATIONS (MONTANT, ETAT = 2, dateOrdre)//
+                                var ListTraitement = db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList();
                                 foreach (var opaV in db.OPA_VALIDATIONS.Where(a => a.ETAT == 2 && a.dateOrdre >= DateDebut && a.dateOrdre <= DateFin && a.NUMEROLIQUIDATION != null))
                                 {
                                     if (opaV.AVANCE == false)
                                     {
-                                        foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && a.REF == opaV.NUMEROLIQUIDATION).ToList())
+                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION).ToList())
                                         {
                                             foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No).ToList())
                                             {
@@ -2522,7 +2525,7 @@ namespace apptab.Controllers
                                     }
                                     else
                                     {
-                                        foreach (var z in db.SI_TRAITJUSTIF.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && a.REF == opaV.NUMEROLIQUIDATION).ToList())
+                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION).ToList())
                                         {
                                             foreach (var xx in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == z.No.ToString()).ToList())
                                             {
@@ -2709,11 +2712,12 @@ namespace apptab.Controllers
                                     }
                                 }
                                 //Montant payé (OPA_VALIDATIONS (MONTANT, ETAT = 2, dateOrdre)//
+                                var ListTraitement = db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList();
                                 foreach (var opaV in db.OPA_VALIDATIONS.Where(a => a.ETAT == 2 && a.dateOrdre >= DateDebut && a.dateOrdre <= DateFin && a.NUMEROLIQUIDATION != null))
                                 {
                                     if (opaV.AVANCE == false)
                                     {
-                                        foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && a.REF == opaV.NUMEROLIQUIDATION).ToList())
+                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION).ToList())
                                         {
                                             foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No).ToList())
                                             {
@@ -2729,7 +2733,7 @@ namespace apptab.Controllers
                                     }
                                     else
                                     {
-                                        foreach (var z in db.SI_TRAITJUSTIF.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && a.REF == opaV.NUMEROLIQUIDATION).ToList())
+                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION).ToList())
                                         {
                                             foreach (var xx in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == z.No.ToString()).ToList())
                                             {
