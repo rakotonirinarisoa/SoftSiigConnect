@@ -493,6 +493,11 @@ namespace SOFTCONNECT.Controllers
                     }
                 }
 
+                //PCOP//
+                Session["PCOP"] = "PCOP";
+                if (db.SI_TYPEPROCESSUS.Any(a => a.IDPROJET == test.IDPROJET))
+                    Session["PCOP"] = db.SI_TYPEPROCESSUS.FirstOrDefault(a => a.IDPROJET == test.IDPROJET && a.DELETIONDATE == null).INTITULE;
+
                 //MENU//
                 if (db.SI_MENU.Any())
                 {

@@ -1469,12 +1469,13 @@ namespace apptab.Controllers
                 if (SExist != null)
                 {
                     if (SExist.VALDEPENSES != param.VALDEPENSES || SExist.VALPAIEMENTS != param.VALPAIEMENTS
-                        || SExist.PAD != param.PAD || SExist.PCOP != param.PCOP)
+                        || SExist.PAD != param.PAD || SExist.PCOP != param.PCOP || SExist.INTITULE != param.INTITULE)
                     {
                         SExist.VALDEPENSES = param.VALDEPENSES;
                         SExist.VALPAIEMENTS = param.VALPAIEMENTS;
                         SExist.PAD = param.PAD;
                         SExist.PCOP = param.PCOP;
+                        SExist.INTITULE = param.INTITULE;
                         SExist.IDUSER = exist.ID;
                         SExist.CREATIONDATE = DateTime.Now;
                         db.SaveChanges();
@@ -1490,6 +1491,7 @@ namespace apptab.Controllers
                         VALPAIEMENTS = param.VALPAIEMENTS,
                         PAD = param.PAD,
                         PCOP = param.PCOP,
+                        INTITULE = param.INTITULE,
                         IDPROJET = IdS,
                         CREATIONDATE = DateTime.Now,
                         IDUSER = exist.ID
