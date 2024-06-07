@@ -565,6 +565,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 },
                                 orderable: false
                             },
+                            { data: 'type' },
                             { data: 'id' },
                             { data: 'dateOrdre' },
                             { data: 'Auxi' },
@@ -592,7 +593,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                     `;
                                 }
                             },
-                            { data: 'type' },
+                            
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
@@ -739,6 +740,7 @@ $('[data-action="ChargerJs"]').click(function () {
 
                         data.push({
                             checkbox: '',
+                            type: v.Avance ? 'Avance' : (v.AUTREOPERATIONS ? 'Autre Opérations' : 'Engagement'),
                             id: v.No,
                             date: isNullOrUndefined(v.Date) ? '' : v.Date,
                             Auxi: isNullOrUndefined(v.Auxi) ? '' : v.Auxi,
@@ -760,7 +762,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             AUTREOP:v.AUTREOP,
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             //type: v.Avance ? 'Avance' : 'Engagement',
-                            type: v.Avance ? 'Avance' : (v.AUTREOPERATIONS ? 'Autre Opérations' : 'Engagement'),
+                           
                             numeroliquidations: v.Mandat,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
                         });
@@ -784,6 +786,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 },
                                 orderable: false
                             },
+                            { data: 'type' },
                             { data: 'id' },
                             { data: 'date' },
                             { data: 'Auxi' },
@@ -811,7 +814,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                     `;
                                 }
                             },
-                            { data: 'type' },
+                            
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);

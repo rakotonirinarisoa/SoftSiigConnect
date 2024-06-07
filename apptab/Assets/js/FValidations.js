@@ -551,6 +551,7 @@ function LoadValidate() {
                         },
                         orderable: false
                     },
+                    { data: 'type' },
                     { data: 'id' },
                     { data: 'dateOrdre' },
                     { data: 'noPiece' },
@@ -577,7 +578,7 @@ function LoadValidate() {
                                     `;
                         }
                     },
-                    { data: 'type' },
+                    
                 ],
                
                 createdRow: function (row, data, _) {
@@ -1029,6 +1030,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 },
                                 orderable: false
                             },
+                            { data: 'type' },
                             { data: 'id' },
                             { data: 'dateOrdre' },
                             { data: 'noPiece' },
@@ -1054,7 +1056,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                     `;
                                 }
                             },
-                            { data: 'type' },
+                            
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
@@ -1234,6 +1236,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 },
                                 orderable: false
                             },
+                            { data: 'type' },
                             { data: 'id' },
                             { data: 'dateOrdre' },
                             { data: 'noPiece' },
@@ -1260,7 +1263,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                     `;
                                 }
                             },
-                            { data: 'type' },
+                            
                         ],
                         
                         createdRow: function (row, data, _) {

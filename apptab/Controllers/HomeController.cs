@@ -15,6 +15,7 @@ using Extensions.DateTime;
 using System.Net.Mail;
 using apptab.Data.Entities;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
+using apptab.Data;
 
 namespace apptab.Controllers
 {
@@ -55,7 +56,7 @@ namespace apptab.Controllers
         }
         public ActionResult BonPourPaiement()
         {
-            ViewBag.Controller = "Validation comptable payeur";
+            ViewBag.Controller = "Validation des Payements";
             return View();
         }
         [HttpPost]
@@ -1077,7 +1078,9 @@ namespace apptab.Controllers
             }
             else
             {
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0).ToList();
+                var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG).ToArray();
+               
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0 && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
 
                 foreach (var item in avalider)
                 {
@@ -1184,8 +1187,12 @@ namespace apptab.Controllers
             var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == PROJECTID).FirstOrDefault().PROJET;
 
             OPA_VALIDATIONS avalider = new OPA_VALIDATIONS();
-
+            int ComptablePayeur = int.Parse(Session["PROCESDEPS"].ToString());
             int? Applicable = db.SI_TYPEPROCESSUS.FirstOrDefault(x => x.IDPROJET == PROJECTID && x.DELETIONDATE == null).VALPAIEMENTS;
+            if (ComptablePayeur == 2)
+            {
+                Applicable = 2;
+            }
 
             if (Applicable == 2)
             {

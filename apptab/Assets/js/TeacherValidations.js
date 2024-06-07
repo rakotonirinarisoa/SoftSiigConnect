@@ -225,7 +225,7 @@ function ChargeLoad() {
                             estAvance: v.AVANCE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             //type: v.AVANCE ? 'Avance' : 'Engagement',
-                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
+                            type: v.AVANCE ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
                             idprojet: codeproject,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
                         });
@@ -248,6 +248,7 @@ function ChargeLoad() {
                                 },
                                 orderable: false
                             },
+                            { data: 'type' },
                             { data: 'id' },
                             { data: 'dateOrdre' },
                             { data: 'auxi' },
@@ -275,7 +276,7 @@ function ChargeLoad() {
                                     `;
                                 }
                             },
-                            { data: 'type' },
+                            
                             //{
                             //    data: 'rejeter',
                             //    render: function (_, _, row, _) {
@@ -836,7 +837,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             estAvance: v.AVANCE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             //type: v.AVANCE ? 'Avance' : 'Engagement',
-                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
+                            type: v.AVANCE ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });
                     });
@@ -859,6 +860,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 },
                                 orderable: false
                             },
+                            { data: 'type' },
                             { data: 'id' },
                             { data: 'dateOrdre' },
                             { data: 'noPiece' },
@@ -885,7 +887,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                     `;
                                 }
                             },
-                            { data: 'estAvance' },
+                            //{ data: 'estAvance' },
                             //{
                             //    data: 'rejeter',
                             //    render: function (_, _, row, _) {
@@ -1055,7 +1057,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             estAvance: v.AVANCE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             //type: v.AVANCE ? 'Avance' : 'Engagement',
-                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
+                            type: v.AVANCE ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });
                     });
@@ -1078,6 +1080,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 },
                                 orderable: false
                             },
+                            { data: 'type' },
                             { data: 'id' },
                             { data: 'dateOrdre' },
                             { data: 'auxi' },
@@ -1105,7 +1108,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                     `;
                                 }
                             },
-                            { data: 'estAvance' },
+                            //{ data: 'estAvance' },
                             //{
                             //    data: 'rejeter',
                             //    render: function (_, _, row, _) {
