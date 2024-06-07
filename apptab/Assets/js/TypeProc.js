@@ -66,6 +66,11 @@ function GetUsers() {
                 $("#pcop").val(`${Datas.data.PCOP}`);
             else
                 $("#pcop").val("");
+
+            if (Datas.data.INTITULE != null)
+                $("#pcopL").val(`${Datas.data.INTITULE}`);
+            else
+                $("#pcopL").val("");
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -105,6 +110,12 @@ $(`[data-action="UpdateUser"]`).click(function () {
         return;
     }
 
+    let pcopL = $("#pcopL").val();
+    if (!pcopL) {
+        alert("Veuillez renseigner l'intitulé du PCOP. ");
+        return;
+    }
+
     let formData = new FormData();
 
     formData.append("suser.LOGIN", User.LOGIN);
@@ -119,6 +130,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
 
     formData.append("param.PAD", $("#pad").val());
     formData.append("param.PCOP", $("#pcop").val());
+    formData.append("param.INTITULE", $("#pcopL").val());
 
     $.ajax({
         type: "POST",
