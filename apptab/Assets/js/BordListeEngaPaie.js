@@ -239,7 +239,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                     dom: 'Bfrtip',
                     buttons: ['colvis'],
                     pageLength: 25,
-                    caption: 'SOFT - SIIG CONNECT ' + new Date().toLocaleDateString(),
+                    caption: 'SOFT EXPENDITURES TRACKERS ' + new Date().toLocaleDateString(),
                     buttons: ['colvis',
                         {
                             extend: 'pdfHtml5',

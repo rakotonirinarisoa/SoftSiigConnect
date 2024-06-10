@@ -204,7 +204,7 @@ function setDataTable() {
         deferRender: true,
         dom: 'Bfrtip',
         buttons: ['colvis'],
-        caption: 'SOFT - SIIG CONNECT ' + new Date().toLocaleDateString(),
+        caption: 'SOFT EXPENDITURES TRACKERS ' + new Date().toLocaleDateString(),
         buttons: ['colvis',
             {
                 extend: 'pdfHtml5',

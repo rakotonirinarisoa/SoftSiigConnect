@@ -232,7 +232,7 @@ function GetListLOADOTHER() {
                     deferRender: true,
                     dom: 'Bfrtip',
                     pageLength: 25,
-                    caption: 'SOFT - SIIG CONNECT ' + new Date().toLocaleDateString(),
+                    caption: 'SOFT EXPENDITURES TRACKERS ' + new Date().toLocaleDateString(),
                     buttons: ['colvis',
                         {
                             extend: 'pdfHtml5',
@@ -525,7 +525,7 @@ $('[data-action="GenereR"]').click(async function () {
                     deferRender: true,
                     dom: 'Bfrtip',
                     pageLength: 25,
-                    caption: 'SOFT - SIIG CONNECT ' + new Date().toLocaleDateString(),
+                    caption: 'SOFT EXPENDITURES TRACKERS ' + new Date().toLocaleDateString(),
                     buttons: ['colvis',
                         {
                             extend: 'pdfHtml5',
