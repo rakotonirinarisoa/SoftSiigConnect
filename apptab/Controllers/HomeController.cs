@@ -809,7 +809,7 @@ namespace apptab.Controllers
                     mail.Subject = "Attente validation paiements du projet " + ProjetIntitule;
                     mail.IsBodyHtml = true;
                     mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " paiements en attente validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
-                        "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+                        "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
 
                     smtp.Port = 587;
                     smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
@@ -917,7 +917,7 @@ namespace apptab.Controllers
                     mail.Subject = "Attente validation paiements du projet " + ProjetIntitule;
                     mail.IsBodyHtml = true;
                     mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " paiements en attente validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
-                        "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+                        "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
 
                     smtp.Port = 587;
                     smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
@@ -1468,14 +1468,14 @@ namespace apptab.Controllers
                     mail.Subject = "Attente validation paiements du projet " + ProjetIntitule;
                     mail.IsBodyHtml = true;
                     mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " paiements en attente validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
-                        "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+                        "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
                 }
                 else
                 {
                     mail.Subject = "Validation paiement du projet " + ProjetIntitule;
                     mail.IsBodyHtml = true;
                     mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " paiement valider pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
-                        "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+                        "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
                 }
                 smtp.Port = 587;
                 smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
@@ -1980,7 +1980,7 @@ namespace apptab.Controllers
                 mail.Subject = "Validation paiement du projet " + ProjetIntitule;
                 mail.IsBodyHtml = true;
                 mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " paiement valider pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
-                    "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+                    "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
 
                 smtp.Port = 587;
                 smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
@@ -2171,7 +2171,7 @@ namespace apptab.Controllers
                         mail.Subject = "Rejet paiement du projet " + ProjetIntitule;
                         mail.IsBodyHtml = true;
                         mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez un paiement rejeté pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
-                            "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+                            "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
 
                         smtp.Port = 587;
                         smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);

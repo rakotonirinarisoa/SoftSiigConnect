@@ -724,12 +724,12 @@ namespace apptab.Controllers
                 mail.IsBodyHtml = true;
 
                 mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " pièces en attente de validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
-                    "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+                    "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
 
                 if (ordsec == 1)
                 {
                     mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " pièces validées pour le compte du projet " + ProjetIntitule + " et en attente de transfert vers SIIGFP.<br/><br>" +
-                        "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+                        "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
 
                 }
 
@@ -828,7 +828,7 @@ namespace apptab.Controllers
                 mail.Subject = "Validation pièces du projet " + ProjetIntitule;
                 mail.IsBodyHtml = true;
                 mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " pièces validées pour le compte du projet " + ProjetIntitule + " et en attente de transfert vers SIIGFP.<br/><br>" +
-                    "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+                    "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
 
                 smtp.Port = 587;
                 smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
@@ -1083,7 +1083,7 @@ namespace apptab.Controllers
                     mail.Subject = "Rejet pièce du projet " + ProjetIntitule;
                     mail.IsBodyHtml = true;
                     mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez une pièce rejetée pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
-                        "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+                        "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
 
                     smtp.Port = 587;
                     smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
@@ -1620,7 +1620,7 @@ namespace apptab.Controllers
                 mail.Subject = "Validation pièces du projet " + ProjetIntitule;
                 mail.IsBodyHtml = true;
                 mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " pièces transférées pour le compte du projet " + ProjetIntitule + " et en attente du traitement de SIIGFP.<br/><br>" +
-                    "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT-SIIG CONNECT.<br/><br>" + "Cordialement";
+                    "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
 
                 smtp.Port = 587;
                 smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
