@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewBag.Title = "Correspondance entre SET - GED";
+    ViewData["Controller"] = "Correspondance entre SET - GED";
+}
+
+<div class="d-flex flex-wrap justify-content-between">
+    <div class="btn bg-gradient-olive mb-3 btn-flat">
+        <a href="../RSF/SuperAdminPROSOA" style="color:#FFFF"><i class="fa fa-plus-circle"></i> Nouvelle correspondance </a>
+    </div>
+</div>
+
+<div class="table-responsive tbodyDiv">
+    <table class="table table-hover table-striped" id="idTable">
+        <thead class="thead-green">
+            <tr>
+                <th>PROJETS SET</th>
+                <th>PROJETS GED</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody data-id="ubody"></tbody>
+    </table>
+</div>
+
+<!-- USer.js -->
+<script src="~/Assets/js/PROGED.js?version=@Session["VERSION"]"></script>

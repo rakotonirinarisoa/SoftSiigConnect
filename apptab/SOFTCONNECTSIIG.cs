@@ -59,7 +59,6 @@ namespace apptab
         public virtual DbSet<SI_TRAITANNULREVERS> SI_TRAITANNULREVERS { get; set; }
         public virtual DbSet<SI_TRAITREVERS> SI_TRAITREVERS { get; set; }
         public virtual DbSet<SI_USERSHISTO> SI_USERSHISTO { get; set; }
-
         public virtual DbSet<HSI_PROSOA> HSI_PROSOA { get; set; }
         public virtual DbSet<HSI_ACTIVITE> HSI_ACTIVITE { get; set; }
         public virtual DbSet<HSI_CATEGORIE> HSI_CATEGORIE { get; set; }
@@ -86,6 +85,9 @@ namespace apptab
         public virtual DbSet<SI_RSFTYPE> SI_RSFTYPE { get; set; }
         public virtual DbSet<SI_PAD> SI_PAD { get; set; }
         public virtual DbSet<SI_PCOP> SI_PCOP { get; set; }
+        public virtual DbSet<SI_MAPPAGES_GED> SI_MAPPAGES_GED { get; set; }
+        public virtual DbSet<HSI_PROGED> HSI_PROGED { get; set; }
+        public virtual DbSet<SI_PROGED> SI_PROGED { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

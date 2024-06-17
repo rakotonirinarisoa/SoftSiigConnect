@@ -27,7 +27,7 @@
 
         public string TYPE { get; set; }
 
-        public string LIEN { get; set; }
+        public Guid LIEN { get; set; }
 
         [Column(TypeName = "smalldatetime")]
         public DateTime? DELETIONDATE { get; set; }

@@ -21,7 +21,7 @@ function GetListProjet() {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/SuperAdmin/GetAllPROJET',
+        url: Origin + '/RSF/GetAllPROJET',
         data: formData,
         cache: false,
         contentType: false,
@@ -71,7 +71,7 @@ function GetListSOA() {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/SuperAdmin/GetAllSOA',
+        url: Origin + '/RSF/GetAllSOA',
         data: formData,
         cache: false,
         contentType: false,
@@ -116,13 +116,13 @@ $(`[data-action="AddnewSociete"]`).click(function () {
 
     let socP = $("#Proj").val();
     if (!socP) {
-        alert("Veuillez renseigner le projet. ");
+        alert("Veuillez renseigner le projet SET. ");
         return;
     }
 
     let soc = $("#Soa").val();
     if (!soc) {
-        alert("Veuillez renseigner le SOA. ");
+        alert("Veuillez renseigner le projet GED. ");
         return;
     }
 
@@ -132,11 +132,11 @@ $(`[data-action="AddnewSociete"]`).click(function () {
     formData.append("suser.IDPROJET", User.IDPROJET);
 
     formData.append("societe.IDPROJET", $(`#Proj`).val());
-    formData.append("societe.IDSOA", $(`#Soa`).val());
+    formData.append("societe.IDGED", $(`#Soa`).val());
 
     $.ajax({
         type: "POST",
-        url: Origin + '/SuperAdmin/AddSocietePROSOA',
+        url: Origin + '/RSF/AddSocietePROSOA',
         data: formData,
         cache: false,
         contentType: false,
@@ -156,7 +156,7 @@ $(`[data-action="AddnewSociete"]`).click(function () {
             }
             if (Datas.type == "success") {
                 alert(Datas.msg);
-                window.location = Origin + "/SuperAdmin/PROSOAList";
+                window.location = Origin + "/RSF/PROSOAList";
             }
             if (Datas.type == "login") {
                 alert(Datas.msg);
@@ -177,7 +177,7 @@ function GetListSociete() {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/SuperAdmin/FillTablePROSOA',
+        url: Origin + '/RSF/FillTablePROSOA',
         data: formData,
         cache: false,
         contentType: false,
@@ -204,35 +204,32 @@ function GetListSociete() {
             $(`[data-id="ubody"]`).text("");
 
             var code = ``;
-            $.each(Datas.data, function (k, v) {
-                code += `
+            if (Datas.data != null) {
+                $.each(Datas.data, function (k, v) {
+                    code += `
                     <tr data-PROJETId="${v.ID}" class="text-nowrap last-hover">
                         <td>${v.PROJET}</td>
-                        <td>${v.SOA}</td>
-                        <td class="elerfr">
-                            <div onclick="DetailPROSOA('${v.ID}')"><i class="fa fa-pen-alt text-warning"></i></div>
-                        </td>
+                        <td>${v.GED}</td>
+                        
                         <td class="elerfr">
                             <div onclick="deletePROSOA('${v.ID}')"><i class="fa fa-trash text-danger"></i></div>
                         </td>
                     </tr>
                 `;
-            });
-
+                });
+            }
+            
             $(`[data-id="ubody"]`).append(code);
-
         },
         error: function () {
             alert("Problème de connexion. ");
         }
     });
 }
-function DetailPROSOA(id) {
-    window.location = Origin + "/SuperAdmin/SuperAdminDetailFPROSOA?PROSOAID=" + id;
-}
+
 function deletePROSOA(id) {
     //alert("eto");
-    if (!confirm("Etes-vous sûr de vouloir supprimer le mappage du PROJET et SOA ?")) return;
+    if (!confirm("Etes-vous sûr de vouloir supprimer le mappage du PROJET SET et GED ?")) return;
     let formData = new FormData();
 
     formData.append("suser.LOGIN", User.LOGIN);
@@ -244,7 +241,7 @@ function deletePROSOA(id) {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/SuperAdmin/DeleteFPROSOA',
+        url: Origin + '/RSF/DeleteFPROSOA',
         data: formData,
         cache: false,
         contentType: false,
@@ -259,66 +256,69 @@ function deletePROSOA(id) {
             var Datas = JSON.parse(result);
             alert(Datas.msg);
             $(`[data-projetid="${id}"]`).remove();
-
         },
         error: function () {
             alert("Problème de connexion. ");
         }
     });
 }
-//UpdateFPROSOA
-$(`[data-action="UpdateFPROSOA"]`).click(function () {
-    let formData = new FormData();
 
-    let socP = $("#Proj").val();
-    if (!socP) {
-        alert("Veuillez renseigner le projet. ");
-        return;
-    }
+//function DetailPROSOA(id) {
+//    window.location = Origin + "/RSF/SuperAdminDetailFPROSOA?PROSOAID=" + id;
+//}
+////UpdateFPROSOA
+//$(`[data-action="UpdateFPROSOA"]`).click(function () {
+//    let formData = new FormData();
 
-    let soc = $("#Soa").val();
-    if (!soc) {
-        alert("Veuillez renseigner le SOA. ");
-        return;
-    }
+//    let socP = $("#Proj").val();
+//    if (!socP) {
+//        alert("Veuillez renseigner le projet. ");
+//        return;
+//    }
 
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDPROJET", User.IDPROJET);
+//    let soc = $("#Soa").val();
+//    if (!soc) {
+//        alert("Veuillez renseigner le SOA. ");
+//        return;
+//    }
 
-    formData.append("societe.PROJET", $(`#Proj`).val());
-    formData.append("societe.SOA", $(`#Soa`).val());
+//    formData.append("suser.LOGIN", User.LOGIN);
+//    formData.append("suser.PWD", User.PWD);
+//    formData.append("suser.ROLE", User.ROLE);
+//    formData.append("suser.IDPROJET", User.IDPROJET);
 
-    $.ajax({
-        type: "POST",
-        url: Origin + '/SuperAdmin/UpdateFPROSOA',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        beforeSend: function () {
-            loader.removeClass('display-none');
-        },
-        complete: function () {
-            loader.addClass('display-none');
-        },
-        success: function (result) {
-            var Datas = JSON.parse(result);
+//    formData.append("societe.PROJET", $(`#Proj`).val());
+//    formData.append("societe.SOA", $(`#Soa`).val());
 
-            if (Datas.type == "error") {
-                alert(Datas.msg);
-                return;
-            }
-            if (Datas.type == "success") {
-                alert(Datas.msg);
-                window.location = Origin + "/SuperAdmin/PROSOAList";
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-                window.location = window.location.origin;
-                return;
-            }
-        },
-    });
-});
+//    $.ajax({
+//        type: "POST",
+//        url: Origin + '/SuperAdmin/UpdateFPROSOA',
+//        data: formData,
+//        cache: false,
+//        contentType: false,
+//        processData: false,
+//        beforeSend: function () {
+//            loader.removeClass('display-none');
+//        },
+//        complete: function () {
+//            loader.addClass('display-none');
+//        },
+//        success: function (result) {
+//            var Datas = JSON.parse(result);
+
+//            if (Datas.type == "error") {
+//                alert(Datas.msg);
+//                return;
+//            }
+//            if (Datas.type == "success") {
+//                alert(Datas.msg);
+//                window.location = Origin + "/SuperAdmin/PROSOAList";
+//            }
+//            if (Datas.type == "login") {
+//                alert(Datas.msg);
+//                window.location = window.location.origin;
+//                return;
+//            }
+//        },
+//    });
+//});

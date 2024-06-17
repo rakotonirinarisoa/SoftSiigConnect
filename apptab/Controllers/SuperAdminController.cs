@@ -275,7 +275,6 @@ namespace apptab.Controllers
 
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user, datas = "" }, settings));
             }
-
         }
 
         //GET ALL SOA//
@@ -315,7 +314,6 @@ namespace apptab.Controllers
                 }).ToList();
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = SOA }, settings));
             }
-
         }
 
         //MAPPAGE LISTE//
@@ -709,6 +707,8 @@ namespace apptab.Controllers
                     PROSOA.DELETIONDATE = DateTime.Now;
                     PROSOA.IDUSERDEL = exist.ID;
 
+                    db.SaveChanges();
+
                     if (elemH != null)
                     {
                         elemH.DELETIONDATE = DateTime.Now;
@@ -732,6 +732,7 @@ namespace apptab.Controllers
         {
             return View();
         }
+
         public JsonResult UpdateFPROSOA(SI_USERS suser, SI_PROSOA societe, string idprosoaUp)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);

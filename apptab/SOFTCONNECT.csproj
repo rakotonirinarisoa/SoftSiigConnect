@@ -204,6 +204,8 @@
     <Compile Include="Data\AUTRE8OPERATION.cs" />
     <Compile Include="Data\Entities\AvanceDetails.cs" />
     <Compile Include="Data\Entities\MOPFOP.cs" />
+    <Compile Include="Models\HSI_PROGED.cs" />
+    <Compile Include="Models\Documents.cs" />
     <Compile Include="Models\MBUDALLOC.cs" />
     <Compile Include="Models\MBUDGET.cs" />
     <Compile Include="Models\HSI_RSF.cs" />
@@ -310,6 +312,7 @@
     <Compile Include="Models\tpa_BanqueSalaries.cs" />
     <Compile Include="Models\tpa_preparations.cs" />
     <Compile Include="Models\tpa_salaries.cs" />
+    <Compile Include="Models\Projects.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\SI_ROLES.cs" />
     <Compile Include="Models\SI_PROJETS.cs" />
@@ -359,10 +362,14 @@
     <Compile Include="Models\RCONVENTION.cs" />
     <Compile Include="Models\RGEO1.cs" />
     <Compile Include="Models\RPLAN6.cs" />
+    <Compile Include="Models\SI_MAPPAGES_GED.cs" />
+    <Compile Include="Models\SI_PROGED.cs" />
+    <Compile Include="SOFTCONNECTGED.cs" />
     <Compile Include="SOFTCONNECTOM.cs" />
     <Compile Include="SOFTCONNECTSIIG.cs" />
     <Compile Include="Models\TP_MPIECES_JUSTIFICATIVES.cs" />
     <Compile Include="Data\Date.cs" />
+    <Compile Include="Models\Users.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="apptab.sln" />
@@ -2421,9 +2428,12 @@
     <Content Include="Assets\fullcalendar-6.1.11\packages\web-component\index.global.js" />
     <Content Include="Assets\fullcalendar-6.1.11\packages\web-component\index.global.min.js" />
     <Content Include="Assets\img\bgo.png" />
+    <Content Include="Assets\img\LogoLogin.png" />
     <Content Include="Assets\img\LogoS1.png" />
     <Content Include="Assets\js\BordRSF.js" />
     <Content Include="Assets\js\BordJRA.js" />
+    <Content Include="Assets\js\MappagUserGED.js" />
+    <Content Include="Assets\js\PROGED.js" />
     <Content Include="Assets\js\RSFDetails.js" />
     <Content Include="Assets\js\RSFCreate.js" />
     <Content Include="Assets\js\RSF.js" />
@@ -4950,6 +4960,9 @@
     <Content Include="Views\RSF\Create.cshtml" />
     <Content Include="Views\RSF\Details.cshtml" />
     <Content Include="Views\BordTraitement\RSF.cshtml" />
+    <Content Include="Views\RSF\MappageGED.cshtml" />
+    <Content Include="Views\RSF\PROSOAList.cshtml" />
+    <Content Include="Views\RSF\SuperAdminPROSOA.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

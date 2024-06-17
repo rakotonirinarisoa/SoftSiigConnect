@@ -5,225 +5,105 @@
 
     $(`[data-id="username"]`).text(User.LOGIN);
 
-    GetListUser();
-    GetListPeriode();
-    GetListType();
-    GetListLien();
+    $(`[data-id="auth-list"]`).change(function (k, v) {
+        let val = $(this).val();
+        if (val == "0") {
+            $("#Connex").prop("disabled", true);
+            $("#MDP").prop("disabled", true);
+            $("#Connex").val("");
+            $("#MDP").val("");
+        } else {
+
+            $("#Connex").prop("disabled", false);
+            $("#MDP").prop("disabled", false);
+        }
+    });
+
+    $("#base-container").hide();
+
+    GetMAPP();
 });
 
-function GetListUser() {
-    let formData = new FormData();
+$(`[data-id="connex"]`).click(function () {
+    let usr = $("#Connex").val();
+    let psw = $("#MDP").val();
+    let inst = $("#Instance").val();
+    let auth = "0";
 
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDPROJET", User.IDPROJET);
+    $("#base-container").hide();
 
-    $.ajax({
-        type: "POST",
-        url: Origin + '/BordTraitement/GetAllPROJET',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        beforeSend: function () {
-            loader.removeClass('display-none');
-        },
-        complete: function () {
-            loader.addClass('display-none');
-        },
-        success: function (result) {
-            var Datas = JSON.parse(result);
-
-            if (Datas.type == "error") {
-                alert(Datas.msg);
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-                window.location = window.location.origin;
-                return;
-            }
-
-            $(`[data-id="societe-list"]`).text("");
-            var code = ``;
-            $.each(Datas.data.List, function (k, v) {
-                code += `
-                    <option value="${v.ID}">${v.PROJET}</option>
-                `;
-            });
-            $(`[data-id="societe-list"]`).append(code);
-
-        },
-        error: function (e) {
-            alert("Problème de connexion. ");
-        }
-    });
-}
-function GetListPeriode() {
-    let formData = new FormData();
-
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDPROJET", User.IDPROJET);
-
-    $.ajax({
-        type: "POST",
-        url: Origin + '/RSF/GetAllPeriode',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        beforeSend: function () {
-            loader.removeClass('display-none');
-        },
-        complete: function () {
-            loader.addClass('display-none');
-        },
-        success: function (result) {
-            var Datas = JSON.parse(result);
-
-            if (Datas.type == "error") {
-                alert(Datas.msg);
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-                window.location = window.location.origin;
-                return;
-            }
-
-            $(`[data-id="periode-list"]`).text("");
-            var code = ``;
-            $.each(Datas.data, function (k, v) {
-                code += `
-                    <option value="${v.PERIODE}">${v.PERIODE}</option>
-                `;
-            });
-            $(`[data-id="periode-list"]`).append(code);
-
-        },
-        error: function (e) {
-            alert("Problème de connexion. ");
-        }
-    })
-}
-
-function GetListType() {
-    let formData = new FormData();
-
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDPROJET", User.IDPROJET);
-
-    $.ajax({
-        type: "POST",
-        url: Origin + '/RSF/GetAllType',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        beforeSend: function () {
-            loader.removeClass('display-none');
-        },
-        complete: function () {
-            loader.addClass('display-none');
-        },
-        success: function (result) {
-            var Datas = JSON.parse(result);
-
-            if (Datas.type == "error") {
-                alert(Datas.msg);
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-                window.location = window.location.origin;
-                return;
-            }
-
-            $(`[data-id="type-list"]`).text("");
-            var code = ``;
-            $.each(Datas.data, function (k, v) {
-                code += `
-                    <option value="${v.TYPE}">${v.TYPE}</option>
-                `;
-            });
-            $(`[data-id="type-list"]`).append(code);
-
-        },
-        error: function (e) {
-            alert("Problème de connexion. ");
-        }
-    }).done(() => {
-        GetMAPP();
-    });
-}
-
-function GetMAPP() {
-    let formData = new FormData();
-
-    let dbase;
-
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDPROJET", User.IDPROJET);
-
-    formData.append("UserId", getUrlParameter("UserId"));
-
-    $.ajax({
-        type: "POST",
-        url: Origin + '/RSF/Details',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        beforeSend: function () {
-            loader.removeClass('display-none');
-        },
-        complete: function () {
-            loader.addClass('display-none');
-        },
-        success: function (result) {
-            var Datas = JSON.parse(result);
-
-            if (Datas.type == "error") {
-                alert(Datas.msg);
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-                window.location = window.location.origin;
-                return;
-            }
-
-            $("#IDProjet").val(Datas.data.PROJET);
-            $("#Title").val(Datas.data.TITLE);
-            $("#Annee").val(Datas.data.ANNEE);
-            $("#Periode").val(Datas.data.PERIODE);
-            $("#Type").val(Datas.data.TYPE);
-            $("#LienTRUE").val(Datas.data.LIEN);
-        },
-        error: function () {
-            alert("Problème de connexion. ");
-        }
-    });
-}
-
-$(`[data-action="Update"]`).click(function () {
-    let formData = new FormData();
-
-    let Title = $(`#Title`).val();
-    let Annee = $(`#Annee`).val();
-    let Periode = $(`#Periode`).val();
-    let Type = $(`#Type`).val();
-    let Lien = $(`#LienTRUE`).val();
-    if (!Title || !Annee || !Periode || !Type || !Lien) {
-        alert("Veuillez renseigner les informations afin d'enregistrer le document. ");
+    if (!inst) {
+        alert("Veuillez renseigner l'instance. ");
         return;
+    }
+    if ($(`[data-id="auth-list"]`).val() == "1") {
+        if (!usr && !psw) {
+            alert("Veuillez renseigner les champs. ");
+            return;
+        }
+    }
+
+    if ($(`[data-id="auth-list"]`).val() != null) {
+        auth = $(`[data-id="auth-list"]`).val();
+    }
+
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
+
+    formData.append("map.INSTANCE", inst);
+    formData.append("map.CONNEXION", usr);
+    formData.append("map.CONNEXPWD", psw);
+    formData.append("map.AUTH", auth);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/RSF/GetNewInstance',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+            }
+
+            $(`[data-id="base-list"]`).text("");
+            var code = ``;
+            $.each(Datas.data, function (k, v) {
+                code += `
+                    <option value="${v}">${v}</option>
+                `;
+            });
+            $(`[data-id="base-list"]`).append(code);
+
+            $("#base-container").show();
+        },
+    });
+});
+
+$(`[data-action="AddnewUser"]`).click(function () {
+    let formData = new FormData();
+    let auth = "0";
+
+    if ($(`[data-id="auth-list"]`).val() != null) {
+        auth = $(`[data-id="auth-list"]`).val();
     }
 
     formData.append("suser.LOGIN", User.LOGIN);
@@ -231,19 +111,15 @@ $(`[data-action="Update"]`).click(function () {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
 
-    formData.append("Title", Title);
-    formData.append("Annee", Annee);
-    formData.append("Periode", Periode);
-    formData.append("Type", Type);
-    formData.append("Lien", Lien);
-
-    formData.append("IDPROJET", $(`#IDProjet`).val());
-
-    formData.append("UserId", getUrlParameter("UserId"));
+    formData.append("user.INSTANCE", $(`#Instance`).val());
+    formData.append("user.AUTH", auth);
+    formData.append("user.CONNEXION", $(`#Connex`).val());
+    formData.append("user.CONNEXPWD", $(`#MDP`).val());
+    formData.append("user.DBASE", $(`#DataBase`).val());
 
     $.ajax({
         type: "POST",
-        url: Origin + '/RSF/Update',
+        url: Origin + '/RSF/MappageCreate',
         data: formData,
         cache: false,
         contentType: false,
@@ -263,9 +139,6 @@ $(`[data-action="Update"]`).click(function () {
             }
             if (Datas.type == "success") {
                 alert(Datas.msg);
-                window.location = Origin + "/RSF/Index";
-                /*window.history.back();*/
-                /*location.replace(document.referrer);*/
             }
             if (Datas.type == "login") {
                 alert(Datas.msg);
@@ -274,3 +147,140 @@ $(`[data-action="Update"]`).click(function () {
         },
     });
 });
+
+function GetMAPP() {
+    let formData = new FormData();
+
+    let dbase;
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
+
+    formData.append("UserId", getUrlParameter("UserId"));
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/RSF/DetailsMAPP',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+
+                $("#Instance").val("");
+                $("#Auth").val("");
+                $("#Connex").val("");
+                $("#MDP").val("");
+
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+
+            $("#Instance").val(Datas.data.INSTANCE);
+            $("#Auth").val(Datas.data.AUTH);
+            $("#Connex").val(Datas.data.CONNEXION);
+            $("#MDP").val(Datas.data.MDP);
+
+            let valau = Datas.data.AUTH;
+            if (valau == "0") {
+                $("#Connex").prop("disabled", true);
+                $("#MDP").prop("disabled", true);
+                $("#Connex").val("");
+                $("#MDP").val("");
+            } else {
+
+                $("#Connex").prop("disabled", false);
+                $("#MDP").prop("disabled", false);
+            }
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    }).done(function (result) {
+        var Datas = JSON.parse(result);
+        GetBASE(Datas.data.BASED);
+    });
+}
+
+function GetBASE(id) {
+    let usr = $("#Connex").val();
+    let psw = $("#MDP").val();
+    let inst = $("#Instance").val();
+    let auth = "0";
+
+    $("#base-container").hide();
+
+    if ($(`[data-id="auth-list"]`).val() != null) {
+        auth = $(`[data-id="auth-list"]`).val();
+    }
+
+    console.log(auth);
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
+
+    formData.append("map.INSTANCE", inst);
+    formData.append("map.CONNEXION", usr);
+    formData.append("map.CONNEXPWD", psw);
+    formData.append("map.AUTH", auth);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/RSF/GetNewInstance',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+            }
+
+            $(`[data-id="base-list"]`).text("");
+            var code = ``;
+            $.each(Datas.data, function (k, v) {
+                code += `
+                    <option value="${v}">${v}</option>
+                `;
+            });
+            $(`[data-id="base-list"]`).append(code);
+
+            $("#base-container").show();
+        },
+    }).done(() => {
+        if (id) {
+            $(`[data-id="base-list"]`).val(id);
+        }
+    });
+}

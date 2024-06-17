@@ -8,6 +8,7 @@
     GetListUser();
     GetListPeriode();
     GetListType();
+    GetListLien();
 });
 
 function GetListUser() {
@@ -160,6 +161,56 @@ function GetListType() {
     })
 }
 
+function GetListLien() {
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/RSF/GetAllLien',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+
+            $(`[data-id="lien-list"]`).text("");
+            var code = ``;
+            $.each(Datas.data, function (k, v) {
+                code += `
+                    <option value="${v.IDDOC}">${v.TITLE}</option>
+                `;
+            });
+            $(`[data-id="lien-list"]`).append(code);
+
+        },
+        error: function (e) {
+            alert("Problème de connexion. ");
+        }
+    })
+}
+
 $(`[data-action="AddnewUser"]`).click(function () {
     let formData = new FormData();
 
@@ -167,7 +218,7 @@ $(`[data-action="AddnewUser"]`).click(function () {
     let Annee = $(`#Annee`).val();
     let Periode = $(`#Periode`).val();
     let Type = $(`#Type`).val();
-    let Lien = $(`#Lien`).val();
+    let Lien = $(`#LienTRUE`).val();
     if (!Title || !Annee || !Periode || !Type || !Lien) {
         alert("Veuillez renseigner les informations afin d'enregistrer le document. ");
         return;

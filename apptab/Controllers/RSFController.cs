@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
+using apptab.Data;
 using apptab.Data.Entities;
 using Microsoft.Win32.SafeHandles;
 using Newtonsoft.Json;
@@ -141,7 +144,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult Create(SI_USERS suser, string Title, string Annee, string Periode, string Type, string Lien, int IDProjet)
+        public JsonResult Create(SI_USERS suser, string Title, string Annee, string Periode, string Type, Guid Lien, int IDProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -267,6 +270,52 @@ namespace apptab.Controllers
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
         }
 
+        //GET ALL LIEN//
+        [HttpPost]
+        public ActionResult GetAllLien(SI_USERS suser)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            var lienGEd = db.SI_GEDLIEN.FirstOrDefault();
+
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+            List<PROGED> linkAll = new List<PROGED>();
+
+            //if (exist.IDPROJET != 0)
+            //{
+                foreach (var x in db.SI_PROGED.Where(a => a.IDPROJET == exist.IDPROJET && a.DELETIONDATE == null))
+                {
+                    foreach (var y in ged.Users.Where(a => a.ProjectId == x.IDGED && a.DeletionDate == null).ToList())
+                    {
+                        foreach (var z in ged.Documents.Where(a => a.SenderId == y.Id && a.DeletionDate == null).ToList())
+                        {
+                            linkAll.Add(new PROGED()
+                            {
+                                LIEN = lienGEd + "/documents/shared/" + z.Id.ToString(),
+                                TITLE = z.Title,
+                                IDDOC = z.Id
+                            });
+
+                            //if (!db.SI_RSF.Any(a => a.LIEN == z.Id))
+                            //{
+                            //    linkAll.Add(new PROGED()
+                            //    {
+                            //        LIEN = lienGEd + "/documents/shared/" + z.Id.ToString(),
+                            //        TITLE = z.Title,
+                            //        IDDOC = z.Id
+                            //    });
+                            //}
+                        }
+                    }
+                }
+            //}
+
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = linkAll }, settings));
+        }
+
         //DETAILS//
         public ActionResult Details(string UserId)
         {
@@ -277,6 +326,8 @@ namespace apptab.Controllers
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            var lienGEd = db.SI_GEDLIEN.FirstOrDefault();
 
             try
             {
@@ -335,7 +386,7 @@ namespace apptab.Controllers
                         TITLE = isModif.TITLE,
                         PERIODE = isModif.PERIODE,
                         TYPE = isModif.TYPE,
-                        LIEN = isModif.LIEN,
+                        LIEN = lienGEd + "/documents/shared/" + isModif.LIEN,
                         ANNEE = isModif.ANNEE,
                         MOIS = moisInt,
                         IDPROJET = isModif.IDPROJET
@@ -358,7 +409,7 @@ namespace apptab.Controllers
 
         //UPDATE//
         [HttpPost]
-        public JsonResult Update(SI_USERS suser, string Title, string Annee, string Periode, string Type, string Lien, int IDProjet, string UserId)
+        public JsonResult Update(SI_USERS suser, string Title, string Annee, string Periode, string Type, Guid Lien, int IDProjet, string UserId)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -465,6 +516,375 @@ namespace apptab.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
             }
+        }
+
+        //GET ALL INSTANCE//
+        [HttpPost]
+        public ActionResult GetNewInstance(SI_USERS suser, SI_MAPPAGES_GED map)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            if (String.IsNullOrEmpty(map.INSTANCE))
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez créer une nouvelle mappage. " }, settings));
+
+            //Get all bases with the instance
+            var BaseList = new List<string>();
+
+            try
+            {
+                SqlConnectionStringBuilder connection = new SqlConnectionStringBuilder();
+                connection.DataSource = map.INSTANCE;
+                if (map.CONNEXION != null) connection.UserID = map.CONNEXION;
+                if (map.CONNEXPWD != null) connection.Password = map.CONNEXPWD;
+
+                if (map.AUTH != 1)
+                    connection.IntegratedSecurity = true;
+                else
+                    connection.TrustServerCertificate = true;
+
+                String strConn = connection.ToString();
+                SqlConnection sqlConn = new SqlConnection(strConn);
+                try
+                {
+                    sqlConn.Open();
+                    DataTable tblDatabases = sqlConn.GetSchema("Databases");
+                    sqlConn.Close();
+                    foreach (DataRow row in tblDatabases.Rows)
+                    {
+                        String strDatabaseName = row["database_name"].ToString();
+                        BaseList.Add(strDatabaseName);
+                    }
+                    BaseList.Sort();
+
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = BaseList }, settings));
+                }
+                catch (Exception)
+                {
+                    if (map.AUTH == 1) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Échec de l'ouverture de session de l'utilisateur 'sa'. Vérifiez vos identifiants pour la connexion à SQL Server. " }, settings));
+                    else return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Une erreur liée au réseau ou spécifique à l'instance s'est produite lors de l'établissement d'une connexion à SQL Server. Le serveur est introuvable ou n'est pas accessible. Vérifiez que le nom de l'instance est correct et que SQL Server est configuré pour autoriser les connexions distantes. " }, settings));
+                }
+            }
+            catch (Exception)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Une erreur liée au réseau ou spécifique à l'instance s'est produite lors de l'établissement d'une connexion à SQL Server. Le serveur est introuvable ou n'est pas accessible. Vérifiez que le nom de l'instance est correct et que SQL Server est configuré pour autoriser les connexions distantes. " }, settings));
+            }
+        }
+
+        //MAPPAGE CREATE//
+        public ActionResult MappageGED()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult MappageCreate(SI_USERS suser, SI_MAPPAGES_GED user)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                var isMapp = db.SI_MAPPAGES_GED.FirstOrDefault();
+                if (isMapp == null)
+                {
+                    var newUser = new SI_MAPPAGES_GED()
+                    {
+                        INSTANCE = user.INSTANCE,
+                        AUTH = user.AUTH,
+                        CONNEXION = user.CONNEXION,
+                        CONNEXPWD = user.CONNEXPWD,
+                        DBASE = user.DBASE,
+                        CREATIONDATE = DateTime.Now,
+                        IDUSER = exist.ID
+                    };
+                    db.SI_MAPPAGES_GED.Add(newUser);
+                    db.SaveChanges();
+                }
+                else
+                {
+                    isMapp.INSTANCE = user.INSTANCE;
+                    isMapp.AUTH = user.AUTH;
+                    isMapp.CONNEXION = user.CONNEXION;
+                    isMapp.CONNEXPWD = user.CONNEXPWD;
+                    isMapp.DBASE = user.DBASE;
+                    isMapp.CREATIONDATE = DateTime.Now;
+                    isMapp.IDUSER = exist.ID;
+
+                    db.SaveChanges();
+                }
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Enregistrement avec succès. ", data = user }, settings));
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
+
+        [HttpPost]
+        public ActionResult DetailsMAPP(SI_USERS suser)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                var map = db.SI_MAPPAGES_GED.FirstOrDefault();
+
+                if (map != null)
+                {
+                    var mapp = new
+                    {
+                        inst = map.INSTANCE,
+                        auth = map.AUTH,
+                        conn = map.CONNEXION,
+                        mdp = map.CONNEXPWD,
+                        baseD = map.DBASE,
+                        id = map.ID
+                    };
+
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { INSTANCE = mapp.inst, AUTH = mapp.auth, CONNEXION = mapp.conn, MDP = mapp.mdp, BASED = mapp.baseD, mapp.id } }, settings));
+                }
+                else
+                {
+                    int aa = 0;
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "message", data = new { INSTANCE = "", AUTH = "", CONNEXION = "", MDP = "", BASED = "", aa } }, settings));
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
+
+        //CORRESPONDANCE SET - GED LISTE//
+        public ActionResult PROSOAList()
+        {
+            ViewBag.Controller = "Correspondance entre SET - GED";
+            return View();
+        }
+
+        public class PROGED
+        {
+            public string PROJET { get; set; }
+            public string GED { get; set; }
+            public int? ID { get; set; }
+            public DateTime? DELETIONDATE { get; set; }
+
+            public Guid IDDOC { get; set; }
+            public string TITLE { get; set; }
+            public string LIEN { get; set; }
+        }
+
+        public JsonResult FillTablePROSOA(SI_USERS suser)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+                SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+                List<PROGED> a = new List<PROGED>();
+
+                if (db.SI_PROGED.Any(x => x.DELETIONDATE == null))
+                {
+                    foreach (var x in db.SI_PROGED.Where(x => x.DELETIONDATE == null).ToList())
+                    {
+                        a.Add(new PROGED()
+                        {
+                            PROJET = db.SI_PROJETS.FirstOrDefault(b => b.ID == x.IDPROJET && b.DELETIONDATE == null).PROJET,
+                            GED = ged.Projects.Any(b => b.Id == x.IDGED) ? ged.Projects.FirstOrDefault(b => b.Id == x.IDGED).Name : "",
+                            ID = x.ID,
+                            DELETIONDATE = x.DELETIONDATE
+                        });
+                    }
+                }
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = a }, settings));
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
+
+        public ActionResult DeleteFPROSOA(SI_USERS suser, string PROSOAID)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                int IDPROSOA = int.Parse(PROSOAID);
+                var PROSOA = db.SI_PROGED.FirstOrDefault(a => a.ID == IDPROSOA && a.DELETIONDATE == null);
+
+                var elemH = db.HSI_PROGED.FirstOrDefault(a => a.IDPARENT == IDPROSOA && a.DELETIONDATE == null);
+
+                if (PROSOA != null)
+                {
+                    PROSOA.DELETIONDATE = DateTime.Now;
+                    PROSOA.IDUSERDEL = exist.ID;
+
+                    db.SaveChanges();
+
+                    if (elemH != null)
+                    {
+                        elemH.DELETIONDATE = DateTime.Now;
+                    }
+
+                    db.SaveChanges();
+
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Suppression avec succès. " }, settings));
+                }
+                else
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de Supression" }, settings));
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
+
+        //CORRESPONDANCE SET - GED CREATE//
+        public ActionResult SuperAdminPROSOA()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public JsonResult AddSocietePROSOA(SI_USERS suser, SI_PROGED societe)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+            var Projet = db.SI_PROJETS.FirstOrDefault(a => a.ID == societe.IDPROJET && a.DELETIONDATE == null).ID;
+            var Soa = ged.Projects.FirstOrDefault(a => a.Id == societe.IDGED && a.DeletionDate == null).Id;
+
+            var societeExist = db.SI_PROGED.FirstOrDefault(a => (a.IDPROJET == Projet /*|| a.IDGED == Soa*/) && a.DELETIONDATE == null);
+
+            if (societeExist == null)
+            {
+                var newSociete = new SI_PROGED()
+                {
+                    IDPROJET = Projet,
+                    IDGED = Soa,
+                    CREATIONDATE = DateTime.Now,
+                    IDUSER = exist.ID
+                };
+                db.SI_PROGED.Add(newSociete);
+                db.SaveChanges();
+
+                var isElemH = db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == Projet && a.IDGED == Soa && a.DELETIONDATE == null);
+                var newSocieteH = new HSI_PROGED()
+                {
+                    IDPROJET = isElemH.IDPROJET,
+                    IDGED = isElemH.IDGED,
+                    CREATIONDATE = isElemH.CREATIONDATE,
+                    IDUSER = isElemH.IDUSER,
+                    IDPARENT = isElemH.ID
+                };
+                db.HSI_PROGED.Add(newSocieteH);
+                db.SaveChanges();
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Enregistrement avec succès. ", data = societe }, settings));
+            }
+            else
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Correspondance déjà existante. " }, settings));
+            }
+        }
+
+        //GET ALL PROJET//
+        [HttpPost]
+        public ActionResult GetAllPROJET(SI_USERS suser, string IDPROSOA)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            if (IDPROSOA != null)
+            {
+                int? PROSOAID = int.Parse(IDPROSOA);
+                var idPro = db.SI_PROSOA.Where(a => a.ID == PROSOAID && a.DELETIONDATE == null).Select(a => a.IDPROJET).FirstOrDefault();
+                var FProfet = db.SI_PROJETS.Where(a => a.ID != idPro && a.DELETIONDATE == null).Select(a => new
+                {
+                    PROJET = a.PROJET,
+                    ID = a.ID
+
+                }).ToList();
+                var FprojetFirst = db.SI_PROJETS.Where(a => a.ID == idPro && a.DELETIONDATE == null).Select(a => new
+                {
+                    PROJET = a.PROJET,
+                    ID = a.ID
+                }).ToList();
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = FprojetFirst, datas = FProfet }, settings));
+            }
+            else
+            {
+                var user = db.SI_PROJETS
+                    .Where(a => a.DELETIONDATE == null).Select(a => new
+                    {
+                        PROJET = a.PROJET,
+                        ID = a.ID
+                    }).ToList();
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user, datas = "" }, settings));
+            }
+        }
+
+        //GET ALL PROJET GED//
+        [HttpPost]
+        public ActionResult GetAllSOA(SI_USERS suser, string IDPROSOA)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+            if (IDPROSOA != null)
+            {
+                int? PROSOAID = int.Parse(IDPROSOA);
+                var idsoa = db.SI_PROGED.Where(a => a.ID == PROSOAID && a.DELETIONDATE == null).Select(a => a.IDGED).FirstOrDefault();
+
+                var SOA = ged.Projects.Where(x => x.Id != idsoa && x.DeletionDate == null).Select(a => new
+                {
+                    SOA = a.Name,
+                    ID = a.Id,
+                    DELETIONDATE = a.DeletionDate
+                }).ToList();
+
+                var soa1 = ged.Projects.Where(x => x.Id == idsoa && x.DeletionDate == null).Select(x => new
+                {
+                    SOA = x.Name,
+                    ID = x.Id,
+                    DELETIONDATE = x.DeletionDate
+                }).ToList();
+
+                List<SI_SOAS> SOAf = new List<SI_SOAS>();
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = soa1, datas = SOA }, settings));
+            }
+            else
+            {
+                var SOA = ged.Projects.Where(x => x.DeletionDate == null).Select(a => new
+                {
+                    SOA = a.Name,
+                    ID = a.Id
+                }).ToList();
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = SOA }, settings));
+            }
+        }
+
+        public ActionResult SuperAdminDetailFPROSOA(SI_USERS suser, string PROSOAID)
+        {
+            return View();
         }
     }
 }

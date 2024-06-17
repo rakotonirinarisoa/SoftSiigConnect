@@ -56,6 +56,27 @@
     </div>
 </div>
 
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Lien du document</span>
+        </div>
+        <div class="select-editable mb-3 col">
+            <select aria-label="Default" class="form-control" style="width:100%" aria-describedby="inputGroup-sizing-default" id="Lien" data-id="lien-list" onchange="this.nextElementSibling.value=this.value">
+            </select>
+            <input type="text" class="form-control" style="width:97%" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="LienTRUE" />
+        </div>
+
+        @*<div class="input-group mb-3 col">
+                <div class="input-group-prepend custom-label">
+                    <span class="input-group-text text-bold" id="inputGroup-sizing-default">Lien du document</span>
+                </div>
+                <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Lien" />
+            </div>*@
+
+    </div>
+</div>
+
 @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
 || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RRSF"].ToString()) == 2)))
 {

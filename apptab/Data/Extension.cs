@@ -38,6 +38,29 @@ namespace apptab.Data
             return (CONN);
         }
 
+        public string GetConGED()
+        {
+            var CONN = "";
+
+            if (db.SI_MAPPAGES_GED.Any())
+            {
+                var isPS = db.SI_MAPPAGES_GED.FirstOrDefault();
+
+                var instance = isPS.INSTANCE;
+                var auth = isPS.AUTH;
+                var connex = isPS.CONNEXION;
+                var connexPWD = isPS.CONNEXPWD;
+                var dbase = isPS.DBASE;
+
+                if (auth == 0)
+                    CONN = "Data Source=" + instance + ";Initial Catalog=" + dbase + ";Integrated Security=True;MultipleActiveResultSets=true;";
+                else
+                    CONN = "Data Source=" + instance + ";Initial Catalog=" + dbase + ";User ID=" + connex + ";Password=" + connexPWD + ";MultipleActiveResultSets=true;";
+            }
+
+            return (CONN);
+        }
+
         public bool TestMail(string mail)
         {
             Regex regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
