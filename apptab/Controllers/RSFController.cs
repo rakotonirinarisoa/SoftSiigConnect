@@ -284,33 +284,45 @@ namespace apptab.Controllers
 
             List<PROGED> linkAll = new List<PROGED>();
 
-            //if (exist.IDPROJET != 0)
-            //{
+            if (exist.IDPROJET != 0)
+            {
                 foreach (var x in db.SI_PROGED.Where(a => a.IDPROJET == exist.IDPROJET && a.DELETIONDATE == null))
                 {
                     foreach (var y in ged.Users.Where(a => a.ProjectId == x.IDGED && a.DeletionDate == null).ToList())
                     {
                         foreach (var z in ged.Documents.Where(a => a.SenderId == y.Id && a.DeletionDate == null).ToList())
                         {
-                            linkAll.Add(new PROGED()
+                            if (!db.SI_RSF.Any(a => a.LIEN == z.Id))
                             {
-                                LIEN = lienGEd + "/documents/shared/" + z.Id.ToString(),
-                                TITLE = z.Title,
-                                IDDOC = z.Id
-                            });
-
-                            //if (!db.SI_RSF.Any(a => a.LIEN == z.Id))
-                            //{
-                            //    linkAll.Add(new PROGED()
-                            //    {
-                            //        LIEN = lienGEd + "/documents/shared/" + z.Id.ToString(),
-                            //        TITLE = z.Title,
-                            //        IDDOC = z.Id
-                            //    });
-                            //}
+                                linkAll.Add(new PROGED()
+                                {
+                                    LIEN = lienGEd + "/documents/shared/" + z.Id.ToString(),
+                                    TITLE = z.Title,
+                                    IDDOC = z.Id
+                                });
+                            }
                         }
                     }
                 }
+            }
+
+            //foreach (var x in db.SI_PROGED.Where(a => a.DELETIONDATE == null))
+            //{
+            //    foreach (var y in ged.Users.Where(a => a.ProjectId == x.IDGED && a.DeletionDate == null).ToList())
+            //    {
+            //        foreach (var z in ged.Documents.Where(a => a.SenderId == y.Id && a.DeletionDate == null).ToList())
+            //        {
+            //            if (!db.SI_RSF.Any(a => a.LIEN == z.Id))
+            //            {
+            //                linkAll.Add(new PROGED()
+            //                {
+            //                    LIEN = lienGEd + "/documents/shared/" + z.Id.ToString(),
+            //                    TITLE = z.Title,
+            //                    IDDOC = z.Id
+            //                });
+            //            }
+            //        }
+            //    }
             //}
 
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = linkAll }, settings));
