@@ -1040,3 +1040,10 @@ div.dt-container .dt-paging .dt-paging-button {
 .select-editable select:focus, .select-editable input:focus {
     outline: none;
 }
+
+.AUTREOPCSS {
+    background: #0bd21e !important;
+}
+.AVANCECSS {
+    background: #FFD111 !important;
+}

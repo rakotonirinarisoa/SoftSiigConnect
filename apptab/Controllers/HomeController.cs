@@ -1189,6 +1189,7 @@ namespace apptab.Controllers
             OPA_VALIDATIONS avalider = new OPA_VALIDATIONS();
             int ComptablePayeur = int.Parse(Session["PROCESDEPS"].ToString());
             int? Applicable = db.SI_TYPEPROCESSUS.FirstOrDefault(x => x.IDPROJET == PROJECTID && x.DELETIONDATE == null).VALPAIEMENTS;
+
             if (ComptablePayeur == 2)
             {
                 Applicable = 2;

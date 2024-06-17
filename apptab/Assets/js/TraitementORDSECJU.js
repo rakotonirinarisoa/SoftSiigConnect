@@ -231,6 +231,10 @@ function GetListLOAD() {
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
                         $(row).addClass('select-text');
+                        if (data.isLATE) {
+                            //$(row).addClass("demoRayure");
+                            $(row).children('td').eq(0).addClass("demoRayure");
+                        }
                     },
                     columnDefs: [
                         {

@@ -293,15 +293,17 @@ function chargeLoad() {
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
-
                             $(row).addClass('select-text');
                             if (data.isLATE) {
                                 //$(row).attr('style', "background-color: #FF7F7F !important;");
                                 $(row).addClass("demoRayure");
-                            }
-                            if (data.AUTREOP) {
+                            } if (data.AUTREOP) {
                                 //$(row).attr('style', "background-color: #0bd21e !important;")
-                                $(row).addClass("demoRayureAUTREOP");
+                                //$(row).addClass("demoRayureAUTREOP");
+                                $(row).children('td').eq(0).addClass("AUTREOPCSS");
+                            }
+                            if (data.estAvance) {
+                                $(row).children('td').eq(0).addClass("AVANCECSS");
                             }
                         },
                         columnDefs: [
@@ -1268,15 +1270,17 @@ $('[data-action="ChargerJs"]').click(function () {
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
-
                             $(row).addClass('select-text');
                             if (data.isLATE) {
                                 //$(row).attr('style', "background-color: #FF7F7F !important;");
                                 $(row).addClass("demoRayure");
-                            }
-                            if (data.AUTREOP) {
+                            } if (data.AUTREOP) {
                                 //$(row).attr('style', "background-color: #0bd21e !important;")
-                                $(row).addClass("demoRayureAUTREOP");
+                                //$(row).addClass("demoRayureAUTREOP");
+                                $(row).children('td').eq(0).addClass("AUTREOPCSS");
+                            }
+                            if (data.estAvance) {
+                                $(row).children('td').eq(0).addClass("AVANCECSS");
                             }
                         },
                         columnDefs: [
