@@ -214,7 +214,8 @@ function GetListLOADOTHER() {
                         $(row).addClass('select-text');
 
                         if (data.isLATE) {
-                            $(row).addClass("demoRayure");
+                            //$(row).addClass("demoRayure");
+                            $(row).children('td').eq(0).addClass("demoRayure");
                         }
                     },
 
@@ -507,7 +508,8 @@ $('[data-action="GenereR"]').click(async function () {
                         $(row).addClass('select-text');
 
                         if (data.isLATE) {
-                            $(row).addClass("demoRayure");
+                            //$(row).addClass("demoRayure");
+                            $(row).children('td').eq(0).addClass("demoRayure");
                         }
                     },
 

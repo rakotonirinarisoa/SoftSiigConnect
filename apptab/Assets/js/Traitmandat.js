@@ -216,7 +216,8 @@ function GetListLOADOTHER() {
 
                         if (data.isLATE) {
                             //$(row).attr('style', "background-color: #FF7F7F !important;");
-                            $(row).addClass("demoRayure");
+                            //$(row).addClass("demoRayure");
+                            $(row).children('td').eq(0).addClass("demoRayure");
                         }
                     },
 
@@ -509,7 +510,8 @@ $('[data-action="GenereR"]').click(async function () {
 
                         if (data.isLATE) {
                             /*$(row).attr('style', "background-color: #FF7F7F !important;");*/
-                            $(row).addClass("demoRayure");
+                            //$(row).addClass("demoRayure");
+                            $(row).children('td').eq(0).addClass("demoRayure");
                         }
                     },
 

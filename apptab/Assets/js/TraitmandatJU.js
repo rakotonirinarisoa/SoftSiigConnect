@@ -215,9 +215,10 @@ function GetListLOADOTHER() {
                         $(row).attr('compteG-id', data.id);
                         $(row).addClass('select-text');
 
-                        //if (data.isLATE) {
-                        //    $(row).attr('style', "background-color: #FF7F7F !important;");
-                        //}
+                        if (data.isLATE) {
+                            //$(row).addClass("demoRayure");
+                            $(row).children('td').eq(0).addClass("demoRayure");
+                        }
                     },
 
                     columnDefs: [
@@ -510,9 +511,10 @@ $('[data-action="GenereR"]').click(async function () {
                         $(row).attr('compteG-id', data.id);
                         $(row).addClass('select-text');
 
-                        //if (data.isLATE) {
-                        //    $(row).attr('style', "background-color: #FF7F7F !important;");
-                        //}
+                        if (data.isLATE) {
+                            //$(row).addClass("demoRayure");
+                            $(row).children('td').eq(0).addClass("demoRayure");
+                        }
                     },
 
                     columnDefs: [

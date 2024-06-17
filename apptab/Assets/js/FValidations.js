@@ -592,12 +592,10 @@ function LoadValidate() {
 
                     $(row).addClass('select-text');
                     if (data.isLATE) {
-                        //$(row).attr('style', "background-color: #FF7F7F !important;");
-                        $(row).addClass("demoRayure");
+                        //$(row).addClass("demoRayure");
+                        $(row).children('td').eq(0).addClass("demoRayure");
                     }
                     if (data.AUTREOP) {
-                        //$(row).attr('style', "background-color: #0bd21e !important;")
-                        //$(row).addClass("demoRayureAUTREOP");
                         $(row).children('td').eq(0).addClass("AUTREOPCSS");
                     }
                     if (data.estAvance) {
@@ -1072,8 +1070,8 @@ $('[data-action="ChargerJs"]').click(function () {
 
                             $(row).addClass('select-text');
                             if (data.isLATE) {
-                                //$(row).attr('style', "background-color: #FF7F7F !important;");
-                                $(row).addClass("demoRayure");
+                                //$(row).addClass("demoRayure");
+                                $(row).children('td').eq(0).addClass("demoRayure");
                             } if (data.AUTREOP) {
                                 //$(row).attr('style', "background-color: #0bd21e !important;")
                                 //$(row).addClass("demoRayureAUTREOP");
@@ -1282,8 +1280,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             $(row).attr('compteG-id', data.id);
                             $(row).addClass('select-text');
                             if (data.isLATE) {
-                                //$(row).attr('style', "background-color: #FF7F7F !important;");
-                                $(row).addClass("demoRayure");
+                                //$(row).addClass("demoRayure");
+                                $(row).children('td').eq(0).addClass("demoRayure");
                             } if (data.AUTREOP) {
                                 //$(row).attr('style', "background-color: #0bd21e !important;")
                                 //$(row).addClass("demoRayureAUTREOP");
