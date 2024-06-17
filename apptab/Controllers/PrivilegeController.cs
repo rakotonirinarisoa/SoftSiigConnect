@@ -33,7 +33,7 @@ namespace apptab.Controllers
                 var test = db.SI_USERS.Where(x => x.LOGIN == exist.LOGIN && x.PWD == exist.PWD && x.DELETIONDATE == null).FirstOrDefault();
                 if (test.ROLE == (int)Role.SAdministrateur)
                 {
-                    var users = db.SI_USERS.Where(x => x.ROLE != Role.SAdministrateur).Select(a => new
+                    var users = db.SI_USERS.Where(x => x.ROLE != Role.SAdministrateur && x.ROLE != Role.Administrateur).Select(a => new
                     {
                         LOGIN = a.LOGIN,
                         ROLE = a.ROLE.ToString(),
@@ -100,7 +100,7 @@ namespace apptab.Controllers
                 }
                 else
                 {
-                    var users = db.SI_USERS.Where(x => x.ROLE != Role.SAdministrateur && x.ROLE != Role.Organe_de_Suivi && x.ROLE != Role.Validateur_paiements && x.IDPROJET == exist.IDPROJET && x.DELETIONDATE == null).Select(a => new
+                    var users = db.SI_USERS.Where(x => x.ROLE != Role.SAdministrateur && x.ROLE != Role.Administrateur && x.ROLE != Role.Organe_de_Suivi && x.ROLE != Role.Validateur_paiements && x.IDPROJET == exist.IDPROJET && x.DELETIONDATE == null).Select(a => new
                     {
                         LOGIN = a.LOGIN,
                         ROLE = a.ROLE.ToString(),
