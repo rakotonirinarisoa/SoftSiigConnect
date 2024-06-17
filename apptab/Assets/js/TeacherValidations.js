@@ -226,6 +226,7 @@ function ChargeLoad() {
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             //type: v.AVANCE ? 'Avance' : 'Engagement',
                             type: v.AVANCE ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
+                            AUTREOP : v.AUTREOP,
                             idprojet: codeproject,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
                         });
@@ -295,6 +296,14 @@ function ChargeLoad() {
                             $(row).addClass('select-text');
                             if (data.isLATE) {
                                 $(row).attr('style', "background-color: #FF7F7F !important;");
+                            }
+                            if (data.AUTREOP) {
+                                //$(row).attr('style', "background-color: #0bd21e !important;")
+                                //$(row).addClass("demoRayureAUTREOP");
+                                $(row).children('td').eq(0).addClass("AUTREOPCSS");
+                            }
+                            if (data.estAvance) {
+                                $(row).children('td').eq(0).addClass("AVANCECSS");
                             }
                         },
                         columnDefs: [
@@ -907,10 +916,13 @@ $('[data-action="ChargerJs"]').click(function () {
                             if (data.isLATE) {
                                 //$(row).attr('style', "background-color: #FF7F7F !important;");
                                 $(row).addClass("demoRayure");
-                            }
-                            if (data.AUTREOP) {
+                            } if (data.AUTREOP) {
                                 //$(row).attr('style', "background-color: #0bd21e !important;")
-                                $(row).addClass("demoRayureAUTREOP");
+                                //$(row).addClass("demoRayureAUTREOP");
+                                $(row).children('td').eq(0).addClass("AUTREOPCSS");
+                            }
+                            if (data.estAvance) {
+                                $(row).children('td').eq(0).addClass("AVANCECSS");
                             }
                         },
 
@@ -1126,10 +1138,13 @@ $('[data-action="ChargerJs"]').click(function () {
                             if (data.isLATE) {
                                 //$(row).attr('style', "background-color: #FF7F7F !important;");
                                 $(row).addClass("demoRayure");
-                            }
-                            if (data.AUTREOP) {
+                            } if (data.AUTREOP) {
                                 //$(row).attr('style', "background-color: #0bd21e !important;")
-                                $(row).addClass("demoRayureAUTREOP");
+                                //$(row).addClass("demoRayureAUTREOP");
+                                $(row).children('td').eq(0).addClass("AUTREOPCSS");
+                            }
+                            if (data.estAvance) {
+                                $(row).children('td').eq(0).addClass("AVANCECSS");
                             }
                         },
                         columnDefs: [

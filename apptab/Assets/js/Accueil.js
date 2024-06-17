@@ -759,7 +759,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             journal: isNullOrUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             estAvance: v.Avance,
-                            AUTREOP:v.AUTREOP,
+                            AUTREOP:v.AUTREOPERATIONS,
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             //type: v.Avance ? 'Avance' : 'Engagement',
                            
@@ -786,7 +786,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 },
                                 orderable: false
                             },
-                            { data: 'type' },
+                            {data: 'type'},
                             { data: 'id' },
                             { data: 'date' },
                             { data: 'Auxi' },
@@ -818,6 +818,7 @@ $('[data-action="ChargerJs"]').click(function () {
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
+                            
                             $(row).addClass('select-text');
                             //if (data.isLATE) {
                             //    //$(row).attr('style', "background-color: #FF7F7F !important;");
@@ -825,7 +826,11 @@ $('[data-action="ChargerJs"]').click(function () {
                             //}
                             if (data.AUTREOP) {
                                 //$(row).attr('style', "background-color: #0bd21e !important;")
-                                $(row).addClass("demoRayureAUTREOP");
+                                //$(row).addClass("demoRayureAUTREOP");
+                                $(row).children('td').eq(0).addClass("AUTREOPCSS");
+                            }
+                            if (data.estAvance) {
+                                $(row).children('td').eq(0).addClass("AVANCECSS");
                             }
                         },
                         columnDefs: [

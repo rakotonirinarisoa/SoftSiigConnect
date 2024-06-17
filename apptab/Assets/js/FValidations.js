@@ -321,101 +321,107 @@ function GetFileNameAnarana(blobUrl) {
 function getelementTXT(a , list) {
     let formData = new FormData();
 
-    let codeproject = $("#Fproject").val();
-    formData.append("codeproject", codeproject);
+   
+    if (window.confirm("le fichier de la banque ne pourra plus être régénéré à nouveau, voulez-vous confirmer?")) {
+        let codeproject = $("#Fproject").val();
+        formData.append("codeproject", codeproject);
 
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.ID", User.ID);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
-    formData.append("baseName", baseName);
-    formData.append("codeJ", $('#commercial').val());
-    formData.append("devise", false);
-    formData.append("intbasetype", a);
+        formData.append("suser.LOGIN", User.LOGIN);
+        formData.append("suser.ID", User.ID);
+        formData.append("suser.PWD", User.PWD);
+        formData.append("suser.ROLE", User.ROLE);
+        formData.append("suser.IDSOCIETE", User.IDSOCIETE);
+        formData.append("baseName", baseName);
+        formData.append("codeJ", $('#commercial').val());
+        formData.append("devise", false);
+        formData.append("intbasetype", a);
 
-    formData.append("listCompte", JSON.stringify(list));
+        formData.append("listCompte", JSON.stringify(list));
 
-    $.ajax({
-        type: "POST",
-        url: Origin + '/Home/CreateZipFile',
-        data: formData,
-        cache: false,
-        contentType: false,
-        datatype: 'json',
-        xhrFields: {
-            responseType: 'blob'
-        },
-        processData: false,
-        beforeSend: function () {
-            loader.removeClass('display-none');
-        },
-        complete: function (result) {
-            loader.addClass('display-none');
-            alert("Traitement avec succés.")
-            window.location.reload();
-        },
-        success: function (result) {
-            console.log(result);
-            let blobUrl = URL.createObjectURL(result);
-            GetFileNameAnarana(blobUrl);
-            //window.location = '/Home/GetFile?file=' + Datas.data;
-            
-        },
-        error: function () {
-            alert("Problème de connexion. ");
-        },
-        
-    });
+        $.ajax({
+            type: "POST",
+            url: Origin + '/Home/CreateZipFile',
+            data: formData,
+            cache: false,
+            contentType: false,
+            datatype: 'json',
+            xhrFields: {
+                responseType: 'blob'
+            },
+            processData: false,
+            beforeSend: function () {
+                loader.removeClass('display-none');
+            },
+            complete: function (result) {
+                loader.addClass('display-none');
+                alert("Traitement avec succés.");
+
+                window.location.reload();
+            },
+            success: function (result) {
+                console.log(result);
+                let blobUrl = URL.createObjectURL(result);
+                GetFileNameAnarana(blobUrl);
+                //window.location = '/Home/GetFile?file=' + Datas.data;
+
+            },
+            error: function () {
+                alert("Problème de connexion. ");
+            },
+
+        });
+    }
+   
 }
 function getelementISO2022(a, list) {
     let formData = new FormData();
+    if (window.confirm("Le fichier de la banque ne pourra plus être régénéré à nouveau, voulez-vous confirmer?")) {
+        let codeproject = $("#Fproject").val();
+        formData.append("codeproject", codeproject);
 
-    let codeproject = $("#Fproject").val();
-    formData.append("codeproject", codeproject);
+        formData.append("suser.LOGIN", User.LOGIN);
+        formData.append("suser.ID", User.ID);
+        formData.append("suser.PWD", User.PWD);
+        formData.append("suser.ROLE", User.ROLE);
+        formData.append("suser.IDSOCIETE", User.IDSOCIETE);
+        formData.append("baseName", baseName);
+        formData.append("codeJ", $('#commercial').val());
+        formData.append("devise", false);
+        formData.append("intbasetype", a);
 
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.ID", User.ID);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
-    formData.append("baseName", baseName);
-    formData.append("codeJ", $('#commercial').val());
-    formData.append("devise", false);
-    formData.append("intbasetype", a);
+        formData.append("listCompte", JSON.stringify(list));
 
-    formData.append("listCompte", JSON.stringify(list));
+        $.ajax({
+            type: "POST",
+            url: Origin + '/Home/CreateZipFileISO2022',
+            data: formData,
+            cache: false,
+            contentType: false,
+            datatype: 'json',
+            xhrFields: {
+                responseType: 'blob'
+            },
+            processData: false,
+            beforeSend: function () {
+                loader.removeClass('display-none');
+            },
+            complete: function () {
+                loader.addClass('display-none');
+                window.location.reload();
+            },
+            success: function (result) {
+                console.log(result);
+                let blobUrl = URL.createObjectURL(result);
+                GetFileNameAnarana(blobUrl);
+                //window.location = '/Home/GetFile?file=' + Datas.data;
 
-    $.ajax({
-        type: "POST",
-        url: Origin + '/Home/CreateZipFileISO2022',
-        data: formData,
-        cache: false,
-        contentType: false,
-        datatype: 'json',
-        xhrFields: {
-            responseType: 'blob'
-        },
-        processData: false,
-        beforeSend: function () {
-            loader.removeClass('display-none');
-        },
-        complete: function () {
-            loader.addClass('display-none');
-            window.location.reload();
-        },
-        success: function (result) {
-            console.log(result);
-            let blobUrl = URL.createObjectURL(result);
-            GetFileNameAnarana(blobUrl);
-            //window.location = '/Home/GetFile?file=' + Datas.data;
-            
-        },
-        error: function () {
-            alert("Problème de connexion. ");
-        },
-        
-    });
+            },
+            error: function () {
+                alert("Problème de connexion. ");
+            },
+
+        });
+    }
 }
 //==============================================================================================Get All Project===================================================================================
 
@@ -591,7 +597,11 @@ function LoadValidate() {
                     }
                     if (data.AUTREOP) {
                         //$(row).attr('style', "background-color: #0bd21e !important;")
-                        $(row).addClass("demoRayureAUTREOP");
+                        //$(row).addClass("demoRayureAUTREOP");
+                        $(row).children('td').eq(0).addClass("AUTREOPCSS");
+                    }
+                    if (data.estAvance) {
+                        $(row).children('td').eq(0).addClass("AVANCECSS");
                     }
                 },
                 columnDefs: [
@@ -793,7 +803,6 @@ $(`[data-action="CreateTxt"]`).click(function () {
 $(`[data-action="ISO2022"]`).click(function () {
     let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
     let list = [];
-
     if (baseName == "2") {
         for (let i = 0; i < checkList.length; i += 1) {
             const id = $(checkList[i]).attr("compteG-id");
@@ -1065,10 +1074,13 @@ $('[data-action="ChargerJs"]').click(function () {
                             if (data.isLATE) {
                                 //$(row).attr('style', "background-color: #FF7F7F !important;");
                                 $(row).addClass("demoRayure");
-                            }
-                            if (data.AUTREOP) {
+                            } if (data.AUTREOP) {
                                 //$(row).attr('style', "background-color: #0bd21e !important;")
-                                $(row).addClass("demoRayureAUTREOP");
+                                //$(row).addClass("demoRayureAUTREOP");
+                                $(row).children('td').eq(0).addClass("AUTREOPCSS");
+                            }
+                            if (data.estAvance) {
+                                $(row).children('td').eq(0).addClass("AVANCECSS");
                             }
                         },
                         columnDefs: [
@@ -1268,15 +1280,17 @@ $('[data-action="ChargerJs"]').click(function () {
                         
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
-
                             $(row).addClass('select-text');
                             if (data.isLATE) {
                                 //$(row).attr('style', "background-color: #FF7F7F !important;");
                                 $(row).addClass("demoRayure");
-                            }
-                            if (data.AUTREOP) {
+                            } if (data.AUTREOP) {
                                 //$(row).attr('style', "background-color: #0bd21e !important;")
-                                $(row).addClass("demoRayureAUTREOP");
+                                //$(row).addClass("demoRayureAUTREOP");
+                                $(row).children('td').eq(0).addClass("AUTREOPCSS");
+                            }
+                            if (data.estAvance) {
+                                $(row).children('td').eq(0).addClass("AVANCECSS");
                             }
                         },
                         columnDefs: [
