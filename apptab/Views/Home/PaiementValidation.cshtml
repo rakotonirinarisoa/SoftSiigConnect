@@ -113,6 +113,7 @@
                 <td style="text-align:right">
                     <input type="checkbox" class="Checkall" />
                 </td>
+                <td style="font-weight: bold; text-align: center">Site</td>
                 <td style="font-weight: bold; text-align: center">Type</td>
                 <td style="font-weight: bold; text-align:center" width="5px">N°</td>
                 <td style="font-weight:bold; text-align:center">Date n°ordre</td>
@@ -133,12 +134,14 @@
                 <td style="font-weight: bold; text-align: center">Marché</td>
                 <td style="font-weight: bold; text-align: center">Liquidation</td>
 
+
             </tr>
         </thead>
         <tbody class="afb160"></tbody>
         <tfoot style="opacity:50%">
             <tr>
                 <th></th>
+                <th>Site</th>
                 <th>Type</th>
                 <th>N°</th>
                 <th>Date n°ordre</th>
@@ -162,6 +165,13 @@
             </tr>
         </tfoot>
     </table>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="btn btn-flat bg-gradient-red col-12" id="export-to-pdf-btn">
+            <i class="fa fa-file-pdf"></i> Export PDF
+        </div>
+    </div>
 </div>
 <div class="form-row mb-3">
     @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
@@ -189,3 +199,10 @@
 
 <script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
 <script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
+
+<script defer>
+    $('#export-to-pdf-btn').on('click', () => {
+        exportTableToPdf('TDB_OPA', 'RECUPERATION PAIEMENTS-PDF', `<p style="font-weight: bold /*text-align:center*/;">RECUPERATION PAIEMENTS</p><p>La liste des récupérations des paiements dans TOM²PRO</p>`, `<p style="font-weight: bold;">SOFT EXPENDITURES TRACKERS </p>`, [0, 13, 14, 15]);
+        /*exportTableToPdf('dashboard', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);*/
+    });
+</script>

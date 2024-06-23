@@ -761,6 +761,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             estAvance: v.Avance,
                             AUTREOP:v.AUTREOPERATIONS,
                             numeroliquidations: v.NUMEROLIQUIDATION,
+                            Site: v.SITE,
                             //type: v.Avance ? 'Avance' : 'Engagement',
                            
                             numeroliquidations: v.Mandat,
@@ -786,6 +787,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 },
                                 orderable: false
                             },
+                            { data: 'Site' },
                             {data: 'type'},
                             { data: 'id' },
                             { data: 'date' },
@@ -814,6 +816,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                     `;
                                 }
                             },
+                           
                             
                         ],
                         createdRow: function (row, data, _) {

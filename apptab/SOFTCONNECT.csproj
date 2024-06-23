@@ -169,6 +169,9 @@
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="xunit.assert, Version=2.8.1.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.assert.2.8.1\lib\netstandard1.1\xunit.assert.dll</HintPath>
+    </Reference>
     <Reference Include="ZstdSharp, Version=0.7.4.0, Culture=neutral, PublicKeyToken=8d151af33a4ad5cf, processorArchitecture=MSIL">
       <HintPath>..\packages\ZstdSharp.Port.0.7.4\lib\net462\ZstdSharp.dll</HintPath>
     </Reference>
@@ -204,6 +207,7 @@
     <Compile Include="Data\AUTRE8OPERATION.cs" />
     <Compile Include="Data\Entities\AvanceDetails.cs" />
     <Compile Include="Data\Entities\MOPFOP.cs" />
+    <Compile Include="Extension\ISO20022xml.cs" />
     <Compile Include="Models\HSI_PROGED.cs" />
     <Compile Include="Models\Documents.cs" />
     <Compile Include="Models\MBUDALLOC.cs" />
@@ -255,6 +259,7 @@
     <Compile Include="Models\GA_AVANCE_MOUVEMENT.cs" />
     <Compile Include="Data\Entities\GA_AVANCE_DETAILS.cs" />
     <Compile Include="Models\ListPaimentV.cs" />
+    <Compile Include="Models\Model1.cs" />
     <Compile Include="Models\SI_USERSHISTO.cs" />
     <Compile Include="Models\TxtPAIEMENT.cs" />
     <Compile Include="Models\TxLISTETRAIT.cs" />

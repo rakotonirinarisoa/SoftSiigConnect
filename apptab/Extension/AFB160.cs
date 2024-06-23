@@ -16,8 +16,9 @@ namespace apptab.Extension
 {
     public class AFB160
     {
-        public AFB CreateISO20022(bool devise, string codeJ, SI_USERS user, string codeproject, List<AvanceDetails> list)
+        public ISO20022xml CreateISO20022(bool devise, string codeJ, SI_USERS user, string codeproject, List<AvanceDetails> list)
         {
+            XmlDocument xd = new XmlDocument();
             
             int PROJECTID = int.Parse(codeproject);
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
@@ -83,8 +84,8 @@ namespace apptab.Extension
             foreach (var item in list)
             {
                 beneficiaires.AddRange((from dordre in db.OPA_REGLEMENTBR
-                                 where dordre.IDSOCIETE == PROJECTID && dordre.NUM == item.Id && dordre.APPLICATION == "BR" && dordre.ETAT == "0"
-                                 select dordre).ToList());
+                                        where dordre.IDSOCIETE == PROJECTID && dordre.NUM == item.Id && dordre.APPLICATION == "BR" && dordre.ETAT == "0"
+                                        select dordre).ToList());
             }
 
             var nums_2 = beneficiaires;
@@ -169,6 +170,17 @@ namespace apptab.Extension
                     {
                         montant += mont.MONTANT;
                     }
+                } else if (pop.AUTREOP == true)
+                {
+                    mont = tom.CPTADMIN_FAUTREOPERATION.Where(x => x.NUMEROOPERATION == num.NUM).FirstOrDefault();
+                    if (devise)
+                    {
+                        montant += mont.MONTANTDEVISE; //à voir avec Faramalala
+                    }
+                    else
+                    {
+                        montant += mont.MONTANTLOCAL;
+                    }
                 }
                 else
                 {
@@ -189,22 +201,22 @@ namespace apptab.Extension
             DateTime dtcrdt = DateTime.Now;
             string xmlconst = "";
             int iteration = 1;
-                string path = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" +nom2 +".xml";
-                try
+            string path = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + fileName + ".xml";
+            try
+            {
+                // Create the file, or overwrite if the file exists.
+                using (FileStream fs = File.Create(path))
                 {
-                    // Create the file, or overwrite if the file exists.
-                    using (FileStream fs = File.Create(path))
-                    {
-                        byte[] info = new UTF8Encoding(true).GetBytes("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\r\n");
-                        // Add some information to the file.
+                    byte[] info = new UTF8Encoding(true).GetBytes("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>\r\n");
+                    // Add some information to the file.
 
-                        fs.Write(info, 0, info.Length);
+                    fs.Write(info, 0, info.Length);
 
-                        info = new UTF8Encoding(true).GetBytes("<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.001.001.03\">\r\n");
+                    info = new UTF8Encoding(true).GetBytes("<Document xmlns=\"urn:iso:std:iso:20022:tech:xsd:pain.001.001.03\">\r\n");
 
-                        //info = new UTF8Encoding(true).GetBytes("<CstmrCdtTrfInitn>\r\n");
+                    //info = new UTF8Encoding(true).GetBytes("<CstmrCdtTrfInitn>\r\n");
 
-                        int globaliteration = beneficiaires.Count();
+                    int globaliteration = beneficiaires.Count();
 
 
                     XElement contacts = new XElement("CstmrCdtTrfInitn",
@@ -222,43 +234,43 @@ namespace apptab.Extension
                                             new XElement("Id", donneurOrde.CODE_BANQUE.TrimEnd(' '))
                                         )
                                 )))));
-                    var  bnfr = beneficiaires.FirstOrDefault();
-                        var op = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == bnfr.NUM).FirstOrDefault();
+                    var bnfr = beneficiaires.FirstOrDefault();
+                    var op = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == bnfr.NUM).FirstOrDefault();
 
-                         contacts.Add(new XElement("PmtInf",
-                            new XElement("PmtInfId", infdonneurOrdre),
-                            new XElement("PmtMtd", "TRF"),
-                            new XElement("BtchBookg", false),
-                            new XElement("NbOfTxs", iteration),
-                            new XElement("CtrlSum", bnfr.MONTANT),
+                    contacts.Add(new XElement("PmtInf",
+                       new XElement("PmtInfId", infdonneurOrdre),
+                       new XElement("PmtMtd", "TRF"),
+                       new XElement("BtchBookg", false),
+                       new XElement("NbOfTxs", iteration),
+                       new XElement("CtrlSum", bnfr.MONTANT),
 
-                            new XElement("PmtTpInf",
-                            new XElement("InstrPrty", "NORM")),//a saisir selon l'utilisateur
-                            new XElement("ReqdExctnDt", dtcrdt),
-                            new XElement("Dbtr",
-                                new XElement("Nm", donneurOrde.DONNEUR_ORDRE),
-                                new XElement("PstlAdr",
-                                    new XElement("StrtNm", donneurOrde.ADDRESSE1),
-                                    new XElement("TwnNm", donneurOrde.VILLE),
-                                    new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' '))
-                            ),
-                            new XElement("Id",
-                            new XElement("OrgId",
-                                new XElement("Othr",
-                                new XElement("Id", donneurOrde.NIF)//NIF a sauvegarder a opa_donneurdordre
-                                )))
-                             ),
-                            new XElement("DbtrAcct",
-                                new XElement("Id",
-                                    new XElement("Othr",
-                                        new XElement("Id", bnfr.RIB))),//RIB RJL1 // beneficiaire.rib
-                                new XElement("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' '))
-                            ),
-                            new XElement("DbtrAgt",
-                            new XElement("FinInstnId",
-                            new XElement("BIC", op.auxi.TrimEnd(' ')),
-                            new XElement("PstlAdr", new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' '))))),
-                            new XElement("ChrgBr", "SHAR")));
+                       new XElement("PmtTpInf",
+                       new XElement("InstrPrty", "NORM")),//a saisir selon l'utilisateur
+                       new XElement("ReqdExctnDt", dtcrdt),
+                       new XElement("Dbtr",
+                           new XElement("Nm", donneurOrde.DONNEUR_ORDRE),
+                           new XElement("PstlAdr",
+                               new XElement("StrtNm", donneurOrde.ADDRESSE1),
+                               new XElement("TwnNm", donneurOrde.VILLE),
+                               new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' '))
+                       ),
+                       new XElement("Id",
+                       new XElement("OrgId",
+                           new XElement("Othr",
+                           new XElement("Id", donneurOrde.NIF)//NIF a sauvegarder a opa_donneurdordre
+                           )))
+                        ),
+                       new XElement("DbtrAcct",
+                           new XElement("Id",
+                               new XElement("Othr",
+                                   new XElement("Id", bnfr.BANQUE + bnfr.GUICHET + bnfr.RIB))),//RIB RJL1 // beneficiaire.rib
+                           new XElement("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' '))
+                       ),
+                       new XElement("DbtrAgt",
+                       new XElement("FinInstnId",
+                       new XElement("BIC", op.auxi.TrimEnd(' ')),
+                       new XElement("PstlAdr", new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' '))))),
+                       new XElement("ChrgBr", "SHAR")));
 
                     //// Add some information to the file.
                     ///
@@ -299,32 +311,27 @@ namespace apptab.Extension
                     fs.Write(info, 0, info.Length);
                     info = new UTF8Encoding(true).GetBytes(contacts.ToString());
                     fs.Write(info, 0, info.Length);
-
                     //info = new UTF8Encoding(true).GetBytes("<\r\n/CstmrCdtTrfInitn>\r\n");
-
                     info = new UTF8Encoding(true).GetBytes("\r\n</Document>");
-                    //// Add some information to the file.
-                    ///fs.Write(info, 0, info.Length);
-                    }
 
-                    // Open the stream and read it back.
-                    using (StreamReader sr = File.OpenText(path))
-                    {
-                        string s = "";
-                        while ((s = sr.ReadLine()) != null)
-                        {
-                            Console.WriteLine(s);
-                        }
-                    }
+                    fs.Write(info, 0, info.Length);
+                    xd.LoadXml(fs.ToString());
                 }
 
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                }
-            
-            return new AFB() { Fichier = path, Chemin = path };
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            //XmlISO.LoadXml(path);
+           
+            //return new AFB() { Fichier = path, Chemin = path };
+            return new ISO20022xml() { Fichier = xd, Chemin = path };
+
         }
+        public XmlDocument XmlISO{ get; set; }
+
         public AFB CreateTOMPROAFB160(bool devise, string codeJ, SI_USERS user, string codeproject)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
@@ -1256,7 +1263,8 @@ namespace apptab.Extension
                             Plan6 = av.PLAN6,
                             Marche = "",
                             Auxi = av.AUXI,
-                            Status = num.ETAT
+                            Status = num.ETAT,
+                            SITE = av.SITE,
                         }).FirstOrDefault();
 
                         listEcritureSelect.Add(ligneRegs);
@@ -1282,7 +1290,8 @@ namespace apptab.Extension
                                                        Plan6 = mcpt.PLAN6,
                                                        Marche = "",
                                                        Auxi = mcpt.AUXIFOURNISSEUR,
-                                                       Status = num.ETAT
+                                                       Status = num.ETAT,
+                                                       SITE = mcpt.SITE,
                                                    }).FirstOrDefault();
                         //ETo tohizana 
                         DataListTomOP ligneRegsOP = tom.CPTADMIN_FAUTREOPERATION.Where(mcpt => mcpt.NUMEROOPERATION == num.NUM).Select(x => new DataListTomOP()
@@ -1303,6 +1312,7 @@ namespace apptab.Extension
                             Marche = x.CODEMARCHE,
                             Auxi = "",
                             Status = num.ETAT,
+                            SITE = x.SITE,
                         }).FirstOrDefault();
 
                         if (ligneRegs != null)
@@ -2303,6 +2313,7 @@ namespace apptab.Extension
                         NUMEREG = mo.NUMENREG,
                         TYPE = fo.TYPE_OPERATION,
                         MARCHE = fo.CODE,
+                        SITE = mo.SITE,
                     }
                 );
 
@@ -2329,7 +2340,7 @@ namespace apptab.Extension
                     ACTI = z.ACTI,
                     GEO = z.GEO,
                     TYPE = a.TYPE,
-
+                    SITE = a.SITE,
                 }).ToList());
             }
             foreach(string numOpr in DjournalOP)
@@ -2352,6 +2363,7 @@ namespace apptab.Extension
                     TYPE = x.TYPEOPERATION,
                     NUMEROREG = null,
                     AUTREOP = true,
+                    SITE = x.SITE
                 }).ToList());
             }
             if (djournal.RIB != null && djournal.RIB != "")
@@ -2404,6 +2416,7 @@ namespace apptab.Extension
                                             NUMEREG = item.NUMENREG,
                                             CogeFourniseur = item.COGEFOURNISSEUR,
                                             AUTREOPERATIONS = false,
+                                            SITE = item.SITE,
                                         });
                                     }
                                 }
@@ -2442,6 +2455,7 @@ namespace apptab.Extension
                                     Status = etat,
                                     Mandat = "",
                                     AUTREOPERATIONS = false,
+                                    SITE = reglementAV.SITE,
                                 });
 
                             }
@@ -2477,6 +2491,7 @@ namespace apptab.Extension
                                     Mandat = "",
                                     NUMEREG = 0,
                                     AUTREOPERATIONS = true,
+                                    SITE = nordAOPS.SITE,
                                 });
 
                             }
@@ -2574,6 +2589,7 @@ namespace apptab.Extension
                                 Avance = true,
                                 Mandat = "",
                                 AUTREOPERATIONS = false,
+                                SITE = reglementAV.SITE,
                             });
                         }
                         foreach (var nord in lOPCOGE)
@@ -2612,6 +2628,7 @@ namespace apptab.Extension
                                         NUMEREG = reglement.NUMENREG,
                                         CogeFourniseur = reglement.COGEFOURNISSEUR,
                                         AUTREOPERATIONS = false,
+                                        SITE = reglement.SITE,
                                     });
                                 }
                                 
@@ -2647,6 +2664,7 @@ namespace apptab.Extension
                                     Mandat = "",
                                     NUMEREG = 0,
                                     AUTREOPERATIONS = true,
+                                    SITE = nordAOPS.SITE,
                                 });
 
                             }
@@ -2780,6 +2798,7 @@ namespace apptab.Extension
                                     Mandat = "",
                                     NUMEREG = 0,
                                     AUTREOPERATIONS = true,
+                                    SITE = nordAOPS.SITE,
                                 });
 
                             }

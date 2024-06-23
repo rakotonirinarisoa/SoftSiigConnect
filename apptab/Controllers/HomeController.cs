@@ -16,6 +16,11 @@ using System.Net.Mail;
 using apptab.Data.Entities;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 using apptab.Data;
+using System.Xml.Linq;
+using System.Xml.XPath;
+using Xunit;
+using System.Text;
+using System.Xml;
 
 namespace apptab.Controllers
 {
@@ -173,7 +178,21 @@ namespace apptab.Controllers
             {
                 return null;
             }
-        } 
+        }
+
+        public XmlDocument SaveDocument(string pathchemin, String path)
+        {
+            var xmlDoc = new XmlDocument();
+            xmlDoc.Load(pathchemin);
+            var address = xmlDoc.GetElementsByTagName("original");
+
+            using (StreamWriter stream = new StreamWriter(path, false, Encoding.GetEncoding("iso-8859-7")))
+            {
+                xmlDoc.Save(stream);
+            }
+            return (xmlDoc);
+        }
+
         public FileResult CreateFileAFBXML(string pathchemin, string pathfiles)
         {
             try
@@ -184,13 +203,9 @@ namespace apptab.Controllers
                 {
                     Directory.CreateDirectory(pth);
                 }
-                StreamWriter sw = null;
-
-                sw = new StreamWriter(pth + pathchemin);
-                sw.Write(pathfiles);
-                sw.Close();
                 byte[] source = System.IO.File.ReadAllBytes(pth + pathchemin);
                 string s = "application/xml";
+
                 return File(source, System.Net.Mime.MediaTypeNames.Application.Octet, pathfiles);
             }
             catch (Exception)
@@ -350,7 +365,7 @@ namespace apptab.Controllers
         public ActionResult CreateZipFileISO2022(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte)
         {
             AFB160 aFB160 = new AFB160();
-
+            XmlDocument xmlResult = new XmlDocument();
             var send = "";
             int PROJECTID = int.Parse(codeproject);
             var list = JsonConvert.DeserializeObject<List<AvanceDetails>>(listCompte);
@@ -389,13 +404,19 @@ namespace apptab.Controllers
                         }
                     }
                 }
+                
                 if (intbasetype == 0)
                 {
                     Anarana = pathfile.Chemin;
-                    return CreateFileAFBXML(pathfile.Chemin, pathfile.Fichier);
+                    //XmlDocument xd = new XmlDocument();
+                    //xd.LoadXml(Anarana);
+                    //return CreateFileAFBXML(pathfile.Chemin, pathfile.Fichier);
+                   
+
+                    xmlResult = SaveDocument(Anarana, Anarana);
                 }
             }
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archivage avec succès. ", data = send }, settings));
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archivage avec succès. ", data = xmlResult  }, settings));
         }
         [HttpPost]
         public JsonResult FileName()
@@ -860,6 +881,7 @@ namespace apptab.Controllers
                         avalider.NUMEROLIQUIDATION = item.Mandat;
                         avalider.NUMEREG = item.NUMEREG;
                         avalider.AUTREOP = item.AUTREOPERATIONS;
+                        avalider.SITE = item.SITE;
                         try
                         {
                             db.OPA_VALIDATIONS.Add(avalider);
@@ -974,6 +996,7 @@ namespace apptab.Controllers
                         AVANCE = item.AVANCE,
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                         AUTREOP = item.AUTREOP,
+                        SITE = item.SITE,
                     });
                 }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
@@ -1011,6 +1034,7 @@ namespace apptab.Controllers
                         AVANCE = item.AVANCE,
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                         AUTREOP = item.AUTREOP,
+                        SITE = item.SITE,
                     });
                 }
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
@@ -1113,6 +1137,7 @@ namespace apptab.Controllers
                             NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                             NUMEREG = item.NUMEREG,
                             AUTREOP = item.AUTREOP,
+                            SITE  = item.SITE,
                         });
                     }
                     else
@@ -1141,6 +1166,7 @@ namespace apptab.Controllers
                             NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                             NUMEREG = item.NUMEREG,
                             AUTREOP = item.AUTREOP,
+                            SITE = item.SITE,
                         });
                     }
                 }
@@ -1358,6 +1384,7 @@ namespace apptab.Controllers
                                 avalider.Journal = avalider.Journal;
                                 avalider.DATEVAL = DateTime.Now;
                                 avalider.IDUSVAL = exist.ID;
+                                avalider.SITE = avalider.SITE;
 
                                 db.SaveChanges();
                             }
@@ -1401,7 +1428,7 @@ namespace apptab.Controllers
                                 avalider.Journal = avalider.Journal;
                                 avalider.DATEVAL = DateTime.Now;
                                 avalider.IDUSVAL = exist.ID;
-
+                                avalider.SITE = avalider.SITE;
                                 db.SaveChanges();
                             }
                             catch (Exception ex)
@@ -1765,6 +1792,7 @@ namespace apptab.Controllers
                         isLATE = isLate,
                         AVANCE = item.AVANCE,
                         AUTREOP = item.AUTREOP,
+                        SITE = item.SITE,
                     });
                 }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
@@ -1801,6 +1829,7 @@ namespace apptab.Controllers
                         isLATE = isLate,
                         AVANCE = item.AVANCE,
                         AUTREOP = item.AUTREOP,
+                        SITE = item.SITE,
                     });
                 }
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés.  ", data = list }, settings));
@@ -2052,6 +2081,7 @@ namespace apptab.Controllers
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                         AVANCE = item.AVANCE,
                         AUTREOP = item.AUTREOP,
+                        SITE = item.SITE,
                     });
                 }
             }
@@ -2089,6 +2119,7 @@ namespace apptab.Controllers
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                         AVANCE = item.AVANCE,
                         AUTREOP = item.AUTREOP,
+                        SITE = item.SITE,
                     });
                 }
             }
