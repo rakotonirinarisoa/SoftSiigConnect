@@ -327,6 +327,7 @@ namespace apptab.Controllers
                                         SOA = soa != null ? soa.SOA : "",
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                         TYPE = "Engagement",
+                                        SITE = x.SITE
                                     });
                                 }
                                 else
@@ -343,6 +344,7 @@ namespace apptab.Controllers
                                         SOA = soa != null ? soa.SOA : "",
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                         TYPE = "Engagement",
+                                        SITE = x.SITE
                                     });
                                 }
                             }
@@ -373,6 +375,7 @@ namespace apptab.Controllers
                                         SOA = soa != null ? soa.SOA : "",
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                         TYPE = "Avance",
+                                        SITE = x.SITE
                                     });
                                 }
                                 else
@@ -389,6 +392,7 @@ namespace apptab.Controllers
                                         SOA = soa != null ? soa.SOA : "",
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                         TYPE = "Avance",
+                                        SITE = x.SITE
                                     });
                                 }
                             }
@@ -493,7 +497,8 @@ namespace apptab.Controllers
 
                                     SOA = soa != null ? soa.SOA : "",
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                    TYPE = "Engagement"
+                                    TYPE = "Engagement",
+                                    SITE = x.SITE
                                 });
                             }
                         }
@@ -524,7 +529,8 @@ namespace apptab.Controllers
 
                                     SOA = soa != null ? soa.SOA : "",
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                    TYPE = "Avance"
+                                    TYPE = "Avance",
+                                    SITE = x.SITE
                                 });
                             }
                         }
@@ -634,7 +640,8 @@ namespace apptab.Controllers
 
                                     SOA = soa != null ? soa.SOA : "",
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                    TYPE = "Engagement"
+                                    TYPE = "Engagement",
+                                    SITE = x.SITE
                                     //isLATE = isLate
                                 });
                             }
@@ -676,7 +683,8 @@ namespace apptab.Controllers
 
                                     SOA = soa != null ? soa.SOA : "",
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                    TYPE = "Avance"
+                                    TYPE = "Avance",
+                                    SITE = x.SITE
                                     //isLATE = isLate
                                 });
                             }
@@ -800,6 +808,7 @@ namespace apptab.Controllers
                         PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
                         TYPE = "Engagement",
                         NUM_ENGAGEMENT = traitprojets[j].REF,
+                        SITE = traitprojets[j].SITE,
                         BENEFICIAIRE = traitprojets[j].TITUL,
                         MONTENGAGEMENT = Data.Cipher.Decrypt(traitprojets[j].MONT, "Oppenheimer").ToString(),
                         DATETRANSFERTRAF = traitprojets[j].DATECRE,
@@ -841,6 +850,7 @@ namespace apptab.Controllers
                         PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
                         TYPE = "Avance",
                         NUM_ENGAGEMENT = traitprojetsAVANCE[j].REF,
+                        SITE = traitprojetsAVANCE[j].SITE,
                         BENEFICIAIRE = traitprojetsAVANCE[j].TITUL,
                         MONTENGAGEMENT = Data.Cipher.Decrypt(traitprojetsAVANCE[j].MONT, "Oppenheimer").ToString(),
                         DATETRANSFERTRAF = traitprojetsAVANCE[j].DATECRE,
@@ -936,11 +946,11 @@ namespace apptab.Controllers
                     int projectId = iProjectsId[i];
 
                     var durPrevu = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == projectId && a.DELETIONDATE == null);
-                    if (durPrevu == null || durPrevu.DELRAF == null || durPrevu.DELTV == null || durPrevu.DELENVOISIIGFP == null || durPrevu.DELSIIGFP == null)
+                    if (durPrevu == null || durPrevu.DELRAF == null || durPrevu.DELTV == null /*|| durPrevu.DELENVOISIIGFP == null || durPrevu.DELSIIGFP == null*/)
                         return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le délais des traitements. " }, settings));
 
                     var durPrevuAVANCE = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == projectId && a.DELETIONDATE == null);
-                    if (durPrevuAVANCE == null || durPrevuAVANCE.DELARAF == null || durPrevuAVANCE.DELAV == null || durPrevuAVANCE.DELAENVOISIIGFP == null || durPrevuAVANCE.DELASIIGFP == null)
+                    if (durPrevuAVANCE == null || durPrevuAVANCE.DELARAF == null || durPrevuAVANCE.DELAV == null /*|| durPrevuAVANCE.DELAENVOISIIGFP == null || durPrevuAVANCE.DELASIIGFP == null*/)
                         return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le délais des traitements. " }, settings));
 
                     var s = await (
@@ -961,7 +971,10 @@ namespace apptab.Controllers
                     //ENGAGEMENTS//
                     var traitprojets = await db.SI_TRAITPROJET.Where(a => a.IDPROJET == projectId && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToListAsync();
 
-                    if (traitprojets.Count == 0)
+                    //AVANCES//
+                    var traitprojetsAVANCE = await db.SI_TRAITAVANCE.Where(a => a.IDPROJET == projectId && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToListAsync();
+
+                    if (traitprojets.Count == 0 && traitprojetsAVANCE.Count == 0)
                     {
                         continue;
                     }
@@ -981,42 +994,35 @@ namespace apptab.Controllers
                             PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
                             TYPE = "Engagement",
                             NUM_ENGAGEMENT = traitprojets[j].REF,
+                            SITE = traitprojets[j].SITE,
                             BENEFICIAIRE = traitprojets[j].TITUL,
                             MONTENGAGEMENT = Data.Cipher.Decrypt(traitprojets[j].MONT, "Oppenheimer").ToString(),
 
                             DATETRANSFERTRAF = traitprojets[j].DATECRE,
                             DATEVALORDSEC = traitprojets[j].DATEVALIDATION,
-                            DATESENDSIIG = traitprojets[j].DATENVOISIIGFP,
-                            DATESIIGFP = traitprojets[j].DATESIIG,
+                            //DATESENDSIIG = traitprojets[j].DATENVOISIIGFP,
+                            //DATESIIGFP = traitprojets[j].DATESIIG,
 
                             TRANSFERTRAFAGENT = await GetAgent(traitprojets[j].IDUSERCREATE),
                             VALORDSECAGENT = await GetAgent(traitprojets[j].IDUSERVALIDATE),
-                            SENDSIIGAGENT = await GetAgent(traitprojets[j].IDUSERENVOISIIGFP),
-                            SIIGFPAGENT = "",
+                            //SENDSIIGAGENT = await GetAgent(traitprojets[j].IDUSERENVOISIIGFP),
+                            //SIIGFPAGENT = "",
 
                             DUREETRAITEMENTTRANSFERTRAF = Data.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
                             DUREETRAITEMENTVALORDSEC = Data.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE),
-                            DUREETRAITEMENTSENDSIIG = Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION),
-                            DUREETRAITEMENTSIIGFP = Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP),
+                            //DUREETRAITEMENTSENDSIIG = Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION),
+                            //DUREETRAITEMENTSIIGFP = Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP),
 
                             DURPREVUTRANSFERT = durPrevu != null ? durPrevu.DELRAF.Value : 0,
                             DURPREVUVALIDATION = durPrevu != null ? durPrevu.DELTV.Value : 0,
-                            DURPREVUTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value : 0,
-                            DURPREVUSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value : 0,
+                            //DURPREVUTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value : 0,
+                            //DURPREVUSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value : 0,
 
                             DEPASTRANSFERT = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE) - durPrevu.DELRAF.Value : 0,
                             DEPASVALIDATION = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE) - durPrevu.DELTV.Value : 0,
-                            DEPASTRANSFSIIG = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) - durPrevu.DELENVOISIIGFP.Value : 0,
-                            DEPASSIIG = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) - durPrevu.DELSIIGFP.Value : 0
+                            //DEPASTRANSFSIIG = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) - durPrevu.DELENVOISIIGFP.Value : 0,
+                            //DEPASSIIG = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) - durPrevu.DELSIIGFP.Value : 0
                         });
-                    }
-
-                    //AVANCES//
-                    var traitprojetsAVANCE = await db.SI_TRAITAVANCE.Where(a => a.IDPROJET == projectId && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToListAsync();
-
-                    if (traitprojetsAVANCE.Count == 0)
-                    {
-                        continue;
                     }
 
                     lastIndexAVANCE += 1;
@@ -1034,33 +1040,34 @@ namespace apptab.Controllers
                             PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
                             TYPE = "Avance",
                             NUM_ENGAGEMENT = traitprojetsAVANCE[j].REF,
+                            SITE = traitprojetsAVANCE[j].SITE,
                             BENEFICIAIRE = traitprojetsAVANCE[j].TITUL,
                             MONTENGAGEMENT = Data.Cipher.Decrypt(traitprojetsAVANCE[j].MONT, "Oppenheimer").ToString(),
 
                             DATETRANSFERTRAF = traitprojetsAVANCE[j].DATECRE,
                             DATEVALORDSEC = traitprojetsAVANCE[j].DATEVALIDATION,
-                            DATESENDSIIG = traitprojetsAVANCE[j].DATENVOISIIGFP,
-                            DATESIIGFP = traitprojetsAVANCE[j].DATESIIG,
+                            //DATESENDSIIG = traitprojetsAVANCE[j].DATENVOISIIGFP,
+                            //DATESIIGFP = traitprojetsAVANCE[j].DATESIIG,
 
                             TRANSFERTRAFAGENT = await GetAgent(traitprojetsAVANCE[j].IDUSERCREATE),
                             VALORDSECAGENT = await GetAgent(traitprojetsAVANCE[j].IDUSERVALIDATE),
-                            SENDSIIGAGENT = await GetAgent(traitprojetsAVANCE[j].IDUSERENVOISIIGFP),
-                            SIIGFPAGENT = "",
+                            //SENDSIIGAGENT = await GetAgent(traitprojetsAVANCE[j].IDUSERENVOISIIGFP),
+                            //SIIGFPAGENT = "",
 
                             DUREETRAITEMENTTRANSFERTRAF = Data.Date.GetDifference(traitprojetsAVANCE[j].DATECRE, traitprojetsAVANCE[j].DATEBE),
                             DUREETRAITEMENTVALORDSEC = Data.Date.GetDifference(traitprojetsAVANCE[j].DATEVALIDATION, traitprojetsAVANCE[j].DATECRE),
-                            DUREETRAITEMENTSENDSIIG = Data.Date.GetDifference(traitprojetsAVANCE[j].DATENVOISIIGFP, traitprojetsAVANCE[j].DATEVALIDATION),
-                            DUREETRAITEMENTSIIGFP = Data.Date.GetDifference(traitprojetsAVANCE[j].DATESIIG, traitprojetsAVANCE[j].DATENVOISIIGFP),
+                            //DUREETRAITEMENTSENDSIIG = Data.Date.GetDifference(traitprojetsAVANCE[j].DATENVOISIIGFP, traitprojetsAVANCE[j].DATEVALIDATION),
+                            //DUREETRAITEMENTSIIGFP = Data.Date.GetDifference(traitprojetsAVANCE[j].DATESIIG, traitprojetsAVANCE[j].DATENVOISIIGFP),
 
                             DURPREVUTRANSFERT = durPrevuAVANCE != null ? durPrevuAVANCE.DELRAF.Value : 0,
                             DURPREVUVALIDATION = durPrevuAVANCE != null ? durPrevuAVANCE.DELTV.Value : 0,
-                            DURPREVUTRANSFSIIG = durPrevuAVANCE != null ? durPrevuAVANCE.DELENVOISIIGFP.Value : 0,
-                            DURPREVUSIIG = durPrevuAVANCE != null ? durPrevuAVANCE.DELSIIGFP.Value : 0,
+                            //DURPREVUTRANSFSIIG = durPrevuAVANCE != null ? durPrevuAVANCE.DELENVOISIIGFP.Value : 0,
+                            //DURPREVUSIIG = durPrevuAVANCE != null ? durPrevuAVANCE.DELSIIGFP.Value : 0,
 
-                            DEPASTRANSFERT = durPrevuAVANCE != null ? Data.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE) - durPrevuAVANCE.DELRAF.Value : 0,
-                            DEPASVALIDATION = durPrevuAVANCE != null ? Data.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE) - durPrevuAVANCE.DELTV.Value : 0,
-                            DEPASTRANSFSIIG = durPrevuAVANCE != null ? Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) - durPrevuAVANCE.DELENVOISIIGFP.Value : 0,
-                            DEPASSIIG = durPrevuAVANCE != null ? Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) - durPrevuAVANCE.DELSIIGFP.Value : 0
+                            DEPASTRANSFERT = durPrevuAVANCE != null ? Data.Date.GetDifference(traitprojetsAVANCE[j].DATECRE, traitprojetsAVANCE[j].DATEBE) - durPrevuAVANCE.DELRAF.Value : 0,
+                            DEPASVALIDATION = durPrevuAVANCE != null ? Data.Date.GetDifference(traitprojetsAVANCE[j].DATEVALIDATION, traitprojetsAVANCE[j].DATECRE) - durPrevuAVANCE.DELTV.Value : 0,
+                            //DEPASTRANSFSIIG = durPrevuAVANCE != null ? Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) - durPrevuAVANCE.DELENVOISIIGFP.Value : 0,
+                            //DEPASSIIG = durPrevuAVANCE != null ? Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) - durPrevuAVANCE.DELSIIGFP.Value : 0
                         });
                     }
                 }
@@ -1120,7 +1127,8 @@ namespace apptab.Controllers
                                    DATECREA = v.DATECREA != null ? v.DATECREA : null,
                                    DATESEND = v.DATESEND != null ? v.DATESEND : null,
                                    DATETRANS = v.DATETRANS != null ? v.DATETRANS : null,
-                                   TYPE = v.AVANCE == true ? "Avance" : "Réglement"
+                                   TYPE = v.AVANCE == true ? "Avance" : "Réglement",
+                                   SITE = v.SITE
                                }
                            ).ToList();
 
@@ -1145,7 +1153,8 @@ namespace apptab.Controllers
                                     DATEPAIEBANQUE = item.DATETRANS,
                                     SOA = soa.SOA != null ? soa.SOA : "",
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                    TYPE = item.TYPE == "1" ? "Avance" : "Réglement"
+                                    TYPE = item.TYPE == "1" ? "Avance" : "Réglement",
+                                    SITE = item.SITE
                                 });
                             }
                         }
@@ -1164,6 +1173,7 @@ namespace apptab.Controllers
                                    DATESEND = v.DATESEND != null ? v.DATESEND : null,
                                    DATETRANS = v.DATETRANS != null ? v.DATETRANS : null,
                                    TYPE = v.AVANCE == true ? "Avance" : "Réglement",
+                                   SITE = v.SITE
                                }
                            ).ToList();
 
@@ -1188,7 +1198,8 @@ namespace apptab.Controllers
                                     DATEPAIEBANQUE = item.DATETRANS,
                                     SOA = soa.SOA != null ? soa.SOA : "",
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                    TYPE = item.TYPE == "1" ? "Avance" : "Réglement"
+                                    TYPE = item.TYPE == "1" ? "Avance" : "Réglement",
+                                    SITE = item.SITE
                                 });
                             }
                         }
@@ -1273,6 +1284,7 @@ namespace apptab.Controllers
                                        IDUSSEND = v.IDUSSEND != null ? v.IDUSSEND : null,
                                        IDUSVAL = v.IDUSVAL != null ? v.IDUSVAL : null,
                                        TYPE = v.AVANCE == true ? "Avance" : "Réglement",
+                                       SITE = v.SITE
                                    }
                                ).ToList();
 
@@ -1300,7 +1312,8 @@ namespace apptab.Controllers
                             SENDSIIGAGENT = await GetAgent(paielst[j].IDUSSEND),
                             DUREETRAITEMENTTRANSFERTRAF = Date.GetDifference(paielst[j].DATECREA, paielst[j].DATESEND),
                             DUREETRAITEMENTVALORDSEC = Date.GetDifference(paielst[j].DATESEND, paielst[j].DATEVAL),
-                            TYPE  = paielst[j].TYPE,
+                            TYPE = paielst[j].TYPE,
+                            SITE = paielst[j].SITE
                         });
                     }
                 }
@@ -1332,6 +1345,7 @@ namespace apptab.Controllers
                                        IDUSSEND = v.IDUSSEND != null ? v.IDUSSEND : null,
                                        IDUSVAL = v.IDUSVAL != null ? v.IDUSVAL : null,
                                        TYPE = v.AVANCE == true ? "Avance" : "Réglement",
+                                       SITE = v.SITE != null ? v.SITE : null
                                    }
                                ).ToList();
 
@@ -1360,6 +1374,7 @@ namespace apptab.Controllers
                             DUREETRAITEMENTTRANSFERTRAF = Date.GetDifference(paielst[j].DATECREA, paielst[j].DATESEND),
                             DUREETRAITEMENTVALORDSEC = Date.GetDifference(paielst[j].DATESEND, paielst[j].DATEVAL),
                             TYPE = db.OPA_VALIDATIONS.Where(a => a.ID == projectId && a.IDREGLEMENT == paielst[j].NUM.ToString() && a.NUMEREG == int.Parse(paielst[j].TYPE)).FirstOrDefault().AVANCE == true ? "Avance" : "Réglement",
+                            SITE = paielst[j].SITE
                         });
                     }
                 }
@@ -1606,15 +1621,16 @@ namespace apptab.Controllers
                                                soas.SOA
                                            }).FirstOrDefault();
 
-                                var cancel = db.OPA_VALIDATIONS.Where(a => a.IDPROJET == crpt && x.ETAT == 4).Join(db.SI_USERS,z => z.IDUSER,e => e.IDUSER, (z, e) => new
+                                var cancel = db.OPA_VALIDATIONS.Where(a => a.IDPROJET == crpt && x.ETAT == 4).Join(db.SI_USERS, z => z.IDUSER, e => e.IDUSER, (z, e) => new
                                 {
                                     AGENT = e.LOGIN,
                                     NUMENGAGEMENT = z.IDREGLEMENT,
                                     DATEREJETPAIEMENT = z.DATEANNULER,
                                     MOTIF = z.MOTIF,
                                     COMMENTAIRE = z.COMS,
+                                    SITE = z.SITE
 
-                                }).Join(db.OPA_REGLEMENTBR, t =>t.NUMENGAGEMENT,p => p.NUM, (t, p) => new
+                                }).Join(db.OPA_REGLEMENTBR, t => t.NUMENGAGEMENT, p => p.NUM, (t, p) => new
                                 {
                                     AGENT = t.AGENT,
                                     NUMENGAGEMENT = t.NUMENGAGEMENT,
@@ -1623,6 +1639,7 @@ namespace apptab.Controllers
                                     COMMENTAIRE = t.MOTIF,
                                     BENEFICIAIRE = p.BENEFICIAIRE,
                                     MONTANT = p.MONTANT,
+                                    SITE = t.SITE
                                 }).ToList();
 
                                 foreach (var item in cancel)
@@ -1634,7 +1651,8 @@ namespace apptab.Controllers
                                         MONTANT = item.MONTANT.ToString(),
                                         DATEREJETAC = item.DATEREJETPAIEMENT,
                                         SOA = soa.SOA != null ? soa.SOA : "",
-                                        PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                        PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                        SITE = item.SITE
                                     });
                                 }
                             }
@@ -1732,7 +1750,8 @@ namespace apptab.Controllers
 
                                     SOA = soa != null ? soa.SOA : "",
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                    TYPE = "Justificatif"
+                                    TYPE = "Justificatif",
+                                    SITE = x.SITE
                                 });
                             }
                         }
@@ -1763,7 +1782,8 @@ namespace apptab.Controllers
 
                                     SOA = soa != null ? soa.SOA : "",
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                    TYPE = "Reversement"
+                                    TYPE = "Reversement",
+                                    SITE = x.SITE
                                 });
                             }
                         }
@@ -1868,7 +1888,8 @@ namespace apptab.Controllers
 
                                     SOA = soa != null ? soa.SOA : "",
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                    TYPE = "Justificatif"
+                                    TYPE = "Justificatif",
+                                    SITE = x.SITE
                                 });
                             }
                         }
@@ -1910,7 +1931,8 @@ namespace apptab.Controllers
 
                                     SOA = soa != null ? soa.SOA : "",
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                    TYPE = "Reversement"
+                                    TYPE = "Reversement",
+                                    SITE = x.SITE
                                 });
                             }
                         }
@@ -2032,6 +2054,8 @@ namespace apptab.Controllers
                             decimal MTNTOTALPeriodeTP = 0;
                             //TOTAL PAD
                             decimal MTNTOTALPADTP = 0;
+                            //SITE
+                            string SITE = "";
 
                             foreach (var x in autrePCOP.Distinct().OrderBy(x => x).ToList())
                             {
@@ -2058,6 +2082,10 @@ namespace apptab.Controllers
                                     {
                                         MTNTOTALPeriode += y.MONTANT.Value;
                                     }
+
+                                    //SITE
+                                    if (String.IsNullOrEmpty(SITE))
+                                        SITE = s.SITE;
                                 }
 
                                 //Montant engagé (Liquidation + Justif validé SET//
@@ -2143,6 +2171,8 @@ namespace apptab.Controllers
                                         SOA = soa != null ? soa.SOA : "",//SOA
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,//PROJET
 
+                                        SITE = SITE,
+
                                         REF = PCOP,//PCOP
                                         INTITUT = PCOPINTITUL,//Intitulé PCOP
 
@@ -2176,6 +2206,8 @@ namespace apptab.Controllers
                                 //No = "",//ID
                                 SOA = "",//SOA
                                 PROJET = "",//PROJET
+
+                                SITE = "",
 
                                 REF = "",//PCOP
                                 INTITUT = "TOTAL",//Intitulé PCOP
@@ -2240,6 +2272,12 @@ namespace apptab.Controllers
                             decimal PADT = 0;
                             //TOTAL % sur PTBA (% Solde sur PTBA)
                             decimal PTBAT = 0;
+                            //TOTAL PTBA
+                            decimal MTNTOTALPeriodeTP = 0;
+                            //TOTAL PAD
+                            decimal MTNTOTALPADTP = 0;
+                            //SITE
+                            string SITE = "";
 
                             foreach (var x in autrePCOP.OrderBy(x => x).Distinct().ToList())
                             {
@@ -2265,6 +2303,9 @@ namespace apptab.Controllers
                                     {
                                         MTNTOTALPeriode += y.MONTANT.Value;
                                     }
+                                    //SITE
+                                    if (String.IsNullOrEmpty(SITE))
+                                        SITE = s.SITE;
                                 }
 
                                 //Montant engagé (Liquidation + Justif validé SET//
@@ -2353,6 +2394,8 @@ namespace apptab.Controllers
                                         REF = PCOP,//PCOP
                                         INTITUT = PCOPINTITUL,//Intitulé PCOP
 
+                                        SITE = SITE,
+
                                         BENEF = Math.Round(MTNTOTALPAD, 2).ToString(),//PAD
                                         MONTENGAGEMENT = Math.Round(MTNTOTALPeriode, 2).ToString(),//Montant PTBA
                                         MONTPAIE = Math.Round(MTNENGA, 2).ToString(),//Montant engagé (Liquidation + Justif validé SET//
@@ -2383,6 +2426,8 @@ namespace apptab.Controllers
                                 //No = "",//ID
                                 SOA = "",//SOA
                                 PROJET = "",//PROJET
+
+                                SITE = "",
 
                                 REF = "",//PCOP
                                 INTITUT = "TOTAL",//Intitulé PCOP
@@ -2447,6 +2492,12 @@ namespace apptab.Controllers
                             decimal PADT = 0;
                             //TOTAL % sur PTBA (% Solde sur PTBA)
                             decimal PTBAT = 0;
+                            //TOTAL PTBA
+                            decimal MTNTOTALPeriodeTP = 0;
+                            //TOTAL PAD
+                            decimal MTNTOTALPADTP = 0;
+                            //SITE
+                            string SITE = "";
 
                             foreach (var x in autrePCOP.OrderBy(x => x).Distinct().ToList())
                             {
@@ -2472,6 +2523,9 @@ namespace apptab.Controllers
                                     {
                                         MTNTOTALPeriode += y.MONTANT.Value;
                                     }
+                                    //SITE
+                                    if (String.IsNullOrEmpty(SITE))
+                                        SITE = s.SITE;
                                 }
 
                                 //Montant engagé (Liquidation + Justif validé SET//
@@ -2557,6 +2611,8 @@ namespace apptab.Controllers
                                         SOA = soa != null ? soa.SOA : "",//SOA
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,//PROJET
 
+                                        SITE = SITE,
+
                                         REF = PCOP,//PCOP
                                         INTITUT = PCOPINTITUL,//Intitulé PCOP
 
@@ -2590,6 +2646,8 @@ namespace apptab.Controllers
                                 //No = "",//ID
                                 SOA = "",//SOA
                                 PROJET = "",//PROJET
+
+                                SITE = "",
 
                                 REF = "",//PCOP
                                 INTITUT = "TOTAL",//Intitulé PCOP
@@ -2654,6 +2712,12 @@ namespace apptab.Controllers
                             decimal PADT = 0;
                             //TOTAL % sur PTBA (% Solde sur PTBA)
                             decimal PTBAT = 0;
+                            //TOTAL PTBA
+                            decimal MTNTOTALPeriodeTP = 0;
+                            //TOTAL PAD
+                            decimal MTNTOTALPADTP = 0;
+                            //SITE
+                            string SITE = "";
 
                             foreach (var x in autrePCOP.OrderBy(x => x).Distinct().ToList())
                             {
@@ -2680,6 +2744,9 @@ namespace apptab.Controllers
                                     {
                                         MTNTOTALPeriode += y.MONTANT.Value;
                                     }
+                                    //SITE
+                                    if (String.IsNullOrEmpty(SITE))
+                                        SITE = s.SITE;
                                 }
 
                                 //Montant engagé (Liquidation + Justif validé SET//
@@ -2768,6 +2835,8 @@ namespace apptab.Controllers
                                         REF = PCOP,//PCOP
                                         INTITUT = PCOPINTITUL,//Intitulé PCOP
 
+                                        SITE = SITE,
+
                                         BENEF = Math.Round(MTNTOTALPAD, 2).ToString(),//PAD
                                         MONTENGAGEMENT = Math.Round(MTNTOTALPeriode, 2).ToString(),//Montant PTBA
                                         MONTPAIE = Math.Round(MTNENGA, 2).ToString(),//Montant engagé (Liquidation + Justif validé SET//
@@ -2798,6 +2867,8 @@ namespace apptab.Controllers
                                 //No = "",//ID
                                 SOA = "",//SOA
                                 PROJET = "",//PROJET
+
+                                SITE = "",
 
                                 REF = "",//PCOP
                                 INTITUT = "TOTAL",//Intitulé PCOP

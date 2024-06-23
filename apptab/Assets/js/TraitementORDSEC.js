@@ -136,6 +136,7 @@ function GetListLOAD() {
                         id: v.No,
                         soa: v.SOA,
                         projet: v.PROJET,
+                        site: v.SITE,
                         ref: v.REF,
                         objet: v.OBJ,
                         titulaire: v.TITUL,
@@ -184,6 +185,7 @@ function GetListLOAD() {
                         },
                         { data: 'soa' },
                         { data: 'projet' },
+                        { data: 'site' },
                         { data: 'ref' },
                         { data: 'objet' },
                         { data: 'titulaire' },
@@ -261,7 +263,7 @@ function GetListLOAD() {
                             bom: true,
                             className: 'custombutton-collection-pdf',
                             exportOptions: {
-                                columns: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+                                columns: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
                             },
                             customize: function (doc) {
                                 doc.defaultStyle.alignment = 'left';
@@ -280,7 +282,7 @@ function GetListLOAD() {
                             bom: true,
                             className: 'custombutton-collection-excel',
                             exportOptions: {
-                                columns: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                                columns: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (typeof data === 'undefined') {
@@ -289,7 +291,7 @@ function GetListLOAD() {
                                         if (data == null) {
                                             return data;
                                         }
-                                        if (column === 10) {
+                                        if (column === 11) {
                                             var arr = data.split(',');
                                             if (arr.length == 1) { return data; }
 
@@ -357,7 +359,7 @@ function GetListLOAD() {
                 });
 
                 $('#TBD_PROJET_ORDSEC tfoot th').each(function (i) {
-                    if (i == 0 || i == 1 || i >= 16) {
+                    if (i == 0 || i == 1 || i >= 17) {
                         $(this).addClass("NOTVISIBLE");
                     }
                 });
@@ -441,6 +443,7 @@ $('[data-action="GenereSIIG"]').click(function () {
                         id: v.No,
                         soa: v.SOA,
                         projet: v.PROJET,
+                        site: v.SITE,
                         ref: v.REF,
                         objet: v.OBJ,
                         titulaire: v.TITUL,
@@ -489,6 +492,7 @@ $('[data-action="GenereSIIG"]').click(function () {
                         },
                         { data: 'soa' },
                         { data: 'projet' },
+                        { data: 'site' },
                         { data: 'ref' },
                         { data: 'objet' },
                         { data: 'titulaire' },
@@ -567,7 +571,7 @@ $('[data-action="GenereSIIG"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-pdf',
                             exportOptions: {
-                                columns: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+                                columns: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
                             },
                             customize: function (doc) {
                                 doc.defaultStyle.alignment = 'left';
@@ -586,7 +590,7 @@ $('[data-action="GenereSIIG"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-excel',
                             exportOptions: {
-                                columns: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                                columns: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (typeof data === 'undefined') {
@@ -595,7 +599,7 @@ $('[data-action="GenereSIIG"]').click(function () {
                                         if (data == null) {
                                             return data;
                                         }
-                                        if (column === 10) {
+                                        if (column === 11) {
                                             var arr = data.split(',');
                                             if (arr.length == 1) { return data; }
 
@@ -663,7 +667,7 @@ $('[data-action="GenereSIIG"]').click(function () {
                 });
 
                 $('#TBD_PROJET_ORDSEC tfoot th').each(function (i) {
-                    if (i == 0 || i == 1 || i >= 16) {
+                    if (i == 0 || i == 1 || i >= 17) {
                         $(this).addClass("NOTVISIBLE");
                     }
                 });

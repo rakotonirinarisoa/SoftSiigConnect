@@ -18,9 +18,8 @@ namespace apptab
         public DateTime? DATEREJETAC { get; set; }
         public string SOA { get; set; }
         public string PROJET { get; set; }
+        public string SITE { get; set; }
         public bool? isLATE { get; set; }
-
-
         public DateTime? DATETRAITEMENTBANQUE { get; set; }
     }
 }

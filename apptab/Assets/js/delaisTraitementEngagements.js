@@ -89,6 +89,7 @@ function parseList(array) {
                     rowNumber,
                     soa: array[i].SOA,
                     projet: array[i].TraitementsEngagementsDetails[j].PROJET,
+                    site: array[i].TraitementsEngagementsDetails[j].SITE,
                     type: array[i].TraitementsEngagementsDetails[j].TYPE,
                     num: array[i].TraitementsEngagementsDetails[j].NUM_ENGAGEMENT,
                     etape,
@@ -124,6 +125,9 @@ function setDataTable() {
                 data: 'projet'
             },
             {
+                data: 'site'
+            },
+            {
                 data: 'type'
             },
             {
@@ -153,18 +157,18 @@ function setDataTable() {
         ordering: false,
         info: false,
         colReorder: false,
-        rowsGroup: [0, 1, 2, 3],
+        rowsGroup: [0, 1, 2, 3, 4],
         order: [['desc']],
         createdRow: function (row, data, _) {
             if (data.rowNumber % NUMBER_OF_ROWS === NUMBER_OF_ROWS - 1) {
-                $('td:eq(5)', row).attr('colspan', 4).css({ 'text-align': 'center' });
-                $('td:eq(5)', row).text('Durée totale');
+                $('td:eq(6)', row).attr('colspan', 4).css({ 'text-align': 'center' });
+                $('td:eq(6)', row).text('Durée totale');
 
-                $('td:eq(6)', row).text(data.dureeTraitement);
+                $('td:eq(7)', row).text(data.dureeTraitement);
 
-                $('td:eq(7)', row).text('').css({ 'display': 'none' });
                 $('td:eq(8)', row).text('').css({ 'display': 'none' });
                 $('td:eq(9)', row).text('').css({ 'display': 'none' });
+                $('td:eq(10)', row).text('').css({ 'display': 'none' });
             }
         },
         deferRender: true,
@@ -184,7 +188,7 @@ function setDataTable() {
                 bom: true,
                 className: 'custombutton-collection-pdf',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
                 },
                 customize: function (doc) {
                     doc.defaultStyle.alignment = 'left';
@@ -203,7 +207,7 @@ function setDataTable() {
                 bom: true,
                 className: 'custombutton-collection-excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                     format: {
                         body: function (data, row, column, node) {
                             if (typeof data === 'undefined') {
@@ -212,7 +216,7 @@ function setDataTable() {
                             if (data == null) {
                                 return data;
                             }
-                            if (column === 6) {
+                            if (column === 7) {
                                 var arr = data.split(',');
                                 if (arr.length == 1) { return data; }
 

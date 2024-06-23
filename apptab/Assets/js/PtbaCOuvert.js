@@ -234,6 +234,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                     data.push({
                         SOA: v.SOA,
                         PROJET: v.PROJET,
+                        SITE: v.SITE,
                         PCOP: v.REF,
                         INTITUT: v.INTITUT,
                         CREDITOUVERT: formatCurrency(String(v.BENEF).replace(",", ".")),
@@ -272,6 +273,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                         },
                         { data: 'SOA' },
                         { data: 'PROJET' },
+                        { data: 'SITE' },
                         { data: 'PCOP' },
                         { data: 'INTITUT' },
                         { data: 'CREDITOUVERT' },
@@ -324,7 +326,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-pdf',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
                             },
                             customize: function (doc) {
                                 doc.defaultStyle.alignment = 'left';
@@ -343,7 +345,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-excel',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (typeof data === 'undefined') {
@@ -352,7 +354,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                                         if (data == null) {
                                             return data;
                                         }
-                                        if (column === 5 || column === 6 || column === 7 || column === 8 || column === 9 || column === 10 || column === 11 || column === 12 || column === 13 || column === 14 || column === 15 || column === 16 || column === 17) {
+                                        if (column === 18 || column === 6 || column === 7 || column === 8 || column === 9 || column === 10 || column === 11 || column === 12 || column === 13 || column === 14 || column === 15 || column === 16 || column === 17) {
                                             var arr = data.split(',');
                                             if (arr.length == 1) { return data; }
 

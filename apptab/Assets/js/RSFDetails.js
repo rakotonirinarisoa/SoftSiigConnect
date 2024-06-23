@@ -200,17 +200,72 @@ function GetMAPP() {
                 return;
             }
 
+            //var code = `<option value="${Datas.data.LIEN}">${Datas.data.TITLEDOCS}</option>`;
+            //$(`[data-id="lien-list"]`).append(code);
+
+
             $("#IDProjet").val(Datas.data.PROJET);
             $("#Title").val(Datas.data.TITLE);
             $("#Annee").val(Datas.data.ANNEE);
             $("#Periode").val(Datas.data.PERIODE);
             $("#Type").val(Datas.data.TYPE);
             $("#LienTRUE").val(Datas.data.LIEN);
+            $("#Lien").val(Datas.data.TITLEDOCS);
         },
         error: function () {
             alert("Problème de connexion. ");
         }
     });
+}
+
+function GetListLien() {
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/RSF/GetAllLien',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+
+            $(`[data-id="lien-list"]`).text("");
+            var code = ``;
+            $.each(Datas.data, function (k, v) {
+                code += `
+                    <option value="${v.LIEN}">${v.TITLE}</option>
+                `;
+            });
+            $(`[data-id="lien-list"]`).append(code);
+
+        },
+        error: function (e) {
+            alert("Problème de connexion. ");
+        }
+    })
 }
 
 $(`[data-action="Update"]`).click(function () {
@@ -221,7 +276,8 @@ $(`[data-action="Update"]`).click(function () {
     let Periode = $(`#Periode`).val();
     let Type = $(`#Type`).val();
     let Lien = $(`#LienTRUE`).val();
-    if (!Title || !Annee || !Periode || !Type || !Lien) {
+    let TITLEDOCS = $(`#Lien`).val();
+    if (!Title || !Annee || !Periode || !Type || !Lien || !TITLEDOCS) {
         alert("Veuillez renseigner les informations afin d'enregistrer le document. ");
         return;
     }
@@ -236,6 +292,7 @@ $(`[data-action="Update"]`).click(function () {
     formData.append("Periode", Periode);
     formData.append("Type", Type);
     formData.append("Lien", Lien);
+    formData.append("TITLEDOCS", TITLEDOCS);
 
     formData.append("IDPROJET", $(`#IDProjet`).val());
 

@@ -119,6 +119,9 @@
 
         public bool? AUTREOP { get; set; }
 
+        [StringLength(50)]
+        public string SITE { get; set; }
+
         [NotMapped]
         public bool isLATE { get; set; }
     }

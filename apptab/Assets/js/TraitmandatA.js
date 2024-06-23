@@ -133,6 +133,7 @@ function GetListLOADOTHER() {
                         id: v.No,
                         soa: v.SOA,
                         projet: v.PROJET,
+                        site: v.SITE,
                         ref: v.REF,
                         objet: v.OBJ,
                         titulaire: v.TITUL,
@@ -168,6 +169,7 @@ function GetListLOADOTHER() {
                         },
                         { data: 'soa' },
                         { data: 'projet' },
+                        { data: 'site' },
                         { data: 'ref' },
                         { data: 'objet' },
                         { data: 'titulaire' },
@@ -245,7 +247,7 @@ function GetListLOADOTHER() {
                             bom: true,
                             className: 'custombutton-collection-pdf',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
                             },
                             customize: function (doc) {
                                 doc.defaultStyle.alignment = 'left';
@@ -264,7 +266,7 @@ function GetListLOADOTHER() {
                             bom: true,
                             className: 'custombutton-collection-excel',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (typeof data === 'undefined') {
@@ -273,7 +275,7 @@ function GetListLOADOTHER() {
                                         if (data == null) {
                                             return data;
                                         }
-                                        if (column === 9) {
+                                        if (column === 10) {
                                             var arr = data.split(',');
                                             if (arr.length == 1) { return data; }
 
@@ -341,7 +343,7 @@ function GetListLOADOTHER() {
                 });
 
                 $('#TBD_PROJET_MANDAT tfoot th').each(function (i) {
-                    if (i == 0 || i >= 13) {
+                    if (i == 0 || i >= 14) {
                         $(this).addClass("NOTVISIBLE");
                     }
                 });
@@ -427,6 +429,7 @@ $('[data-action="GenereR"]').click(async function () {
                         id: v.No,
                         soa: v.SOA,
                         projet: v.PROJET,
+                        site: v.SITE,
                         ref: v.REF,
                         objet: v.OBJ,
                         titulaire: v.TITUL,
@@ -462,6 +465,7 @@ $('[data-action="GenereR"]').click(async function () {
                         },
                         { data: 'soa' },
                         { data: 'projet' },
+                        { data: 'site' },
                         { data: 'ref' },
                         { data: 'objet' },
                         { data: 'titulaire' },
@@ -539,7 +543,7 @@ $('[data-action="GenereR"]').click(async function () {
                             bom: true,
                             className: 'custombutton-collection-pdf',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
                             },
                             customize: function (doc) {
                                 doc.defaultStyle.alignment = 'left';
@@ -558,7 +562,7 @@ $('[data-action="GenereR"]').click(async function () {
                             bom: true,
                             className: 'custombutton-collection-excel',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (typeof data === 'undefined') {
@@ -567,7 +571,7 @@ $('[data-action="GenereR"]').click(async function () {
                                         if (data == null) {
                                             return data;
                                         }
-                                        if (column === 9) {
+                                        if (column === 10) {
                                             var arr = data.split(',');
                                             if (arr.length == 1) { return data; }
 
@@ -635,7 +639,7 @@ $('[data-action="GenereR"]').click(async function () {
                 });
 
                 $('#TBD_PROJET_MANDAT tfoot th').each(function (i) {
-                    if (i == 0 || i >= 13) {
+                    if (i == 0 || i >= 14) {
                         $(this).addClass("NOTVISIBLE");
                     }
                 });

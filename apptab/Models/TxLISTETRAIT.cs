@@ -10,6 +10,7 @@ namespace apptab
     {
         public Guid? No { get; set; }
         public string REF { get; set; }
+        public string SITE { get; set; }
         public string NPIECE { get; set; }
         public string BENEF { get; set; }
         public string MONTENGAGEMENT { get; set; }

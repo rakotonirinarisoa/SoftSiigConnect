@@ -91,6 +91,7 @@ function parseList(array) {
                     rowNumber,
                     soa: array[i].SOA,
                     projet: array[i].TraitementPaiementDetails[j].PROJET,
+                    site: array[i].TraitementPaiementDetails[j].SITE,
                     type: array[i].TraitementPaiementDetails[j].TYPE,
                     num: array[i].TraitementPaiementDetails[j].NUM_ENGAGEMENT,
                     etape,
@@ -126,7 +127,9 @@ function setDataTable() {
             {
                 data: 'projet'
             },
-
+            {
+                data: 'site'
+            },
             {
                 data: 'type'
             },
@@ -157,7 +160,7 @@ function setDataTable() {
         ordering: false,
         info: false,
         colReorder: false,
-        rowsGroup: [0, 1, 2],
+        rowsGroup: [0, 1, 2, 3],
         order: [['desc']],
         createdRow: function (row, data, _) {
             if (data.rowNumber !== 0) {
@@ -166,15 +169,15 @@ function setDataTable() {
             }
 
             if (data.rowNumber % NUMBER_OF_ROWS === NUMBER_OF_ROWS - 1) {
-                $('td:eq(3)', row).attr('colspan', 4).css({ 'text-align': 'center' });
-                $('td:eq(3)', row).text('Durée totale');
+                $('td:eq(4)', row).attr('colspan', 4).css({ 'text-align': 'center' });
+                $('td:eq(4)', row).text('Durée totale');
 
-                $('td:eq(5)', row).text(data.dateTraitement);
+                $('td:eq(6)', row).text(data.dateTraitement);
 
-                $('td:eq(6)', row).text(data.dureeTraitement);
-                $('td:eq(7)', row).text('').css({ 'display': 'none' });
+                $('td:eq(7)', row).text(data.dureeTraitement);
                 $('td:eq(8)', row).text('').css({ 'display': 'none' });
                 $('td:eq(9)', row).text('').css({ 'display': 'none' });
+                $('td:eq(10)', row).text('').css({ 'display': 'none' });
             }
         }
     });

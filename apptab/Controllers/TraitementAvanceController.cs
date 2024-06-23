@@ -155,7 +155,7 @@ namespace apptab.Controllers
 
                 int retarDate = 0;
                 if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null))
-                    retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELRAF.Value;
+                    retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELARAF.Value;
 
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
                 SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -252,7 +252,8 @@ namespace apptab.Controllers
                                         DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BE).DATETRAITEMENT,
                                         SOA = soa.FirstOrDefault().SOA,
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                        isLATE = isLate
+                                        isLATE = isLate,
+                                        SITE = x.SITE
                                     });
                                 }
                             }
@@ -283,7 +284,7 @@ namespace apptab.Controllers
 
                 int retarDate = 0;
                 if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null))
-                    retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELRAF.Value;
+                    retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELARAF.Value;
 
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
                 SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -380,7 +381,8 @@ namespace apptab.Controllers
                                         DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BE).DATETRAITEMENT,
                                         SOA = soa.FirstOrDefault().SOA,
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                        isLATE = isLate
+                                        isLATE = isLate,
+                                        SITE = x.SITE
                                     });
                                 }
                             }
@@ -471,7 +473,8 @@ namespace apptab.Controllers
                             DATECREATION = x.DATECRE.Value.Date,
                             SOA = soa.FirstOrDefault().SOA,
                             PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                            isLATE = isLate
+                            isLATE = isLate,
+                            SITE = x.SITE
                         });
                     }
                 }
@@ -552,7 +555,8 @@ namespace apptab.Controllers
                             DATECREATION = x.DATECRE.Value.Date,
                             SOA = soa.FirstOrDefault().SOA,
                             PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                            isLATE = isLate
+                            isLATE = isLate,
+                            SITE = x.SITE
                         });
                     }
                     //listORDER = list.OrderByDescending(a => a.isLATE).ToList();
@@ -666,7 +670,8 @@ namespace apptab.Controllers
                                 DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == FF.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BE).DATETRAITEMENT,
                                 DATECRE = DateTime.Now,
                                 ETAT = 0,
-                                IDUSERCREATE = exist.ID
+                                IDUSERCREATE = exist.ID,
+                                SITE = FF.SITE
                             };
 
                             if (ordsec == 1)
@@ -1216,7 +1221,8 @@ namespace apptab.Controllers
                                     DATETEF = DATETEF,
                                     DATEBE = DATEBE,
                                     SOA = soa.FirstOrDefault().SOA,
-                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    SITE = x.SITE
                                 });
                             }
                         }
@@ -1344,7 +1350,8 @@ namespace apptab.Controllers
                                     DATETEF = DATETEF,
                                     DATEBE = DATEBE,
                                     SOA = soa.FirstOrDefault().SOA,
-                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    SITE = x.SITE
                                 });
                             }
                         }

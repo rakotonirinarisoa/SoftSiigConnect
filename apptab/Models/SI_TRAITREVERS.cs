@@ -1,4 +1,4 @@
-namespace apptab
+﻿namespace apptab
 {
     using System;
     using System.ComponentModel.DataAnnotations;
@@ -74,5 +74,8 @@ namespace apptab
 
         [StringLength(50)]
         public string NBESIIG { get; set; }
+
+        [StringLength(50)]
+        public string SITE { get; set; }
     }
 }

@@ -176,6 +176,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                         id: v.No,
                         soa: v.SOA,
                         projet: v.PROJET,
+                        site: v.SITE,
                         type: v.TYPE,
                         ref: v.REF,
                         benef: v.BENEF,
@@ -211,6 +212,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                         },
                         { data: 'soa' },
                         { data: 'projet' },
+                        { data: 'site' },
                         { data: 'type' },
                         { data: 'ref' },
                         { data: 'benef' },
@@ -284,7 +286,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-pdf',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
                             },
                             customize: function (doc) {
                                 doc.defaultStyle.alignment = 'left';
@@ -303,7 +305,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-excel',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (typeof data === 'undefined') {
@@ -312,7 +314,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                                         if (data == null) {
                                             return data;
                                         }
-                                        if (column === 6) {
+                                        if (column === 7) {
                                             var arr = data.split(',');
                                             if (arr.length == 1) { return data; }
 

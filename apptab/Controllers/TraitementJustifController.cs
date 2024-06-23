@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Extensions.DateTime;
 using Newtonsoft.Json;
 
 namespace apptab.Controllers
@@ -97,9 +98,9 @@ namespace apptab.Controllers
                 if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
 
-                //int retarDate = 0;
-                //if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null))
-                //    retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELRAF.Value;
+                int retarDate = 0;
+                if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null))
+                    retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELARAF.Value;
 
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
                 SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -190,10 +191,10 @@ namespace apptab.Controllers
                                                            soas.SOA
                                                        });
 
-                                            //bool isLate = false;
-                                            //DateTime DD = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BE).DATETRAITEMENT.Value.Date;
-                                            //if (DD.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
-                                            //    isLate = true;
+                                            bool isLate = false;
+                                            DateTime DD = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BE).DATETRAITEMENT.Value.Date;
+                                            if (DD.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                                                isLate = true;
 
                                             list.Add(new DATATRPROJET
                                             {
@@ -210,7 +211,9 @@ namespace apptab.Controllers
                                                 DATETEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO_AVANCE && a.NUMEROETAPE == numCaEtapAPP.TEF).DATETRAITEMENT,
                                                 DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO_AVANCE && a.NUMEROETAPE == numCaEtapAPP.BE).DATETRAITEMENT,
                                                 SOA = soa.FirstOrDefault().SOA,
-                                                PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                                PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                                isLATE = isLate,
+                                                SITE = y.SITE
                                             });
                                         }
                                     }
@@ -241,9 +244,9 @@ namespace apptab.Controllers
                 if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
 
-                //int retarDate = 0;
-                //if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null))
-                //    retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELRAF.Value;
+                int retarDate = 0;
+                if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null))
+                    retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELARAF.Value;
 
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
                 SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -334,10 +337,10 @@ namespace apptab.Controllers
                                                            soas.SOA
                                                        });
 
-                                            //bool isLate = false;
-                                            //DateTime DD = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BE).DATETRAITEMENT.Value.Date;
-                                            //if (DD.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
-                                            //    isLate = true;
+                                            bool isLate = false;
+                                            DateTime DD = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BE).DATETRAITEMENT.Value.Date;
+                                            if (DD.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                                                isLate = true;
 
                                             list.Add(new DATATRPROJET
                                             {
@@ -354,7 +357,9 @@ namespace apptab.Controllers
                                                 DATETEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO_AVANCE && a.NUMEROETAPE == numCaEtapAPP.TEF).DATETRAITEMENT,
                                                 DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO_AVANCE && a.NUMEROETAPE == numCaEtapAPP.BE).DATETRAITEMENT,
                                                 SOA = soa.FirstOrDefault().SOA,
-                                                PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                                                PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                                isLATE = isLate,
+                                                SITE = y.SITE
                                             });
                                         }
                                     }
@@ -463,7 +468,8 @@ namespace apptab.Controllers
                             DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == isPiece.NUMERO_AVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA).DATETRAITEMENT,
                             DATECRE = DateTime.Now,
                             ETAT = 0,
-                            IDUSERCREATE = exist.ID
+                            IDUSERCREATE = exist.ID,
+                            SITE = isGA.SITE
                         };
 
                         if (ordsec == 1)
@@ -807,9 +813,9 @@ namespace apptab.Controllers
             {
                 int crpt = iProjet;
 
-                //int retarDate = 0;
-                //if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null))
-                //    retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELAV.Value;
+                int retarDate = 0;
+                if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null))
+                    retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELAV.Value;
 
                 //Check si le projet est mappé à une base de données TOM²PRO//
                 if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null) == null)
@@ -843,9 +849,9 @@ namespace apptab.Controllers
                                        soas.SOA
                                    });
 
-                        //bool isLate = false;
-                        //if (x.DATECRE.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
-                        //    isLate = true;
+                        bool isLate = false;
+                        if (x.DATECRE.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                            isLate = true;
 
                         list.Add(new DATATRPROJET
                         {
@@ -864,8 +870,9 @@ namespace apptab.Controllers
                             LIEN = db.SI_USERS.FirstOrDefault(a => a.ID == x.IDUSERCREATE).LOGIN,
                             DATECREATION = x.DATECRE.Value.Date,
                             SOA = soa.FirstOrDefault().SOA,
-                            PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
-                            //isLATE = isLate
+                            PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                            isLATE = isLate,
+                            SITE = x.SITE
                         });
                     }
                     //listORDER = list.OrderByDescending(a => a.isLATE).ToList();
@@ -889,9 +896,9 @@ namespace apptab.Controllers
             {
                 int crpt = iProjet;
 
-                //int retarDate = 0;
-                //if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null))
-                //    retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELAV.Value;
+                int retarDate = 0;
+                if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null))
+                    retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELAV.Value;
 
                 //Check si le projet est mappé à une base de données TOM²PRO//
                 if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null) == null)
@@ -925,9 +932,9 @@ namespace apptab.Controllers
                                        soas.SOA
                                    });
 
-                        //bool isLate = false;
-                        //if (x.DATECRE.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
-                        //    isLate = true;
+                        bool isLate = false;
+                        if (x.DATECRE.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                            isLate = true;
 
                         list.Add(new DATATRPROJET
                         {
@@ -946,7 +953,9 @@ namespace apptab.Controllers
                             LIEN = db.SI_USERS.FirstOrDefault(a => a.ID == x.IDUSERCREATE).LOGIN,
                             DATECREATION = x.DATECRE.Value.Date,
                             SOA = soa.FirstOrDefault().SOA,
-                            PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET
+                            PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                            isLATE = isLate,
+                            SITE = x.SITE
                         });
                     }
                 }

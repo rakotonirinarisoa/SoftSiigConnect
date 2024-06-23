@@ -9,6 +9,11 @@
     GetListPeriode();
     GetListType();
     GetListLien();
+
+    $(`[data-id="lien-list"]`).change(function (k, v) {
+        let nom = $(`#Lien`).val();
+        $(`#LienTRUE`).val(nom);
+    });
 });
 
 function GetListUser() {
@@ -199,7 +204,7 @@ function GetListLien() {
             var code = ``;
             $.each(Datas.data, function (k, v) {
                 code += `
-                    <option value="${v.IDDOC}">${v.TITLE}</option>
+                    <option value="${v.LIEN}">${v.TITLE}</option>
                 `;
             });
             $(`[data-id="lien-list"]`).append(code);
@@ -219,7 +224,8 @@ $(`[data-action="AddnewUser"]`).click(function () {
     let Periode = $(`#Periode`).val();
     let Type = $(`#Type`).val();
     let Lien = $(`#LienTRUE`).val();
-    if (!Title || !Annee || !Periode || !Type || !Lien) {
+    let TITLEDOCS = $(`#Lien`).val();
+    if (!Title || !Annee || !Periode || !Type || !Lien || !TITLEDOCS) {
         alert("Veuillez renseigner les informations afin d'enregistrer le document. ");
         return;
     }
@@ -234,6 +240,7 @@ $(`[data-action="AddnewUser"]`).click(function () {
     formData.append("Periode", Periode);
     formData.append("Type", Type);
     formData.append("Lien", Lien);
+    formData.append("TITLEDOCS", TITLEDOCS);
 
     formData.append("IDPROJET", $(`#IDProjet`).val());
 

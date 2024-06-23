@@ -67,5 +67,7 @@
         public string NTEFSIIG { get; set; }
         [StringLength(50)]
         public string NBESIIG { get; set; }
+        [StringLength(50)]
+        public string SITE { get; set; }
     }
 }
