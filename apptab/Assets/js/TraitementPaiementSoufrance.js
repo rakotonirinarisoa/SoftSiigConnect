@@ -106,6 +106,9 @@ function parseList(array) {
                 result.push({
                     rowNumber,
                     soa: array[i].SOA,
+                    projet: array[i].TraitementPaiementDetails[j].PROJET,
+                    site:array[i].TraitementPaiementDetails[j].SITE,
+                    type: array[i].TraitementPaiementDetails[j].AVANCE ? 'Avance' : 'Paiement',
                     num: array[i].TraitementPaiementDetails[j].NUM_ENGAGEMENT,
                     etape,
                     beneficiaire,
@@ -114,8 +117,7 @@ function parseList(array) {
                     dateTraitement,
                     dureeTraitement,
                     dureePrevu,
-                    depassement,
-                    type: array[i].TraitementPaiementDetails[j].AVANCE ? 'Avance' : 'Paiement'
+                    depassement
                 });
 
                 rowNumber += 1;
@@ -138,6 +140,15 @@ function setDataTable() {
         columns: [
             {
                 data: 'soa'
+            },
+            {
+                data: 'projet'
+            },
+            {
+                data: 'site'
+            },
+            {
+                data: 'type'
             },
             {
                 data: 'num'
@@ -166,16 +177,13 @@ function setDataTable() {
             {
                 data: 'depassement'
             },
-            {
-                data: 'type'
-            },
         ],
         lengthChange: false,
         paging: false,
         ordering: false,
         info: false,
         colReorder: false,
-        rowsGroup: [0, 1],
+        rowsGroup: [0, 1,2,3,4],
         order: [['desc']],
         createdRow: function (row, data, _) {
             if (data.rowNumber !== 0) {
@@ -184,17 +192,17 @@ function setDataTable() {
             }
 
             if (data.rowNumber % NUMBER_OF_ROWS === NUMBER_OF_ROWS - 1) {
-                $('td:eq(3)', row).attr('colspan', 4).css({ 'text-align': 'center' });
-                $('td:eq(3)', row).text('Durée totale');
+                $('td:eq(6)', row).attr('colspan', 4).css({ 'text-align': 'center' });
+                $('td:eq(6)', row).text('Durée totale');
 
                 /*$('td:eq(4)', row).text(data.dateTraitement);*/
-                $('td:eq(4)', row).text(data.dureeTraitement);
-                $('td:eq(5)', row).text(data.dureePrevu);
-                $('td:eq(6)', row).text(data.depassement);
+                $('td:eq(7)', row).text(data.dureeTraitement);
+                $('td:eq(8)', row).text(data.dureePrevu);
+                $('td:eq(9)', row).text(data.depassement);
 
-                $('td:eq(7)', row).text('').css({ 'display': 'none' });
-                $('td:eq(8)', row).text('').css({ 'display': 'none' });
-                $('td:eq(9)', row).text('').css({ 'display': 'none' });
+                $('td:eq(10)', row).text('').css({ 'display': 'none' });
+                $('td:eq(11)', row).text('').css({ 'display': 'none' });
+                $('td:eq(12)', row).text('').css({ 'display': 'none' });
             }
         }
     });

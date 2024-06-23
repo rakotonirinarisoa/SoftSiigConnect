@@ -1453,6 +1453,7 @@ namespace apptab.Controllers
                                        IDUSCREA = v.IDUSCREA != null ? v.IDUSCREA : null,
                                        IDUSSEND = v.IDUSSEND != null ? v.IDUSSEND : null,
                                        IDUSVAL = v.IDUSVAL != null ? v.IDUSVAL : null,
+                                       SITE = v.SITE != null ? v.SITE : null,
                                    }
                                ).ToList();
 
@@ -1477,6 +1478,7 @@ namespace apptab.Controllers
                         double dateBK = Date.GetDifference(paielst[j].DATEVAL, paielst[j].DATESEND);
                         result[lastIndex].TraitementPaiementDetails.Add(new TraitementPaiementDetails
                         {
+                            PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
                             NUM_ENGAGEMENT = paielst[j].NUM,
                             BENEFICIAIRE = paielst[j].BENEFICIAIRE,
                             MONTENGAGEMENT = paielst[j].MONTANT.ToString(),
@@ -1497,6 +1499,7 @@ namespace apptab.Controllers
                             DEPASSEMENTOP = durerTraite.FirstOrDefault().DELAISOP != null ? Convert.ToDouble(durerTraite.FirstOrDefault().DELAISOP) - dateOP : 0,
                             DEPASSEMENTAC = durerTraite.FirstOrDefault().DELAISAC != null ? Convert.ToDouble(durerTraite.FirstOrDefault().DELAISAC) - dateAC : 0,
                             DEPASSEMENTBK = durerTraite.FirstOrDefault().DELAISBK != null ? Convert.ToDouble(durerTraite.FirstOrDefault().DELAISBK) - dateBK : 0,
+                            SITE = paielst[j].SITE,
                         });
                     }
                 }
@@ -1528,6 +1531,7 @@ namespace apptab.Controllers
                                        IDUSCREA = v.IDUSCREA != null ? v.IDUSCREA : null,
                                        IDUSSEND = v.IDUSSEND != null ? v.IDUSSEND : null,
                                        IDUSVAL = v.IDUSVAL != null ? v.IDUSVAL : null,
+                                       SITE = v.SITE != null ? v.SITE : null,
                                    }
                                ).ToList();
                     var durerTraite = db.SI_DELAISTRAITEMENT.Where(x => x.IDPROJET == projectId).Select(x => new {
@@ -1547,6 +1551,7 @@ namespace apptab.Controllers
                     {
                         result[lastIndex].TraitementPaiementDetails.Add(new TraitementPaiementDetails
                         {
+                            PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
                             NUM_ENGAGEMENT = paielst[j].NUM.ToString(),
                             BENEFICIAIRE = paielst[j].BENEFICIAIRE,
                             MONTENGAGEMENT = paielst[j].MONTANT.ToString(),
@@ -1567,6 +1572,8 @@ namespace apptab.Controllers
                             DEPASSEMENTOP = durerTraite.FirstOrDefault().DELAISOP != null ? Convert.ToDouble(durerTraite.FirstOrDefault().DELAISOP) - Convert.ToDouble(Date.GetDifference(paielst[j].DATECREA, paielst[j].DATESEND)) : 0,
                             DEPASSEMENTAC = durerTraite.FirstOrDefault().DELAISAC != null ? Convert.ToDouble(durerTraite.FirstOrDefault().DELAISAC) - Convert.ToDouble(Date.GetDifference(paielst[j].DATESEND, paielst[j].DATEVAL)) : 0,
                             DEPASSEMENTBK = durerTraite.FirstOrDefault().DELAISBK != null ? Convert.ToDouble(durerTraite.FirstOrDefault().DELAISBK) - Convert.ToDouble(Date.GetDifference(paielst[j].DATEVAL, paielst[j].DATEVAL)) : 0,
+
+                            SITE = paielst[j].SITE,
                         });
                     }
                 }

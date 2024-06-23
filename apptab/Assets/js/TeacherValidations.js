@@ -229,6 +229,7 @@ function ChargeLoad() {
                             AUTREOP : v.AUTREOP,
                             idprojet: codeproject,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
+                            Site: v.SITE,
                         });
                     });
                     arr = data;
@@ -249,6 +250,7 @@ function ChargeLoad() {
                                 },
                                 orderable: false
                             },
+                            { data: 'Site' },
                             { data: 'type' },
                             { data: 'id' },
                             { data: 'dateOrdre' },
@@ -848,7 +850,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             //type: v.AVANCE ? 'Avance' : 'Engagement',
                             type: v.AVANCE ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
-                            numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
+                            numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
+                            Site:v.SITE,
                         });
                     });
 
@@ -870,6 +873,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 },
                                 orderable: false
                             },
+                            { data: 'Site' },
                             { data: 'type' },
                             { data: 'id' },
                             { data: 'dateOrdre' },
@@ -1071,7 +1075,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             //type: v.AVANCE ? 'Avance' : 'Engagement',
                             type: v.AVANCE ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
-                            numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
+                            numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
+                            Site: v.SITE,
                         });
                     });
 
@@ -1093,6 +1098,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 },
                                 orderable: false
                             },
+                            { data: 'Site' },
                             { data: 'type' },
                             { data: 'id' },
                             { data: 'dateOrdre' },

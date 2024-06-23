@@ -397,7 +397,8 @@ function getelementISO2022(a, list) {
             data: formData,
             cache: false,
             contentType: false,
-            datatype: 'json',
+            //datatype: 'json',
+            dataType: 'xml',
             xhrFields: {
                 responseType: 'blob'
             },
@@ -410,14 +411,16 @@ function getelementISO2022(a, list) {
                 window.location.reload();
             },
             success: function (result) {
-                console.log(result);
+                alert(result);
                 let blobUrl = URL.createObjectURL(result);
-                GetFileNameAnarana(blobUrl);
+                //GetFileNameAnarana(blobUrl);
                 //window.location = '/Home/GetFile?file=' + Datas.data;
 
             },
-            error: function () {
-                alert("Problème de connexion. ");
+            error: function (result) {
+
+                console.log(result);
+                alert("Problème de connexion ISO. ");
             },
 
         });
@@ -536,7 +539,8 @@ function LoadValidate() {
                     //type: v.AVANCE ? 'Avance' : 'Engagement',
                     type: v.AVANCE ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
                     idprojet: codeproject,
-                    numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
+                    numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
+                    Site: v.SITE
                 });
             });
 
@@ -557,6 +561,7 @@ function LoadValidate() {
                         },
                         orderable: false
                     },
+                    { data: 'Site' },
                     { data: 'type' },
                     { data: 'id' },
                     { data: 'dateOrdre' },

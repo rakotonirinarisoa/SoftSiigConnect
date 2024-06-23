@@ -232,7 +232,8 @@ function chargeLoad() {
                             //type: v.AVANCE ? 'Avance' : 'Paiement',
                             type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
                             numeroliquidations: v.NUMEROLIQUIDATION,
-                            numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
+                            numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
+                            Site: v.SITE,
                         });
                     });
 
@@ -262,6 +263,8 @@ function chargeLoad() {
                                     `;
                                 }
                             },
+                            { data: 'Site' },
+                            { data: 'type' },
                             { data: 'id' },
                             { data: 'dateOrdre' },
                             { data: 'noPiece' },
@@ -288,7 +291,7 @@ function chargeLoad() {
                                     `;
                                 }
                             },
-                            { data: 'type' },
+                           
                             
                         ],
                         createdRow: function (row, data, _) {
