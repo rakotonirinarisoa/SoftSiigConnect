@@ -39,6 +39,5 @@ namespace apptab.Data.Entities
         public double DEPASSEMENTOP { get; set; }
         public double DEPASSEMENTAC { get; set; }
         public double DEPASSEMENTBK { get; set; }
-        public string SITE { get; set; }
     }
 }
