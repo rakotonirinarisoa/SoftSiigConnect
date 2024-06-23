@@ -441,7 +441,7 @@ function chargeLoad() {
                             type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
-                            Site: v.SITE,
+                            site: v.SITE,
                         });
                     });
 
@@ -471,7 +471,7 @@ function chargeLoad() {
                                     `;
                                 }
                             },
-                            { data: 'Site' },
+                            { data: 'site' },
                             { data: 'type' },
                             { data: 'id' },
                             { data: 'dateOrdre' },
@@ -500,7 +500,7 @@ function chargeLoad() {
                                     `;
                                 }
                             },
-                            { data: 'type' },
+                           
                             
                         ],
                         createdRow: function (row, data, _) {

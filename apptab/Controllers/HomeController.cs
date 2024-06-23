@@ -1659,7 +1659,7 @@ namespace apptab.Controllers
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                         NUMEREG = item.NUMEREG,
                         AUTREOP = item.AUTREOP,
-                        SITE = item.SITE
+                        SITE = item.SITE,
                     });
                 }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
@@ -1698,7 +1698,7 @@ namespace apptab.Controllers
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                         NUMEREG = item.NUMEREG,
                         AUTREOP = item.AUTREOP,
-                        SITE = item.SITE
+                        SITE = item.SITE,
                     });
                 }
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
