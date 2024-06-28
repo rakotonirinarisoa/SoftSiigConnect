@@ -1,4 +1,0 @@
-0302                     28054SOFTWELL                000025                          0000774097130002                                               00005      
-0602              510100000049RASOLONJATOVO_ANDRIAMAHEBFV SG MADAGAS                  00002050011604050000000050000000AVTEST001CI-ANALYSE DE LA SITUA00008      
-0602              510100000050RASOLONJATOVO_ANDRIAMAHEBFV SG MADAGAS                  00002050011604050000000011000000001TESTAcquisition fournitures 00008      
-0802                                                                                                  0000000061000000                                          

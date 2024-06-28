@@ -1,5 +1,0 @@
-0302                     30054SOFTWELL                000026                          0500018452371236                                               00009      
-0602              510100000051RASOLONJATOVO_ANDRIAMAHEBFV SG MADAGAS                  00002050011604050000000050000000AVTEST001CI-ANALYSE DE LA SITUA00008      
-0602              510100000052RASOLONJATOVO_ANDRIAMAHEBFV SG MADAGAS                  00002050011604050000000011000000001TESTAcquisition fournitures 00008      
-0602              510100000053SOUS_COMPTE_DESIGNE_DRB_BOA2                            05500184523173360000000018000000OP006Virement                  00009      
-0802                                                                                                  0000000079000000                                          

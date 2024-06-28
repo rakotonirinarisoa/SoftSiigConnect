@@ -1,4 +1,0 @@
-0302                     22034SOFTWELLVersiondémoSOFTW000009                          0000774097130002                                               00005      
-0602              510100000044EA TRADING              BFV SG MADAGAS                  00015020010094190000000005000000LIQUIDATION                    00008      
-0702              510100000044EA TRADING              BFV SG MADAGAS                  00015020010094190000000000000000 MULTI-LIGN                    00008      
-0802                                                                                                  0000000005000000                                          
