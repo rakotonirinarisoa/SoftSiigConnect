@@ -21,7 +21,7 @@
         },
         success: function (result) {
             sessionStorage.setItem("user", null);
-            window.location = window.location.origin /*+ '/SOFTEXPENDITURESTRACKERS/'*/;
+            window.location = window.location.origin + '/SOFTSET';
         },
         error: function () {
             alert("Problème de connexion. ");
