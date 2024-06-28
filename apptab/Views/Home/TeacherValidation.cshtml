@@ -168,28 +168,33 @@
         </tfoot>
     </table>
 </div>
-<div class="form-row">
-    
-    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMP2"].ToString()) == 2)))
-    {
-        <div class="input-group mb-3 col">
-            <div class="mb-3 col">
-                <div class="btn btn-flat bg-gradient-red col-12" data-action="GetElementChecked">
-                    <i class="fa fa-check-double"></i> Enregistrer et valider
-                </div>
+@if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMP2"].ToString()) == 2)))
+{
+    <div class="input-group mb-3 col">
+        <div class="mb-3 col">
+            <div class="btn btn-flat bg-gradient-red col-12" data-action="GetElementChecked">
+                <i class="fa fa-check-double"></i> Enregistrer et valider
             </div>
         </div>
-    }
-        <div class="input-group mb-3 col">
-            <div class="mb-3 col ">
-                <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TDB_OPA', 'LISTE PAIEMENTS EN ATTENTE VALIDATION')">
-                    <i class="fa fa-file-excel"></i> Exporter EXCEL
-                </div>
-            </div>
-        </div>
-
     </div>
+}
+<div class="form-row">
+
+    <div class="input-group mb-3 col">
+        <div class="mb-3 col ">
+            <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TDB_OPA', 'LISTE PAIEMENTS EN ATTENTE VALIDATION')">
+                <i class="fa fa-file-excel"></i> Exporter EXCEL
+            </div>
+        </div>
+    </div>
+    <div class="mb-3 col">
+        <div class="btn btn-flat bg-gradient-red col-12" id="export-to-pdf-btn">
+            <i class="fa fa-file-pdf"></i> Export PDF
+        </div>
+    </div>
+
+</div>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="F-modal" data-id="">
     <div class="modal-dialog modal-xl" role="document" @*style="width:fit-content"*@>
@@ -235,3 +240,10 @@
 
 <script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
 <script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
+
+<script defer>
+    $('#export-to-pdf-btn').on('click', () => {
+        exportTableToPdf('TDB_OPA', 'RECUPERATION PAIEMENTS-PDF', `<p style="font-weight: bold /*text-align:center*/;">RECUPERATION PAIEMENTS</p><p>La liste des récupérations des paiements dans TOM²PRO</p>`, `<p style="font-weight: bold;">SOFT EXPENDITURES TRACKERS </p>`, [0, 13, 14, 15]);
+        /*exportTableToPdf('dashboard', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);*/
+    });
+</script>

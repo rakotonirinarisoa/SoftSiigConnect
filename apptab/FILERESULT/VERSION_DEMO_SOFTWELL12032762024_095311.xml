@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="iso-8859-7" standalone="no"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03">
+  <CstmrCdtTrfInitn>
+    <GrpHdr>
+      <MsgId>27064SOFTWELL                000093</MsgId>
+      <CreDtTm>2024-06-27T09:53:11.7587489+03:00</CreDtTm>
+      <NbOfTxs>1</NbOfTxs>
+      <CtrlSum>500000.000000</CtrlSum>
+      <InitgPty>
+        <Nm>SOFTWELL </Nm>
+        <Id>
+          <OrgId>
+            <Othr>
+              <Id>00009</Id>
+            </Othr>
+          </OrgId>
+        </Id>
+      </InitgPty>
+    </GrpHdr>
+    <PmtInf>
+      <PmtInfId>27064SOFTWELL                000093</PmtInfId>
+      <PmtMtd>TRF</PmtMtd>
+      <BtchBookg>false</BtchBookg>
+      <NbOfTxs>1</NbOfTxs>
+      <CtrlSum>500000</CtrlSum>
+      <PmtTpInf>
+        <InstrPrty>NORM</InstrPrty>
+      </PmtTpInf>
+      <ReqdExctnDt>2024-06-27T09:53:11.7587489+03:00</ReqdExctnDt>
+      <Dbtr>
+        <Nm>SOFTWELL</Nm>
+        <PstlAdr>
+          <StrtNm />
+          <TwnNm />
+          <Ctry>MADAGASCAR</Ctry>
+        </PstlAdr>
+        <Id>
+          <OrgId>
+            <Othr>
+              <Id>00 01 123 456 789 C</Id>
+            </Othr>
+          </OrgId>
+        </Id>
+      </Dbtr>
+      <DbtrAcct>
+        <Id>
+          <Othr>
+            <Id>BFV SG MADAGASCAR 0000205001160405</Id>
+          </Othr>
+        </Id>
+        <Ccy>MGA</Ccy>
+      </DbtrAcct>
+      <DbtrAgt>
+        <FinInstnId>
+          <BIC>01</BIC>
+          <PstlAdr>
+            <Ctry>MADAGASCAR</Ctry>
+          </PstlAdr>
+        </FinInstnId>
+      </DbtrAgt>
+      <ChrgBr>SHAR</ChrgBr>
+    </PmtInf>
+  </CstmrCdtTrfInitn>
+</Document>

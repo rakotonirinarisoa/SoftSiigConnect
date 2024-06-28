@@ -7,5 +7,6 @@ namespace apptab.Extension
     {
         public XmlDocument Fichier { get; set; }
         public string Chemin { get; set; }
+        public string NomFichier { get; set; }
     }
 }

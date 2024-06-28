@@ -2,10 +2,10 @@
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03">
   <CstmrCdtTrfInitn>
     <GrpHdr>
-      <MsgId>23064SOFTWELL                000060</MsgId>
-      <CreDtTm>2024-06-23T13:09:44.5895641+03:00</CreDtTm>
+      <MsgId>27064SOFTWELL                000103</MsgId>
+      <CreDtTm>2024-06-27T10:25:25.8699595+03:00</CreDtTm>
       <NbOfTxs>1</NbOfTxs>
-      <CtrlSum>180000.000000000000</CtrlSum>
+      <CtrlSum>600000.000000</CtrlSum>
       <InitgPty>
         <Nm>SOFTWELL </Nm>
         <Id>
@@ -18,15 +18,15 @@
       </InitgPty>
     </GrpHdr>
     <PmtInf>
-      <PmtInfId>23064SOFTWELL                000060</PmtInfId>
+      <PmtInfId>27064SOFTWELL                000103</PmtInfId>
       <PmtMtd>TRF</PmtMtd>
       <BtchBookg>false</BtchBookg>
       <NbOfTxs>1</NbOfTxs>
-      <CtrlSum>180000</CtrlSum>
+      <CtrlSum>600000</CtrlSum>
       <PmtTpInf>
         <InstrPrty>NORM</InstrPrty>
       </PmtTpInf>
-      <ReqdExctnDt>2024-06-23T13:09:44.5895641+03:00</ReqdExctnDt>
+      <ReqdExctnDt>2024-06-27T10:25:25.8699595+03:00</ReqdExctnDt>
       <Dbtr>
         <Nm>SOFTWELL</Nm>
         <PstlAdr>
@@ -45,15 +45,14 @@
       <DbtrAcct>
         <Id>
           <Othr>
-            <Id>BOA2055001845231736</Id>
+            <Id>BFV SG MADAGASCAR 0000205001160405</Id>
           </Othr>
         </Id>
         <Ccy>MGA</Ccy>
       </DbtrAcct>
       <DbtrAgt>
         <FinInstnId>
-          <BIC>
-          </BIC>
+          <BIC>01</BIC>
           <PstlAdr>
             <Ctry>MADAGASCAR</Ctry>
           </PstlAdr>

@@ -21,6 +21,9 @@ using System.Xml.XPath;
 using Xunit;
 using System.Text;
 using System.Xml;
+using WebGrease.Activities;
+using System.Web;
+using Microsoft.Build.Framework.XamlTypes;
 
 namespace apptab.Controllers
 {
@@ -382,10 +385,13 @@ namespace apptab.Controllers
                 int b = int.Parse(item.Numereg);
                 avalider.AddRange(db.OPA_VALIDATIONS.Where(a => a.IDPROJET == PROJECTID && a.ETAT == 2 && a.IDREGLEMENT == item.Id && a.NUMEREG == b).ToList());
             };
+            var path = "";
+            var Nomfichier = "";
             if (avalider != null)
             {
                 var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject,list);
-
+                path = pathfile.Chemin;
+                Nomfichier = pathfile.NomFichier + ".xml";
                 if (avalider != null)
                 {
                     foreach (var item in avalider)
@@ -416,7 +422,21 @@ namespace apptab.Controllers
                     xmlResult = SaveDocument(Anarana, Anarana);
                 }
             }
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archivage avec succès. ", data = xmlResult  }, settings));
+            byte[] fileBytes = System.IO.File.ReadAllBytes(path);
+            FileInfo fi = new FileInfo(path + ".xml");
+            string contentType = MimeMapping.GetMimeMapping(path + ".xml");
+
+            var cd = new System.Net.Mime.ContentDisposition
+            {
+                FileName = Nomfichier,
+                Inline = false,
+            };
+
+            Response.AppendHeader("Content-Disposition", cd.ToString());
+
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet);
+            //return File(fileBytes , System.Net.Mime.MediaTypeNames.Application.Soap, Nomfichier);
+            //return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archivage avec succès. ", data = xmlResult  }, settings));
         }
         [HttpPost]
         public JsonResult FileName()

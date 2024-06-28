@@ -395,10 +395,10 @@ function getelementISO2022(a, list) {
             type: "POST",
             url: Origin + '/Home/CreateZipFileISO2022',
             data: formData,
+            
             cache: false,
             contentType: false,
-            //datatype: 'json',
-            dataType: 'xml',
+            datatype: 'json',
             xhrFields: {
                 responseType: 'blob'
             },
@@ -411,9 +411,10 @@ function getelementISO2022(a, list) {
                 window.location.reload();
             },
             success: function (result) {
+               
                 alert(result);
                 let blobUrl = URL.createObjectURL(result);
-                //GetFileNameAnarana(blobUrl);
+                GetFileNameAnarana(blobUrl);
                 //window.location = '/Home/GetFile?file=' + Datas.data;
 
             },
@@ -1021,7 +1022,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             //type: v.AVANCE ? 'Avance' : 'Engagement',
                             type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
                             idprojet: codeproject,
-                            numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
+                            numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
+                            Site: v.SITE
                         });
                     });
 
@@ -1042,6 +1044,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 },
                                 orderable: false
                             },
+                            { data: 'Site' },
                             { data: 'type' },
                             { data: 'id' },
                             { data: 'dateOrdre' },
@@ -1230,7 +1233,8 @@ $('[data-action="ChargerJs"]').click(function () {
                             //type: v.AVANCE ? 'Avance' : 'Engagement',
                             type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
                             idprojet: codeproject,
-                            numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
+                            numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
+                            Site: v.SITE
                         });
                     });
 
@@ -1251,6 +1255,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 },
                                 orderable: false
                             },
+                            { data: 'Site' },
                             { data: 'type' },
                             { data: 'id' },
                             { data: 'dateOrdre' },

@@ -15,7 +15,7 @@ namespace apptab
         }
 
         public static string connex = "name=SOFTCONNECTOM";
-
+        public virtual DbSet<RPAYS> RPAYS { get; set; }
         public virtual DbSet<CPTADMIN_CHAINETRAITEMENT> CPTADMIN_CHAINETRAITEMENT { get; set; }
         public virtual DbSet<CPTADMIN_COMMENTAIRE> CPTADMIN_COMMENTAIRE { get; set; }
         public virtual DbSet<CPTADMIN_FLIQUIDATION> CPTADMIN_FLIQUIDATION { get; set; }

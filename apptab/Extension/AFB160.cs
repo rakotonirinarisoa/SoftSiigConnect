@@ -198,10 +198,11 @@ namespace apptab.Extension
                     }
                 }
             }
+            //string CodePays = 
             DateTime dtcrdt = DateTime.Now;
             string xmlconst = "";
             int iteration = 1;
-            string path = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + fileName + ".xml";
+            string path = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + fileName ;
             try
             {
                 // Create the file, or overwrite if the file exists.
@@ -218,13 +219,13 @@ namespace apptab.Extension
 
                     int globaliteration = beneficiaires.Count();
 
-
+                    var bnfr = beneficiaires.FirstOrDefault();
                     XElement contacts = new XElement("CstmrCdtTrfInitn",
                                  new XElement("GrpHdr",
-                                new XElement("MsgId", infdonneurOrdre),
-                                new XElement("CreDtTm", dtcrdt),
+                                new XElement("MsgId", infdonneurOrdre.Trim(' ')),
+                                new XElement("CreDtTm", dtcrdt.Date),
                                 new XElement("NbOfTxs", globaliteration),//a etudier
-                                new XElement("CtrlSum", montant),
+                                new XElement("CtrlSum", bnfr.MONTANT),
 
                                 new XElement("InitgPty",
                                     new XElement("Nm", donneurOrde.DONNEUR_ORDRE.TrimEnd(' ') + " "),
@@ -234,7 +235,7 @@ namespace apptab.Extension
                                             new XElement("Id", donneurOrde.CODE_BANQUE.TrimEnd(' '))
                                         )
                                 )))));
-                    var bnfr = beneficiaires.FirstOrDefault();
+                    
                     var op = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == bnfr.NUM).FirstOrDefault();
 
                     contacts.Add(new XElement("PmtInf",
@@ -246,7 +247,7 @@ namespace apptab.Extension
 
                        new XElement("PmtTpInf",
                        new XElement("InstrPrty", "NORM")),//a saisir selon l'utilisateur
-                       new XElement("ReqdExctnDt", dtcrdt),
+                       new XElement("ReqdExctnDt", dtcrdt.Date),
                        new XElement("Dbtr",
                            new XElement("Nm", donneurOrde.DONNEUR_ORDRE),
                            new XElement("PstlAdr",
@@ -327,7 +328,7 @@ namespace apptab.Extension
             //XmlISO.LoadXml(path);
            
             //return new AFB() { Fichier = path, Chemin = path };
-            return new ISO20022xml() { Fichier = xd, Chemin = path };
+            return new ISO20022xml() { Fichier = xd, Chemin = path ,NomFichier = fileName };
 
         }
         public XmlDocument XmlISO{ get; set; }
@@ -1564,7 +1565,28 @@ namespace apptab.Extension
             var tdonneur1 = (from dord in db.OPA_DONNEURORDRE
                              where dord.IDSOCIETE == PROJECTID && dord.APPLICATION == "BR"
                              select dord).FirstOrDefault();
+            /*list = (from bul in tom.tmp_bulletin
+                            join sal in tom.tpa_salaries on bul.matricule equals sal.matricule
+                            join ban in tom.tpa_BanqueSalaries on sal.matricule equals ban.matricule
+                            where bul.mois == mois && bul.annee == annee
+                            select new DataListTompaie()
+                            {
+                                No = bul.num,
+                                Matricule = sal.matricule,
+                                Nom = sal.nom,
+                                Mois = bul.mois.Value,
+                                Annee = bul.annee.Value,
+                                Libelle = bul.montant + sal.matricule + bul.mois,
+                                Montant = bul.montant.Value,
+                                Cin = sal.cin,
+                                Banque = ban.Agence,
+                                CodeBanque = ban.codeLibelleBanque,
+                                Guichet = ban.codeGuichet,
+                                CompteBanque = ban.numCompte,
+                                CleRIB = ban.cle_RIB
+                            }).ToList();*/
             var projet = (from prjt in tom.RPROJET
+                          join py in tom.RPAYS on prjt.PAYS equals py.LIBELLE
                           select new
                           {
                               SIGLE = prjt.SIGLE,
@@ -1575,7 +1597,8 @@ namespace apptab.Extension
                               VILLE = prjt.VILLE,
                               ADDRESSE2 = prjt.ADRESSE2,
                               ADDRESSE1 = prjt.ADRESSE1,
-                              PAYS = prjt.PAYS,
+                              //PAYS = prjt.PAYS,
+                              PAYS = py.CODE,
                           }).FirstOrDefault();
             string dordre = "";
             if (Ordbanque != "" && Ordbanque != null )
