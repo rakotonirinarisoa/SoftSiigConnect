@@ -1586,7 +1586,7 @@ namespace apptab.Extension
                                 CleRIB = ban.cle_RIB
                             }).ToList();*/
             var projet = (from prjt in tom.RPROJET
-                          join py in tom.RPAYS on prjt.PAYS equals py.LIBELLE
+                          join py in tom.RPAYS on prjt.PAYS equals py.CODE
                           select new
                           {
                               SIGLE = prjt.SIGLE,
