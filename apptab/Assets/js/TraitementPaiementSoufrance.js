@@ -5,39 +5,11 @@ let list = [];
 //const NUMBER_OF_ROWS = 5;
 const NUMBER_OF_ROWS = 4;
 
-
-function setSum(array, startIndex, endIndex) {
-    let total = 0;
-    let totalPREVU = 0;
-    let totalDEPASS = 0;
-
-    for (let i = startIndex; i <= endIndex; i += 1) {
-        total += Number(array[i].dureeTraitement);
-        totalPREVU += Number(array[i].dureePrevu);
-        totalDEPASS += Number(array[i].depassement);
-    }
-
-    array[endIndex + 1].dureeTraitement = total;
-    array[endIndex + 1].dureePrevu = totalPREVU;
-    array[endIndex + 1].depassement = totalDEPASS;
-}
-function calculateDuration(array) {
-    let pointer = 0;
-
-    for (let i = 0; i < array.length; i += 1) {
-        if (i % NUMBER_OF_ROWS === NUMBER_OF_ROWS - 1) {
-            setSum(array, pointer, i - 1);
-
-            pointer = i + 1;
-        }
-    }
-}
-
 function parseList(array) {
     const result = [];
 
     let rowNumber = 0;
-    console.log(array);
+    
     for (let i = 0; i < array.length; i += 1) {
         rowNumber = 0;
 
@@ -54,7 +26,7 @@ function parseList(array) {
 
                 switch (k) {
                     case 0:
-                        etape = 'Transfert et Validation OP';
+                        etape = 'Transfert et Validation';
                         dateTraitement = array[i].TraitementPaiementDetails[j].DATETRANSFERTRAF === undefined ? '' : formatDate(array[i].TraitementPaiementDetails[j].DATETRANSFERTRAF);
                         beneficiaire = dateTraitement === '' ? '' : array[i].TraitementPaiementDetails[j].BENEFICIAIRE;
                         montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementPaiementDetails[j].MONTENGAGEMENT).replace(',', '.'));
@@ -130,6 +102,33 @@ function parseList(array) {
     list = result;
 }
 
+function setSum(array, startIndex, endIndex) {
+    let total = 0;
+    let totalPREVU = 0;
+    let totalDEPASS = 0;
+
+    for (let i = startIndex; i <= endIndex; i += 1) {
+        total += Number(array[i].dureeTraitement);
+        totalPREVU += Number(array[i].dureePrevu);
+        totalDEPASS += Number(array[i].depassement);
+    }
+
+    array[endIndex + 1].dureeTraitement = total;
+    array[endIndex + 1].dureePrevu = totalPREVU;
+    array[endIndex + 1].depassement = totalDEPASS;
+}
+function calculateDuration(array) {
+    let pointer = 0;
+
+    for (let i = 0; i < array.length; i += 1) {
+        if (i % NUMBER_OF_ROWS === NUMBER_OF_ROWS - 1) {
+            setSum(array, pointer, i - 1);
+
+            pointer = i + 1;
+        }
+    }
+}
+
 function setDataTable() {
     if (table !== undefined) {
         table.destroy();
@@ -183,19 +182,33 @@ function setDataTable() {
         ordering: false,
         info: false,
         colReorder: false,
-        rowsGroup: [0, 1,2,3,4],
+        rowsGroup: [0, 1, 2, 3, 4],
         order: [['desc']],
-        createdRow: function (row, data, _) {
-            if (data.rowNumber !== 0) {
-                $('td:eq(0)', row).addClass('delete-td');
-                $('td:eq(1)', row).addClass('delete-td');
-            }
+        //createdRow: function (row, data, _) {
+        //    if (data.rowNumber !== 0) {
+        //        $('td:eq(0)', row).addClass('delete-td');
+        //        $('td:eq(1)', row).addClass('delete-td');
+        //    }
 
+        //    if (data.rowNumber % NUMBER_OF_ROWS === NUMBER_OF_ROWS - 1) {
+        //        $('td:eq(6)', row).attr('colspan', 4).css({ 'text-align': 'center' });
+        //        $('td:eq(6)', row).text('Durée totale');
+
+        //        /*$('td:eq(4)', row).text(data.dateTraitement);*/
+        //        $('td:eq(7)', row).text(data.dureeTraitement);
+        //        $('td:eq(8)', row).text(data.dureePrevu);
+        //        $('td:eq(9)', row).text(data.depassement);
+
+        //        $('td:eq(10)', row).text('').css({ 'display': 'none' });
+        //        $('td:eq(11)', row).text('').css({ 'display': 'none' });
+        //        $('td:eq(12)', row).text('').css({ 'display': 'none' });
+        //    }
+        //}
+        createdRow: function (row, data, _) {
             if (data.rowNumber % NUMBER_OF_ROWS === NUMBER_OF_ROWS - 1) {
                 $('td:eq(6)', row).attr('colspan', 4).css({ 'text-align': 'center' });
                 $('td:eq(6)', row).text('Durée totale');
 
-                /*$('td:eq(4)', row).text(data.dateTraitement);*/
                 $('td:eq(7)', row).text(data.dureeTraitement);
                 $('td:eq(8)', row).text(data.dureePrevu);
                 $('td:eq(9)', row).text(data.depassement);
@@ -204,7 +217,70 @@ function setDataTable() {
                 $('td:eq(11)', row).text('').css({ 'display': 'none' });
                 $('td:eq(12)', row).text('').css({ 'display': 'none' });
             }
-        }
+        },
+        deferRender: true,
+        dom: 'Bfrtip',
+        buttons: ['colvis'],
+        caption: 'SOFT EXPENDITURES TRACKERS ' + new Date().toLocaleDateString(),
+        buttons: ['colvis',
+            {
+                extend: 'pdfHtml5',
+                title: 'TRAITEMENTS EN SOUFFRANCE (PAR RAPPORT AU DELAI MOYEN)',
+                messageTop: 'Liste des paiements en souffrance (par rapport au délai moyen)',
+                text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
+                orientation: 'landscape',
+                pageSize: 'A4',
+                charset: "utf-8",
+                bom: true,
+                className: 'custombutton-collection-pdf',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    //grouped_array_index: [1] //note the brackets, i think this is so you can group by multiple columns.
+                },
+                customize: function (doc) {
+                    doc.defaultStyle.alignment = 'left';
+                    //doc.defaultStyle.margin = [12, 12, 12, 12];
+                },
+                download: 'open'
+            },
+            {
+                extend: 'excelHtml5',
+                title: 'TRAITEMENTS EN SOUFFRANCE (PAR RAPPORT AU DELAI MOYEN)',
+                messageTop: 'Liste des paiements en souffrance (par rapport au délai moyen)',
+                text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
+                orientation: 'landscape',
+                pageSize: 'A4',
+                charset: "utf-8",
+                bom: true,
+                className: 'custombutton-collection-excel',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    format: {
+                        body: function (data, row, column, node) {
+                            if (typeof data === 'undefined') {
+                                return;
+                            }
+                            if (data == null) {
+                                return data;
+                            }
+                            if (column === 7) {
+                                var arr = data.split(',');
+                                if (arr.length == 1) { return data; }
+
+                                arr[0] = arr[0].toString().replace(/[\.]/g, "");
+                                if (arr[0] > '' || arr[1] > '') {
+                                    data = arr[0] + '.' + arr[1];
+                                } else {
+                                    return '';
+                                }
+                                return data.toString().replace(/[^\d.-]/g, "");
+                            }
+                            return data;
+                        }
+                    }
+                },
+            }
+        ],
     });
 }
 
@@ -291,10 +367,17 @@ $(document).ready(async () => {
     GetListProjet();
 });
 
-$('#export-excel-btn').on('click', () => {
-    $(`td.delete-td`).remove();
+//$('#export-excel-btn').on('click', () => {
+//    $(`td.delete-td`).remove();
 
-    tableToExcel('dashboard', 'DELAIS DE TRAITEMENT ENGAGEMENTS', setDataTable);
+//    tableToExcel('dashboard', 'DELAIS DE TRAITEMENT ENGAGEMENTS', setDataTable);
+//});
+$('#export-excel-btn').on('click', () => {
+    $('td').filter(function () {
+        return $(this).css('display') === 'none';
+    }).remove();
+
+    tableToExcel('dashboard', 'TRAITEMENT EN SOUFFRANCE', setDataTable);
 });
 
 $('#proj').on('change', () => {
@@ -382,6 +465,7 @@ function emptyTable() {
         ordering: false,
         info: false,
         colReorder: false,
+
         deferRender: true,
         dom: 'Bfrtip',
         buttons: ['colvis'],
