@@ -507,12 +507,17 @@ function chargeLoad() {
                             $(row).attr('compteG-id', data.id);
 
                             $(row).addClass('select-text');
-                            if (data.isLATE) {
-                                //$(row).addClass("demoRayure");
-                                $(row).children('td').eq(0).addClass("demoRayure");
-                            }
+                            //if (data.isLATE) {
+                            //    //$(row).attr('style', "background-color: #FF7F7F !important;");
+                            //    $(row).addClass("demoRayure");
+                            //}
                             if (data.AUTREOP) {
-                                $(row).addClass("demoRayureAUTREOP");
+                                //$(row).attr('style', "background-color: #0bd21e !important;")
+                                //$(row).addClass("demoRayureAUTREOP");
+                                $(row).children('td').eq(0).addClass("AUTREOPCSS");
+                            }
+                            if (data.estAvance) {
+                                $(row).children('td').eq(0).addClass("AVANCECSS");
                             }
                         },
                         columnDefs: [
