@@ -3033,7 +3033,7 @@ namespace apptab.Controllers
                                     REF = x.TYPE,
                                     NPIECE = x.ANNEE.ToString(),
                                     BENEF = x.MOIS,
-                                    INTITUT = lienGEd + "/documents/shared/" + x.LIEN.ToString(),
+                                    INTITUT = x.LIEN.ToString(),
                                     COMMENTAIRE = x.PERIODE
                                 });
                             }
