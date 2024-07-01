@@ -661,6 +661,13 @@ namespace SOFTCONNECT.Controllers
                     Session["GED"] = isMenu.LIEN;
                 }
 
+                foreach (var x in db.SI_USERSHISTO.Where(a => a.IDUSER == test.ID).ToList())
+                {
+                    var isusr = db.SI_USERSHISTO.Where(a => a.ID == x.ID).FirstOrDefault();
+                    isusr.DISCONNEX = DateTime.Now;
+                    db.SaveChanges();
+                }
+
                 test.LASTCONNEXTION = DateTime.Now;
                 db.SaveChanges();
 
