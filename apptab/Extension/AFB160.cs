@@ -69,14 +69,9 @@ namespace apptab.Extension
 
             //infdonneurOrdre += this.formaterTexte(21, "                        ");
             infdonneurOrdre += this.formaterDatePaie((DateTime)donneurOrde.DATE_PAIEMENT);
-            infdonneurOrdre += this.formaterTexte(24, donneurOrde.DONNEUR_ORDRE);
+            infdonneurOrdre += this.formaterTexte(24, donneurOrde.DONNEUR_ORDRE.TrimEnd(' '));
 
             infdonneurOrdre += this.formaterTexte(6, this.ajouter0(6, y.ToString()));//réference ordre de virement
-            //infdonneurOrdre += this.formaterTexte(26, "                    ");
-            //infdonneurOrdre += this.formaterTexte(5, donneurOrde.CODE_GUICHET);
-            //infdonneurOrdre += this.formaterTexte(11, donneurOrde.NUM_COMPTE);
-            //infdonneurOrdre += this.formaterTexte(47, "      ");
-            //infdonneurOrdre += this.formaterTexte(5, donneurOrde.CODE_BANQUE);
             //infdonneurOrdre += this.formaterTexte(6, " ");
 
             /********              0602        ******/
@@ -228,7 +223,7 @@ namespace apptab.Extension
                                 new XElement("CtrlSum", bnfr.MONTANT),
 
                                 new XElement("InitgPty",
-                                    new XElement("Nm", donneurOrde.DONNEUR_ORDRE.TrimEnd(' ') + " "),
+                                    new XElement("Nm", donneurOrde.DONNEUR_ORDRE.TrimEnd(' ')),
                                     new XElement("Id",
                                     new XElement("OrgId",
                                         new XElement("Othr",
