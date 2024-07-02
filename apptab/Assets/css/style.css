@@ -13,6 +13,7 @@
     overflow: auto;
     max-height: 75vh
 }
+
 .table-responsive.tbodyDiv table#idTable thead.thead-green tr th {
     position: sticky;
     top: 0;
