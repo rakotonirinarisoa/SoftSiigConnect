@@ -88,6 +88,7 @@ namespace apptab
         public virtual DbSet<SI_MAPPAGES_GED> SI_MAPPAGES_GED { get; set; }
         public virtual DbSet<HSI_PROGED> HSI_PROGED { get; set; }
         public virtual DbSet<SI_PROGED> SI_PROGED { get; set; }
+        public virtual DbSet<SI_SITE> SI_SITE { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
