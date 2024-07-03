@@ -2440,6 +2440,7 @@
     <Content Include="Assets\js\BordRSF.js" />
     <Content Include="Assets\js\BordJRA.js" />
     <Content Include="Assets\js\MappagUserGED.js" />
+    <Content Include="Assets\js\SITE.js" />
     <Content Include="Assets\js\PROGED.js" />
     <Content Include="Assets\js\RSFDetails.js" />
     <Content Include="Assets\js\RSFCreate.js" />
@@ -4970,6 +4971,8 @@
     <Content Include="Views\RSF\MappageGED.cshtml" />
     <Content Include="Views\RSF\PROSOAList.cshtml" />
     <Content Include="Views\RSF\SuperAdminPROSOA.cshtml" />
+    <Content Include="Views\Privilege\SiteList.cshtml" />
+    <Content Include="Views\Privilege\CreateSITE.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
