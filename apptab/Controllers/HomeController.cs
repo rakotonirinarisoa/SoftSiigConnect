@@ -24,6 +24,8 @@ using System.Xml;
 using WebGrease.Activities;
 using System.Web;
 using Microsoft.Build.Framework.XamlTypes;
+using System.Security.Policy;
+using System.Web.WebPages;
 
 namespace apptab.Controllers
 {
@@ -488,6 +490,8 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
+            var site = db.SI_SITE.Where(ST => ST.IDUSER == exist.ID && ST.IDPROJET == exist.IDPROJET).Select(ST => ST.SITE).ToList();
+
             var basename = GetTypeP(suser, codeproject);
             int PROJECTID = int.Parse(codeproject);
 
@@ -524,6 +528,7 @@ namespace apptab.Controllers
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            var site = db.SI_SITE.Where(ST => ST.IDUSER == exist.ID && ST.IDPROJET == exist.IDPROJET).Select(ST => ST.SITE).ToList();
 
             var basename = GetTypeP(suser, codeproject);
             int PROJECTID = int.Parse(codeproject);
@@ -566,7 +571,7 @@ namespace apptab.Controllers
             List<DataListTomOP> tempList = new List<DataListTomOP>();
             if (hstSiig != null)
             {
-                var sss = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID).Where(x => !hstSiig.Contains(x.No.ToString())).ToList();
+                var sss = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID,site).Where(x => !hstSiig.Contains(x.No.ToString())).ToList();
                 foreach (var s1 in sss)
                 {
                     if (list.Find(x => x.No != s1.No) == null)
@@ -577,7 +582,7 @@ namespace apptab.Controllers
             }
             else
             {
-                list.AddRange(afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID).ToList());
+                list.AddRange(afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site).ToList());
             }
 
 
@@ -731,7 +736,7 @@ namespace apptab.Controllers
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
             var basename = GetTypeP(suser, codeproject);
             int PROJECTID = int.Parse(codeproject);
-
+            var site = db.SI_SITE.Where(ST => ST.IDUSER == exist.ID && ST.IDPROJET == exist.IDPROJET).Select(ST => ST.SITE).ToList();
             if (basename == "")
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le type d'ecriture avant toutes opérations. " }, settings));
@@ -747,7 +752,10 @@ namespace apptab.Controllers
 
             #endregion
             int countTraitement = 0;
-            var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
+            var lien = "http://softwellset.softwell.cloud/softsetformation";
+
+            Uri MyUrl = Request.Url;
+            string link = MyUrl.Host;
 
             var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == PROJECTID).FirstOrDefault().PROJET;
 
@@ -869,7 +877,7 @@ namespace apptab.Controllers
                 {
                     int a = int.Parse(h.Numereg);
 
-                    var listA = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID).Where(x => x.No.ToString() == h.Id && x.NUMEREG == a).ToList();
+                    var listA = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID,site).Where(x => x.No.ToString() == h.Id && x.NUMEREG == a).ToList();
                     foreach (var item in listA)
                     {
                         avalider.IDREGLEMENT = item.No;
@@ -980,6 +988,7 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
+            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
             int retarDate = 0;
             if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null))
                 retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).DELPE.Value;
@@ -1025,7 +1034,7 @@ namespace apptab.Controllers
             else
             {
                 var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG).ToArray();
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0 && (ecriture.ComptaG == comptaG || ecriture.ComptaG == null) && ecriture.Journal == journal && ecriture.dateOrdre >= datein && ecriture.dateOrdre <= dateout && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0 && (ecriture.ComptaG == comptaG || ecriture.ComptaG == null) && site.Contains(ecriture.SITE) && ecriture.Journal == journal && ecriture.dateOrdre >= datein && ecriture.dateOrdre <= dateout && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
@@ -1069,6 +1078,7 @@ namespace apptab.Controllers
             AFB160 aFB160 = new AFB160();
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            var site = db.SI_SITE.Where(x=> x.IDUSER == exist.ID && x.IDPROJET ==  exist.IDPROJET).Select(x => x.SITE).ToList();
 
             var basename = GetTypeP(suser, codeproject);
             int PROJECTID = int.Parse(codeproject);
@@ -1084,7 +1094,7 @@ namespace apptab.Controllers
             }
             if (basename == "2")
             {
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0).ToList();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0 && site.Contains(ecriture.SITE)).ToList();
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
@@ -1124,7 +1134,7 @@ namespace apptab.Controllers
             {
                 var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG).ToArray();
                
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0 && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0 && site.Contains(ecriture.SITE) && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
 
                 foreach (var item in avalider)
                 {
@@ -1207,6 +1217,8 @@ namespace apptab.Controllers
             }
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
+
             bool devise = false;
             int PROJECTID = int.Parse(codeproject);
             var basename = GetTypeP(suser, codeproject);
@@ -1245,13 +1257,13 @@ namespace apptab.Controllers
             {
                 if (basename == "2")
                 {
-                    aFB160.SaveValideSelectEcriture(list, true, suser, codeproject);
+                    aFB160.SaveValideSelectEcriture(list, true, suser, codeproject,site);
                 }
                 else
                 {
                     foreach (var item in AvaliderList)
                     {
-                        aFB160.SaveValideSelectEcritureBR(item.IDREGLEMENT, item.Journal, item.ETAT.ToString(), devise, suser, PROJECTID, (bool)item.AVANCE);
+                        aFB160.SaveValideSelectEcritureBR(item.IDREGLEMENT, item.Journal, item.ETAT.ToString(), devise, suser, PROJECTID, (bool)item.AVANCE,site);
                     }
 
                 }
@@ -1308,13 +1320,13 @@ namespace apptab.Controllers
             {//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Non applicable////////////////////////////////////////////////////////////////////////
                 if (basename == "2")
                 {
-                    aFB160.SaveValideSelectEcriture(list, true, suser, codeproject);
+                    aFB160.SaveValideSelectEcriture(list, true, suser, codeproject, site);
                 }
                 else
                 {
                     foreach (var item in AvaliderList)
                     {
-                        aFB160.SaveValideSelectEcritureBR(item.IDREGLEMENT, item.Journal, item.ETAT.ToString(), devise, suser, PROJECTID, (bool)item.AVANCE);
+                        aFB160.SaveValideSelectEcritureBR(item.IDREGLEMENT, item.Journal, item.ETAT.ToString(), devise, suser, PROJECTID, (bool)item.AVANCE, site);
                     }
 
                 }
@@ -1325,11 +1337,11 @@ namespace apptab.Controllers
 
                 if (basename == "2")
                 {
-                    listReg = aFB160.getREGLEMENT(suser, PROJECTID);
+                    listReg = aFB160.getREGLEMENT(suser, PROJECTID,site);
                 }
                 else
                 {
-                    listRegBR = aFB160.getREGLEMENTBR(suser, PROJECTID);
+                    listRegBR = aFB160.getREGLEMENTBR(suser, PROJECTID,site);
                 }
 
                 if (basename == "2")
@@ -1875,6 +1887,8 @@ namespace apptab.Controllers
 
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            var site = db.SI_SITE.Where(a => a.IDUSER == exist.ID && a.IDPROJET ==  exist.IDPROJET).Select(a => a.SITE).ToList();
             baseName = GetTypeP(suser, codeproject);
             if (baseName == "")
             {
@@ -1886,18 +1900,18 @@ namespace apptab.Controllers
 
             if (baseName == "2")
             {
-                listReg = aFB160.getREGLEMENT(suser, PROJECTID);
+                listReg = aFB160.getREGLEMENT(suser, PROJECTID,site);
             }
             else
             {
-                listRegBR = aFB160.getREGLEMENTBR(suser, PROJECTID);
+                listRegBR = aFB160.getREGLEMENTBR(suser, PROJECTID,site);
             }
 
             var AvaliderList = new List<OPA_VALIDATIONS>();
 
             foreach (var item in list)
             {
-                AvaliderList.Add(db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.Id && a.ETAT == 1).FirstOrDefault());
+                AvaliderList.Add(db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.Id && a.ETAT == 1 && site.Contains(a.SITE)).FirstOrDefault());
             }
 
             OPA_VALIDATIONS avalider = new OPA_VALIDATIONS();
@@ -1906,7 +1920,7 @@ namespace apptab.Controllers
                 foreach (var item in list)
                 {
                     int b = int.Parse(item.Id);
-                    avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == b.ToString()).FirstOrDefault();
+                    avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == b.ToString() && site.Contains(a.SITE)).FirstOrDefault();
                     if (avalider != null)
                     {
                         try
@@ -1949,7 +1963,7 @@ namespace apptab.Controllers
                 foreach (var item in list)
                 {
                     //int b = int.Parse(item);
-                    avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.Id).FirstOrDefault();
+                    avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.Id && site.Contains(a.SITE)).FirstOrDefault();
                     if (avalider != null)
                     {
                         try
@@ -2060,6 +2074,8 @@ namespace apptab.Controllers
             AFB160 aFB160 = new AFB160();
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            var site = db.SI_SITE.Where(a => a.IDUSER == exist.ID && a.IDPROJET == exist.IDPROJET).Select(a => a.SITE).ToList();
+
             int PROJECTID = int.Parse(codeproject);
 
             int retarDate = 0;
@@ -2073,7 +2089,7 @@ namespace apptab.Controllers
             {
                 //var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG).ToArray();
                 //var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 && !HistoAFB.Contains(a.IDREGLEMENT.ToString())).ToList();
-                var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2).ToList();
+                var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 && site.Contains(a.SITE)).ToList();
                 foreach (var item in val)
                 {
                     bool isLate = false;
@@ -2111,7 +2127,7 @@ namespace apptab.Controllers
             {
                 //var HistoAFB = db.OPA_HISTORIQUE.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG.ToString()).ToArray();
                 //var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 && !HistoAFB.Contains(a.IDREGLEMENT.ToString())).ToList();
-                var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 ).ToList();
+                var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 && site.Contains(a.SITE)).ToList();
                 foreach (var item in val)
                 {
                     bool isLate = false;

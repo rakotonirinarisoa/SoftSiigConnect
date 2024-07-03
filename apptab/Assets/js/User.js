@@ -2,7 +2,7 @@
     User = JSON.parse(sessionStorage.getItem("user"));
     if (User == null || User === "undefined") window.location = User.origin;
     Origin = User.origin;
-
+    //$("#idTable").DataTable();
     $(`[data-id="username"]`).text(User.LOGIN);
     GetListUser();
 });

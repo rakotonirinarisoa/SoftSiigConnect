@@ -8,6 +8,9 @@ using apptab.Data.Entities;
 using apptab.Data;
 using Newtonsoft.Json;
 using System.Web.UI.WebControls;
+using System.Security.Policy;
+using System.Web.UI;
+using System.Collections;
 
 namespace apptab.Controllers
 {
@@ -28,6 +31,7 @@ namespace apptab.Controllers
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
 
             try
             {
@@ -72,7 +76,7 @@ namespace apptab.Controllers
                     {
                         var user = (from usr in db.SI_PROJETS
                                     join prj in db.SI_MAPUSERPROJET on usr.ID equals prj.IDPROJET
-                                    where prj.IDUS == test.ID && usr.DELETIONDATE == null
+                                    where prj.IDUS == test.ID && usr.DELETIONDATE == null 
                                     select new
                                     {
                                         PROJET = usr.PROJET,
@@ -100,6 +104,7 @@ namespace apptab.Controllers
         {
             var exist = await db.SI_USERS.FirstOrDefaultAsync(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
 
             try
             {
@@ -110,12 +115,12 @@ namespace apptab.Controllers
 
                 List<DATATRPROJET> list = new List<DATATRPROJET>();
 
-                if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.MODULLE == "LIQUIDATION") != null)
+                if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.MODULLE == "LIQUIDATION" && site.Contains(a.CODE_SITE)) != null)
                 {
-                    foreach (var x in tom.TP_MPIECES_JUSTIFICATIVES.Where(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE != "DEF" && a.TYPEPIECE != "TEF" && a.TYPEPIECE != "BE" && a.MODULLE == "LIQUIDATION").OrderBy(a => a.RANG).ToList())
+                    foreach (var x in tom.TP_MPIECES_JUSTIFICATIVES.Where(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE != "DEF" && a.TYPEPIECE != "TEF" && a.TYPEPIECE != "BE" && a.MODULLE == "LIQUIDATION" && site.Contains(a.CODE_SITE)).OrderBy(a => a.RANG).ToList())
                     {
                         var idFGuid = Guid.Parse(IdF);
-                        DateTime dpj = tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == idFGuid).FirstOrDefault().DATELIQUIDATION.Value;
+                        DateTime dpj = tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == idFGuid && site.Contains(a.SITE)).FirstOrDefault().DATELIQUIDATION.Value;
                         list.Add(new DATATRPROJET
                         {
                             REF = x.TYPEPIECE,
@@ -141,6 +146,7 @@ namespace apptab.Controllers
         {
             var exist = await db.SI_USERS.FirstOrDefaultAsync(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
 
             try
             {
@@ -151,7 +157,7 @@ namespace apptab.Controllers
 
                 List<DATATRPROJET> list = new List<DATATRPROJET>();
 
-                if (tom.CPTADMIN_MLIQUIDATION.FirstOrDefault(a => a.IDLIQUIDATION == IdF) != null)
+                if (tom.CPTADMIN_MLIQUIDATION.FirstOrDefault(a => a.IDLIQUIDATION == IdF ) != null)
                 {
                     foreach (var x in tom.CPTADMIN_MLIQUIDATION.Where(a => a.IDLIQUIDATION == IdF).ToList())
                     {
@@ -178,6 +184,7 @@ namespace apptab.Controllers
         {
             var exist = await db.SI_USERS.FirstOrDefaultAsync(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
 
             try
             {
@@ -194,17 +201,17 @@ namespace apptab.Controllers
                     TITUL = ""
                 };
 
-                if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && (a.TYPEPIECE == "DEF" || a.TYPEPIECE == "TEF" || a.TYPEPIECE == "BE") && a.MODULLE == "LIQUIDATION") != null)
+                if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && (a.TYPEPIECE == "DEF" || a.TYPEPIECE == "TEF" || a.TYPEPIECE == "BE") && a.MODULLE == "LIQUIDATION" && site.Contains(a.CODE_SITE) ) != null)
                 {
                     var def = "";
-                    if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "DEF" && a.MODULLE == "LIQUIDATION") != null)
-                        def = tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "DEF" && a.MODULLE == "LIQUIDATION").LIEN;
+                    if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "DEF" && a.MODULLE == "LIQUIDATION" && site.Contains(a.CODE_SITE)) != null)
+                        def = tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "DEF" && a.MODULLE == "LIQUIDATION" && site.Contains(a.CODE_SITE)).LIEN;
                     var tef = "";
-                    if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "TEF" && a.MODULLE == "LIQUIDATION") != null)
-                        tef = tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "TEF" && a.MODULLE == "LIQUIDATION").LIEN;
+                    if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "TEF" && a.MODULLE == "LIQUIDATION" && site.Contains(a.CODE_SITE)) != null)
+                        tef = tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "TEF" && a.MODULLE == "LIQUIDATION" && site.Contains(a.CODE_SITE)).LIEN;
                     var be = "";
-                    if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "BE" && a.MODULLE == "LIQUIDATION") != null)
-                        be = tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "BE" && a.MODULLE == "LIQUIDATION").LIEN;
+                    if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "BE" && a.MODULLE == "LIQUIDATION" && site.Contains(a.CODE_SITE)) != null)
+                        be = tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "BE" && a.MODULLE == "LIQUIDATION" && site.Contains(a.CODE_SITE)).LIEN;
 
                     newElemH = new DATATRPROJET()
                     {
@@ -253,6 +260,7 @@ namespace apptab.Controllers
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
 
             try
             {
@@ -312,7 +320,7 @@ namespace apptab.Controllers
                                            {
                                                soas.SOA
                                            }).FirstOrDefault();
-                                var paiement = db.OPA_VALIDATIONS.Where(pai => pai.ETAT == 3 && pai.IDPROJET == crpt && pai.IDREGLEMENT == x.REF).FirstOrDefault();
+                                var paiement = db.OPA_VALIDATIONS.Where(pai => pai.ETAT == 3 && pai.IDPROJET == crpt && pai.IDREGLEMENT == x.REF && site.Contains(pai.SITE)).FirstOrDefault();
                                 if (paiement != null)
                                 {
                                     list.Add(new TxLISTETRAIT
@@ -349,9 +357,9 @@ namespace apptab.Controllers
                                 }
                             }
                         }
-                        if (db.SI_TRAITAVANCE.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
+                        if (db.SI_TRAITAVANCE.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)) != null)
                         {
-                            foreach (var x in db.SI_TRAITAVANCE.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
+                            foreach (var x in db.SI_TRAITAVANCE.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -360,7 +368,7 @@ namespace apptab.Controllers
                                            {
                                                soas.SOA
                                            }).FirstOrDefault();
-                                var paiement = db.OPA_VALIDATIONS.Where(pai => pai.ETAT == 3 && pai.IDPROJET == crpt && pai.IDREGLEMENT == x.REF && pai.AVANCE == true).FirstOrDefault();
+                                var paiement = db.OPA_VALIDATIONS.Where(pai => pai.ETAT == 3 && pai.IDPROJET == crpt && pai.IDREGLEMENT == x.REF && pai.AVANCE == true &&  site.Contains(pai.SITE)).FirstOrDefault();
                                 if (paiement != null)
                                 {
                                     list.Add(new TxLISTETRAIT
@@ -422,6 +430,7 @@ namespace apptab.Controllers
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
 
             try
             {
@@ -470,9 +479,9 @@ namespace apptab.Controllers
                     {
                         int crpt = int.Parse(idP);
 
-                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
+                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)) != null)
                         {
-                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
+                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -502,9 +511,9 @@ namespace apptab.Controllers
                                 });
                             }
                         }
-                        if (db.SI_TRAITAVANCE.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
+                        if (db.SI_TRAITAVANCE.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)) != null)
                         {
-                            foreach (var x in db.SI_TRAITAVANCE.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
+                            foreach (var x in db.SI_TRAITAVANCE.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATEMANDAT ).OrderBy(a => a.DATECRE).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -559,6 +568,7 @@ namespace apptab.Controllers
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
 
             try
             {
@@ -603,9 +613,9 @@ namespace apptab.Controllers
                     {
                         int crpt = int.Parse(idP);
 
-                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
+                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)) != null)
                         {
-                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
+                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -646,9 +656,9 @@ namespace apptab.Controllers
                                 });
                             }
                         }
-                        if (db.SI_TRAITAVANCE.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
+                        if (db.SI_TRAITAVANCE.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)) != null)
                         {
-                            foreach (var x in db.SI_TRAITAVANCE.Where(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
+                            foreach (var x in db.SI_TRAITAVANCE.Where(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -717,6 +727,7 @@ namespace apptab.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
             }
+            var site = db.SI_SITE.Where(x => x.IDUSER == user.ID && x.IDPROJET == user.IDPROJET).Select(x => x.SITE).ToList();
 
             string[] separators = { "," };
 
@@ -786,7 +797,7 @@ namespace apptab.Controllers
                 }
 
                 //ENGAGEMENTS//
-                var traitprojets = await db.SI_TRAITPROJET.Where(a => a.IDPROJET == projectId && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToListAsync();
+                var traitprojets = await db.SI_TRAITPROJET.Where(a => a.IDPROJET == projectId && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToListAsync();
 
                 if (traitprojets.Count == 0)
                 {
@@ -828,7 +839,7 @@ namespace apptab.Controllers
                 }
 
                 //AVANCES//
-                var traitprojetsAVANCE = await db.SI_TRAITAVANCE.Where(a => a.IDPROJET == projectId && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToListAsync();
+                var traitprojetsAVANCE = await db.SI_TRAITAVANCE.Where(a => a.IDPROJET == projectId && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToListAsync();
 
                 if (traitprojetsAVANCE.Count == 0)
                 {
@@ -885,11 +896,12 @@ namespace apptab.Controllers
         public async Task<JsonResult> GenereSoufTraitement(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
         {
             var user = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
-
+            
             if (user == null)
             {
                 return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
             }
+            var site = db.SI_SITE.Where(x => x.IDUSER == user.ID && x.IDPROJET == user.IDPROJET).Select(x => x.SITE).ToList();
 
             string[] separators = { "," };
 
@@ -969,10 +981,10 @@ namespace apptab.Controllers
                     }
 
                     //ENGAGEMENTS//
-                    var traitprojets = await db.SI_TRAITPROJET.Where(a => a.IDPROJET == projectId && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToListAsync();
+                    var traitprojets = await db.SI_TRAITPROJET.Where(a => a.IDPROJET == projectId && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToListAsync();
 
                     //AVANCES//
-                    var traitprojetsAVANCE = await db.SI_TRAITAVANCE.Where(a => a.IDPROJET == projectId && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToListAsync();
+                    var traitprojetsAVANCE = await db.SI_TRAITAVANCE.Where(a => a.IDPROJET == projectId && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToListAsync();
 
                     if (traitprojets.Count == 0 && traitprojetsAVANCE.Count == 0)
                     {
@@ -1088,6 +1100,7 @@ namespace apptab.Controllers
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
 
             try
             {
@@ -1118,7 +1131,7 @@ namespace apptab.Controllers
                             var paielst = (
                                from r in db.OPA_REGLEMENTBR
                                join v in db.OPA_VALIDATIONS on r.IDSOCIETE equals v.IDPROJET
-                               where r.NUM == v.IDREGLEMENT && r.IDSOCIETE == crpt
+                               where r.NUM == v.IDREGLEMENT && r.IDSOCIETE == crpt && site.Contains(v.SITE)
                                select new
                                {
                                    BENEFICIAIRE = r.BENEFICIAIRE,
@@ -1163,7 +1176,7 @@ namespace apptab.Controllers
                             var paielst = (
                                from r in db.OPA_REGLEMENT
                                join v in db.OPA_VALIDATIONS on r.IDSOCIETE equals v.IDPROJET
-                               where r.NUM.ToString() == v.IDREGLEMENT && r.IDSOCIETE == crpt
+                               where r.NUM.ToString() == v.IDREGLEMENT && r.IDSOCIETE == crpt && site.Contains(v.SITE)
                                select new
                                {
                                    BENEFICIAIRE = r.BENEFICIAIRE,
@@ -1227,6 +1240,7 @@ namespace apptab.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
             }
+            var site = db.SI_SITE.Where(x => x.IDUSER == user.ID && x.IDPROJET == user.IDPROJET).Select(x => x.SITE).ToList();
 
             string[] separators = { "," };
 
@@ -1271,7 +1285,7 @@ namespace apptab.Controllers
                     var paielst = (
                                    from r in db.OPA_REGLEMENTBR
                                    join v in db.OPA_VALIDATIONS on r.IDSOCIETE equals v.IDPROJET
-                                   where r.NUM == v.IDREGLEMENT && r.IDSOCIETE == projectId
+                                   where r.NUM == v.IDREGLEMENT && r.IDSOCIETE == projectId && site.Contains(v.SITE)
                                    select new
                                    {
                                        BENEFICIAIRE = r.BENEFICIAIRE,
@@ -1332,7 +1346,7 @@ namespace apptab.Controllers
                     var paielst = (
                                    from r in db.OPA_REGLEMENT
                                    join v in db.OPA_VALIDATIONS on r.IDSOCIETE equals v.IDPROJET
-                                   where r.NUM.ToString() == v.IDREGLEMENT && r.IDSOCIETE == projectId
+                                   where r.NUM.ToString() == v.IDREGLEMENT && r.IDSOCIETE == projectId && site.Contains(v.SITE) 
                                    select new
                                    {
                                        BENEFICIAIRE = r.BENEFICIAIRE,
@@ -1397,6 +1411,7 @@ namespace apptab.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
             }
+            var site = db.SI_SITE.Where(x => x.IDUSER == user.ID && x.IDPROJET == user.IDPROJET).Select(x => x.SITE).ToList();
 
             string[] separators = { "," };
 
@@ -1441,7 +1456,7 @@ namespace apptab.Controllers
                     var paielst = (
                                    from r in db.OPA_REGLEMENTBR
                                    join v in db.OPA_VALIDATIONS on r.IDSOCIETE equals v.IDPROJET
-                                   where r.NUM == v.IDREGLEMENT && r.IDSOCIETE == projectId
+                                   where r.NUM == v.IDREGLEMENT && r.IDSOCIETE == projectId && site.Contains(v.SITE)
                                    select new
                                    {
                                        BENEFICIAIRE = r.BENEFICIAIRE,
@@ -1591,6 +1606,7 @@ namespace apptab.Controllers
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
 
             try
             {
@@ -1618,7 +1634,7 @@ namespace apptab.Controllers
                         var typeEcriture = db.SI_TYPECRITURE.Where(x => x.IDPROJET == crpt).FirstOrDefault().TYPE;
                         if (db.OPA_VALIDATIONS.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DateIn >= DateDebut && a.DateOut <= DateFin) != null)
                         {
-                            foreach (var x in db.OPA_VALIDATIONS.Where(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DateIn >= DateDebut && a.DateOut <= DateFin).OrderBy(a => a.DateIn).OrderBy(a => a.DATECREA).ToList())
+                            foreach (var x in db.OPA_VALIDATIONS.Where(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DateIn >= DateDebut && a.DateOut <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DateIn).OrderBy(a => a.DATECREA).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -1628,7 +1644,7 @@ namespace apptab.Controllers
                                                soas.SOA
                                            }).FirstOrDefault();
 
-                                var cancel = db.OPA_VALIDATIONS.Where(a => a.IDPROJET == crpt && x.ETAT == 4).Join(db.SI_USERS, z => z.IDUSER, e => e.IDUSER, (z, e) => new
+                                var cancel = db.OPA_VALIDATIONS.Where(a => a.IDPROJET == crpt && x.ETAT == 4 && site.Contains(a.SITE)).Join(db.SI_USERS, z => z.IDUSER, e => e.IDUSER, (z, e) => new
                                 {
                                     AGENT = e.LOGIN,
                                     NUMENGAGEMENT = z.IDREGLEMENT,
@@ -1689,6 +1705,7 @@ namespace apptab.Controllers
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
 
             try
             {
@@ -1731,9 +1748,9 @@ namespace apptab.Controllers
                     {
                         int crpt = int.Parse(idP);
 
-                        if (db.SI_TRAITJUSTIF.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
+                        if (db.SI_TRAITJUSTIF.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)) != null)
                         {
-                            foreach (var x in db.SI_TRAITJUSTIF.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
+                            foreach (var x in db.SI_TRAITJUSTIF.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -1762,9 +1779,9 @@ namespace apptab.Controllers
                                 });
                             }
                         }
-                        if (db.SI_TRAITREVERS.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
+                        if (db.SI_TRAITREVERS.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)) != null)
                         {
-                            foreach (var x in db.SI_TRAITREVERS.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
+                            foreach (var x in db.SI_TRAITREVERS.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -1819,6 +1836,7 @@ namespace apptab.Controllers
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
 
             try
             {
@@ -1857,9 +1875,9 @@ namespace apptab.Controllers
                     {
                         int crpt = int.Parse(idP);
 
-                        if (db.SI_TRAITJUSTIF.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
+                        if (db.SI_TRAITJUSTIF.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)) != null)
                         {
-                            foreach (var x in db.SI_TRAITJUSTIF.Where(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
+                            foreach (var x in db.SI_TRAITJUSTIF.Where(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -1871,7 +1889,7 @@ namespace apptab.Controllers
 
                                 var isRejet = (from user in db.SI_USERS
                                                join rejet in db.SI_TRAITANNULJUSTIF on user.ID equals rejet.IDUSER
-                                               where rejet.IDPROJET == crpt && rejet.No == x.No
+                                               where rejet.IDPROJET == crpt && rejet.No == x.No 
                                                orderby rejet.DATEANNUL descending
                                                select new
                                                {
@@ -1902,7 +1920,7 @@ namespace apptab.Controllers
                         }
                         if (db.SI_TRAITREVERS.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
                         {
-                            foreach (var x in db.SI_TRAITREVERS.Where(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
+                            foreach (var x in db.SI_TRAITREVERS.Where(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -1968,6 +1986,7 @@ namespace apptab.Controllers
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
 
             //if (DateDebut.Year != DateFin.Year) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vous ne pouvez pas générer deux années différentes. " }, settings));
 
@@ -2019,9 +2038,9 @@ namespace apptab.Controllers
                     //ACTI//
                     if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "ACTI")
                     {
-                        foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList())
+                        foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && site.Contains(a.SITE)).ToList())
                         {
-                            foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No).ToList())
+                            foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No && site.Contains(a.SITE)).ToList())
                             {
                                 if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "ACTI")
                                 {
