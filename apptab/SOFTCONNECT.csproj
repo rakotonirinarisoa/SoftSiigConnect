@@ -2450,6 +2450,7 @@
     <Content Include="Assets\js\BordSoufTraitement.js" />
     <Content Include="Assets\js\PaiementsRejets.js" />
     <Content Include="Assets\js\BordSoufTraitement.js" />
+    <Content Include="Assets\js\SearchJsSet.js" />
     <Content Include="Assets\js\TraitementENVOISIIGFA.js" />
     <Content Include="Assets\js\TraitementORDSECRV.js" />
     <Content Include="Assets\js\TraitementORDSECJU.js" />

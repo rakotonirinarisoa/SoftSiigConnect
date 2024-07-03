@@ -3,6 +3,7 @@
     ViewBag.Title = "Liste des Privilèges";
     ViewData["Controller"] = "Liste des Privilèges";
 }
+<input type="text" id="myInput" onkeyup="SearchFunc()" placeholder="Recherche">
 
 <div class="table-responsive tbodyDiv">
     <table class="table table-hover table-striped" id="idTable">
@@ -104,3 +105,5 @@
 </div>
 
 <script defer src="~/Assets/js/Privilege.js?version=@Session["VERSION"]" ></script>
+
+<script src="~/Assets/js/SearchJsSet.js?version=@Session["VERSION"]"></script>
