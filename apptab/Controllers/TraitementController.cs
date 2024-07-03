@@ -177,9 +177,11 @@ namespace apptab.Controllers
                 if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO. " }, settings));
 
-                if (tom.CPTADMIN_FLIQUIDATION.Any(a => a.DATELIQUIDATION >= DateDebut && a.DATELIQUIDATION <= DateFin))
+                var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
+
+                if (tom.CPTADMIN_FLIQUIDATION.Any(a => a.DATELIQUIDATION >= DateDebut && a.DATELIQUIDATION <= DateFin && site.Contains(a.SITE)))
                 {
-                    foreach (var x in tom.CPTADMIN_FLIQUIDATION.Where(a => a.DATELIQUIDATION >= DateDebut && a.DATELIQUIDATION <= DateFin).OrderBy(a => a.DATELIQUIDATION).ToList())
+                    foreach (var x in tom.CPTADMIN_FLIQUIDATION.Where(a => a.DATELIQUIDATION >= DateDebut && a.DATELIQUIDATION <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATELIQUIDATION).ToList())
                     {
                         decimal MTN = 0;
                         decimal MTNPJ = 0;
@@ -199,9 +201,9 @@ namespace apptab.Controllers
 
                         //TEST SI SOMMES MTN M = SOMMES MTN MPJ//
                         var IDString = x.ID.ToString();
-                        if (tom.TP_MPIECES_JUSTIFICATIVES.Any(a => a.NUMERO_FICHE == IDString && a.MODULLE == "LIQUIDATION"))
+                        if (tom.TP_MPIECES_JUSTIFICATIVES.Any(a => a.NUMERO_FICHE == IDString && a.MODULLE == "LIQUIDATION" && site.Contains(a.CODE_SITE)))
                         {
-                            foreach (var y in tom.TP_MPIECES_JUSTIFICATIVES.Where(a => a.NUMERO_FICHE == IDString && a.MODULLE == "LIQUIDATION").ToList())
+                            foreach (var y in tom.TP_MPIECES_JUSTIFICATIVES.Where(a => a.NUMERO_FICHE == IDString && a.MODULLE == "LIQUIDATION" && site.Contains(a.CODE_SITE)).ToList())
                             {
                                 MTNPJ += y.MONTANT.Value;
                             }
@@ -212,17 +214,17 @@ namespace apptab.Controllers
                         {
                             //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
                             var canBe = true;
-                            if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF) == null)
+                            if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF && site.Contains(a.CODE_SITE)) == null)
                                 canBe = false;
-                            if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF) == null)
+                            if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF && site.Contains(a.CODE_SITE)) == null)
                                 canBe = false;
-                            if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE) == null)
+                            if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE && site.Contains(a.CODE_SITE)) == null)
                                 canBe = false;
 
                             //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
                             if (canBe)
                             {
-                                if (!db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.IDPROJET == crpt) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt))
+                                if (!db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.IDPROJET == crpt && site.Contains(a.SITE)) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt && site.Contains(a.SITE)))
                                 {
                                     var titulaire = "";
                                     if (tom.RTIERS.Any(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE))
@@ -237,7 +239,7 @@ namespace apptab.Controllers
                                                });
 
                                     bool isLate = false;
-                                    DateTime DD = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE).DATECA.Value.Date;
+                                    DateTime DD = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE && site.Contains(a.CODE_SITE)).DATECA.Value.Date;
                                     if (DD.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                                         isLate = true;
 
@@ -306,9 +308,11 @@ namespace apptab.Controllers
                 if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO. " }, settings));
 
-                if (tom.CPTADMIN_FLIQUIDATION.Any())
+                var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
+
+                if (tom.CPTADMIN_FLIQUIDATION.Any(a => site.Contains(a.SITE)))
                 {
-                    foreach (var x in tom.CPTADMIN_FLIQUIDATION.OrderBy(a => a.DATELIQUIDATION).ToList())
+                    foreach (var x in tom.CPTADMIN_FLIQUIDATION.Where(a => site.Contains(a.SITE)).OrderBy(a => a.DATELIQUIDATION).ToList())
                     {
                         decimal MTN = 0;
                         decimal MTNPJ = 0;
@@ -328,9 +332,9 @@ namespace apptab.Controllers
 
                         //TEST SI SOMMES MTN M = SOMMES MTN MPJ//
                         var IDString = x.ID.ToString();
-                        if (tom.TP_MPIECES_JUSTIFICATIVES.Any(a => a.NUMERO_FICHE == IDString && a.MODULLE == "LIQUIDATION"))
+                        if (tom.TP_MPIECES_JUSTIFICATIVES.Any(a => a.NUMERO_FICHE == IDString && a.MODULLE == "LIQUIDATION" && site.Contains(a.CODE_SITE)))
                         {
-                            foreach (var y in tom.TP_MPIECES_JUSTIFICATIVES.Where(a => a.NUMERO_FICHE == IDString && a.MODULLE == "LIQUIDATION").ToList())
+                            foreach (var y in tom.TP_MPIECES_JUSTIFICATIVES.Where(a => a.NUMERO_FICHE == IDString && a.MODULLE == "LIQUIDATION" && site.Contains(a.CODE_SITE)).ToList())
                             {
                                 MTNPJ += y.MONTANT.Value;
                             }
@@ -341,17 +345,17 @@ namespace apptab.Controllers
                         {
                             //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
                             var canBe = true;
-                            if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF) == null)
+                            if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF && site.Contains(a.CODE_SITE)) == null)
                                 canBe = false;
-                            if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF) == null)
+                            if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF && site.Contains(a.CODE_SITE)) == null)
                                 canBe = false;
-                            if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE) == null)
+                            if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE && site.Contains(a.CODE_SITE)) == null)
                                 canBe = false;
 
                             //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
                             if (canBe)
                             {
-                                if (!db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.IDPROJET == crpt) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt))
+                                if (!db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.IDPROJET == crpt && site.Contains(a.SITE)) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt && site.Contains(a.SITE)))
                                 {
                                     var titulaire = "";
                                     if (tom.RTIERS.Any(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE))
@@ -366,7 +370,7 @@ namespace apptab.Controllers
                                                });
 
                                     bool isLate = false;
-                                    DateTime DD = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE).DATECA.Value.Date;
+                                    DateTime DD = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE && site.Contains(a.CODE_SITE)).DATECA.Value.Date;
                                     if (DD.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
                                         isLate = true;
 
@@ -444,9 +448,11 @@ namespace apptab.Controllers
                 if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO. " }, settings));
 
-                if (db.SI_TRAITPROJET.Any(a => a.IDPROJET == crpt && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 0))
+                var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
+
+                if (db.SI_TRAITPROJET.Any(a => a.IDPROJET == crpt && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 0 && site.Contains(a.SITE)))
                 {
-                    foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 0).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                    foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 0 && a.ETAT == 0 && site.Contains(a.SITE)).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
                     {
                         var soa = (from soas in db.SI_SOAS
                                    join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -526,9 +532,11 @@ namespace apptab.Controllers
                 if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO. " }, settings));
 
-                if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 0) != null)
+                var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
+
+                if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 0 && a.ETAT == 0 && site.Contains(a.SITE)) != null)
                 {
-                    foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT == 0).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                    foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT == 0 && a.ETAT == 0 && site.Contains(a.SITE)).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
                     {
                         var soa = (from soas in db.SI_SOAS
                                    join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -579,6 +587,8 @@ namespace apptab.Controllers
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
 
             int countTraitement = 0;
             int crpt = iProjet;

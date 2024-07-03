@@ -790,6 +790,34 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
+        public ActionResult GETALLSITE(SI_USERS suser, int iProjet)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                int crpt = iProjet;
+
+                var crpto = db.SI_SITE.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+
+                if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
+
+                SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
+                var etat = tom.RSITE.OrderBy(a => a.CODE).ToList();
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { etat = etat, IDP = crpt } }, settings));
+            }
+            catch (Exception)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Mappage de la base de données non existant" }, settings));
+            }
+        }
+
+        [HttpPost]
         public ActionResult DetailsMAIL(SI_USERS suser, int iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
