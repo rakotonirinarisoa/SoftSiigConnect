@@ -156,7 +156,7 @@ function exportTableToPdf(tableId, filename, header, footer, columnsIndexesToHid
 
             $('body').find('#tmp').remove();
 
-            window.location.href = Origin + 'Pdf/Index';
+            window.location.href = Origin + '/Pdf/Index';
         },
         error: function () {
             alert('Probl�me de connexion!');

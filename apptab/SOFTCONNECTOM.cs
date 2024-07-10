@@ -147,9 +147,10 @@ namespace apptab
             modelBuilder.Entity<TP_MPIECES_JUSTIFICATIVES>()
                 .Property(e => e.MONTANT)
                 .HasPrecision(30, 6);
+
             modelBuilder.Entity<FCOMPTA>()
-    .Property(e => e.NUMEROCHEQUE)
-    .HasPrecision(18, 0);
+                .Property(e => e.NUMEROCHEQUE)
+                .HasPrecision(18, 0);
 
             modelBuilder.Entity<FOP>()
                 .Property(e => e.MONTANT)

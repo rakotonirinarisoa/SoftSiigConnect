@@ -260,7 +260,6 @@
     <Compile Include="Data\Entities\GA_AVANCE_DETAILS.cs" />
     <Compile Include="Models\ListPaimentV.cs" />
     <Compile Include="Models\RPAYS.cs" />
-    <Compile Include="Models\RSITE.cs" />
     <Compile Include="Models\SI_SITE.cs" />
     <Compile Include="Models\SI_USERSHISTO.cs" />
     <Compile Include="Models\TxtPAIEMENT.cs" />
@@ -371,6 +370,7 @@
     <Compile Include="Models\RPLAN6.cs" />
     <Compile Include="Models\SI_MAPPAGES_GED.cs" />
     <Compile Include="Models\SI_PROGED.cs" />
+    <Compile Include="Models\RSITE.cs" />
     <Compile Include="SOFTCONNECTGED.cs" />
     <Compile Include="SOFTCONNECTOM.cs" />
     <Compile Include="SOFTCONNECTSIIG.cs" />
