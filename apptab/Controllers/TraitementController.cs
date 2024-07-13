@@ -153,6 +153,16 @@ namespace apptab.Controllers
             try
             {
                 int crpt = iProjet;
+
+                List<string> site = new List<string>();
+                var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+                if (siteS == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
+                foreach (var item in siteS.Split(','))
+                {
+                    site.Add(item);
+                }
+
                 //Check si le projet est mappé à une base de données TOM²PRO//
                 if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
@@ -176,8 +186,6 @@ namespace apptab.Controllers
                     return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 2 n'est pas paramétré sur TOM²PRO. " }, settings));
                 if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO. " }, settings));
-
-                var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
 
                 if (tom.CPTADMIN_FLIQUIDATION.Any(a => a.DATELIQUIDATION >= DateDebut && a.DATELIQUIDATION <= DateFin && site.Contains(a.SITE)))
                 {
@@ -253,9 +261,9 @@ namespace apptab.Controllers
                                         COMPTE = x.COGEBENEFICIAIRE,
                                         DATE = x.DATELIQUIDATION.Value.Date,
                                         PCOP = PCOP,
-                                        DATEDEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF).DATECA,
-                                        DATETEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF).DATECA,
-                                        DATEBE = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE).DATECA,
+                                        DATEDEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF && site.Contains(a.CODE_SITE)).DATECA,
+                                        DATETEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF && site.Contains(a.CODE_SITE)).DATECA,
+                                        DATEBE = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE && site.Contains(a.CODE_SITE)).DATECA,
                                         SOA = soa.FirstOrDefault().SOA,
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                         isLATE = isLate,
@@ -284,6 +292,16 @@ namespace apptab.Controllers
             try
             {
                 int crpt = iProjet;
+
+                List<string> site = new List<string>();
+                var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+                if (siteS == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
+                foreach (var item in siteS.Split(','))
+                {
+                    site.Add(item);
+                }
+
                 //Check si le projet est mappé à une base de données TOM²PRO//
                 if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
@@ -307,8 +325,6 @@ namespace apptab.Controllers
                     return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 2 n'est pas paramétré sur TOM²PRO. " }, settings));
                 if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO. " }, settings));
-
-                var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
 
                 if (tom.CPTADMIN_FLIQUIDATION.Any(a => site.Contains(a.SITE)))
                 {
@@ -384,9 +400,9 @@ namespace apptab.Controllers
                                         COMPTE = x.COGEBENEFICIAIRE,
                                         DATE = x.DATELIQUIDATION.Value.Date,
                                         PCOP = PCOP,
-                                        DATEDEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF).DATECA,
-                                        DATETEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF).DATECA,
-                                        DATEBE = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE).DATECA,
+                                        DATEDEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF && site.Contains(a.CODE_SITE)).DATECA,
+                                        DATETEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF && site.Contains(a.CODE_SITE)).DATECA,
+                                        DATEBE = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE && site.Contains(a.CODE_SITE)).DATECA,
                                         SOA = soa.FirstOrDefault().SOA,
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                         isLATE = isLate,
@@ -424,6 +440,15 @@ namespace apptab.Controllers
             {
                 int crpt = iProjet;
 
+                List<string> site = new List<string>();
+                var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+                if (siteS == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
+                foreach (var item in siteS.Split(','))
+                {
+                    site.Add(item);
+                }
+
                 int retarDate = 0;
                 if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null))
                     retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELTV.Value;
@@ -447,8 +472,6 @@ namespace apptab.Controllers
                     return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 2 n'est pas paramétré sur TOM²PRO. " }, settings));
                 if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO. " }, settings));
-
-                var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
 
                 if (db.SI_TRAITPROJET.Any(a => a.IDPROJET == crpt && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 0 && site.Contains(a.SITE)))
                 {
@@ -508,6 +531,15 @@ namespace apptab.Controllers
             {
                 int crpt = iProjet;
 
+                List<string> site = new List<string>();
+                var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+                if (siteS == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
+                foreach (var item in siteS.Split(','))
+                {
+                    site.Add(item);
+                }
+
                 int retarDate = 0;
                 if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null))
                     retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null).DELTV.Value;
@@ -531,8 +563,6 @@ namespace apptab.Controllers
                     return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 2 n'est pas paramétré sur TOM²PRO. " }, settings));
                 if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO. " }, settings));
-
-                var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
 
                 if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 0 && a.ETAT == 0 && site.Contains(a.SITE)) != null)
                 {
@@ -588,11 +618,19 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
-
             int countTraitement = 0;
             int crpt = iProjet;
-            var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
+
+            List<string> site = new List<string>();
+            var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+            if (siteS == null)
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
+            foreach (var item in siteS.Split(','))
+            {
+                site.Add(item);
+            }
+
+            var lien = db.SI_SETLIEN.FirstOrDefault().LIEN;
 
             //SEND MAIL ALERT et NOTIFICATION//
             string MailAdresse = "";
@@ -682,9 +720,9 @@ namespace apptab.Controllers
                                 COMPTE = FF.COGEBENEFICIAIRE,
                                 DATEMANDAT = FF.DATELIQUIDATION.Value.Date,
                                 PCOP = PCOP,
-                                DATEDEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == FF.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF).DATECA,
-                                DATETEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == FF.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF).DATECA,
-                                DATEBE = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == FF.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE).DATECA,
+                                DATEDEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == FF.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF && site.Contains(a.CODE_SITE)).DATECA,
+                                DATETEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == FF.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF && site.Contains(a.CODE_SITE)).DATECA,
+                                DATEBE = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == FF.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE && site.Contains(a.CODE_SITE)).DATECA,
                                 DATECRE = DateTime.Now,
                                 ETAT = 0,
                                 IDUSERCREATE = exist.ID,
@@ -765,11 +803,19 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
-
             int countTraitement = 0;
             int crpt = iProjet;
-            var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
+
+            List<string> site = new List<string>();
+            var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+            if (siteS == null)
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
+            foreach (var item in siteS.Split(','))
+            {
+                site.Add(item);
+            }
+
+            var lien = db.SI_SETLIEN.FirstOrDefault().LIEN;
 
             //SEND MAIL ALERT et NOTIFICATION//
             string MailAdresse = "";
@@ -864,11 +910,18 @@ namespace apptab.Controllers
             var exist = await db.SI_USERS.FirstOrDefaultAsync(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
-
             try
             {
                 int crpt = iProjet;
+
+                List<string> site = new List<string>();
+                var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+                if (siteS == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
+                foreach (var item in siteS.Split(','))
+                {
+                    site.Add(item);
+                }
 
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
                 SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -944,11 +997,18 @@ namespace apptab.Controllers
             var exist = await db.SI_USERS.FirstOrDefaultAsync(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
-
             try
             {
                 int crpt = iProjet;
+
+                List<string> site = new List<string>();
+                var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+                if (siteS == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
+                foreach (var item in siteS.Split(','))
+                {
+                    site.Add(item);
+                }
 
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
                 SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -961,7 +1021,7 @@ namespace apptab.Controllers
                     TITUL = ""
                 };
 
-                if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && (a.TYPEPIECE == "DEF" || a.TYPEPIECE == "TEF" || a.TYPEPIECE == "BE" && site.Contains(a.CODE_SITE)) && a.MODULLE == "LIQUIDATION") != null)
+                if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && (a.TYPEPIECE == "DEF" || a.TYPEPIECE == "TEF" || a.TYPEPIECE == "BE") && site.Contains(a.CODE_SITE) && a.MODULLE == "LIQUIDATION") != null)
                 {
                     var def = "";
                     if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "DEF" && a.MODULLE == "LIQUIDATION" && site.Contains(a.CODE_SITE)) != null)
@@ -1031,13 +1091,18 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
-
             try
             {
                 int IdS = iProjet;
 
-                var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
+                List<string> site = new List<string>();
+                var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == IdS).Select(x => x.SITE).FirstOrDefault();
+                foreach (var item in siteS.Split(','))
+                {
+                    site.Add(item);
+                }
+
+                var lien = db.SI_SETLIEN.FirstOrDefault().LIEN;
 
                 //SEND MAIL ALERT et NOTIFICATION//
                 string MailAdresse = "";
@@ -1139,15 +1204,22 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
-
             try
             {
                 int crpt = iProjet;
+
+                List<string> site = new List<string>();
+                var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+                if (siteS == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
+                foreach (var item in siteS.Split(','))
+                {
+                    site.Add(item);
+                }
+
                 //Check si le projet est mappé à une base de données TOM²PRO//
                 if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
-
 
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
                 SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -1271,11 +1343,19 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
-
             try
             {
                 int crpt = iProjet;
+
+                List<string> site = new List<string>();
+                var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+                if (siteS == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
+                foreach (var item in siteS.Split(','))
+                {
+                    site.Add(item);
+                }
+
                 //Check si le projet est mappé à une base de données TOM²PRO//
                 if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
@@ -1402,11 +1482,18 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
-
             try
             {
                 int crpt = iProjet;
+
+                List<string> site = new List<string>();
+                var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+                if (siteS == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
+                foreach (var item in siteS.Split(','))
+                {
+                    site.Add(item);
+                }
 
                 int retarDate = 0;
                 if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null))
@@ -1492,11 +1579,18 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
-
             try
             {
                 int crpt = iProjet;
+
+                List<string> site = new List<string>();
+                var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+                if (siteS == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
+                foreach (var item in siteS.Split(','))
+                {
+                    site.Add(item);
+                }
 
                 int retarDate = 0;
                 if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null))
@@ -1574,11 +1668,19 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
-
             int countTraitement = 0;
             int crpt = iProjet;
-            var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
+
+            List<string> site = new List<string>();
+            var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+            if (siteS == null)
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
+            foreach (var item in siteS.Split(','))
+            {
+                site.Add(item);
+            }
+
+            var lien = db.SI_SETLIEN.FirstOrDefault().LIEN;
 
             //SEND MAIL ALERT et NOTIFICATION//
             string MailAdresse = "";
@@ -1700,8 +1802,6 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
-
             if (idF == 0 || Numeroliquidations == "" || EstAvance == "")
             {
                 return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -1710,6 +1810,16 @@ namespace apptab.Controllers
             try
             {
                 int crpt = idF;
+
+                List<string> site = new List<string>();
+                var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+                if (siteS == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
+                foreach (var item in siteS.Split(','))
+                {
+                    site.Add(item);
+                }
+
                 bool isAvance = bool.Parse(EstAvance);
 
                 int retarDate = 0;
@@ -1840,11 +1950,19 @@ namespace apptab.Controllers
             var exist = await db.SI_USERS.FirstOrDefaultAsync(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
-
             try
             {
                 int crpt = idF;
+
+                List<string> site = new List<string>();
+                var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+                if (siteS == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
+                foreach (var item in siteS.Split(','))
+                {
+                    site.Add(item);
+                }
+
                 bool isAvance = bool.Parse(EstAvance);
 
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
@@ -1964,11 +2082,19 @@ namespace apptab.Controllers
             var exist = await db.SI_USERS.FirstOrDefaultAsync(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
-
             try
             {
                 int crpt = idF;
+
+                List<string> site = new List<string>();
+                var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+                if (siteS == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
+                foreach (var item in siteS.Split(','))
+                {
+                    site.Add(item);
+                }
+
                 bool isAvance = bool.Parse(EstAvance);
 
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
@@ -1983,7 +2109,7 @@ namespace apptab.Controllers
 
                 if (isAvance)
                 {
-                    if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && (a.TYPEPIECE == "DEF" || a.TYPEPIECE == "TEF" || a.TYPEPIECE == "BE" && site.Contains(a.CODE_SITE)) && a.MODULLE == "CPTADMINAVANCE") != null)
+                    if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && (a.TYPEPIECE == "DEF" || a.TYPEPIECE == "TEF" || a.TYPEPIECE == "BE") && site.Contains(a.CODE_SITE) && a.MODULLE == "CPTADMINAVANCE") != null)
                     {
                         var def = "";
                         if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "DEF" && a.MODULLE == "CPTADMINAVANCE" && site.Contains(a.CODE_SITE)) != null)
@@ -2005,7 +2131,7 @@ namespace apptab.Controllers
                 }
                 else
                 {
-                    if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && (a.TYPEPIECE == "DEF" || a.TYPEPIECE == "TEF" || a.TYPEPIECE == "BE" && site.Contains(a.CODE_SITE)) && a.MODULLE == "LIQUIDATION") != null)
+                    if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && (a.TYPEPIECE == "DEF" || a.TYPEPIECE == "TEF" || a.TYPEPIECE == "BE") && site.Contains(a.CODE_SITE) && a.MODULLE == "LIQUIDATION") != null)
                     {
                         var def = "";
                         if (tom.TP_MPIECES_JUSTIFICATIVES.FirstOrDefault(a => a.NUMERO_FICHE == IdF && a.TYPEPIECE == "DEF" && a.MODULLE == "LIQUIDATION" && site.Contains(a.CODE_SITE)) != null)

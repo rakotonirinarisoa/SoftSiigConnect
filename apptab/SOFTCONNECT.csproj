@@ -371,6 +371,7 @@
     <Compile Include="Models\SI_MAPPAGES_GED.cs" />
     <Compile Include="Models\SI_PROGED.cs" />
     <Compile Include="Models\RSITE.cs" />
+    <Compile Include="Models\SI_SETLIEN.cs" />
     <Compile Include="SOFTCONNECTGED.cs" />
     <Compile Include="SOFTCONNECTOM.cs" />
     <Compile Include="SOFTCONNECTSIIG.cs" />
