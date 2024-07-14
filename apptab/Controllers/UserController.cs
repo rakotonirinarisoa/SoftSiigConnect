@@ -289,7 +289,7 @@ namespace SOFTCONNECT.Controllers
                             if (!int.TryParse(listProjet, out TestProjetRole))
                                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vous ne pouvez pas affecter plusieurs projets à ce type d'utilisateur. " }, settings));
 
-                            userExist.LOGIN = user.LOGIN;
+                            //userExist.LOGIN = user.LOGIN;
                             userExist.PWD = user.PWD;
                             userExist.IDPROJET = int.Parse(listProjet);
                             userExist.ROLE = user.ROLE;
@@ -299,7 +299,7 @@ namespace SOFTCONNECT.Controllers
                         }
                         else
                         {
-                            userExist.LOGIN = user.LOGIN;
+                            //userExist.LOGIN = user.LOGIN;
                             userExist.PWD = user.PWD;
                             userExist.IDPROJET = 0;
                             userExist.ROLE = user.ROLE;
@@ -340,7 +340,7 @@ namespace SOFTCONNECT.Controllers
                     }
                     else
                     {
-                        userExist.LOGIN = user.LOGIN;
+                        //userExist.LOGIN = user.LOGIN;
                         userExist.PWD = user.PWD;
                         userExist.IDPROJET = exist.IDPROJET;
                         userExist.ROLE = user.ROLE;
