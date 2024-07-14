@@ -201,7 +201,13 @@ namespace apptab.Controllers
                                                        select new
                                                        {
                                                            soas.SOA
-                                                       });
+                                                       }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                                      join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                                      where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                                      select new
+                                                                                      {
+                                                                                          soas.SOA
+                                                                                      }).FirstOrDefault().SOA : "MULTIPLE";
 
                                             bool isLate = false;
                                             DateTime DD = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BE && site.Contains(a.CODE_SITE)).DATETRAITEMENT.Value.Date;
@@ -222,7 +228,7 @@ namespace apptab.Controllers
                                                 DATEDEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO_AVANCE && a.NUMEROETAPE == numCaEtapAPP.DEF && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
                                                 DATETEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO_AVANCE && a.NUMEROETAPE == numCaEtapAPP.TEF && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
                                                 DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO_AVANCE && a.NUMEROETAPE == numCaEtapAPP.BE && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
-                                                SOA = soa.FirstOrDefault().SOA,
+                                                SOA = soa,
                                                 PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                                 isLATE = isLate,
                                                 SITE = y.SITE
@@ -358,7 +364,13 @@ namespace apptab.Controllers
                                                        select new
                                                        {
                                                            soas.SOA
-                                                       });
+                                                       }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                                      join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                                      where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                                      select new
+                                                                                      {
+                                                                                          soas.SOA
+                                                                                      }).FirstOrDefault().SOA : "MULTIPLE";
 
                                             bool isLate = false;
                                             DateTime DD = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BE && site.Contains(a.CODE_SITE)).DATETRAITEMENT.Value.Date;
@@ -379,7 +391,7 @@ namespace apptab.Controllers
                                                 DATEDEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO_AVANCE && a.NUMEROETAPE == numCaEtapAPP.DEF && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
                                                 DATETEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO_AVANCE && a.NUMEROETAPE == numCaEtapAPP.TEF && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
                                                 DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO_AVANCE && a.NUMEROETAPE == numCaEtapAPP.BE && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
-                                                SOA = soa.FirstOrDefault().SOA,
+                                                SOA = soa,
                                                 PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                                 isLATE = isLate,
                                                 SITE = y.SITE
@@ -925,7 +937,13 @@ namespace apptab.Controllers
                                    select new
                                    {
                                        soas.SOA
-                                   });
+                                   }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                  join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                  where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                  select new
+                                                                  {
+                                                                      soas.SOA
+                                                                  }).FirstOrDefault().SOA : "MULTIPLE";
 
                         bool isLate = false;
                         if (x.DATECRE.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
@@ -947,7 +965,7 @@ namespace apptab.Controllers
                             DATEBE = x.DATEBE.Value.Date,
                             LIEN = db.SI_USERS.FirstOrDefault(a => a.ID == x.IDUSERCREATE).LOGIN,
                             DATECREATION = x.DATECRE.Value.Date,
-                            SOA = soa.FirstOrDefault().SOA,
+                            SOA = soa,
                             PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                             isLATE = isLate,
                             SITE = x.SITE
@@ -1017,7 +1035,13 @@ namespace apptab.Controllers
                                    select new
                                    {
                                        soas.SOA
-                                   });
+                                   }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                  join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                  where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                  select new
+                                                                  {
+                                                                      soas.SOA
+                                                                  }).FirstOrDefault().SOA : "MULTIPLE";
 
                         bool isLate = false;
                         if (x.DATECRE.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
@@ -1039,7 +1063,7 @@ namespace apptab.Controllers
                             DATEBE = x.DATEBE.Value.Date,
                             LIEN = db.SI_USERS.FirstOrDefault(a => a.ID == x.IDUSERCREATE).LOGIN,
                             DATECREATION = x.DATECRE.Value.Date,
-                            SOA = soa.FirstOrDefault().SOA,
+                            SOA = soa,
                             PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                             isLATE = isLate,
                             SITE = x.SITE

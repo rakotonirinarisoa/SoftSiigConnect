@@ -319,7 +319,14 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           }).FirstOrDefault();
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
+
                                 var paiement = db.OPA_VALIDATIONS.Where(pai => pai.ETAT == 3 && pai.IDPROJET == crpt && pai.IDREGLEMENT == x.REF && site.Contains(pai.SITE)).FirstOrDefault();
                                 if (paiement != null)
                                 {
@@ -332,7 +339,7 @@ namespace apptab.Controllers
                                         MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                         DATEPAIE = paiement.DATEVAL,
                                         MONTPAIE = string.Format("{0:0.00}", Math.Round(paiement.MONTANT.Value)),
-                                        SOA = soa != null ? soa.SOA : "",
+                                        SOA = soa,
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                         TYPE = "Engagement",
                                         SITE = x.SITE
@@ -349,7 +356,7 @@ namespace apptab.Controllers
                                         MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                         DATEPAIE = null,
                                         MONTPAIE = "",
-                                        SOA = soa != null ? soa.SOA : "",
+                                        SOA = soa,
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                         TYPE = "Engagement",
                                         SITE = x.SITE
@@ -367,7 +374,14 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           }).FirstOrDefault();
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
+
                                 var paiement = db.OPA_VALIDATIONS.Where(pai => pai.ETAT == 3 && pai.IDPROJET == crpt && pai.IDREGLEMENT == x.REF && pai.AVANCE == true &&  site.Contains(pai.SITE)).FirstOrDefault();
                                 if (paiement != null)
                                 {
@@ -380,7 +394,7 @@ namespace apptab.Controllers
                                         MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                         DATEPAIE = paiement.DATEVAL,
                                         MONTPAIE = string.Format("{0:0.00}", Math.Round(paiement.MONTANT.Value)),
-                                        SOA = soa != null ? soa.SOA : "",
+                                        SOA = soa,
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                         TYPE = "Avance",
                                         SITE = x.SITE
@@ -397,7 +411,7 @@ namespace apptab.Controllers
                                         MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                         DATEPAIE = null,
                                         MONTPAIE = "",
-                                        SOA = soa != null ? soa.SOA : "",
+                                        SOA = soa,
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                         TYPE = "Avance",
                                         SITE = x.SITE
@@ -489,7 +503,13 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           }).FirstOrDefault();
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
 
                                 list.Add(new TxLISTETRAIT
                                 {
@@ -504,7 +524,7 @@ namespace apptab.Controllers
                                     DATESENDSIIG = x.DATENVOISIIGFP != null ? x.DATENVOISIIGFP : null,
                                     DATESIIGFP = x.DATESIIG != null ? x.DATESIIG : null,
 
-                                    SOA = soa != null ? soa.SOA : "",
+                                    SOA = soa,
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                     TYPE = "Engagement",
                                     SITE = x.SITE
@@ -521,7 +541,13 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           }).FirstOrDefault();
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
 
                                 list.Add(new TxLISTETRAIT
                                 {
@@ -536,7 +562,7 @@ namespace apptab.Controllers
                                     DATESENDSIIG = x.DATENVOISIIGFP != null ? x.DATENVOISIIGFP : null,
                                     DATESIIGFP = x.DATESIIG != null ? x.DATESIIG : null,
 
-                                    SOA = soa != null ? soa.SOA : "",
+                                    SOA = soa,
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                     TYPE = "Avance",
                                     SITE = x.SITE
@@ -623,7 +649,13 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           }).FirstOrDefault();
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
 
                                 var isRejet = (from user in db.SI_USERS
                                                join rejet in db.SI_TRAITANNUL on user.ID equals rejet.IDUSER
@@ -648,7 +680,7 @@ namespace apptab.Controllers
                                     MOTIF = isRejet != null ? isRejet.MOTIF : "",
                                     COMMENTAIRE = isRejet != null ? isRejet.COMMENTAIRE : "",
 
-                                    SOA = soa != null ? soa.SOA : "",
+                                    SOA = soa,
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                     TYPE = "Engagement",
                                     SITE = x.SITE
@@ -666,7 +698,13 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           }).FirstOrDefault();
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
 
                                 var isRejet = (from user in db.SI_USERS
                                                join rejet in db.SI_TRAITANNULAVANCE on user.ID equals rejet.IDUSER
@@ -691,7 +729,7 @@ namespace apptab.Controllers
                                     MOTIF = isRejet != null ? isRejet.MOTIF : "",
                                     COMMENTAIRE = isRejet != null ? isRejet.COMMENTAIRE : "",
 
-                                    SOA = soa != null ? soa.SOA : "",
+                                    SOA = soa,
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                     TYPE = "Avance",
                                     SITE = x.SITE
@@ -1153,8 +1191,13 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           }).FirstOrDefault();
-
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
 
                                 list.Add(new TxtPAIEMENT
                                 {
@@ -1164,7 +1207,7 @@ namespace apptab.Controllers
                                     DATEVALIDATIONOP = item.DATECREA,
                                     DATEVALIDATIONAC = item.DATESEND,
                                     DATEPAIEBANQUE = item.DATETRANS,
-                                    SOA = soa.SOA != null ? soa.SOA : "",
+                                    SOA = soa,
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                     TYPE = item.TYPE == "1" ? "Avance" : "Réglement",
                                     SITE = item.SITE
@@ -1198,8 +1241,13 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           }).FirstOrDefault();
-
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
 
                                 list.Add(new TxtPAIEMENT
                                 {
@@ -1209,7 +1257,7 @@ namespace apptab.Controllers
                                     DATEVALIDATIONOP = item.DATECREA,
                                     DATEVALIDATIONAC = item.DATESEND,
                                     DATEPAIEBANQUE = item.DATETRANS,
-                                    SOA = soa.SOA != null ? soa.SOA : "",
+                                    SOA = soa,
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                     TYPE = item.TYPE == "1" ? "Avance" : "Réglement",
                                     SITE = item.SITE
@@ -1642,7 +1690,13 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           }).FirstOrDefault();
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
 
                                 var cancel = db.OPA_VALIDATIONS.Where(a => a.IDPROJET == crpt && x.ETAT == 4 && site.Contains(a.SITE)).Join(db.SI_USERS, z => z.IDUSER, e => e.IDUSER, (z, e) => new
                                 {
@@ -1673,7 +1727,7 @@ namespace apptab.Controllers
                                         BENEF = item.BENEFICIAIRE,
                                         MONTANT = item.MONTANT.ToString(),
                                         DATEREJETAC = item.DATEREJETPAIEMENT,
-                                        SOA = soa.SOA != null ? soa.SOA : "",
+                                        SOA = soa,
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                         SITE = item.SITE
                                     });
@@ -1758,7 +1812,13 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           }).FirstOrDefault();
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
 
                                 list.Add(new TxLISTETRAIT
                                 {
@@ -1772,7 +1832,7 @@ namespace apptab.Controllers
                                     DATETRANSFERTRAF = x.DATECRE != null ? x.DATECRE : null,
                                     DATEVALORDSEC = x.DATEVALIDATION != null ? x.DATEVALIDATION : null,
 
-                                    SOA = soa != null ? soa.SOA : "",
+                                    SOA = soa,
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                     TYPE = "Justificatif",
                                     SITE = x.SITE
@@ -1789,7 +1849,13 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           }).FirstOrDefault();
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
 
                                 list.Add(new TxLISTETRAIT
                                 {
@@ -1804,7 +1870,7 @@ namespace apptab.Controllers
                                     DATETRANSFERTRAF = x.DATECRE != null ? x.DATECRE : null,
                                     DATEVALORDSEC = x.DATEVALIDATION != null ? x.DATEVALIDATION : null,
 
-                                    SOA = soa != null ? soa.SOA : "",
+                                    SOA = soa,
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                     TYPE = "Reversement",
                                     SITE = x.SITE
@@ -1885,7 +1951,13 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           }).FirstOrDefault();
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
 
                                 var isRejet = (from user in db.SI_USERS
                                                join rejet in db.SI_TRAITANNULJUSTIF on user.ID equals rejet.IDUSER
@@ -1911,7 +1983,7 @@ namespace apptab.Controllers
                                     MOTIF = isRejet != null ? isRejet.MOTIF : "",
                                     COMMENTAIRE = isRejet != null ? isRejet.COMMENTAIRE : "",
 
-                                    SOA = soa != null ? soa.SOA : "",
+                                    SOA = soa,
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                     TYPE = "Justificatif",
                                     SITE = x.SITE
@@ -1928,7 +2000,13 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           }).FirstOrDefault();
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
 
                                 var isRejet = (from user in db.SI_USERS
                                                join rejet in db.SI_TRAITANNULREVERS on user.ID equals rejet.IDUSER
@@ -1954,7 +2032,7 @@ namespace apptab.Controllers
                                     MOTIF = isRejet != null ? isRejet.MOTIF : "",
                                     COMMENTAIRE = isRejet != null ? isRejet.COMMENTAIRE : "",
 
-                                    SOA = soa != null ? soa.SOA : "",
+                                    SOA = soa,
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                     TYPE = "Reversement",
                                     SITE = x.SITE
@@ -2187,14 +2265,20 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           }).FirstOrDefault();
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
 
                                 if (MTNTOTALPAD != 0 || MTNTOTALPeriode != 0 || MTNENGA != 0 || MTNPAYE != 0)
                                 {
                                     list.Add(new TxLISTETRAIT
                                     {
                                         //No = "",//ID
-                                        SOA = soa != null ? soa.SOA : "",//SOA
+                                        SOA = soa,//SOA
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,//PROJET
 
                                         SITE = SITE,
@@ -2407,14 +2491,20 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           }).FirstOrDefault();
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
 
                                 if (MTNTOTALPAD != 0 || MTNTOTALPeriode != 0 || MTNENGA != 0 || MTNPAYE != 0)
                                 {
                                     list.Add(new TxLISTETRAIT
                                     {
                                         //No = "",//ID
-                                        SOA = soa != null ? soa.SOA : "",//SOA
+                                        SOA = soa,//SOA
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,//PROJET
 
                                         REF = PCOP,//PCOP
@@ -2627,14 +2717,20 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           }).FirstOrDefault();
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
 
                                 if (MTNTOTALPAD != 0 || MTNTOTALPeriode != 0 || MTNENGA != 0 || MTNPAYE != 0)
                                 {
                                     list.Add(new TxLISTETRAIT
                                     {
                                         //No = "",//ID
-                                        SOA = soa != null ? soa.SOA : "",//SOA
+                                        SOA = soa,//SOA
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,//PROJET
 
                                         SITE = SITE,
@@ -2848,14 +2944,20 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           }).FirstOrDefault();
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
 
                                 if (MTNTOTALPAD != 0 || MTNTOTALPeriode != 0 || MTNENGA != 0 || MTNPAYE != 0)
                                 {
                                     list.Add(new TxLISTETRAIT
                                     {
                                         //No = "",//ID
-                                        SOA = soa != null ? soa.SOA : "",//SOA
+                                        SOA = soa,//SOA
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,//PROJET
 
                                         REF = PCOP,//PCOP
@@ -3041,12 +3143,18 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           }).FirstOrDefault();
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
 
                                 list.Add(new TxLISTETRAIT
                                 {
                                     IDRSF = x.ID,
-                                    SOA = soa != null ? soa.SOA : "",
+                                    SOA = soa,
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                     TYPE = x.TITLE,
                                     REF = x.TYPE,

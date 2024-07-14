@@ -562,7 +562,13 @@ namespace apptab.Controllers
                                            select new
                                            {
                                                soas.SOA
-                                           }).FirstOrDefault().SOA;
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == x.IDPROJET && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
                                 }
 
                                 var isUser = db.SI_USERS.FirstOrDefault(a => a.DELETIONDATE == null && a.ID == x.IDUSER);
@@ -571,7 +577,8 @@ namespace apptab.Controllers
                                 {
                                     IDUSERHISTO = x.ID,
                                     SOA = soa,
-                                    PROJET = x.IDPROJET != 0 ? db.SI_PROJETS.Where(a => a.ID == x.IDPROJET && a.DELETIONDATE == null).FirstOrDefault().PROJET : "MULTIPLE",
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == x.IDPROJET && a.DELETIONDATE == null).FirstOrDefault() != null ? db.SI_PROJETS.Where(a => a.ID == x.IDPROJET && a.DELETIONDATE == null).FirstOrDefault().PROJET : "MULTIPLE",
+                                    //PROJET = x.IDPROJET != 0 ? db.SI_PROJETS.Where(a => a.ID == x.IDPROJET && a.DELETIONDATE == null).FirstOrDefault().PROJET : "MULTIPLE",
                                     REF = isUser != null ? isUser.LOGIN : "",
                                     DATEDEF = x.CONNEX != null ? x.CONNEX : null,
                                     DATETEF = x.DISCONNEX != null ? x.DISCONNEX : null,
@@ -603,11 +610,17 @@ namespace apptab.Controllers
                                         {
                                             soa = (from soas in db.SI_SOAS
                                                    join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
-                                                   where prj.IDPROJET == us.ID && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                   where prj.IDPROJET == x.IDPROJET && prj.DELETIONDATE == null && soas.DELETIONDATE == null
                                                    select new
                                                    {
                                                        soas.SOA
-                                                   }).FirstOrDefault().SOA;
+                                                   }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                                  join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                                  where prj.IDPROJET == x.IDPROJET && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                                  select new
+                                                                                  {
+                                                                                      soas.SOA
+                                                                                  }).FirstOrDefault().SOA : "MULTIPLE";
                                         }
 
                                         var isUser = db.SI_USERS.FirstOrDefault(a => a.DELETIONDATE == null && a.ID == x.IDUSER);
@@ -616,7 +629,7 @@ namespace apptab.Controllers
                                         {
                                             IDUSERHISTO = x.ID,
                                             SOA = soa,
-                                            PROJET = x.IDPROJET != 0 ? db.SI_PROJETS.Where(a => a.ID == us.ID && a.DELETIONDATE == null).FirstOrDefault().PROJET : "MULTIPLE",
+                                            PROJET = db.SI_PROJETS.Where(a => a.ID == x.IDPROJET && a.DELETIONDATE == null).FirstOrDefault() != null ? db.SI_PROJETS.Where(a => a.ID == x.IDPROJET && a.DELETIONDATE == null).FirstOrDefault().PROJET : "MULTIPLE",
                                             REF = isUser != null ? isUser.LOGIN : "",
                                             DATEDEF = x.CONNEX != null ? x.CONNEX : null,
                                             DATETEF = x.DISCONNEX != null ? x.DISCONNEX : null,
@@ -663,7 +676,7 @@ namespace apptab.Controllers
                                         {
                                             IDUSERHISTO = x.ID,
                                             SOA = soa,
-                                            PROJET = x.IDPROJET != 0 ? db.SI_PROJETS.Where(a => a.ID == us.ID && a.DELETIONDATE == null).FirstOrDefault().PROJET : "MULTIPLE",
+                                            PROJET = db.SI_PROJETS.Where(a => a.ID == x.IDPROJET && a.DELETIONDATE == null).FirstOrDefault() != null ? db.SI_PROJETS.Where(a => a.ID == x.IDPROJET && a.DELETIONDATE == null).FirstOrDefault().PROJET : "MULTIPLE",
                                             REF = isUser != null ? isUser.LOGIN : "",
                                             DATEDEF = x.CONNEX != null ? x.CONNEX : null,
                                             DATETEF = x.DISCONNEX != null ? x.DISCONNEX : null,
