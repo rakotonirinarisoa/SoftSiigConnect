@@ -1788,11 +1788,16 @@ namespace apptab.Controllers
 
         //Genere Statut des Justificatifs et reversements//
         [HttpPost]
-        public JsonResult GenereStatutJR(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
+        public JsonResult GenereStatutJR(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin, string listSite)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
+
+            List<string> site = new List<string>();
+            foreach (var item in listSite.Split(','))
+            {
+                site.Add(item);
+            }
 
             try
             {
