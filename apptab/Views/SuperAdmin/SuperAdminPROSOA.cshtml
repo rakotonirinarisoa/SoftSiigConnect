@@ -33,6 +33,21 @@
     </div>
 </div>
 
+<script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
+<script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
+
+<script>
+    $("#Proj").select2({
+        tags: true,
+        tokenSeparators: [',', ' ']
+    })
+
+    $("#Soa").select2({
+        tags: true,
+        tokenSeparators: [',', ' ']
+    })
+</script>
+
 <!-- USer.js -->
-<script src="~/Assets/js/PROSOA.js?version=@Session["VERSION"]" ></script>
+<script src="~/Assets/js/PROSOA.js?version=@Session["VERSION"]"></script>
 

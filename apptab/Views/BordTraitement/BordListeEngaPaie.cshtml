@@ -11,7 +11,17 @@
         <div class="input-group-prepend custom-label">
             <span class="input-group-text text-bold" id="inputGroup-sizing-default">PROJET</span>
         </div>
-        <select class="form-control selectTOO" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="proj" data-id="proj-list" multiple="multiple">
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="proj" data-id="proj-list">
+        </select>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Sites</span>
+        </div>
+        <select class="form-control selectTOO" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="site" data-id="site-list" multiple="multiple">
         </select>
     </div>
 </div>
@@ -58,8 +68,8 @@
                 <td style="font-weight: bold; text-align: center">Montant payé</td>
 
                 @*<td style="font-weight: bold; text-align: center">Imputation</td>
-                <td style="font-weight: bold; text-align: center">Pièce justificative</td>
-                <td style="font-weight: bold; text-align: center">Document</td>*@
+                    <td style="font-weight: bold; text-align: center">Pièce justificative</td>
+                    <td style="font-weight: bold; text-align: center">Document</td>*@
             </tr>
         </thead>
         <tbody class="traitementORDSEC"></tbody>
@@ -90,12 +100,12 @@
 </div>
 
 @*<div class="form-row">
-    <div class="input-group mb-3 col">
-        <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TBD_PROJET_ORDSEC', 'LISTE ENGAGEMENTS, AVANCES ET PAIEMENTS')">
-            <i class="fa fa-file-excel"></i> Exporter
+        <div class="input-group mb-3 col">
+            <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TBD_PROJET_ORDSEC', 'LISTE ENGAGEMENTS, AVANCES ET PAIEMENTS')">
+                <i class="fa fa-file-excel"></i> Exporter
+            </div>
         </div>
-    </div>
-</div>*@
+    </div>*@
 
 <div class="modal fade" tabindex="-1" role="dialog" id="password-modal">
     <div class="modal-dialog modal-xl" role="document" @*style="width:fit-content"*@>
@@ -186,6 +196,11 @@
 
 <script>
     $("#proj").select2({
+        tags: true,
+        tokenSeparators: [',', ' ']
+    })
+
+    $("#site").select2({
         tags: true,
         tokenSeparators: [',', ' ']
     })

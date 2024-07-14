@@ -11,6 +11,7 @@ using System.Web.UI.WebControls;
 using System.Security.Policy;
 using System.Web.UI;
 using System.Collections;
+using static apptab.Controllers.PrivilegeController;
 
 namespace apptab.Controllers
 {
@@ -92,6 +93,33 @@ namespace apptab.Controllers
                         return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { List = user, PROJET = proj } }, settings));
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
+
+        [HttpPost]
+        public ActionResult GETALLSITE(SI_USERS suser, int iProjet)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                int crpt = iProjet;
+
+                List<string> site = new List<string>();
+                var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+                if (siteS == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "notYet", msg = "Veuillez paramétrer votre site. " }, settings));
+                foreach (var item in siteS.Split(','))
+                {
+                    site.Add(item);
+                }
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { etat = site } }, settings));
             }
             catch (Exception e)
             {
@@ -256,11 +284,16 @@ namespace apptab.Controllers
 
         //Genere liste des engagements et paiements//
         [HttpPost]
-        public JsonResult GenereLISTE(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
+        public JsonResult GenereLISTE(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin, string listSite)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
+
+            List<string> site = new List<string>();
+            foreach (var item in listSite.Split(','))
+            {
+                site.Add(item);
+            }
 
             try
             {
@@ -309,9 +342,9 @@ namespace apptab.Controllers
                     {
                         int crpt = int.Parse(idP);
 
-                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
+                        if (db.SI_TRAITPROJET.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)) != null)
                         {
-                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
+                            foreach (var x in db.SI_TRAITPROJET.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
                             {
                                 var soa = (from soas in db.SI_SOAS
                                            join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -382,7 +415,7 @@ namespace apptab.Controllers
                                                                               soas.SOA
                                                                           }).FirstOrDefault().SOA : "MULTIPLE";
 
-                                var paiement = db.OPA_VALIDATIONS.Where(pai => pai.ETAT == 3 && pai.IDPROJET == crpt && pai.IDREGLEMENT == x.REF && pai.AVANCE == true &&  site.Contains(pai.SITE)).FirstOrDefault();
+                                var paiement = db.OPA_VALIDATIONS.Where(pai => pai.ETAT == 3 && pai.IDPROJET == crpt && pai.IDREGLEMENT == x.REF && pai.AVANCE == true && site.Contains(pai.SITE)).FirstOrDefault();
                                 if (paiement != null)
                                 {
                                     list.Add(new TxLISTETRAIT

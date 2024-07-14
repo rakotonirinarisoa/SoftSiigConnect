@@ -154,7 +154,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
             }
             if (Datas.type == "success") {
                 alert(Datas.msg);
-                window.location = window.location.origin;
+                window.location = window.location.origin /*+ "//"*/;
             }
             if (Datas.type == "login") {
                 alert(Datas.msg);
