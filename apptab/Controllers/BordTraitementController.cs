@@ -2138,11 +2138,16 @@ namespace apptab.Controllers
 
         //GENERER Suivi budgétaire et crédit ouvert//
         [HttpPost]
-        public JsonResult GenerePTBA(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin, int numbud)
+        public JsonResult GenerePTBA(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin, int numbud, string listSite)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
+
+            List<string> site = new List<string>();
+            foreach (var item in listSite.Split(','))
+            {
+                site.Add(item);
+            }
 
             //if (DateDebut.Year != DateFin.Year) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vous ne pouvez pas générer deux années différentes. " }, settings));
 
@@ -2202,7 +2207,7 @@ namespace apptab.Controllers
                                 {
                                     foreach (var yy in tom.CPTADMIN_MLIQUIDATION.Where(a => a.IDLIQUIDATION == xx.ID).ToList())
                                     {
-                                        if (tom.MBUDGET.Where(a => a.NUMBUD == numbud && a.ACTI == yy.ACTI).Count() == 0)
+                                        if (tom.MBUDGET.Where(a => a.NUMBUD == numbud && a.ACTI == yy.ACTI && site.Contains(a.SITE)).Count() == 0)
                                         {
                                             if (!autrePCOP.Contains(yy.ACTI) && !String.IsNullOrEmpty(yy.ACTI))
                                                 autrePCOP.Add(yy.ACTI);
@@ -2212,9 +2217,9 @@ namespace apptab.Controllers
                             }
                         }
 
-                        if (tom.MBUDGET.Any(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)))
+                        if (tom.MBUDGET.Any(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE) && site.Contains(a.SITE)))
                         {
-                            foreach (var x in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)).Select(a => a.ACTI).Distinct().ToList())
+                            foreach (var x in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE) && site.Contains(a.SITE)).Select(a => a.ACTI).Distinct().ToList())
                             {
                                 if (!autrePCOP.Contains(x) && !String.IsNullOrEmpty(x))
                                     autrePCOP.Add(x);
@@ -2254,13 +2259,13 @@ namespace apptab.Controllers
                                 //Montant payé (OPA_VALIDATIONS (MONTANT, ETAT = 2, dateOrdre)//
                                 decimal MTNPAYE = 0;
 
-                                foreach (var s in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE) && a.ACTI == x).ToList())
+                                foreach (var s in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE) && a.ACTI == x && site.Contains(a.SITE)).ToList())
                                 {
                                     //PAD
                                     if (MTNTOTALPAD == 0) if (tom.RREPACTI.Any(a => a.CODE == s.ACTI)) MTNTOTALPAD = tom.RREPACTI.FirstOrDefault(a => a.CODE == s.ACTI).MONTREP1.Value;
 
                                     //PTBA
-                                    foreach (var y in tom.MBUDALLOC.Where(a => a.NUMBUD == numbud && a.NUMENREG == s.NUMENREG && (a.MOIS >= DateDebut && a.MOIS <= DateFin) && listAnnee.Contains(a.ANNEE)).ToList())
+                                    foreach (var y in tom.MBUDALLOC.Where(a => a.NUMBUD == numbud && a.NUMENREG == s.NUMENREG && (a.MOIS >= DateDebut && a.MOIS <= DateFin) && listAnnee.Contains(a.ANNEE) && site.Contains(a.SITE)).ToList())
                                     {
                                         MTNTOTALPeriode += y.MONTANT.Value;
                                     }
@@ -2272,9 +2277,9 @@ namespace apptab.Controllers
 
                                 //Montant engagé (Liquidation + Justif validé SET//
                                 //Liquidation validé SET//
-                                foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList())
+                                foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && site.Contains(a.SITE)).ToList())
                                 {
-                                    foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No).ToList())
+                                    foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No && site.Contains(a.SITE)).ToList())
                                     {
                                         if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "ACTI")
                                         {
@@ -2286,13 +2291,13 @@ namespace apptab.Controllers
                                     }
                                 }
                                 //Justif validé SET//
-                                foreach (var z in db.SI_TRAITJUSTIF.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList())
+                                foreach (var z in db.SI_TRAITJUSTIF.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && site.Contains(a.SITE)).ToList())
                                 {
-                                    foreach (var xx in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == z.No.ToString()).ToList())
+                                    foreach (var xx in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == z.No.ToString() && site.Contains(a.SITE)).ToList())
                                     {
                                         if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "ACTI")
                                         {
-                                            foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.ACTI == PCOP).ToList())
+                                            foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.ACTI == PCOP && site.Contains(a.SITE)).ToList())
                                             {
                                                 MTNENGA += xx.MONTANT.Value;
                                             }
@@ -2300,14 +2305,14 @@ namespace apptab.Controllers
                                     }
                                 }
                                 //Montant payé (OPA_VALIDATIONS (MONTANT, ETAT = 2, dateOrdre)//
-                                var ListTraitement = db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList();
-                                foreach (var opaV in db.OPA_VALIDATIONS.Where(a => a.ETAT == 2 && a.dateOrdre >= DateDebut && a.dateOrdre <= DateFin && a.NUMEROLIQUIDATION != null))
+                                var ListTraitement = db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && site.Contains(a.SITE)).ToList();
+                                foreach (var opaV in db.OPA_VALIDATIONS.Where(a => a.ETAT == 2 && a.dateOrdre >= DateDebut && a.dateOrdre <= DateFin && a.NUMEROLIQUIDATION != null && site.Contains(a.SITE)))
                                 {
                                     if (opaV.AVANCE == false)
                                     {
-                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION).ToList())
+                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION && site.Contains(a.SITE)).ToList())
                                         {
-                                            foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No).ToList())
+                                            foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No && site.Contains(a.SITE)).ToList())
                                             {
                                                 if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "ACTI")
                                                 {
@@ -2321,13 +2326,13 @@ namespace apptab.Controllers
                                     }
                                     else
                                     {
-                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION).ToList())
+                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION && site.Contains(a.SITE)).ToList())
                                         {
-                                            foreach (var xx in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == z.No.ToString()).ToList())
+                                            foreach (var xx in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == z.No.ToString() && site.Contains(a.SITE)).ToList())
                                             {
                                                 if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "ACTI")
                                                 {
-                                                    foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.ACTI == PCOP).ToList())
+                                                    foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.ACTI == PCOP && site.Contains(a.SITE)).ToList())
                                                     {
                                                         MTNPAYE += opaV.MONTANT.Value;
                                                     }
@@ -2422,15 +2427,15 @@ namespace apptab.Controllers
                     //GEO//
                     if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "GEO")
                     {
-                        foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList())
+                        foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && site.Contains(a.SITE)).ToList())
                         {
-                            foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No).ToList())
+                            foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No && site.Contains(a.SITE)).ToList())
                             {
                                 if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "GEO")
                                 {
                                     foreach (var yy in tom.CPTADMIN_MLIQUIDATION.Where(a => a.IDLIQUIDATION == xx.ID).ToList())
                                     {
-                                        if (tom.MBUDGET.Where(a => a.NUMBUD == numbud && a.GEO == yy.GEO).Count() == 0)
+                                        if (tom.MBUDGET.Where(a => a.NUMBUD == numbud && a.GEO == yy.GEO && site.Contains(a.SITE)).Count() == 0)
                                         {
                                             if (!autrePCOP.Contains(yy.GEO) && !String.IsNullOrEmpty(yy.GEO))
                                                 autrePCOP.Add(yy.GEO);
@@ -2440,9 +2445,9 @@ namespace apptab.Controllers
                             }
                         }
 
-                        if (tom.MBUDGET.Any(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)))
+                        if (tom.MBUDGET.Any(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE) && site.Contains(a.SITE)))
                         {
-                            foreach (var x in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)).Select(a => a.GEO).Distinct().ToList())
+                            foreach (var x in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE) && site.Contains(a.SITE)).Select(a => a.GEO).Distinct().ToList())
                             {
                                 if (!autrePCOP.Contains(x) && !String.IsNullOrEmpty(x))
                                     autrePCOP.Add(x);
@@ -2482,12 +2487,12 @@ namespace apptab.Controllers
                                 //Montant payé (OPA_VALIDATIONS (MONTANT, ETAT = 2, dateOrdre)//
                                 decimal MTNPAYE = 0;
 
-                                foreach (var s in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE) && a.GEO == x).ToList())
+                                foreach (var s in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE) && a.GEO == x && site.Contains(a.SITE)).ToList())
                                 {
                                     //PAD
                                     if (MTNTOTALPAD == 0) if (tom.RREPGEO.Any(a => a.CODE == s.GEO)) MTNTOTALPAD = tom.RREPGEO.FirstOrDefault(a => a.CODE == s.GEO).MONTREP1.Value;
                                     //PTBA
-                                    foreach (var y in tom.MBUDALLOC.Where(a => a.NUMBUD == numbud && a.NUMENREG == s.NUMENREG && (a.MOIS >= DateDebut && a.MOIS <= DateFin) && listAnnee.Contains(a.ANNEE)).ToList())
+                                    foreach (var y in tom.MBUDALLOC.Where(a => a.NUMBUD == numbud && a.NUMENREG == s.NUMENREG && (a.MOIS >= DateDebut && a.MOIS <= DateFin) && listAnnee.Contains(a.ANNEE) && site.Contains(a.SITE)).ToList())
                                     {
                                         MTNTOTALPeriode += y.MONTANT.Value;
                                     }
@@ -2498,9 +2503,9 @@ namespace apptab.Controllers
 
                                 //Montant engagé (Liquidation + Justif validé SET//
                                 //Liquidation validé SET//
-                                foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList())
+                                foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && site.Contains(a.SITE)).ToList())
                                 {
-                                    foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No).ToList())
+                                    foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No && site.Contains(a.SITE)).ToList())
                                     {
                                         if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "GEO")
                                         {
@@ -2512,13 +2517,13 @@ namespace apptab.Controllers
                                     }
                                 }
                                 //Justif validé SET//
-                                foreach (var z in db.SI_TRAITJUSTIF.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList())
+                                foreach (var z in db.SI_TRAITJUSTIF.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && site.Contains(a.SITE)).ToList())
                                 {
-                                    foreach (var xx in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == z.No.ToString()).ToList())
+                                    foreach (var xx in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == z.No.ToString() && site.Contains(a.SITE)).ToList())
                                     {
                                         if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "GEO")
                                         {
-                                            foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.GEO == PCOP).ToList())
+                                            foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.GEO == PCOP && site.Contains(a.SITE)).ToList())
                                             {
                                                 MTNENGA += xx.MONTANT.Value;
                                             }
@@ -2526,14 +2531,14 @@ namespace apptab.Controllers
                                     }
                                 }
                                 //Montant payé (OPA_VALIDATIONS (MONTANT, ETAT = 2, dateOrdre)//
-                                var ListTraitement = db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList();
-                                foreach (var opaV in db.OPA_VALIDATIONS.Where(a => a.ETAT == 2 && a.dateOrdre >= DateDebut && a.dateOrdre <= DateFin && a.NUMEROLIQUIDATION != null))
+                                var ListTraitement = db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && site.Contains(a.SITE)).ToList();
+                                foreach (var opaV in db.OPA_VALIDATIONS.Where(a => a.ETAT == 2 && a.dateOrdre >= DateDebut && a.dateOrdre <= DateFin && a.NUMEROLIQUIDATION != null && site.Contains(a.SITE)))
                                 {
                                     if (opaV.AVANCE == false)
                                     {
-                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION).ToList())
+                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION && site.Contains(a.SITE)).ToList())
                                         {
-                                            foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No).ToList())
+                                            foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No && site.Contains(a.SITE)).ToList())
                                             {
                                                 if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "GEO")
                                                 {
@@ -2547,13 +2552,13 @@ namespace apptab.Controllers
                                     }
                                     else
                                     {
-                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION).ToList())
+                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION && site.Contains(a.SITE)).ToList())
                                         {
-                                            foreach (var xx in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == z.No.ToString()).ToList())
+                                            foreach (var xx in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == z.No.ToString() && site.Contains(a.SITE)).ToList())
                                             {
                                                 if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "GEO")
                                                 {
-                                                    foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.GEO == PCOP).ToList())
+                                                    foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.GEO == PCOP && site.Contains(a.SITE)).ToList())
                                                     {
                                                         MTNPAYE += opaV.MONTANT.Value;
                                                     }
@@ -2648,15 +2653,15 @@ namespace apptab.Controllers
                     //PLAN6//
                     if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "PLAN6")
                     {
-                        foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList())
+                        foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && site.Contains(a.SITE)).ToList())
                         {
-                            foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No).ToList())
+                            foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No && site.Contains(a.SITE)).ToList())
                             {
                                 if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "PLAN6")
                                 {
                                     foreach (var yy in tom.CPTADMIN_MLIQUIDATION.Where(a => a.IDLIQUIDATION == xx.ID).ToList())
                                     {
-                                        if (tom.MBUDGET.Where(a => a.NUMBUD == numbud && a.PLAN6 == yy.PLAN6).Count() == 0)
+                                        if (tom.MBUDGET.Where(a => a.NUMBUD == numbud && a.PLAN6 == yy.PLAN6 && site.Contains(a.SITE)).Count() == 0)
                                         {
                                             if (!autrePCOP.Contains(yy.PLAN6) && !String.IsNullOrEmpty(yy.PLAN6))
                                                 autrePCOP.Add(yy.PLAN6);
@@ -2666,9 +2671,9 @@ namespace apptab.Controllers
                             }
                         }
 
-                        if (tom.MBUDGET.Any(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)))
+                        if (tom.MBUDGET.Any(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE) && site.Contains(a.SITE)))
                         {
-                            foreach (var x in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)).Select(a => a.PLAN6).Distinct().ToList())
+                            foreach (var x in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE) && site.Contains(a.SITE)).Select(a => a.PLAN6).Distinct().ToList())
                             {
                                 if (!autrePCOP.Contains(x) && !String.IsNullOrEmpty(x))
                                     autrePCOP.Add(x);
@@ -2708,12 +2713,12 @@ namespace apptab.Controllers
                                 //Montant payé (OPA_VALIDATIONS (MONTANT, ETAT = 2, dateOrdre)//
                                 decimal MTNPAYE = 0;
 
-                                foreach (var s in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE) && a.PLAN6 == x).ToList())
+                                foreach (var s in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE) && a.PLAN6 == x && site.Contains(a.SITE)).ToList())
                                 {
                                     //PAD
                                     if (MTNTOTALPAD == 0) if (tom.RREPPLAN6.Any(a => a.CODE == s.PLAN6)) MTNTOTALPAD = tom.RREPPLAN6.FirstOrDefault(a => a.CODE == s.PLAN6).MONTREP1.Value;
                                     //PTBA
-                                    foreach (var y in tom.MBUDALLOC.Where(a => a.NUMBUD == numbud && a.NUMENREG == s.NUMENREG && (a.MOIS >= DateDebut && a.MOIS <= DateFin) && listAnnee.Contains(a.ANNEE)).ToList())
+                                    foreach (var y in tom.MBUDALLOC.Where(a => a.NUMBUD == numbud && a.NUMENREG == s.NUMENREG && (a.MOIS >= DateDebut && a.MOIS <= DateFin) && listAnnee.Contains(a.ANNEE) && site.Contains(a.SITE)).ToList())
                                     {
                                         MTNTOTALPeriode += y.MONTANT.Value;
                                     }
@@ -2724,9 +2729,9 @@ namespace apptab.Controllers
 
                                 //Montant engagé (Liquidation + Justif validé SET//
                                 //Liquidation validé SET//
-                                foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList())
+                                foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && site.Contains(a.SITE)).ToList())
                                 {
-                                    foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No).ToList())
+                                    foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No && site.Contains(a.SITE)).ToList())
                                     {
                                         if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "PLAN6")
                                         {
@@ -2738,13 +2743,13 @@ namespace apptab.Controllers
                                     }
                                 }
                                 //Justif validé SET//
-                                foreach (var z in db.SI_TRAITJUSTIF.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList())
+                                foreach (var z in db.SI_TRAITJUSTIF.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && site.Contains(a.SITE)).ToList())
                                 {
-                                    foreach (var xx in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == z.No.ToString()).ToList())
+                                    foreach (var xx in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == z.No.ToString() && site.Contains(a.SITE)).ToList())
                                     {
                                         if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "PLAN6")
                                         {
-                                            foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.PLAN6 == PCOP).ToList())
+                                            foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.PLAN6 == PCOP && site.Contains(a.SITE)).ToList())
                                             {
                                                 MTNENGA += xx.MONTANT.Value;
                                             }
@@ -2752,14 +2757,14 @@ namespace apptab.Controllers
                                     }
                                 }
                                 //Montant payé (OPA_VALIDATIONS (MONTANT, ETAT = 2, dateOrdre)//
-                                var ListTraitement = db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList();
-                                foreach (var opaV in db.OPA_VALIDATIONS.Where(a => a.ETAT == 2 && a.dateOrdre >= DateDebut && a.dateOrdre <= DateFin && a.NUMEROLIQUIDATION != null))
+                                var ListTraitement = db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && site.Contains(a.SITE)).ToList();
+                                foreach (var opaV in db.OPA_VALIDATIONS.Where(a => a.ETAT == 2 && a.dateOrdre >= DateDebut && a.dateOrdre <= DateFin && a.NUMEROLIQUIDATION != null && site.Contains(a.SITE)))
                                 {
                                     if (opaV.AVANCE == false)
                                     {
-                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION).ToList())
+                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION && site.Contains(a.SITE)).ToList())
                                         {
-                                            foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No).ToList())
+                                            foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No && site.Contains(a.SITE)).ToList())
                                             {
                                                 if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "PLAN6")
                                                 {
@@ -2773,9 +2778,9 @@ namespace apptab.Controllers
                                     }
                                     else
                                     {
-                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION).ToList())
+                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION && site.Contains(a.SITE)).ToList())
                                         {
-                                            foreach (var xx in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == z.No.ToString()).ToList())
+                                            foreach (var xx in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == z.No.ToString() && site.Contains(a.SITE)).ToList())
                                             {
                                                 if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "PLAN6")
                                                 {
@@ -2874,15 +2879,15 @@ namespace apptab.Controllers
                     //POSTE//
                     if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "POSTE")
                     {
-                        foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList())
+                        foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && site.Contains(a.SITE)).ToList())
                         {
-                            foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No).ToList())
+                            foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No && site.Contains(a.SITE)).ToList())
                             {
                                 if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "POSTE")
                                 {
                                     foreach (var yy in tom.CPTADMIN_MLIQUIDATION.Where(a => a.IDLIQUIDATION == xx.ID).ToList())
                                     {
-                                        if (tom.MBUDGET.Where(a => a.NUMBUD == numbud && a.POSTE == yy.POSTE).Count() == 0)
+                                        if (tom.MBUDGET.Where(a => a.NUMBUD == numbud && a.POSTE == yy.POSTE && site.Contains(a.SITE)).Count() == 0)
                                         {
                                             if (!autrePCOP.Contains(yy.POSTE) && !String.IsNullOrEmpty(yy.POSTE))
                                                 autrePCOP.Add(yy.POSTE);
@@ -2892,9 +2897,9 @@ namespace apptab.Controllers
                             }
                         }
 
-                        if (tom.MBUDGET.Any(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)))
+                        if (tom.MBUDGET.Any(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE) && site.Contains(a.SITE)))
                         {
-                            foreach (var x in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE)).Select(a => a.POSTE).Distinct().ToList())
+                            foreach (var x in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE) && site.Contains(a.SITE)).Select(a => a.POSTE).Distinct().ToList())
                             {
                                 if (!autrePCOP.Contains(x) && !String.IsNullOrEmpty(x))
                                     autrePCOP.Add(x);
@@ -2935,12 +2940,12 @@ namespace apptab.Controllers
                                 //Montant payé (OPA_VALIDATIONS (MONTANT, ETAT = 2, dateOrdre)//
                                 decimal MTNPAYE = 0;
 
-                                foreach (var s in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE) && a.POSTE == x).ToList())
+                                foreach (var s in tom.MBUDGET.Where(a => a.NUMBUD == numbud && listAnnee.Contains(a.ANNEE) && a.POSTE == x && site.Contains(a.SITE)).ToList())
                                 {
                                     //PAD
                                     if (MTNTOTALPAD == 0) if (tom.RREPPOSTE.Any(a => a.CODE == s.POSTE)) MTNTOTALPAD = tom.RREPPOSTE.FirstOrDefault(a => a.CODE == s.POSTE).MONTREP1.Value;
                                     //PTBA
-                                    foreach (var y in tom.MBUDALLOC.Where(a => a.NUMBUD == numbud && a.NUMENREG == s.NUMENREG && (a.MOIS >= DateDebut && a.MOIS <= DateFin) && listAnnee.Contains(a.ANNEE)).ToList())
+                                    foreach (var y in tom.MBUDALLOC.Where(a => a.NUMBUD == numbud && a.NUMENREG == s.NUMENREG && (a.MOIS >= DateDebut && a.MOIS <= DateFin) && listAnnee.Contains(a.ANNEE) && site.Contains(a.SITE)).ToList())
                                     {
                                         MTNTOTALPeriode += y.MONTANT.Value;
                                     }
@@ -2951,9 +2956,9 @@ namespace apptab.Controllers
 
                                 //Montant engagé (Liquidation + Justif validé SET//
                                 //Liquidation validé SET//
-                                foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList())
+                                foreach (var z in db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && site.Contains(a.SITE)).ToList())
                                 {
-                                    foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No).ToList())
+                                    foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No && site.Contains(a.SITE)).ToList())
                                     {
                                         if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "POSTE")
                                         {
@@ -2965,9 +2970,9 @@ namespace apptab.Controllers
                                     }
                                 }
                                 //Justif validé SET//
-                                foreach (var z in db.SI_TRAITJUSTIF.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList())
+                                foreach (var z in db.SI_TRAITJUSTIF.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && site.Contains(a.SITE)).ToList())
                                 {
-                                    foreach (var xx in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == z.No.ToString()).ToList())
+                                    foreach (var xx in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == z.No.ToString() && site.Contains(a.SITE)).ToList())
                                     {
                                         if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "POSTE")
                                         {
@@ -2979,14 +2984,14 @@ namespace apptab.Controllers
                                     }
                                 }
                                 //Montant payé (OPA_VALIDATIONS (MONTANT, ETAT = 2, dateOrdre)//
-                                var ListTraitement = db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt).ToList();
-                                foreach (var opaV in db.OPA_VALIDATIONS.Where(a => a.ETAT == 2 && a.dateOrdre >= DateDebut && a.dateOrdre <= DateFin && a.NUMEROLIQUIDATION != null))
+                                var ListTraitement = db.SI_TRAITPROJET.Where(a => a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 1 && a.IDPROJET == crpt && site.Contains(a.SITE)).ToList();
+                                foreach (var opaV in db.OPA_VALIDATIONS.Where(a => a.ETAT == 2 && a.dateOrdre >= DateDebut && a.dateOrdre <= DateFin && a.NUMEROLIQUIDATION != null && site.Contains(a.SITE)))
                                 {
                                     if (opaV.AVANCE == false)
                                     {
-                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION).ToList())
+                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION && site.Contains(a.SITE)).ToList())
                                         {
-                                            foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No).ToList())
+                                            foreach (var xx in tom.CPTADMIN_FLIQUIDATION.Where(a => a.ID == z.No && site.Contains(a.SITE)).ToList())
                                             {
                                                 if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "POSTE")
                                                 {
@@ -3000,13 +3005,13 @@ namespace apptab.Controllers
                                     }
                                     else
                                     {
-                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION).ToList())
+                                        foreach (var z in ListTraitement.Where(a => a.REF == opaV.NUMEROLIQUIDATION && site.Contains(a.SITE)).ToList())
                                         {
-                                            foreach (var xx in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == z.No.ToString()).ToList())
+                                            foreach (var xx in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.ID == z.No.ToString() && site.Contains(a.SITE)).ToList())
                                             {
                                                 if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "POSTE")
                                                 {
-                                                    foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.POSTE == PCOP).ToList())
+                                                    foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.POSTE == PCOP && site.Contains(a.SITE)).ToList())
                                                     {
                                                         MTNPAYE += opaV.MONTANT.Value;
                                                     }
@@ -3118,20 +3123,27 @@ namespace apptab.Controllers
                 //int crpt = exist.IDPROJET.Value;
                 int crpt = iProjet;
 
-                SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
-                SOFTCONNECTOM tom = new SOFTCONNECTOM();
-
-                var user = tom.RBUDGET.Select(a => new
+                try
                 {
-                    BUDGET = a.LIBELLE,
-                    ID = a.NUMBUD
-                }).ToList();
+                    SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                    SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { List = user } }, settings));
+                    var user = tom.RBUDGET.Select(a => new
+                    {
+                        BUDGET = a.LIBELLE,
+                        ID = a.NUMBUD
+                    }).ToList();
+
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { List = user } }, settings));
+                }
+                catch (Exception)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre base de données. " }, settings));
+                }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre base de données. " }, settings));
             }
         }
 
