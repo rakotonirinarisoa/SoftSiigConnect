@@ -473,11 +473,16 @@ namespace apptab.Controllers
 
         //Genere Statut des engagements et avances//
         [HttpPost]
-        public JsonResult GenereSTATLISTE(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
+        public JsonResult GenereSTATLISTE(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin, string listSite)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
+
+            List<string> site = new List<string>();
+            foreach (var item in listSite.Split(','))
+            {
+                site.Add(item);
+            }
 
             try
             {
@@ -623,11 +628,16 @@ namespace apptab.Controllers
 
         //Genere Liste Engagements et avances rejetés//
         [HttpPost]
-        public async Task<JsonResult> GenereREJETE(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
+        public async Task<JsonResult> GenereREJETE(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin, string listSite)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
+
+            List<string> site = new List<string>();
+            foreach (var item in listSite.Split(','))
+            {
+                site.Add(item);
+            }
 
             try
             {
@@ -790,7 +800,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> GenereDelaisTraitementEngagements(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
+        public async Task<JsonResult> GenereDelaisTraitementEngagements(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin, string listSite)
         {
             var user = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
 
@@ -798,7 +808,12 @@ namespace apptab.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
             }
-            var site = db.SI_SITE.Where(x => x.IDUSER == user.ID && x.IDPROJET == user.IDPROJET).Select(x => x.SITE).ToList();
+
+            List<string> site = new List<string>();
+            foreach (var item in listSite.Split(','))
+            {
+                site.Add(item);
+            }
 
             string[] separators = { "," };
 
@@ -964,15 +979,20 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> GenereSoufTraitement(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
+        public async Task<JsonResult> GenereSoufTraitement(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin, string listSite)
         {
             var user = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
-            
+
             if (user == null)
             {
                 return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
             }
-            var site = db.SI_SITE.Where(x => x.IDUSER == user.ID && x.IDPROJET == user.IDPROJET).Select(x => x.SITE).ToList();
+
+            List<string> site = new List<string>();
+            foreach (var item in listSite.Split(','))
+            {
+                site.Add(item);
+            }
 
             string[] separators = { "," };
 
@@ -1167,11 +1187,16 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult GenereSTATPAIEMENT(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
+        public JsonResult GenereSTATPAIEMENT(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin, string listSite)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
+
+            List<string> site = new List<string>();
+            foreach (var item in listSite.Split(','))
+            {
+                site.Add(item);
+            }
 
             try
             {
@@ -1484,7 +1509,7 @@ namespace apptab.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<JsonResult> GenereTraitementPaiementSouffrance(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
+        public async Task<JsonResult> GenereTraitementPaiementSouffrance(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin, string listSite)
         {
             var user = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
 
@@ -1492,7 +1517,12 @@ namespace apptab.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
             }
-            var site = db.SI_SITE.Where(x => x.IDUSER == user.ID && x.IDPROJET == user.IDPROJET).Select(x => x.SITE).ToList();
+
+            List<string> site = new List<string>();
+            foreach (var item in listSite.Split(','))
+            {
+                site.Add(item);
+            }
 
             string[] separators = { "," };
 
@@ -1615,7 +1645,7 @@ namespace apptab.Controllers
                     var paielst = (
                                    from r in db.OPA_REGLEMENT
                                    join v in db.OPA_VALIDATIONS on r.IDSOCIETE equals v.IDPROJET
-                                   where r.NUM.ToString() == v.IDREGLEMENT && r.IDSOCIETE == projectId
+                                   where r.NUM.ToString() == v.IDREGLEMENT && r.IDSOCIETE == projectId && site.Contains(v.SITE)
                                    select new
                                    {
                                        BENEFICIAIRE = r.BENEFICIAIRE,
@@ -1683,11 +1713,16 @@ namespace apptab.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<JsonResult> GenerePaiementREJETE(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
+        public async Task<JsonResult> GenerePaiementREJETE(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin, string listSite)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
+
+            List<string> site = new List<string>();
+            foreach (var item in listSite.Split(','))
+            {
+                site.Add(item);
+            }
 
             try
             {
@@ -1713,7 +1748,7 @@ namespace apptab.Controllers
                         int crpt = int.Parse(idP);
 
                         var typeEcriture = db.SI_TYPECRITURE.Where(x => x.IDPROJET == crpt).FirstOrDefault().TYPE;
-                        if (db.OPA_VALIDATIONS.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DateIn >= DateDebut && a.DateOut <= DateFin) != null)
+                        if (db.OPA_VALIDATIONS.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DateIn >= DateDebut && a.DateOut <= DateFin && site.Contains(a.SITE)) != null)
                         {
                             foreach (var x in db.OPA_VALIDATIONS.Where(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DateIn >= DateDebut && a.DateOut <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DateIn).OrderBy(a => a.DATECREA).ToList())
                             {
@@ -1936,11 +1971,16 @@ namespace apptab.Controllers
 
         //Genere Liste Engagements et avances rejetés//
         [HttpPost]
-        public async Task<JsonResult> GenereStatutJRA(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin)
+        public async Task<JsonResult> GenereStatutJRA(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin, string listSite)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
+
+            List<string> site = new List<string>();
+            foreach (var item in listSite.Split(','))
+            {
+                site.Add(item);
+            }
 
             try
             {
@@ -2028,7 +2068,7 @@ namespace apptab.Controllers
                                 });
                             }
                         }
-                        if (db.SI_TRAITREVERS.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin) != null)
+                        if (db.SI_TRAITREVERS.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)) != null)
                         {
                             foreach (var x in db.SI_TRAITREVERS.Where(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
                             {

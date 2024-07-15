@@ -12,7 +12,17 @@
         <div class="input-group-prepend custom-label">
             <span class="input-group-text text-bold" id="inputGroup-sizing-default">PROJET</span>
         </div>
-        <select class="form-control selectTOO" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="proj" data-id="proj-list" multiple="multiple">
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="proj" data-id="proj-list">
+        </select>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Sites</span>
+        </div>
+        <select class="form-control selectTOO" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="site" data-id="site-list" multiple="multiple">
         </select>
     </div>
 </div>
@@ -89,7 +99,15 @@
         tokenSeparators: [',', ' ']
     });
 
+    $("#site").select2({
+        tags: true,
+        tokenSeparators: [',', ' ']
+    })
+</script>
+
+<script defer>
     $('#export-to-pdf-btn').on('click', () => {
-        exportTableToPdf('dashboard', 'Souffrance', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);
+        exportTableToPdf('dashboard', 'PAIEMENTS EN SOUFFRANCE (PAR RAPPORT AU DELAI MOYEN)-PDF', `<p style="font-weight: bold /*text-align:center*/;">PAIEMENTS EN SOUFFRANCE (PAR RAPPORT AU DELAI MOYEN)</p><p>Liste des paiements en souffrance (par rapport au délai moyen)</p>`, `<p style="font-weight: bold;">SOFT EXPENDITURES TRACKERS </p>`, []);
+        /*exportTableToPdf('dashboard', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);*/
     });
 </script>
