@@ -26,6 +26,9 @@ using System.Web;
 using Microsoft.Build.Framework.XamlTypes;
 using System.Security.Policy;
 using System.Web.WebPages;
+using System.IO.Compression;
+using System.Collections;
+using static apptab.Controllers.RSFController;
 
 namespace apptab.Controllers
 {
@@ -67,6 +70,21 @@ namespace apptab.Controllers
         public ActionResult BonPourPaiement()
         {
             ViewBag.Controller = "Validation des Payements";
+            return View();
+        }
+        public ActionResult CancelHisto()
+        {
+            ViewBag.Controller = "Annuler Paiements";
+            return View();
+        }
+        public ActionResult HistoReg()
+        {
+            ViewBag.Controller = "Historiques Paiements";
+            return View();
+        }
+        public ActionResult AnomaliePaiement()
+        {
+            ViewBag.Controller = "Anomalie Paiements";
             return View();
         }
         [HttpPost]
@@ -230,8 +248,9 @@ namespace apptab.Controllers
             //sw = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + pathchemin + ".txt");
             sw.Write(pathfiles);
             sw.Close();
-
-            FileStream zipFile = System.IO.File.Open(pth + pathchemin + ".zip", FileMode.Create);
+            using (var memoryStream = new MemoryStream())
+            {
+                FileStream zipFile = System.IO.File.Open(pth + pathchemin + ".zip", FileMode.Create);
 
             var archive = new Archive(new ArchiveEntrySettings(encryptionSettings: new TraditionalEncryptionSettings(psw)));
 
@@ -243,7 +262,12 @@ namespace apptab.Controllers
             zipFile.Dispose();
             // archive.Dispose();
 
-            return File(source, System.Net.Mime.MediaTypeNames.Application.Octet);
+
+            memoryStream.Position = 0;
+            return File(memoryStream, "application/zip", "my.zip");
+            }
+            
+            //return File(source, System.Net.Mime.MediaTypeNames.Application.Octet);
         }
         [HttpPost]
         public ActionResult CreateZipFile(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte)
@@ -528,10 +552,17 @@ namespace apptab.Controllers
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            var site = db.SI_SITE.Where(ST => ST.IDUSER == exist.ID && ST.IDPROJET == exist.IDPROJET).Select(ST => ST.SITE).ToList();
+            int PROJECTID = int.Parse(codeproject);
+            List<string>site = new List<string>();
+
+            var siteS = db.SI_SITE.Where(ST => ST.IDUSER == exist.ID && ST.IDPROJET == PROJECTID).Select(ST => ST.SITE).FirstOrDefault();
+            foreach (var item in siteS.Split(','))
+            {
+                site.Add(item);
+            }
 
             var basename = GetTypeP(suser, codeproject);
-            int PROJECTID = int.Parse(codeproject);
+            //GetAnomalieTomOP(suser, journal, codeproject, datein, dateout, comptaG, auxi, siteS);
             if (basename == "")
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le type d'ecriture avant toutes opérations. " }, settings));
@@ -736,7 +767,31 @@ namespace apptab.Controllers
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
             var basename = GetTypeP(suser, codeproject);
             int PROJECTID = int.Parse(codeproject);
-            var site = db.SI_SITE.Where(ST => ST.IDUSER == exist.ID && ST.IDPROJET == exist.IDPROJET).Select(ST => ST.SITE).ToList();
+            List<string>site = new List<string>();
+
+            var siteS = db.SI_SITE.Where(ST => ST.IDUSER == exist.ID && ST.IDPROJET == PROJECTID).Select(ST => ST.SITE).FirstOrDefault();
+            foreach (var item in siteS.Split(','))
+            {
+                site.Add(item);
+            }
+            #region 
+            //if (exist.IDPROJET == 0)
+            //{
+            //    var siteS = db.SI_SITE.Where(ST => ST.IDUSER == exist.ID).Select(ST => ST.SITE).FirstOrDefault();
+            //    foreach (var item in siteS.Split(','))
+            //    {
+            //        site.Add(item);
+            //    }
+            //}
+            //else
+            //{
+            //    var siteS = db.SI_SITE.Where(ST => ST.IDUSER == exist.ID && ST.IDPROJET == PROJECTID).Select(ST => ST.SITE).FirstOrDefault();
+            //    foreach (var item in siteS.Split(','))
+            //    {
+            //        site.Add(item);
+            //    }
+            //}
+            #endregion
             if (basename == "")
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le type d'ecriture avant toutes opérations. " }, settings));
@@ -988,16 +1043,24 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
+            List<string> site = new List<string>();
+            var siteS = db.SI_SITE.Where(ST => ST.IDUSER == exist.ID && ST.IDPROJET == PROJECTID).Select(ST => ST.SITE).FirstOrDefault();
+            foreach (var item in siteS.Split(','))
+            {
+                site.Add(item);
+            }
+
             int retarDate = 0;
             if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null))
                 retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).DELPE.Value;
+
+            if (comptaG == "Autre Opérations") comptaG = null;
 
             List<OPA_VALIDATIONS> list = new List<OPA_VALIDATIONS>();
             if (ChoixBase == "2")
             {
                 var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG).ToArray();
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0 && ecriture.dateOrdre >= datein && ecriture.dateOrdre <= dateout.Date && (ecriture.Compte == comptaG || ecriture.Compte == "") && ecriture.Journal == journal && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0 && ecriture.dateOrdre >= datein && ecriture.dateOrdre <= dateout.Date && /*(ecriture.Compte == comptaG || ecriture.Compte == "")*/ ecriture.ComptaG == comptaG && ecriture.Journal == journal && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
@@ -1034,7 +1097,7 @@ namespace apptab.Controllers
             else
             {
                 var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG).ToArray();
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0 && (ecriture.ComptaG == comptaG || ecriture.ComptaG == null) && site.Contains(ecriture.SITE) && ecriture.Journal == journal && ecriture.dateOrdre >= datein && ecriture.dateOrdre <= dateout && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0 && /*(ecriture.ComptaG == comptaG || ecriture.ComptaG == null)*/ ecriture.ComptaG == comptaG && site.Contains(ecriture.SITE) && ecriture.Journal == journal && ecriture.dateOrdre >= datein && ecriture.dateOrdre <= dateout && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
@@ -1078,11 +1141,17 @@ namespace apptab.Controllers
             AFB160 aFB160 = new AFB160();
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            var site = db.SI_SITE.Where(x=> x.IDUSER == exist.ID && x.IDPROJET ==  exist.IDPROJET).Select(x => x.SITE).ToList();
-
-            var basename = GetTypeP(suser, codeproject);
             int PROJECTID = int.Parse(codeproject);
 
+            List<string>site = new List<string>();
+            var siteS = db.SI_SITE.Where(ST => ST.IDUSER == exist.ID && ST.IDPROJET == PROJECTID).Select(ST => ST.SITE).FirstOrDefault();
+            foreach (var item in siteS.Split(','))
+            {
+                site.Add(item);
+            }
+
+            var basename = GetTypeP(suser, codeproject);
+            
             int retarDate = 0;
             if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null))
                 retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).DELPE.Value;
@@ -1217,10 +1286,19 @@ namespace apptab.Controllers
             }
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
+
+            int PROJECTID = int.Parse(codeproject);
+
+            List<string> site = new List<string>();
+
+            var siteS = db.SI_SITE.Where(ST => ST.IDUSER == exist.ID && ST.IDPROJET == PROJECTID).Select(ST => ST.SITE).FirstOrDefault();
+            foreach (var item in siteS.Split(','))
+            {
+                site.Add(item);
+            }
 
             bool devise = false;
-            int PROJECTID = int.Parse(codeproject);
+           
             var basename = GetTypeP(suser, codeproject);
 
             if (basename == null)
@@ -1556,7 +1634,7 @@ namespace apptab.Controllers
             int PROJECTID = int.Parse(codeproject);
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-
+            if (comptaG == "Autre Opérations") comptaG = null;
             int retarDate = 0;
             if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null))
                 retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).DELPV.Value;
@@ -1596,6 +1674,7 @@ namespace apptab.Controllers
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                         NUMEREG = item.NUMEREG,
                         AUTREOP = item.AUTREOP,
+                        SITE = item.SITE,
                     });
                 }
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés. ", data = list }, settings));
@@ -1633,6 +1712,7 @@ namespace apptab.Controllers
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                         NUMEREG = item.NUMEREG,
                         AUTREOP = item.AUTREOP,
+                        SITE = item.SITE,
                     });
                 }
 
@@ -1799,7 +1879,7 @@ namespace apptab.Controllers
             if (ChoixBase == "2")
             {
                 var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG).ToArray();
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && (ecriture.ComptaG == comptaG || ecriture.ComptaG == null) && ecriture.Journal == journal && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && /*(ecriture.ComptaG == comptaG || ecriture.ComptaG == null)*/ ecriture.ComptaG == comptaG && ecriture.Journal == journal && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
@@ -1835,7 +1915,7 @@ namespace apptab.Controllers
             else
             {
                 var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG.ToString()).ToArray();
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && (ecriture.ComptaG == comptaG || ecriture.ComptaG == null) && ecriture.Journal == journal && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && /*(ecriture.ComptaG == comptaG || ecriture.ComptaG == null)*/ ecriture.ComptaG == comptaG && ecriture.Journal == journal && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
                 foreach (var item in avalider)
                 {
@@ -1888,7 +1968,14 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            var site = db.SI_SITE.Where(a => a.IDUSER == exist.ID && a.IDPROJET ==  exist.IDPROJET).Select(a => a.SITE).ToList();
+           // var site = db.SI_SITE.Where(a => a.IDUSER == exist.ID && a.IDPROJET ==  exist.IDPROJET).Select(a => a.SITE).ToList();
+            List<string> site = new List<string>();
+
+            var siteS = db.SI_SITE.Where(ST => ST.IDUSER == exist.ID && ST.IDPROJET == PROJECTID).Select(ST => ST.SITE).FirstOrDefault();
+            foreach (var item in siteS.Split(','))
+            {
+                site.Add(item);
+            }
             baseName = GetTypeP(suser, codeproject);
             if (baseName == "")
             {
@@ -2074,9 +2161,17 @@ namespace apptab.Controllers
             AFB160 aFB160 = new AFB160();
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            var site = db.SI_SITE.Where(a => a.IDUSER == exist.ID && a.IDPROJET == exist.IDPROJET).Select(a => a.SITE).ToList();
+            //var site = db.SI_SITE.Where(a => a.IDUSER == exist.ID && a.IDPROJET == exist.IDPROJET).Select(a => a.SITE).ToList();
 
             int PROJECTID = int.Parse(codeproject);
+
+            List<string>site = new List<string>();
+            var siteS = db.SI_SITE.Where(ST => ST.IDUSER == exist.ID && ST.IDPROJET == PROJECTID).Select(ST => ST.SITE).FirstOrDefault();
+            foreach (var item in siteS.Split(','))
+            {
+                site.Add(item);
+            }
+            
 
             int retarDate = 0;
             if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null))
@@ -2286,14 +2381,29 @@ namespace apptab.Controllers
 
         }
         //======================================================================================================GetAnomalieBack================================================================
-        public JsonResult GetAnomalieBack(SI_USERS suser, string baseName)
+        public JsonResult GetAnomalieBack(SI_USERS suser, string baseName,string codeproject)
         {
             AFB160 Afb = new AFB160();
-            if (baseName == "3")
+
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            int PROJECTID = int.Parse(codeproject);
+
+            List<string> site = new List<string>();
+
+            var siteS = db.SI_SITE.Where(ST => ST.IDUSER == exist.ID && ST.IDPROJET == PROJECTID).Select(ST => ST.SITE).FirstOrDefault();
+            foreach (var item in siteS.Split(','))
             {
-                //var anom = db.OPA_ANOMALIEBR.ToList();
-                var resultAnomalies = Afb.getListAnomalieBR(suser);
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = resultAnomalies }, settings));
+                site.Add(item);
+            }
+
+            var type = db.SI_TYPECRITURE.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault().TYPE;
+            if (type == 1)
+            {
+                var anom = db.OPA_ANOMALIEBR.Where(x => x.NUM == null).ToList();
+                var resultAnomalies = Afb.getListAnomalieBR(suser, PROJECTID);
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = resultAnomalies, dataAnom = anom }, settings));
             }
             else
             {
@@ -2435,13 +2545,94 @@ namespace apptab.Controllers
             }
         }
         [HttpPost]
-        public JsonResult GetHistoriques(SI_USERS suser)
+        public JsonResult GetHistoriques(SI_USERS suser, string codeproject)
         {
-
             var usr = db.SI_USERS.Where(x => x.LOGIN == suser.LOGIN && x.IDPROJET == suser.IDPROJET).FirstOrDefault();
+            int PROJECTID = int.Parse(codeproject);
+            List<string> site = new List<string>();
+            var siteS = db.SI_SITE.Where(ST => ST.IDUSER == usr.ID && ST.IDPROJET == PROJECTID).Select(ST => ST.SITE).FirstOrDefault();
+            foreach (var item in siteS.Split(','))
+            {
+                site.Add(item);
+            }
 
-            var query = db.OPA_HISTORIQUE
-                .Where(x => x.IDSOCIETE == suser.IDPROJET && x.IDUSER == usr.ID)
+
+            if (usr.IDPROJET == 0)
+            {
+                var query = db.OPA_HISTORIQUE
+                .Join(db.OPA_REGLEMENT, histo => histo.NUMENREG, reglement => reglement.NUM, (histo, reglement) => new
+                {
+                    NUMENREG = histo.NUMENREG,
+                    DATEAFB = histo.DATEAFB,
+                    IDUSER = histo.IDUSER,
+                    IDSOCIETE = histo.IDSOCIETE,
+                    CODE_J = reglement.CODE_J,
+                    RIB = reglement.RIB,
+                    MONTANT = reglement.MONTANT,
+                    DATE = reglement.DATE,
+                    LIBELLE = reglement.LIBELLE,
+                    BANQUE = reglement.BANQUE,
+                    GUICHET = reglement.GUICHET,
+                    NOMFICHIER = histo.AFB,
+                   
+                }).Join(db.SI_USERS, x => x.IDUSER, user => user.ID, (x, user) => new
+                {
+                    NUMENREG = x.NUMENREG,
+                    DATEAFB = x.DATEAFB,
+                    IDUSER = x.IDUSER,
+                    IDSOCIETE = x.IDSOCIETE,
+                    CODE_J = x.CODE_J,
+                    RIB = x.RIB,
+                    MONTANT = x.MONTANT,
+                    DATE = x.DATE,
+                    LIBELLE = x.LIBELLE,
+                    BANQUE = x.BANQUE,
+                    GUICHET = x.GUICHET,
+                    LOGIN = user.LOGIN,
+                    NOMFICHIER = x.NOMFICHIER,
+                })
+                .OrderBy(x => x.DATE).ToList();
+                var queryBr = db.OPA_HISTORIQUEBR
+                    .Where(ST => site.Contains(ST.SITE))
+                    .Join(db.OPA_REGLEMENTBR, histo => histo.NUMENREG, reglement => reglement.NUM, (histo, reglement) => new
+                    {
+                        NUMENREG = histo.NUMENREG,
+                        DATEAFB = histo.DATEAFB,
+                        IDUSER = histo.IDUSER,
+                        IDSOCIETE = histo.IDSOCIETE,
+                        CODE_J = reglement.CODE_J,
+                        RIB = reglement.RIB,
+                        MONTANT = reglement.MONTANT,
+                        DATE = reglement.DATE,
+                        LIBELLE = reglement.LIBELLE,
+                        BANQUE = reglement.BANQUE,
+                        GUICHET = reglement.GUICHET,
+                        SITE = histo.SITE,
+                        NOMFICHIER = histo.AFB,
+                    }).Join(db.SI_USERS, x => x.IDUSER, user => user.ID, (x, user) => new
+                    {
+                        NUMENREG = x.NUMENREG,
+                        DATEAFB = x.DATEAFB,
+                        IDUSER = x.IDUSER,
+                        IDSOCIETE = x.IDSOCIETE,
+                        CODE_J = x.CODE_J,
+                        RIB = x.RIB,
+                        MONTANT = x.MONTANT,
+                        DATE = x.DATE,
+                        LIBELLE = x.LIBELLE,
+                        BANQUE = x.BANQUE,
+                        GUICHET = x.GUICHET,
+                        LOGIN = user.LOGIN,
+                        SITE = x.SITE,
+                        NOMFICHIER = x.NOMFICHIER,
+                    })
+                    .OrderBy(x => x.DATE).ToList();
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = query, databr = queryBr }, settings));
+            }
+            else
+            {
+                var query = db.OPA_HISTORIQUE
+                .Where(x => x.IDSOCIETE == usr.IDPROJET && x.IDUSER == usr.ID)
                 .Join(db.OPA_REGLEMENT, histo => histo.NUMENREG, reglement => reglement.NUM, (histo, reglement) => new
                 {
                     NUMENREG = histo.NUMENREG,
@@ -2471,57 +2662,68 @@ namespace apptab.Controllers
                     LOGIN = user.LOGIN
                 })
                 .OrderBy(x => x.DATE).ToList();
-            var queryBr = db.OPA_HISTORIQUEBR
-                .Where(x => x.IDSOCIETE == suser.IDPROJET && x.IDUSER == usr.ID)
-                .Join(db.OPA_REGLEMENTBR, histo => histo.NUMENREG, reglement => reglement.NUM, (histo, reglement) => new
-                {
-                    NUMENREG = histo.NUMENREG,
-                    DATEAFB = histo.DATEAFB,
-                    IDUSER = histo.IDUSER,
-                    IDSOCIETE = histo.IDSOCIETE,
-                    CODE_J = reglement.CODE_J,
-                    RIB = reglement.RIB,
-                    MONTANT = reglement.MONTANT,
-                    DATE = reglement.DATE,
-                    LIBELLE = reglement.LIBELLE,
-                    BANQUE = reglement.BANQUE,
-                    GUICHET = reglement.GUICHET,
-                }).Join(db.SI_USERS, x => x.IDUSER, user => user.ID, (x, user) => new
-                {
-                    NUMENREG = x.NUMENREG,
-                    DATEAFB = x.DATEAFB,
-                    IDUSER = x.IDUSER,
-                    IDSOCIETE = x.IDSOCIETE,
-                    CODE_J = x.CODE_J,
-                    RIB = x.RIB,
-                    MONTANT = x.MONTANT,
-                    DATE = x.DATE,
-                    LIBELLE = x.LIBELLE,
-                    BANQUE = x.BANQUE,
-                    GUICHET = x.GUICHET,
-                    LOGIN = user.LOGIN
-                })
-                .OrderBy(x => x.DATE).ToList();
-
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = query, databr = queryBr }, settings));
+                var queryBr = db.OPA_HISTORIQUEBR
+                    .Where(x => x.IDSOCIETE == usr.IDPROJET && x.IDUSER == usr.ID && site.Contains(x.SITE))
+                    .Join(db.OPA_REGLEMENTBR, histo => histo.NUMENREG, reglement => reglement.NUM, (histo, reglement) => new
+                    {
+                        NUMENREG = histo.NUMENREG,
+                        DATEAFB = histo.DATEAFB,
+                        IDUSER = histo.IDUSER,
+                        IDSOCIETE = histo.IDSOCIETE,
+                        CODE_J = reglement.CODE_J,
+                        RIB = reglement.RIB,
+                        MONTANT = reglement.MONTANT,
+                        DATE = reglement.DATE,
+                        LIBELLE = reglement.LIBELLE,
+                        BANQUE = reglement.BANQUE,
+                        GUICHET = reglement.GUICHET,
+                        SITE = histo.SITE,
+                        
+                    }).Join(db.SI_USERS, x => x.IDUSER, user => user.ID, (x, user) => new
+                    {
+                        NUMENREG = x.NUMENREG,
+                        DATEAFB = x.DATEAFB,
+                        IDUSER = x.IDUSER,
+                        IDSOCIETE = x.IDSOCIETE,
+                        CODE_J = x.CODE_J,
+                        RIB = x.RIB,
+                        MONTANT = x.MONTANT,
+                        DATE = x.DATE,
+                        LIBELLE = x.LIBELLE,
+                        BANQUE = x.BANQUE,
+                        GUICHET = x.GUICHET,
+                        LOGIN = user.LOGIN,
+                        SITE = x.SITE,
+                    })
+                    .OrderBy(x => x.DATE).ToList();
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = query, databr = queryBr }, settings));
+            }
+            
         }
-        public JsonResult GetCancel(SI_USERS suser, string listCompte)
+        public JsonResult GetCancel(SI_USERS suser, string listCompte,string codeproject)
         {
             var list = listCompte.Split(',');
+            int PROJECTID = int.Parse(codeproject); 
             List<OPA_HISTORIQUE> result = new List<OPA_HISTORIQUE>();
             List<OPA_HISTORIQUEBR> resultBR = new List<OPA_HISTORIQUEBR>();
             var user = db.SI_USERS.Where(x => x.LOGIN == suser.LOGIN && x.PWD == suser.PWD).FirstOrDefault();
+            var TYPE = db.SI_TYPECRITURE.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault().TYPE;
+
+            int countTraitement = 0;
+            var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
+            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == PROJECTID && a.DELETIONDATE == null).FirstOrDefault().PROJET;
+
             foreach (var item in list)
             {
-                if (item.Contains("BR"))
+                if (TYPE == 1)
                 {
-                    resultBR = db.OPA_HISTORIQUEBR.Where(y => y.NUMENREG == item && y.IDUSER == user.ID && y.IDSOCIETE == suser.IDPROJET).ToList();
+                    resultBR = db.OPA_HISTORIQUEBR.Where(y => y.NUMENREG == item && y.IDUSER == user.ID && y.IDSOCIETE == PROJECTID).ToList();
                 }
                 else
                 {
                     decimal ii;
                     ii = Convert.ToDecimal(item);
-                    result = db.OPA_HISTORIQUE.Where(x => x.NUMENREG == ii && x.IDUSER == user.ID && x.IDSOCIETE == suser.IDPROJET).ToList();
+                    result = db.OPA_HISTORIQUE.Where(x => x.NUMENREG == ii && x.IDUSER == user.ID && x.IDSOCIETE == PROJECTID).ToList();
 
                 }
 
@@ -2534,8 +2736,59 @@ namespace apptab.Controllers
                 {
                     db.OPA_HISTORIQUEBR.Remove(br);
                 }
+                countTraitement++;
             }
             db.SaveChanges();
+            string MailAdresse = "";
+            string mdpMail = "";
+
+            if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).SENDMAIL != null && db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).SENDPWD != null)
+            {
+                MailAdresse = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).SENDMAIL;
+                mdpMail = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).SENDPWD;
+            }
+            else
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mail émetteur (Notifications et Alertes)" }, settings));
+            }
+            
+            using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
+            {
+                SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
+                smtp.UseDefaultCredentials = true;
+
+                mail.From = new MailAddress(MailAdresse);
+
+                mail.To.Add(MailAdresse);
+                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE != null)
+                {
+                    string[] separators = { ";" };
+
+                    var Tomail = mail;
+                    if (Tomail != null)
+                    {
+                        string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE;
+                        string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                        foreach (var mailto in mailListe)
+                        {
+                            mail.To.Add(mailto);
+                        }
+                    }
+                }
+               
+                    mail.Subject = "Annulation paiement du projet " + ProjetIntitule;
+                    mail.IsBodyHtml = true;
+                    mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez annulée" + countTraitement + " paiement pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
+                        "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
+                
+                smtp.Port = 587;
+                smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
+                smtp.EnableSsl = true;
+
+                try { smtp.Send(mail); }
+                catch (Exception) { }
+            }
             return Json(JsonConvert.SerializeObject(new { msg = "success", data = result, datebr = resultBR }));
         }
         public JsonResult SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE)
@@ -2594,6 +2847,71 @@ namespace apptab.Controllers
                 s = str;
             }
             return s;
+        }
+        //public JsonResult GetAnomalieTomOP(SI_USERS suser,string journal, string codeproject, DateTime datein, DateTime dateout, string compteG,string Auxi,string site)
+       public JsonResult GetAnomalieTomOP(SI_USERS suser, string codeproject)
+        {
+            var Anomalie = __db.RTIERS.Where(x => x.RIB1 == null || x.NOM == null || x.AD1 == null || x.DOM1 == null ).ToList();
+
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            int PROJECTID = int.Parse(codeproject);
+
+            ANOMALIE_G SAUVEANOMALIE = new ANOMALIE_G();
+            var GetallAnomalieProjet = db.ANOMALIE_G.Where(x => x.IDPROJECT == PROJECTID).ToList();
+            foreach (var Sup in GetallAnomalieProjet)
+            {
+                db.ANOMALIE_G.Remove(Sup);
+            }
+            //db.ANOMALIE_G.RemoveRange(db.ANOMALIE_G);
+            db.SaveChanges();
+            if (Anomalie.Count != 0)
+            {
+                foreach (var item in Anomalie)
+                {
+                    SAUVEANOMALIE.COMPTE_BANQUE = item.NOM;
+                    SAUVEANOMALIE.RIB = item.RIB1;
+                    SAUVEANOMALIE.COMPTEG = item.COGE;
+                    SAUVEANOMALIE.IDPROJECT = PROJECTID;
+                    SAUVEANOMALIE.AUXI = item.AUXI;
+                    SAUVEANOMALIE.AD1 = item.AD1;
+                    SAUVEANOMALIE.AD2 = item.AD2;
+                    SAUVEANOMALIE.DOM1 = item.DOM1;
+                    try
+                    {
+                        db.ANOMALIE_G.Add(SAUVEANOMALIE);
+                        db.SaveChanges();
+                    }
+                    catch
+                    {
+
+                    }
+                }
+            }
+            var DataAnomalie = db.ANOMALIE_G.Where(x => x.IDPROJECT == PROJECTID).Select(x => new
+            {
+                COMPTE_BANQUE = x.COMPTE_BANQUE,
+                RIB = x.RIB,
+                AUXI = x.AUXI,
+                COMPTEG = x.COMPTEG,
+                IDPROJECT = x.IDPROJECT,
+                AD1 = x.AD1,
+                AD2 = x.AD2,
+                DOM1 = x.DOM1
+
+            }).Join(db.SI_PROJETS,anomalie => anomalie.IDPROJECT,projet => projet.ID ,(anomalie, projet) => new
+            {
+                COMPTE_BANQUE = anomalie.COMPTE_BANQUE,
+                RIB = anomalie.RIB,
+                AUXI = anomalie.AUXI,
+                COMPTEG = anomalie.COMPTEG,
+                IDPROJECT = projet.PROJET,
+                AD1 = anomalie.AD1,
+                AD2 = anomalie.AD2,
+                DOM1 = anomalie.DOM1,
+
+            }).ToList();
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès.", data = DataAnomalie }, settings));
         }
     }
 }

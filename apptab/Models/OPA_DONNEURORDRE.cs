@@ -55,5 +55,8 @@ namespace apptab.Models
 
         [StringLength(10)]
         public string PAYS { get; set; }
+
+        [StringLength(50)]
+        public string SITE { get; set; }
     }
 }

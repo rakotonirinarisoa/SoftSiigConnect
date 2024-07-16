@@ -701,7 +701,7 @@ function GetListCompG() {
                 alert(Datas.msg);
                 return;
             }
-            let code = ``;
+            let code = ` <option value="Autre Opérations">Autre Opérations</option>`;
             let codeAuxi = ``;
             ListCompteG = Datas.data;
 
@@ -1212,6 +1212,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             estAvance: v.AVANCE,
                             AUTREOP:v.AUTREOP,
                             numeroliquidations: v.NUMEROLIQUIDATION,
+                            Site: v.SITE,
                             //type: v.AVANCE ? 'Avance' : 'Paiement',
                             type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
@@ -1246,6 +1247,8 @@ $('[data-action="ChargerJs"]').click(function () {
                                     `;
                                 }
                             },
+                            { data: 'Site' },
+                            { data: 'type' },
                             { data: 'id' },
                             { data: 'dateOrdre' },
                             { data: 'noPiece' },
@@ -1273,7 +1276,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                     `;
                                 }
                             },
-                            { data: 'type' },
+                            
                             
                         ],
                         createdRow: function (row, data, _) {

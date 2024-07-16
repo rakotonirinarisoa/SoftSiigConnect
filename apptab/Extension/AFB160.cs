@@ -121,6 +121,7 @@ namespace apptab.Extension
                         historique.IDUSER = usr.ID;
                         historique.AFB = fileName;
                         historique.IDSOCIETE = PROJECTID;
+                        historique.SITE = bnfcr.SITE;
                     }
                     else
                     {
@@ -129,6 +130,7 @@ namespace apptab.Extension
                         historique.IDUSER = usr.ID;
                         historique.AFB = fileName;
                         historique.IDSOCIETE = PROJECTID;
+                        historique.SITE = bnfcr.SITE;
                     }
                     db.OPA_HISTORIQUEBR.Add(historique);
 
@@ -327,7 +329,7 @@ namespace apptab.Extension
             return new ISO20022xml() { Fichier = xd, Chemin = path ,NomFichier = fileName };
 
         }
-        public XmlDocument XmlISO{ get; set; }
+        public XmlDocument XmlISO { get; set; }
 
         public AFB CreateTOMPROAFB160(bool devise, string codeJ, SI_USERS user, string codeproject)
         {
@@ -862,6 +864,7 @@ namespace apptab.Extension
                         historique.IDUSER = usr.ID;
                         historique.AFB = fileName;
                         historique.IDSOCIETE = PROJECTID;
+                        historique.SITE = bnfcr.SITE;
                     }
                     else
                     {
@@ -884,6 +887,7 @@ namespace apptab.Extension
                         historique.IDUSER = usr.ID;
                         historique.AFB = fileName;
                         historique.IDSOCIETE = PROJECTID;
+                        historique.SITE = bnfcr.SITE;
                     }
                     db.OPA_HISTORIQUEBR.Add(historique);
 
@@ -1368,13 +1372,13 @@ namespace apptab.Extension
             return listAnomalie;
 
         }
-        public List<DataListTomOP> getListAnomalieBR(SI_USERS user)
+        public List<DataListTomOP> getListAnomalieBR(SI_USERS user,int PROJECTID)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
             /**************Remplissage dtAnomalie*******************/
             List<OPA_ANOMALIEBR> anomalies = (from panom in db.OPA_ANOMALIEBR
-                                              where panom.IDSOCIETE == user.IDPROJET
+                                              where panom.IDSOCIETE == PROJECTID && panom.NUM != null
                                               select panom).ToList();
             List<DataListTomOP> listAnomalie = new List<DataListTomOP>();
             foreach (OPA_ANOMALIEBR anomalie in anomalies)
@@ -2275,11 +2279,39 @@ namespace apptab.Extension
 
             List<string> DjournalFop = tom.FOP.Where(x => x.JOURNAL == journal && (x.ETAPE1USER == etat || x.ETAPE2USER == etat || x.ETAPE3USER == etat || x.ETAPE4USER == etat || x.ETAPE5USER == etat || x.ETAPE6USER == etat || x.ETAPE7USER == etat || x.ETAPE8USER == etat || x.ETAPE9USER == etat || x.ETAPE10USER == etat)).Select(x => x.NUMEROOP).ToList();
             List<string> DjournalAvance = tom.GA_AVANCE.Where(x => x.JOURNAL == journal && x.COGE == compteG).Select(x => x.NUMERO).ToList();
-            List<string> DjournalOP = tom.CPTADMIN_FAUTREOPERATION.Where(x => x.JOURNALRECEPTION == journal ).Select(x => x.NUMEROOPERATION).ToList();
+            List<string> DjournalOP = new List<string>();
 
             List<MOPFOP> lNoOPS = new List<MOPFOP>();
             List<GA_AVANCE_DETAILS> lNoOpsAV = new List<GA_AVANCE_DETAILS>();
             List<AUTRE8OPERATION> lNoOpsAOP = new List<AUTRE8OPERATION>();
+
+            if (compteG == "Autre Opérations")
+            {
+                DjournalOP = tom.CPTADMIN_FAUTREOPERATION.Where(x => x.JOURNALPAIEMENT == journal).Select(x => x.NUMEROOPERATION).ToList();
+                foreach (string numOpr in DjournalOP)
+                {
+                    lNoOpsAOP.AddRange(tom.CPTADMIN_FAUTREOPERATION.Where(x => x.NUMEROOPERATION == numOpr && site.Contains(x.SITE)).Select(x => new AUTRE8OPERATION
+                    {
+                        NUMEROOPERATION = x.NUMEROOPERATION,
+                        DATEOPERATION = x.DATEOPERATION,
+                        MONTANTLOCAL = x.MONTANTLOCAL,
+                        JOURNAL = x.JOURNALRECEPTION,
+                        NORDPAIEMENT = x.NORDPAIEMENT,
+                        DATEMAJ = x.DATEMAJ,
+                        LIBELLE = x.DESCRIPTION,
+                        MONTANTDEVISE = x.MONTANTDEVISE,
+                        MONTANTRAPPORT = x.MONTANTRAPPORT,
+                        FINANCEMENT = x.FINANCEMENT,
+                        MARCHER = x.CODEMARCHE,
+                        CATEGORIE = x.CATEGORIE,
+                        ACTIVITER = x.ACTIVITE,
+                        TYPE = x.TYPEOPERATION,
+                        NUMEROREG = null,
+                        AUTREOP = true,
+                        SITE = x.SITE
+                    }).ToList());
+                }
+            }
 
             foreach (string num in DjournalFop)
             {
@@ -2362,29 +2394,7 @@ namespace apptab.Extension
                     SITE = a.SITE,
                 }).ToList());
             }
-            foreach(string numOpr in DjournalOP)
-            {
-                lNoOpsAOP.AddRange(tom.CPTADMIN_FAUTREOPERATION.Where(x => x.NUMEROOPERATION == numOpr).Select(x => new AUTRE8OPERATION
-                {
-                    NUMEROOPERATION = x.NUMEROOPERATION,
-                    DATEOPERATION = x.DATEOPERATION,
-                    MONTANTLOCAL = x.MONTANTLOCAL,
-                    JOURNAL = x.JOURNALRECEPTION,
-                    NORDPAIEMENT = x.NORDPAIEMENT,
-                    DATEMAJ = x.DATEMAJ,
-                    LIBELLE = x.DESCRIPTION,
-                    MONTANTDEVISE = x.MONTANTDEVISE,
-                    MONTANTRAPPORT = x.MONTANTRAPPORT,
-                    FINANCEMENT = x.FINANCEMENT,
-                    MARCHER = x.CODEMARCHE,
-                    CATEGORIE = x.CATEGORIE,
-                    ACTIVITER = x.ACTIVITE,
-                    TYPE = x.TYPEOPERATION,
-                    NUMEROREG = null,
-                    AUTREOP = true,
-                    SITE = x.SITE
-                }).ToList());
-            }
+            
             if (djournal.RIB != null && djournal.RIB != "")
             {
                 #region Chargement liste écriture
@@ -3076,7 +3086,8 @@ namespace apptab.Extension
                         Plan6 = av.PLAN6,
                         Journal = journal,
                         Marche = "",
-                        Auxi = ga.AUXI
+                        Auxi = ga.AUXI,
+                        SITE = ga.SITE,
                     }).FirstOrDefault();
 
                    
@@ -3096,6 +3107,7 @@ namespace apptab.Extension
                                             AUXI = bn.AUXI,
                                             AD1 = bn.AD1,
                                             AD2 = bn.AD2,
+                                            SITE = ecriture.SITE,
                                         }
                                       ).FirstOrDefault();
 
@@ -3130,6 +3142,7 @@ namespace apptab.Extension
                         preg.AUXI = beneficiaire.AUXI;
                         preg.AD1 = beneficiaire.AD1;
                         preg.AD2 = beneficiaire.AD2;
+                        preg.SITE = ecriture.SITE;
 
                         if (devise)
                         {
@@ -3196,7 +3209,8 @@ namespace apptab.Extension
                                         Journal = journal,
                                         Marche = "",
                                         Auxi = mcpt.AUXIFOURNISSEUR,
-                                        NUMEREG = mcpt.NUMENREG
+                                        NUMEREG = mcpt.NUMENREG,
+                                        SITE = mcpt.SITE,
                                     }).FirstOrDefault();
 
                     var AutreOP = tom.CPTADMIN_FAUTREOPERATION.Where(a => a.NUMEROOPERATION == numBR && site.Contains(a.SITE)).Select(x => new DataListTomOP()
@@ -3218,7 +3232,7 @@ namespace apptab.Extension
                         JOURNALPAYEMENT = x.JOURNALPAIEMENT,
                         Marche = x.CODEMARCHE,
                         Auxi = "",
-
+                        SITE = x.SITE,
                     }).FirstOrDefault();
 
                     if (ecriture == null) ecriture = AutreOP;
@@ -3238,6 +3252,7 @@ namespace apptab.Extension
                                             AUXI = bn.AUXI,
                                             AD1 = bn.AD1,
                                             AD2 = bn.AD2,
+                                            SITE = ecriture.SITE,
                                         }
                                       ).FirstOrDefault();
 
@@ -3256,6 +3271,7 @@ namespace apptab.Extension
                             AUXI = "",
                             AD1 = "",
                             AD2 = "",
+                            SITE = ecriture.SITE,
                         }).FirstOrDefault();
                     }
                     #region Sauve REGELEMENT & ANOMALIE
@@ -3289,14 +3305,14 @@ namespace apptab.Extension
                         preg.AUXI = beneficiaire.AUXI;
                         preg.AD1 = beneficiaire.AD1;
                         preg.AD2 = beneficiaire.AD2;
-
+                        preg.SITE = beneficiaire.SITE;
                         if (devise)
                         {
-                            preg.MONTANT = ecriture.Montant;
+                            preg.MONTANT = Math.Truncate(ecriture.Montant);
                         }
                         else
                         {
-                            preg.MONTANT = ecriture.Montant;
+                            preg.MONTANT = Math.Truncate(ecriture.Montant);
                         }
                         if (ecriture.No.Length > 10)
                         {

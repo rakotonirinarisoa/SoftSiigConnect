@@ -1,0 +1,4 @@
+0302                     10074SOFTWELL                000006                          0000505004011960                                               00008      
+0602              01BQ00000001RASOLONJATOVO_ANDRIAMAHEBFV SG MADAGAS                  00002050011604050000001500000000OPMIORA01IMP SUR FA DU 14/11/2000008      
+0602              01BQ00000002RASOLONJATOVO_ANDRIAMAHEBFV SG MADAGAS                  00002050011604050000001500000000OPMIORA2IMP SUR FA DU 14/11/20200008      
+0802                                                                                                  0000003000000000                                          

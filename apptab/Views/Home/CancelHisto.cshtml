@@ -4,8 +4,23 @@
     ViewData["Controller"] = "Anullation de réglement";
 }
 
+<div class="form-row">
+    <div class="input-group mb-3 col-sm-12 col-md-6">
+        <div class="input-group-prepend">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Projet</span>
+        </div>
+        <select class="form-control col combobox" id="Fproject" code-project>
+        </select>
+    </div>
+    <div class="input-group mb-3 col-sm-12 col-md-6">
+        <div class="input-group-prepend">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Ecriture</span>
+        </div>
+        <input type="text" class="form-control" value="" readonly code_Type />
+    </div>
+</div>
 
-<div class="d-flex flex-wrap justify-content-between">
+@*<div class="d-flex flex-wrap justify-content-between">
     <div></div>
     <div class="input-group mb-3 col-sm-5">
         <div class="input-group-prepend custom-label">
@@ -13,38 +28,38 @@
         </div>
         <input type="text" class="form-control col" id="ticket" placeholder="Rechercher...">
     </div>
-</div>
-
-<div class="table-responsive">
-    <table class="table table-hover table-striped">
+</div>*@
+<input type="text" id="myInput" onkeyup="SearchFuncHistorique()" placeholder="Recherche">
+<div class="table-responsive tbodyDiv">
+    <table class="table table-hover table-striped" id="idTable">
         <thead class="thead-green">
             <tr>
                 <th></th>
                 <th>Date règlement</th>
                 <th>N°</th>
+                <th>Site</th>
                 <th>Date n° ordre</th>
                 <th>N° pièce</th>
                 <th>Journal</th>
-                <th>Compte G</th>
-                <th>Libellé</th>
+                <th>NOM FICHIER</th>
+                <th>Banque</th>
                 <th>Montant Ar</th>
-                <th>Montant devise</th>
                 <th>RIB</th>
                 <th>Utilisateur</th>
+                <th>Notifications</th>
             </tr>
         </thead>
         <tbody ticket-list id="CancelReg">
-            
         </tbody>
     </table>
 </div>
-<div class="form-row mb-3">
-    <div class="input-group mb-3 col-md-9">
-    </div>
-    <div class="mb-3 col col-sm-12 col-md-3">
+
+<div class="input-group mb-3 col">
+    <div class="mb-3 col">
         <div class="btn btn-flat bg-gradient-danger col-12" data-action="GetElementChecked">
             <i class="fa fa-ban"></i> Cancel
         </div>
     </div>
 </div>
-<script src="~/Assets/js/Historiques.js?version=@Session["VERSION"]" ></script>
+<script src="~/Assets/js/Historiques.js?version=@Session["VERSION"]"></script>
+<script src="~/Assets/js/SearchJsSet.js?version=@Session["VERSION"]"></script>

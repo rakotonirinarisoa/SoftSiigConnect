@@ -1,7 +1,10 @@
 namespace apptab.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
 
     public partial class OPA_HISTORIQUEBR
     {
@@ -18,5 +21,10 @@ namespace apptab.Models
         public string AFB { get; set; }
 
         public int? IDSOCIETE { get; set; }
+
+        public bool? NOTIF { get; set; }
+
+        [StringLength(50)]
+        public string SITE { get; set; }
     }
 }

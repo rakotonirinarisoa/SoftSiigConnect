@@ -74,6 +74,7 @@
     <Reference Include="System.Drawing.Common, Version=4.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Drawing.Common.4.5.1\lib\net461\System.Drawing.Common.dll</HintPath>
     </Reference>
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
     </Reference>
@@ -208,6 +209,7 @@
     <Compile Include="Data\Entities\AvanceDetails.cs" />
     <Compile Include="Data\Entities\MOPFOP.cs" />
     <Compile Include="Extension\ISO20022xml.cs" />
+    <Compile Include="Models\ANOMALIE_G.cs" />
     <Compile Include="Models\HSI_PROGED.cs" />
     <Compile Include="Models\Documents.cs" />
     <Compile Include="Models\MBUDALLOC.cs" />
@@ -259,6 +261,9 @@
     <Compile Include="Models\GA_AVANCE_MOUVEMENT.cs" />
     <Compile Include="Data\Entities\GA_AVANCE_DETAILS.cs" />
     <Compile Include="Models\ListPaimentV.cs" />
+    <Compile Include="Models\Model1.cs" />
+    <Compile Include="Models\Model2.cs" />
+    <Compile Include="Models\Model3.cs" />
     <Compile Include="Models\RPAYS.cs" />
     <Compile Include="Models\RSITE.cs" />
     <Compile Include="Models\SI_SITE.cs" />
@@ -2439,6 +2444,7 @@
     <Content Include="Assets\img\LogoS1.png" />
     <Content Include="Assets\js\BordRSF.js" />
     <Content Include="Assets\js\BordJRA.js" />
+    <Content Include="Assets\js\AnomalieJS.js" />
     <Content Include="Assets\js\MappagUserGED.js" />
     <Content Include="Assets\js\PROGED.js" />
     <Content Include="Assets\js\RSFDetails.js" />
@@ -4971,6 +4977,7 @@
     <Content Include="Views\RSF\MappageGED.cshtml" />
     <Content Include="Views\RSF\PROSOAList.cshtml" />
     <Content Include="Views\RSF\SuperAdminPROSOA.cshtml" />
+    <Content Include="Views\Home\AnomaliePaiement.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

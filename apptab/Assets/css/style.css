@@ -11,14 +11,21 @@
 
 .tbodyDiv {
     overflow: auto;
-    max-height: 75vh
+    max-height: 70vh;
+}
+
+td.AnomalieClass {
+    /*color: #dd4141d6;*/
+    background: linear-gradient(45deg, #eb7575 0%, #fff 0%, #fff 50%, #eb7575 50%, #eb7575 51%, #fff 0%, #fff 100%, #eb7575 100%) !important;
+    background-size: 30px 30px !important;
+    background-position: 50px 50px !important;
 }
 
 .table-responsive.tbodyDiv table#idTable thead.thead-green tr th {
     position: sticky;
     top: 0;
     z-index: 2;
-    background: #008000;
+    background: #3d9970;
 }
 #myInput {
     background-image: url('/css/searchicon.png'); /* Add a search icon to input */
