@@ -178,6 +178,9 @@ namespace SOFTCONNECT.Controllers
                             if (!int.TryParse(listProjet, out TestProjetRole))
                                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vous ne pouvez pas affecter plusieurs projets à ce type d'utilisateur. " }, settings));
 
+                            if (db.SI_USERS.Any(a => a.LOGIN == user.LOGIN && a.DELETIONDATE == null))
+                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'utilisateur existe déjà. " }, settings));
+
                             var newUser = new SI_USERS()
                             {
                                 LOGIN = user.LOGIN,
@@ -192,6 +195,9 @@ namespace SOFTCONNECT.Controllers
                         }
                         else
                         {
+                            if (db.SI_USERS.Any(a => a.LOGIN == user.LOGIN && a.DELETIONDATE == null))
+                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'utilisateur existe déjà. " }, settings));
+
                             var newUser = new SI_USERS()
                             {
                                 LOGIN = user.LOGIN,
@@ -230,6 +236,9 @@ namespace SOFTCONNECT.Controllers
                     }
                     else
                     {
+                        if (db.SI_USERS.Any(a => a.LOGIN == user.LOGIN && a.DELETIONDATE == null))
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'utilisateur existe déjà. " }, settings));
+
                         var newUser = new SI_USERS()
                         {
                             LOGIN = user.LOGIN,
@@ -280,7 +289,7 @@ namespace SOFTCONNECT.Controllers
                             if (!int.TryParse(listProjet, out TestProjetRole))
                                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vous ne pouvez pas affecter plusieurs projets à ce type d'utilisateur. " }, settings));
 
-                            userExist.LOGIN = user.LOGIN;
+                            //userExist.LOGIN = user.LOGIN;
                             userExist.PWD = user.PWD;
                             userExist.IDPROJET = int.Parse(listProjet);
                             userExist.ROLE = user.ROLE;
@@ -290,7 +299,7 @@ namespace SOFTCONNECT.Controllers
                         }
                         else
                         {
-                            userExist.LOGIN = user.LOGIN;
+                            //userExist.LOGIN = user.LOGIN;
                             userExist.PWD = user.PWD;
                             userExist.IDPROJET = 0;
                             userExist.ROLE = user.ROLE;
@@ -331,7 +340,7 @@ namespace SOFTCONNECT.Controllers
                     }
                     else
                     {
-                        userExist.LOGIN = user.LOGIN;
+                        //userExist.LOGIN = user.LOGIN;
                         userExist.PWD = user.PWD;
                         userExist.IDPROJET = exist.IDPROJET;
                         userExist.ROLE = user.ROLE;

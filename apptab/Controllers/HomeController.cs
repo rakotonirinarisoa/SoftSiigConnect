@@ -1318,7 +1318,7 @@ namespace apptab.Controllers
             }
 
             int countTraitement = 0;
-            var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
+            var lien = db.SI_SETLIEN.FirstOrDefault().LIEN;
 
             var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == PROJECTID).FirstOrDefault().PROJET;
 
@@ -1827,7 +1827,7 @@ namespace apptab.Controllers
             OPA_VALIDATIONS avalider = new OPA_VALIDATIONS();
             int PROJECTID = int.Parse(codeproject);
             int countTraitement = 0;
-            var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
+            var lien = db.SI_SETLIEN.FirstOrDefault().LIEN;
 
             foreach (var item in list)
             {
@@ -1962,7 +1962,7 @@ namespace apptab.Controllers
             int PROJECTID = int.Parse(codeproject);
 
             int countTraitement = 0;
-            var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
+            var lien = db.SI_SETLIEN.FirstOrDefault().LIEN;
             var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == PROJECTID && a.DELETIONDATE == null).FirstOrDefault().PROJET;
 
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
@@ -2289,7 +2289,7 @@ namespace apptab.Controllers
                     //db.OPA_HCANCEL.Add(Hcancel);
                     db.SaveChanges();
 
-                    var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
+                    var lien = db.SI_SETLIEN.FirstOrDefault().LIEN;
                     var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == PROJECTID && a.DELETIONDATE == null).FirstOrDefault().PROJET;
                     //SEND MAIL ALERT et NOTIFICATION//
                     // string MailAdresse = "serviceinfo@softwell.mg";

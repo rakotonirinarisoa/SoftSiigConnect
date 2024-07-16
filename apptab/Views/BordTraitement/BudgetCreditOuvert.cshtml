@@ -19,6 +19,16 @@
 <div class="form-row">
     <div class="input-group mb-3 col">
         <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Sites</span>
+        </div>
+        <select class="form-control selectTOO" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="site" data-id="site-list" multiple="multiple">
+        </select>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
             <span class="input-group-text text-bold" id="inputGroup-sizing-default">Budget</span>
         </div>
         <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="budget" data-id="budget-list">
@@ -121,12 +131,17 @@
 <script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
 <script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
 
-@*<script>
+<script defer>
     $("#proj").select2({
         tags: true,
         tokenSeparators: [',', ' ']
+    });
+
+    $("#site").select2({
+        tags: true,
+        tokenSeparators: [',', ' ']
     })
-</script>*@
+</script>
 
 <script defer>
     $('#export-to-pdf-btn').on('click', () => {

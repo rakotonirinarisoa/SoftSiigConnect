@@ -30,6 +30,6 @@ namespace apptab
         public string isAvance { get; set; }
         public string SITE { get; set; }
 
-        public int IDUSERHISTO { get; set; }
+        public int? IDUSERHISTO { get; set; }
     }
 }

@@ -1,9 +1,8 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
+﻿using apptab.Models;
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
-using apptab.Models;
+using System.Linq;
 
 namespace apptab
 {
@@ -148,9 +147,10 @@ namespace apptab
             modelBuilder.Entity<TP_MPIECES_JUSTIFICATIVES>()
                 .Property(e => e.MONTANT)
                 .HasPrecision(30, 6);
+
             modelBuilder.Entity<FCOMPTA>()
-    .Property(e => e.NUMEROCHEQUE)
-    .HasPrecision(18, 0);
+                .Property(e => e.NUMEROCHEQUE)
+                .HasPrecision(18, 0);
 
             modelBuilder.Entity<FOP>()
                 .Property(e => e.MONTANT)

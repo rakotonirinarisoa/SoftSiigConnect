@@ -38,7 +38,17 @@
     </div>
 </div>
 
+<script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
+<script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
+
+<script>
+    $("#proj").select2({
+        tags: true,
+        tokenSeparators: [',', ' ']
+    })
+</script>
+
 <!-- Droit.js -->
-<script src="~/Assets/js/Prog.js?version=@Session["VERSION"]" ></script>
+<script src="~/Assets/js/Prog.js?version=@Session["VERSION"]"></script>
 
 

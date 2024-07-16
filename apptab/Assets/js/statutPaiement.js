@@ -16,6 +16,78 @@ $(document).ready(() => {
 
 $('#proj').on('change', () => {
     emptyTable();
+
+    $(`[data-id="site-list"]`).text("");
+    var code1 = ``;
+    $(`[data-id="site-list"]`).append(code1);
+
+    const id = $('#proj').val();
+    GetSITE();
+});
+
+function GetSITE() {
+    let formData = new FormData();
+
+    formData.append("iProjet", $("#proj").val());
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/BordTraitement/GETALLSITE',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+            if (Datas.type == "notYet") {
+                alert(Datas.msg);
+
+                $(`[data-id="site-list"]`).text("");
+                var code1 = ``;
+                $(`[data-id="site-list"]`).append(code1);
+
+                return;
+            }
+
+            $(`[data-id="site-list"]`).text("");
+
+            var code1 = ``;
+            $.each(Datas.data.etat, function (k, v) {
+                code1 += `
+                    <option value="${v}">${v}</option>
+                `;
+            });
+            $(`[data-id="site-list"]`).append(code1);
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
+
+$('#site').on('change', () => {
+    emptyTable();
 });
 
 function checkdel(id) {
@@ -118,6 +190,12 @@ $('[data-action="GenereLISTE"]').click(function () {
         return;
     }
 
+    let site = $("#site").val();
+    if (!site) {
+        alert("Veuillez sélectionner au moins un site. ");
+        return;
+    }
+
     let formData = new FormData();
 
     formData.append("suser.LOGIN", User.LOGIN);
@@ -129,6 +207,7 @@ $('[data-action="GenereLISTE"]').click(function () {
     formData.append("DateFin", $('#dateF').val());
 
     formData.append("listProjet", $("#proj").val());
+    formData.append("listSite", $("#site").val());
 
     $.ajax({
         type: "POST",

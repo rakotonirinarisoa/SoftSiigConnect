@@ -89,7 +89,12 @@ namespace apptab
         public virtual DbSet<HSI_PROGED> HSI_PROGED { get; set; }
         public virtual DbSet<SI_PROGED> SI_PROGED { get; set; }
         public virtual DbSet<SI_SITE> SI_SITE { get; set; }
+<<<<<<< HEAD
         public virtual DbSet<ANOMALIE_G> ANOMALIE_G { get; set; }
+=======
+        public virtual DbSet<SI_SETLIEN> SI_SETLIEN { get; set; }
+
+>>>>>>> 3e6028cbc14f377f83ded2a4fd5e7bbfc53d9144
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<OPA_REGLEMENTBR>()

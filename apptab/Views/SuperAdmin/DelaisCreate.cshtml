@@ -34,23 +34,23 @@
     </div>
 </div>
 @*<div class="form-row">
-    <div class="input-group mb-3 col">
-        <div class="input-group-prepend custom-label">
-            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Transfert SIIGFP</span>
+        <div class="input-group mb-3 col">
+            <div class="input-group-prepend custom-label">
+                <span class="input-group-text text-bold" id="inputGroup-sizing-default">Transfert SIIGFP</span>
+            </div>
+            <input type="number" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaSiig">
+            <span class="input-group-text">JOURS</span>
         </div>
-        <input type="number" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaSiig">
-        <span class="input-group-text">JOURS</span>
-    </div>
-</div>*@
+    </div>*@
 @*<div class="form-row">
-    <div class="input-group mb-3 col">
-        <div class="input-group-prepend custom-label">
-            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Traitement SIIGFP</span>
+        <div class="input-group mb-3 col">
+            <div class="input-group-prepend custom-label">
+                <span class="input-group-text text-bold" id="inputGroup-sizing-default">Traitement SIIGFP</span>
+            </div>
+            <input type="number" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaS">
+            <span class="input-group-text">JOURS</span>
         </div>
-        <input type="number" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaS">
-        <span class="input-group-text">JOURS</span>
-    </div>
-</div>*@
+    </div>*@
 
 <h5>Traitements avances, justificatifs et reversements</h5>
 <div class="form-row">
@@ -72,23 +72,23 @@
     </div>
 </div>
 @*<div class="form-row">
-    <div class="input-group mb-3 col">
-        <div class="input-group-prepend custom-label">
-            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Transfert SIIGFP</span>
+        <div class="input-group mb-3 col">
+            <div class="input-group-prepend custom-label">
+                <span class="input-group-text text-bold" id="inputGroup-sizing-default">Transfert SIIGFP</span>
+            </div>
+            <input type="number" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaSiigA">
+            <span class="input-group-text">JOURS</span>
         </div>
-        <input type="number" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaSiigA">
-        <span class="input-group-text">JOURS</span>
     </div>
-</div>
-<div class="form-row">
-    <div class="input-group mb-3 col">
-        <div class="input-group-prepend custom-label">
-            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Traitement SIIGFP</span>
+    <div class="form-row">
+        <div class="input-group mb-3 col">
+            <div class="input-group-prepend custom-label">
+                <span class="input-group-text text-bold" id="inputGroup-sizing-default">Traitement SIIGFP</span>
+            </div>
+            <input type="number" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaSA">
+            <span class="input-group-text">JOURS</span>
         </div>
-        <input type="number" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaSA">
-        <span class="input-group-text">JOURS</span>
-    </div>
-</div>*@
+    </div>*@
 
 <h5>Paiements</h5>
 <div class="form-row">
@@ -135,6 +135,16 @@
         </div>
     </div>
 </div>
+
+<script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
+<script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
+
+<script>
+    $("#proj").select2({
+        tags: true,
+        tokenSeparators: [',', ' ']
+    })
+</script>
 
 <!-- Droit.js -->
 <script src="~/Assets/js/DelaisT.js?version=@Session["VERSION"]"></script>

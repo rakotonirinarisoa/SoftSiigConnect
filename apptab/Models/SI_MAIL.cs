@@ -57,5 +57,8 @@
 
         [StringLength(50)]
         public string SENDPWD { get; set; }
+
+        [StringLength(50)]
+        public string SITE { get; set; }
     }
 }

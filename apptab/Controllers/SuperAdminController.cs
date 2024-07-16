@@ -790,7 +790,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public ActionResult DetailsMAIL(SI_USERS suser, int iProjet)
+        public ActionResult GETALLSITE(SI_USERS suser, int iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -799,7 +799,35 @@ namespace apptab.Controllers
             {
                 int crpt = iProjet;
 
-                var crpto = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                var crpto = db.SI_SITE.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+
+                if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
+
+                SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
+                var etat = tom.RSITE.OrderBy(a => a.CODE).ToList();
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { etat = etat, IDP = crpt } }, settings));
+            }
+            catch (Exception)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Mappage de la base de données non existant" }, settings));
+            }
+        }
+
+        [HttpPost]
+        public ActionResult DetailsMAIL(SI_USERS suser, int iProjet, string iSite)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                int crpt = iProjet;
+
+                var crpto = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == iSite);
                 if (crpto != null)
                 {
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = crpto }, settings));
@@ -816,7 +844,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateMAIL(SI_USERS suser, SI_MAIL param, int iProjet)
+        public JsonResult UpdateMAIL(SI_USERS suser, SI_MAIL param, int iProjet, string iSite)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -861,7 +889,7 @@ namespace apptab.Controllers
             try
             {
                 int IdS = iProjet;
-                var SExist = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null);
+                var SExist = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null && a.SITE == iSite);
 
                 if (SExist != null)
                 {
@@ -973,6 +1001,8 @@ namespace apptab.Controllers
 
                         SENDMAIL = param.SENDMAIL,
                         SENDPWD = param.SENDPWD,
+
+                        SITE = iSite
                     };
 
                     db.SI_MAIL.Add(newPara);
@@ -981,7 +1011,9 @@ namespace apptab.Controllers
                     var isElemH = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.MAILTE == param.MAILTE && a.MAILTV == param.MAILTV /*&& a.MAILSIIG == param.MAILSIIG*/ && a.MAILREJET == param.MAILREJET
                     && a.MAILTEA == param.MAILTEA && a.MAILTVA == param.MAILTVA /*&& a.MAILSIIGA == param.MAILSIIGA*/ && a.MAILREJETA == param.MAILREJETA
                     && a.MAILJ0 == param.MAILJ0 && a.MAILJ1 == param.MAILJ1 && a.MAILJ2 == param.MAILJ2 && a.MAILJ3 == param.MAILJ3 && a.MAILREJETREV == param.MAILREJETREV && a.MAILREJETJUST == param.MAILREJETJUST
-                    && a.MAILPE == param.MAILPE && a.MAILPV == param.MAILPV && a.MAILPP == param.MAILPP && a.MAILPI == param.MAILPI && a.SENDMAIL == param.SENDMAIL && a.SENDPWD == param.SENDPWD && a.DELETIONDATE == null);
+                    && a.MAILPE == param.MAILPE && a.MAILPV == param.MAILPV && a.MAILPP == param.MAILPP && a.MAILPI == param.MAILPI && a.SENDMAIL == param.SENDMAIL && a.SENDPWD == param.SENDPWD && a.DELETIONDATE == null
+                    && a.SITE == iSite);
+
                     var newElemH = new HSI_MAIL()
                     {
                         MAILTE = isElemH.MAILTE,
@@ -1012,6 +1044,8 @@ namespace apptab.Controllers
 
                         SENDMAIL = param.SENDMAIL,
                         SENDPWD = param.SENDPWD,
+
+                        SITE = isElemH.SITE
                     };
                     db.HSI_MAIL.Add(newElemH);
                     db.SaveChanges();
