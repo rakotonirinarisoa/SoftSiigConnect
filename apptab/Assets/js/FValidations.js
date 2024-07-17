@@ -140,7 +140,7 @@ function GetListCompG() {
 
                 return;
             }
-            let code = ``;
+            let code = ` <option value="Autre Opérations">Autre Opérations</option>`;
             let codeAuxi = ``;
             ListCompteG = Datas.data;
 
@@ -1217,7 +1217,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             libelle: isNullOrUndefined(v.Libelle) ? '' : v.Libelle,
                             debit: isNullOrUndefined(v.Debit) ? '' : v.Debit,
                             credit: isNullOrUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
-                            montant: isNullOrUndefined(v.Montant) ? '' : formatCurrency(String(v.Montant).replace(",", ".")),
+                            montant: isNullOrUndefined(v.MONTANT) ? '' : formatCurrency(String(v.MONTANT).replace(",", ".")),
                             montantDevise: v.MontantDevise === 0 ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                             mon: isNullOrUndefined(v.Mon) ? '' : v.Mon,
                             rang: isNullOrUndefined(v.Rang) ? '' : v.Rang,

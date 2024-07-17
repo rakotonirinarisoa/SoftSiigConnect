@@ -211,7 +211,7 @@ function GetListCompG() {
                 return;
             }
 
-            let code = ``;
+            let code = ` <option value="Autre Opérations">Autre Opérations</option>`;
 
             ListCompteG = Datas.data;
             console.log(GetListCompG);

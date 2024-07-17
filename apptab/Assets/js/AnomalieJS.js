@@ -1,4 +1,5 @@
-﻿let contentpaie;
+﻿let ContentAnomalie;
+let Projet;
 $(document).ready(() => {
 
     User = JSON.parse(sessionStorage.getItem("user"));
@@ -13,7 +14,7 @@ $(document).ready(() => {
     //GetListCodeJournal();
     //GetListCompG();
 });
-function GetHistoriques() {
+function GetAnomalie() {
     let formData = new FormData();
 
     let codeproject = $("#Fproject").val();
@@ -26,7 +27,8 @@ function GetHistoriques() {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/Home/GetHistoriques',
+        url: Origin + '/Home/GetAnomalieTomOP',
+        //url: Origin + '/Home/GetAnomalieBack',
         data: formData,
         cache: false,
         contentType: false,
@@ -48,89 +50,33 @@ function GetHistoriques() {
                 window.location = window.location.origin;
                 return;
             }
-            ListResult = Datas.data
-            ListResultBr = Datas.databr
+           
+            ListResultBr = Datas.data;
+            //console.log(ListResultBr);
             content = ``;
-            $.each(ListResult, function (k, v) {
-                contentpaie += `
-                    <tr compteG-id="${v.NUMENREG}">
-                        <td>${v.DATEAFB}</td>
-                        <td>${v.NUMENREG}</td>
-                        <td>${v.SITE}</td>
-                        <td>${v.DATE}</td>
-                        <td>${v.GUICHET}</td>
-                        <td>${v.CODE_J}</td>
-                        <td>${v.NOMFICHIER}</td>
-                        <td>${v.BANQUE}</td>
-                        <td>${v.MONTANT}</td>
-                        <td>${v.RIB}</td>
-                        <td>${v.LOGIN}</td>
-                        <td><input type="submit" class="btn btn-primary" value="Notification" /></td>
-                    </tr>`
-
-            });
+           
             $.each(ListResultBr, function (k, v) {
-                contentpaie += `
-                    <tr compteG-id="${v.NUMENREG}">
-                        <td>${v.DATEAFB}</td>
-                        <td>${v.NUMENREG}</td>
-                        <td>${v.SITE}</td>
-                        <td>${v.DATE}</td>
-                        <td>${v.GUICHET}</td>
-                        <td>${v.CODE_J}</td>
-                         <td>${v.NOMFICHIER}</td>
-                        <td>${v.BANQUE}</td>
-                        <td>${v.MONTANT}</td>
-                        <td>${v.RIB}</td>
-                        <td>${v.LOGIN}</td>
-                        <td><input type="submit"  class="btn btn-primary" value="Notification" /></td>
-                    </tr>`
+                ContentAnomalie += `<tr compteG-id="${v.ID}">`
 
+                        if (!v.COMPTEG) ContentAnomalie += `<td class ="AnomalieClass">${v.COMPTEG}</td>`;
+                        else ContentAnomalie += ` <td>${v.COMPTEG}</td>`;
+                        if (v.AUXI == null) ContentAnomalie += `<td class ="AnomalieClass">${v.AUXI}</td>`;
+                                else ContentAnomalie += ` <td>${v.AUXI}</td>`;
+                        if (v.COMPTE_BANQUE == null) ContentAnomalie += `<td class ="AnomalieClass">${v.COMPTE_BANQUE}</td>`;
+                                else ContentAnomalie += ` <td>${v.COMPTE_BANQUE}</td>`;
+                        if (v.DOM1 == null) ContentAnomalie += `<td class ="AnomalieClass">${v.DOM1}</td>`;
+                                else ContentAnomalie += ` <td>${v.DOM1}</td>`;
+                        if (v.AD1 == null) ContentAnomalie += `<td class ="AnomalieClass">${v.AD1}</td>`;
+                                else ContentAnomalie += ` <td>${v.AD1}</td>`;
+                        if (v.RIB == null) ContentAnomalie += `<td class ="AnomalieClass">${v.RIB}</td>`;
+                                else ContentAnomalie += ` <td>${v.RIB}</td>`;
+                        if (v.IDPROJECT == null) ContentAnomalie += `<td class ="AnomalieClass">${v.IDPROJECT}</td>`;
+                                else ContentAnomalie += ` <td>${v.IDPROJECT}</td>`;
+                ContentAnomalie += `</tr>`;
             });
-            $.each(ListResult, function (k, v) {
-                content += `
-                    <tr compteG-id="${v.NUMENREG}">
-                        <td>
-                            <input type="checkbox" name = "checkprod" compteg-ischecked/>
-                        </td>
-                        <td>${v.DATEAFB}</td>
-                        <td>${v.NUMENREG}</td>
-                         <td>${v.SITE}</td>
-                        <td>${v.DATE}</td>
-                        <td>${v.GUICHET}</td>
-                        <td>${v.CODE_J}</td>
-                         <td>${v.NOMFICHIER}</td>
-                        <td>${v.BANQUE}</td>
-                        <td>${v.MONTANT}</td>
-                        <td>${v.RIB}</td>
-                        <td>${v.LOGIN}</td>
-                        <td><input type="submit"  class="btn btn-primary" value="Notification" /></td>
-                    </tr>`
-
-            });
-            $.each(ListResultBr, function (k, v) {
-                content += `
-                    <tr compteG-id="${v.NUMENREG}">
-                        <td>
-                            <input type="checkbox" name = "checkprod" compteg-ischecked/>
-                        </td>
-                        <td>${v.DATEAFB}</td>
-                        <td>${v.NUMENREG}</td>
-                         <td>${v.SITE}</td>
-                        <td>${v.DATE}</td>
-                        <td>${v.GUICHET}</td>
-                        <td>${v.CODE_J}</td>
-                         <td>${v.NOMFICHIER}</td>
-                        <td>${v.BANQUE}</td>
-                        <td>${v.MONTANT}</td>
-                        <td>${v.RIB}</td>
-                        <td>${v.LOGIN}</td>
-                        <td><input type="submit"  class="btn btn-primary" value="Notification" /></td>
-                    </tr>`
-
-            });
-            $('#historiques').html(contentpaie);
-            $('#CancelReg').html(content);
+          
+            console.log(ContentAnomalie);
+            $('#historiques').html(ContentAnomalie);
             //window.location = '/Home/GetFile?file=' + Datas.data;
 
         },
@@ -240,7 +186,7 @@ function GetAllProjectUser() {
 
             $("#Fproject").html(listproject);
             GetTypeP();
-            GetHistoriques()
+            GetAnomalie();
             //GetListCodeJournal();
            // LoadValidate();
         },

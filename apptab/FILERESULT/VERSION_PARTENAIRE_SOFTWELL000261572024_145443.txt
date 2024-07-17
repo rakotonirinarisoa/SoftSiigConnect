@@ -1,0 +1,10 @@
+0302                     15074SOFTWELL                000014                          0200024416640103                                               00009      
+0602              90BQ00000022JOURNAL_BANQUE_AINA     52                              02000244166401030000000500000000USER72APPRUSER 72 APPRO        00009      
+0602              90BQ00000023JOURNAL_BANQUE_AINA     52                              02000244166401030000000500000000USER24APPRO                    00009      
+0602              90BQ00000024JOURNAL_BANQUE_AINA     52                              02000244166401030000000500000000USER24APPRO                    00009      
+0602              90BQ00000025JOURNAL_BANQUE_AINA     52                              02000244166401030000000500000000USER24APPRO                    00009      
+0602              90BQ00000026JOURNAL_BANQUE_AINA     52                              02000244166401030000000500000000USER24APPRO                    00009      
+0602              90BQ00000027JOURNAL_BANQUE_AINA     52                              02000244166401030000000500000000USER48APPRO                    00009      
+0602              90BQ00000028JOURNAL_BANQUE_AINA     52                              02000244166401030000000500000000REELREEL                       00009      
+0602              90BQ00000029JOURNAL_BANQUE_AINA     52                              02000244166401030000000500000000TEST 02DEMANDE DE TRANSFERT    00009      
+0802                                                                                                  0000004000000000                                          

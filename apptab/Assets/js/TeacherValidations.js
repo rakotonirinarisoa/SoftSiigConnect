@@ -550,7 +550,7 @@ function GetListCompG() {
                 window.location = window.location.origin;
                 return;
             }
-            let code = ``;
+            let code = ` <option value="Autre Opérations">Autre Opérations</option>`;
             let codeAuxi = ``;
             ListCompteG = Datas.data;
 
