@@ -53,8 +53,8 @@ function GetListEvenements() {
             $(`[data-id="proj-list"]`).text("");
             var code = [];
             $.each(Datas.data, function (k, v) {
-                let type = 'engagements';
-                let typeT = 'ENGAGEMENT';
+                let type = 'dépenses à payer';
+                let typeT = 'DEPENSES A PAYER';
                 if (v.TYPE == 1) { type = 'paiements'; typeT = 'PAIEMENT'; }
                 if (v.TYPE == 3) { type = 'avances'; typeT = 'AVANCE'; }
                 let etat = 'Tris';

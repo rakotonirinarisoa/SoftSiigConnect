@@ -357,8 +357,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                     buttons: ['colvis',
                         {
                             extend: 'pdfHtml5',
-                            title: 'STATUTS ENGAGEMENTS et AVANCES',
-                            messageTop: 'Liste des statuts des engagements et avances',
+                            title: 'STATUTS DEPENSES A PAYER et AVANCES',
+                            messageTop: 'Liste des statuts des dépenses à payer et avances',
                             text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
@@ -376,8 +376,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                         },
                         {
                             extend: 'excelHtml5',
-                            title: 'STATUTS ENGAGEMENTS et AVANCES',
-                            messageTop: 'Liste des statuts des engagements et avances',
+                            title: 'STATUTS DEPENSES A PAYER et AVANCES',
+                            messageTop: 'Liste des statuts des dépenses à payer et avances',
                             text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',

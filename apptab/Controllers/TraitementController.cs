@@ -28,7 +28,7 @@ namespace apptab.Controllers
         //Traitement mandats PROJET//
         public ActionResult TraitementPROJET()
         {
-            ViewBag.Controller = "Tris et validation des engagements";
+            ViewBag.Controller = "Tris et validation des dépenses à payer";
 
             return View();
         }
@@ -437,7 +437,7 @@ namespace apptab.Controllers
         //Traitement mandats ORDSEC//
         public ActionResult TraitementORDSEC()
         {
-            ViewBag.Controller = "Validation des engagements";
+            ViewBag.Controller = "Validation des dépenses à payer";
 
             return View();
         }
@@ -1822,7 +1822,7 @@ namespace apptab.Controllers
         //GENERATION PAIEMENT//
         public ActionResult GenerationPAIEMENTIndex()
         {
-            ViewBag.Controller = "Liste des engagements ou avances par paiement";
+            ViewBag.Controller = "Liste des dépenses à payer ou avances par paiement";
 
             return View();
         }
@@ -1990,7 +1990,7 @@ namespace apptab.Controllers
                                 SOA = soa,
                                 PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                 isLATE = isLate,
-                                isAvance = "Engagement"
+                                isAvance = "Dépenses à payer"
                             });
                         }
                     }

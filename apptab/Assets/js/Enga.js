@@ -67,7 +67,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let user = $("#Para").val();
     let code = $("#Code").val();
     if (!user || !code) {
-        alert("Veuillez renseigner l'information sur l'engagement. ");
+        alert("Veuillez renseigner l'information sur l'engagement'. ");
         return;
     }
 

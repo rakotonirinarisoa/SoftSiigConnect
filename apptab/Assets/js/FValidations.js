@@ -538,7 +538,7 @@ function LoadValidate() {
                     AUTREOP:v.AUTREOP,
                     numeroliquidations: v.NUMEROLIQUIDATION,
                     //type: v.AVANCE ? 'Avance' : 'Engagement',
-                    type: v.AVANCE ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
+                    type: v.AVANCE ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Dépenses à payer'),
                     idprojet: codeproject,
                     numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
                     Site: v.SITE
@@ -1020,7 +1020,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             AUTREOP:v.AUTREOP,
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             //type: v.AVANCE ? 'Avance' : 'Engagement',
-                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
+                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Dépenses à payer'),
                             idprojet: codeproject,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
                             Site: v.SITE
@@ -1231,7 +1231,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             estAvance:v.AVANCE,
                             //type: v.AVANCE ? 'Avance' : 'Engagement',
-                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
+                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Dépenses à payer'),
                             idprojet: codeproject,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
                             Site: v.SITE

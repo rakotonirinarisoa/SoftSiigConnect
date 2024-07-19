@@ -230,7 +230,7 @@ function chargeLoad() {
                             isLATE: v.IsLATE,
                             estAvance: v.AVANCE,
                             //type: v.AVANCE ? 'Avance' : 'Paiement',
-                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
+                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Dépenses à payer'),
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
                             Site: v.SITE,
@@ -438,7 +438,7 @@ function chargeLoad() {
                             AUTREOP : v.AUTREOP,
                             estAvance: v.AVANCE,
                             //type: v.AVANCE ? 'Avance':'Paiement',                            
-                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
+                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Dépenses à payer'),
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
                             site: v.SITE,
@@ -994,7 +994,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             estAvance : v.AVANCE,
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             //type: v.AVANCE ? 'Avance' : 'Paiement',
-                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
+                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Dépenses à payer'),
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });
                     });
@@ -1214,7 +1214,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             Site: v.SITE,
                             //type: v.AVANCE ? 'Avance' : 'Paiement',
-                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Engagement'),
+                            type: v.Avance ? 'Avance' : (v.AUTREOP ? 'Autre Opérations' : 'Dépenses à payer'),
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG
                         });
                     });

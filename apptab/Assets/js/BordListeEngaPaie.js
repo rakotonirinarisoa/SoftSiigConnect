@@ -324,8 +324,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                     buttons: ['colvis',
                         {
                             extend: 'pdfHtml5',
-                            title: 'ENGAGEMENTS, AVANCES et PAIEMENTS',
-                            messageTop: 'Liste des engagements, avances et des paiements',
+                            title: 'DEPENSES A PAYER, AVANCES et PAIEMENTS',
+                            messageTop: 'Liste des dépenses à payer, avances et des paiements',
                             text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
@@ -343,8 +343,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                         },
                         {
                             extend: 'excelHtml5',
-                            title: 'ENGAGEMENTS, AVANCES et PAIEMENTS',
-                            messageTop: 'Liste des engagements, avances et des paiements',
+                            title: 'DEPENSES A PAYER, AVANCES et PAIEMENTS',
+                            messageTop: 'Liste des dépenses à payer, avances et des paiements',
                             text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',

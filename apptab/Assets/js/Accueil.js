@@ -740,7 +740,7 @@ $('[data-action="ChargerJs"]').click(function () {
 
                         data.push({
                             checkbox: '',
-                            type: v.Avance ? 'Avance' : (v.AUTREOPERATIONS ? 'Autre Opérations' : 'Engagement'),
+                            type: v.Avance ? 'Avance' : (v.AUTREOPERATIONS ? 'Autre Opérations' : 'Dépenses à payer'),
                             id: v.No,
                             date: isNullOrUndefined(v.Date) ? '' : v.Date,
                             Auxi: isNullOrUndefined(v.Auxi) ? '' : v.Auxi,
