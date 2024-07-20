@@ -179,8 +179,8 @@ function setDataTable() {
         buttons: ['colvis',
             {
                 extend: 'pdfHtml5',
-                title: 'DELAIS DE TRAITEMENT DES ENGAGEMENTS et AVANCES',
-                messageTop: 'Suvi des délais de traitement des engagements et avances',
+                title: 'DELAIS DE TRAITEMENT DES DEPENSES A PAYER et AVANCES',
+                messageTop: 'Suvi des délais de traitement des dépenses à payer et avances',
                 text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
                 orientation: 'landscape',
                 pageSize: 'A4',
@@ -198,8 +198,8 @@ function setDataTable() {
             },
             {
                 extend: 'excelHtml5',
-                title: 'DELAIS DE TRAITEMENT DES ENGAGEMENTS et AVANCES',
-                messageTop: 'Suvi des délais de traitement des engagements et avances',
+                title: 'DELAIS DE TRAITEMENT DES DEPENSES A PAYER et AVANCES',
+                messageTop: 'Suvi des délais de traitement des dépenses à payer et avances',
                 text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
                 orientation: 'landscape',
                 pageSize: 'A4',
@@ -332,7 +332,7 @@ $('#export-excel-btn').on('click', () => {
         return $(this).css('display') === 'none';
     }).remove();
 
-    tableToExcel('dashboard', 'DELAIS DE TRAITEMENT ENGAGEMENTS ET AVANCES', setDataTable);
+    tableToExcel('dashboard', 'DELAIS DE TRAITEMENT DEPENSES A PAYER ET AVANCES', setDataTable);
 });
 
 $('#proj').on('change', () => {

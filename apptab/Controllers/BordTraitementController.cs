@@ -277,7 +277,7 @@ namespace apptab.Controllers
         //Liste des engagements, avances et paiements//
         public ActionResult BordListeEngaPaie()
         {
-            ViewBag.Controller = "Liste des engagements, avances et des paiements";
+            ViewBag.Controller = "Liste des dépenses à payer, avances et des paiements";
 
             return View();
         }
@@ -374,7 +374,7 @@ namespace apptab.Controllers
                                         MONTPAIE = string.Format("{0:0.00}", Math.Round(paiement.MONTANT.Value)),
                                         SOA = soa,
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                        TYPE = "Engagement",
+                                        TYPE = "Dépenses à payer",
                                         SITE = x.SITE
                                     });
                                 }
@@ -391,7 +391,7 @@ namespace apptab.Controllers
                                         MONTPAIE = "",
                                         SOA = soa,
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                        TYPE = "Engagement",
+                                        TYPE = "Dépenses à payer",
                                         SITE = x.SITE
                                     });
                                 }
@@ -466,7 +466,7 @@ namespace apptab.Controllers
         //Statut des engagements//
         public ActionResult StatutEngagements()
         {
-            ViewBag.Controller = "Statut des engagements et avances";
+            ViewBag.Controller = "Statut des dépenses à payer et avances";
 
             return View();
         }
@@ -564,7 +564,7 @@ namespace apptab.Controllers
 
                                     SOA = soa,
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                    TYPE = "Engagement",
+                                    TYPE = "Dépenses à payer",
                                     SITE = x.SITE
                                 });
                             }
@@ -621,7 +621,7 @@ namespace apptab.Controllers
         //Engagements et avances rejetés//
         public ActionResult EngagementsREJETE()
         {
-            ViewBag.Controller = "Liste des engagements et avances rejetés";
+            ViewBag.Controller = "Liste des dépenses à payer et avances rejetés";
 
             return View();
         }
@@ -725,7 +725,7 @@ namespace apptab.Controllers
 
                                     SOA = soa,
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                    TYPE = "Engagement",
+                                    TYPE = "Dépenses à payer",
                                     SITE = x.SITE
                                     //isLATE = isLate
                                 });
@@ -794,7 +794,7 @@ namespace apptab.Controllers
         //Suivi des délais de traitement des engagements et avances//
         public ActionResult DelaisTraitementEngagements()
         {
-            ViewBag.Controller = "Suvi des délais de traitement des engagements et avances";
+            ViewBag.Controller = "Suvi des délais de traitement des dépenses à payer et avances";
 
             return View();
         }
@@ -903,7 +903,7 @@ namespace apptab.Controllers
                     result[lastIndex].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
                     {
                         PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
-                        TYPE = "Engagement",
+                        TYPE = "Dépenses à payer",
                         NUM_ENGAGEMENT = traitprojets[j].REF,
                         SITE = traitprojets[j].SITE,
                         BENEFICIAIRE = traitprojets[j].TITUL,
@@ -1095,7 +1095,7 @@ namespace apptab.Controllers
                         result[lastIndex].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
                         {
                             PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
-                            TYPE = "Engagement",
+                            TYPE = "Dépenses à payer",
                             NUM_ENGAGEMENT = traitprojets[j].REF,
                             SITE = traitprojets[j].SITE,
                             BENEFICIAIRE = traitprojets[j].TITUL,

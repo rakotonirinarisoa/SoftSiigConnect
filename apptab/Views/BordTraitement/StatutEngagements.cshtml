@@ -1,6 +1,6 @@
 ﻿@{
-    ViewBag.Title = "Statut des engagements et avances";
-    ViewData["Controller"] = "Statut des engagements et avances";
+    ViewBag.Title = "Statut des dépenses à payer et avances";
+    ViewData["Controller"] = "Statut des dépenses à payer et avances";
 }
 
 <meta charset="utf-8" />
@@ -210,7 +210,7 @@
 
 <script defer>
     $('#export-to-pdf-btn').on('click', () => {
-        exportTableToPdf('TBD_PROJET_ORDSEC', 'STATUTS ENGAGEMENTS et AVANCES-PDF', `<p style="font-weight: bold /*text-align:center*/;">STATUTS ENGAGEMENTS et AVANCES</p><p>Liste des statuts des engagements et avances</p>`, `<p style="font-weight: bold;">SOFT EXPENDITURES TRACKERS </p>`, [0]);
+        exportTableToPdf('TBD_PROJET_ORDSEC', 'STATUTS DEPENSES A PAYER et AVANCES-PDF', `<p style="font-weight: bold /*text-align:center*/;">STATUTS DEPENSES A PAYER et AVANCES</p><p>Liste des statuts des dépenses à payer et avances</p>`, `<p style="font-weight: bold;">SOFT EXPENDITURES TRACKERS </p>`, [0]);
         /*exportTableToPdf('dashboard', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);*/
     });
 </script>

@@ -356,8 +356,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                     buttons: ['colvis',
                         {
                             extend: 'pdfHtml5',
-                            title: 'ENGAGEMENTS et AVANCES REJETES',
-                            messageTop: 'Liste des engagements et avances rejetés',
+                            title: 'DEPENSES A PAYER et AVANCES REJETES',
+                            messageTop: 'Liste des dépenses à payer et avances rejetés',
                             text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
@@ -375,8 +375,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                         },
                         {
                             extend: 'excelHtml5',
-                            title: 'ENGAGEMENTS et AVANCES REJETES',
-                            messageTop: 'Liste des engagements et avances rejetés',
+                            title: 'DEPENSES A PAYER et AVANCES REJETES',
+                            messageTop: 'Liste des dépenses à payer et avances rejetés',
                             text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
