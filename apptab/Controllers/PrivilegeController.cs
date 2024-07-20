@@ -97,6 +97,10 @@ namespace apptab.Controllers
                         RSFT = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).RSFT != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).RSFT : 0,
                         TDB9 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB9 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB9 : 0,
 
+                        TDB11 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB11 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB11 : 0,
+                        TDB12 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB12 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB12 : 0,
+                        TDB13 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB13 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB13 : 0,
+
                         GED = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).GED != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).GED : 0
 
                     }).Where(a => a.PROJET != null && a.DELETONDATE == null).OrderBy(a => a.PROJET).OrderBy(a => a.CREAT).ToList();
@@ -163,6 +167,10 @@ namespace apptab.Controllers
                         RSF = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).RSF != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).RSF : 0,
                         RSFT = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).RSFT != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).RSFT : 0,
                         TDB9 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB9 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB9 : 0,
+
+                        TDB11 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB11 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB11 : 0,
+                        TDB12 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB12 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB12 : 0,
+                        TDB13 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB13 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB13 : 0,
 
                         GED = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).GED != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).GED : 0
 
@@ -246,6 +254,10 @@ namespace apptab.Controllers
                 RSF = privilege.RSF,
                 RSFT = privilege.RSFT,
                 TDB9 = privilege.TDB9,
+
+                TDB11 = privilege.TDB11,
+                TDB12 = privilege.TDB12,
+                TDB13 = privilege.TDB13,
 
                 GED = privilege.GED
             };

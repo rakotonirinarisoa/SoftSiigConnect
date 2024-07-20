@@ -2850,7 +2850,7 @@ namespace apptab.Controllers
         }
         //public JsonResult GetAnomalieTomOP(SI_USERS suser,string journal, string codeproject, DateTime datein, DateTime dateout, string compteG,string Auxi,string site)
        public JsonResult GetAnomalieTomOP(SI_USERS suser, string codeproject)
-        {
+       {
             var Anomalie = __db.RTIERS.Where(x => x.RIB1 == null || x.NOM == null || x.AD1 == null || x.DOM1 == null ).ToList();
 
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);

@@ -77,6 +77,10 @@ function GetUsers() {
             $("#RSF").val(Datas.data.RSF);
             $("#RSFT").val(Datas.data.RSFT);
             $("#Tdb9").val(Datas.data.TDB9);
+
+            $("#Tdb11").val(Datas.data.TDB11);
+            $("#Tdb12").val(Datas.data.TDB12);
+            $("#Tdb13").val(Datas.data.TDB13);
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -127,9 +131,13 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let RSFT = $("#RSFT").val();
     let Tdb9 = $("#Tdb9").val();
 
+    let Tdb11 = $("#Tdb11").val();
+    let Tdb12 = $("#Tdb12").val();
+    let Tdb13 = $("#Tdb13").val();
+
     if (!ParaV0 || !ParaV || !ParaS /*|| !ParaSiig*/ || !ParaPe || !ParaPv || !ParaPp || !ParaPb || !Md0 || !Md1 || !Md2 /*|| !Md3 || !Mop0 || !Mop1 || !Mop2*/
         || !Tdb0 || !Tdb1 || !Tdb2 || !Tdb3 || !Tdb4 || !Tdb5 || !Tdb6 || !Tdb7 || !Tdb8
-        || !J0 || !J1 || !J2 || !J3 || !JR || !JRA || !RSF || !RSFT || !Tdb9) {
+        || !J0 || !J1 || !J2 || !J3 || !JR || !JRA || !RSF || !RSFT || !Tdb9 || !Tdb11 || !Tdb12 || !Tdb13) {
         alert("Veuillez renseigner les intitulés des menus. ");
         return;
     }
@@ -179,6 +187,10 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("param.RSF", $(`#RSF`).val());
     formData.append("param.RSFT", $(`#RSFT`).val());
     formData.append("param.TDB9", $(`#Tdb9`).val());
+
+    formData.append("param.TDB11", $(`#Tdb11`).val());
+    formData.append("param.TDB12", $(`#Tdb12`).val());
+    formData.append("param.TDB13", $(`#Tdb13`).val());
 
     $.ajax({
         type: "POST",
