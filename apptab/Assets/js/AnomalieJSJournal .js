@@ -51,26 +51,25 @@ function GetAnomalie() {
                 return;
             }
            
-            ListResultBr = Datas.data;
+            ListResultBr = Datas.datas;
             console.log(ListResultBr);
             content = ``;
-            ContentAnomalie = ``;
            
             $.each(ListResultBr, function (k, v) {
                 ContentAnomalie += `<tr compteG-id="${v.ID}">`
 
+                        if (!v.JOURNAL) ContentAnomalie += `<td class ="AnomalieClass">${v.JOURNAL}</td>`;
+                        else ContentAnomalie += ` <td>${v.JOURNAL}</td>`;
+                        if (!v.LIBELLE) ContentAnomalie += `<td class ="AnomalieClass">${v.LIBELLE}</td>`;
+                        else ContentAnomalie += ` <td>${v.LIBELLE}</td>`;
                         if (!v.COMPTEG) ContentAnomalie += `<td class ="AnomalieClass">${v.COMPTEG}</td>`;
                         else ContentAnomalie += ` <td>${v.COMPTEG}</td>`;
-                        if (v.AUXI == null) ContentAnomalie += `<td class ="AnomalieClass">${v.AUXI}</td>`;
-                                else ContentAnomalie += ` <td>${v.AUXI}</td>`;
-                        if (v.COMPTE_BANQUE == null) ContentAnomalie += `<td class ="AnomalieClass">${v.COMPTE_BANQUE}</td>`;
-                                else ContentAnomalie += ` <td>${v.COMPTE_BANQUE}</td>`;
-                        if (v.DOM1 == null) ContentAnomalie += `<td class ="AnomalieClass">${v.DOM1}</td>`;
-                                else ContentAnomalie += ` <td>${v.DOM1}</td>`;
-                        if (v.AD1 == null) ContentAnomalie += `<td class ="AnomalieClass">${v.AD1}</td>`;
-                                else ContentAnomalie += ` <td>${v.AD1}</td>`;
                         if (v.RIB == null) ContentAnomalie += `<td class ="AnomalieClass">${v.RIB}</td>`;
                         else ContentAnomalie += ` <td>${v.RIB}</td>`;
+                        if (v.AGENCE == null) ContentAnomalie += `<td class ="AnomalieClass">${v.AGENCE}</td>`;
+                        else ContentAnomalie += ` <td>${v.AGENCE}</td>`;
+                        if (v.GUICHET == null) ContentAnomalie += `<td class ="AnomalieClass">${v.GUICHET}</td>`;
+                        else ContentAnomalie += ` <td>${v.GUICHET}</td>`;
                         if (v.TYPE == null) ContentAnomalie += `<td class ="AnomalieClass">${v.TYPE}</td>`;
                         else ContentAnomalie += ` <td>${v.TYPE}</td>`;
                         if (v.IDPROJECT == null) ContentAnomalie += `<td class ="AnomalieClass">${v.IDPROJECT}</td>`;
@@ -79,7 +78,6 @@ function GetAnomalie() {
             });
           
             console.log(ContentAnomalie);
-            $('#historiques').html('');
             $('#historiques').html(ContentAnomalie);
             //window.location = '/Home/GetFile?file=' + Datas.data;
 
@@ -148,10 +146,6 @@ $('[data-action="GetElementChecked"]').click(function () {
 });
 $(`[tab="autre"]`).hide();
 
-$(document).on("change", "[code-project]", () => {
-   
-    GetAnomalie();
-});
 function GetAllProjectUser() {
 
     let formData = new FormData();

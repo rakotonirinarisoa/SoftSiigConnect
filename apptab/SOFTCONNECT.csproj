@@ -264,6 +264,8 @@
     <Compile Include="Models\Model1.cs" />
     <Compile Include="Models\Model2.cs" />
     <Compile Include="Models\Model3.cs" />
+    <Compile Include="Models\Model4.cs" />
+    <Compile Include="Models\Model5.cs" />
     <Compile Include="Models\RPAYS.cs" />
     <Compile Include="Models\SI_SITE.cs" />
     <Compile Include="Models\SI_USERSHISTO.cs" />
@@ -2443,6 +2445,7 @@
     <Content Include="Assets\img\bgo.png" />
     <Content Include="Assets\img\LogoLogin.png" />
     <Content Include="Assets\img\LogoS1.png" />
+    <Content Include="Assets\js\AnomalieJSJournal .js" />
     <Content Include="Assets\js\BordRSF.js" />
     <Content Include="Assets\js\BordJRA.js" />
     <Content Include="Assets\js\AnomalieJS.js" />
@@ -4982,6 +4985,7 @@
     <Content Include="Views\Home\AnomaliePaiement.cshtml" />
     <Content Include="Views\Privilege\SiteList.cshtml" />
     <Content Include="Views\Privilege\CreateSITE.cshtml" />
+    <Content Include="Views\Home\AnomaliePaiementJournal.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

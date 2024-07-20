@@ -1,7 +1,7 @@
 ﻿
 @{
-    ViewBag.Title = "Anomalie de réglement";
-    ViewData["Controller"] = "Anullation de réglement";
+    ViewBag.Title = "A de réglement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="form-row">
@@ -34,12 +34,12 @@
     <table class="table table-hover table-striped" id="idTable">
         <thead class="thead-green">
             <tr>
+                <th>CODE</th>
+                <th>LIBELLE</th>
                 <th>COMPTE GENERALE</th>
-                <th>AUXI</th>
-                <th>NOM / RAISON SOCIALE</th>
-                <th>NOM BANQUE</th>
-                <th>ADRESSE</th>
                 <th>RIB</th>
+                <th>GUICHET</th>
+                <th>AGENCES</th>
                 <th>TYPE</th>
                 <th>PROJET</th>
 
@@ -51,4 +51,4 @@
 </div>
 
 <script src="~/Assets/js/SearchJsSet.js?version=@Session["VERSION"]"></script>
-<script src="~/Assets/js/AnomalieJS.js?version=@Session["VERSION"]""></script>
+<script src="~/Assets/js/AnomalieJSJournal .js?version=@Session["VERSION"]"></script>

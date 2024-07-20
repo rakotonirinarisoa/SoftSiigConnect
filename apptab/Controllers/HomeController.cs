@@ -87,6 +87,11 @@ namespace apptab.Controllers
             ViewBag.Controller = "Anomalie Paiements";
             return View();
         }
+        public ActionResult AnomaliePaiementJournal()
+        {
+            ViewBag.Controller = "Anomalie Journal";
+            return View();
+        }
         [HttpPost]
         public string GetTypeP(SI_USERS suser, string codeproject)
         {
@@ -582,8 +587,9 @@ namespace apptab.Controllers
             AFB160 afb160 = new AFB160();
 
             RJL1 djournal = (from jrnl in tom.RJL1
-                             where jrnl.CODE == journal
+                             where jrnl.CODE == journal && jrnl.JLTRESOR == true && jrnl.NATURE == "2"
                              select jrnl).Single();
+
             if (djournal.RIB == null || djournal.RIB == "")
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez remplir les comptes RIB du " + journal + " journal. ", data = "" }, settings));
@@ -672,7 +678,7 @@ namespace apptab.Controllers
             SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
-            var JournalVM = tom.RJL1.Select(x => new
+            var JournalVM = tom.RJL1.Where(x => x.JLTRESOR == true && x.NATURE == "2").Select(x => new
             {
                 CODE = x.CODE,
                 LIBELLE = x.LIBELLE
@@ -807,7 +813,8 @@ namespace apptab.Controllers
 
             #endregion
             int countTraitement = 0;
-            var lien = "http://softwellset.softwell.cloud/softsetformation";
+            var lien = db.SI_SETLIEN.FirstOrDefault().LIEN;
+            //var lien = "http://softwellset.softwell.cloud/softsetformation";
 
             Uri MyUrl = Request.Url;
             string link = MyUrl.Host;
@@ -1828,6 +1835,7 @@ namespace apptab.Controllers
             int PROJECTID = int.Parse(codeproject);
             int countTraitement = 0;
             var lien = db.SI_SETLIEN.FirstOrDefault().LIEN;
+            //var lien = "http://softwellset.softwell.cloud/softsetformation";
 
             foreach (var item in list)
             {
@@ -1963,6 +1971,7 @@ namespace apptab.Controllers
 
             int countTraitement = 0;
             var lien = db.SI_SETLIEN.FirstOrDefault().LIEN;
+            //var lien = "http://softwellset.softwell.cloud/softsetformation";
             var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == PROJECTID && a.DELETIONDATE == null).FirstOrDefault().PROJET;
 
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
@@ -2290,6 +2299,7 @@ namespace apptab.Controllers
                     db.SaveChanges();
 
                     var lien = db.SI_SETLIEN.FirstOrDefault().LIEN;
+                    //var lien = "http://softwellset.softwell.cloud/softsetformation";
                     var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == PROJECTID && a.DELETIONDATE == null).FirstOrDefault().PROJET;
                     //SEND MAIL ALERT et NOTIFICATION//
                     // string MailAdresse = "serviceinfo@softwell.mg";
@@ -2710,7 +2720,8 @@ namespace apptab.Controllers
             var TYPE = db.SI_TYPECRITURE.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault().TYPE;
 
             int countTraitement = 0;
-            var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
+            var lien = db.SI_SETLIEN.FirstOrDefault().LIEN;
+           // var lien = "http://srvapp.softwell.cloud/softconnectsiig/";
             var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == PROJECTID && a.DELETIONDATE == null).FirstOrDefault().PROJET;
 
             foreach (var item in list)
@@ -2851,11 +2862,17 @@ namespace apptab.Controllers
         //public JsonResult GetAnomalieTomOP(SI_USERS suser,string journal, string codeproject, DateTime datein, DateTime dateout, string compteG,string Auxi,string site)
        public JsonResult GetAnomalieTomOP(SI_USERS suser, string codeproject)
         {
-            var Anomalie = __db.RTIERS.Where(x => x.RIB1 == null || x.NOM == null || x.AD1 == null || x.DOM1 == null ).ToList();
+            int PROJECTID = int.Parse(codeproject);
+            SOFTCONNECTOM.connex = new Data.Extension().GetCon(PROJECTID);
+            SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
+            var Anomalie = tom.RTIERS.Where(x => x.RIB1 == null || x.NOM == null || x.AD1 == null || x.DOM1 == null ).ToList();
+
+            var JournalAnomalie = __db.RJL1.Where(x => x.NATURE == "2" && x.JLTRESOR == true && (x.RIB == null || x.AGENCE == null || x.GUICHET == null || x.BANQUE == null)).ToList();
 
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            int PROJECTID = int.Parse(codeproject);
+           
 
             ANOMALIE_G SAUVEANOMALIE = new ANOMALIE_G();
             var GetallAnomalieProjet = db.ANOMALIE_G.Where(x => x.IDPROJECT == PROJECTID).ToList();
@@ -2877,6 +2894,39 @@ namespace apptab.Controllers
                     SAUVEANOMALIE.AD1 = item.AD1;
                     SAUVEANOMALIE.AD2 = item.AD2;
                     SAUVEANOMALIE.DOM1 = item.DOM1;
+                    SAUVEANOMALIE.TYPE = "TIERS";
+                    SAUVEANOMALIE.GUICHET = "";
+                    SAUVEANOMALIE.AGENCE = "";
+                    try
+                    {
+                        db.ANOMALIE_G.Add(SAUVEANOMALIE);
+                        db.SaveChanges();
+                    }
+                    catch
+                    {
+
+                    }
+                }
+               
+            }
+            if (JournalAnomalie.Count != 0)
+            {
+                foreach (var item in JournalAnomalie)
+                {
+                    SAUVEANOMALIE.COMPTE_BANQUE = item.BANQUE;
+                    SAUVEANOMALIE.RIB = item.RIB;
+                    SAUVEANOMALIE.IDPROJECT = PROJECTID;
+                    SAUVEANOMALIE.GUICHET = item.GUICHET;
+                    SAUVEANOMALIE.AGENCE = item.AGENCE;
+                    SAUVEANOMALIE.TYPE = "JOURNAL";
+                    SAUVEANOMALIE.JOURNAL = item.CODE;
+                    SAUVEANOMALIE.LIBELLE = item.LIBELLE;
+                    SAUVEANOMALIE.COMPTEG = item.COMPTEASSOCIE;
+                    SAUVEANOMALIE.AD1 = "";
+                    SAUVEANOMALIE.AD2 = "";
+                    SAUVEANOMALIE.AUXI = "";
+                    SAUVEANOMALIE.DOM1 = "";
+                    SAUVEANOMALIE.AD2 = "";
                     try
                     {
                         db.ANOMALIE_G.Add(SAUVEANOMALIE);
@@ -2888,8 +2938,9 @@ namespace apptab.Controllers
                     }
                 }
             }
-            var DataAnomalie = db.ANOMALIE_G.Where(x => x.IDPROJECT == PROJECTID).Select(x => new
+            var DataAnomalie = db.ANOMALIE_G.Where(x => x.IDPROJECT == PROJECTID && x.TYPE == "TIERS").Select(x => new
             {
+                ID = x.ID,
                 COMPTE_BANQUE = x.COMPTE_BANQUE,
                 RIB = x.RIB,
                 AUXI = x.AUXI,
@@ -2897,10 +2948,15 @@ namespace apptab.Controllers
                 IDPROJECT = x.IDPROJECT,
                 AD1 = x.AD1,
                 AD2 = x.AD2,
-                DOM1 = x.DOM1
+                DOM1 = x.DOM1,
+                GUICHET = x.GUICHET,
+                AGENCE = x.AGENCE,
+                TYPE = x.TYPE,
+
 
             }).Join(db.SI_PROJETS,anomalie => anomalie.IDPROJECT,projet => projet.ID ,(anomalie, projet) => new
             {
+                ID = anomalie.ID,
                 COMPTE_BANQUE = anomalie.COMPTE_BANQUE,
                 RIB = anomalie.RIB,
                 AUXI = anomalie.AUXI,
@@ -2909,9 +2965,47 @@ namespace apptab.Controllers
                 AD1 = anomalie.AD1,
                 AD2 = anomalie.AD2,
                 DOM1 = anomalie.DOM1,
+                GUICHET = anomalie.GUICHET,
+                AGENCE = anomalie.AGENCE,
+                TYPE = anomalie.TYPE,
 
             }).ToList();
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès.", data = DataAnomalie }, settings));
+            var DataAnomalieJournal = db.ANOMALIE_G.Where(x => x.IDPROJECT == PROJECTID && x.TYPE == "JOURNAL").Select(x => new
+            {
+                ID = x.ID,
+                COMPTE_BANQUE = x.COMPTE_BANQUE,
+                RIB = x.RIB,
+                AUXI = x.AUXI,
+                COMPTEG = x.COMPTEG,
+                IDPROJECT = x.IDPROJECT,
+                AD1 = x.AD1,
+                AD2 = x.AD2,
+                DOM1 = x.DOM1,
+                GUICHET = x.GUICHET,
+                AGENCE = x.AGENCE,
+                TYPE = x.TYPE,
+                JOURNAL = x.JOURNAL,
+                LIBELLE = x.LIBELLE
+
+            }).Join(db.SI_PROJETS, anomalie => anomalie.IDPROJECT, projet => projet.ID, (anomalie, projet) => new
+            {
+                ID = anomalie.ID,
+                COMPTE_BANQUE = anomalie.COMPTE_BANQUE,
+                RIB = anomalie.RIB,
+                AUXI = anomalie.AUXI,
+                COMPTEG = anomalie.COMPTEG,
+                IDPROJECT = projet.PROJET,
+                AD1 = anomalie.AD1,
+                AD2 = anomalie.AD2,
+                DOM1 = anomalie.DOM1,
+                GUICHET = anomalie.GUICHET,
+                AGENCE = anomalie.AGENCE,
+                TYPE = anomalie.TYPE,
+                JOURNAL = anomalie.JOURNAL,
+                LIBELLE = anomalie.LIBELLE
+
+            }).ToList();
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès.", data = DataAnomalie , datas = DataAnomalieJournal }, settings));
         }
     }
 }
