@@ -30,5 +30,16 @@ namespace apptab.Models
         public string DOM1 { get; set; }
 
         public int? IDPROJECT { get; set; }
+
+        public string AGENCE { get; set; }
+
+        public string GUICHET { get; set; }
+
+        [StringLength(50)]
+        public string TYPE { get; set; }
+
+        public string JOURNAL { get; set; }
+
+        public string LIBELLE { get; set; }
     }
 }

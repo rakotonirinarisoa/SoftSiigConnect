@@ -499,7 +499,8 @@ namespace apptab.Extension
             texteAFB160 += "0802";
             texteAFB160 += this.formaterTexte(98, "                        ");
             texteAFB160 += this.formaterChiffre(16, montant.ToString());
-            texteAFB160 += this.formaterTexte(42, " ");
+            texteAFB160 += this.formaterTexte(42, " ");//asiana ligne vide ny farany fichier
+            texteAFB160 += "\r\n";
             //using (var sfd = new SaveFileDialog())
             //{
             //    sfd.Filter = "Fichiers txt (*.txt)|*.txt";
@@ -1669,10 +1670,12 @@ namespace apptab.Extension
             List<DataListTompro> list = new List<DataListTompro>();
 
 
+            //RJL1 djournal = (from jrnl in tom.RJL1
+            //                 where jrnl.CODE == journal
+            //                 select jrnl).Single();
             RJL1 djournal = (from jrnl in tom.RJL1
-                             where jrnl.CODE == journal
+                             where jrnl.CODE == journal && jrnl.JLTRESOR == true && jrnl.NATURE == "2"
                              select jrnl).Single();
-
             if (djournal.RIB != null && djournal.RIB != "")
             {
                 #region Chargement liste écriture
@@ -2114,10 +2117,12 @@ namespace apptab.Extension
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
             List<DataListTompaie> list = new List<DataListTompaie>();
+            //RJL1 djournal = (from jrnl in tom.RJL1
+            //                 where jrnl.CODE == journal
+            //                 select jrnl).SingleOrDefault();
             RJL1 djournal = (from jrnl in tom.RJL1
-                             where jrnl.CODE == journal
-                             select jrnl).SingleOrDefault();
-
+                             where jrnl.CODE == journal && jrnl.JLTRESOR == true && jrnl.NATURE == "2"
+                             select jrnl).Single();
             if (djournal.RIB != null && djournal.RIB != "")
             {
                 #region Chargement liste écriture
@@ -2273,9 +2278,12 @@ namespace apptab.Extension
             List<DataListTomOP> list = new List<DataListTomOP>();
             if (etat == "VERIFIES" || etat == "Tous")
                 etat = null;
+            //RJL1 djournal = (from jrnl in tom.RJL1
+            //                 where jrnl.CODE == journal
+            //                 select jrnl).Single();//Miova table FOP
             RJL1 djournal = (from jrnl in tom.RJL1
-                             where jrnl.CODE == journal
-                             select jrnl).Single();//Miova table FOP
+                             where jrnl.CODE == journal && jrnl.JLTRESOR == true && jrnl.NATURE == "2"
+                             select jrnl).Single();
 
             List<string> DjournalFop = tom.FOP.Where(x => x.JOURNAL == journal && (x.ETAPE1USER == etat || x.ETAPE2USER == etat || x.ETAPE3USER == etat || x.ETAPE4USER == etat || x.ETAPE5USER == etat || x.ETAPE6USER == etat || x.ETAPE7USER == etat || x.ETAPE8USER == etat || x.ETAPE9USER == etat || x.ETAPE10USER == etat)).Select(x => x.NUMEROOP).ToList();
             List<string> DjournalAvance = tom.GA_AVANCE.Where(x => x.JOURNAL == journal && x.COGE == compteG).Select(x => x.NUMERO).ToList();
@@ -3061,8 +3069,11 @@ namespace apptab.Extension
             //bool test = false;
             List<int> supprLignes = new List<int>();
 
+            //RJL1 djournal = (from jrnl in tom.RJL1
+            //                 where jrnl.CODE == journal
+            //                 select jrnl).Single();
             RJL1 djournal = (from jrnl in tom.RJL1
-                             where jrnl.CODE == journal
+                             where jrnl.CODE == journal && jrnl.JLTRESOR == true && jrnl.NATURE == "2"
                              select jrnl).Single();
             if (avance == true)
             {
@@ -3258,7 +3269,7 @@ namespace apptab.Extension
 
                     if (beneficiaire == null)//à regler selon les regles
                     {
-                        beneficiaire = tom.RJL1.Where(code => code.CODE == AutreOP.JOURNALPAYEMENT).Select(x => new
+                        beneficiaire = tom.RJL1.Where(code => code.CODE == AutreOP.JOURNALPAYEMENT && code.NATURE == "2" && code.JLTRESOR == true).Select(x => new
                         {
                             BENEFICIAIRE = x.LIBELLE,
                             BANQUE = x.BANQUE,//BOA//SG//BNI
