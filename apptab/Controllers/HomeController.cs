@@ -234,14 +234,14 @@ namespace apptab.Controllers
                 byte[] source = System.IO.File.ReadAllBytes(pth + pathchemin);
                 string s = "application/xml";
 
-                return File(source, System.Net.Mime.MediaTypeNames.Application.Octet, pathfiles);
+                return File(source, System.Net.Mime.MediaTypeNames.Text.Xml, pathfiles);
             }
             catch (Exception)
             {
                 return null;
             }
         }
-        public FileResult CreateAFBTXTArch(string pathchemin, string pathfiles, string psw)
+        public FileContentResult CreateAFBTXTArch(string pathchemin, string pathfiles, string psw)
         {
             string pth = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\";
             if (!Directory.Exists(pth))
@@ -253,23 +253,27 @@ namespace apptab.Controllers
             //sw = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + pathchemin + ".txt");
             sw.Write(pathfiles);
             sw.Close();
+            byte[] bytearray = null;
             using (var memoryStream = new MemoryStream())
             {
                 FileStream zipFile = System.IO.File.Open(pth + pathchemin + ".zip", FileMode.Create);
 
-            var archive = new Archive(new ArchiveEntrySettings(encryptionSettings: new TraditionalEncryptionSettings(psw)));
+                var archive = new Archive(new ArchiveEntrySettings(encryptionSettings: new TraditionalEncryptionSettings(psw)));
 
-            FileStream source = System.IO.File.Open(pth + pathchemin + ".txt", FileMode.Open, FileAccess.Read);
+                FileStream source = System.IO.File.Open(pth + pathchemin + ".txt", FileMode.Open, FileAccess.Read);
 
-            archive.CreateEntry(pathchemin + ".txt", source);
-            archive.Save(zipFile);
+                archive.CreateEntry(pathchemin + ".txt", source);
+                archive.Save(zipFile);
 
-            zipFile.Dispose();
-            // archive.Dispose();
-
-
-            memoryStream.Position = 0;
-            return File(memoryStream, "application/zip", "my.zip");
+                zipFile.Dispose();
+                // archive.Dispose();
+                memoryStream.Position = 0;
+                
+                bytearray = memoryStream.ToArray(); ;
+                
+                return new FileContentResult(bytearray, "application/zip");
+               
+                //return File(memoryStream, System.Net.Mime.MediaTypeNames.Application.Zip);
             }
             
             //return File(source, System.Net.Mime.MediaTypeNames.Application.Octet);
@@ -1484,7 +1488,7 @@ namespace apptab.Controllers
                     foreach (var item in list)
                     {
                         int b = int.Parse(item.Id);
-                        avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == b.ToString()).FirstOrDefault();
+                        avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == b.ToString() && a.ETAT == 1).FirstOrDefault();
                         if (avalider != null)
                         {
                             try
@@ -1528,7 +1532,7 @@ namespace apptab.Controllers
                     foreach (var item in AvaliderList)
                     {
                         //int b = int.Parse(item);
-                        avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.IDREGLEMENT).FirstOrDefault();
+                        avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.IDREGLEMENT && a.ETAT == 1).FirstOrDefault();
                         if (avalider != null)
                         {
                             try

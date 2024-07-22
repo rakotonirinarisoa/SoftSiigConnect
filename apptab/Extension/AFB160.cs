@@ -967,6 +967,7 @@ namespace apptab.Extension
             texteAFB160 += this.formaterTexte(98, "                        ");
             texteAFB160 += this.formaterChiffre(16, montant.ToString());
             texteAFB160 += this.formaterTexte(42, " ");
+            texteAFB160 += "\r\n";
 
             return new AFB() { Fichier = texteAFB160, Chemin = fileName };// create file text
         }
