@@ -751,7 +751,8 @@
                             @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
                                 || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB0"].ToString()) != 0 || int.Parse(Session["RJR"].ToString()) != 0 || int.Parse(Session["RJRA"].ToString()) != 0 || int.Parse(Session["RTDB1"].ToString()) != 0 ||
                                 int.Parse(Session["RTDB2"].ToString()) != 0 || int.Parse(Session["RTDB3"].ToString()) != 0 || int.Parse(Session["RTDB4"].ToString()) != 0 || int.Parse(Session["RTDB5"].ToString()) != 0 ||
-                                int.Parse(Session["RTDB6"].ToString()) != 0 || int.Parse(Session["RTDB7"].ToString()) != 0 || int.Parse(Session["RTDB8"].ToString()) != 0 || int.Parse(Session["RTDB9"].ToString()) != 0)))
+                                int.Parse(Session["RTDB6"].ToString()) != 0 || int.Parse(Session["RTDB7"].ToString()) != 0 || int.Parse(Session["RTDB8"].ToString()) != 0 || int.Parse(Session["RTDB9"].ToString()) != 0
+                                || int.Parse(Session["RTDB11"].ToString()) != 0 || int.Parse(Session["RTDB12"].ToString()) != 0 || int.Parse(Session["RTDB13"].ToString()) != 0)))
                             {
                                 <hr />
                                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
@@ -767,32 +768,6 @@
 
                                 <div data-parent-id="5" class="w3-hide">
                                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;" id="menu-accordeon" data-menu-accordion="5">
-
-                                        <li class="nav-item">
-                                            <a href="../Home/AnomaliePaiement" class="nav-link" data-child-id="4">
-                                                <i class="nav-icon fas fa-stop-circle" style="color: #4970cb"></i>
-                                                <p>
-                                                    Anomalie Générale
-                                                </p>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="../Home/AnomaliePaiementJournal" class="nav-link" data-child-id="4">
-                                                <i class="nav-icon fas fa-stop-circle" style="color: #4970cb"></i>
-                                                <p>
-                                                    Anomalie Journal
-                                                </p>
-                                            </a>
-                                        </li>
-
-                                        <li class="nav-item">
-                                            <a href="../Home/CancelHisto" class="nav-link" data-child-id="4">
-                                                <i class="nav-icon fas fa-not-equal" style="color: #4970cb"></i>
-                                                <p>
-                                                    Anullation de payement
-                                                </p>
-                                            </a>
-                                        </li>
 
                                         <li class="nav-item">
                                             <a href="../Home/HistoReg" class="nav-link" data-child-id="4">
@@ -980,28 +955,67 @@
                                             </li>
                                         }
 
+                                        @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB11"].ToString()) != 0)))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="../Home/AnomaliePaiement" class="nav-link" data-child-id="4">
+                                                    <i class="nav-icon fas fa-stop-circle" style="color: #4970cb"></i>
+                                                    <p>
+                                                        @Session["TDB11"]@*Anomalie Générale des paiements*@
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
+
+                                        @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB12"].ToString()) != 0)))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="../Home/CancelHisto" class="nav-link" data-child-id="4">
+                                                    <i class="nav-icon fas fa-not-equal" style="color: #4970cb"></i>
+                                                    <p>
+                                                        @Session["TDB12"]@*Anullation de payement*@
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
+
+                                        @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB13"].ToString()) != 0)))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="../Home/HistoReg" class="nav-link" data-child-id="4">
+                                                    <i class="nav-icon fas fa-history" style="color: #4970cb"></i>
+                                                    <p>
+                                                        @Session["TDB13"]@*Historiques des paiements*@
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
+
                                     </ul>
                                 </div>
                             }
 
-                            @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                                || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RGED"].ToString()) != 0)))
-                            {
-                                <hr />
-                                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
-                                    <li class="nav-item menu-open">
-                                        <a href="@Session["GED"]" class="nav-link active bg-gradient-success" target="_blank">
-                                            <img src="~/Assets/icons/analytics-statistics-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
-                                            <p>
-                                                GED
-                                            </p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            }
-                            @*<img src="~/Assets/img/logo-soft.png" alt="AdminLTE Logo" class="brand-image elevation-0 imageHoverLogo" style="opacity: .7; bottom: 0; position: absolute; width: 60%; padding-bottom: 15%;">*@
+                        @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RGED"].ToString()) != 0)))
+                        {
+                            <hr />
+                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
+                                <li class="nav-item menu-open">
+                                    <a href="@Session["GED"]" class="nav-link active bg-gradient-success" target="_blank">
+                                        <img src="~/Assets/icons/analytics-statistics-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
+                                        <p>
+                                            GED
+                                        </p>
+                                    </a>
+                                </li>
+                            </ul>
+                        }
+                        @*<img src="~/Assets/img/logo-soft.png" alt="AdminLTE Logo" class="brand-image elevation-0 imageHoverLogo" style="opacity: .7; bottom: 0; position: absolute; width: 60%; padding-bottom: 15%;">*@
 
-                        </nav>
+                    </nav>
                 </div>
 
                 <a href="https://www.softwell.mg" target="_blank">

@@ -40,6 +40,9 @@
         public string RSF { get; set; }
         public string RSFT { get; set; }
         public string TDB9 { get; set; }
+        public string TDB11 { get; set; }
+        public string TDB12 { get; set; }
+        public string TDB13 { get; set; }
 
         [Column(TypeName = "smalldatetime")]
         public DateTime? CREATIONDATE { get; set; }

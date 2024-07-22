@@ -1269,7 +1269,8 @@ namespace apptab.Controllers
                         || SExist.MP1 != param.MP1 || SExist.MP2 != param.MP2 || SExist.MP3 != param.MP3 || SExist.MP4 != param.MP4
                         || SExist.TDB0 != param.TDB0 || SExist.TDB1 != param.TDB1 || SExist.TDB2 != param.TDB2 || SExist.TDB3 != param.TDB3 || SExist.TDB4 != param.TDB4
                         || SExist.TDB5 != param.TDB5 || SExist.TDB6 != param.TDB6 || SExist.TDB7 != param.TDB7 || SExist.TDB8 != param.TDB8
-                        || SExist.J0 != param.J0 || SExist.J1 != param.J1 || SExist.J2 != param.J2 || SExist.J3 != param.J3 || SExist.JR != param.JR || SExist.JRA != param.JRA)
+                        || SExist.J0 != param.J0 || SExist.J1 != param.J1 || SExist.J2 != param.J2 || SExist.J3 != param.J3 || SExist.JR != param.JR || SExist.JRA != param.JRA
+                        || SExist.TDB9 != param.TDB9 || SExist.TDB11 != param.TDB11 || SExist.TDB12 != param.TDB12 || SExist.TDB13 != param.TDB13)
                     {
                         SExist.MTNON = param.MTNON;
                         SExist.MT0 = param.MT0;
@@ -1310,6 +1311,10 @@ namespace apptab.Controllers
                         SExist.RSF = param.RSF;
                         SExist.RSFT = param.RSFT;
                         SExist.TDB9 = param.TDB9;
+
+                        SExist.TDB11 = param.TDB11;
+                        SExist.TDB12 = param.TDB12;
+                        SExist.TDB13 = param.TDB13;
 
                         db.SaveChanges();
                     }
@@ -1359,6 +1364,10 @@ namespace apptab.Controllers
                         RSF = param.RSF,
                         RSFT = param.RSFT,
                         TDB9 = param.TDB9,
+
+                        TDB11 = param.TDB11,
+                        TDB12 = param.TDB12,
+                        TDB13 = param.TDB13,
 
                         CREATIONDATE = DateTime.Now
                     };

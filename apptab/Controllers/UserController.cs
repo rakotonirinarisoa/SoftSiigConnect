@@ -53,7 +53,7 @@ namespace SOFTCONNECT.Controllers
                         DELETONDATE = a.DELETIONDATE,
                         //STAT = a.DELETIONDATE == null ? "ACTIF" : "INACTIF",
                         CREAT = a.CREATIONDATE
-                    }).Where(a => a.PROJET != null && a.DELETONDATE == null).OrderBy(a => a.PROJET).OrderBy(a => a.CREAT).ToList();
+                    }).Where(a => a.PROJET != null && a.DELETONDATE == null).OrderBy(a => a.PROJET).OrderBy(a => a.LOGIN).ToList();
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = users }, settings));
                 }
                 else
@@ -68,7 +68,7 @@ namespace SOFTCONNECT.Controllers
                         DELETONDATE = a.DELETIONDATE,
                         //STAT = "ACTIF",
                         CREAT = a.CREATIONDATE
-                    }).OrderBy(a => a.CREAT).Where(a => a.DELETONDATE == null).ToList();
+                    }).OrderBy(a => a.CREAT).Where(a => a.DELETONDATE == null).OrderBy(a => a.PROJET).OrderBy(a => a.LOGIN).ToList();
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = users }, settings));
                 }
             }
@@ -168,6 +168,9 @@ namespace SOFTCONNECT.Controllers
                 var test = db.SI_USERS.Where(x => x.ROLE == exist.ROLE && x.IDPROJET == exist.IDPROJET && x.DELETIONDATE == null).FirstOrDefault();
                 if (userExist == null)
                 {
+                    if (db.SI_USERS.Any(a => a.LOGIN == user.LOGIN && a.DELETIONDATE == null))
+                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'utilisateur existe déjà. " }, settings));
+
                     if (test.ROLE == Role.SAdministrateur)
                     {
                         if (listProjet == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Veuillez sélectionner au moins un projet. " }, settings));
@@ -177,9 +180,6 @@ namespace SOFTCONNECT.Controllers
                             int TestProjetRole = 0;
                             if (!int.TryParse(listProjet, out TestProjetRole))
                                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vous ne pouvez pas affecter plusieurs projets à ce type d'utilisateur. " }, settings));
-
-                            if (db.SI_USERS.Any(a => a.LOGIN == user.LOGIN && a.DELETIONDATE == null))
-                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'utilisateur existe déjà. " }, settings));
 
                             var newUser = new SI_USERS()
                             {
@@ -195,9 +195,6 @@ namespace SOFTCONNECT.Controllers
                         }
                         else
                         {
-                            if (db.SI_USERS.Any(a => a.LOGIN == user.LOGIN && a.DELETIONDATE == null))
-                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'utilisateur existe déjà. " }, settings));
-
                             var newUser = new SI_USERS()
                             {
                                 LOGIN = user.LOGIN,
@@ -236,9 +233,6 @@ namespace SOFTCONNECT.Controllers
                     }
                     else
                     {
-                        if (db.SI_USERS.Any(a => a.LOGIN == user.LOGIN && a.DELETIONDATE == null))
-                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'utilisateur existe déjà. " }, settings));
-
                         var newUser = new SI_USERS()
                         {
                             LOGIN = user.LOGIN,
@@ -550,6 +544,10 @@ namespace SOFTCONNECT.Controllers
                     Session["RSF"] = isMenu.RSF;
                     Session["RSFT"] = isMenu.RSFT;
                     Session["TDB9"] = isMenu.TDB9;
+
+                    Session["TDB11"] = isMenu.TDB11;
+                    Session["TDB12"] = isMenu.TDB12;
+                    Session["TDB13"] = isMenu.TDB13;
                 }
 
                 //PRIVILEGES//
@@ -605,6 +603,10 @@ namespace SOFTCONNECT.Controllers
                 Session["RRSF"] = 0;
                 Session["RRSFT"] = 0;
                 Session["RTDB9"] = 0;
+
+                Session["RTDB11"] = 0;
+                Session["RTDB12"] = 0;
+                Session["RTDB13"] = 0;
 
                 if (db.SI_PRIVILEGE.Any(a => a.IDUSERPRIV == test.ID))
                 {
@@ -662,6 +664,10 @@ namespace SOFTCONNECT.Controllers
                     Session["RRSF"] = isMenu.RSF;
                     Session["RRSFT"] = isMenu.RSFT;
                     Session["RTDB9"] = isMenu.TDB9;
+
+                    Session["RTDB11"] = isMenu.TDB11;
+                    Session["RTDB12"] = isMenu.TDB12;
+                    Session["RTDB13"] = isMenu.TDB13;
                 }
 
                 if (db.SI_GEDLIEN.Any())

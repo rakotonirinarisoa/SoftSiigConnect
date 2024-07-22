@@ -112,9 +112,64 @@
     </div>
 </div>
 
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="verification-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<h5 class="modal-title">Mot de passe</h5>*@
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="loader" class="lds-dual-ring display-none overlay"></div>
+                <div class="auth-login">
+                    <div class="login-box">
+                        <div>
+                            <div class="card-body">
+                                <p class="login-box-msg font-weight-bold" style="color: #3d9970">
+                                    Veuillez confirmer votre mot de passe
+                                </p>
+
+                                <form method="post">
+                                    <div class="input-group mb-3">
+                                        <input type="password" class="form-control" placeholder="Mot de passe" id="password">
+                                        <div class="input-group-append">
+                                            <div class="input-group-text bg-gradient-secondary">
+                                                <span class="fas fa-lock"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="button type--B" id="get-user-password-btn" style="cursor: pointer;">
+                                                <div class="button__line"></div>
+                                                <div class="button__line"></div>
+                                                <span class="button__text">Vérifier</span>
+                                                <div class="button__drow1"></div>
+                                                <div class="button__drow2"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <br />
+                                    <br />
+
+                                    <p id="user-password" style="margin-top: 10px; margin-bottom: 10px"></p>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="~/Assets/js/Traitmandat.js?version=@Session["VERSION"]"></script>
 <script src="~/Assets/js/utils.js?version=@Session["VERSION"]"></script>
-
 
 <div class="modal fade" tabindex="-1" role="dialog" id="password-modal">
     <div class="modal-dialog modal-xl" role="document" @*style="width:fit-content"*@>
