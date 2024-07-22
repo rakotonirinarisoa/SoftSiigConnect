@@ -253,6 +253,7 @@ namespace apptab.Controllers
             //sw = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + pathchemin + ".txt");
             sw.Write(pathfiles);
             sw.Close();
+
             byte[] bytearray = null;
             using (var memoryStream = new MemoryStream())
             {
@@ -268,14 +269,12 @@ namespace apptab.Controllers
                 zipFile.Dispose();
                 // archive.Dispose();
                 memoryStream.Position = 0;
-                
-                bytearray = memoryStream.ToArray(); ;
-                
+
+                bytearray = memoryStream.ToArray();
+
                 return new FileContentResult(bytearray, "application/zip");
-               
                 //return File(memoryStream, System.Net.Mime.MediaTypeNames.Application.Zip);
             }
-            
             //return File(source, System.Net.Mime.MediaTypeNames.Application.Octet);
         }
         [HttpPost]

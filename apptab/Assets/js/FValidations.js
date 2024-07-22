@@ -861,7 +861,8 @@ $(`[data-action="CreateTxtCrypter"]`).click(function () {
             });
         }
     }
-    getelementTXT(1,list);
+    //getelementTXT(1,list);
+    getelementTXT(1);
 });
 
 $(`[data-action="CreateTxtSend"]`).click(function () {
