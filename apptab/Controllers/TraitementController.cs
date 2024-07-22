@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Newtonsoft.Json;
 using System.Net.Mail;
 using Extensions.DateTime;
+using apptab.Data.Entities;
 
 namespace apptab.Controllers
 {
@@ -24,6 +25,29 @@ namespace apptab.Controllers
             TypeNameHandling = TypeNameHandling.Auto,
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore
         };
+
+        [HttpPost]
+        public async Task<JsonResult> Password(SI_USERS suser, string userPassword)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                var connectedUser = await db.SI_USERS.Where(x => x.LOGIN == exist.LOGIN && x.PWD == userPassword && x.DELETIONDATE == null).FirstOrDefaultAsync();
+
+                if (connectedUser == null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez vérifier vos identifiants. " }, settings));
+                }
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = connectedUser }, settings));
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
 
         //Traitement mandats PROJET//
         public ActionResult TraitementPROJET()

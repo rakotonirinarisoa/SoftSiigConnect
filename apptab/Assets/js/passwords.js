@@ -40,10 +40,10 @@ $('#get-user-password-btn').on('click', () => {
             const res = JSON.parse(result);
             if (res.type === 'error') {
                 p.css({ 'color': 'red' });
-                p.text('Identifiants incorrects!');
+                p.text('Identifiants incorrects.');
             } else {
                 p.css({ 'color': 'black' });
-                p.html(`Le mot de passe de <b>${res.data.login}</b> est <u>${res.data.password}</u>`);
+                p.html(`Le mot de passe de l'utilisateur "<b>${res.data.login}</b>" est "<u>${res.data.password}</u>"`);
 
                 closeButton.text('Fermer');
             }
