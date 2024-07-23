@@ -1,4 +1,5 @@
 ﻿var table = undefined;
+const p = $('#user-password');
 
 $(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
@@ -743,6 +744,69 @@ $('.Checkall').change(function () {
 
 $('[data-action="SaveSIIG"]').click(function () {
     let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
+
+    let list = [];
+    $.each(CheckList, (k, v) => {
+        list.push($(v).attr("compteG-id"));
+    });
+
+    if (list.length == 0) {
+        alert("Veuillez sélectionner au moins un justificatif afin de le valider. ");
+        return;
+    }
+
+    p.text('');
+    $('#password').val('');
+    $('#verification-modal').modal('toggle');
+});
+
+$('#get-user-password-btn').on('click', () => {
+    let formData = new FormData();
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDSOCIETE);
+
+    formData.append("userPassword", $("#password").val());
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Traitement/Password',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        //error: function (result) {
+        //    var Datas = JSON.parse(result);
+        //    alert(Datas.msg);
+        //    return;
+        //},
+        //success: function (result) {
+        //    OKOK();
+        //}
+        success: function (result) {
+            const res = JSON.parse(result);
+            if (res.type === 'error') {
+                p.css({ 'color': 'red' });
+                p.text('Identifiants incorrects.');
+            } else {
+                OKOK();
+            }
+        },
+        Error: function (_, e) {
+            alert(e);
+        }
+    });
+});
+
+function OKOK() {
+    let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
     let list = [];
     $.each(CheckList, (k, v) => {
         list.push($(v).attr("compteG-id"));
@@ -782,7 +846,7 @@ $('[data-action="SaveSIIG"]').click(function () {
             alert("Problème de connexion. ");
         }
     });
-});
+};
 
 function emptyTable() {
     const data = [];
