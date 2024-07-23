@@ -1,5 +1,6 @@
 ﻿var table = undefined;
 var FilenameUsr;
+const pass = $('#user-password');
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
@@ -775,63 +776,10 @@ $(document).on("click", "[data-target]", function () {
 });
 
 $(`[data-action="CreateTxt"]`).click(function () {
-    let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
-    let list = [];
-
-    if (baseName == "2") {
-        for (let i = 0; i < checkList.length; i += 1) {
-            const id = $(checkList[i]).attr("compteG-id");
-
-            const item = arr.find(item => item.id === Number(id));
-            list.push({
-                id,
-                estAvance: item.estAvance,
-                numereg: item.numereg
-            });
-        }
-    } else {
-        for (let i = 0; i < checkList.length; i += 1) {
-            const id = $(checkList[i]).attr("compteG-id");
-
-            const item = arr.find(item => item.id === id);
-            list.push({
-                id,
-                estAvance: item.estAvance,
-                numereg: item.numereg
-            });
-        }
-    }
-    console.log(list);
-    getelementTXT(0,list);
+   
 });
 $(`[data-action="ISO2022"]`).click(function () {
-    let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
-    let list = [];
-    if (baseName == "2") {
-        for (let i = 0; i < checkList.length; i += 1) {
-            const id = $(checkList[i]).attr("compteG-id");
-
-            const item = arr.find(item => item.id === Number(id));
-            list.push({
-                id,
-                estAvance: item.estAvance,
-                numereg: item.numereg
-            });
-        }
-    } else {
-        for (let i = 0; i < checkList.length; i += 1) {
-            const id = $(checkList[i]).attr("compteG-id");
-
-            const item = arr.find(item => item.id === id);
-            list.push({
-                id,
-                estAvance: item.estAvance,
-                numereg: item.numereg
-            });
-        }
-    }
-    console.log(list);
-    getelementISO2022(0,list);
+   
 });
 
 $(`[data-action="CreateTxtCrypter"]`).click(function () {
@@ -1516,6 +1464,194 @@ $('[data-action="GetAnomalieListes"]').click(function () {
         }
     });
 });
+function getelementCheckJsISO() {
+    alert("ttt");
+    let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
+    let list = [];
+    if (baseName == "2") {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
 
+            const item = arr.find(item => item.id === Number(id));
+            list.push({
+                id,
+                estAvance: item.estAvance,
+                numereg: item.numereg
+            });
+        }
+    } else {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
+
+            const item = arr.find(item => item.id === id);
+            list.push({
+                id,
+                estAvance: item.estAvance,
+                numereg: item.numereg
+            });
+        }
+    }
+    console.log(list);
+    getelementISO2022(0, list);
+}
+function getelementCheckJs() {
+    let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
+    let list = [];
+
+    if (baseName == "2") {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
+
+            const item = arr.find(item => item.id === Number(id));
+            list.push({
+                id,
+                estAvance: item.estAvance,
+                numereg: item.numereg
+            });
+        }
+    } else {
+        for (let i = 0; i < checkList.length; i += 1) {
+            const id = $(checkList[i]).attr("compteG-id");
+
+            const item = arr.find(item => item.id === id);
+            list.push({
+                id,
+                estAvance: item.estAvance,
+                numereg: item.numereg
+            });
+        }
+    }
+    console.log(list);
+    getelementTXT(0, list);
+}
+
+$('[data-action="SaveV"]').click(function () {
+    let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
+
+    let list = [];
+    $.each(CheckList, (k, v) => {
+        list.push($(v).attr("compteG-id"));
+    });
+
+    if (list.length == 0) {
+        alert("Veuillez sélectionner au moins un mandat afin de l'enregistrer et l'envoyer pour validation. ");
+        return;
+    }
+
+    pass.text('');
+    $('#password').val('');
+    $('#verification-modal').modal('toggle');
+});
+
+$('#get-user-password-btn').on('click', () => {
+    let formData = new FormData();
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDSOCIETE);
+
+    formData.append("userPassword", $("#password").val());
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Traitement/Password',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        //error: function (result) {
+        //    var Datas = JSON.parse(result);
+        //    alert(Datas.msg);
+        //    return;
+        //},
+        //success: function (result) {
+        //    OKOK();
+        //}
+        success: function (result) {
+            const res = JSON.parse(result);
+            if (res.type === 'error') {
+                pass.css({ 'color': 'red' });
+                pass.text('Identifiants incorrects.');
+            } else {
+                // OKOK();
+                getelementCheckJs()
+            }
+        },
+        Error: function (_, e) {
+            alert(e);
+        }
+    });
+});
+
+$('[data-action="SaveVISO"]').click(function () {
+    let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
+
+    let list = [];
+    $.each(CheckList, (k, v) => {
+        list.push($(v).attr("compteG-id"));
+    });
+
+    if (list.length == 0) {
+        alert("Veuillez sélectionner au moins un mandat afin de l'enregistrer et l'envoyer pour validation. ");
+        return;
+    }
+
+    pass.text('');
+    $('#password').val('');
+    $('#verification-modalISO').modal('toggle');
+});
+
+$('#get-user-password-btnISO').on('click', () => {
+    
+    let formData = new FormData();
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDSOCIETE);
+
+    formData.append("userPassword", $("#passwordISo").val());
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Traitement/Password',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        //error: function (result) {
+        //    var Datas = JSON.parse(result);
+        //    alert(Datas.msg);
+        //    return;
+        //},
+        //success: function (result) {
+        //    OKOK();
+        //}
+        success: function (result) {
+            const res = JSON.parse(result);
+            if (res.type === 'error') {
+                pass.css({ 'color': 'red' });
+                pass.text('Identifiants incorrects.');
+            } else {
+                // OKOK();
+                getelementCheckJsISO();
+            }
+        },
+        Error: function (_, e) {
+            alert(e);
+        }
+    });
+});
 var baseName = "2";
 

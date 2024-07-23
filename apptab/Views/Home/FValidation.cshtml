@@ -113,11 +113,11 @@
         <div class="nav-link active" data-type="switch_tab" data-target="tfacture">Factures sélectionnées</div>
     </li>
     @*<li class="nav-item">
-        <div class="nav-link" data-type="switch_tab" data-target="tdetail">Détail de la ligne</div>
-    </li>
-    <li class="nav-item">
-        <div class="nav-link" data-type="switch_tab" data-target="tordre">Donneur d'ordre</div>
-    </li>*@
+            <div class="nav-link" data-type="switch_tab" data-target="tdetail">Détail de la ligne</div>
+        </li>
+        <li class="nav-item">
+            <div class="nav-link" data-type="switch_tab" data-target="tordre">Donneur d'ordre</div>
+        </li>*@
     <li class="nav-item">
         <div class="nav-link" data-type="switch_tab" data-target="tanomalie" data-action="GetAnomalieListes">Anomalie</div>
     </li>
@@ -200,12 +200,12 @@
     {
         <div class="form-row">
             <div class="mb-3 col">
-                <div class="btn btn-flat bg-gradient-primary col-12" data-action="ISO2022">
+                <div class="btn btn-flat bg-gradient-primary col-12" @*data-action="ISO2022"*@ data-action="SaveVISO">
                     <i class="fa fa-download"></i> Créer ISO2022
                 </div>
             </div>
             <div class="mb-3 col">
-                <div class="btn btn-flat bg-gradient-primary col-12" data-action="CreateTxt">
+                <div class="btn btn-flat bg-gradient-primary col-12" @*data-action="CreateTxt"*@ data-action="SaveV">
                     <i class="fa fa-download"></i> Créer fichier AFB
                 </div>
             </div>
@@ -213,12 +213,12 @@
 
         <div class="form-row">
             <div class="mb-3 col">
-                <div class="btn btn-flat bg-gradient-red col-12" data-action="CreateTxtCrypter">
+                <div class="btn btn-flat bg-gradient-red col-12" @*data-action="CreateTxtCrypter"*@ data-action="SaveV">
                     <i class="fa fa-file-archive"></i> Créer fichier AFB crypté
                 </div>
             </div>
             <div class="mb-3 col">
-                <div class="btn btn-flat bg-gradient-red col-12" data-action="CreateTxtSend">
+                <div class="btn btn-flat bg-gradient-red col-12" @*data-action="CreateTxtSend"*@ data-action="SaveV">
                     <i class="fa fa-paper-plane"></i> Envoyer FTP fichier AFB
                 </div>
             </div>
@@ -337,6 +337,118 @@
         </div>
     </div>
 </div>
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="verification-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<h5 class="modal-title">Mot de passe</h5>*@
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="loader" class="lds-dual-ring display-none overlay"></div>
+                <div class="auth-login">
+                    <div class="login-box">
+                        <div>
+                            <div class="card-body">
+                                <p class="login-box-msg font-weight-bold" style="color: #3d9970">
+                                    Veuillez confirmer votre mot de passe
+                                </p>
+
+                                <form method="post">
+                                    <div class="input-group mb-3">
+                                        <input type="password" class="form-control" placeholder="Mot de passe" id="password">
+                                        <div class="input-group-append">
+                                            <div class="input-group-text bg-gradient-secondary">
+                                                <span class="fas fa-lock"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="button type--B" id="get-user-password-btn" style="cursor: pointer;">
+                                                <div class="button__line"></div>
+                                                <div class="button__line"></div>
+                                                <span class="button__text">Vérifier</span>
+                                                <div class="button__drow1"></div>
+                                                <div class="button__drow2"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <br />
+                                    <br />
+
+                                    <p id="user-password" style="margin-top: 10px; margin-bottom: 10px"></p>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="verification-modalISO">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<h5 class="modal-title">Mot de passe</h5>*@
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="loader" class="lds-dual-ring display-none overlay"></div>
+                <div class="auth-login">
+                    <div class="login-box">
+                        <div>
+                            <div class="card-body">
+                                <p class="login-box-msg font-weight-bold" style="color: #3d9970">
+                                    Veuillez confirmer votre mot de passe
+                                </p>
+
+                                <form method="post">
+                                    <div class="input-group mb-3">
+                                        <input type="password" class="form-control" placeholder="Mot de passe" id="passwordISo">
+                                        <div class="input-group-append">
+                                            <div class="input-group-text bg-gradient-secondary">
+                                                <span class="fas fa-lock"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="button type--B" id="get-user-password-btnISO" style="cursor: pointer;">
+                                                <div class="button__line"></div>
+                                                <div class="button__line"></div>
+                                                <span class="button__text">Vérifier</span>
+                                                <div class="button__drow1"></div>
+                                                <div class="button__drow2"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <br />
+                                    <br />
+
+                                    <p id="user-password" style="margin-top: 10px; margin-bottom: 10px"></p>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script src="~/Assets/js/utils.js?version=@Session["VERSION"]"></script>
 <script src="~/Assets/js/FValidations.js?version=@Session["VERSION"]"></script>
 
