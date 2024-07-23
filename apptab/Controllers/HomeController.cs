@@ -267,13 +267,12 @@ namespace apptab.Controllers
 
                 zipFile.Dispose();
                 // archive.Dispose();
+                memoryStream.CopyTo(zipFile);
+                bytearray = memoryStream.ToArray();
                 memoryStream.Position = 0;
-                
-                bytearray = memoryStream.ToArray(); ;
-                
-                return new FileContentResult(bytearray, "application/zip");
+                //return new FileContentResult(bytearray, "application/zip");
                
-                //return File(memoryStream, System.Net.Mime.MediaTypeNames.Application.Zip);
+                return File(bytearray, System.Net.Mime.MediaTypeNames.Application.Zip, pathfiles + ".zip");
             }
             
             //return File(source, System.Net.Mime.MediaTypeNames.Application.Octet);
