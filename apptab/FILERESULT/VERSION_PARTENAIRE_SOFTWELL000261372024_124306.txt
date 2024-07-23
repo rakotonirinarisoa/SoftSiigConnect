@@ -1,6 +1,0 @@
-0302                     13074SOFTWELL                000011                          0200024416640103                                               00009      
-0602              90BQ00000008EA_TRADING_             BFV SG MADAGAS                  00015020010094190000001000000000USER01AVANCEAVANCE PARTENAIRE U00008      
-0602              90BQ00000009EA_TRADING_             BFV SG MADAGAS                  00015020010094190000000020000000OPUSER01FACTURE USER001 EA TRAD00008      
-0602              90BQ00000010EA_TRADING_             BFV SG MADAGAS                  00015020010094190000000050000000OPUSER25TFACTURE USER25 EA TRAD00008      
-0602              90BQ00000011HG_MADAGASCAR           BOA MADAGASCAR                  05060216851400060000001500000000BR 020FA 052 AIN PAIEMENT HG MA00009      
-0802                                                                                                  0000002570000000                                          

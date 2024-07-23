@@ -778,8 +778,8 @@ namespace apptab.Extension
             foreach (var item in list)
             {
                 beneficiaires.AddRange(from dordre in db.OPA_REGLEMENTBR
-                                 where dordre.IDSOCIETE == PROJECTID && dordre.NUM == item.Id && dordre.APPLICATION == "BR" && dordre.ETAT == "0"
-                                 select dordre);
+                                       where dordre.IDSOCIETE == PROJECTID && dordre.NUM == item.Id && dordre.APPLICATION == "BR" && dordre.ETAT == "0"
+                                       select dordre);
             }
 
             var nums_2 = beneficiaires;
@@ -829,9 +829,9 @@ namespace apptab.Extension
                         if (opp.AVANCE == true)
                         {
                             texteAFB160 += this.formaterChiffre(16, mont.MONTANT.ToString());
-                        }else if(opp.auxi == "" && opp.ComptaG == null && opp.Compte == "" && opp.Rang == "")
+                        }
+                        else if (opp.auxi == "" && opp.ComptaG == null && opp.Compte == "" && opp.Rang == "")
                         {
-                           
                             texteAFB160 += this.formaterChiffre(16, opp.MONTANT.ToString());
                         }
                         else

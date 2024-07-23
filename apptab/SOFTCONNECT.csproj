@@ -2605,17 +2605,6 @@
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="DeploieF\UrlOrigine.txt" />
     <Content Include="favicon.ico" />
-    <Content Include="FILERESULT\VERSION_DEMO_SOFTWELL01ACHAT2232024_101358.txt" />
-    <Content Include="FILERESULT\VERSION_DEMO_SOFTWELL12032032024_185136.txt" />
-    <Content Include="FILERESULT\VERSION_DEMO_SOFTWELL12032132024_095525.txt" />
-    <Content Include="FILERESULT\VERSION_DEMO_SOFTWELL12032232024_143251.txt" />
-    <Content Include="FILERESULT\VERSION_DEMO_SOFTWELL12032232024_152348.txt" />
-    <Content Include="FILERESULT\VERSION_DEMO_SOFTWELL12032432024_082747.txt" />
-    <Content Include="FILERESULT\VERSION_DEMO_SOFTWELL12032432024_084903.txt" />
-    <Content Include="FILERESULT\VERSION_DEMO_SOFTWELL12032432024_102313.txt" />
-    <Content Include="FILERESULT\VERSION_DEMO_SOFTWELL12032432024_111638.txt" />
-    <Content Include="FILERESULT\VERSION_DEMO_SOFTWELL12032932024_123836.txt" />
-    <Content Include="FILERESULT\VERSION_DEMO_SOFTWELLACHAT2232024_095012.txt" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="obj\Release\apptab.csproj.FileListAbsolute.txt" />
@@ -4992,6 +4981,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Assets\admlte\dist\img\credit\" />
     <Folder Include="Assets\admlte\dist\js\" />
+    <Folder Include="FILERESULT\" />
     <Folder Include="Views\GetCountTDB\" />
     <Folder Include="Views\GetFileF\" />
   </ItemGroup>
