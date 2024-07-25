@@ -21,26 +21,25 @@
 </div>
 
 @*<div class="d-flex flex-wrap justify-content-between">
-    <div></div>
-    <div class="input-group mb-3 col-sm-5">
-        <div class="input-group-prepend custom-label">
-            <span class="input-group-text text-bold" id="basic-addon3"><i class="fa fa-search"></i></span>
+        <div></div>
+        <div class="input-group mb-3 col-sm-5">
+            <div class="input-group-prepend custom-label">
+                <span class="input-group-text text-bold" id="basic-addon3"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control col" id="ticket" placeholder="Rechercher...">
         </div>
-        <input type="text" class="form-control col" id="ticket" placeholder="Rechercher...">
-    </div>
-</div>*@
+    </div>*@
 
 <input type="text" id="myInput" onkeyup="SearchFuncHistorique()" placeholder="Recherche">
 
 <div class="table-responsive tbodyDiv">
     <table class="table table-hover table-striped" id="idTable">
-        <thead class="thead-green">
-            <tr>
+        <thead style="position:sticky">
+            <tr class="thead-accueil1" style="white-space: nowrap;">
                 <th>Date règlement</th>
                 <th>N°</th>
+                <th>Date Fichier</th>
                 <th>Site</th>
-                <th>Date n° ordre</th>
-                <th>N° pièce</th>
                 <th>Journal</th>
                 <th>NOM FICHIER</th>
                 <th>Compte G</th>
@@ -50,9 +49,28 @@
                 <th>Notifications</th>
             </tr>
         </thead>
-        <tbody ticket-list id="historiques">
-        </tbody>
+        <tbody></tbody>
+        @*<tbody ticket-list id="historiques"></tbody>*@
+        <tfoot style="opacity:50%">
+            <tr>
+                <th>Date règlement</th>
+                <th>N°</th>
+                <th>Date Fichier</th>
+                <th>Site</th>
+                <th>Journal</th>
+                <th>NOM FICHIER</th>
+                <th>Compte G</th>
+                <th>Montant Ar</th>
+                <th>RIB</th>
+                <th>Utilisateur</th>
+                <th>Notifications</th>
+            </tr>
+        </tfoot>
     </table>
 </div>
 <script src="~/Assets/js/Historiques.js?version=@Session["VERSION"]"></script>
 <script src="~/Assets/js/SearchJsSet.js?version=@Session["VERSION"]"></script>
+<script src="~/Assets/js/utils.js?version=@Session["VERSION"]"></script>
+
+<script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
+<script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>

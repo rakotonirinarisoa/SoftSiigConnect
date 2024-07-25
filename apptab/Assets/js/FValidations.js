@@ -1465,7 +1465,6 @@ $('[data-action="GetAnomalieListes"]').click(function () {
     });
 });
 function getelementCheckJsISO() {
-    alert("ttt");
     let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
     let list = [];
     if (baseName == "2") {

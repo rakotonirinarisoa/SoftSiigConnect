@@ -468,8 +468,8 @@ namespace apptab.Controllers
 
             Response.AppendHeader("Content-Disposition", cd.ToString());
 
-            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet);
-            //return File(fileBytes , System.Net.Mime.MediaTypeNames.Application.Soap, Nomfichier);
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Text.Xml);
+            //return File(fileBytes , System.Net.Mime.MediaTypeNames.Application.octet);
             //return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archivage avec succès. ", data = xmlResult  }, settings));
         }
         [HttpPost]
@@ -2672,7 +2672,8 @@ namespace apptab.Controllers
                     LIBELLE = x.LIBELLE,
                     BANQUE = x.BANQUE,
                     GUICHET = x.GUICHET,
-                    LOGIN = user.LOGIN
+                    LOGIN = user.LOGIN,
+                    NOTIFICATION = true,
                 })
                 .OrderBy(x => x.DATE).ToList();
                 var queryBr = db.OPA_HISTORIQUEBR
@@ -2707,6 +2708,7 @@ namespace apptab.Controllers
                         GUICHET = x.GUICHET,
                         LOGIN = user.LOGIN,
                         SITE = x.SITE,
+                        NOTIFICATION = true,
                     })
                     .OrderBy(x => x.DATE).ToList();
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = query, databr = queryBr }, settings));
