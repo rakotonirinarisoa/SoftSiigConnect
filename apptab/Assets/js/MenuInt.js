@@ -81,6 +81,22 @@ function GetUsers() {
             $("#Tdb11").val(Datas.data.TDB11);
             $("#Tdb12").val(Datas.data.TDB12);
             $("#Tdb13").val(Datas.data.TDB13);
+
+            $("#Tdb9CHK").prop("checked", Datas.data.TDB9i);
+            $("#Tdb0CHK").prop("checked", Datas.data.TDB0i);
+            $("#JRCHK").prop("checked", Datas.data.JRi);
+            $("#JRACHK").prop("checked", Datas.data.JRAi);
+            $("#Tdb1CHK").prop("checked", Datas.data.TDB1i);
+            $("#Tdb2CHK").prop("checked", Datas.data.TDB2i);
+            $("#Tdb3CHK").prop("checked", Datas.data.TDB3i);
+            $("#Tdb4CHK").prop("checked", Datas.data.TDB4i);
+            $("#Tdb5CHK").prop("checked", Datas.data.TDB5i);
+            $("#Tdb6CHK").prop("checked", Datas.data.TDB6i);
+            $("#Tdb7CHK").prop("checked", Datas.data.TDB7i);
+            $("#Tdb8CHK").prop("checked", Datas.data.TDB8i);
+            $("#Tdb11CHK").prop("checked", Datas.data.TDB11i);
+            $("#Tdb12CHK").prop("checked", Datas.data.TDB12i);
+            $("#Tdb13CHK").prop("checked", Datas.data.TDB13i);
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -134,6 +150,31 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let Tdb11 = $("#Tdb11").val();
     let Tdb12 = $("#Tdb12").val();
     let Tdb13 = $("#Tdb13").val();
+
+    //if ($('#ChkDevise').prop("checked") == true) {
+    //    formData.append("devise", true);
+    //} else {
+    //    formData.append("devise", false);
+    //}
+
+    let Tdb9CHK = $('#Tdb9CHK').prop("checked");
+    let Tdb0CHK = $('#Tdb0CHK').prop("checked");
+
+    let JRCHK = $('#JRCHK').prop("checked");
+    let JRACHK = $('#JRACHK').prop("checked");
+
+    let Tdb1CHK = $('#Tdb1CHK').prop("checked");
+    let Tdb2CHK = $('#Tdb2CHK').prop("checked");
+    let Tdb3CHK = $('#Tdb3CHK').prop("checked");
+    let Tdb4CHK = $('#Tdb4CHK').prop("checked");
+    let Tdb5CHK = $('#Tdb5CHK').prop("checked");
+    let Tdb6CHK = $('#Tdb6CHK').prop("checked");
+    let Tdb7CHK = $('#Tdb7CHK').prop("checked");
+    let Tdb8CHK = $('#Tdb8CHK').prop("checked");
+
+    let Tdb11CHK = $('#Tdb11CHK').prop("checked");
+    let Tdb12CHK = $('#Tdb12CHK').prop("checked");
+    let Tdb13CHK = $('#Tdb13CHK').prop("checked");
 
     if (!ParaV0 || !ParaV || !ParaS /*|| !ParaSiig*/ || !ParaPe || !ParaPv || !ParaPp || !ParaPb || !Md0 || !Md1 || !Md2 /*|| !Md3 || !Mop0 || !Mop1 || !Mop2*/
         || !Tdb0 || !Tdb1 || !Tdb2 || !Tdb3 || !Tdb4 || !Tdb5 || !Tdb6 || !Tdb7 || !Tdb8
@@ -191,6 +232,22 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("param.TDB11", $(`#Tdb11`).val());
     formData.append("param.TDB12", $(`#Tdb12`).val());
     formData.append("param.TDB13", $(`#Tdb13`).val());
+
+    formData.append("param.TDB9i", Tdb9CHK);
+    formData.append("param.TDB0i", Tdb0CHK);
+    formData.append("param.JRi", JRCHK);
+    formData.append("param.JRAi", JRACHK);
+    formData.append("param.TDB1i", Tdb1CHK);
+    formData.append("param.TDB2i", Tdb2CHK);
+    formData.append("param.TDB3i", Tdb3CHK);
+    formData.append("param.TDB4i", Tdb4CHK);
+    formData.append("param.TDB5i", Tdb5CHK);
+    formData.append("param.TDB6i", Tdb6CHK);
+    formData.append("param.TDB7i", Tdb7CHK);
+    formData.append("param.TDB8i", Tdb8CHK);
+    formData.append("param.TDB11i", Tdb11CHK);
+    formData.append("param.TDB12i", Tdb12CHK);
+    formData.append("param.TDB13i", Tdb13CHK);
 
     $.ajax({
         type: "POST",

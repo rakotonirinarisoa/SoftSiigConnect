@@ -1263,61 +1263,79 @@ namespace apptab.Controllers
 
                 if (SExist != null)
                 {
-                    if (SExist.MTNON != param.MTNON || SExist.MT0 != param.MT0 || SExist.MT1 != param.MT1 /*|| SExist.MT2 != param.MT2*/
-                        || SExist.MD0 != param.MD0 || SExist.MD1 != param.MD1 || SExist.MD2 != param.MD2 /*|| SExist.MD3 != param.MD3*/
-                        /*|| SExist.MOP0 != param.MOP0 || SExist.MOP1 != param.MOP1 || SExist.MOP2 != param.MOP2*/
-                        || SExist.MP1 != param.MP1 || SExist.MP2 != param.MP2 || SExist.MP3 != param.MP3 || SExist.MP4 != param.MP4
-                        || SExist.TDB0 != param.TDB0 || SExist.TDB1 != param.TDB1 || SExist.TDB2 != param.TDB2 || SExist.TDB3 != param.TDB3 || SExist.TDB4 != param.TDB4
-                        || SExist.TDB5 != param.TDB5 || SExist.TDB6 != param.TDB6 || SExist.TDB7 != param.TDB7 || SExist.TDB8 != param.TDB8
-                        || SExist.J0 != param.J0 || SExist.J1 != param.J1 || SExist.J2 != param.J2 || SExist.J3 != param.J3 || SExist.JR != param.JR || SExist.JRA != param.JRA
-                        || SExist.TDB9 != param.TDB9 || SExist.TDB11 != param.TDB11 || SExist.TDB12 != param.TDB12 || SExist.TDB13 != param.TDB13)
-                    {
-                        SExist.MTNON = param.MTNON;
-                        SExist.MT0 = param.MT0;
-                        SExist.MT1 = param.MT1;
-                        //SExist.MT2 = param.MT2;
+                    //if (SExist.MTNON != param.MTNON || SExist.MT0 != param.MT0 || SExist.MT1 != param.MT1 /*|| SExist.MT2 != param.MT2*/
+                    //    || SExist.MD0 != param.MD0 || SExist.MD1 != param.MD1 || SExist.MD2 != param.MD2 /*|| SExist.MD3 != param.MD3*/
+                    //    /*|| SExist.MOP0 != param.MOP0 || SExist.MOP1 != param.MOP1 || SExist.MOP2 != param.MOP2*/
+                    //    || SExist.MP1 != param.MP1 || SExist.MP2 != param.MP2 || SExist.MP3 != param.MP3 || SExist.MP4 != param.MP4
+                    //    || SExist.TDB0 != param.TDB0 || SExist.TDB1 != param.TDB1 || SExist.TDB2 != param.TDB2 || SExist.TDB3 != param.TDB3 || SExist.TDB4 != param.TDB4
+                    //    || SExist.TDB5 != param.TDB5 || SExist.TDB6 != param.TDB6 || SExist.TDB7 != param.TDB7 || SExist.TDB8 != param.TDB8
+                    //    || SExist.J0 != param.J0 || SExist.J1 != param.J1 || SExist.J2 != param.J2 || SExist.J3 != param.J3 || SExist.JR != param.JR || SExist.JRA != param.JRA
+                    //    || SExist.TDB9 != param.TDB9 || SExist.TDB11 != param.TDB11 || SExist.TDB12 != param.TDB12 || SExist.TDB13 != param.TDB13)
+                    //{
 
-                        SExist.MP1 = param.MP1;
-                        SExist.MP2 = param.MP2;
-                        SExist.MP3 = param.MP3;
-                        SExist.MP4 = param.MP4;
+                    //}
 
-                        SExist.MD0 = param.MD0;
-                        SExist.MD1 = param.MD1;
-                        SExist.MD2 = param.MD2;
-                        //SExist.MD3 = param.MD3;
+                    SExist.MTNON = param.MTNON;
+                    SExist.MT0 = param.MT0;
+                    SExist.MT1 = param.MT1;
+                    //SExist.MT2 = param.MT2;
 
-                        //SExist.MOP0 = param.MOP0;
-                        //SExist.MOP1 = param.MOP1;
-                        //SExist.MOP2 = param.MOP2;
+                    SExist.MP1 = param.MP1;
+                    SExist.MP2 = param.MP2;
+                    SExist.MP3 = param.MP3;
+                    SExist.MP4 = param.MP4;
 
-                        SExist.TDB0 = param.TDB0;
-                        SExist.TDB1 = param.TDB1;
-                        SExist.TDB2 = param.TDB2;
-                        SExist.TDB3 = param.TDB3;
-                        SExist.TDB4 = param.TDB4;
-                        SExist.TDB5 = param.TDB5;
-                        SExist.TDB6 = param.TDB6;
-                        SExist.TDB7 = param.TDB7;
-                        SExist.TDB8 = param.TDB8;
+                    SExist.MD0 = param.MD0;
+                    SExist.MD1 = param.MD1;
+                    SExist.MD2 = param.MD2;
+                    //SExist.MD3 = param.MD3;
 
-                        SExist.J0 = param.J0;
-                        SExist.J1 = param.J1;
-                        SExist.J2 = param.J2;
-                        SExist.J3 = param.J3;
-                        SExist.JR = param.JR;
-                        SExist.JRA = param.JRA;
+                    //SExist.MOP0 = param.MOP0;
+                    //SExist.MOP1 = param.MOP1;
+                    //SExist.MOP2 = param.MOP2;
 
-                        SExist.RSF = param.RSF;
-                        SExist.RSFT = param.RSFT;
-                        SExist.TDB9 = param.TDB9;
+                    SExist.TDB0 = param.TDB0;
+                    SExist.TDB1 = param.TDB1;
+                    SExist.TDB2 = param.TDB2;
+                    SExist.TDB3 = param.TDB3;
+                    SExist.TDB4 = param.TDB4;
+                    SExist.TDB5 = param.TDB5;
+                    SExist.TDB6 = param.TDB6;
+                    SExist.TDB7 = param.TDB7;
+                    SExist.TDB8 = param.TDB8;
 
-                        SExist.TDB11 = param.TDB11;
-                        SExist.TDB12 = param.TDB12;
-                        SExist.TDB13 = param.TDB13;
+                    SExist.J0 = param.J0;
+                    SExist.J1 = param.J1;
+                    SExist.J2 = param.J2;
+                    SExist.J3 = param.J3;
+                    SExist.JR = param.JR;
+                    SExist.JRA = param.JRA;
 
-                        db.SaveChanges();
-                    }
+                    SExist.RSF = param.RSF;
+                    SExist.RSFT = param.RSFT;
+                    SExist.TDB9 = param.TDB9;
+
+                    SExist.TDB11 = param.TDB11;
+                    SExist.TDB12 = param.TDB12;
+                    SExist.TDB13 = param.TDB13;
+
+                    SExist.TDB9i = param.TDB9i;
+                    SExist.TDB0i = param.TDB0i;
+                    SExist.JRi = param.JRi;
+                    SExist.JRAi = param.JRAi;
+                    SExist.TDB1i = param.TDB1i;
+                    SExist.TDB2i = param.TDB2i;
+                    SExist.TDB3i = param.TDB3i;
+                    SExist.TDB4i = param.TDB4i;
+                    SExist.TDB5i = param.TDB5i;
+                    SExist.TDB6i = param.TDB6i;
+                    SExist.TDB7i = param.TDB7i;
+                    SExist.TDB8i = param.TDB8i;
+                    SExist.TDB11i = param.TDB11i;
+                    SExist.TDB12i = param.TDB12i;
+                    SExist.TDB13i = param.TDB13i;
+
+                    db.SaveChanges();
 
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Enregistrement avec succès. ", data = param }, settings));
                 }
@@ -1368,6 +1386,22 @@ namespace apptab.Controllers
                         TDB11 = param.TDB11,
                         TDB12 = param.TDB12,
                         TDB13 = param.TDB13,
+
+                        TDB9i = param.TDB9i,
+                        TDB0i = param.TDB0i,
+                        JRi = param.JRi,
+                        JRAi = param.JRAi,
+                        TDB1i = param.TDB1i,
+                        TDB2i = param.TDB2i,
+                        TDB3i = param.TDB3i,
+                        TDB4i = param.TDB4i,
+                        TDB5i = param.TDB5i,
+                        TDB6i = param.TDB6i,
+                        TDB7i = param.TDB7i,
+                        TDB8i = param.TDB8i,
+                        TDB11i = param.TDB11i,
+                        TDB12i = param.TDB12i,
+                        TDB13i = param.TDB13i,
 
                         CREATIONDATE = DateTime.Now
                     };

@@ -548,6 +548,22 @@ namespace SOFTCONNECT.Controllers
                     Session["TDB11"] = isMenu.TDB11;
                     Session["TDB12"] = isMenu.TDB12;
                     Session["TDB13"] = isMenu.TDB13;
+
+                    Session["TDB9i"] = isMenu.TDB9i == true ? 1 : 0;
+                    Session["TDB0i"] = isMenu.TDB0i == true ? 1 : 0;
+                    Session["JRi"] = isMenu.JRi == true ? 1 : 0;
+                    Session["JRAi"] = isMenu.JRAi == true ? 1 : 0;
+                    Session["TDB1i"] = isMenu.TDB1i == true ? 1 : 0;
+                    Session["TDB2i"] = isMenu.TDB2i == true ? 1 : 0;
+                    Session["TDB3i"] = isMenu.TDB3i == true ? 1 : 0;
+                    Session["TDB4i"] = isMenu.TDB4i == true ? 1 : 0;
+                    Session["TDB5i"] = isMenu.TDB5i == true ? 1 : 0;
+                    Session["TDB6i"] = isMenu.TDB6i == true ? 1 : 0;
+                    Session["TDB7i"] = isMenu.TDB7i == true ? 1 : 0;
+                    Session["TDB8i"] = isMenu.TDB8i == true ? 1 : 0;
+                    Session["TDB11i"] = isMenu.TDB11i == true ? 1 : 0;
+                    Session["TDB12i"] = isMenu.TDB12i == true ? 1 : 0;
+                    Session["TDB13i"] = isMenu.TDB13i == true ? 1 : 0;
                 }
 
                 //PRIVILEGES//

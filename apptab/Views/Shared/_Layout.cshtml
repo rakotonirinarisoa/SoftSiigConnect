@@ -770,15 +770,6 @@
                                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;" id="menu-accordeon" data-menu-accordion="5">
 
                                         <li class="nav-item">
-                                            <a href="../Home/HistoReg" class="nav-link" data-child-id="4">
-                                                <i class="nav-icon fas fa-history" style="color: #4970cb"></i>
-                                                <p>
-                                                    Historiques des paiements
-                                                </p>
-                                            </a>
-                                        </li>
-
-                                        <li class="nav-item">
                                             <a href="../Etat/HistoUsers" class="nav-link" data-child-id="5">
                                                 <i class="nav-icon fa fa-exclamation"></i>
                                                 <p>
@@ -810,7 +801,8 @@
                                         }
 
                                         @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB9"].ToString()) != 0)))
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) 
+                                        && (int.Parse(Session["RTDB9"].ToString()) != 0 && int.Parse(Session["TDB9i"].ToString()) == 1)))
                                         {
                                             <li class="nav-item">
                                                 <a href="../BordTraitement/BudgetCreditOuvert" class="nav-link" data-child-id="5">
@@ -823,7 +815,8 @@
                                         }
 
                                         @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB0"].ToString()) != 0)))
+                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
+                                            && (int.Parse(Session["RTDB0"].ToString()) != 0 && int.Parse(Session["TDB0i"].ToString()) == 1)))
                                         {
                                             <li class="nav-item">
                                                 <a href="../BordTraitement/BordListeEngaPaie" class="nav-link" data-child-id="5">
@@ -835,7 +828,8 @@
                                             </li>
                                         }
                                         @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJR"].ToString()) != 0)))
+                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
+                                            && (int.Parse(Session["RJR"].ToString()) != 0 && int.Parse(Session["JRi"].ToString()) == 1)))
                                         {
                                             <li class="nav-item">
                                                 <a href="../BordTraitement/StatutJR" class="nav-link" data-child-id="5">
@@ -847,7 +841,8 @@
                                             </li>
                                         }
                                         @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJRA"].ToString()) != 0)))
+                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
+                                            && (int.Parse(Session["RJRA"].ToString()) != 0 && int.Parse(Session["JRAi"].ToString()) == 1)))
                                         {
                                             <li class="nav-item">
                                                 <a href="../BordTraitement/StatutJRA" class="nav-link" data-child-id="5">
@@ -859,7 +854,8 @@
                                             </li>
                                         }
                                         @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB1"].ToString()) != 0)))
+                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
+                                            && (int.Parse(Session["RTDB1"].ToString()) != 0 && int.Parse(Session["TDB1i"].ToString()) == 1)))
                                         {
                                             <li class="nav-item">
                                                 <a href="../BordTraitement/StatutEngagements" class="nav-link" data-child-id="5">
@@ -871,7 +867,8 @@
                                             </li>
                                         }
                                         @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB2"].ToString()) != 0)))
+                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
+                                            && (int.Parse(Session["RTDB2"].ToString()) != 0 && int.Parse(Session["TDB2i"].ToString()) == 1)))
                                         {
                                             <li class="nav-item">
                                                 <a href="../BordTraitement/DelaisTraitementEngagements" class="nav-link" data-child-id="5">
@@ -883,7 +880,8 @@
                                             </li>
                                         }
                                         @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB3"].ToString()) != 0)))
+                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
+                                            && (int.Parse(Session["RTDB3"].ToString()) != 0 && int.Parse(Session["TDB3i"].ToString()) == 1)))
                                         {
                                             <li class="nav-item">
                                                 <a href="../BordTraitement/SoufTraitement" class="nav-link" data-child-id="5">
@@ -895,7 +893,8 @@
                                             </li>
                                         }
                                         @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB4"].ToString()) != 0)))
+                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
+                                            && (int.Parse(Session["RTDB4"].ToString()) != 0 && int.Parse(Session["TDB4i"].ToString()) == 1)))
                                         {
                                             <li class="nav-item">
                                                 <a href="../BordTraitement/EngagementsREJETE" class="nav-link" data-child-id="5">
@@ -907,7 +906,8 @@
                                             </li>
                                         }
                                         @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB5"].ToString()) != 0)))
+                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
+                                            && (int.Parse(Session["RTDB5"].ToString()) != 0 && int.Parse(Session["TDB5i"].ToString()) == 1)))
                                         {
                                             <li class="nav-item">
                                                 <a href="../BordTraitement/StatutPaiement" class="nav-link" data-child-id="5">
@@ -919,7 +919,8 @@
                                             </li>
                                         }
                                         @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB6"].ToString()) != 0)))
+                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
+                                            && (int.Parse(Session["RTDB6"].ToString()) != 0 && int.Parse(Session["TDB6i"].ToString()) == 1)))
                                         {
                                             <li class="nav-item">
                                                 <a href="../BordTraitement/TraitementsPaiement" class="nav-link" data-child-id="5">
@@ -931,7 +932,8 @@
                                             </li>
                                         }
                                         @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB7"].ToString()) != 0)))
+                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
+                                            && (int.Parse(Session["RTDB7"].ToString()) != 0 && int.Parse(Session["TDB7i"].ToString()) == 1)))
                                         {
                                             <li class="nav-item">
                                                 <a href="../BordTraitement/TraitementPaiementSoufrance" class="nav-link" data-child-id="5">
@@ -943,7 +945,8 @@
                                             </li>
                                         }
                                         @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB8"].ToString()) != 0)))
+                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
+                                            && (int.Parse(Session["RTDB8"].ToString()) != 0 && int.Parse(Session["TDB8i"].ToString()) == 1)))
                                         {
                                             <li class="nav-item">
                                                 <a href="../BordTraitement/TraitementPaiementRejet" class="nav-link" data-child-id="5">
@@ -956,7 +959,8 @@
                                         }
 
                                         @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB11"].ToString()) != 0)))
+                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
+                                            && (int.Parse(Session["RTDB11"].ToString()) != 0 && int.Parse(Session["TDB11i"].ToString()) == 1)))
                                         {
                                             <li class="nav-item">
                                                 <a href="../Home/AnomaliePaiement" class="nav-link" data-child-id="4">
@@ -969,11 +973,12 @@
                                         }
 
                                         @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB12"].ToString()) != 0)))
+                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
+                                            && (int.Parse(Session["RTDB12"].ToString()) != 0 && int.Parse(Session["TDB12i"].ToString()) == 1)))
                                         {
                                             <li class="nav-item">
                                                 <a href="../Home/CancelHisto" class="nav-link" data-child-id="4">
-                                                    <i class="nav-icon fas fa-not-equal" style="color: #4970cb"></i>
+                                                    <i class="nav-icon fa fa-ban" style="color: #4970cb"></i>
                                                     <p>
                                                         @Session["TDB12"]@*Anullation de payement*@
                                                     </p>
@@ -982,7 +987,8 @@
                                         }
 
                                         @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB13"].ToString()) != 0)))
+                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
+                                            && (int.Parse(Session["RTDB13"].ToString()) != 0 && int.Parse(Session["TDB13i"].ToString()) == 1)))
                                         {
                                             <li class="nav-item">
                                                 <a href="../Home/HistoReg" class="nav-link" data-child-id="4">
