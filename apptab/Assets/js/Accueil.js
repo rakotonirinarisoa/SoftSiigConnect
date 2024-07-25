@@ -1,5 +1,6 @@
 ﻿var table = undefined;
 var baseName = "2";
+const pass = $('#user-password');
 
 let arr = [];
 
@@ -914,6 +915,9 @@ $('[data-action="ChargerJs"]').click(function () {
 //==============================================================================================CHECK===================================================================================
 
 $('[data-action="GetElementChecked"]').on('click', () => {
+
+});
+function getelementCheckJs() {
     let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
 
     let list = [];
@@ -925,7 +929,7 @@ $('[data-action="GetElementChecked"]').on('click', () => {
             list.push({
                 id,
                 estAvance: item.estAvance,
-                numereg : item.numereg
+                numereg: item.numereg
             });
         }
     } else {
@@ -940,7 +944,7 @@ $('[data-action="GetElementChecked"]').on('click', () => {
             });
         }
     }
-   
+
 
     let formData = new FormData();
 
@@ -987,4 +991,116 @@ $('[data-action="GetElementChecked"]').on('click', () => {
             alert("Problème de connexion. ");
         }
     });
+}
+$('[data-action="SaveV"]').click(function () {
+    let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
+
+    let list = [];
+    $.each(CheckList, (k, v) => {
+        list.push($(v).attr("compteG-id"));
+    });
+
+    if (list.length == 0) {
+        alert("Veuillez sélectionner au moins un mandat afin de l'enregistrer et l'envoyer pour validation. ");
+        return;
+    }
+
+    pass.text('');
+    $('#password').val('');
+    $('#verification-modal').modal('toggle');
 });
+
+$('#get-user-password-btn').on('click', () => {
+    let formData = new FormData();
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDSOCIETE);
+
+    formData.append("userPassword", $("#password").val());
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Traitement/Password',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        //error: function (result) {
+        //    var Datas = JSON.parse(result);
+        //    alert(Datas.msg);
+        //    return;
+        //},
+        //success: function (result) {
+        //    OKOK();
+        //}
+        success: function (result) {
+            const res = JSON.parse(result);
+            if (res.type === 'error') {
+                pass.css({ 'color': 'red' });
+                pass.text('Identifiants incorrects.');
+            } else {
+               // OKOK();
+                getelementCheckJs()
+            }
+        },
+        Error: function (_, e) {
+            alert(e);
+        }
+    });
+});
+
+function OKOK() {
+    let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
+
+    let list = [];
+    $.each(CheckList, (k, v) => {
+        list.push($(v).attr("compteG-id"));
+    });
+
+    if (list.length == 0) {
+        alert("Veuillez sélectionner au moins un mandat afin de l'enregistrer et l'envoyer pour validation. ");
+        return;
+    }
+
+    let formData = new FormData();
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDSOCIETE);
+
+    formData.append("listCompte", list);
+
+    formData.append("iProjet", $("#projMANDAT").val());
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Traitement/GetCheckedEcritureF',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+            alert(Datas.msg);
+            $.each(CheckList, (k, v) => {
+                list.push($(v).remove());
+            });
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
