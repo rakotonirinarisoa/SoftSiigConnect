@@ -718,7 +718,7 @@ namespace apptab.Controllers
                 {
                     list.Add(new DATATRPROJET
                     {
-                        LIEN = tom.GA_AVANCE_JUSTIFICATIF.FirstOrDefault(a => a.ID == IdF && site.Contains(a.SITE)).COMMENTAIRE != null ? tom.GA_AVANCE_JUSTIFICATIF.FirstOrDefault(a => a.ID == IdF && site.Contains(a.SITE)).COMMENTAIRE : ""
+                        LIEN = tom.GA_AVANCE_JUSTIFICATIF.FirstOrDefault(a => a.ID == IdF && site.Contains(a.SITE)).LIEN != null ? tom.GA_AVANCE_JUSTIFICATIF.FirstOrDefault(a => a.ID == IdF && site.Contains(a.SITE)).LIEN : ""
                     });
                 }
 

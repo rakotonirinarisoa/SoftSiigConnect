@@ -2862,8 +2862,9 @@ namespace apptab.Controllers
             }
             return s;
         }
+        
         //public JsonResult GetAnomalieTomOP(SI_USERS suser,string journal, string codeproject, DateTime datein, DateTime dateout, string compteG,string Auxi,string site)
-       public JsonResult GetAnomalieTomOP(SI_USERS suser, string codeproject)
+        public JsonResult GetAnomalieTomOP(SI_USERS suser, string codeproject)
         {
             int PROJECTID = int.Parse(codeproject);
             SOFTCONNECTOM.connex = new Data.Extension().GetCon(PROJECTID);
@@ -2876,7 +2877,6 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
            
-
             ANOMALIE_G SAUVEANOMALIE = new ANOMALIE_G();
             var GetallAnomalieProjet = db.ANOMALIE_G.Where(x => x.IDPROJECT == PROJECTID).ToList();
             foreach (var Sup in GetallAnomalieProjet)
@@ -2910,7 +2910,6 @@ namespace apptab.Controllers
 
                     }
                 }
-               
             }
             if (JournalAnomalie.Count != 0)
             {

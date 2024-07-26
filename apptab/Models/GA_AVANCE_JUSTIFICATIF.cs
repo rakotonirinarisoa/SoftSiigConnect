@@ -1,4 +1,4 @@
-namespace apptab
+﻿namespace apptab
 {
     using System;
     using System.ComponentModel.DataAnnotations;
@@ -39,5 +39,8 @@ namespace apptab
         public string NORD { get; set; }
 
         public DateTime? DATE_COMPTABILISATION { get; set; }
+
+        [StringLength(4000)]
+        public string LIEN { get; set; }
     }
 }
