@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using apptab.Data.Entities;
 using System.Data.Entity;
 using System;
+using System.Runtime;
 
 namespace apptab.Controllers
 {
@@ -61,6 +62,9 @@ namespace apptab.Controllers
             }
 
             var project = await _db.SI_PROJETS.FirstOrDefaultAsync(p => p.PROJET == societe.PROJET && p.DELETIONDATE == null);
+
+            if (_db.SI_USERS.Any(a => a.LOGIN == user.LOGIN && a.DELETIONDATE == null))
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'utilisateur existe déjà. " }, _settings));
 
             if (project == null)
             {
@@ -190,6 +194,12 @@ namespace apptab.Controllers
                 project.DELETIONDATE = now;
 
                 await _db.SaveChangesAsync();
+
+                foreach (var x in _db.SI_USERS.Where(a => a.IDPROJET == projectToDelete.Id).ToList())
+                {
+                    x.DELETIONDATE = now;
+                    await _db.SaveChangesAsync();
+                }
 
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Suppression avec succès." }, _settings));
             }
