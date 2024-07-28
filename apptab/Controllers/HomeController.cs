@@ -1324,7 +1324,8 @@ namespace apptab.Controllers
 
             foreach (var item in list)
             {
-                AvaliderList.Add(db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.Id && a.ETAT == 0).FirstOrDefault());
+                int numeroReg = int.Parse(item.Numereg);
+                AvaliderList.Add(db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.Id && a.ETAT == 0 && a.NUMEREG == numeroReg).FirstOrDefault());
             }
 
             int countTraitement = 0;
@@ -2010,7 +2011,8 @@ namespace apptab.Controllers
 
             foreach (var item in list)
             {
-                AvaliderList.Add(db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.Id && a.ETAT == 1 && site.Contains(a.SITE)).FirstOrDefault());
+                int numereg = int.Parse(item.Numereg);
+                AvaliderList.Add(db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.Id && a.ETAT == 1 && site.Contains(a.SITE) && a.NUMEREG == numereg).FirstOrDefault());
             }
 
             OPA_VALIDATIONS avalider = new OPA_VALIDATIONS();
@@ -2019,7 +2021,8 @@ namespace apptab.Controllers
                 foreach (var item in list)
                 {
                     int b = int.Parse(item.Id);
-                    avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == b.ToString() && site.Contains(a.SITE)).FirstOrDefault();
+                    int numereg = int.Parse(item.Numereg);
+                    avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == b.ToString() && site.Contains(a.SITE) && a.NUMEREG == numereg).FirstOrDefault();
                     if (avalider != null)
                     {
                         try
@@ -2062,7 +2065,8 @@ namespace apptab.Controllers
                 foreach (var item in list)
                 {
                     //int b = int.Parse(item);
-                    avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.Id && site.Contains(a.SITE)).FirstOrDefault();
+                    int numereg = int.Parse(item.Numereg);
+                    avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.Id && site.Contains(a.SITE) && a.NUMEREG == numereg).FirstOrDefault();
                     if (avalider != null)
                     {
                         try
