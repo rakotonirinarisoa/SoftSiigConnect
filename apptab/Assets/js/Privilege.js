@@ -748,6 +748,10 @@ function SavePRIV(id) {
     formData.append("privilege.RSFT", $(`input[name="droneRSFT${id}"]:checked`).val());
     formData.append("privilege.TDB9", $(`input[name="droneTDB9${id}"]:checked`).val());
 
+    formData.append("privilege.TDB11", $(`input[name="droneTDB11${id}"]:checked`).val());
+    formData.append("privilege.TDB12", $(`input[name="droneTDB12${id}"]:checked`).val());
+    formData.append("privilege.TDB13", $(`input[name="droneTDB13${id}"]:checked`).val());
+
     formData.append("privilege.GED", $(`input[name="droneGED${id}"]:checked`).val());
 
     $.ajax({
