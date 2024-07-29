@@ -330,26 +330,32 @@ namespace apptab.Controllers
                 {
                     foreach (var x in db.SI_SITE.Where(x => x.DELETIONDATE == null).ToList())
                     {
-                        a.Add(new SITE()
+                        if (db.SI_PROJETS.FirstOrDefault(b => b.ID == x.IDPROJET && b.DELETIONDATE == null) != null)
                         {
-                            PROJET = db.SI_PROJETS.FirstOrDefault(b => b.ID == x.IDPROJET && b.DELETIONDATE == null).PROJET,
-                            ID = x.ID,
-                            USER = db.SI_USERS.FirstOrDefault(z => z.ID == x.IDUSER && z.DELETIONDATE == null).LOGIN,
-                            SITES = x.SITE
-                        });
+                            a.Add(new SITE()
+                            {
+                                PROJET = db.SI_PROJETS.FirstOrDefault(b => b.ID == x.IDPROJET && b.DELETIONDATE == null).PROJET,
+                                ID = x.ID,
+                                USER = db.SI_USERS.FirstOrDefault(z => z.ID == x.IDUSER && z.DELETIONDATE == null).LOGIN,
+                                SITES = x.SITE
+                            });
+                        }
                     }
                 }
                 else
                 {
                     foreach (var x in db.SI_SITE.Where(x => x.DELETIONDATE == null && x.IDPROJET == exist.IDPROJET).ToList())
                     {
-                        a.Add(new SITE()
+                        if (db.SI_PROJETS.FirstOrDefault(b => b.ID == x.IDPROJET && b.DELETIONDATE == null) != null)
                         {
-                            PROJET = db.SI_PROJETS.FirstOrDefault(b => b.ID == x.IDPROJET && b.DELETIONDATE == null).PROJET,
-                            ID = x.ID,
-                            USER = db.SI_USERS.FirstOrDefault(z => z.ID == x.IDUSER && z.DELETIONDATE == null).LOGIN,
-                            SITES = x.SITE
-                        });
+                            a.Add(new SITE()
+                            {
+                                PROJET = db.SI_PROJETS.FirstOrDefault(b => b.ID == x.IDPROJET && b.DELETIONDATE == null).PROJET,
+                                ID = x.ID,
+                                USER = db.SI_USERS.FirstOrDefault(z => z.ID == x.IDUSER && z.DELETIONDATE == null).LOGIN,
+                                SITES = x.SITE
+                            });
+                        }
                     }
                 }
 
