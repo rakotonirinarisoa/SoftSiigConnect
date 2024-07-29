@@ -332,11 +332,11 @@ namespace apptab.Controllers
             {
                 var mapp = db.SI_MAPPAGES.Select(a => new
                 {
-                    db.SI_PROJETS.FirstOrDefault(x => x.ID == a.IDPROJET && a.DELETIONDATE == null).PROJET,
+                    db.SI_PROJETS.FirstOrDefault(x => x.ID == a.IDPROJET && x.DELETIONDATE == null).PROJET,
                     a.INSTANCE,
                     a.DBASE,
                     a.ID
-                }).ToList();
+                }).Where(a => a.PROJET != null).ToList();
 
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = mapp }, settings));
             }

@@ -735,13 +735,16 @@ namespace apptab.Controllers
                     {
                         if (ged.Projects.Any(b => b.Id == x.IDGED))
                         {
-                            a.Add(new PROGED()
+                            if (db.SI_PROJETS.FirstOrDefault(b => b.ID == x.IDPROJET && b.DELETIONDATE == null) != null)
                             {
-                                PROJET = db.SI_PROJETS.FirstOrDefault(b => b.ID == x.IDPROJET && b.DELETIONDATE == null).PROJET,
-                                GED = ged.Projects.Any(b => b.Id == x.IDGED) ? ged.Projects.FirstOrDefault(b => b.Id == x.IDGED).Name : "",
-                                ID = x.ID,
-                                DELETIONDATE = x.DELETIONDATE
-                            });
+                                a.Add(new PROGED()
+                                {
+                                    PROJET = db.SI_PROJETS.FirstOrDefault(b => b.ID == x.IDPROJET && b.DELETIONDATE == null).PROJET,
+                                    GED = ged.Projects.Any(b => b.Id == x.IDGED) ? ged.Projects.FirstOrDefault(b => b.Id == x.IDGED).Name : "",
+                                    ID = x.ID,
+                                    DELETIONDATE = x.DELETIONDATE
+                                });
+                            }
                         }
                     }
                 }
