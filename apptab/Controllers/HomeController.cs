@@ -114,6 +114,10 @@ namespace apptab.Controllers
                 {
                     basename = ii.TYPE.ToString();
                 }
+                else
+                {
+                    basename = "Veuillez parametrer votre Type Ecriture";
+                }
 
 
                 return basename;
@@ -353,24 +357,7 @@ namespace apptab.Controllers
             {
                 var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser, codeproject,list);
 
-                if (avalider != null)
-                {
-                    foreach (var item in avalider)
-                    {
-                        try
-                        {
-                            item.DATETRANS = DateTime.Now;
-                            item.IDUSTRANS = exist.ID;
-                            item.ETAT = 3;
-                            db.SaveChanges();
-                        }
-                        catch (Exception ex)
-                        {
-                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
-                            throw;
-                        }
-                    }
-                }
+               
                 if (intbasetype == 0)
                 {
                     Anarana = pathfile.Chemin;
@@ -394,6 +381,25 @@ namespace apptab.Controllers
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                     return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
+                }
+
+                if (avalider != null)
+                {
+                    foreach (var item in avalider)
+                    {
+                        try
+                        {
+                            item.DATETRANS = DateTime.Now;
+                            item.IDUSTRANS = exist.ID;
+                            item.ETAT = 3;
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                            throw;
+                        }
+                    }
                 }
 
             }
@@ -2187,8 +2193,6 @@ namespace apptab.Controllers
             {
                 site.Add(item);
             }
-            
-
             int retarDate = 0;
             if (db.SI_DELAISTRAITEMENT.Any(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null))
                 retarDate = db.SI_DELAISTRAITEMENT.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).DELPP.Value;
