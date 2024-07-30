@@ -785,8 +785,7 @@ namespace apptab.Extension
             var nums_2 = beneficiaires;
             foreach (var bnfcr in beneficiaires)
             {
-                bnfcr.ETAT = "1";
-                db.SaveChanges();
+               
                 var opp = db.OPA_VALIDATIONS.Where(e => e.IDREGLEMENT == bnfcr.NUM).FirstOrDefault();
                 historique = new OPA_HISTORIQUEBR();
                 if (opp != null)
@@ -900,7 +899,7 @@ namespace apptab.Extension
                 var fact = (from mct in tom.MCOMPTA
                             where mct.NUMENREG == bnfcr.NUM
                             select mct).First();*/
-                
+
                 /*****************************CHANGER ETAT FACTURE*****************************/
 
                 /* var virement = (from vrmt in tom.MCOMPTA
@@ -908,6 +907,8 @@ namespace apptab.Extension
                                  select vrmt).Single();
                  virement.EVIREMENT = virement.JL + this.recupDate((DateTime)donneurOrde.DATE_PAIEMENT);
                  tom.SaveChanges();*/
+                bnfcr.ETAT = "1";
+                db.SaveChanges();
             }
             try
             {
@@ -2317,7 +2318,8 @@ namespace apptab.Extension
                         TYPE = x.TYPEOPERATION,
                         NUMEROREG = null,
                         AUTREOP = true,
-                        SITE = x.SITE
+                        SITE = x.SITE,
+                        
                     }).ToList());
                 }
             }
@@ -2344,6 +2346,7 @@ namespace apptab.Extension
                         NUMEROFACTURE = mo.NUMEROFACTURE,
                         COGE = mo.COGE,
                         AUXI = mo.AUXI,
+                        JOURNAL = fo.JOURNAL,
                         CONVENTION = mo.CONVENTION,
                         CATEGORIE = mo.CATEGORIE,
                         SOUSCATEGORIE = mo.SOUSCATEGORIE,

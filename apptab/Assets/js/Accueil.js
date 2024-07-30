@@ -986,6 +986,7 @@ function getelementCheckJs() {
             for (let i = 0; i < checkList.length; i += 1) {
                 table.row($(checkList[i])).remove().draw();
             }
+            $('#verification-modal').modal('toggle');
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -1094,10 +1095,17 @@ function OKOK() {
         },
         success: function (result) {
             var Datas = JSON.parse(result);
-            alert(Datas.msg);
-            $.each(CheckList, (k, v) => {
-                list.push($(v).remove());
-            });
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+            } else {
+                $.each(CheckList, (k, v) => {
+                    list.push($(v).remove());
+                });
+
+                $('#verification-modal').modal('toggle');
+            }
+            
+          
         },
         error: function () {
             alert("Problème de connexion. ");
