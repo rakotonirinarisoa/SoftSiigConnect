@@ -638,17 +638,7 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            int countTraitement = 0;
             int crpt = iProjet;
-
-            List<string> site = new List<string>();
-            var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
-            if (siteS == null)
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
-            foreach (var item in siteS.Split(','))
-            {
-                site.Add(item);
-            }
 
             var lien = db.SI_SETLIEN.FirstOrDefault().LIEN;
 
@@ -656,159 +646,172 @@ namespace apptab.Controllers
             string MailAdresse = "";
             string mdpMail = "";
 
-            if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && site.Contains(a.SITE)).SENDMAIL != null && db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && site.Contains(a.SITE)).SENDPWD != null)
+            var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+            if (siteS == null)
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
+
+            foreach (var item in siteS.Split(','))
             {
-                MailAdresse = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && site.Contains(a.SITE)).SENDMAIL;
-                mdpMail = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && site.Contains(a.SITE)).SENDPWD;
+                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mail émetteur (Notifications et Alertes). " }, settings));
             }
-            else
+
+            foreach (var item in siteS.Split(','))
             {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mail émetteur (Notifications et Alertes)" }, settings));
-            }
+                int countTraitement = 0;
 
-            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET;
+                MailAdresse = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item).SENDMAIL;
+                mdpMail = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item).SENDPWD;
 
-            int ordsec = int.Parse(Session["PROCESDEPS"].ToString());
+                var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET;
 
-            var listCompteS = listCompte.Split(',');
-            foreach (var SAV in listCompteS)
-            {
-                try
+                int ordsec = int.Parse(Session["PROCESDEPS"].ToString());
+
+                var listCompteS = listCompte.Split(',');
+
+                foreach (var SAV in listCompteS)
                 {
-                    SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
-                    SOFTCONNECTOM tom = new SOFTCONNECTOM();
-                    var FSauv = new SI_TRAITAVANCE();
-
-                    List<DATATRPROJET> list = new List<DATATRPROJET>();
-
-                    Guid elem = Guid.Parse(SAV);
-                    if (db.SI_TRAITAVANCE.FirstOrDefault(a => a.No == elem && a.ETAT == 2 && a.IDPROJET == crpt && site.Contains(a.SITE)) != null)
+                    try
                     {
-                        var ismod = db.SI_TRAITAVANCE.FirstOrDefault(a => a.No == elem && a.IDPROJET == crpt && site.Contains(a.SITE));
-                        ismod.ETAT = 0;
-                        ismod.DATECRE = DateTime.Now;
-                        ismod.DATEANNUL = null;
-                        ismod.IDUSERANNUL = null;
+                        SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                        SOFTCONNECTOM tom = new SOFTCONNECTOM();
+                        var FSauv = new SI_TRAITAVANCE();
 
-                        //SANS ORDSEC//
-                        if (ordsec == 1)
+                        List<DATATRPROJET> list = new List<DATATRPROJET>();
+
+                        Guid elem = Guid.Parse(SAV);
+                        if (db.SI_TRAITAVANCE.FirstOrDefault(a => a.No == elem && a.ETAT == 2 && a.IDPROJET == crpt && a.SITE == item) != null)
                         {
-                            ismod.ETAT = 1;
-                            ismod.DATEVALIDATION = DateTime.Now;
-                            ismod.IDUSERVALIDATE = exist.ID;
-                        }
+                            var ismod = db.SI_TRAITAVANCE.FirstOrDefault(a => a.No == elem && a.IDPROJET == crpt && a.SITE == item);
+                            ismod.ETAT = 0;
+                            ismod.DATECRE = DateTime.Now;
+                            ismod.DATEANNUL = null;
+                            ismod.IDUSERANNUL = null;
 
-                        db.SaveChanges();
-                    }
-                    else
-                    {
-                        decimal MTN = 0;
-                        var PCOP = "";
-                        if (tom.CPTADMIN_FAVANCE.Any(a => a.ID == elem && site.Contains(a.SITE)))
-                        {
-                            if (tom.CPTADMIN_MAVANCE.Any(a => a.IDAVANCE == elem))
-                            {
-                                foreach (var y in tom.CPTADMIN_MAVANCE.Where(a => a.IDAVANCE == elem).ToList())
-                                {
-                                    //Get total MTN dans CPTADMIN_MLIQUIDATION pour vérification du SOMMES MTN M = SOMMES MTN MPJ//
-                                    MTN += y.MONTANTLOCAL.Value;
-
-                                    if (string.IsNullOrEmpty(PCOP))
-                                        PCOP = y.POSTE;
-                                }
-                            }
-
-                            var FF = tom.CPTADMIN_FAVANCE.FirstOrDefault(a => a.ID == elem && site.Contains(a.SITE));
-
-                            var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
-
-                            var titulaire = "";
-                            if (tom.RTIERS.Any(a => a.COGE == FF.COGEBENEFICIAIRE && a.AUXI == FF.AUXIBENEFICIAIRE))
-                                titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == FF.COGEBENEFICIAIRE && a.AUXI == FF.AUXIBENEFICIAIRE).NOM;
-
-                            var newT = new SI_TRAITAVANCE()
-                            {
-                                IDPROJET = crpt,
-                                No = FF.ID,
-                                REF = FF.NUMEROAVANCE,
-                                OBJ = FF.DESCRIPTION,
-                                TITUL = titulaire,
-                                MONT = Data.Cipher.Encrypt((Math.Round(MTN, 2)).ToString(), "Oppenheimer"),
-                                COMPTE = FF.COGEBENEFICIAIRE,
-                                DATEMANDAT = FF.DATEAVANCE.Value.Date,
-                                PCOP = PCOP,
-                                DATEDEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == FF.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.DEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
-                                DATETEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == FF.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.TEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
-                                DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == FF.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
-                                DATECRE = DateTime.Now,
-                                ETAT = 0,
-                                IDUSERCREATE = exist.ID,
-                                SITE = FF.SITE
-                            };
-
+                            //SANS ORDSEC//
                             if (ordsec == 1)
                             {
-                                newT.ETAT = 1;
-                                newT.DATEVALIDATION = DateTime.Now;
-                                newT.IDUSERVALIDATE = exist.ID;
+                                ismod.ETAT = 1;
+                                ismod.DATEVALIDATION = DateTime.Now;
+                                ismod.IDUSERVALIDATE = exist.ID;
                             }
 
-                            db.SI_TRAITAVANCE.Add(newT);
                             db.SaveChanges();
+                            countTraitement++;
                         }
-                    }
-                    countTraitement++;
-                }
-                catch (Exception e)
-                {
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
-                }
-            }
-
-            using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
-            {
-                SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
-                smtp.UseDefaultCredentials = true;
-
-                mail.From = new MailAddress(MailAdresse);
-
-                mail.To.Add(MailAdresse);
-                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && site.Contains(a.SITE)).MAILTEA != null)
-                {
-                    string[] separators = { ";" };
-
-                    var Tomail = mail;
-                    if (Tomail != null)
-                    {
-                        string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && site.Contains(a.SITE)).MAILTEA;
-                        string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-
-                        foreach (var mailto in mailListe)
+                        else
                         {
-                            mail.To.Add(mailto);
+                            decimal MTN = 0;
+                            var PCOP = "";
+                            if (tom.CPTADMIN_FAVANCE.Any(a => a.ID == elem && a.SITE == item))
+                            {
+                                if (tom.CPTADMIN_MAVANCE.Any(a => a.IDAVANCE == elem))
+                                {
+                                    foreach (var y in tom.CPTADMIN_MAVANCE.Where(a => a.IDAVANCE == elem).ToList())
+                                    {
+                                        //Get total MTN dans CPTADMIN_MLIQUIDATION pour vérification du SOMMES MTN M = SOMMES MTN MPJ//
+                                        MTN += y.MONTANTLOCAL.Value;
+
+                                        if (string.IsNullOrEmpty(PCOP))
+                                            PCOP = y.POSTE;
+                                    }
+                                }
+
+                                var FF = tom.CPTADMIN_FAVANCE.FirstOrDefault(a => a.ID == elem && a.SITE == item);
+
+                                var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+
+                                var titulaire = "";
+                                if (tom.RTIERS.Any(a => a.COGE == FF.COGEBENEFICIAIRE && a.AUXI == FF.AUXIBENEFICIAIRE))
+                                    titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == FF.COGEBENEFICIAIRE && a.AUXI == FF.AUXIBENEFICIAIRE).NOM;
+
+                                var newT = new SI_TRAITAVANCE()
+                                {
+                                    IDPROJET = crpt,
+                                    No = FF.ID,
+                                    REF = FF.NUMEROAVANCE,
+                                    OBJ = FF.DESCRIPTION,
+                                    TITUL = titulaire,
+                                    MONT = Data.Cipher.Encrypt((Math.Round(MTN, 2)).ToString(), "Oppenheimer"),
+                                    COMPTE = FF.COGEBENEFICIAIRE,
+                                    DATEMANDAT = FF.DATEAVANCE.Value.Date,
+                                    PCOP = PCOP,
+                                    DATEDEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == FF.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.DEFA && a.CODE_SITE == item).DATETRAITEMENT,
+                                    DATETEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == FF.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.TEFA && a.CODE_SITE == item).DATETRAITEMENT,
+                                    DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == FF.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA && a.CODE_SITE == item).DATETRAITEMENT,
+                                    DATECRE = DateTime.Now,
+                                    ETAT = 0,
+                                    IDUSERCREATE = exist.ID,
+                                    SITE = FF.SITE
+                                };
+
+                                if (ordsec == 1)
+                                {
+                                    newT.ETAT = 1;
+                                    newT.DATEVALIDATION = DateTime.Now;
+                                    newT.IDUSERVALIDATE = exist.ID;
+                                }
+
+                                db.SI_TRAITAVANCE.Add(newT);
+                                db.SaveChanges();
+                                countTraitement++;
+                            }
                         }
+                    }
+                    catch (Exception e)
+                    {
+                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
                     }
                 }
 
-                mail.Subject = "Attente validation pièces du projet " + ProjetIntitule;
-                mail.IsBodyHtml = true;
-
-                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " pièces en attente de validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
-                    "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
-
-                if (ordsec == 1)
+                if (countTraitement > 0)
                 {
-                    mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " pièces validées pour le compte du projet " + ProjetIntitule + " et en attente de transfert vers SIIGFP.<br/><br>" +
-                        "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
+                    using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
+                    {
+                        SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
+                        smtp.UseDefaultCredentials = true;
 
+                        mail.From = new MailAddress(MailAdresse);
+
+                        mail.To.Add(MailAdresse);
+                        if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item).MAILTEA != null)
+                        {
+                            string[] separators = { ";" };
+
+                            var Tomail = mail;
+                            if (Tomail != null)
+                            {
+                                string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item).MAILTEA;
+                                string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                                foreach (var mailto in mailListe)
+                                {
+                                    mail.To.Add(mailto);
+                                }
+                            }
+                        }
+
+                        mail.Subject = "Attente validation pièces du projet " + ProjetIntitule;
+                        mail.IsBodyHtml = true;
+
+                        mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " pièces en attente de validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
+                            "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
+
+                        if (ordsec == 1)
+                        {
+                            mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " pièces validées pour le compte du projet " + ProjetIntitule + " et en attente de transfert vers SIIGFP.<br/><br>" +
+                                "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
+
+                        }
+
+                        smtp.Port = 587;
+                        smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
+                        smtp.EnableSsl = true;
+
+                        try { smtp.Send(mail); }
+                        catch (Exception) { }
+                    }
                 }
-
-                smtp.Port = 587;
-                smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
-                smtp.EnableSsl = true;
-
-                try { smtp.Send(mail); }
-                catch (Exception) { }
             }
 
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = "" }, settings));
@@ -820,17 +823,7 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            int countTraitement = 0;
             int crpt = iProjet;
-
-            List<string> site = new List<string>();
-            var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
-            if (siteS == null)
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
-            foreach (var item in siteS.Split(','))
-            {
-                site.Add(item);
-            }
 
             var lien = db.SI_SETLIEN.FirstOrDefault().LIEN;
 
@@ -838,84 +831,95 @@ namespace apptab.Controllers
             string MailAdresse = "";
             string mdpMail = "";
 
-            if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && site.Contains(a.SITE)).SENDMAIL != null && db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && site.Contains(a.SITE)).SENDPWD != null)
+            var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+            if (siteS == null)
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
+
+            foreach (var item in siteS.Split(','))
             {
-                MailAdresse = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && site.Contains(a.SITE)).SENDMAIL;
-                mdpMail = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && site.Contains(a.SITE)).SENDPWD;
-            }
-            else
-            {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mail émetteur (Notifications et Alertes)" }, settings));
+                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mail émetteur (Notifications et Alertes). " }, settings));
             }
 
-            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET;
-
-            var listCompteS = listCompte.Split(',');
-            foreach (var SAV in listCompteS)
+            foreach (var item in siteS.Split(','))
             {
-                try
+                int countTraitement = 0;
+
+                MailAdresse = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item).SENDMAIL;
+                mdpMail = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item).SENDPWD;
+
+                var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET;
+
+                var listCompteS = listCompte.Split(',');
+                foreach (var SAV in listCompteS)
                 {
-                    SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
-                    SOFTCONNECTOM tom = new SOFTCONNECTOM();
-
-                    List<DATATRPROJET> list = new List<DATATRPROJET>();
-
-                    Guid isSAV = Guid.Parse(SAV);
-                    if (db.SI_TRAITAVANCE.FirstOrDefault(a => a.IDPROJET == crpt && a.No == isSAV && site.Contains(a.SITE)) != null)
+                    try
                     {
-                        var isModified = db.SI_TRAITAVANCE.FirstOrDefault(a => a.IDPROJET == crpt && a.No == isSAV && site.Contains(a.SITE));
-                        isModified.ETAT = 1;
-                        isModified.DATEVALIDATION = DateTime.Now;
-                        isModified.DATEANNUL = null;
-                        isModified.IDUSERANNUL = null;
-                        isModified.IDUSERVALIDATE = exist.ID;
-                        db.SaveChanges();
+                        SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                        SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
-                        countTraitement++;
-                    }
-                }
-                catch (Exception e)
-                {
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
-                }
-            }
+                        List<DATATRPROJET> list = new List<DATATRPROJET>();
 
-            using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
-            {
-                SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
-                smtp.UseDefaultCredentials = true;
-
-                mail.From = new MailAddress(MailAdresse);
-
-                mail.To.Add(MailAdresse);
-                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && site.Contains(a.SITE)).MAILTVA != null)
-                {
-                    string[] separators = { ";" };
-
-                    var Tomail = mail;
-                    if (Tomail != null)
-                    {
-                        string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && site.Contains(a.SITE)).MAILTV;
-                        string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-
-                        foreach (var mailto in mailListe)
+                        Guid isSAV = Guid.Parse(SAV);
+                        if (db.SI_TRAITAVANCE.FirstOrDefault(a => a.IDPROJET == crpt && a.No == isSAV && a.SITE == item) != null)
                         {
-                            mail.To.Add(mailto);
+                            var isModified = db.SI_TRAITAVANCE.FirstOrDefault(a => a.IDPROJET == crpt && a.No == isSAV && a.SITE == item);
+                            isModified.ETAT = 1;
+                            isModified.DATEVALIDATION = DateTime.Now;
+                            isModified.DATEANNUL = null;
+                            isModified.IDUSERANNUL = null;
+                            isModified.IDUSERVALIDATE = exist.ID;
+                            db.SaveChanges();
+
+                            countTraitement++;
                         }
                     }
+                    catch (Exception e)
+                    {
+                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+                    }
                 }
 
-                mail.Subject = "Validation pièces du projet " + ProjetIntitule;
-                mail.IsBodyHtml = true;
-                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " pièces validées pour le compte du projet " + ProjetIntitule + " et en attente de transfert vers SIIGFP.<br/><br>" +
-                    "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
+                if (countTraitement > 0)
+                {
+                    using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
+                    {
+                        SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
+                        smtp.UseDefaultCredentials = true;
 
-                smtp.Port = 587;
-                smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
-                smtp.EnableSsl = true;
+                        mail.From = new MailAddress(MailAdresse);
 
-                try { smtp.Send(mail); }
-                catch (Exception) { }
+                        mail.To.Add(MailAdresse);
+                        if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item).MAILTVA != null)
+                        {
+                            string[] separators = { ";" };
+
+                            var Tomail = mail;
+                            if (Tomail != null)
+                            {
+                                string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item).MAILTVA;
+                                string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                                foreach (var mailto in mailListe)
+                                {
+                                    mail.To.Add(mailto);
+                                }
+                            }
+                        }
+
+                        mail.Subject = "Validation pièces du projet " + ProjetIntitule;
+                        mail.IsBodyHtml = true;
+                        mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " pièces validées pour le compte du projet " + ProjetIntitule + " et en attente de transfert vers SIIGFP.<br/><br>" +
+                            "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
+
+                        smtp.Port = 587;
+                        smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
+                        smtp.EnableSsl = true;
+
+                        try { smtp.Send(mail); }
+                        catch (Exception) { }
+                    }
+                }
             }
 
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = "" }, settings));
@@ -1108,102 +1112,101 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            try
+            int IdS = iProjet;
+
+            var lien = db.SI_SETLIEN.FirstOrDefault().LIEN;
+
+            //SEND MAIL ALERT et NOTIFICATION//
+            string MailAdresse = "";
+            string mdpMail = "";
+
+            var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == IdS).Select(x => x.SITE).FirstOrDefault();
+            if (siteS == null)
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
+
+            foreach (var item in siteS.Split(','))
             {
-                int IdS = iProjet;
+                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null && a.SITE == item) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mail émetteur (Notifications et Alertes). " }, settings));
+            }
 
-                List<string> site = new List<string>();
-                var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == IdS).Select(x => x.SITE).FirstOrDefault();
-                foreach (var item in siteS.Split(','))
-                {
-                    site.Add(item);
-                }
-
-                var lien = db.SI_SETLIEN.FirstOrDefault().LIEN;
-
-                //SEND MAIL ALERT et NOTIFICATION//
-                string MailAdresse = "";
-                string mdpMail = "";
-
-                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null && site.Contains(a.SITE)).SENDMAIL != null && db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null && site.Contains(a.SITE)).SENDPWD != null)
-                {
-                    MailAdresse = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null && site.Contains(a.SITE)).SENDMAIL;
-                    mdpMail = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null && site.Contains(a.SITE)).SENDPWD;
-                }
-                else
-                {
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mail émetteur (Notifications et Alertes)" }, settings));
-                }
+            foreach (var item in siteS.Split(','))
+            {
+                MailAdresse = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null && a.SITE == item).SENDMAIL;
+                mdpMail = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null && a.SITE == item).SENDPWD;
 
                 var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == IdS && a.DELETIONDATE == null).FirstOrDefault().PROJET;
 
-                if (db.SI_TRAITAVANCE.FirstOrDefault(a => a.No == IdF && a.IDPROJET == IdS && site.Contains(a.SITE)) != null)
+                try
                 {
-                    var ismod = db.SI_TRAITAVANCE.FirstOrDefault(a => a.No == IdF && a.IDPROJET == IdS && site.Contains(a.SITE));
-                    ismod.ETAT = 2;
-                    //ismod.DATECRE = DateTime.Now;
-                    ismod.DATEANNUL = DateTime.Now;
-                    ismod.IDUSERANNUL = exist.ID;
-
-                    db.SaveChanges();
-                }
-
-                var newElemH = new SI_TRAITANNULAVANCE()
-                {
-                    No = IdF,
-                    DATEANNUL = DateTime.Now,
-                    MOTIF = Motif,
-                    COMMENTAIRE = Comm,
-                    IDPROJET = IdS,
-                    IDUSER = exist.ID
-                };
-                db.SI_TRAITANNULAVANCE.Add(newElemH);
-                db.SaveChanges();
-
-                using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
-                {
-                    SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
-                    smtp.UseDefaultCredentials = true;
-
-                    mail.From = new MailAddress(MailAdresse);
-
-                    mail.To.Add(MailAdresse);
-                    if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null && site.Contains(a.SITE)).MAILREJETA != null)
+                    if (db.SI_TRAITAVANCE.FirstOrDefault(a => a.No == IdF && a.IDPROJET == IdS && a.SITE == item) != null)
                     {
-                        string[] separators = { ";" };
+                        var ismod = db.SI_TRAITAVANCE.FirstOrDefault(a => a.No == IdF && a.IDPROJET == IdS && a.SITE == item);
+                        ismod.ETAT = 2;
+                        //ismod.DATECRE = DateTime.Now;
+                        ismod.DATEANNUL = DateTime.Now;
+                        ismod.IDUSERANNUL = exist.ID;
 
-                        var Tomail = mail;
-                        if (Tomail != null)
-                        {
-                            string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null && site.Contains(a.SITE)).MAILREJETA;
-                            string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-
-                            foreach (var mailto in mailListe)
-                            {
-                                mail.To.Add(mailto);
-                            }
-                        }
+                        db.SaveChanges();
                     }
 
-                    mail.Subject = "Rejet pièce du projet " + ProjetIntitule;
-                    mail.IsBodyHtml = true;
-                    mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez une pièce rejetée pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
-                        "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
+                    var newElemH = new SI_TRAITANNULAVANCE()
+                    {
+                        No = IdF,
+                        DATEANNUL = DateTime.Now,
+                        MOTIF = Motif,
+                        COMMENTAIRE = Comm,
+                        IDPROJET = IdS,
+                        IDUSER = exist.ID
+                    };
+                    db.SI_TRAITANNULAVANCE.Add(newElemH);
+                    db.SaveChanges();
 
-                    smtp.Port = 587;
-                    smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
-                    smtp.EnableSsl = true;
+                    using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
+                    {
+                        SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
+                        smtp.UseDefaultCredentials = true;
 
-                    try { smtp.Send(mail); }
-                    catch (Exception) { }
+                        mail.From = new MailAddress(MailAdresse);
+
+                        mail.To.Add(MailAdresse);
+                        if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null && a.SITE == item).MAILREJETA != null)
+                        {
+                            string[] separators = { ";" };
+
+                            var Tomail = mail;
+                            if (Tomail != null)
+                            {
+                                string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null && a.SITE == item).MAILREJETA;
+                                string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                                foreach (var mailto in mailListe)
+                                {
+                                    mail.To.Add(mailto);
+                                }
+                            }
+                        }
+
+                        mail.Subject = "Rejet pièce du projet " + ProjetIntitule;
+                        mail.IsBodyHtml = true;
+                        mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez une pièce rejetée pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
+                            "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
+
+                        smtp.Port = 587;
+                        smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
+                        smtp.EnableSsl = true;
+
+                        try { smtp.Send(mail); }
+                        catch (Exception) { }
+                    }
                 }
+                catch (Exception)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur d'enregistrement de l'information. " }, settings));
+                }
+            }
 
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Rejet avec succès. ", data = Comm }, settings));
-            }
-            catch (Exception)
-            {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur d'enregistrement de l'information. " }, settings));
-            }
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Rejet avec succès. ", data = Comm }, settings));
         }
 
         //Traitement mandats ORDSECOTHER//
@@ -1710,17 +1713,7 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            int countTraitement = 0;
             int crpt = iProjet;
-
-            List<string> site = new List<string>();
-            var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
-            if (siteS == null)
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
-            foreach (var item in siteS.Split(','))
-            {
-                site.Add(item);
-            }
 
             var lien = db.SI_SETLIEN.FirstOrDefault().LIEN;
 
@@ -1728,85 +1721,96 @@ namespace apptab.Controllers
             string MailAdresse = "";
             string mdpMail = "";
 
-            if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && site.Contains(a.SITE)).SENDMAIL != null && db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && site.Contains(a.SITE)).SENDPWD != null)
+            var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+            if (siteS == null)
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer votre site. " }, settings));
+
+            foreach (var item in siteS.Split(','))
             {
-                MailAdresse = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && site.Contains(a.SITE)).SENDMAIL;
-                mdpMail = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && site.Contains(a.SITE)).SENDPWD;
-            }
-            else
-            {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mail émetteur (Notifications et Alertes)" }, settings));
+                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mail émetteur (Notifications et Alertes). " }, settings));
             }
 
-            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET;
-
-            var listCompteS = listCompte.Split(',');
-            foreach (var SAV in listCompteS)
+            foreach (var item in siteS.Split(','))
             {
-                try
+                int countTraitement = 0;
+
+                MailAdresse = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item).SENDMAIL;
+                mdpMail = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item).SENDPWD;
+
+                var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET;
+
+                var listCompteS = listCompte.Split(',');
+                foreach (var SAV in listCompteS)
                 {
-                    SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
-                    SOFTCONNECTOM tom = new SOFTCONNECTOM();
-
-                    List<DATATRPROJET> list = new List<DATATRPROJET>();
-
-                    Guid isSAV = Guid.Parse(SAV);
-                    if (db.SI_TRAITAVANCE.FirstOrDefault(a => a.IDPROJET == crpt && a.No == isSAV && site.Contains(a.SITE)) != null)
+                    try
                     {
-                        //SEND SIIGFP//
+                        SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                        SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
+                        List<DATATRPROJET> list = new List<DATATRPROJET>();
 
-                        var isModified = db.SI_TRAITAVANCE.FirstOrDefault(a => a.IDPROJET == crpt && a.No == isSAV && site.Contains(a.SITE));
-                        isModified.ETAT = 3;
-                        isModified.DATENVOISIIGFP = DateTime.Now;
-                        isModified.IDUSERENVOISIIGFP = exist.ID;
-                        db.SaveChanges();
-
-                        countTraitement++;
-                    }
-                }
-                catch (Exception e)
-                {
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
-                }
-            }
-
-            using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
-            {
-                SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
-                smtp.UseDefaultCredentials = true;
-
-                mail.From = new MailAddress(MailAdresse);
-
-                mail.To.Add(MailAdresse);
-                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && site.Contains(a.SITE)).MAILSIIGA != null)
-                {
-                    string[] separators = { ";" };
-
-                    var Tomail = mail;
-                    if (Tomail != null)
-                    {
-                        string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && site.Contains(a.SITE)).MAILSIIGA;
-                        string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-
-                        foreach (var mailto in mailListe)
+                        Guid isSAV = Guid.Parse(SAV);
+                        if (db.SI_TRAITAVANCE.FirstOrDefault(a => a.IDPROJET == crpt && a.No == isSAV && a.SITE == item) != null)
                         {
-                            mail.To.Add(mailto);
+                            //SEND SIIGFP//
+
+
+                            var isModified = db.SI_TRAITAVANCE.FirstOrDefault(a => a.IDPROJET == crpt && a.No == isSAV && a.SITE == item);
+                            isModified.ETAT = 3;
+                            isModified.DATENVOISIIGFP = DateTime.Now;
+                            isModified.IDUSERENVOISIIGFP = exist.ID;
+                            db.SaveChanges();
+
+                            countTraitement++;
                         }
                     }
+                    catch (Exception e)
+                    {
+                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+                    }
                 }
 
-                mail.Subject = "Validation pièces du projet " + ProjetIntitule;
-                mail.IsBodyHtml = true;
-                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " pièces transférées pour le compte du projet " + ProjetIntitule + " et en attente du traitement de SIIGFP.<br/><br>" +
-                    "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
+                if (countTraitement > 0)
+                {
+                    using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
+                    {
+                        SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
+                        smtp.UseDefaultCredentials = true;
 
-                smtp.Port = 587;
-                smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
-                smtp.EnableSsl = true;
+                        mail.From = new MailAddress(MailAdresse);
 
-                try { smtp.Send(mail); }
-                catch (Exception) { }
+                        mail.To.Add(MailAdresse);
+                        if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item).MAILSIIGA != null)
+                        {
+                            string[] separators = { ";" };
+
+                            var Tomail = mail;
+                            if (Tomail != null)
+                            {
+                                string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item).MAILSIIGA;
+                                string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                                foreach (var mailto in mailListe)
+                                {
+                                    mail.To.Add(mailto);
+                                }
+                            }
+                        }
+
+                        mail.Subject = "Validation pièces du projet " + ProjetIntitule;
+                        mail.IsBodyHtml = true;
+                        mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " pièces transférées pour le compte du projet " + ProjetIntitule + " et en attente du traitement de SIIGFP.<br/><br>" +
+                            "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
+
+                        smtp.Port = 587;
+                        smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
+                        smtp.EnableSsl = true;
+
+                        try { smtp.Send(mail); }
+                        catch (Exception) { }
+                    }
+                }
             }
 
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = "" }, settings));
