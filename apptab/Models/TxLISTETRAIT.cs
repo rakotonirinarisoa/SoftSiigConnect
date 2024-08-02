@@ -44,5 +44,16 @@ namespace apptab
         public string SoldPtbaPayé { get; set; }
         public string SoldPtbaPayéP { get; set; }
         public string PayeEngage { get; set; }
+
+
+        public string OBJ { get; set; }
+        public string TITUL { get; set; }
+        public string COMPTE { get; set; }
+        public string PCOP { get; set; }
+        public string MONT { get; set; }
+        public string MONTi { get; set; }
+        public DateTime? DATEDEF { get; set; }
+        public DateTime? DATETEF { get; set; }
+        public DateTime? DATEBE { get; set; }
     }
 }

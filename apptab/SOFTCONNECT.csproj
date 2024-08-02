@@ -186,6 +186,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AnomalieController.cs" />
     <Compile Include="Controllers\BordTraitementController.cs" />
     <Compile Include="Controllers\CalendarController.cs" />
     <Compile Include="Controllers\CryptoController.cs" />
@@ -374,6 +375,7 @@
     <Compile Include="Models\SI_PROGED.cs" />
     <Compile Include="Models\RSITE.cs" />
     <Compile Include="Models\SI_SETLIEN.cs" />
+    <Compile Include="Models\SI_TRAITPROJETANO.cs" />
     <Compile Include="SOFTCONNECTGED.cs" />
     <Compile Include="SOFTCONNECTOM.cs" />
     <Compile Include="SOFTCONNECTSIIG.cs" />
@@ -2440,6 +2442,7 @@
     <Content Include="Assets\img\bgo.png" />
     <Content Include="Assets\img\LogoLogin.png" />
     <Content Include="Assets\img\LogoS1.png" />
+    <Content Include="Assets\js\AnomalieDPA.js" />
     <Content Include="Assets\js\AnomalieJSJournal .js" />
     <Content Include="Assets\js\BordRSF.js" />
     <Content Include="Assets\js\BordJRA.js" />
@@ -2489,10 +2492,13 @@
     <Content Include="Assets\js\TraitmandatDOCRV.js" />
     <Content Include="Assets\js\TraitmandatDOCOJU.js" />
     <Content Include="Assets\js\TraitmandatDOCJU.js" />
+    <Content Include="Assets\js\AnomalieDOCT.js" />
     <Content Include="Assets\js\TraitmandatLIASORV.js" />
     <Content Include="Assets\js\TraitmandatLIASRV.js" />
+    <Content Include="Assets\js\AnomalieLIAST.js" />
     <Content Include="Assets\js\TraitmandatModalORV.js" />
     <Content Include="Assets\js\TraitmandatModalRV.js" />
+    <Content Include="Assets\js\AnomalieModalT.js" />
     <Content Include="Assets\js\TraitmandatRV.js" />
     <Content Include="Assets\js\TraitmandatJU.js" />
     <Content Include="Assets\js\TraitmandatA.js" />
@@ -4970,6 +4976,7 @@
     <Content Include="Views\Privilege\SiteList.cshtml" />
     <Content Include="Views\Privilege\CreateSITE.cshtml" />
     <Content Include="Views\Home\AnomaliePaiementJournal.cshtml" />
+    <Content Include="Views\Anomalie\Anomalie.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

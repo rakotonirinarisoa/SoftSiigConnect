@@ -43,6 +43,7 @@
         public string TDB11 { get; set; }
         public string TDB12 { get; set; }
         public string TDB13 { get; set; }
+        public string TDB14 { get; set; }
         public bool? TDB9i { get; set; }
         public bool? TDB0i { get; set; }
         public bool? JRi { get; set; }
@@ -58,6 +59,7 @@
         public bool? TDB11i { get; set; }
         public bool? TDB12i { get; set; }
         public bool? TDB13i { get; set; }
+        public bool? TDB14i { get; set; }
 
         [Column(TypeName = "smalldatetime")]
         public DateTime? CREATIONDATE { get; set; }

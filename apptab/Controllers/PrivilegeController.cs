@@ -101,6 +101,8 @@ namespace apptab.Controllers
                         TDB12 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB12 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB12 : 0,
                         TDB13 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB13 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB13 : 0,
 
+                        TDB14 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB14 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB14 : 0,
+
                         GED = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).GED != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).GED : 0
 
                     }).Where(a => a.PROJET != null && a.DELETONDATE == null).OrderBy(a => a.PROJET).OrderBy(a => a.CREAT).ToList();
@@ -171,6 +173,8 @@ namespace apptab.Controllers
                         TDB11 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB11 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB11 : 0,
                         TDB12 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB12 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB12 : 0,
                         TDB13 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB13 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB13 : 0,
+
+                        TDB14 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB14 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).TDB14 : 0,
 
                         GED = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).GED != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).GED : 0
 
@@ -258,6 +262,8 @@ namespace apptab.Controllers
                 TDB11 = privilege.TDB11,
                 TDB12 = privilege.TDB12,
                 TDB13 = privilege.TDB13,
+
+                TDB14 = privilege.TDB14,
 
                 GED = privilege.GED
             };

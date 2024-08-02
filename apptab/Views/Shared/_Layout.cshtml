@@ -801,7 +801,7 @@
                                         }
 
                                         @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) 
+                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
                                         && (int.Parse(Session["RTDB9"].ToString()) != 0 && int.Parse(Session["TDB9i"].ToString()) == 1)))
                                         {
                                             <li class="nav-item">
@@ -953,6 +953,20 @@
                                                     <i class="nav-icon fa fa-file" style="color: #338B85"></i>
                                                     <p>
                                                         @Session["TDB8"]@*Paiements rejetés*@
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        }
+
+                                        @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
+                                            && (int.Parse(Session["RTDB14"].ToString()) != 0 && int.Parse(Session["TDB14i"].ToString()) == 1)))
+                                        {
+                                            <li class="nav-item">
+                                                <a href="../Anomalie/Anomalie" class="nav-link" data-child-id="4">
+                                                    <i class="nav-icon fas fa-recycle" style="color: #4970cb"></i>
+                                                    <p>
+                                                        @Session["TDB14"]@*Anomalie Générale des liquidations et avances*@
                                                     </p>
                                                 </a>
                                             </li>

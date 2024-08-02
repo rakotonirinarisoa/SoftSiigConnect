@@ -1318,6 +1318,7 @@ namespace apptab.Controllers
                     SExist.TDB11 = param.TDB11;
                     SExist.TDB12 = param.TDB12;
                     SExist.TDB13 = param.TDB13;
+                    SExist.TDB14 = param.TDB14;
 
                     SExist.TDB9i = param.TDB9i;
                     SExist.TDB0i = param.TDB0i;
@@ -1334,6 +1335,7 @@ namespace apptab.Controllers
                     SExist.TDB11i = param.TDB11i;
                     SExist.TDB12i = param.TDB12i;
                     SExist.TDB13i = param.TDB13i;
+                    SExist.TDB14i = param.TDB14i;
 
                     db.SaveChanges();
 
@@ -1386,6 +1388,7 @@ namespace apptab.Controllers
                         TDB11 = param.TDB11,
                         TDB12 = param.TDB12,
                         TDB13 = param.TDB13,
+                        TDB14 = param.TDB14,
 
                         TDB9i = param.TDB9i,
                         TDB0i = param.TDB0i,
@@ -1402,6 +1405,7 @@ namespace apptab.Controllers
                         TDB11i = param.TDB11i,
                         TDB12i = param.TDB12i,
                         TDB13i = param.TDB13i,
+                        TDB14i = param.TDB14i,
 
                         CREATIONDATE = DateTime.Now
                     };
