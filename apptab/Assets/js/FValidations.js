@@ -364,7 +364,7 @@ function getelementTXT(a , list) {
                 let blobUrl = URL.createObjectURL(result);
                 GetFileNameAnarana(blobUrl);
                 //window.location = '/Home/GetFile?file=' + Datas.data;
-
+                $('#verification-modal').modal('toggle');
             },
             error: function () {
                 alert("Problème de connexion. ");

@@ -15,132 +15,6 @@ $(document).ready(() => {
     //GetListCodeJournal();
     //GetListCompG();
 });
-//function GetHistoriques() {
-//    let formData = new FormData();
-
-//    let codeproject = $("#Fproject").val();
-//    formData.append("suser.LOGIN", User.LOGIN);
-//    formData.append("suser.ID", User.ID);
-//    formData.append("suser.PWD", User.PWD);
-//    formData.append("suser.ROLE", User.ROLE);
-//    formData.append("suser.IDPROJET", User.IDPROJET);
-//    formData.append("codeproject", codeproject);
-
-//    $.ajax({
-//        type: "POST",
-//        url: Origin + '/Home/GetHistoriques',
-//        data: formData,
-//        cache: false,
-//        contentType: false,
-//        processData: false,
-//        beforeSend: function () {
-//            loader.removeClass('display-none');
-//        },
-//        complete: function () {
-//            loader.addClass('display-none');
-//        },
-//        success: function (result) {
-//            var Datas = JSON.parse(result);
-//            //alert(Datas.data)
-//            if (Datas.type == "error") {
-//                return;
-//            }
-//            if (Datas.type == "login") {
-//                alert(Datas.msg);
-//                window.location = window.location.origin;
-//                return;
-//            }
-//            ListResult = Datas.data
-//            ListResultBr = Datas.databr
-//            content = ``;
-//            $.each(ListResult, function (k, v) {
-//                contentpaie += `
-//                    <tr compteG-id="${v.NUMENREG}">
-//                        <td>${v.DATEAFB}</td>
-//                        <td>${v.NUMENREG}</td>
-//                        <td>${v.SITE}</td>
-//                        <td>${v.DATE}</td>
-//                        <td>${v.GUICHET}</td>
-//                        <td>${v.CODE_J}</td>
-//                        <td>${v.NOMFICHIER}</td>
-//                        <td>${v.BANQUE}</td>
-//                        <td>${v.MONTANT}</td>
-//                        <td>${v.RIB}</td>
-//                        <td>${v.LOGIN}</td>
-//                        <td><input type="submit" class="btn btn-primary" value="Notification" /></td>
-//                    </tr>`
-
-//            });
-//            $.each(ListResultBr, function (k, v) {
-//                contentpaie += `
-//                    <tr compteG-id="${v.NUMENREG}">
-//                        <td>${v.DATEAFB}</td>
-//                        <td>${v.NUMENREG}</td>
-//                        <td>${v.SITE}</td>
-//                        <td>${v.DATE}</td>
-//                        <td>${v.GUICHET}</td>
-//                        <td>${v.CODE_J}</td>
-//                         <td>${v.NOMFICHIER}</td>
-//                        <td>${v.BANQUE}</td>
-//                        <td>${v.MONTANT}</td>
-//                        <td>${v.RIB}</td>
-//                        <td>${v.LOGIN}</td>
-//                        <td><input type="submit"  class="btn btn-primary" value="Notification" /></td>
-//                    </tr>`
-
-//            });
-//            $.each(ListResult, function (k, v) {
-//                content += `
-//                    <tr compteG-id="${v.NUMENREG}">
-//                        <td>
-//                            <input type="checkbox" name = "checkprod" compteg-ischecked/>
-//                        </td>
-//                        <td>${v.DATEAFB}</td>
-//                        <td>${v.NUMENREG}</td>
-//                         <td>${v.SITE}</td>
-//                        <td>${v.DATE}</td>
-//                        <td>${v.GUICHET}</td>
-//                        <td>${v.CODE_J}</td>
-//                         <td>${v.NOMFICHIER}</td>
-//                        <td>${v.BANQUE}</td>
-//                        <td>${v.MONTANT}</td>
-//                        <td>${v.RIB}</td>
-//                        <td>${v.LOGIN}</td>
-//                        <td><input type="submit"  class="btn btn-primary" value="Notification" /></td>
-//                    </tr>`
-
-//            });
-//            $.each(ListResultBr, function (k, v) {
-//                content += `
-//                    <tr compteG-id="${v.NUMENREG}">
-//                        <td>
-//                            <input type="checkbox" name = "checkprod" compteg-ischecked/>
-//                        </td>
-//                        <td>${v.DATEAFB}</td>
-//                        <td>${v.NUMENREG}</td>
-//                         <td>${v.SITE}</td>
-//                        <td>${v.DATE}</td>
-//                        <td>${v.GUICHET}</td>
-//                        <td>${v.CODE_J}</td>
-//                         <td>${v.NOMFICHIER}</td>
-//                        <td>${v.BANQUE}</td>
-//                        <td>${v.MONTANT}</td>
-//                        <td>${v.RIB}</td>
-//                        <td>${v.LOGIN}</td>
-//                        <td><input type="submit"  class="btn btn-primary" value="Notification" /></td>
-//                    </tr>`
-
-//            });
-//            $('#historiques').html(contentpaie);
-//            $('#CancelReg').html(content);
-//            //window.location = '/Home/GetFile?file=' + Datas.data;
-
-//        },
-//        error: function () {
-//            alert("Problème de connexion. ");
-//        }
-//    });
-//}
 function GetHistoriques() {
     let formData = new FormData();
 
@@ -182,6 +56,7 @@ function GetHistoriques() {
             content = ``;
             $.each(ListResult, function (k, v) {
                 data.push({
+                    checkbox: '',
                     dateREG: isNullOrUndefined(v.DATEAFB) ? '' : v.DATEAFB,
                     id: isNullOrUndefined(v.NUMENREG) ? '' : v.NUMENREG,
                     dateFile: isNullOrUndefined(v.DATEAFB) ? '' : v.DATEAFB,
@@ -189,7 +64,7 @@ function GetHistoriques() {
                     Date: isNullOrUndefined(v.DATE) ? '' : v.DATE,
                     Guichet: isNullOrUndefined(v.GUICHET) ? '' : formatCurrency(String(v.GUICHET).replace(",", ".")),
                     Journal: isNullOrUndefined(v.CODE_J) ? '' : formatCurrency(String(v.CODE_J).replace(",", ".")),
-                    NomFichier: isNullOrUndefined(v.NOMFICHIER) ? '' : v.NOMFICHIER,
+                    NomFichier: isNullOrUndefined(v.LIBELLE) ? '' : v.LIBELLE,
                     Banque: isNullOrUndefined(v.BANQUE) ? '' : v.BANQUE,
                     Montant: isNullOrUndefined(v.MONTANT) ? '' : v.MONTANT,
                     RIB: isNullOrUndefined(v.RIB) ? '' : v.RIB,
@@ -199,6 +74,7 @@ function GetHistoriques() {
             });
             $.each(ListResultBr, function (k, v) {
                 data.push({
+                    checkbox: '',
                     dateREG: isNullOrUndefined(v.DATEAFB) ? '' : v.DATEAFB,
                     id: isNullOrUndefined(v.NUMENREG) ? '' : v.NUMENREG,
                     dateFile: isNullOrUndefined(v.DATEAFB) ? '' : v.DATEAFB,
@@ -206,7 +82,7 @@ function GetHistoriques() {
                     Date: isNullOrUndefined(v.DATE) ? '' : v.DATE,
                     Guichet: isNullOrUndefined(v.GUICHET) ? '' : formatCurrency(String(v.GUICHET).replace(",", ".")),
                     Journal: isNullOrUndefined(v.CODE_J) ? '' : formatCurrency(String(v.CODE_J).replace(",", ".")),
-                    NomFichier: isNullOrUndefined(v.NOMFICHIER) ? '' : v.NOMFICHIER,
+                    NomFichier: isNullOrUndefined(v.LIBELLE) ? '' : v.LIBELLE,
                     Banque: isNullOrUndefined(v.BANQUE) ? '' : v.BANQUE,
                     Montant: isNullOrUndefined(v.MONTANT) ? '' : v.MONTANT,
                     RIB: isNullOrUndefined(v.RIB) ? '' : v.RIB,
@@ -216,6 +92,7 @@ function GetHistoriques() {
             });
             $.each(ListResult, function (k, v) {
                 data.push({
+                    checkbox: '',
                     dateREG: isNullOrUndefined(v.DATEAFB) ? '' : v.DATEAFB,
                     id: isNullOrUndefined(v.NUMENREG) ? '' : v.NUMENREG,
                     dateFile: isNullOrUndefined(v.DATEAFB) ? '' : v.DATEAFB,
@@ -223,7 +100,7 @@ function GetHistoriques() {
                     Date: isNullOrUndefined(v.DATE) ? '' : v.DATE,
                     Guichet: isNullOrUndefined(v.GUICHET) ? '' : formatCurrency(String(v.GUICHET).replace(",", ".")),
                     Journal: isNullOrUndefined(v.CODE_J) ? '' : formatCurrency(String(v.CODE_J).replace(",", ".")),
-                    NomFichier: isNullOrUndefined(v.NOMFICHIER) ? '' : v.NOMFICHIER,
+                    NomFichier: isNullOrUndefined(v.LIBELLE) ? '' : v.LIBELLE,
                     Banque: isNullOrUndefined(v.BANQUE) ? '' : v.BANQUE,
                     Montant: isNullOrUndefined(v.MONTANT) ? '' : v.MONTANT,
                     RIB: isNullOrUndefined(v.RIB) ? '' : v.RIB,
@@ -234,6 +111,7 @@ function GetHistoriques() {
             });
             $.each(ListResultBr, function (k, v) {
                 data.push({
+                    checkbox: '',
                     dateREG: isNullOrUndefined(v.DATEAFB) ? '' : v.DATEAFB,
                     id: isNullOrUndefined(v.NUMENREG) ? '' : v.NUMENREG,
                     dateFile: isNullOrUndefined(v.DATEAFB) ? '' : v.DATEAFB,
@@ -241,7 +119,7 @@ function GetHistoriques() {
                     Date: isNullOrUndefined(v.DATE) ? '' : v.DATE,
                     Guichet: isNullOrUndefined(v.GUICHET) ? '' : formatCurrency(String(v.GUICHET).replace(",", ".")),
                     Journal: isNullOrUndefined(v.CODE_J) ? '' : formatCurrency(String(v.CODE_J).replace(",", ".")),
-                    NomFichier: isNullOrUndefined(v.NOMFICHIER) ? '' : v.NOMFICHIER,
+                    NomFichier: isNullOrUndefined(v.LIBELLE) ? '' : v.LIBELLE,
                     Banque: isNullOrUndefined(v.BANQUE) ? '' : v.BANQUE,
                     Montant: isNullOrUndefined(v.MONTANT) ? '' : v.MONTANT,
                     RIB: isNullOrUndefined(v.RIB) ? '' : v.RIB,
@@ -255,6 +133,15 @@ function GetHistoriques() {
             table = $('#idTable').DataTable({
                 data,
                 columns: [
+                    {
+                        data: 'checkbox',
+                        render: function () {
+                            return `
+                                        <input type="checkbox" name="checkprod" compteg-ischecked onchange="checkdel()" />
+                                    `;
+                        },
+                        orderable: false
+                    },
                     { data: 'dateREG' },
                     { data: 'id' },
                     { data: 'dateFile' },

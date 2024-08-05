@@ -986,6 +986,7 @@ function getelementCheckJs() {
             for (let i = 0; i < checkList.length; i += 1) {
                 table.row($(checkList[i])).remove().draw();
             }
+            
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -1046,7 +1047,8 @@ $('#get-user-password-btn').on('click', () => {
                 pass.css({ 'color': 'red' });
                 pass.text('Identifiants incorrects.');
             } else {
-               // OKOK();
+                // OKOK();
+                $('#verification-modal').modal('toggle');
                 getelementCheckJs()
             }
         },
@@ -1094,10 +1096,16 @@ function OKOK() {
         },
         success: function (result) {
             var Datas = JSON.parse(result);
-            alert(Datas.msg);
-            $.each(CheckList, (k, v) => {
-                list.push($(v).remove());
-            });
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+            } else {
+                $.each(CheckList, (k, v) => {
+                    list.push($(v).remove());
+                });
+
+                //$('#verification-modal').modal('toggle');
+            }
+            
         },
         error: function () {
             alert("Problème de connexion. ");

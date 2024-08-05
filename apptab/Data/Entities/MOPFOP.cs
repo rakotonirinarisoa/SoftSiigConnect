@@ -82,6 +82,7 @@
             public decimal? TAXECOMMISSION { get; set; }
             public string NUMEROLIQUIDATION { get; set; }
             public string MARCHE { get; set; }
+            public string JOURNAL { get; set; }
             public string TYPE { get; set; }
             public string test { get; set; }
             public int NUMEREG { get; set; }

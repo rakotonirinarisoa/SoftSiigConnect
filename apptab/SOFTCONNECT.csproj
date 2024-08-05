@@ -2478,9 +2478,11 @@
     <Content Include="Assets\img\LogoS1.png" />
     <Content Include="Assets\js\AnomalieDPA.js" />
     <Content Include="Assets\js\AnomalieJSJournal .js" />
+    <Content Include="Assets\js\BordStatutActuelDoc.js" />
     <Content Include="Assets\js\BordRSF.js" />
     <Content Include="Assets\js\BordJRA.js" />
     <Content Include="Assets\js\AnomalieJS.js" />
+    <Content Include="Assets\js\AnulationReg.js" />
     <Content Include="Assets\js\MappagUserGED.js" />
     <Content Include="Assets\js\SITE.js" />
     <Content Include="Assets\js\PROGED.js" />
@@ -5012,6 +5014,7 @@
     <Content Include="Views\Home\AnomaliePaiementJournal.cshtml" />
     <Content Include="Views\Anomalie\Anomalie.cshtml" />
     <Content Include="Views\EtatGED\EtapTypeDocs.cshtml" />
+    <Content Include="Views\BordTraitement\BordEtatActuDoc.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
