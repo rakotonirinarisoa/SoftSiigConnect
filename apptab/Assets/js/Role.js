@@ -193,7 +193,7 @@ function GetUsers() {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/Privilege/GETALLUSER',
+        url: Origin + '/User/GETALLUSER',
         data: formData,
         cache: false,
         contentType: false,
