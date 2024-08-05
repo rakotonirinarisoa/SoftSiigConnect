@@ -24,5 +24,7 @@
 
         [Column(TypeName = "DATETIME")]
         public DateTime? CREATIONDATE { get; set; }
+
+        public Guid? IDUSERGED { get; set; }
     }
 }

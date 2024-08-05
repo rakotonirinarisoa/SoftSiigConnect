@@ -27,5 +27,7 @@
         public DateTime? CREATIONDATE { get; set; }
         public DateTime? LASTCONNEXTION { get; set; }
 
+        public Guid? IDUSERGED { get; set; }
+
     }
 }

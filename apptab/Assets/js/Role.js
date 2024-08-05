@@ -176,3 +176,74 @@ $(`[data-action="AddnewUser"]`).click(function () {
         },
     });
 });
+
+$('#PROJET').on('change', () => {
+    const id = $('#PROJET').val();
+    GetUsers(id);
+});
+
+function GetUsers() {
+    let formData = new FormData();
+
+    formData.append("iProjet", $("#PROJET").val());
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Privilege/GETALLUSER',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+            if (Datas.type == "notYet") {
+                alert(Datas.msg);
+
+                $(`[data-id="user-list"]`).text("");
+                var code1 = `<option value=""></option>`;
+                $.each(Datas.data.etat, function (k, v) {
+                    code1 += `
+                    <option value="${v.ID}">${v.LOGIN}</option>
+                `;
+                });
+                $(`[data-id="user-list"]`).append(code1);
+
+                return;
+            }
+
+            $(`[data-id="user-list"]`).text("");
+
+            var code1 = `<option value=""></option>`;
+            $.each(Datas.data.etat, function (k, v) {
+                code1 += `
+                    <option value="${v.ID}">${v.LOGIN}</option>
+                `;
+            });
+            $(`[data-id="user-list"]`).append(code1);
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}

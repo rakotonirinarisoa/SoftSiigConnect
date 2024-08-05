@@ -5011,6 +5011,7 @@
     <Content Include="Views\Privilege\CreateSITE.cshtml" />
     <Content Include="Views\Home\AnomaliePaiementJournal.cshtml" />
     <Content Include="Views\Anomalie\Anomalie.cshtml" />
+    <Content Include="Views\EtatGED\EtapTypeDocs.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -5023,7 +5024,6 @@
     <Folder Include="Assets\admlte\dist\img\credit\" />
     <Folder Include="Assets\admlte\dist\js\" />
     <Folder Include="FILERESULT\" />
-    <Folder Include="Views\EtatGED\" />
     <Folder Include="Views\GetCountTDB\" />
     <Folder Include="Views\GetFileF\" />
   </ItemGroup>

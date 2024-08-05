@@ -239,6 +239,16 @@ body.sidebar-mini.layout-fixed.sidebar-collapse ul.nav-pills.nav-sidebar.flex-co
         background-color: #336193 !important;
     }
 
+.thead-accueil2 {
+    color: #fff !important;
+    background-color: #264e7a !important;
+}
+
+    .thead-accueil2:hover {
+        color: #fff !important;
+        background-color: #264e7a !important;
+    }
+
 body.sidebar-mini.layout-fixed.sidebar-collapse img.brand-image.elevation-0 {
     width: 5em !important;
 }

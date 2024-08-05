@@ -733,9 +733,9 @@ namespace apptab.Controllers
                 {
                     foreach (var x in db.SI_PROGED.Where(x => x.DELETIONDATE == null).ToList())
                     {
-                        if (ged.Projects.Any(b => b.Id == x.IDGED))
+                        if (ged.Projects.Any(b => b.Id == x.IDGED && x.DELETIONDATE == null))
                         {
-                            if (db.SI_PROJETS.FirstOrDefault(b => b.ID == x.IDPROJET && b.DELETIONDATE == null) != null)
+                            if (db.SI_PROJETS.Any(b => b.ID == x.IDPROJET && b.DELETIONDATE == null))
                             {
                                 a.Add(new PROGED()
                                 {
