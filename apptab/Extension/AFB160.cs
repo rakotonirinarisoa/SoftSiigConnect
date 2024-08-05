@@ -27,7 +27,7 @@ namespace apptab.Extension
             var OP = db.OPA_VALIDATIONS.Where(a => a.IDPROJET == PROJECTID).FirstOrDefault();
             dynamic mont;
             SI_USERS usr = (from u in db.SI_USERS
-                            where u.LOGIN == user.LOGIN
+                            where u.LOGIN == user.LOGIN && u.DELETIONDATE == null
                             select u).FirstOrDefault();
             SI_MAPPAGES dbt = db.SI_MAPPAGES.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
 
@@ -338,7 +338,7 @@ namespace apptab.Extension
             string texteAFB160 = "";
             OPA_HISTORIQUE historique;
             int PROJECTID = int.Parse(codeproject);
-            var Fuser = db.SI_USERS.Where(x => x.LOGIN == user.LOGIN && x.PWD == user.PWD).FirstOrDefault();
+            var Fuser = db.SI_USERS.Where(x => x.LOGIN == user.LOGIN && x.PWD == user.PWD && x.DELETIONDATE == null).FirstOrDefault();
 
             /*********             * 0302       * *******/
 
@@ -520,7 +520,7 @@ namespace apptab.Extension
             int PROJECTID = int.Parse(codeproject);
             string texteAFB160 = "";
             OPA_HISTORIQUE historique;
-            var Fuser = db.SI_USERS.Where(x => x.LOGIN == user.LOGIN && x.PWD == user.PWD).FirstOrDefault();
+            var Fuser = db.SI_USERS.Where(x => x.LOGIN == user.LOGIN && x.PWD == user.PWD && x.DELETIONDATE == null).FirstOrDefault();
             /*********             * 0302       * *******/
 
             var donneurOrde = (from dordre in db.OPA_DONNEURORDRE
@@ -721,7 +721,7 @@ namespace apptab.Extension
             var OP = db.OPA_VALIDATIONS.Where(a => a.IDPROJET == PROJECTID).FirstOrDefault();
             dynamic mont;
             SI_USERS usr = (from u in db.SI_USERS
-                            where u.LOGIN == user.LOGIN
+                            where u.LOGIN == user.LOGIN && u.DELETIONDATE == null
                             select u).FirstOrDefault();
             SI_MAPPAGES dbt = db.SI_MAPPAGES.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
 
@@ -787,6 +787,15 @@ namespace apptab.Extension
             {
                
                 var opp = db.OPA_VALIDATIONS.Where(e => e.IDREGLEMENT == bnfcr.NUM).FirstOrDefault();
+                var ribOp = "";
+                var guicherOP = "";
+                var numEtabOP = "";
+                if (opp.AUTREOP == true)
+                {
+                    ribOp = tom.RJL1.Where(a => a.CODE == opp.Journal).FirstOrDefault().RIB;
+                    guicherOP = tom.RJL1.Where(a => a.CODE == opp.Journal).FirstOrDefault().GUICHET;
+                    numEtabOP = tom.RJL1.Where(a => a.CODE == opp.Journal).FirstOrDefault().AGENCE;
+                }
                 historique = new OPA_HISTORIQUEBR();
                 if (opp != null)
                 {
@@ -823,8 +832,16 @@ namespace apptab.Extension
                         texteAFB160 += this.formaterTexte(24, traitementNomFichier(bnfcr.BENEFICIAIRE));
                         texteAFB160 += this.formaterTexte(14, bnfcr.BANQUE);
                         texteAFB160 += this.formaterTexte(18, " ");
-                        texteAFB160 += this.formaterTexte(5, bnfcr.GUICHET);
-                        texteAFB160 += this.formaterTexte(11, bnfcr.RIB);
+                        if (opp.AUTREOP == true)
+                        {
+                            texteAFB160 += this.formaterTexte(5, guicherOP);
+                            texteAFB160 += this.formaterTexte(11, ribOp);
+                        }
+                        else
+                        {
+                            texteAFB160 += this.formaterTexte(5, bnfcr.GUICHET);
+                            texteAFB160 += this.formaterTexte(11, bnfcr.RIB);
+                        }
                         if (opp.AVANCE == true)
                         {
                             texteAFB160 += this.formaterChiffre(16, mont.MONTANT.ToString());
@@ -840,7 +857,14 @@ namespace apptab.Extension
                         //texteAFB160 += this.formaterTexte(11, bnfcr.LIBELLE);
                         texteAFB160 += this.formaterTexte(31, bnfcr.LIBELLE);
                         //texteAFB160 += this.formaterTexte(20, " ");
-                        texteAFB160 += this.formaterTexte(5, bnfcr.NUM_ETABLISSEMENT);
+                        if (opp.AUTREOP == true)
+                        {
+                            texteAFB160 += this.formaterTexte(5, numEtabOP);
+                        }
+                        else
+                        {
+                            texteAFB160 += this.formaterTexte(5, bnfcr.NUM_ETABLISSEMENT);
+                        }
                         texteAFB160 += this.formaterTexte(6, " ");
                         texteAFB160 += "\r\n";
 
@@ -1615,7 +1639,7 @@ namespace apptab.Extension
 
             try
             {
-                //tdonneur1.CODE_J = djournal.CODE;
+                tdonneur1.CODE_J = djournal.CODE;
                 tdonneur1.DATE_PAIEMENT = dateP;
                 tdonneur1.DONNEUR_ORDRE = couperText(24, traitementNomFichier(dordre.Replace(" ", "")));
                 tdonneur1.CODE_GUICHET = couperText(5, djournal.GUICHET);
@@ -2297,7 +2321,9 @@ namespace apptab.Extension
 
             if (compteG == "Autre Opérations")
             {
+               
                 DjournalOP = tom.CPTADMIN_FAUTREOPERATION.Where(x => x.JOURNALPAIEMENT == journal).Select(x => x.NUMEROOPERATION).ToList();
+
                 foreach (string numOpr in DjournalOP)
                 {
                     lNoOpsAOP.AddRange(tom.CPTADMIN_FAUTREOPERATION.Where(x => x.NUMEROOPERATION == numOpr && site.Contains(x.SITE)).Select(x => new AUTRE8OPERATION
@@ -2615,6 +2641,7 @@ namespace apptab.Extension
                                 Auxi = reglementAV.AUXI,
                                 NoPiece = reglementAV.NUMERO_PIECE,
                                 Compte = reglementAV.COGE,
+                                CogeFourniseur = reglementAV.COGE,
                                 Libelle = reglementAV.LIBELLE,
                                 Montant = item.MONTANT,
                                 MontantDevise = 0,
@@ -2852,9 +2879,22 @@ namespace apptab.Extension
                 }
                 #endregion
                 #region Enregistrement donneur d'ordre
+
                 foreach (var item in list)
                 {
-                    bool test = saveDonneurOrdreBR(user, djournal,item.Banque, dateP, PROJECTID);
+                    if (item.AUTREOPERATIONS == true)
+                    {
+                        //djournal = (from jrnl in tom.RJL1
+                        //            where jrnl.CODE == item.Journal && jrnl.JLTRESOR == true
+                        //            select jrnl).SingleOrDefault();
+
+                        bool test = saveDonneurOrdreBR(user, djournal, item.Banque, dateP, PROJECTID);
+                    }
+                    else
+                    {
+                        bool test = saveDonneurOrdreBR(user, djournal, item.Banque, dateP, PROJECTID);
+                    }
+                   
                 }
                 //bool test = saveDonneurOrdreBR(user, djournal, dateP, PROJECTID);
                 #endregion
@@ -3172,6 +3212,7 @@ namespace apptab.Extension
                         //preg.NUM_ETABLISSEMENT = this.RIB(beneficiaire.COMPTE_BANQUE)[0];
                         preg.NUM_ETABLISSEMENT = beneficiaire.ETABLISMENT;
                         preg.CODE_J = journal;
+                        //preg.CODE_J =;
                         preg.DOM1 = beneficiaire.DOM1;
                         preg.DOM2 = beneficiaire.DOM2;
                         //preg.CATEGORIE = beneficiaire.CATEGORIE;

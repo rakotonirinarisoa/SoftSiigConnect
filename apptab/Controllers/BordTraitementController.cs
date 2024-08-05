@@ -281,6 +281,12 @@ namespace apptab.Controllers
 
             return View();
         }
+        public ActionResult BordEtatActuDoc()
+        {
+            ViewBag.Controller = "Liste des etats actuel des documents";
+
+            return View();
+        }
 
         //Genere liste des engagements et paiements//
         [HttpPost]

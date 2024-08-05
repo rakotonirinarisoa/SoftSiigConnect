@@ -367,6 +367,7 @@ function GetHistoriques() {
     });
 }
 
+
 $('[data-action="GetElementChecked"]').click(function () {
     let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
     let list = [];
