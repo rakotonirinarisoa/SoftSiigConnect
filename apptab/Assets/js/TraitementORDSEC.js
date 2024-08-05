@@ -718,6 +718,17 @@ $('[data-action="SaveV"]').click(function () {
         },
         success: function (result) {
             var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+
             alert(Datas.msg);
             $.each(CheckList, (k, v) => {
                 list.push($(v).remove());
@@ -835,6 +846,17 @@ function OKOK() {
         },
         success: function (result) {
             var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+
             alert(Datas.msg);
             $.each(CheckList, (k, v) => {
                 list.push($(v).remove());

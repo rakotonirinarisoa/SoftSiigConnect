@@ -57,6 +57,7 @@
         public int? TDB11 { get; set; }
         public int? TDB12 { get; set; }
         public int? TDB13 { get; set; }
+        public int? TDB14 { get; set; }
 
         [Column(TypeName = "smalldatetime")]
         public DateTime? CREATIONDATE { get; set; }

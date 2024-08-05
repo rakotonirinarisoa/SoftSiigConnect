@@ -548,6 +548,7 @@ namespace SOFTCONNECT.Controllers
                     Session["TDB11"] = isMenu.TDB11;
                     Session["TDB12"] = isMenu.TDB12;
                     Session["TDB13"] = isMenu.TDB13;
+                    Session["TDB14"] = isMenu.TDB14;
 
                     Session["TDB9i"] = isMenu.TDB9i == true ? 1 : 0;
                     Session["TDB0i"] = isMenu.TDB0i == true ? 1 : 0;
@@ -564,6 +565,7 @@ namespace SOFTCONNECT.Controllers
                     Session["TDB11i"] = isMenu.TDB11i == true ? 1 : 0;
                     Session["TDB12i"] = isMenu.TDB12i == true ? 1 : 0;
                     Session["TDB13i"] = isMenu.TDB13i == true ? 1 : 0;
+                    Session["TDB14i"] = isMenu.TDB14i == true ? 1 : 0;
                 }
 
                 //PRIVILEGES//
@@ -623,6 +625,7 @@ namespace SOFTCONNECT.Controllers
                 Session["RTDB11"] = 0;
                 Session["RTDB12"] = 0;
                 Session["RTDB13"] = 0;
+                Session["RTDB14"] = 0;
 
                 if (db.SI_PRIVILEGE.Any(a => a.IDUSERPRIV == test.ID))
                 {
@@ -684,6 +687,7 @@ namespace SOFTCONNECT.Controllers
                     Session["RTDB11"] = isMenu.TDB11;
                     Session["RTDB12"] = isMenu.TDB12;
                     Session["RTDB13"] = isMenu.TDB13;
+                    Session["RTDB14"] = isMenu.TDB14;
                 }
 
                 if (db.SI_GEDLIEN.Any())

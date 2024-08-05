@@ -754,13 +754,25 @@ function OKOK() {
         },
         success: function (result) {
             var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+
             alert(Datas.msg);
             $.each(CheckList, (k, v) => {
                 list.push($(v).remove());
             });
+            $('#verification-modal').modal('toggle');
         },
         error: function () {
-            alert("Problème de connexion. ");
+            alert(Datas.msg);
         }
     });
 }
