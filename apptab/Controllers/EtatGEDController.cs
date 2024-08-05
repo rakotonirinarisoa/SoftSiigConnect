@@ -10,6 +10,7 @@ namespace apptab.Controllers
     public class EtatGEDController : Controller
     {
         private readonly SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
+        private readonly SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
         JsonSerializerSettings settings = new JsonSerializerSettings
         {
