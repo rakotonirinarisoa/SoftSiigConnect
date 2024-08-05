@@ -33,8 +33,15 @@ namespace apptab.Controllers
                 site.Add(item);
             }
 
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = ""}, settings));
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = "" }, settings));
 
+        }
+        //TB2: Situation des étapes par type de document (état d'avancement)//
+        public ActionResult EtapTypeDocs()
+        {
+            ViewBag.Controller = "Situation des étapes par type de document";
+
+            return View();
         }
     }
 }
