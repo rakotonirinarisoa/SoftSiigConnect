@@ -191,6 +191,7 @@
     <Compile Include="Controllers\CalendarController.cs" />
     <Compile Include="Controllers\CryptoController.cs" />
     <Compile Include="Controllers\EtatController.cs" />
+    <Compile Include="Controllers\EtatGEDController.cs" />
     <Compile Include="Controllers\FtpController.cs" />
     <Compile Include="Controllers\GetCountTDBController.cs" />
     <Compile Include="Controllers\GetFileFController.cs" />
@@ -4989,6 +4990,7 @@
     <Folder Include="Assets\admlte\dist\img\credit\" />
     <Folder Include="Assets\admlte\dist\js\" />
     <Folder Include="FILERESULT\" />
+    <Folder Include="Views\EtatGED\" />
     <Folder Include="Views\GetCountTDB\" />
     <Folder Include="Views\GetFileF\" />
   </ItemGroup>
