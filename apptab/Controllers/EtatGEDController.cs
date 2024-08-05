@@ -16,5 +16,13 @@ namespace apptab.Controllers
             TypeNameHandling = TypeNameHandling.Auto,
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore
         };
+
+        //TB2: Situation des étapes par type de document (état d'avancement)//
+        public ActionResult EtapTypeDocs()
+        {
+            ViewBag.Controller = "Situation des étapes par type de document";
+
+            return View();
+        }
     }
 }
