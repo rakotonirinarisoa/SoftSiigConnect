@@ -375,7 +375,7 @@ namespace apptab.Controllers
                                         REF = x.REF,
                                         BENEF = x.TITUL,
                                         DATENGAGEMENT = x.DATEMANDAT != null ? x.DATEMANDAT : null,
-                                        MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                        MONTENGAGEMENT = Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                         DATEPAIE = paiement.DATEVAL,
                                         MONTPAIE = string.Format("{0:0.00}", Math.Round(paiement.MONTANT.Value)),
                                         SOA = soa,
@@ -392,7 +392,7 @@ namespace apptab.Controllers
                                         REF = x.REF,
                                         BENEF = x.TITUL,
                                         DATENGAGEMENT = x.DATEMANDAT != null ? x.DATEMANDAT : null,
-                                        MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                        MONTENGAGEMENT = Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                         DATEPAIE = null,
                                         MONTPAIE = "",
                                         SOA = soa,
@@ -430,7 +430,7 @@ namespace apptab.Controllers
                                         REF = x.REF,
                                         BENEF = x.TITUL,
                                         DATENGAGEMENT = x.DATEMANDAT != null ? x.DATEMANDAT : null,
-                                        MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                        MONTENGAGEMENT = Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                         DATEPAIE = paiement.DATEVAL,
                                         MONTPAIE = string.Format("{0:0.00}", Math.Round(paiement.MONTANT.Value)),
                                         SOA = soa,
@@ -447,7 +447,7 @@ namespace apptab.Controllers
                                         REF = x.REF,
                                         BENEF = x.TITUL,
                                         DATENGAGEMENT = x.DATEMANDAT != null ? x.DATEMANDAT : null,
-                                        MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                        MONTENGAGEMENT = Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                         DATEPAIE = null,
                                         MONTPAIE = "",
                                         SOA = soa,
@@ -561,7 +561,7 @@ namespace apptab.Controllers
                                     REF = x.REF,
                                     BENEF = x.TITUL,
                                     //DATENGAGEMENT = x.DATEMANDAT.Value.Date,
-                                    MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                    MONTENGAGEMENT = Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
 
                                     DATETRANSFERTRAF = x.DATECRE != null ? x.DATECRE : null,
                                     DATEVALORDSEC = x.DATEVALIDATION != null ? x.DATEVALIDATION : null,
@@ -599,7 +599,7 @@ namespace apptab.Controllers
                                     REF = x.REF,
                                     BENEF = x.TITUL,
                                     //DATENGAGEMENT = x.DATEMANDAT.Value.Date,
-                                    MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                    MONTENGAGEMENT = Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
 
                                     DATETRANSFERTRAF = x.DATECRE != null ? x.DATECRE : null,
                                     DATEVALORDSEC = x.DATEVALIDATION != null ? x.DATEVALIDATION : null,
@@ -723,7 +723,7 @@ namespace apptab.Controllers
                                     No = x.No,
                                     REF = x.REF,
                                     BENEF = x.TITUL,
-                                    MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                    MONTENGAGEMENT = Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                     AGENTREJETE = isRejet != null ? await GetAgent(isRejet.IDUSER) : "",
                                     DATEREJETE = isRejet != null ? isRejet.DATEREJE : null,
                                     MOTIF = isRejet != null ? isRejet.MOTIF : "",
@@ -772,7 +772,7 @@ namespace apptab.Controllers
                                     No = x.No,
                                     REF = x.REF,
                                     BENEF = x.TITUL,
-                                    MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                    MONTENGAGEMENT = Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                     AGENTREJETE = isRejet != null ? await GetAgent(isRejet.IDUSER) : "",
                                     DATEREJETE = isRejet != null ? isRejet.DATEREJE : null,
                                     MOTIF = isRejet != null ? isRejet.MOTIF : "",
@@ -913,7 +913,7 @@ namespace apptab.Controllers
                         NUM_ENGAGEMENT = traitprojets[j].REF,
                         SITE = traitprojets[j].SITE,
                         BENEFICIAIRE = traitprojets[j].TITUL,
-                        MONTENGAGEMENT = Data.Cipher.Decrypt(traitprojets[j].MONT, "Oppenheimer").ToString(),
+                        MONTENGAGEMENT = Cipher.Decrypt(traitprojets[j].MONT, "Oppenheimer").ToString(),
                         DATETRANSFERTRAF = traitprojets[j].DATECRE,
                         TRANSFERTRAFAGENT = await GetAgent(traitprojets[j].IDUSERCREATE),
                         DATEVALORDSEC = traitprojets[j].DATEVALIDATION,
@@ -923,10 +923,10 @@ namespace apptab.Controllers
                         DATESIIGFP = traitprojets[j].DATESIIG,
                         SIIGFPAGENT = "",
 
-                        DUREETRAITEMENTTRANSFERTRAF = Data.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
-                        DUREETRAITEMENTVALORDSEC = Data.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE),
-                        DUREETRAITEMENTSENDSIIG = Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION),
-                        DUREETRAITEMENTSIIGFP = Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP)
+                        DUREETRAITEMENTTRANSFERTRAF = Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
+                        DUREETRAITEMENTVALORDSEC = Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE),
+                        DUREETRAITEMENTSENDSIIG = Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION),
+                        DUREETRAITEMENTSIIGFP = Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP)
                     });
                 }
 
@@ -955,7 +955,7 @@ namespace apptab.Controllers
                         NUM_ENGAGEMENT = traitprojetsAVANCE[j].REF,
                         SITE = traitprojetsAVANCE[j].SITE,
                         BENEFICIAIRE = traitprojetsAVANCE[j].TITUL,
-                        MONTENGAGEMENT = Data.Cipher.Decrypt(traitprojetsAVANCE[j].MONT, "Oppenheimer").ToString(),
+                        MONTENGAGEMENT = Cipher.Decrypt(traitprojetsAVANCE[j].MONT, "Oppenheimer").ToString(),
                         DATETRANSFERTRAF = traitprojetsAVANCE[j].DATECRE,
                         TRANSFERTRAFAGENT = await GetAgent(traitprojetsAVANCE[j].IDUSERCREATE),
                         DATEVALORDSEC = traitprojetsAVANCE[j].DATEVALIDATION,
@@ -965,10 +965,10 @@ namespace apptab.Controllers
                         DATESIIGFP = traitprojetsAVANCE[j].DATESIIG,
                         SIIGFPAGENT = "",
 
-                        DUREETRAITEMENTTRANSFERTRAF = Data.Date.GetDifference(traitprojetsAVANCE[j].DATECRE, traitprojetsAVANCE[j].DATEBE),
-                        DUREETRAITEMENTVALORDSEC = Data.Date.GetDifference(traitprojetsAVANCE[j].DATEVALIDATION, traitprojetsAVANCE[j].DATECRE),
-                        DUREETRAITEMENTSENDSIIG = Data.Date.GetDifference(traitprojetsAVANCE[j].DATENVOISIIGFP, traitprojetsAVANCE[j].DATEVALIDATION),
-                        DUREETRAITEMENTSIIGFP = Data.Date.GetDifference(traitprojetsAVANCE[j].DATESIIG, traitprojetsAVANCE[j].DATENVOISIIGFP)
+                        DUREETRAITEMENTTRANSFERTRAF = Date.GetDifference(traitprojetsAVANCE[j].DATECRE, traitprojetsAVANCE[j].DATEBE),
+                        DUREETRAITEMENTVALORDSEC = Date.GetDifference(traitprojetsAVANCE[j].DATEVALIDATION, traitprojetsAVANCE[j].DATECRE),
+                        DUREETRAITEMENTSENDSIIG = Date.GetDifference(traitprojetsAVANCE[j].DATENVOISIIGFP, traitprojetsAVANCE[j].DATEVALIDATION),
+                        DUREETRAITEMENTSIIGFP = Date.GetDifference(traitprojetsAVANCE[j].DATESIIG, traitprojetsAVANCE[j].DATENVOISIIGFP)
                     });
                 }
             }
@@ -1105,7 +1105,7 @@ namespace apptab.Controllers
                             NUM_ENGAGEMENT = traitprojets[j].REF,
                             SITE = traitprojets[j].SITE,
                             BENEFICIAIRE = traitprojets[j].TITUL,
-                            MONTENGAGEMENT = Data.Cipher.Decrypt(traitprojets[j].MONT, "Oppenheimer").ToString(),
+                            MONTENGAGEMENT = Cipher.Decrypt(traitprojets[j].MONT, "Oppenheimer").ToString(),
 
                             DATETRANSFERTRAF = traitprojets[j].DATECRE,
                             DATEVALORDSEC = traitprojets[j].DATEVALIDATION,
@@ -1117,8 +1117,8 @@ namespace apptab.Controllers
                             //SENDSIIGAGENT = await GetAgent(traitprojets[j].IDUSERENVOISIIGFP),
                             //SIIGFPAGENT = "",
 
-                            DUREETRAITEMENTTRANSFERTRAF = Data.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
-                            DUREETRAITEMENTVALORDSEC = Data.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE),
+                            DUREETRAITEMENTTRANSFERTRAF = Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
+                            DUREETRAITEMENTVALORDSEC = Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE),
                             //DUREETRAITEMENTSENDSIIG = Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION),
                             //DUREETRAITEMENTSIIGFP = Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP),
 
@@ -1127,8 +1127,8 @@ namespace apptab.Controllers
                             //DURPREVUTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value : 0,
                             //DURPREVUSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value : 0,
 
-                            DEPASTRANSFERT = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE) - durPrevu.DELRAF.Value : 0,
-                            DEPASVALIDATION = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE) - durPrevu.DELTV.Value : 0,
+                            DEPASTRANSFERT = durPrevu != null ? Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE) - durPrevu.DELRAF.Value : 0,
+                            DEPASVALIDATION = durPrevu != null ? Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE) - durPrevu.DELTV.Value : 0,
                             //DEPASTRANSFSIIG = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) - durPrevu.DELENVOISIIGFP.Value : 0,
                             //DEPASSIIG = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) - durPrevu.DELSIIGFP.Value : 0
                         });
@@ -1151,7 +1151,7 @@ namespace apptab.Controllers
                             NUM_ENGAGEMENT = traitprojetsAVANCE[j].REF,
                             SITE = traitprojetsAVANCE[j].SITE,
                             BENEFICIAIRE = traitprojetsAVANCE[j].TITUL,
-                            MONTENGAGEMENT = Data.Cipher.Decrypt(traitprojetsAVANCE[j].MONT, "Oppenheimer").ToString(),
+                            MONTENGAGEMENT = Cipher.Decrypt(traitprojetsAVANCE[j].MONT, "Oppenheimer").ToString(),
 
                             DATETRANSFERTRAF = traitprojetsAVANCE[j].DATECRE,
                             DATEVALORDSEC = traitprojetsAVANCE[j].DATEVALIDATION,
@@ -1163,8 +1163,8 @@ namespace apptab.Controllers
                             //SENDSIIGAGENT = await GetAgent(traitprojetsAVANCE[j].IDUSERENVOISIIGFP),
                             //SIIGFPAGENT = "",
 
-                            DUREETRAITEMENTTRANSFERTRAF = Data.Date.GetDifference(traitprojetsAVANCE[j].DATECRE, traitprojetsAVANCE[j].DATEBE),
-                            DUREETRAITEMENTVALORDSEC = Data.Date.GetDifference(traitprojetsAVANCE[j].DATEVALIDATION, traitprojetsAVANCE[j].DATECRE),
+                            DUREETRAITEMENTTRANSFERTRAF = Date.GetDifference(traitprojetsAVANCE[j].DATECRE, traitprojetsAVANCE[j].DATEBE),
+                            DUREETRAITEMENTVALORDSEC = Date.GetDifference(traitprojetsAVANCE[j].DATEVALIDATION, traitprojetsAVANCE[j].DATECRE),
                             //DUREETRAITEMENTSENDSIIG = Data.Date.GetDifference(traitprojetsAVANCE[j].DATENVOISIIGFP, traitprojetsAVANCE[j].DATEVALIDATION),
                             //DUREETRAITEMENTSIIGFP = Data.Date.GetDifference(traitprojetsAVANCE[j].DATESIIG, traitprojetsAVANCE[j].DATENVOISIIGFP),
 
@@ -1173,8 +1173,8 @@ namespace apptab.Controllers
                             //DURPREVUTRANSFSIIG = durPrevuAVANCE != null ? durPrevuAVANCE.DELENVOISIIGFP.Value : 0,
                             //DURPREVUSIIG = durPrevuAVANCE != null ? durPrevuAVANCE.DELSIIGFP.Value : 0,
 
-                            DEPASTRANSFERT = durPrevuAVANCE != null ? Data.Date.GetDifference(traitprojetsAVANCE[j].DATECRE, traitprojetsAVANCE[j].DATEBE) - durPrevuAVANCE.DELRAF.Value : 0,
-                            DEPASVALIDATION = durPrevuAVANCE != null ? Data.Date.GetDifference(traitprojetsAVANCE[j].DATEVALIDATION, traitprojetsAVANCE[j].DATECRE) - durPrevuAVANCE.DELTV.Value : 0,
+                            DEPASTRANSFERT = durPrevuAVANCE != null ? Date.GetDifference(traitprojetsAVANCE[j].DATECRE, traitprojetsAVANCE[j].DATEBE) - durPrevuAVANCE.DELRAF.Value : 0,
+                            DEPASVALIDATION = durPrevuAVANCE != null ? Date.GetDifference(traitprojetsAVANCE[j].DATEVALIDATION, traitprojetsAVANCE[j].DATECRE) - durPrevuAVANCE.DELTV.Value : 0,
                             //DEPASTRANSFSIIG = durPrevuAVANCE != null ? Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) - durPrevuAVANCE.DELENVOISIIGFP.Value : 0,
                             //DEPASSIIG = durPrevuAVANCE != null ? Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) - durPrevuAVANCE.DELSIIGFP.Value : 0
                         });
@@ -1906,7 +1906,7 @@ namespace apptab.Controllers
                                     BENEF = x.TITUL,
                                     NPIECE = x.NPIECE,
 
-                                    MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                    MONTENGAGEMENT = Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
 
                                     DATETRANSFERTRAF = x.DATECRE != null ? x.DATECRE : null,
                                     DATEVALORDSEC = x.DATEVALIDATION != null ? x.DATEVALIDATION : null,
@@ -1944,7 +1944,7 @@ namespace apptab.Controllers
 
                                     NPIECE = x.NPIECE,
 
-                                    MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                    MONTENGAGEMENT = Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
 
                                     DATETRANSFERTRAF = x.DATECRE != null ? x.DATECRE : null,
                                     DATEVALORDSEC = x.DATEVALIDATION != null ? x.DATEVALIDATION : null,
@@ -2061,7 +2061,7 @@ namespace apptab.Controllers
                                     REF = x.REF,
                                     NPIECE = x.NPIECE,
                                     BENEF = x.TITUL,
-                                    MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                    MONTENGAGEMENT = Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                     AGENTREJETE = isRejet != null ? await GetAgent(isRejet.IDUSER) : "",
                                     DATEREJETE = isRejet != null ? isRejet.DATEREJE : null,
                                     MOTIF = isRejet != null ? isRejet.MOTIF : "",
@@ -2110,7 +2110,7 @@ namespace apptab.Controllers
                                     REF = x.REF,
                                     NPIECE = x.NPIECE,
                                     BENEF = x.TITUL,
-                                    MONTENGAGEMENT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                    MONTENGAGEMENT = Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
                                     AGENTREJETE = isRejet != null ? await GetAgent(isRejet.IDUSER) : "",
                                     DATEREJETE = isRejet != null ? isRejet.DATEREJE : null,
                                     MOTIF = isRejet != null ? isRejet.MOTIF : "",

@@ -1,4 +1,4 @@
-namespace apptab.Models
+﻿namespace apptab.Models
 {
     using System;
     using System.Collections.Generic;

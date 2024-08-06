@@ -7,13 +7,15 @@ using Newtonsoft.Json;
 using System.Web.UI.WebControls;
 using System.Threading.Tasks;
 using apptab.Data.Entities;
+using apptab.Data;
 using System.Data.Entity;
 
-namespace SOFTCONNECT.Controllers
+namespace apptab.Controllers
 {
     public class UserController : Controller
     {
         private readonly SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
+        private readonly SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
         JsonSerializerSettings settings = new JsonSerializerSettings
         {
@@ -763,6 +765,36 @@ namespace SOFTCONNECT.Controllers
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             return Json(JsonConvert.SerializeObject(new { type = "login", msg = "", data = exist.ROLE != (int)Role.SAdministrateur }, settings));
+        }
+
+        [HttpPost]
+        public ActionResult GETALLUSER(SI_USERS suser, int iProjet)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+                SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+                int crpt = iProjet;
+
+                var crpto = db.SI_USERS.Where(a => a.IDPROJET == crpt && a.DELETIONDATE == null).ToList();
+
+                if (crpto != null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { etat = crpto, IDP = crpt } }, settings));
+                }
+                else
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "notYet", msg = "Veuillez créer des utilisateurs. ", data = new { etat = crpto, IDP = crpt } }, settings));
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
         }
     }
 }
