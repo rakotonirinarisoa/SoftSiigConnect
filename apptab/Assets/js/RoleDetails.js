@@ -13,11 +13,6 @@
     GetListProjet();
 });
 
-$('#PROJET').on('change', () => {
-    //const id = $('#PROJET').val();
-    //GetUsersGED(id);
-    
-});
 
 $(`[data-id="proj-list"]`).on("change", function () {
     const id = $('#PROJET').val();

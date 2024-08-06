@@ -96,7 +96,7 @@ namespace apptab.Controllers
                             DELETONDATE = a.DELETIONDATE != null ? a.DELETIONDATE : null,
                             //STAT = a.DELETIONDATE == null ? "ACTIF" : "INACTIF",
                             CREAT = a.CREATIONDATE != null ? a.CREATIONDATE : null,
-                            USERGED = ged.Users.Any(z => z.Id == a.IDUSERGED && z.DeletionDate == null) ? ged.Users.FirstOrDefault(z => z.Id == a.IDUSERGED && z.DeletionDate == null).Username : ""
+                            USERGED = a.IDUSERGED != null ? ged.Users.FirstOrDefault(z => z.Id == a.IDUSERGED && z.DeletionDate == null).Username : ""
                         });
                     }
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = users }, settings));

@@ -39,6 +39,8 @@ namespace apptab.Controllers
                 Projet.Add(item);
             }
             var RefDoc = ged.Documents.Where(x => x.DeletionDate == null).ToList();
+            var userged = ged.Users.Where(x=> x.Id == exist.IDUSERGED).FirstOrDefault();
+
 
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = "" }, settings));
 
