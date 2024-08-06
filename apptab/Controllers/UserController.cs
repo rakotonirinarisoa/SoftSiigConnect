@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using apptab.Data.Entities;
 using apptab.Data;
 using System.Data.Entity;
+using static System.Net.Mime.MediaTypeNames;
+using static apptab.Controllers.RSFController;
+using System.Web.Helpers;
 
 namespace apptab.Controllers
 {
@@ -32,6 +35,18 @@ namespace apptab.Controllers
             return View();
         }
 
+        public class ListeUser
+        {
+            public string LOGIN { get; set; }
+            public string PWD { get; set; }
+            public string ROLE { get; set; }
+            public string USERGED { get; set; }
+            public int ID { get; set; }
+            public string PROJET { get; set; }
+            public DateTime? DELETONDATE { get; set; }
+            public DateTime? CREAT { get; set; }
+        }
+
         [HttpPost]
         public JsonResult FillTable(SI_USERS suser)
         {
@@ -39,38 +54,51 @@ namespace apptab.Controllers
             ViewBag.Role = exist.ROLE;
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+            List<ListeUser> users = new List<ListeUser>();
+
             try
             {
                 var test = db.SI_USERS.Where(x => x.ROLE == exist.ROLE && x.IDPROJET == exist.IDPROJET && x.DELETIONDATE == null).FirstOrDefault();
                 //var test = db.SI_USERS.Where(x => x.ROLE == suser.ROLE && x.IDPROJET == suser.IDPROJET).FirstOrDefault();
                 if (test.ROLE == (int)Role.SAdministrateur)
                 {
-                    var users = db.SI_USERS.Where(x => x.ROLE != Role.SAdministrateur).Select(a => new
+                    foreach (var a in db.SI_USERS.Where(x => x.ROLE != Role.SAdministrateur && x.DELETIONDATE == null))
                     {
-                        a.LOGIN,
-                        a.PWD,
-                        ROLE = a.ROLE.ToString(),
-                        ID = a.ID,
-                        PROJET = a.IDPROJET == 0 ? "MULTIPLES" : db.SI_PROJETS.Where(z => z.ID == a.IDPROJET && z.DELETIONDATE == null).FirstOrDefault().PROJET,
-                        DELETONDATE = a.DELETIONDATE,
-                        //STAT = a.DELETIONDATE == null ? "ACTIF" : "INACTIF",
-                        CREAT = a.CREATIONDATE
-                    }).Where(a => a.PROJET != null && a.DELETONDATE == null).OrderBy(a => a.PROJET).OrderBy(a => a.LOGIN).ToList();
+                        users.Add(new ListeUser()
+                        {
+                            LOGIN = a.LOGIN,
+                            PWD = a.PWD,
+                            ROLE = a.ROLE.ToString(),
+                            ID = a.ID,
+                            PROJET = a.IDPROJET == 0 ? "MULTIPLES" : db.SI_PROJETS.Where(z => z.ID == a.IDPROJET && z.DELETIONDATE == null).FirstOrDefault().PROJET,
+                            DELETONDATE = a.DELETIONDATE != null ? a.DELETIONDATE : null,
+                            CREAT = a.CREATIONDATE != null ? a.CREATIONDATE : null,
+                            USERGED = ged.Users.Any(z => z.Id == a.IDUSERGED && z.DeletionDate == null) ? ged.Users.FirstOrDefault(z => z.Id == a.IDUSERGED && z.DeletionDate == null).Username : ""
+                        });
+                    }
+                    //OrderBy(a => a.PROJET).OrderBy(a => a.LOGIN).ToList();
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = users }, settings));
                 }
                 else
                 {
-                    var users = db.SI_USERS.Where(x => x.ROLE != Role.SAdministrateur && x.ROLE != Role.Organe_de_Suivi && x.ROLE != Role.Validateur_paiements && x.IDPROJET == exist.IDPROJET && x.DELETIONDATE == null).Select(a => new
+                    foreach (var a in db.SI_USERS.Where(x => x.ROLE != Role.SAdministrateur && x.ROLE != Role.Organe_de_Suivi && x.ROLE != Role.Validateur_paiements && x.IDPROJET == exist.IDPROJET && x.DELETIONDATE == null))
                     {
-                        a.LOGIN,
-                        a.PWD,
-                        ROLE = a.ROLE.ToString(),
-                        ID = a.ID,
-                        PROJET = db.SI_PROJETS.Where(z => z.ID == exist.IDPROJET && z.DELETIONDATE == null).FirstOrDefault().PROJET,
-                        DELETONDATE = a.DELETIONDATE,
-                        //STAT = "ACTIF",
-                        CREAT = a.CREATIONDATE
-                    }).OrderBy(a => a.CREAT).Where(a => a.DELETONDATE == null).OrderBy(a => a.PROJET).OrderBy(a => a.LOGIN).ToList();
+                        users.Add(new ListeUser()
+                        {
+                            LOGIN = a.LOGIN,
+                            PWD = a.PWD,
+                            ROLE = a.ROLE.ToString(),
+                            ID = a.ID,
+                            PROJET = a.IDPROJET == 0 ? "MULTIPLES" : db.SI_PROJETS.Where(z => z.ID == a.IDPROJET && z.DELETIONDATE == null).FirstOrDefault().PROJET,
+                            DELETONDATE = a.DELETIONDATE != null ? a.DELETIONDATE : null,
+                            //STAT = a.DELETIONDATE == null ? "ACTIF" : "INACTIF",
+                            CREAT = a.CREATIONDATE != null ? a.CREATIONDATE : null,
+                            USERGED = ged.Users.Any(z => z.Id == a.IDUSERGED && z.DeletionDate == null) ? ged.Users.FirstOrDefault(z => z.Id == a.IDUSERGED && z.DeletionDate == null).Username : ""
+                        });
+                    }
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = users }, settings));
                 }
             }
@@ -159,7 +187,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult AddUser(SI_USERS suser, SI_USERS user, string listProjet)
+        public JsonResult AddUser(SI_USERS suser, SI_USERS user, string listProjet, Guid? userGED)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDPROJET == suser.IDPROJET*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -190,7 +218,8 @@ namespace apptab.Controllers
                                 IDPROJET = int.Parse(listProjet),
                                 ROLE = user.ROLE,
                                 CREATIONDATE = DateTime.Now,
-                                IDUSER = exist.ID
+                                IDUSER = exist.ID,
+                                IDUSERGED = userGED
                             };
                             db.SI_USERS.Add(newUser);
                             db.SaveChanges();
@@ -204,7 +233,8 @@ namespace apptab.Controllers
                                 IDPROJET = 0,
                                 ROLE = user.ROLE,
                                 CREATIONDATE = DateTime.Now,
-                                IDUSER = exist.ID
+                                IDUSER = exist.ID,
+                                IDUSERGED = userGED
                             };
                             db.SI_USERS.Add(newUser);
                             db.SaveChanges();
@@ -242,7 +272,8 @@ namespace apptab.Controllers
                             IDPROJET = exist.IDPROJET,
                             ROLE = user.ROLE,
                             CREATIONDATE = DateTime.Now,
-                            IDUSER = exist.ID
+                            IDUSER = exist.ID,
+                            IDUSERGED = userGED
                         };
                         db.SI_USERS.Add(newUser);
 
@@ -263,7 +294,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateUser(SI_USERS suser, SI_USERS user, string oldPassword, string UserId, string listProjet)
+        public JsonResult UpdateUser(SI_USERS suser, SI_USERS user, string oldPassword, string UserId, string listProjet, Guid? userGED)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDPROJET == suser.IDPROJET*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -427,6 +458,9 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDPROJET == suser.IDPROJET*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
             try
             {
                 int useID = int.Parse(UserId);
@@ -450,7 +484,7 @@ namespace apptab.Controllers
 
                 if (user != null)
                 {
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { LOGIN = user.LOGIN, ROLE = user.ROLE, PROJET = proj } }, settings));
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { LOGIN = user.LOGIN, ROLE = user.ROLE, PROJET = proj, USERGEDid = user.IDUSERGED, USERGEDname = ged.Users.FirstOrDefault(a => a.Id == user.IDUSERGED && a.DeletionDate == null).Username } }, settings));
                 }
                 else
                 {
@@ -767,28 +801,95 @@ namespace apptab.Controllers
             return Json(JsonConvert.SerializeObject(new { type = "login", msg = "", data = exist.ROLE != (int)Role.SAdministrateur }, settings));
         }
 
+        public class ListeUserGEd
+        {
+            public string Username { get; set; }
+            public Guid Id { get; set; }
+        }
+
         [HttpPost]
-        public ActionResult GETALLUSER(SI_USERS suser, int iProjet)
+        public ActionResult GETALLUSER(SI_USERS suser, string iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            List<ListeUserGEd> crpto = new List<ListeUserGEd>();
 
             try
             {
                 SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
                 SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
-                int crpt = iProjet;
-
-                var crpto = db.SI_USERS.Where(a => a.IDPROJET == crpt && a.DELETIONDATE == null).ToList();
-
-                if (crpto != null)
+                if (!String.IsNullOrEmpty(iProjet))
                 {
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { etat = crpto, IDP = crpt } }, settings));
+                    string[] separators = { "," };
+                    var pro = iProjet;
+                    if (pro != null)
+                    {
+                        string listUser = pro.ToString();
+                        string[] lst = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                        foreach (var a in lst)
+                        {
+                            var idP = int.Parse(a);
+                            var projet = db.SI_PROGED.FirstOrDefault(b => b.IDPROJET == idP && b.DELETIONDATE == null);
+
+                            if (projet != null)
+                            {
+                                var projetGED = ged.Projects.FirstOrDefault(b => b.Id == projet.IDGED && b.DeletionDate == null);
+
+                                if (projetGED != null)
+                                {
+                                    foreach (var y in ged.Users.Where(b => b.ProjectId == projetGED.Id && b.DeletionDate == null).ToList())
+                                    {
+                                        if (!db.SI_USERS.Any(z => z.IDUSERGED == y.Id && z.DELETIONDATE == null))
+                                        {
+                                            crpto.Add(new ListeUserGEd()
+                                            {
+                                                Username = y.Username,
+                                                Id = y.Id
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 else
                 {
-                    return Json(JsonConvert.SerializeObject(new { type = "notYet", msg = "Veuillez créer des utilisateurs. ", data = new { etat = crpto, IDP = crpt } }, settings));
+                    var idP = exist.IDPROJET;
+
+                    var projet = db.SI_PROGED.FirstOrDefault(b => b.IDPROJET == idP && b.DELETIONDATE == null);
+
+                    if (projet != null)
+                    {
+                        var projetGED = ged.Projects.FirstOrDefault(b => b.Id == projet.IDGED && b.DeletionDate == null);
+
+                        if (projetGED != null)
+                        {
+                            foreach (var y in ged.Users.Where(b => b.ProjectId == projetGED.Id && b.DeletionDate == null).ToList())
+                            {
+                                if (!db.SI_USERS.Any(z => z.IDUSERGED == y.Id && z.DELETIONDATE == null))
+                                {
+                                    crpto.Add(new ListeUserGEd()
+                                    {
+                                        Username = y.Username,
+                                        Id = y.Id
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (crpto != null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = crpto, settings }));
+                }
+                else
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "notYet", msg = "Veuillez créer des utilisateurs. ", data = crpto, settings }));
                 }
             }
             catch (Exception e)

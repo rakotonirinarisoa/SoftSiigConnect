@@ -62,7 +62,7 @@ function GetListUser() {
                                 onclick="showPassword('${v.ID}')"
                             />
                         </td>
-
+                        <td>${v.USERGED}</td>
                         <td class="elerfr">
                             <div onclick="DetailUpdateUser('${v.ID}')"><i class="fa fa-pen-alt text-warning"></i></div>
                         </td>

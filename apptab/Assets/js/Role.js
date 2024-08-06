@@ -6,6 +6,9 @@
     $(`[data-id="username"]`).text(User.LOGIN);
     GetListRole();
     GetListProjet();
+
+    const id = $('#PROJET').val();
+    GetUsers(id);
 });
 
 function GetListRole() {
@@ -142,6 +145,7 @@ $(`[data-action="AddnewUser"]`).click(function () {
     formData.append("user.PWD", newpwd);
 
     formData.append("listProjet", $("#PROJET").val());
+    formData.append("userGED", $("#user").val());
     
     $.ajax({
         type: "POST",
@@ -222,9 +226,9 @@ function GetUsers() {
 
                 $(`[data-id="user-list"]`).text("");
                 var code1 = `<option value=""></option>`;
-                $.each(Datas.data.etat, function (k, v) {
+                $.each(Datas.data, function (k, v) {
                     code1 += `
-                    <option value="${v.ID}">${v.LOGIN}</option>
+                    <option value="${v.Id}">${v.Username}</option>
                 `;
                 });
                 $(`[data-id="user-list"]`).append(code1);
@@ -235,9 +239,9 @@ function GetUsers() {
             $(`[data-id="user-list"]`).text("");
 
             var code1 = `<option value=""></option>`;
-            $.each(Datas.data.etat, function (k, v) {
+            $.each(Datas.data, function (k, v) {
                 code1 += `
-                    <option value="${v.ID}">${v.LOGIN}</option>
+                    <option value="${v.Id}">${v.Username}</option>
                 `;
             });
             $(`[data-id="user-list"]`).append(code1);
