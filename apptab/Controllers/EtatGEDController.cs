@@ -28,11 +28,17 @@ namespace apptab.Controllers
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
             if (exist.IDUSERGED == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Veuillez parametrer le mappage GED ET PROJET. " }, settings));
 
+            List<string> Projet = new List<string>();
             List<string> site = new List<string>();
             foreach (var item in listSite.Split(','))
             {
                 site.Add(item);
             }
+            foreach (var item in listProjet.Split(','))
+            {
+                Projet.Add(item);
+            }
+            var RefDoc = ged.Documents.Where(x => x.DeletionDate == null).ToList();
 
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = "" }, settings));
 

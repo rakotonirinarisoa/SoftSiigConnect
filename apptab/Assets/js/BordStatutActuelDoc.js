@@ -212,7 +212,7 @@ $('[data-action="GenereLISTE"]').click(function () {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/EtatGEDController/GenereLISTE',
+        url: Origin + '/EtatGED/GenereLISTE',
         data: formData,
         cache: false,
         contentType: false,
