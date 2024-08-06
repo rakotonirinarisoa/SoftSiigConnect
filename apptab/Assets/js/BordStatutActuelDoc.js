@@ -21,7 +21,6 @@ $('#proj').on('change', () => {
     var code1 = ``;
     $(`[data-id="site-list"]`).append(code1);
 
-    const id = $('#proj').val();
     GetSITE();
 });
 
@@ -36,7 +35,7 @@ function GetSITE() {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/BordTraitement/GETALLSITE',
+        url: Origin + '/EtatGED/GETALLSITE',
         data: formData,
         cache: false,
         contentType: false,
@@ -53,6 +52,10 @@ function GetSITE() {
             if (Datas.type == "error") {
                 alert(Datas.msg);
 
+                $(`[data-id="site-list"]`).text("");
+                var code1 = ``;
+                $(`[data-id="site-list"]`).append(code1);
+
                 return;
             }
             if (Datas.type == "login") {
@@ -60,22 +63,12 @@ function GetSITE() {
                 window.location = window.location.origin;
                 return;
             }
-            if (Datas.type == "notYet") {
-                alert(Datas.msg);
-
-                $(`[data-id="site-list"]`).text("");
-                var code1 = ``;
-                $(`[data-id="site-list"]`).append(code1);
-
-                return;
-            }
 
             $(`[data-id="site-list"]`).text("");
-
             var code1 = ``;
             $.each(Datas.data.etat, function (k, v) {
                 code1 += `
-                    <option value="${v}">${v}</option>
+                    <option value="${v.Id}">${v.Code}</option>
                 `;
             });
             $(`[data-id="site-list"]`).append(code1);
@@ -88,7 +81,69 @@ function GetSITE() {
 
 $('#site').on('change', () => {
     emptyTable();
+
+    $(`[data-id="typeDoc-list"]`).text("");
+    var code1 = ``;
+    $(`[data-id="typeDoc-list"]`).append(code1);
+
+    GetTypeDocs();
 });
+
+function GetTypeDocs() {
+    let formData = new FormData();
+
+    formData.append("iProjet", $("#proj").val());
+    formData.append("iSite", $("#site").val());
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/EtatGED/GETALLTYPEDOCS',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+
+                $(`[data-id="typeDoc-list"]`).text("");
+                var code1 = ``;
+                $(`[data-id="typeDoc-list"]`).append(code1);
+
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+
+            $(`[data-id="typeDoc-list"]`).text("");
+            var code1 = ``;
+            $.each(Datas.data.etat, function (k, v) {
+                code1 += `
+                    <option value="${v.Id}">${v.Title}</option>
+                `;
+            });
+            $(`[data-id="typeDoc-list"]`).append(code1);
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
 
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
