@@ -1,4 +1,4 @@
-namespace apptab
+﻿namespace apptab
 {
     using System;
     using System.Collections.Generic;
@@ -8,15 +8,15 @@ namespace apptab
 
     public partial class Projects
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Projects()
-        {
-            DocumentTypes = new HashSet<DocumentTypes>();
-            DynamicFields = new HashSet<DynamicFields>();
-            Suppliers = new HashSet<Suppliers>();
-            TomProConnections = new HashSet<TomProConnections>();
-            Users = new HashSet<Users>();
-        }
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        //public Projects()
+        //{
+        //    DocumentTypes = new HashSet<DocumentTypes>();
+        //    DynamicFields = new HashSet<DynamicFields>();
+        //    Suppliers = new HashSet<Suppliers>();
+        //    TomProConnections = new HashSet<TomProConnections>();
+        //    Users = new HashSet<Users>();
+        //}
 
         public Guid Id { get; set; }
 

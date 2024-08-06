@@ -63,6 +63,16 @@
 </div>
 
 <div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Utilisateur GED</span>
+        </div>
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="user" data-id="user-list">
+        </select>
+    </div>
+</div>
+
+<div class="form-row">
     <div class="mb-3 col">
         <div class="btn btn-flat bg-gradient-olive col-12" data-action="UpdateUser">
             <i class="fa fa-save"></i> Enregistrer
@@ -119,6 +129,11 @@
     });
 
     $("#PROJET").select2({
+        tags: true,
+        tokenSeparators: [',', ' ']
+    })
+
+    $("#user").select2({
         tags: true,
         tokenSeparators: [',', ' ']
     })

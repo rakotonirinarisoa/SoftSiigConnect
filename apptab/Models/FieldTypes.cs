@@ -1,4 +1,4 @@
-namespace apptab
+﻿namespace apptab
 {
     using System;
     using System.Collections.Generic;
@@ -8,13 +8,13 @@ namespace apptab
 
     public partial class FieldTypes
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public FieldTypes()
-        {
-            DocumentsFields = new HashSet<DocumentsFields>();
-        }
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        //public FieldTypes()
+        //{
+        //    DocumentsFields = new HashSet<DocumentsFields>();
+        //}
 
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        //[DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }
 
         [Required]

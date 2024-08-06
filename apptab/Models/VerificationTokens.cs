@@ -1,4 +1,4 @@
-namespace apptab
+﻿namespace apptab
 {
     using System;
     using System.Collections.Generic;
@@ -8,11 +8,11 @@ namespace apptab
 
     public partial class VerificationTokens
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public VerificationTokens()
-        {
-            VerificationTokensHistory = new HashSet<VerificationTokensHistory>();
-        }
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        //public VerificationTokens()
+        //{
+        //    VerificationTokensHistory = new HashSet<VerificationTokensHistory>();
+        //}
 
         public Guid Id { get; set; }
 

@@ -1,4 +1,4 @@
-namespace apptab
+﻿namespace apptab
 {
     using System;
     using System.Collections.Generic;
@@ -8,13 +8,13 @@ namespace apptab
 
     public partial class DynamicFields
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public DynamicFields()
-        {
-            DocumentDynamicFields = new HashSet<DocumentDynamicFields>();
-            DocumentsDynamicAttachements = new HashSet<DocumentsDynamicAttachements>();
-            DynamicFieldItems = new HashSet<DynamicFieldItems>();
-        }
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        //public DynamicFields()
+        //{
+        //    DocumentDynamicFields = new HashSet<DocumentDynamicFields>();
+        //    DocumentsDynamicAttachements = new HashSet<DocumentsDynamicAttachements>();
+        //    DynamicFieldItems = new HashSet<DynamicFieldItems>();
+        //}
 
         public Guid Id { get; set; }
 

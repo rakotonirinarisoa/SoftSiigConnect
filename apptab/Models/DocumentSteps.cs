@@ -1,4 +1,4 @@
-namespace apptab
+﻿namespace apptab
 {
     using System;
     using System.Collections.Generic;
@@ -8,13 +8,13 @@ namespace apptab
 
     public partial class DocumentSteps
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public DocumentSteps()
-        {
-            DocumentsFields = new HashSet<DocumentsFields>();
-            UsersSteps = new HashSet<UsersSteps>();
-            ValidationsHistory = new HashSet<ValidationsHistory>();
-        }
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        //public DocumentSteps()
+        //{
+        //    DocumentsFields = new HashSet<DocumentsFields>();
+        //    UsersSteps = new HashSet<UsersSteps>();
+        //    ValidationsHistory = new HashSet<ValidationsHistory>();
+        //}
 
         public Guid Id { get; set; }
 
