@@ -2913,7 +2913,6 @@ namespace apptab.Controllers
                     BANQUE = reglement.BANQUE,
                     GUICHET = reglement.GUICHET,
                     NOMFICHIER = histo.AFB,
-                   
                 }).Join(db.SI_USERS, x => x.IDUSER, user => user.ID, (x, user) => new
                 {
                     NUMENREG = x.NUMENREG,
