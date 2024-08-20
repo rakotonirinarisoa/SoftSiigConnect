@@ -71,7 +71,6 @@ namespace apptab.Extension
             //infdonneurOrdre += this.formaterTexte(21, "                        ");
             infdonneurOrdre += this.formaterDatePaie((DateTime)donneurOrde.DATE_PAIEMENT);
             infdonneurOrdre += this.formaterTexte(24, donneurOrde.DONNEUR_ORDRE.TrimEnd(' '));
-
             infdonneurOrdre += this.formaterTexte(6, this.ajouter0(6, y.ToString()));//réference ordre de virement
             //infdonneurOrdre += this.formaterTexte(6, " ");
 
@@ -215,15 +214,16 @@ namespace apptab.Extension
 
                     //info = new UTF8Encoding(true).GetBytes("<CstmrCdtTrfInitn>\r\n");
 
-                    int globaliteration = beneficiaires.Count();
+                    int globaliteration = beneficiaires.Count() + 1;
 
                     var bnfr = beneficiaires.FirstOrDefault();
                     XElement contacts = new XElement("CstmrCdtTrfInitn",
                                  new XElement("GrpHdr",
                                 new XElement("MsgId", infdonneurOrdre.Trim(' ')),
-                                new XElement("CreDtTm", dtcrdt.Date),
+                                new XElement("CreDtTm", dtcrdt),
                                 new XElement("NbOfTxs", globaliteration),//a etudier
-                                new XElement("CtrlSum", bnfr.MONTANT),
+                                //new XElement("CtrlSum", bnfr.MONTANT),
+                                new XElement("CtrlSum", montant),
 
                                 new XElement("InitgPty",
                                     new XElement("Nm", donneurOrde.DONNEUR_ORDRE.TrimEnd(' ')),
@@ -237,7 +237,7 @@ namespace apptab.Extension
                     var op = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == bnfr.NUM).FirstOrDefault();
 
                     contacts.Add(new XElement("PmtInf",
-                       new XElement("PmtInfId", infdonneurOrdre),
+                       new XElement("PmtInfId", op.Libelle),
                        new XElement("PmtMtd", "TRF"),
                        new XElement("BtchBookg", false),
                        new XElement("NbOfTxs", iteration),

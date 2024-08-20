@@ -1019,6 +1019,50 @@
                             </div>
                         }
 
+                        <hr />
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
+                            <li class="nav-item menu-open" onclick="myFunction('6')">
+                                <a class="nav-link active" style="background: #17A2B8 ">
+                                    <img src="~/Assets/icons/analytics-data-analytics-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
+                                    <p>
+                                        TABLEAUX DE BORD GED
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                        <div data-parent-id="6" class="w3-hide">
+                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;" id="menu-accordeon" data-menu-accordion="6">
+
+                                <li class="nav-item">
+                                    <a href="../EtatGED/EtapActuelDocs" class="nav-link" data-child-id="5">
+                                        <i class="nav-icon fa fa-exclamation"></i>
+                                        <p>
+                                            Situation actuel de chaque document
+                                        </p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="../EtatGED/EtapTypeDocs" class="nav-link" data-child-id="6">
+                                        <i class="nav-icon fa fa-exclamation"></i>
+                                        <p>
+                                            Situation des étapes par type de document
+                                        </p>
+                                    </a>
+                                </li> 
+                                <li class="nav-item">
+                                    <a href="../EtatGED/SituationDetailleDoc" class="nav-link" data-child-id="6">
+                                        <i class="nav-icon fa fa-exclamation"></i>
+                                        <p>
+                                            Situation des étapes par type de document
+                                        </p>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+
+
                         @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
                             || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
                             && (int.Parse(Session["RTDB1GED"].ToString()) != 0 || int.Parse(Session["RTDB2GED"].ToString()) != 0 || int.Parse(Session["RTDB3GED"].ToString()) != 0
@@ -1045,7 +1089,7 @@
                                         || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB1GED"].ToString()) != 0)))
                                     {
                                         <li class="nav-item">
-                                            <a href="../BordTraitement/BordEtatActuDoc" class="nav-link" data-child-id="6">
+                                            <a href="../EtatGED/EtapActuelDocs" class="nav-link" data-child-id="6">
                                                 <i class="nav-icon fa fa-exclamation"></i>
                                                 <p>
                                                     @Session["TDB1GED"]@*Situation actuel de chaque document*@
@@ -1084,7 +1128,7 @@
                                         || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB4GED"].ToString()) != 0)))
                                     {
                                         <li class="nav-item">
-                                            <a href="../EtatGED/EtapTypeDocsBIS" class="nav-link" data-child-id="6">
+                                            <a href="../EtatGED/SituationDetailleDoc" class="nav-link" data-child-id="6">
                                                 <i class="nav-icon fa fa-exclamation"></i>
                                                 <p>
                                                     @Session["TDB4GED"]@*Situation Détaillé par document*@
@@ -1097,7 +1141,7 @@
                                         || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB5GED"].ToString()) != 0)))
                                     {
                                         <li class="nav-item">
-                                            <a href="../EtatGED/EtapTypeDocsBIS" class="nav-link" data-child-id="6">
+                                            <a href="#" class="nav-link" data-child-id="6">
                                                 <i class="nav-icon fa fa-exclamation"></i>
                                                 <p>
                                                     @Session["TDB5GED"]@*Statistique des factures fournisseur rejeté*@
@@ -1110,7 +1154,7 @@
                                         || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB6GED"].ToString()) != 0)))
                                     {
                                         <li class="nav-item">
-                                            <a href="../EtatGED/EtapTypeDocsBIS" class="nav-link" data-child-id="6">
+                                            <a href="#" class="nav-link" data-child-id="6">
                                                 <i class="nav-icon fa fa-exclamation"></i>
                                                 <p>
                                                     @Session["TDB6GED"]@*Liste des documents en retard de traitement*@

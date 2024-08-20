@@ -22,6 +22,8 @@ $('#proj').on('change', () => {
     $(`[data-id="site-list"]`).append(code1);
 
     GetSITE();
+    GetSuppliers();
+    GetReference();
 });
 
 function GetSITE() {
@@ -32,7 +34,7 @@ function GetSITE() {
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
-
+    
     $.ajax({
         type: "POST",
         url: Origin + '/EtatGED/GETALLSITE',
@@ -72,21 +74,133 @@ function GetSITE() {
                 `;
             });
             $(`[data-id="site-list"]`).append(code1);
+            //
         },
         error: function () {
             alert("Problème de connexion. ");
         }
     });
 }
+function GetSuppliers(id) {
+    let formData = new FormData();
 
+    formData.append("iProjet", $("#proj").val());
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/EtatGED/GETALLFOURNISSEUR',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+
+                $(`[data-id="fournisseur-list"]`).text("");
+                var code1 = ``;
+                $(`[data-id="fournisseur-list"]`).append(code1);
+
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+
+            $(`[data-id="fournisseur-list"]`).text("");
+            var code1 = ``;
+            $.each(Datas.data.etat, function (k, v) {
+                code1 += `
+                    <option value="${v.Id}">${v.Nom}</option>
+                `;
+            });
+            $(`[data-id="fournisseur-list"]`).append(code1);
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
+function GetReference(id) {
+    let formData = new FormData();
+
+    formData.append("PROJECTID", $("#proj").val());
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    let site = $("#site").val();
+    formData.append("listSite", site);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/EtatGED/GenereREFERENCE',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+
+                $(`[data-id="reference-list"]`).text("");
+                var code1 = ``;
+                $(`[data-id="reference-list"]`).append(code1);
+
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+
+            $(`[data-id="reference-list"]`).text("");
+            var code1 = ``;
+            $.each(Datas.data, function (k, v) {
+                code1 += `
+                    <option value="${v.ID}">${v.Reference}</option>
+                `;
+            });
+            $(`[data-id="reference-list"]`).append(code1);
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
+//GETALLFOURNISSEUR
 $('#site').on('change', () => {
     emptyTable();
-
+    let id = $("#site").val();
     $(`[data-id="typeDoc-list"]`).text("");
     var code1 = ``;
     $(`[data-id="typeDoc-list"]`).append(code1);
 
-    GetTypeDocs();
+    //GetTypeDocs();
+    GetSuppliers(id);
 });
 
 function GetTypeDocs() {
@@ -131,7 +245,7 @@ function GetTypeDocs() {
             }
 
             $(`[data-id="typeDoc-list"]`).text("");
-            var code1 = `<option value="">Tous</option>`;
+            var code1 = ``;
             $.each(Datas.data.etat, function (k, v) {
                 code1 += `
                     <option value="${v.Id}">${v.Title}</option>
@@ -262,13 +376,15 @@ $('[data-action="GenereLISTE"]').click(function () {
     formData.append("DateDebut", $('#dateD').val());
     formData.append("DateFin", $('#dateF').val());
 
-    formData.append("listProjet", $("#proj").val());
+    formData.append("PROJECTID", $("#proj").val());
     formData.append("listSite", $("#site").val());
-    formData.append("TypeDoc", $("#typeDoc").val());
+    formData.append("fournisseur", $("#fournisseur").val());
+    formData.append("reference", $("#Reference").val());
+    formData.append("status", $("#status").val());
 
     $.ajax({
         type: "POST",
-        url: Origin + '/EtatGED/GenereLISTERFR',
+        url: Origin + '/EtatGED/GenereLISTE',
         data: formData,
         cache: false,
         contentType: false,
@@ -309,15 +425,15 @@ $('[data-action="GenereLISTE"]').click(function () {
 
                 $.each(listResult, function (_, v) {
                     data.push({
-                        REREFERENCEF: v.REFERENCE,
-                        DOCUMENT: v.DOCUMENT,
+                        id: v.REF,
+                        Objet: v.Objet,
                         FOURNISSEUR: v.FOURNISSEUR,
-                        MONTANT: v.MONTANT,
-                        TYPE: v.TYPE,
-                        STEPNOW: v.STEPNOW,
-                        STEPNEXT: v.STEPNEXT,
-                        VALIDATEURNEXT: v.VALIDATEURNEXT,
-                        DUREENEXT: v.DUREENEXT,
+                        ACCUSE: formatDate(v.ACCUSE),
+                        VALIDATEUR: v.VALIDATEUR,
+                        Montant: v.Montant,
+                        Encours: v.Encours,
+                        ARCHIVES: v.ARCHIVES,
+                        Lien: v.Lien,
                     });
                 });
 
@@ -328,19 +444,23 @@ $('[data-action="GenereLISTE"]').click(function () {
                 table = $('#TBD_PROJET_ORDSEC').DataTable({
                     data,
                     columns: [
-                        { data: 'REFERENCE' },
-                        { data: 'DOCUMENT' },
+                        { data: 'id', },
+                        { data: 'Objet' },
                         { data: 'FOURNISSEUR' },
-                        { data: 'MONTANT' },
-                        { data: 'TYPE' },
-                        { data: 'STEPNOW' },
-                        { data: 'STEPNEXT' },
-                        { data: 'VALIDATEURNEXT' },
-                        { data: 'DUREENEXT' },
+                        { data: 'ACCUSE' },
+                        { data: 'VALIDATEUR' },
+                        { data: 'Montant' },
+                        { data: 'Encours' },
+                        { data: 'ARCHIVES' },
+                        { data: 'Lien' },
                     ],
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
                         $(row).addClass('select-text');
+
+                        //if (data.isLATE) {
+                        //    $(row).attr('style', "background-color: #FF7F7F !important;");
+                        //}
                     },
                     columnDefs: [
                         {
@@ -359,8 +479,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                     buttons: ['colvis',
                         {
                             extend: 'pdfHtml5',
-                            title: 'SITUATION DES ETAPES PAR TYPE DE DOCUMENT',
-                            messageTop: 'Liste situation des étapes par type de document',
+                            title: 'DEPENSES A PAYER, AVANCES et PAIEMENTS',
+                            messageTop: 'Liste des dépenses à payer, avances et des paiements',
                             text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
@@ -368,7 +488,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-pdf',
                             exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                             },
                             customize: function (doc) {
                                 doc.defaultStyle.alignment = 'left';
@@ -378,8 +498,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                         },
                         {
                             extend: 'excelHtml5',
-                            title: 'SITUATION DES ETAPES PAR TYPE DE DOCUMENT',
-                            messageTop: 'Liste situation des étapes par type de document',
+                            title: 'DEPENSES A PAYER, AVANCES et PAIEMENTS',
+                            messageTop: 'Liste des dépenses à payer, avances et des paiements',
                             text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
@@ -387,7 +507,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-excel',
                             exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (typeof data === 'undefined') {
@@ -463,11 +583,11 @@ $('[data-action="GenereLISTE"]').click(function () {
                     }
                 });
 
-                //$('#TBD_PROJET_ORDSEC tfoot th').each(function (i) {
-                //    if (i == 0) {
-                //        $(this).addClass("NOTVISIBLE");
-                //    }
-                //});
+                $('#TBD_PROJET_ORDSEC tfoot th').each(function (i) {
+                    if (i == 0) {
+                        $(this).addClass("NOTVISIBLE");
+                    }
+                });
             }
         },
         error: function () {

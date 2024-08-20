@@ -22,6 +22,8 @@ $('#proj').on('change', () => {
     $(`[data-id="site-list"]`).append(code1);
 
     GetSITE();
+    GetNifSTATCIN();
+    GetReference();
 });
 
 function GetSITE() {
@@ -32,7 +34,7 @@ function GetSITE() {
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
-
+    
     $.ajax({
         type: "POST",
         url: Origin + '/EtatGED/GETALLSITE',
@@ -72,21 +74,145 @@ function GetSITE() {
                 `;
             });
             $(`[data-id="site-list"]`).append(code1);
+            //
         },
         error: function () {
             alert("Problème de connexion. ");
         }
     });
 }
+function GetNifSTATCIN(id) {
+    let formData = new FormData();
 
+    formData.append("PROJECTID", $("#proj").val());
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/EtatGED/GetNIFSTATCIN',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+
+                $(`[data-id="Nif-list"]`).text("");
+                var code1 = ``;
+                $(`[data-id="Nif-list"]`).append(code1);
+
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+
+            $(`[data-id="Nif-list"]`).text("");
+            $(`[data-id="stat-list"]`).text("");
+            $(`[data-id="cin-list"]`).text("");
+            var code1 = ``;
+            var code2 = ``;
+            var code3 = ``;
+            $.each(Datas.data, function (k, v) {
+                code1 += `
+                    <option value="${v.ID}">${v.NIF}</option>
+                `;
+                code2 += `
+                    <option value="${v.ID}">${v.STAT}</option>
+                `;
+                code3 += `
+                    <option value="${v.ID}">${v.CIN}</option>
+                `;
+            });
+            $(`[data-id="Nif-list"]`).append(code1);
+            $(`[data-id="stat-list"]`).append(code2);
+            $(`[data-id="cin-list"]`).append(code3);
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
+function GetReference(id) {
+    let formData = new FormData();
+
+    formData.append("PROJECTID", $("#proj").val());
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    let site = $("#site").val();
+    formData.append("listSite", site);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/EtatGED/GenereREFERENCE',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+
+                $(`[data-id="reference-list"]`).text("");
+                var code1 = ``;
+                $(`[data-id="reference-list"]`).append(code1);
+
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+
+            $(`[data-id="reference-list"]`).text("");
+            var code1 = ``;
+            $.each(Datas.data, function (k, v) {
+                code1 += `
+                    <option value="${v.ID}">${v.Reference}</option>
+                `;
+            });
+            $(`[data-id="reference-list"]`).append(code1);
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
+//GETALLFOURNISSEUR
 $('#site').on('change', () => {
     emptyTable();
-
+    let id = $("#site").val();
     $(`[data-id="typeDoc-list"]`).text("");
     var code1 = ``;
     $(`[data-id="typeDoc-list"]`).append(code1);
 
-    GetTypeDocs();
+    //GetTypeDocs();
+    //GetSuppliers(id);
 });
 
 function GetTypeDocs() {
@@ -131,7 +257,7 @@ function GetTypeDocs() {
             }
 
             $(`[data-id="typeDoc-list"]`).text("");
-            var code1 = `<option value="">Tous</option>`;
+            var code1 = ``;
             $.each(Datas.data.etat, function (k, v) {
                 code1 += `
                     <option value="${v.Id}">${v.Title}</option>
@@ -262,13 +388,16 @@ $('[data-action="GenereLISTE"]').click(function () {
     formData.append("DateDebut", $('#dateD').val());
     formData.append("DateFin", $('#dateF').val());
 
-    formData.append("listProjet", $("#proj").val());
+    formData.append("REFERENCE", $("#Reference").val());
+    formData.append("PROJECTID", $("#proj").val());
     formData.append("listSite", $("#site").val());
-    formData.append("TypeDoc", $("#typeDoc").val());
+    formData.append("CIN", $("#cin").val());
+    formData.append("STAT", $("#Stat").val());
+    formData.append("NIF", $("#Nif").val());
 
     $.ajax({
         type: "POST",
-        url: Origin + '/EtatGED/GenereLISTERFR',
+        url: Origin + '/EtatGED/GetSituationsDoc',
         data: formData,
         cache: false,
         contentType: false,
@@ -309,15 +438,10 @@ $('[data-action="GenereLISTE"]').click(function () {
 
                 $.each(listResult, function (_, v) {
                     data.push({
-                        REREFERENCEF: v.REFERENCE,
-                        DOCUMENT: v.DOCUMENT,
-                        FOURNISSEUR: v.FOURNISSEUR,
-                        MONTANT: v.MONTANT,
-                        TYPE: v.TYPE,
-                        STEPNOW: v.STEPNOW,
-                        STEPNEXT: v.STEPNEXT,
-                        VALIDATEURNEXT: v.VALIDATEURNEXT,
-                        DUREENEXT: v.DUREENEXT,
+                        StepID: v.ProcessingDescription,
+                        Datevalidations: formatDate(v.Datevalidations),
+                        VALIDATEUR: v.UserName,
+                        Commentaire: v.Comment,
                     });
                 });
 
@@ -328,19 +452,18 @@ $('[data-action="GenereLISTE"]').click(function () {
                 table = $('#TBD_PROJET_ORDSEC').DataTable({
                     data,
                     columns: [
-                        { data: 'REFERENCE' },
-                        { data: 'DOCUMENT' },
-                        { data: 'FOURNISSEUR' },
-                        { data: 'MONTANT' },
-                        { data: 'TYPE' },
-                        { data: 'STEPNOW' },
-                        { data: 'STEPNEXT' },
-                        { data: 'VALIDATEURNEXT' },
-                        { data: 'DUREENEXT' },
+                        { data: 'StepID' },
+                        { data: 'VALIDATEUR' },
+                        { data: 'Datevalidations' },
+                        { data: 'Commentaire' },
                     ],
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
                         $(row).addClass('select-text');
+
+                        //if (data.isLATE) {
+                        //    $(row).attr('style', "background-color: #FF7F7F !important;");
+                        //}
                     },
                     columnDefs: [
                         {
@@ -359,8 +482,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                     buttons: ['colvis',
                         {
                             extend: 'pdfHtml5',
-                            title: 'SITUATION DES ETAPES PAR TYPE DE DOCUMENT',
-                            messageTop: 'Liste situation des étapes par type de document',
+                            title: 'DEPENSES A PAYER, AVANCES et PAIEMENTS',
+                            messageTop: 'Liste des dépenses à payer, avances et des paiements',
                             text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
@@ -368,7 +491,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-pdf',
                             exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                             },
                             customize: function (doc) {
                                 doc.defaultStyle.alignment = 'left';
@@ -378,8 +501,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                         },
                         {
                             extend: 'excelHtml5',
-                            title: 'SITUATION DES ETAPES PAR TYPE DE DOCUMENT',
-                            messageTop: 'Liste situation des étapes par type de document',
+                            title: 'DEPENSES A PAYER, AVANCES et PAIEMENTS',
+                            messageTop: 'Liste des dépenses à payer, avances et des paiements',
                             text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
@@ -387,7 +510,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-excel',
                             exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (typeof data === 'undefined') {
@@ -463,11 +586,11 @@ $('[data-action="GenereLISTE"]').click(function () {
                     }
                 });
 
-                //$('#TBD_PROJET_ORDSEC tfoot th').each(function (i) {
-                //    if (i == 0) {
-                //        $(this).addClass("NOTVISIBLE");
-                //    }
-                //});
+                $('#TBD_PROJET_ORDSEC tfoot th').each(function (i) {
+                    if (i == 0) {
+                        $(this).addClass("NOTVISIBLE");
+                    }
+                });
             }
         },
         error: function () {
