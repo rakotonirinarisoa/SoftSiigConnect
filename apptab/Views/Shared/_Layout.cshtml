@@ -1019,49 +1019,6 @@
                             </div>
                         }
 
-                        <hr />
-                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
-                            <li class="nav-item menu-open" onclick="myFunction('6')">
-                                <a class="nav-link active" style="background: #17A2B8 ">
-                                    <img src="~/Assets/icons/analytics-data-analytics-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
-                                    <p>
-                                        TABLEAUX DE BORD GED
-                                    </p>
-                                </a>
-                            </li>
-                        </ul>
-                        <div data-parent-id="6" class="w3-hide">
-                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;" id="menu-accordeon" data-menu-accordion="6">
-
-                                <li class="nav-item">
-                                    <a href="../EtatGED/EtapActuelDocs" class="nav-link" data-child-id="5">
-                                        <i class="nav-icon fa fa-exclamation"></i>
-                                        <p>
-                                            Situation actuel de chaque document
-                                        </p>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item">
-                                    <a href="../EtatGED/EtapTypeDocs" class="nav-link" data-child-id="6">
-                                        <i class="nav-icon fa fa-exclamation"></i>
-                                        <p>
-                                            Situation des étapes par type de document
-                                        </p>
-                                    </a>
-                                </li> 
-                                <li class="nav-item">
-                                    <a href="../EtatGED/SituationDetailleDoc" class="nav-link" data-child-id="6">
-                                        <i class="nav-icon fa fa-exclamation"></i>
-                                        <p>
-                                            Situation des étapes par type de document
-                                        </p>
-                                    </a>
-                                </li>
-
-                            </ul>
-                        </div>
-
 
                         @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
                             || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
@@ -1090,7 +1047,7 @@
                                     {
                                         <li class="nav-item">
                                             <a href="../EtatGED/EtapActuelDocs" class="nav-link" data-child-id="6">
-                                                <i class="nav-icon fa fa-exclamation"></i>
+                                                <i class="nav-icon fa fa-file-alt" style="color: #338B85"></i>
                                                 <p>
                                                     @Session["TDB1GED"]@*Situation actuel de chaque document*@
                                                 </p>
@@ -1103,7 +1060,7 @@
                                     {
                                         <li class="nav-item">
                                             <a href="../EtatGED/EtapTypeDocs" class="nav-link" data-child-id="6">
-                                                <i class="nav-icon fa fa-exclamation"></i>
+                                                <i class="nav-icon fa fa-file-alt" style="color: #338B85"></i>
                                                 <p>
                                                     @Session["TDB2GED"]@*Situation des étapes par type de document*@
                                                 </p>
@@ -1116,7 +1073,7 @@
                                     {
                                         <li class="nav-item">
                                             <a href="../EtatGED/EtapTypeDocsBIS" class="nav-link" data-child-id="6">
-                                                <i class="nav-icon fa fa-exclamation"></i>
+                                                <i class="nav-icon fa fa-file-alt" style="color: #338B85"></i>
                                                 <p>
                                                     @Session["TDB3GED"]@*Etat d'avancement par type de document*@
                                                 </p>
@@ -1129,7 +1086,7 @@
                                     {
                                         <li class="nav-item">
                                             <a href="../EtatGED/SituationDetailleDoc" class="nav-link" data-child-id="6">
-                                                <i class="nav-icon fa fa-exclamation"></i>
+                                                <i class="nav-icon fa fa-file-alt" style="color: #338B85"></i>
                                                 <p>
                                                     @Session["TDB4GED"]@*Situation Détaillé par document*@
                                                 </p>
@@ -1142,9 +1099,9 @@
                                     {
                                         <li class="nav-item">
                                             <a href="#" class="nav-link" data-child-id="6">
-                                                <i class="nav-icon fa fa-exclamation"></i>
+                                                <i class="nav-icon fa fa-file-alt" style="color: #338B85"></i>
                                                 <p>
-                                                    @Session["TDB5GED"]@*Statistique des factures fournisseur rejeté*@
+                                                    @Session["TDB5GED"]@*Statistique des factures fournisseur rejetées*@
                                                 </p>
                                             </a>
                                         </li>
@@ -1155,7 +1112,7 @@
                                     {
                                         <li class="nav-item">
                                             <a href="#" class="nav-link" data-child-id="6">
-                                                <i class="nav-icon fa fa-exclamation"></i>
+                                                <i class="nav-icon fa fa-file-alt" style="color: #338B85"></i>
                                                 <p>
                                                     @Session["TDB6GED"]@*Liste des documents en retard de traitement*@
                                                 </p>

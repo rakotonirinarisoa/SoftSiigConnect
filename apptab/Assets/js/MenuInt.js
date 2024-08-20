@@ -194,12 +194,19 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let Tdb13CHK = $('#Tdb13CHK').prop("checked");
     let Tdb14CHK = $('#Tdb14CHK').prop("checked");
 
-    let Tdb1GED = $('#Tdb1GED').prop("checked");
-    let Tdb2GED = $('#Tdb2GED').prop("checked");
-    let Tdb3GED = $('#Tdb3GED').prop("checked");
-    let Tdb4GED = $('#Tdb4GED').prop("checked");
-    let Tdb5GED = $('#Tdb5GED').prop("checked");
-    let Tdb6GED = $('#Tdb6GED').prop("checked");
+    let Tdb1GED = $('#Tdb1GED').val();
+    let Tdb2GED = $('#Tdb2GED').val();
+    let Tdb3GED = $('#Tdb3GED').val();
+    let Tdb4GED = $('#Tdb4GED').val();
+    let Tdb5GED = $('#Tdb5GED').val();
+    let Tdb6GED = $('#Tdb6GED').val();
+
+    let Tdb1GEDCHK = $('#Tdb1GEDCHK').prop("checked");
+    let Tdb2GEDCHK = $('#Tdb2GEDCHK').prop("checked");
+    let Tdb3GEDCHK = $('#Tdb3GEDCHK').prop("checked");
+    let Tdb4GEDCHK = $('#Tdb4GEDCHK').prop("checked");
+    let Tdb5GEDCHK = $('#Tdb5GEDCHK').prop("checked");
+    let Tdb6GEDCHK = $('#Tdb6GEDCHK').prop("checked");
 
     if (!ParaV0 || !ParaV || !ParaS /*|| !ParaSiig*/ || !ParaPe || !ParaPv || !ParaPp || !ParaPb || !Md0 || !Md1 || !Md2 /*|| !Md3 || !Mop0 || !Mop1 || !Mop2*/
         || !Tdb0 || !Tdb1 || !Tdb2 || !Tdb3 || !Tdb4 || !Tdb5 || !Tdb6 || !Tdb7 || !Tdb8
@@ -276,6 +283,13 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("param.TDB12i", Tdb12CHK);
     formData.append("param.TDB13i", Tdb13CHK);
     formData.append("param.TDB14i", Tdb14CHK);
+
+    formData.append("param.TDB1GED", Tdb1GED);
+    formData.append("param.TDB2GED", Tdb2GED);
+    formData.append("param.TDB3GED", Tdb3GED);
+    formData.append("param.TDB4GED", Tdb4GED);
+    formData.append("param.TDB5GED", Tdb5GED);
+    formData.append("param.TDB6GED", Tdb6GED);
 
     formData.append("param.TDB1GEDi", Tdb1GEDCHK);
     formData.append("param.TDB2GEDi", Tdb2GEDCHK);
