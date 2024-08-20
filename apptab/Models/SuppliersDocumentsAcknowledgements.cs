@@ -1,4 +1,4 @@
-namespace apptab
+﻿namespace apptab
 {
     using System;
     using System.Collections.Generic;
@@ -13,6 +13,14 @@ namespace apptab
         public DateTime CreationDate { get; set; }
 
         public Guid InitiatorId { get; set; }
+        public int Serie { get; set; }
+        public int DocumentYear { get; set; }
+
+        [StringLength(50)]
+        public string DocumentSite { get; set; }
+
+        [StringLength(50)]
+        public string ReferenceInterne { get; set; }
 
         public virtual Documents Documents { get; set; }
 

@@ -78,8 +78,8 @@ function GetUsersGED(id) {
                 `;
                 });
                 $(`[data-id="user-list"]`).append(code1);
+
                 GetUsers();
-                return;
             }
         },
         error: function () {
@@ -132,7 +132,6 @@ function GetListRole() {
             });
 
             $(`[data-id="User-role-list"]`).append(code);
-
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -182,9 +181,8 @@ function GetListProjet() {
                 `;
             });
             $(`[data-id="proj-list"]`).append(code);
-            $("#user").val("test");
+
             GetUsersGED(id);
-            
         },
         error: function (e) {
             alert("Problème de connexion. ");
@@ -217,7 +215,6 @@ function GetUsers() {
         },
         success: function (result) {
             var Datas = JSON.parse(result);
-            console.log(Datas);
             var code = "";
             if (Datas.type == "error") {
                 alert(Datas.msg);
@@ -233,12 +230,10 @@ function GetUsers() {
 
                 $("#Role").val(`${Datas.data.ROLE}`);
 
-                console.log(Datas.data.PROJET);
                 //$("#PROJET").val([...Datas.data.PROJET]).trigger('change');
 
                 code += `<option value="${Datas.data.USERGEDid}">${Datas.data.USERGEDname}</option>`;
                 $(`[data-id="user-list"]`).append(code);
-                //$("#user").html(code);
                 $("#user").val(`${Datas.data.USERGEDid}`);
             }
         },

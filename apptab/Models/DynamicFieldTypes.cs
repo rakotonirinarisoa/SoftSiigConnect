@@ -8,11 +8,11 @@
 
     public partial class DynamicFieldTypes
     {
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        //public DynamicFieldTypes()
-        //{
-        //    DynamicFields = new HashSet<DynamicFields>();
-        //}
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public DynamicFieldTypes()
+        {
+            DynamicFields = new HashSet<DynamicFields>();
+        }
 
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Id { get; set; }

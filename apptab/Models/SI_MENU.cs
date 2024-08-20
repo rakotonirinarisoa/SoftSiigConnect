@@ -60,6 +60,18 @@
         public bool? TDB12i { get; set; }
         public bool? TDB13i { get; set; }
         public bool? TDB14i { get; set; }
+        public string TDB1GED { get; set; }
+        public string TDB2GED { get; set; }
+        public string TDB3GED { get; set; }
+        public string TDB4GED { get; set; }
+        public string TDB5GED { get; set; }
+        public string TDB6GED { get; set; }
+        public bool? TDB1GEDi { get; set; }
+        public bool? TDB2GEDi { get; set; }
+        public bool? TDB3GEDi { get; set; }
+        public bool? TDB4GEDi { get; set; }
+        public bool? TDB5GEDi { get; set; }
+        public bool? TDB6GEDi { get; set; }
 
         [Column(TypeName = "smalldatetime")]
         public DateTime? CREATIONDATE { get; set; }

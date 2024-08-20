@@ -99,6 +99,20 @@ function GetUsers() {
             $("#Tdb12CHK").prop("checked", Datas.data.TDB12i);
             $("#Tdb13CHK").prop("checked", Datas.data.TDB13i);
             $("#Tdb14CHK").prop("checked", Datas.data.TDB14i);
+
+            $("#Tdb1GED").val(Datas.data.TDB1GED);
+            $("#Tdb2GED").val(Datas.data.TDB2GED);
+            $("#Tdb3GED").val(Datas.data.TDB3GED);
+            $("#Tdb4GED").val(Datas.data.TDB4GED);
+            $("#Tdb5GED").val(Datas.data.TDB5GED);
+            $("#Tdb6GED").val(Datas.data.TDB6GED);
+
+            $("#Tdb1GEDCHK").prop("checked", Datas.data.TDB1GEDi);
+            $("#Tdb2GEDCHK").prop("checked", Datas.data.TDB2GEDi);
+            $("#Tdb3GEDCHK").prop("checked", Datas.data.TDB3GEDi);
+            $("#Tdb4GEDCHK").prop("checked", Datas.data.TDB4GEDi);
+            $("#Tdb5GEDCHK").prop("checked", Datas.data.TDB5GEDi);
+            $("#Tdb6GEDCHK").prop("checked", Datas.data.TDB6GEDi);
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -180,9 +194,17 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let Tdb13CHK = $('#Tdb13CHK').prop("checked");
     let Tdb14CHK = $('#Tdb14CHK').prop("checked");
 
+    let Tdb1GED = $('#Tdb1GED').prop("checked");
+    let Tdb2GED = $('#Tdb2GED').prop("checked");
+    let Tdb3GED = $('#Tdb3GED').prop("checked");
+    let Tdb4GED = $('#Tdb4GED').prop("checked");
+    let Tdb5GED = $('#Tdb5GED').prop("checked");
+    let Tdb6GED = $('#Tdb6GED').prop("checked");
+
     if (!ParaV0 || !ParaV || !ParaS /*|| !ParaSiig*/ || !ParaPe || !ParaPv || !ParaPp || !ParaPb || !Md0 || !Md1 || !Md2 /*|| !Md3 || !Mop0 || !Mop1 || !Mop2*/
         || !Tdb0 || !Tdb1 || !Tdb2 || !Tdb3 || !Tdb4 || !Tdb5 || !Tdb6 || !Tdb7 || !Tdb8
-        || !J0 || !J1 || !J2 || !J3 || !JR || !JRA || !RSF || !RSFT || !Tdb9 || !Tdb11 || !Tdb12 || !Tdb13 || !Tdb14) {
+        || !J0 || !J1 || !J2 || !J3 || !JR || !JRA || !RSF || !RSFT || !Tdb9 || !Tdb11 || !Tdb12 || !Tdb13 || !Tdb14
+        || !Tdb1GED || !Tdb2GED || !Tdb3GED || !Tdb4GED || !Tdb5GED || !Tdb6GED) {
         alert("Veuillez renseigner les intitulés des menus. ");
         return;
     }
@@ -254,6 +276,13 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("param.TDB12i", Tdb12CHK);
     formData.append("param.TDB13i", Tdb13CHK);
     formData.append("param.TDB14i", Tdb14CHK);
+
+    formData.append("param.TDB1GEDi", Tdb1GEDCHK);
+    formData.append("param.TDB2GEDi", Tdb2GEDCHK);
+    formData.append("param.TDB3GEDi", Tdb3GEDCHK);
+    formData.append("param.TDB4GEDi", Tdb4GEDCHK);
+    formData.append("param.TDB5GEDi", Tdb5GEDCHK);
+    formData.append("param.TDB6GEDi", Tdb6GEDCHK);
 
     $.ajax({
         type: "POST",

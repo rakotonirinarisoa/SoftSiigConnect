@@ -131,7 +131,7 @@ function GetTypeDocs() {
             }
 
             $(`[data-id="typeDoc-list"]`).text("");
-            var code1 = `<option value="">Tous</option>`;
+            var code1 = ``;
             $.each(Datas.data.etat, function (k, v) {
                 code1 += `
                     <option value="${v.Id}">${v.Title}</option>
@@ -268,7 +268,7 @@ $('[data-action="GenereLISTE"]').click(function () {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/EtatGED/GenereLISTE',
+        url: Origin + '/EtatGED/GenereLISTEBIS',
         data: formData,
         cache: false,
         contentType: false,
@@ -303,23 +303,108 @@ $('[data-action="GenereLISTE"]').click(function () {
                 return;
             }
             if (Datas.type == "success") {
+
                 listResult = Datas.data
 
-                const data = [];
+                var RFRcontent = ``;
+                RFRcontent += `
+                <table class="table table-hover table-striped table-bordered" display responsive nowrap" width="100%" id="TBD_PROJET_ORDSEC">
+                    <thead style="position:sticky">
+                        <tr class="thead-accueil2" style="white-space: nowrap;">
+                            <th colspan="4"></th>
+                `;
 
-                $.each(listResult, function (_, v) {
+                //<th colspan=""></th> number of columns
+                let nombreEtape = listResult.nombreEtape
+                RFRcontent += `
+                            <th colspan="${nombreEtape}" style="text-align:center">Etapes</th>
+                `;
+
+                RFRcontent += `
+                            <th colspan="2"></th>
+                        </tr>
+                        <tr class="thead-accueil1" style="white-space: nowrap;">
+                            <td style="font-weight:bold; text-align:center">Référence</td>
+                            <td style="font-weight:bold; text-align:center">Document</td>
+                            <td style="font-weight:bold; text-align:center">Fournisseur</td>
+                            <td style="font-weight:bold; text-align:center">Montant</td>
+                `;
+
+                //each()<td>
+                $.each(listResult.listEtape, function (k, v) {
+                    RFRcontent += `
+                            <td style="font-weight: bold; text-align: center">${v}</td>
+                    `;
+                });
+
+                RFRcontent += `
+                            <td style="font-weight: bold; text-align: center">Archive</td>
+                            <td style="font-weight: bold; text-align: center">Rattachement TOMATE</td>
+                        </tr>
+                    </thead>
+                    <tbody class="traitementORDSEC"></tbody>
+                    <tfoot style="opacity:50%">
+                        <tr>
+                            <th>Référence</th>
+                            <th>Document</th>
+                            <th>Fournisseur</th>
+                            <th>Montant</th>
+                `;
+
+                //each()<th>
+                $.each(listResult.listEtape, function (k, v) {
+                    RFRcontent += `
+                            <th>${v}</th>
+                    `;
+                });
+
+                RFRcontent += `
+                            <th>Archive</th>
+                            <th>Rattachement TOMATE</th>
+                        </tr>
+                    </tfoot>
+                </table>
+                `;
+
+                $('#RFRTable').html(RFRcontent);
+
+                const data = [];
+                const tab = [];
+
+                $.each(listResult.list, function (_, v) {
+
+                    const foo = new Map();
+
+                    for (let i = 0; i < v.DATESTEP.length; i += 1) {
+                        tab.push({
+                            data: `Etape ${i + 1}`
+                        });
+
+                        foo.set(tab[i].data, v.DATESTEP[i]);
+                    }
+
+                    const tmp = Object.fromEntries(foo.entries())
+
+                    console.log(tmp);
+
                     data.push({
-                        REREFERENCEF: v.REFERENCE,
+                        REFERENCE: v.REFERENCE,
                         DOCUMENT: v.DOCUMENT,
                         FOURNISSEUR: v.FOURNISSEUR,
                         MONTANT: v.MONTANT,
-                        TYPE: v.TYPE,
-                        STEPNOW: v.STEPNOW,
-                        STEPNEXT: v.STEPNEXT,
-                        VALIDATEURNEXT: v.VALIDATEURNEXT,
-                        DUREENEXT: v.DUREENEXT,
+                        ARCHIVEDATE: v.ARCHIVEDATE,
+                        RATTACHTOM: v.RATTACHTOM,
+                        //TEST: $.each(v.DATESTEP, function (key, value) {
+                        //    data.concat({
+                        //        key: value
+                        //     });
+                        //}),
+                        ...tmp,
+                        
                     });
                 });
+
+                console.log(data);
 
                 if (table !== undefined) {
                     table.destroy();
@@ -332,11 +417,35 @@ $('[data-action="GenereLISTE"]').click(function () {
                         { data: 'DOCUMENT' },
                         { data: 'FOURNISSEUR' },
                         { data: 'MONTANT' },
-                        { data: 'TYPE' },
-                        { data: 'STEPNOW' },
-                        { data: 'STEPNEXT' },
-                        { data: 'VALIDATEURNEXT' },
-                        { data: 'DUREENEXT' },
+                        ...tab,
+                        //{
+                        //    data: 'TEST',
+                        //    render: function (data, _, _, _) {
+                        //        let content = ``;
+
+                        //        for (let i = 0; i < data.length; i += 1) {
+                        //            content += `<td>` + data[i] + `</td>`;
+                        //        }
+                        //        console.log(content);
+                        //        return content;
+                        //    },
+                        //},
+                        //{ data: 'TEST',
+                        //    render: function (data, type, row) {
+                        //        console.log(data);
+                        //        return;
+                        //        //let content = ``;
+
+                        //        //for (let i = 0; i < data.length; i += 1) {
+                        //        //    content += `<li>` + data[i] + `</li>`;
+                        //        //}
+
+                        //        //return content;
+                        //    },
+                        //},
+
+                        { data: 'ARCHIVEDATE' },
+                        { data: 'RATTACHTOM' },
                     ],
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
@@ -359,17 +468,17 @@ $('[data-action="GenereLISTE"]').click(function () {
                     buttons: ['colvis',
                         {
                             extend: 'pdfHtml5',
-                            title: 'SITUATION DES ETAPES PAR TYPE DE DOCUMENT',
-                            messageTop: 'Liste situation des étapes par type de document',
+                            title: 'ETAT D\'AVANCEMENT PAR TYPE DE DOCUMENT',
+                            messageTop: 'Liste des états d\'avancement par type de document',
                             text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
                             charset: "utf-8",
                             bom: true,
                             className: 'custombutton-collection-pdf',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-                            },
+                            //exportOptions: {
+                            //    columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                            //},
                             customize: function (doc) {
                                 doc.defaultStyle.alignment = 'left';
                                 //doc.defaultStyle.margin = [12, 12, 12, 12];
@@ -378,8 +487,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                         },
                         {
                             extend: 'excelHtml5',
-                            title: 'SITUATION DES ETAPES PAR TYPE DE DOCUMENT',
-                            messageTop: 'Liste situation des étapes par type de document',
+                            title: 'ETAT D\'AVANCEMENT PAR TYPE DE DOCUMENT',
+                            messageTop: 'Liste des états d\'avancement par type de document',
                             text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
@@ -387,7 +496,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-excel',
                             exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                //columns: [0, 1, 2, 3, 4, 5, 6, 7],
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (typeof data === 'undefined') {
@@ -396,7 +505,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                                         if (data == null) {
                                             return data;
                                         }
-                                        if (column === 8 || column === 10) {
+                                        if (column === 3) {
                                             var arr = data.split(',');
                                             if (arr.length == 1) { return data; }
 
@@ -462,6 +571,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                         });
                     }
                 });
+
+                console.log(table);
 
                 //$('#TBD_PROJET_ORDSEC tfoot th').each(function (i) {
                 //    if (i == 0) {

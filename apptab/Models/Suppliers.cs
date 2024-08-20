@@ -8,11 +8,11 @@
 
     public partial class Suppliers
     {
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        //public Suppliers()
-        //{
-        //    SuppliersEmails = new HashSet<SuppliersEmails>();
-        //}
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Suppliers()
+        {
+            SuppliersEmails = new HashSet<SuppliersEmails>();
+        }
 
         public Guid Id { get; set; }
 

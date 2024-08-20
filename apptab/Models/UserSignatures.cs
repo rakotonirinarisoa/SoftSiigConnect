@@ -8,11 +8,11 @@
 
     public partial class UserSignatures
     {
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        //public UserSignatures()
-        //{
-        //    VerificationTokensHistory = new HashSet<VerificationTokensHistory>();
-        //}
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public UserSignatures()
+        {
+            VerificationTokensHistory = new HashSet<VerificationTokensHistory>();
+        }
 
         public Guid Id { get; set; }
 

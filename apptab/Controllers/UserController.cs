@@ -606,6 +606,13 @@ namespace apptab.Controllers
                     Session["TDB13"] = isMenu.TDB13;
                     Session["TDB14"] = isMenu.TDB14;
 
+                    Session["TDB1GED"] = isMenu.TDB1GED;
+                    Session["TDB2GED"] = isMenu.TDB2GED;
+                    Session["TDB3GED"] = isMenu.TDB3GED;
+                    Session["TDB4GED"] = isMenu.TDB4GED;
+                    Session["TDB5GED"] = isMenu.TDB5GED;
+                    Session["TDB6GED"] = isMenu.TDB6GED;
+
                     Session["TDB9i"] = isMenu.TDB9i == true ? 1 : 0;
                     Session["TDB0i"] = isMenu.TDB0i == true ? 1 : 0;
                     Session["JRi"] = isMenu.JRi == true ? 1 : 0;
@@ -622,6 +629,13 @@ namespace apptab.Controllers
                     Session["TDB12i"] = isMenu.TDB12i == true ? 1 : 0;
                     Session["TDB13i"] = isMenu.TDB13i == true ? 1 : 0;
                     Session["TDB14i"] = isMenu.TDB14i == true ? 1 : 0;
+
+                    Session["TDB1GEDi"] = isMenu.TDB1GEDi == true ? 1 : 0;
+                    Session["TDB2GEDi"] = isMenu.TDB2GEDi == true ? 1 : 0;
+                    Session["TDB3GEDi"] = isMenu.TDB3GEDi == true ? 1 : 0;
+                    Session["TDB4GEDi"] = isMenu.TDB4GEDi == true ? 1 : 0;
+                    Session["TDB5GEDi"] = isMenu.TDB5GEDi == true ? 1 : 0;
+                    Session["TDB6GEDi"] = isMenu.TDB6GEDi == true ? 1 : 0;
                 }
 
                 //PRIVILEGES//
@@ -682,6 +696,13 @@ namespace apptab.Controllers
                 Session["RTDB12"] = 0;
                 Session["RTDB13"] = 0;
                 Session["RTDB14"] = 0;
+
+                Session["RTDB1GED"] = 0;
+                Session["RTDB2GED"] = 0;
+                Session["RTDB3GED"] = 0;
+                Session["RTDB4GED"] = 0;
+                Session["RTDB5GED"] = 0;
+                Session["RTDB6GED"] = 0;
 
                 if (db.SI_PRIVILEGE.Any(a => a.IDUSERPRIV == test.ID))
                 {
@@ -744,6 +765,13 @@ namespace apptab.Controllers
                     Session["RTDB12"] = isMenu.TDB12;
                     Session["RTDB13"] = isMenu.TDB13;
                     Session["RTDB14"] = isMenu.TDB14;
+
+                    Session["RTDB1GED"] = isMenu.TDB1GED;
+                    Session["RTDB2GED"] = isMenu.TDB2GED;
+                    Session["RTDB3GED"] = isMenu.TDB3GED;
+                    Session["RTDB4GED"] = isMenu.TDB4GED;
+                    Session["RTDB5GED"] = isMenu.TDB5GED;
+                    Session["RTDB6GED"] = isMenu.TDB6GED;
                 }
 
                 if (db.SI_GEDLIEN.Any())

@@ -1337,6 +1337,20 @@ namespace apptab.Controllers
                     SExist.TDB13i = param.TDB13i;
                     SExist.TDB14i = param.TDB14i;
 
+                    SExist.TDB1GED = param.TDB1GED;
+                    SExist.TDB2GED = param.TDB2GED;
+                    SExist.TDB3GED = param.TDB3GED;
+                    SExist.TDB4GED = param.TDB4GED;
+                    SExist.TDB5GED = param.TDB5GED;
+                    SExist.TDB6GED = param.TDB6GED;
+
+                    SExist.TDB1GEDi = param.TDB1GEDi;
+                    SExist.TDB2GEDi = param.TDB2GEDi;
+                    SExist.TDB3GEDi = param.TDB3GEDi;
+                    SExist.TDB4GEDi = param.TDB4GEDi;
+                    SExist.TDB5GEDi = param.TDB5GEDi;
+                    SExist.TDB6GEDi = param.TDB6GEDi;
+
                     db.SaveChanges();
 
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Enregistrement avec succès. ", data = param }, settings));
@@ -1406,6 +1420,20 @@ namespace apptab.Controllers
                         TDB12i = param.TDB12i,
                         TDB13i = param.TDB13i,
                         TDB14i = param.TDB14i,
+
+                        TDB1GED = param.TDB1GED,
+                        TDB2GED = param.TDB2GED,
+                        TDB3GED = param.TDB3GED,
+                        TDB4GED = param.TDB4GED,
+                        TDB5GED = param.TDB5GED,
+                        TDB6GED = param.TDB6GED,
+
+                        TDB1GEDi = param.TDB1GEDi,
+                        TDB2GEDi = param.TDB2GEDi,
+                        TDB3GEDi = param.TDB3GEDi,
+                        TDB4GEDi = param.TDB4GEDi,
+                        TDB5GEDi = param.TDB5GEDi,
+                        TDB6GEDi = param.TDB6GEDi,
 
                         CREATIONDATE = DateTime.Now
                     };

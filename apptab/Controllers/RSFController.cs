@@ -814,9 +814,7 @@ namespace apptab.Controllers
             var Projet = db.SI_PROJETS.FirstOrDefault(a => a.ID == societe.IDPROJET && a.DELETIONDATE == null).ID;
             var Soa = ged.Projects.FirstOrDefault(a => a.Id == societe.IDGED && a.DeletionDate == null).Id;
 
-            var societeExist = db.SI_PROGED.FirstOrDefault(a => (a.IDPROJET == Projet /*|| a.IDGED == Soa*/) && a.DELETIONDATE == null);
-
-            if (societeExist == null)
+            if (!db.SI_PROGED.Any(a => a.IDPROJET == Projet /*|| a.IDGED == Soa*/ && a.DELETIONDATE == null))
             {
                 var newSociete = new SI_PROGED()
                 {

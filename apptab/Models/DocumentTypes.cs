@@ -8,11 +8,11 @@
 
     public partial class DocumentTypes
     {
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        //public DocumentTypes()
-        //{
-        //    DocumentTypesSteps = new HashSet<DocumentTypesSteps>();
-        //}
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public DocumentTypes()
+        {
+            DocumentTypesSteps = new HashSet<DocumentTypesSteps>();
+        }
 
         public Guid Id { get; set; }
 
