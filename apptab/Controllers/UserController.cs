@@ -109,7 +109,7 @@ namespace apptab.Controllers
                     {
                         if (a.IDUSERGED != null)
                         {
-                            var tt = ged.Users.FirstOrDefault(z => z.Id == a.IDUSERGED && z.DeletionDate == null);
+                            var tt = ged.Users.Where(z => z.Id == a.IDUSERGED && z.DeletionDate == null).FirstOrDefault();
                             if (tt != null) {
                                 users.Add(new ListeUser()
                                 {

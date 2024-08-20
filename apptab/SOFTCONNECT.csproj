@@ -2478,6 +2478,7 @@
     <Content Include="Assets\img\LogoS1.png" />
     <Content Include="Assets\js\AnomalieDPA.js" />
     <Content Include="Assets\js\AnomalieJSJournal .js" />
+    <Content Include="Assets\js\BordSituationDoc.js" />
     <Content Include="Assets\js\BordEtatActuelDoc.js" />
     <Content Include="Assets\js\BordStatutActuelDoc.js" />
     <Content Include="Assets\js\BordRSF.js" />
@@ -5017,6 +5018,7 @@
     <Content Include="Views\EtatGED\EtapTypeDocs.cshtml" />
     <Content Include="Views\BordTraitement\BordEtatActuDoc.cshtml" />
     <Content Include="Views\EtatGED\EtapActuelDocs.cshtml" />
+    <Content Include="Views\EtatGED\SituationDetailleDoc.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

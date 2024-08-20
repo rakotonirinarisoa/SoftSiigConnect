@@ -29,6 +29,7 @@
 
         [StringLength(500)]
         public string Message { get; set; }
+        public string ProcessingDescription { get; set; }
 
         public Guid DocumentId { get; set; }
 
