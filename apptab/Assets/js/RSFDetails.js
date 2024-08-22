@@ -203,10 +203,11 @@ function GetMAPP() {
             //var code = `<option value="${Datas.data.LIEN}">${Datas.data.TITLEDOCS}</option>`;
             //$(`[data-id="lien-list"]`).append(code);
 
+            console.log(Datas.data)
 
             $("#IDProjet").val(Datas.data.PROJET);
             $("#Title").val(Datas.data.TITLE);
-            $("#Annee").val(Datas.data.ANNEE);
+            $("#Annee").val(Datas.data.ANNEE + '-01');
             $("#Periode").val(Datas.data.PERIODE);
             $("#Type").val(Datas.data.TYPE);
             $("#LienTRUE").val(Datas.data.LIEN);
@@ -275,9 +276,9 @@ $(`[data-action="Update"]`).click(function () {
     let Annee = $(`#Annee`).val();
     let Periode = $(`#Periode`).val();
     let Type = $(`#Type`).val();
-    let Lien = $(`#LienTRUE`).val();
-    let TITLEDOCS = $(`#Lien`).val();
-    if (!Title || !Annee || !Periode || !Type || !Lien || !TITLEDOCS) {
+    //let Lien = $(`#LienTRUE`).val();
+    //let TITLEDOCS = $(`#Lien`).val();
+    if (!Title || !Annee || !Periode || !Type /*|| !Lien || !TITLEDOCS*/) {
         alert("Veuillez renseigner les informations afin d'enregistrer le document. ");
         return;
     }
@@ -291,8 +292,8 @@ $(`[data-action="Update"]`).click(function () {
     formData.append("Annee", Annee);
     formData.append("Periode", Periode);
     formData.append("Type", Type);
-    formData.append("Lien", Lien);
-    formData.append("TITLEDOCS", TITLEDOCS);
+    //formData.append("Lien", Lien);
+    //formData.append("TITLEDOCS", TITLEDOCS);
 
     formData.append("IDPROJET", $(`#IDProjet`).val());
 

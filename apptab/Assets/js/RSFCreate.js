@@ -9,11 +9,15 @@
     GetListPeriode();
     GetListType();
     GetListLien();
+});
 
-    $(`[data-id="lien-list"]`).change(function (k, v) {
-        let nom = $(`#Lien`).val();
-        $(`#LienTRUE`).val(nom);
-    });
+$(`[data-id="lien-list"]`).change(function (k, v) {
+    let nom = $(`#Lien`).val();
+
+    //let nom2 = document.getElementById(`Lien`);
+
+    $(`#LienTRUE`).val(nom);
+    //$(`#TitleTRUE`).val(nom2.options[nom2.selectedIndex].text);
 });
 
 function GetListUser() {

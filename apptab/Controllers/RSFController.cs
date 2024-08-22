@@ -6,12 +6,14 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Runtime;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using apptab.Data;
 using apptab.Data.Entities;
 using Microsoft.Win32.SafeHandles;
 using Newtonsoft.Json;
+using static apptab.Controllers.EtatGEDController;
 
 namespace apptab.Controllers
 {
@@ -279,17 +281,45 @@ namespace apptab.Controllers
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
         }
 
+        public static String[] DeserializeJsonToGuidArray(string jsonString)
+        {
+            return System.Text.Json.JsonSerializer.Deserialize<String[]>(jsonString);
+        }
+
         //GET ALL LIEN//
         [HttpPost]
         public ActionResult GetAllLien(SI_USERS suser)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-
-            var lienGEd = db.SI_GEDLIEN.FirstOrDefault().LIEN;
+            if (exist.IDUSERGED == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Veuillez parametrer le mappage GED ET PROJET. " }, settings));
 
             SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+            if (!db.SI_PROGED.Any(a => a.IDPROJET == exist.IDPROJET))
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance projet SET-GED. " }, settings));
+
+            if (db.SI_USERS.FirstOrDefault(a => a.IDPROJET == exist.IDPROJET && a.DELETIONDATE == null && a.ID == exist.ID).IDUSERGED == null)
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
+            else
+            {
+                var IDUSERGEDT = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == exist.IDPROJET && b.DELETIONDATE == null && b.ID == exist.ID).IDUSERGED;
+                if (!ged.Users.Any(a => a.Id == IDUSERGEDT && a.DeletionDate == null))
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
+            }
+
+            var IDUSERGED = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == exist.IDPROJET && b.DELETIONDATE == null && b.ID == exist.ID).IDUSERGED;
+
+            List<string> site = new List<string>();
+            var allSite = ged.Users.FirstOrDefault(a => a.Id == IDUSERGED).Sites;
+            String[] guidArray = DeserializeJsonToGuidArray(allSite);
+            foreach (string guid in guidArray)
+            {
+                site.Add(guid);
+            }
+
+            var lienGEd = db.SI_GEDLIEN.FirstOrDefault().LIEN;
 
             List<PROGED> linkAll = new List<PROGED>();
 
@@ -300,48 +330,48 @@ namespace apptab.Controllers
                 //IDDOC = null
             });
 
-            //if (exist.IDPROJET != 0)
-            //{
-            //    foreach (var x in db.SI_PROGED.Where(a => a.IDPROJET == exist.IDPROJET && a.DELETIONDATE == null))
-            //    {
-            //        foreach (var y in ged.Users.Where(a => a.ProjectId == x.IDGED && a.DeletionDate == null).ToList())
-            //        {
-            //            foreach (var z in ged.Documents.Where(a => a.SenderId == y.Id && a.DeletionDate == null).ToList())
-            //            {
-            //                var islink = lienGEd + "/documents/shared/" + z.Id.ToString();
-            //                if (!db.SI_RSF.Any(a => a.LIEN == islink))
-            //                {
-            //                    linkAll.Add(new PROGED()
-            //                    {
-            //                        LIEN = lienGEd + "/documents/shared/" + z.Id.ToString(),
-            //                        TITLE = z.Title,
-            //                        IDDOC = z.Id
-            //                    });
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-
-            foreach (var x in db.SI_PROGED.Where(a => a.DELETIONDATE == null))
+            if (exist.IDPROJET != 0)
             {
-                foreach (var y in ged.Users.Where(a => a.ProjectId == x.IDGED && a.DeletionDate == null).ToList())
+                foreach (var x in db.SI_PROGED.Where(a => a.IDPROJET == exist.IDPROJET && a.DELETIONDATE == null))
                 {
-                    foreach (var z in ged.Documents.Where(a => a.SenderId == y.Id && a.DeletionDate == null).ToList())
+                    foreach (var y in ged.Users.Where(a => a.ProjectId == x.IDGED && a.DeletionDate == null/* && site.Contains(a.Sites)*/).ToList())
                     {
-                        var islink = lienGEd + "/documents/shared/" + z.Id.ToString();
-                        if (db.SI_RSF.Where(a => a.LIEN == islink && a.DELETIONDATE == null).Count() == 0)
+                        foreach (var z in ged.Documents.Where(a => a.SenderId == y.Id && a.DeletionDate == null && site.Contains(a.Site)).ToList())
                         {
-                            linkAll.Add(new PROGED()
+                            var islink = lienGEd + "/documents/shared/" + z.Id.ToString();
+                            if (!db.SI_RSF.Any(a => a.LIEN == islink))
                             {
-                                LIEN = islink,
-                                TITLE = z.Title,
-                                //IDDOC = z.Id
-                            });
+                                linkAll.Add(new PROGED()
+                                {
+                                    LIEN = islink,
+                                    TITLE = z.Title,
+                                    IDDOC = z.Id
+                                });
+                            }
                         }
                     }
                 }
             }
+
+                //foreach (var x in db.SI_PROGED.Where(a => a.DELETIONDATE == null))
+                //{
+                //    foreach (var y in ged.Users.Where(a => a.ProjectId == x.IDGED && a.DeletionDate == null).ToList())
+                //    {
+                //        foreach (var z in ged.Documents.Where(a => a.SenderId == y.Id && a.DeletionDate == null).ToList())
+                //        {
+                //            var islink = lienGEd + "/documents/shared/" + z.Id.ToString();
+                //            if (db.SI_RSF.Where(a => a.LIEN == islink && a.DELETIONDATE == null).Count() == 0)
+                //            {
+                //                linkAll.Add(new PROGED()
+                //                {
+                //                    LIEN = islink,
+                //                    TITLE = z.Title,
+                //                    //IDDOC = z.Id
+                //                });
+                //            }
+                //        }
+                //    }
+                //}
 
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = linkAll }, settings));
         }
@@ -440,17 +470,17 @@ namespace apptab.Controllers
 
         //UPDATE//
         [HttpPost]
-        public JsonResult Update(SI_USERS suser, string Title, string Annee, string Periode, string Type, string Lien, int IDProjet, string UserId, string TITLEDOCS)
+        public JsonResult Update(SI_USERS suser, string Title, string Annee, string Periode, string Type/*, string Lien*/, int IDProjet, string UserId/*, string TITLEDOCS*/)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            Guid isDocs = Guid.Parse(Lien.Split('/').Last());
+            //Guid isDocs = Guid.Parse(Lien.Split('/').Last());
 
             SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
-            var isTit = ged.Documents.FirstOrDefault(a => a.Id == isDocs).Title;
+            //var isTit = ged.Documents.FirstOrDefault(a => a.Id == isDocs).Title;
 
             try
             {
@@ -505,17 +535,17 @@ namespace apptab.Controllers
                         break;
                 }
 
-                if (isModif.TITLE != Title || isModif.PERIODE != Periode || isModif.TYPE != Type || isModif.LIEN != Lien.ToString() || isModif.TITLEDOCS != isTit || isModif.ANNEE != int.Parse(words[0]) || isModif.MOIS != mois)
+                if (isModif.TITLE != Title || isModif.PERIODE != Periode || isModif.TYPE != Type /*|| isModif.LIEN != Lien.ToString() || isModif.TITLEDOCS != isTit*/ || isModif.ANNEE != int.Parse(words[0]) || isModif.MOIS != mois)
                 {
                     if (isModif.IDUSER == exist.ID && exist.ID != 0)
                     {
                         isModif.TITLE = Title;
                         isModif.PERIODE = Periode;
                         isModif.TYPE = Type;
-                        isModif.LIEN = Lien.ToString();
+                        //isModif.LIEN = Lien.ToString();
                         isModif.ANNEE = int.Parse(words[0]);
                         isModif.MOIS = mois;
-                        isModif.TITLEDOCS = isTit;
+                        //isModif.TITLEDOCS = isTit;
 
                         db.SaveChanges();
 
@@ -531,14 +561,14 @@ namespace apptab.Controllers
                             TITLE = Title,
                             PERIODE = Periode,
                             TYPE = Type,
-                            LIEN = Lien.ToString(),
+                            //LIEN = Lien.ToString(),
                             ANNEE = int.Parse(words[0]),
                             MOIS = mois,
                             IDPROJET = IDProjet,
                             CREATIONDATE = DateTime.Now,
                             IDUSER = exist.ID,
                             IDPARENT = isModif.ID,
-                            TITLEDOCS = isModif.TITLEDOCS,
+                            //TITLEDOCS = isModif.TITLEDOCS,
                         };
                         db.HSI_RSF.Add(newSocieteH);
                         db.SaveChanges();
