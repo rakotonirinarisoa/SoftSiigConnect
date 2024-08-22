@@ -20,7 +20,7 @@ namespace apptab.Extension
         public ISO20022xml CreateISO20022(bool devise, string codeJ, SI_USERS user, string codeproject, List<AvanceDetails> list)
         {
             XmlDocument xd = new XmlDocument();
-            
+
             int PROJECTID = int.Parse(codeproject);
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -219,39 +219,47 @@ namespace apptab.Extension
                     var bnfr = beneficiaires.FirstOrDefault();
                     XElement contacts = new XElement("CstmrCdtTrfInitn",
                                  new XElement("GrpHdr",
-                                new XElement("MsgId", infdonneurOrdre.Trim(' ')),
+                                new XElement("MsgId", infdonneurOrdre.Trim(' ').TrimEnd(' ')),
                                 new XElement("CreDtTm", dtcrdt),
                                 new XElement("NbOfTxs", globaliteration),//a etudier
                                 //new XElement("CtrlSum", bnfr.MONTANT),
-                                new XElement("CtrlSum", montant),
+                                new XElement("CtrlSum", Convert.ToDecimal(montant)),
 
                                 new XElement("InitgPty",
-                                    new XElement("Nm", donneurOrde.DONNEUR_ORDRE.TrimEnd(' ')),
+                                    new XElement("Nm", donneurOrde.DONNEUR_ORDRE.TrimEnd(' ').Trim(' ')),
                                     new XElement("Id",
                                     new XElement("OrgId",
                                         new XElement("Othr",
                                             new XElement("Id", donneurOrde.CODE_BANQUE.TrimEnd(' '))
                                         )
-                                )))));
-                    
+                                ))),
+                                new XElement("Nm", donneurOrde.DONNEUR_ORDRE.TrimEnd(' ').Trim(' ')),
+                                new XElement("PstlAdr",
+                                new XElement("AdrTp",donneurOrde.ADDRESSE1),
+                                new XElement("TwnNm", donneurOrde.VILLE),
+                                new XElement("Ctry", donneurOrde.PAYS),
+                                new XElement("AdrLine", donneurOrde.VILLE))
+                                ));
                     var op = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == bnfr.NUM).FirstOrDefault();
 
                     contacts.Add(new XElement("PmtInf",
-                       new XElement("PmtInfId", op.Libelle),
+                       new XElement("PmtInfId", op.Libelle.Trim(' ').TrimEnd(' ')),
                        new XElement("PmtMtd", "TRF"),
                        new XElement("BtchBookg", false),
-                       new XElement("NbOfTxs", iteration),
-                       new XElement("CtrlSum", bnfr.MONTANT),
+                       new XElement("NbOfTxs", globaliteration),
+                       new XElement("CtrlSum", Convert.ToDecimal(bnfr.MONTANT)),
 
                        new XElement("PmtTpInf",
                        new XElement("InstrPrty", "NORM")),//a saisir selon l'utilisateur
                        new XElement("ReqdExctnDt", dtcrdt.Date),
                        new XElement("Dbtr",
-                           new XElement("Nm", donneurOrde.DONNEUR_ORDRE),
+                           new XElement("Nm", donneurOrde.DONNEUR_ORDRE.Trim(' ').TrimEnd(' ')),
                            new XElement("PstlAdr",
-                               new XElement("StrtNm", donneurOrde.ADDRESSE1),
+                               new XElement("AdrTp", donneurOrde.ADDRESSE1),
+                               //new XElement("StrtNm", donneurOrde.ADDRESSE1),
                                new XElement("TwnNm", donneurOrde.VILLE),
-                               new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' '))
+                               new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')),
+                               new XElement("AdrLine", donneurOrde.VILLE))
                        ),
                        new XElement("Id",
                        new XElement("OrgId",
@@ -263,13 +271,15 @@ namespace apptab.Extension
                            new XElement("Id",
                                new XElement("Othr",
                                    new XElement("Id", bnfr.BANQUE + bnfr.GUICHET + bnfr.RIB))),//RIB RJL1 // beneficiaire.rib
-                           new XElement("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' '))
+                           new XElement("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ').Trim(' '))
                        ),
                        new XElement("DbtrAgt",
                        new XElement("FinInstnId",
-                       new XElement("BIC", op.auxi.TrimEnd(' ')),
-                       new XElement("PstlAdr", new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' '))))),
-                       new XElement("ChrgBr", "SHAR")));
+                       new XElement("BIC", op.auxi.TrimEnd(' ').Trim(' '))
+                       )));
+                       //new XElement("PstlAdr",
+                       //new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' '))))),
+                       //new XElement("ChrgBr", "SHAR"));
 
                     //// Add some information to the file.
                     ///
@@ -285,11 +295,13 @@ namespace apptab.Extension
                             new XElement("EndToEndId", formaterTexte(16, opop.auxi.TrimEnd(' '))
 
                             ),
-                            new XElement("Amt", new XElement("InstdAmt", new XAttribute("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ')), montant)
+                            new XElement("Amt", new XElement("InstdAmt", new XAttribute("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ')), Convert.ToDecimal(montant))
                             ),
+                            new XElement("ChrgBr", "SHAR"),
                             new XElement("CdtrAgt",
                                 new XElement("FinInstnId",
                                 new XElement("BIC", item.AUXI),
+                                new XElement("Nm", donneurOrde.DONNEUR_ORDRE.Trim(' ').TrimEnd(' ')),
                                 new XElement("PstlAdr", new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' '))))),
                             new XElement("Cdtr",
                                 new XElement("Nm", item.BENEFICIAIRE),
