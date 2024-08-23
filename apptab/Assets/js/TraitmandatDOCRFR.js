@@ -55,6 +55,8 @@ function modalD(id) {
                         <td style="font-weight: bold; text-align:center">${v.OBJ}</td>
                         <td style="font-weight: bold; text-align:center">${v.TITUL}</td>
                         <td style="font-weight: bold; text-align:center">${formatCurrency(String(v.MONT).replace(",", "."))}</td>
+                        <td style="font-weight: bold; text-align:center">${v.STAT}</td>
+                        <td style="font-weight: bold; text-align:center">${v.NPIECE}</td>
                     </tr>
                     `                });
                 $('.LIQUIMODAL').empty();
