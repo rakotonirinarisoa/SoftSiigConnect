@@ -1,4 +1,4 @@
-namespace apptab
+﻿namespace apptab
 {
     using System;
     using System.ComponentModel.DataAnnotations;
@@ -65,6 +65,12 @@ namespace apptab
         public string USERMAJ { get; set; }
 
         public DateTime? DATEMAJ { get; set; }
+
+        [StringLength(20)]
+        public string COGEFRNS { get; set; }
+
+        [StringLength(20)]
+        public string AUXIFRNS { get; set; }
 
         public virtual CPTADMIN_FLIQUIDATION CPTADMIN_FLIQUIDATION { get; set; }
     }
