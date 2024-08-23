@@ -1,4 +1,4 @@
-namespace apptab
+﻿namespace apptab
 {
     using System;
     using System.Collections.Generic;
@@ -28,11 +28,11 @@ namespace apptab
 
         public DateTime? DATELIQUIDATION { get; set; }
 
-        [StringLength(20)]
-        public string COGEBENEFICIAIRE { get; set; }
+        //[StringLength(20)]
+        //public string COGEBENEFICIAIRE { get; set; }
 
-        [StringLength(20)]
-        public string AUXIBENEFICIAIRE { get; set; }
+        //[StringLength(20)]
+        //public string AUXIBENEFICIAIRE { get; set; }
 
         [StringLength(3)]
         public string DEVISE { get; set; }

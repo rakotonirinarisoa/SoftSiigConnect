@@ -304,6 +304,9 @@ namespace apptab.Controllers
                                 decimal MTNPJ = 0;
                                 var PCOP = "";
 
+                                var COGEBENEFICIAIRE = "";
+                                var AUXIBENEFICIAIRE = "";
+
                                 //Get total MTN dans CPTADMIN_MLIQUIDATION pour vérification du SOMMES MTN M = SOMMES MTN MPJ//
                                 if (tom.CPTADMIN_MLIQUIDATION.Any(a => a.IDLIQUIDATION == x.ID))
                                 {
@@ -313,6 +316,12 @@ namespace apptab.Controllers
 
                                         if (String.IsNullOrEmpty(PCOP))
                                             PCOP = y.POSTE;
+
+                                        if (String.IsNullOrEmpty(COGEBENEFICIAIRE))
+                                            COGEBENEFICIAIRE = y.COGEFRNS;
+
+                                        if (String.IsNullOrEmpty(AUXIBENEFICIAIRE))
+                                            AUXIBENEFICIAIRE = y.AUXIFRNS;
                                     }
                                 }
 
@@ -344,8 +353,8 @@ namespace apptab.Controllers
                                         if (!db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.IDPROJET == crpt && site.Contains(a.SITE)) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt && site.Contains(a.SITE)))
                                         {
                                             var titulaire = "";
-                                            if (tom.RTIERS.Any(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE))
-                                                titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE).NOM;
+                                            if (tom.RTIERS.Any(a => a.COGE == COGEBENEFICIAIRE && a.AUXI == AUXIBENEFICIAIRE))
+                                                titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == COGEBENEFICIAIRE && a.AUXI == AUXIBENEFICIAIRE).NOM;
 
                                             var soa = (from soas in db.SI_SOAS
                                                        join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -372,7 +381,7 @@ namespace apptab.Controllers
                                                 OBJ = x.DESCRIPTION,//Objet
                                                 TITUL = titulaire,//Titulaire
                                                 DATENGAGEMENT = x.DATELIQUIDATION.Value.Date,//Date mandat
-                                                COMPTE = x.COGEBENEFICIAIRE,//Compte bénéficiaire
+                                                COMPTE = COGEBENEFICIAIRE,//Compte bénéficiaire
                                                 PCOP = PCOP,//PCOP
 
                                                 MONT = Math.Round(MTN, 2).ToString(),//Montant imputations

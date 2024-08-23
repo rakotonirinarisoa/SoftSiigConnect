@@ -219,6 +219,9 @@ namespace apptab.Controllers
                         decimal MTNPJ = 0;
                         var PCOP = "";
 
+                        var COGEBENEFICIAIRE = "";
+                        var AUXIBENEFICIAIRE = "";
+
                         //Get total MTN dans CPTADMIN_MLIQUIDATION pour vérification du SOMMES MTN M = SOMMES MTN MPJ//
                         if (tom.CPTADMIN_MLIQUIDATION.Any(a => a.IDLIQUIDATION == x.ID))
                         {
@@ -228,6 +231,12 @@ namespace apptab.Controllers
 
                                 if (String.IsNullOrEmpty(PCOP))
                                     PCOP = y.POSTE;
+
+                                if (String.IsNullOrEmpty(COGEBENEFICIAIRE))
+                                    COGEBENEFICIAIRE = y.COGEFRNS;
+
+                                if (String.IsNullOrEmpty(AUXIBENEFICIAIRE))
+                                    AUXIBENEFICIAIRE = y.AUXIFRNS;
                             }
                         }
 
@@ -259,8 +268,8 @@ namespace apptab.Controllers
                                 if (!db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.IDPROJET == crpt && site.Contains(a.SITE)) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt && site.Contains(a.SITE)))
                                 {
                                     var titulaire = "";
-                                    if (tom.RTIERS.Any(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE))
-                                        titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE).NOM;
+                                    if (tom.RTIERS.Any(a => a.COGE == COGEBENEFICIAIRE && a.AUXI == AUXIBENEFICIAIRE))
+                                        titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == COGEBENEFICIAIRE && a.AUXI == AUXIBENEFICIAIRE).NOM;
 
                                     var soa = (from soas in db.SI_SOAS
                                                join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -288,7 +297,7 @@ namespace apptab.Controllers
                                         OBJ = x.DESCRIPTION,
                                         TITUL = titulaire,
                                         MONT = Math.Round(MTN, 2).ToString(),
-                                        COMPTE = x.COGEBENEFICIAIRE,
+                                        COMPTE = COGEBENEFICIAIRE,
                                         DATE = x.DATELIQUIDATION.Value.Date,
                                         PCOP = PCOP,
                                         DATEDEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF && site.Contains(a.CODE_SITE)).DATECA,
@@ -364,6 +373,9 @@ namespace apptab.Controllers
                         decimal MTNPJ = 0;
                         var PCOP = "";
 
+                        var COGEBENEFICIAIRE = "";
+                        var AUXIBENEFICIAIRE = "";
+
                         //Get total MTN dans CPTADMIN_MLIQUIDATION pour vérification du SOMMES MTN M = SOMMES MTN MPJ//
                         if (tom.CPTADMIN_MLIQUIDATION.Any(a => a.IDLIQUIDATION == x.ID))
                         {
@@ -373,6 +385,12 @@ namespace apptab.Controllers
 
                                 if (String.IsNullOrEmpty(PCOP))
                                     PCOP = y.POSTE;
+
+                                if (String.IsNullOrEmpty(COGEBENEFICIAIRE))
+                                    COGEBENEFICIAIRE = y.COGEFRNS;
+
+                                if (String.IsNullOrEmpty(AUXIBENEFICIAIRE))
+                                    AUXIBENEFICIAIRE = y.AUXIFRNS;
                             }
                         }
 
@@ -404,8 +422,8 @@ namespace apptab.Controllers
                                 if (!db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.IDPROJET == crpt && site.Contains(a.SITE)) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt && site.Contains(a.SITE)))
                                 {
                                     var titulaire = "";
-                                    if (tom.RTIERS.Any(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE))
-                                        titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE).NOM;
+                                    if (tom.RTIERS.Any(a => a.COGE == COGEBENEFICIAIRE && a.AUXI == AUXIBENEFICIAIRE))
+                                        titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == COGEBENEFICIAIRE && a.AUXI == AUXIBENEFICIAIRE).NOM;
 
                                     var soa = (from soas in db.SI_SOAS
                                                join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
@@ -433,7 +451,7 @@ namespace apptab.Controllers
                                         OBJ = x.DESCRIPTION,
                                         TITUL = titulaire,
                                         MONT = Math.Round(MTN, 2).ToString(),
-                                        COMPTE = x.COGEBENEFICIAIRE,
+                                        COMPTE = COGEBENEFICIAIRE,
                                         DATE = x.DATELIQUIDATION.Value.Date,
                                         PCOP = PCOP,
                                         DATEDEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF && site.Contains(a.CODE_SITE)).DATECA,
@@ -730,6 +748,10 @@ namespace apptab.Controllers
                         {
                             decimal MTN = 0;
                             var PCOP = "";
+
+                            var COGEBENEFICIAIRE = "";
+                            var AUXIBENEFICIAIRE = "";
+
                             if (tom.CPTADMIN_FLIQUIDATION.Any(a => a.ID == elem && a.SITE == item))
                             {
                                 if (tom.CPTADMIN_MLIQUIDATION.Any(a => a.IDLIQUIDATION == elem))
@@ -741,6 +763,12 @@ namespace apptab.Controllers
 
                                         if (string.IsNullOrEmpty(PCOP))
                                             PCOP = y.POSTE;
+
+                                        if (String.IsNullOrEmpty(COGEBENEFICIAIRE))
+                                            COGEBENEFICIAIRE = y.COGEFRNS;
+
+                                        if (String.IsNullOrEmpty(AUXIBENEFICIAIRE))
+                                            AUXIBENEFICIAIRE = y.AUXIFRNS;
                                     }
                                 }
 
@@ -749,8 +777,8 @@ namespace apptab.Controllers
                                 var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
 
                                 var titulaire = "";
-                                if (tom.RTIERS.Any(a => a.COGE == FF.COGEBENEFICIAIRE && a.AUXI == FF.AUXIBENEFICIAIRE))
-                                    titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == FF.COGEBENEFICIAIRE && a.AUXI == FF.AUXIBENEFICIAIRE).NOM;
+                                if (tom.RTIERS.Any(a => a.COGE == COGEBENEFICIAIRE && a.AUXI == AUXIBENEFICIAIRE))
+                                    titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == COGEBENEFICIAIRE && a.AUXI == AUXIBENEFICIAIRE).NOM;
 
                                 //DateTime? DateVal = ((ordsec == 1) ? DateTime.Now : null);//SANS ORDSEC//
                                 //int? userVal = ((ordsec == 1) ? exist.ID : null);//SANS ORDSEC//
@@ -763,7 +791,7 @@ namespace apptab.Controllers
                                     OBJ = FF.DESCRIPTION,
                                     TITUL = titulaire,
                                     MONT = Data.Cipher.Encrypt((Math.Round(MTN, 2)).ToString(), "Oppenheimer"),
-                                    COMPTE = FF.COGEBENEFICIAIRE,
+                                    COMPTE = COGEBENEFICIAIRE,
                                     DATEMANDAT = FF.DATELIQUIDATION.Value.Date,
                                     PCOP = PCOP,
                                     DATEDEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == FF.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF && a.CODE_SITE == item).DATECA,
@@ -1295,6 +1323,9 @@ namespace apptab.Controllers
                         decimal MTNPJ = 0;
                         var PCOP = "";
 
+                        var COGEBENEFICIAIRE = "";
+                        var AUXIBENEFICIAIRE = "";
+
                         //Get total MTN dans CPTADMIN_MLIQUIDATION pour vérification du SOMMES MTN M = SOMMES MTN MPJ//
                         if (tom.CPTADMIN_MLIQUIDATION.Any(a => a.IDLIQUIDATION == x.ID))
                         {
@@ -1304,6 +1335,12 @@ namespace apptab.Controllers
 
                                 if (String.IsNullOrEmpty(PCOP))
                                     PCOP = y.POSTE;
+
+                                if (String.IsNullOrEmpty(COGEBENEFICIAIRE))
+                                    COGEBENEFICIAIRE = y.COGEFRNS;
+
+                                if (String.IsNullOrEmpty(AUXIBENEFICIAIRE))
+                                    AUXIBENEFICIAIRE = y.AUXIFRNS;
                             }
                         }
 
@@ -1335,8 +1372,8 @@ namespace apptab.Controllers
                             if (canBeDEF == false || canBeTEF == false || canBeBE == false)
                             {
                                 var titulaire = "";
-                                if (tom.RTIERS.Any(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE))
-                                    titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE).NOM;
+                                if (tom.RTIERS.Any(a => a.COGE == COGEBENEFICIAIRE && a.AUXI == AUXIBENEFICIAIRE))
+                                    titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == COGEBENEFICIAIRE && a.AUXI == AUXIBENEFICIAIRE).NOM;
 
                                 DateTime? DATEDEF = null;
                                 if (tom.CPTADMIN_TRAITEMENT.Any(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF && site.Contains(a.CODE_SITE)))
@@ -1369,7 +1406,7 @@ namespace apptab.Controllers
                                     OBJ = x.DESCRIPTION,
                                     TITUL = titulaire,
                                     MONT = Math.Round(MTN, 2).ToString(),
-                                    COMPTE = x.COGEBENEFICIAIRE,
+                                    COMPTE = COGEBENEFICIAIRE,
                                     DATE = x.DATELIQUIDATION.Value.Date,
                                     PCOP = PCOP,
                                     DATEDEF = DATEDEF,
@@ -1440,6 +1477,9 @@ namespace apptab.Controllers
                         decimal MTNPJ = 0;
                         var PCOP = "";
 
+                        var COGEBENEFICIAIRE = "";
+                        var AUXIBENEFICIAIRE = "";
+
                         //Get total MTN dans CPTADMIN_MLIQUIDATION pour vérification du SOMMES MTN M = SOMMES MTN MPJ//
                         if (tom.CPTADMIN_MLIQUIDATION.Any(a => a.IDLIQUIDATION == x.ID))
                         {
@@ -1449,6 +1489,12 @@ namespace apptab.Controllers
 
                                 if (String.IsNullOrEmpty(PCOP))
                                     PCOP = y.POSTE;
+
+                                if (String.IsNullOrEmpty(COGEBENEFICIAIRE))
+                                    COGEBENEFICIAIRE = y.COGEFRNS;
+
+                                if (String.IsNullOrEmpty(AUXIBENEFICIAIRE))
+                                    AUXIBENEFICIAIRE = y.AUXIFRNS;
                             }
                         }
 
@@ -1480,8 +1526,8 @@ namespace apptab.Controllers
                             if (canBeDEF == false || canBeTEF == false || canBeBE == false)
                             {
                                 var titulaire = "";
-                                if (tom.RTIERS.Any(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE))
-                                    titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE).NOM;
+                                if (tom.RTIERS.Any(a => a.COGE == COGEBENEFICIAIRE && a.AUXI == AUXIBENEFICIAIRE))
+                                    titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == COGEBENEFICIAIRE && a.AUXI == AUXIBENEFICIAIRE).NOM;
 
                                 DateTime? DATEDEF = null;
                                 if (tom.CPTADMIN_TRAITEMENT.Any(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF && site.Contains(a.CODE_SITE)))
@@ -1514,7 +1560,7 @@ namespace apptab.Controllers
                                     OBJ = x.DESCRIPTION,
                                     TITUL = titulaire,
                                     MONT = Math.Round(MTN, 2).ToString(),
-                                    COMPTE = x.COGEBENEFICIAIRE,
+                                    COMPTE = COGEBENEFICIAIRE,
                                     DATE = x.DATELIQUIDATION.Value.Date,
                                     PCOP = PCOP,
                                     DATEDEF = DATEDEF,
