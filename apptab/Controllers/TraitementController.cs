@@ -1052,12 +1052,18 @@ namespace apptab.Controllers
                 {
                     foreach (var x in tom.CPTADMIN_MLIQUIDATION.Where(a => a.IDLIQUIDATION == IdF).ToList())
                     {
+                        var titulaire = "";
+                        if (tom.RTIERS.Any(a => a.COGE == x.COGEFRNS && a.AUXI == x.AUXIFRNS))
+                            titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == x.COGEFRNS && a.AUXI == x.AUXIFRNS).NOM;
+
                         list.Add(new DATATRPROJET
                         {
                             REF = x.LIBELLE != null ? x.LIBELLE : "",
                             OBJ = x.COGE != null ? x.COGE.ToString() : "",
                             TITUL = x.POSTE != null ? x.POSTE.ToString() : "",
                             MONT = x.MONTANTLOCAL != null ? Math.Round(x.MONTANTLOCAL.Value, 2).ToString() : "0",
+                            NPIECE = titulaire,
+                            STAT = x.COGEFRNS != null ? x.COGEFRNS.ToString() : "",
                         });
                     }
                 }
@@ -2180,6 +2186,8 @@ namespace apptab.Controllers
                                 OBJ = x.COGE != null ? x.COGE.ToString() : "",
                                 TITUL = x.POSTE != null ? x.POSTE.ToString() : "",
                                 MONT = x.MONTANTLOCAL != null ? Math.Round(x.MONTANTLOCAL.Value, 2).ToString() : "0",
+                                NPIECE = "",
+                                STAT = "",
                             });
                         }
                     }
@@ -2190,12 +2198,18 @@ namespace apptab.Controllers
                     {
                         foreach (var x in tom.CPTADMIN_MLIQUIDATION.Where(a => a.IDLIQUIDATION == IdF).ToList())
                         {
+                            var titulaire = "";
+                            if (tom.RTIERS.Any(a => a.COGE == x.COGEFRNS && a.AUXI == x.AUXIFRNS))
+                                titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == x.COGEFRNS && a.AUXI == x.AUXIFRNS).NOM;
+
                             list.Add(new DATATRPROJET
                             {
                                 REF = x.LIBELLE != null ? x.LIBELLE : "",
                                 OBJ = x.COGE != null ? x.COGE.ToString() : "",
                                 TITUL = x.POSTE != null ? x.POSTE.ToString() : "",
                                 MONT = x.MONTANTLOCAL != null ? Math.Round(x.MONTANTLOCAL.Value, 2).ToString() : "0",
+                                NPIECE = titulaire,
+                                STAT = x.COGEFRNS != null ? x.COGEFRNS.ToString() : "",
                             });
                         }
                     }
