@@ -68,36 +68,21 @@ namespace apptab.Controllers
                     var adminUser = db.SI_USERS.Where(x => x.ROLE != Role.SAdministrateur && x.DELETIONDATE == null).ToList();
                     foreach (var a in adminUser)
                     {
-                        var tt = ged.Users.FirstOrDefault(z => z.Id == a.IDUSERGED && z.DeletionDate == null);
-                        if (a.IDUSERGED != null)
-                        {
-                            users.Add(new ListeUser()
-                            {
-                                LOGIN = a.LOGIN,
-                                PWD = a.PWD,
-                                ROLE = a.ROLE.ToString(),
-                                ID = a.ID,
-                                PROJET = a.IDPROJET == 0 ? "MULTIPLES" : db.SI_PROJETS.Where(z => z.ID == a.IDPROJET && z.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                DELETONDATE = a.DELETIONDATE != null ? a.DELETIONDATE : null,
-                                CREAT = a.CREATIONDATE != null ? a.CREATIONDATE : null,
-                                USERGED = tt != null ? tt.Username : ""
-                            });
+                        var tt = "";
+                        if (ged.Users.Any(z => z.Id == a.IDUSERGED && z.DeletionDate == null))
+                            tt = ged.Users.FirstOrDefault(z => z.Id == a.IDUSERGED && z.DeletionDate == null).Username;
 
-                        }
-                        else
+                        users.Add(new ListeUser()
                         {
-                            users.Add(new ListeUser()
-                            {
-                                LOGIN = a.LOGIN,
-                                PWD = a.PWD,
-                                ROLE = a.ROLE.ToString(),
-                                ID = a.ID,
-                                PROJET = a.IDPROJET == 0 ? "MULTIPLES" : db.SI_PROJETS.Where(z => z.ID == a.IDPROJET && z.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                DELETONDATE = a.DELETIONDATE != null ? a.DELETIONDATE : null,
-                                CREAT = a.CREATIONDATE != null ? a.CREATIONDATE : null,
-                                USERGED = ""
-                            });
-                        }
+                            LOGIN = a.LOGIN,
+                            PWD = a.PWD,
+                            ROLE = a.ROLE.ToString(),
+                            ID = a.ID,
+                            PROJET = a.IDPROJET == 0 ? "MULTIPLES" : db.SI_PROJETS.Where(z => z.ID == a.IDPROJET && z.DELETIONDATE == null).FirstOrDefault().PROJET,
+                            DELETONDATE = a.DELETIONDATE != null ? a.DELETIONDATE : null,
+                            CREAT = a.CREATIONDATE != null ? a.CREATIONDATE : null,
+                            USERGED = tt
+                        });
                     }
                     //OrderBy(a => a.PROJET).OrderBy(a => a.LOGIN).ToList();
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = users }, settings));
@@ -107,40 +92,21 @@ namespace apptab.Controllers
                     var testss = db.SI_USERS.Where(x => x.ROLE != Role.SAdministrateur && x.ROLE != Role.Organe_de_Suivi && x.ROLE != Role.Validateur_paiements && x.IDPROJET == exist.IDPROJET && x.DELETIONDATE == null).ToList();
                     foreach (var a in testss)
                     {
-                        if (a.IDUSERGED != null)
+                        var tt = "";
+                        if (ged.Users.Any(z => z.Id == a.IDUSERGED && z.DeletionDate == null))
+                            tt = ged.Users.FirstOrDefault(z => z.Id == a.IDUSERGED && z.DeletionDate == null).Username;
+
+                        users.Add(new ListeUser()
                         {
-                            var tt = ged.Users.Where(z => z.Id == a.IDUSERGED && z.DeletionDate == null).FirstOrDefault();
-                            if (tt != null) {
-                                users.Add(new ListeUser()
-                                {
-                                    LOGIN = a.LOGIN,
-                                    PWD = a.PWD,
-                                    ROLE = a.ROLE.ToString(),
-                                    ID = a.ID,
-                                    PROJET = a.IDPROJET == 0 ? "MULTIPLES" : db.SI_PROJETS.Where(z => z.ID == a.IDPROJET && z.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                    DELETONDATE = a.DELETIONDATE != null ? a.DELETIONDATE : null,
-                                    //STAT = a.DELETIONDATE == null ? "ACTIF" : "INACTIF",
-                                    CREAT = a.CREATIONDATE != null ? a.CREATIONDATE : null,
-                                    USERGED = a.IDUSERGED != null ? tt.Username : ""
-                                });
-                            }
-                          
-                        }
-                        else
-                        {
-                            users.Add(new ListeUser()
-                            {
-                                LOGIN = a.LOGIN,
-                                PWD = a.PWD,
-                                ROLE = a.ROLE.ToString(),
-                                ID = a.ID,
-                                PROJET = a.IDPROJET == 0 ? "MULTIPLES" : db.SI_PROJETS.Where(z => z.ID == a.IDPROJET && z.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                DELETONDATE = a.DELETIONDATE != null ? a.DELETIONDATE : null,
-                                //STAT = a.DELETIONDATE == null ? "ACTIF" : "INACTIF",
-                                CREAT = a.CREATIONDATE != null ? a.CREATIONDATE : null,
-                                USERGED = "",
-                            });
-                        }
+                            LOGIN = a.LOGIN,
+                            PWD = a.PWD,
+                            ROLE = a.ROLE.ToString(),
+                            ID = a.ID,
+                            PROJET = a.IDPROJET == 0 ? "MULTIPLES" : db.SI_PROJETS.Where(z => z.ID == a.IDPROJET && z.DELETIONDATE == null).FirstOrDefault().PROJET,
+                            DELETONDATE = a.DELETIONDATE != null ? a.DELETIONDATE : null,
+                            CREAT = a.CREATIONDATE != null ? a.CREATIONDATE : null,
+                            USERGED = tt
+                        });
                     }
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = users }, settings));
                 }
