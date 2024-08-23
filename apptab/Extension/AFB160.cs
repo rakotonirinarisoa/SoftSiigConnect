@@ -223,7 +223,7 @@ namespace apptab.Extension
                                 new XElement("CreDtTm", dtcrdt),
                                 new XElement("NbOfTxs", globaliteration),//a etudier
                                 //new XElement("CtrlSum", bnfr.MONTANT),
-                                new XElement("CtrlSum", Convert.ToDecimal(montant)),
+                                new XElement("CtrlSum", Convert.ToDecimal(String.Format("{0:0.00}",montant))),
 
                                 new XElement("InitgPty",
                                     new XElement("Nm", donneurOrde.DONNEUR_ORDRE.TrimEnd(' ').Trim(' ')),
@@ -247,7 +247,7 @@ namespace apptab.Extension
                        new XElement("PmtMtd", "TRF"),
                        new XElement("BtchBookg", false),
                        new XElement("NbOfTxs", globaliteration),
-                       new XElement("CtrlSum", Convert.ToDecimal(bnfr.MONTANT)),
+                       new XElement("CtrlSum", Convert.ToDecimal(String.Format("{0:0.00}",bnfr.MONTANT))),
 
                        new XElement("PmtTpInf",
                        new XElement("InstrPrty", "NORM")),//a saisir selon l'utilisateur
@@ -295,7 +295,7 @@ namespace apptab.Extension
                             new XElement("EndToEndId", formaterTexte(16, opop.auxi.TrimEnd(' '))
 
                             ),
-                            new XElement("Amt", new XElement("InstdAmt", new XAttribute("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ')), Convert.ToDecimal(montant))
+                            new XElement("Amt", new XElement("InstdAmt", new XAttribute("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ')), Convert.ToDecimal( String.Format("{0:0.00}",montant)))
                             ),
                             new XElement("ChrgBr", "SHAR"),
                             new XElement("CdtrAgt",
