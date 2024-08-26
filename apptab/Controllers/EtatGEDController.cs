@@ -17,6 +17,7 @@ using Microsoft.Ajax.Utilities;
 using System.Xml.Linq;
 using static apptab.Controllers.EtatGEDController;
 using Antlr.Runtime.Tree;
+using System.Security.Cryptography.Xml;
 
 namespace apptab.Controllers
 {
@@ -667,17 +668,42 @@ namespace apptab.Controllers
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
             }
 
+            list.Add(new TDB
+            {
+                REFERENCE = "0001/24/01",
+                DOCUMENT = "Document01",
+                FOURNISSEUR = "TELMA",
+                MONTANT = "200000",
+                TYPE = "Facture",
+                STEPNOW = "USER1",
+                STEPNEXT = "Validation 2",
+                VALIDATEURNEXT = "USER 2",
+                DUREENEXT = "24"
+            });
+            list.Add(new TDB
+            {
+                REFERENCE = "0001/24/02",
+                DOCUMENT = "Document02",
+                FOURNISSEUR = "TELMA",
+                MONTANT = "500000",
+                TYPE = "BC",
+                STEPNOW = "USER1",
+                STEPNEXT = "Validation 2",
+                VALIDATEURNEXT = "USER 2",
+                DUREENEXT = "24"
+            });
+
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list }, settings));
         }
 
         public ActionResult SituationDetailleDoc()
         {
-            ViewBag.Controller = "Situation Détaillé par document";
+            ViewBag.Controller = "Situation détaillée par document";
             return View();
         }
         public ActionResult EtapActuelDocs()
         {
-            ViewBag.Controller = "Situation Actuel ded documents";
+            ViewBag.Controller = "Situation actuelle des documents";
 
             return View();
         }
@@ -842,10 +868,14 @@ namespace apptab.Controllers
                             listEtape.Add("Etape " + elem.StepNumber + " : " + elem.ProcessingDescription);
                         }
 
+                        //var rrr = ged.Documents.Where(a => a.CreationDate >= DD && a.CreationDate <= DF && site.Contains(a.Site)
+                        //&& a.DocumentsSenders.Type == 1 && a.DeletionDate == null
+                        //&& a.DocumentsSenders.Suppliers.ProjectId == idProjet).ToList();
+
                         //Mbola misy code eto ijerena ny type de docs WHERE @io ambany io//
                         foreach (var y in ged.Documents.Where(a => a.CreationDate >= DD && a.CreationDate <= DF && site.Contains(a.Site)
                         && a.DocumentsSenders.Type == 1 && a.DeletionDate == null
-                        && a.Users.ProjectId == idProjet))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
+                        && a.DocumentsSenders.Suppliers.ProjectId == idProjet))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
                         {
                             //Accusé de récéption//
                             if (ged.SuppliersDocumentsAcknowledgements.Any(a => a.Id == y.Id) && y.Status == 1) //Status == 1 => Création circuit : OK pour un document
@@ -868,28 +898,32 @@ namespace apptab.Controllers
                                 {
                                     //var DocTypeUserSteps = ged.DocumentTypesUsersSteps.FirstOrDefault(a => a.StepId == elem.Id);
                                     var DocSteps = ged.DocumentSteps.FirstOrDefault(a => a.StepNumber == elem.StepNumber && a.DocumentId == y.Id && a.DeletionDate == null);
-                                    var UsersStep = ged.UsersSteps.FirstOrDefault(a => a.DocumentStepId == DocSteps.Id && a.DeletionDate == null);//A verifier le ACTIONTYPE dans ValidationHistory si besoin (0 : validation ou 3 : archivage)
 
-                                    var dateValidation = "";
-                                    if (UsersStep.ProcessingDate != null)
+                                    if (DocSteps != null)
                                     {
-                                        dateValidation = UsersStep.ProcessingDate.Value.ToShortDateString();
-                                    }
+                                        var UsersStep = ged.UsersSteps.FirstOrDefault(a => a.DocumentStepId == DocSteps.Id && a.DeletionDate == null);//A verifier le ACTIONTYPE dans ValidationHistory si besoin (0 : validation ou 3 : archivage)
 
-                                    dateStep.Add(dateValidation);
+                                        var dateValidation = "";
+                                        if (UsersStep.ProcessingDate != null)
+                                        {
+                                            dateValidation = UsersStep.ProcessingDate.Value.ToShortDateString();
+                                        }
+
+                                        dateStep.Add(dateValidation);
+                                    }
                                 }
 
-                                list.Add(new TDB
-                                {
-                                    REFERENCE = reference,
-                                    DOCUMENT = document,
-                                    FOURNISSEUR = fournisseur,
-                                    MONTANT = montant,
-                                    TYPE = typedoc.Title,
-                                    DATESTEP = dateStep,
-                                    ARCHIVEDATE = ARCHIVEDATE,//archive
-                                    RATTACHTOM = RATTACHTOM//rattachement TOMATE
-                                });
+                                //list.Add(new TDB
+                                //{
+                                //    REFERENCE = reference,
+                                //    DOCUMENT = document,
+                                //    FOURNISSEUR = fournisseur,
+                                //    MONTANT = montant,
+                                //    TYPE = typedoc.Title,
+                                //    DATESTEP = dateStep,
+                                //    ARCHIVEDATE = ARCHIVEDATE,//archive
+                                //    RATTACHTOM = RATTACHTOM//rattachement TOMATE
+                                //});
                             }
                         }
                     }
@@ -902,17 +936,29 @@ namespace apptab.Controllers
 
             dateStep.Add("14/08/2024");
             dateStep.Add("15/08/2024");
+
             list.Add(new TDB
             {
-                REFERENCE = "reference",
-                DOCUMENT = "document",
-                FOURNISSEUR = "fournisseur",
-                MONTANT = "2000000",
-                TYPE = "typedoc.Title",
+                REFERENCE = "0001/24/01",
+                DOCUMENT = "Document01",
+                FOURNISSEUR = "TELMA",
+                MONTANT = "200000",
+                TYPE = "Facture",
                 DATESTEP = dateStep,
-                ARCHIVEDATE = "ARCHIVEDATE",//archive
+                ARCHIVEDATE = "20/08/2024",//archive
                 RATTACHTOM = "RATTACHTOM"//rattachement TOMATE
             });
+            //list.Add(new TDB
+            //{
+            //    REFERENCE = "0001/24/02",
+            //    DOCUMENT = "Document02",
+            //    FOURNISSEUR = "TELMA",
+            //    MONTANT = "500000",
+            //    TYPE = "BC",
+            //    DATESTEP = dateStep,
+            //    ARCHIVEDATE = "20/08/2024",//archive
+            //    RATTACHTOM = "RATTACHTOM"//rattachement TOMATE
+            //});
 
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = new { list = list, listEtape = listEtape, nombreEtape = nombreEtape } }, settings));
         }

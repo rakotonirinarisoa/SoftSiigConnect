@@ -309,7 +309,7 @@ $('[data-action="GenereLISTE"]').click(function () {
 
                 $.each(listResult, function (_, v) {
                     data.push({
-                        REREFERENCEF: v.REFERENCE,
+                        REFERENCE: v.REFERENCE,
                         DOCUMENT: v.DOCUMENT,
                         FOURNISSEUR: v.FOURNISSEUR,
                         MONTANT: v.MONTANT,

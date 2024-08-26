@@ -385,7 +385,7 @@ $('[data-action="GenereLISTE"]').click(function () {
 
                     const tmp = Object.fromEntries(foo.entries())
 
-                    console.log(tmp);
+                    //console.log(tmp);
 
                     data.push({
                         REFERENCE: v.REFERENCE,
@@ -404,7 +404,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                     });
                 });
 
-                console.log(data);
+                //console.log(data);
 
                 if (table !== undefined) {
                     table.destroy();
@@ -572,7 +572,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                     }
                 });
 
-                console.log(table);
+                //console.log(table);
 
                 //$('#TBD_PROJET_ORDSEC tfoot th').each(function (i) {
                 //    if (i == 0) {
