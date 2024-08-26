@@ -70,7 +70,7 @@ namespace apptab.Extension
 
             //infdonneurOrdre += this.formaterTexte(21, "                        ");
             infdonneurOrdre += this.formaterDatePaie((DateTime)donneurOrde.DATE_PAIEMENT);
-            infdonneurOrdre += this.formaterTexte(24, donneurOrde.DONNEUR_ORDRE.TrimEnd(' '));
+            infdonneurOrdre += donneurOrde.DONNEUR_ORDRE.TrimEnd(' ');
             infdonneurOrdre += this.formaterTexte(6, this.ajouter0(6, y.ToString()));//réference ordre de virement
             //infdonneurOrdre += this.formaterTexte(6, " ");
 
@@ -237,7 +237,7 @@ namespace apptab.Extension
                                 new XElement("PstlAdr",
                                 new XElement("AdrTp",donneurOrde.ADDRESSE1),
                                 new XElement("TwnNm", donneurOrde.VILLE),
-                                new XElement("Ctry", donneurOrde.PAYS),
+                                new XElement("Ctry", donneurOrde.PAYS.Trim(' ')),
                                 new XElement("AdrLine", donneurOrde.VILLE))
                                 ));
                     var op = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == bnfr.NUM).FirstOrDefault();

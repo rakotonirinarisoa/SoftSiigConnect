@@ -357,7 +357,32 @@ namespace apptab.Controllers
                         });
                     }
                 }
-
+                documentF.Add(new DocS
+                {
+                    REF = "0001/24/02",
+                    Objet = "20240813042914-Géo.pdf",
+                    FOURNISSEUR = "SOFTWELL",
+                    ACCUSE = DateTime.Now,
+                    VALIDATEUR = "SOFT1",
+                    Montant = "50000",
+                    Encours = "VALIDATION DU DOCUMENT",
+                    ARCHIVES = "PAS ENCORE",
+                    Lien = "",
+                    Validations =""
+                });
+                documentF.Add(new DocS
+                {
+                    REF = "0001/24/02",
+                    Objet = "20240813042914-Géo.pdf",
+                    FOURNISSEUR = "SOFTWELL",
+                    ACCUSE = DateTime.Now,
+                    VALIDATEUR = "SOFT1",
+                    Montant = "50000",
+                    Encours = "VALIDATION CPT",
+                    ARCHIVES = "PAS ENCORE",
+                    Lien = "",
+                    Validations =""
+                });
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = documentF }, settings));
             }
             catch (Exception e)
@@ -795,8 +820,39 @@ namespace apptab.Controllers
                 DATEValidations = res.CreationDate,
                 UserName = usr.Username,
             }).ToList();
+            var Fictif = new List<DocumentInfosFicti>();
 
-            return Json(JsonConvert.SerializeObject(new { type = "success", data = informationsDoc }));
+            Fictif.Add(new DocumentInfosFicti
+            {
+                IDDOCUMENT = "E782192C-4D49-4C60-B0E8-B1D800AB3524",
+                Validateur = "SOFT1",
+                CreationDate = "2024-08-26 10:26:03.833",
+                DocuMent = "FACT01",
+                StepNumber = "0",
+                ProcessingDescription = "VISA DU DOCUMENT",
+                IDDOCSTEP = "",
+                UserID = "",
+                FromUserID = "",
+                Comment = "OK",
+                DATEValidations = "2024-08-26 10:26:03.833",
+                UserName = "SOFT1",
+            });
+            Fictif.Add(new DocumentInfosFicti
+            {
+                IDDOCUMENT = "E782192C-4D49-4C60-B0E8-B1D800AB3524",
+                Validateur = "SOFT1",
+                CreationDate = "2024-08-26 10:26:03.833",
+                DocuMent = "FACT02",
+                StepNumber = "0",
+                ProcessingDescription = "VALIDATION DU DOCUMENT",
+                IDDOCSTEP = "",
+                UserID = "",
+                FromUserID = "",
+                Comment = "RAS",
+                DATEValidations = "2024-08-26 10:26:03.833",
+                UserName = "SOFT1",
+            });
+            return Json(JsonConvert.SerializeObject(new { type = "success", data = Fictif }));
         }
         public class DocumentInfos
         {
@@ -808,6 +864,23 @@ namespace apptab.Controllers
             public Guid DocumentID { get; set; }
             public Guid StepID { get; set; }
             public Guid UserID { get; set; }
+        }
+        public class DocumentInfosFicti
+        {
+            public string IDDOCUMENT { get; set; }
+            public string Validateur { get; set; }
+            public string DocuMent { get; set; }
+            public string CreationDate { get; set; }
+            public string Comment { get; set; }
+            public string StepNumber { get; set; }
+            public string ProcessingDescription { get; set; }
+            public string IDDOCSTEP { get; set; }
+            public string FromUserID { get; set; }
+            public string DATEValidations { get; set; }
+            public string DocumentID { get; set; }
+            public string StepID { get; set; }
+            public string UserID { get; set; }
+            public string UserName { get; set; }
         }
 
         //TB2 BIS: Situation des étapes par type de document (état d'avancement)//
