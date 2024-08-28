@@ -25,6 +25,12 @@ $('#proj').on('change', () => {
 });
 
 function GetSITE() {
+    let pr = $("#proj").val();
+    if (!pr) {
+        alert("Veuillez sélectionner au moins un projet. ");
+        return;
+    }
+
     let formData = new FormData();
 
     formData.append("iProjet", $("#proj").val());
@@ -90,6 +96,12 @@ $('#site').on('change', () => {
 });
 
 function GetTypeDocs() {
+    let pr = $("#proj").val();
+    if (!pr) {
+        alert("Veuillez sélectionner au moins un projet. ");
+        return;
+    }
+
     let formData = new FormData();
 
     formData.append("iProjet", $("#proj").val());

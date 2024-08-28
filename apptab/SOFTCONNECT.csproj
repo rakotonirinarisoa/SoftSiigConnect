@@ -186,6 +186,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Models\DocumentTypeUnion.cs" />
     <Compile Include="Models\Attachements.cs" />
     <Compile Include="Controllers\AnomalieController.cs" />
     <Compile Include="Controllers\BordTraitementController.cs" />
