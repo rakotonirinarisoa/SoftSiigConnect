@@ -50,6 +50,7 @@ namespace apptab
         public virtual DbSet<ValidationsHistory> ValidationsHistory { get; set; }
         public virtual DbSet<VerificationTokens> VerificationTokens { get; set; }
         public virtual DbSet<VerificationTokensHistory> VerificationTokensHistory { get; set; }
+        public virtual DbSet<DocumentTypeUnion> DocumentTypeUnion { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
