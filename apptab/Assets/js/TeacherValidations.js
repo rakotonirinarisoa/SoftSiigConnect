@@ -211,7 +211,7 @@ function ChargeLoad() {
                             libelle: isNullOrUndefined(v.Libelle) ? '' : v.Libelle,
                             debit: isNullOrUndefined(v.Debit) ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
                             credit: isNullOrUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
-                            montant: isNullOrUndefined(v.MONTANT) ? '' : formatCurrency(String(v.MONTANT).replace(",", ".")),
+                            montant: isNullOrUndefined(v.MONTANT) ? '' : formatCurrency(v.MONTANT),
                             montantDevise: isNullOrUndefined(v.MontantDevise) ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                             mon: isNullOrUndefined(v.Mon) ? '' : v.Mon,
                             rang: isNullOrUndefined(v.Rang) ? '' : v.Rang,
@@ -496,14 +496,18 @@ function FillAUXI() {
     var list = ListCompteG.filter(x => x.COGE == $(`[compG-list]`).val()).pop();
 
     let code = `<option value="Tous"> Tous</option> `;
-    $.each(list.AUXI, function (k, v) {
-        $.each(v, function (x, y) {
-            code += `
+    if (list == undefined) {
+
+    } else {
+        $.each(list.AUXI, function (k, v) {
+            $.each(v, function (x, y) {
+                code += `
                     <option value="${y}">${y}</option>
                 `;
-        })
+            })
 
-    });
+        });
+    }
 
     $(`[auxi-list]`).html('');
     $(`[auxi-list]`).html(code);
@@ -834,7 +838,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             libelle: isNullOrUndefined(v.Libelle) ? '' : v.Libelle,
                             debit: isNullOrUndefined(v.Debit) ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
                             credit: isNullOrUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
-                            montant: isNullOrUndefined(v.Montant) ? '' : formatCurrency(String(v.Montant).replace(",", ".")),
+                            montant: isNullOrUndefined(v.Montant) ? '' : formatCurrency(v.Montant),
                             montantDevise: isNullOrUndefined(v.MontantDevise) ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                             mon: isNullOrUndefined(v.Mon) ? '' : v.Mon,
                             rang: isNullOrUndefined(v.Rang) ? '' : v.Rang,
@@ -1059,7 +1063,7 @@ $('[data-action="ChargerJs"]').click(function () {
                             libelle: isNullOrUndefined(v.Libelle) ? '' : v.Libelle,
                             debit: isNullOrUndefined(v.Debit) ? '' : formatCurrency(String(v.Debit).replace(",", ".")),
                             credit: isNullOrUndefined(v.Credit) ? '' : formatCurrency(String(v.Credit).replace(",", ".")),
-                            montant: isNullOrUndefined(v.MONTANT) ? '' : formatCurrency(String(v.MONTANT).replace(",", ".")),
+                            montant: isNullOrUndefined(v.MONTANT) ? '' : formatCurrency(v.MONTANT),
                             montantDevise: isNullOrUndefined(v.MontantDevise) ? '' : formatCurrency(String(v.MontantDevise).replace(",", ".")),
                             mon: isNullOrUndefined(v.Mon) ? '' : v.Mon,
                             rang: isNullOrUndefined(v.Rang) ? '' : v.Rang,

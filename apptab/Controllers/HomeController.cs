@@ -29,6 +29,7 @@ using System.Web.WebPages;
 using System.IO.Compression;
 using System.Collections;
 using static apptab.Controllers.RSFController;
+using Microsoft.Ajax.Utilities;
 
 namespace apptab.Controllers
 {
@@ -37,6 +38,7 @@ namespace apptab.Controllers
         private readonly SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
         private readonly SOFTCONNECTOM __db = new SOFTCONNECTOM();
         private static string Anarana;
+
 
         JsonSerializerSettings settings = new JsonSerializerSettings
         {
@@ -276,7 +278,7 @@ namespace apptab.Controllers
                 bytearray = memoryStream.ToArray();
                 memoryStream.Position = 0;
                 //return new FileContentResult(bytearray, "application/zip");
-               
+
                 return File(bytearray, System.Net.Mime.MediaTypeNames.Application.Zip, pathfiles + ".zip");
             }
             //return File(source, System.Net.Mime.MediaTypeNames.Application.Octet);
@@ -365,9 +367,9 @@ namespace apptab.Controllers
             }
             else
             {
-                var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser, codeproject,list);
+                var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser, codeproject, list);
 
-               
+
                 if (intbasetype == 0)
                 {
                     Anarana = pathfile.Chemin;
@@ -413,12 +415,13 @@ namespace apptab.Controllers
                 }
 
             }
-        } 
+        }
         [HttpPost]
         public ActionResult CreateZipFileISO2022(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte)
         {
             AFB160 aFB160 = new AFB160();
             XmlDocument xmlResult = new XmlDocument();
+
             var send = "";
             int PROJECTID = int.Parse(codeproject);
             var list = JsonConvert.DeserializeObject<List<AvanceDetails>>(listCompte);
@@ -439,7 +442,7 @@ namespace apptab.Controllers
             var Nomfichier = "";
             if (avalider != null)
             {
-                var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject,list);
+                var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list);
                 path = pathfile.Chemin;
                 Nomfichier = pathfile.NomFichier + ".xml";
                 if (avalider != null)
@@ -460,15 +463,12 @@ namespace apptab.Controllers
                         }
                     }
                 }
-                
                 if (intbasetype == 0)
                 {
                     Anarana = pathfile.Chemin;
                     //XmlDocument xd = new XmlDocument();
                     //xd.LoadXml(Anarana);
                     //return CreateFileAFBXML(pathfile.Chemin, pathfile.Fichier);
-                   
-
                     xmlResult = SaveDocument(Anarana, Anarana);
                 }
             }
@@ -484,8 +484,8 @@ namespace apptab.Controllers
 
             Response.AppendHeader("Content-Disposition", cd.ToString());
 
-            return File(fileBytes, System.Net.Mime.MediaTypeNames.Text.Xml);
-            //return File(fileBytes , System.Net.Mime.MediaTypeNames.Application.octet);
+            //return File(fileBytes, System.Net.Mime.MediaTypeNames.Text.Xml);
+            return File(fileBytes , System.Net.Mime.MediaTypeNames.Application.Octet);
             //return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archivage avec succès. ", data = xmlResult  }, settings));
         }
         [HttpPost]
@@ -2894,8 +2894,6 @@ namespace apptab.Controllers
             {
                 site.Add(item);
             }
-
-
             if (usr.IDPROJET == 0)
             {
                 var query = db.OPA_HISTORIQUE
@@ -3000,7 +2998,7 @@ namespace apptab.Controllers
                     LOGIN = user.LOGIN,
                     NOTIFICATION = true,
                 })
-                .OrderBy(x => x.DATE).ToList();
+                .OrderBy(x => x.DATE).DistinctBy(x => x.NUMENREG).ToList();
                 var queryBr = db.OPA_HISTORIQUEBR
                     .Where(x => x.IDSOCIETE == PROJECTID && site.Contains(x.SITE))
                     .Join(db.OPA_REGLEMENTBR, histo => histo.NUMENREG, reglement => reglement.NUM, (histo, reglement) => new
@@ -3013,7 +3011,7 @@ namespace apptab.Controllers
                         RIB = reglement.RIB,
                         MONTANT = reglement.MONTANT,
                         DATE = reglement.DATE,
-                        LIBELLE = reglement.LIBELLE,
+                        LIBELLE = histo.AFB,
                         BANQUE = reglement.BANQUE,
                         GUICHET = reglement.GUICHET,
                         SITE = histo.SITE,
@@ -3034,7 +3032,7 @@ namespace apptab.Controllers
                         SITE = x.SITE,
                         NOTIFICATION = true,
                     })
-                    .OrderBy(x => x.DATE).ToList();
+                    .OrderBy(x => x.DATE).DistinctBy(x=> x.NUMENREG).ToList();
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = query, databr = queryBr }, settings));
             }
             
@@ -3045,6 +3043,7 @@ namespace apptab.Controllers
             int PROJECTID = int.Parse(codeproject); 
             List<OPA_HISTORIQUE> result = new List<OPA_HISTORIQUE>();
             List<OPA_HISTORIQUEBR> resultBR = new List<OPA_HISTORIQUEBR>();
+            List<OPA_VALIDATIONS> OPABR = new List<OPA_VALIDATIONS>();
             var user = db.SI_USERS.Where(x => x.LOGIN == suser.LOGIN && x.PWD == suser.PWD && x.DELETIONDATE== null).FirstOrDefault();
             var TYPE = db.SI_TYPECRITURE.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault().TYPE;
 
@@ -3058,6 +3057,20 @@ namespace apptab.Controllers
                 if (TYPE == 1)
                 {
                     resultBR = db.OPA_HISTORIQUEBR.Where(y => y.NUMENREG == item && y.IDUSER == user.ID && y.IDSOCIETE == PROJECTID).ToList();
+                    var OPABRSAVE = db.OPA_VALIDATIONS.Where(x => x.IDREGLEMENT == item && x.IDPROJET == PROJECTID).FirstOrDefault();
+                    if (OPABRSAVE != null)
+                    {
+                        db.OPA_VALIDATIONS.Remove(OPABRSAVE);
+                        try
+                        {
+                            db.SaveChanges();
+                        }
+                        catch (Exception)
+                        {
+
+                            throw;
+                        }
+                    }
                 }
                 else
                 {
@@ -3067,14 +3080,15 @@ namespace apptab.Controllers
 
                 }
 
-
                 foreach (var pc in result)
                 {
                     db.OPA_HISTORIQUE.Remove(pc);
+                    
                 }
                 foreach (var br in resultBR)
                 {
                     db.OPA_HISTORIQUEBR.Remove(br);
+
                 }
                 countTraitement++;
             }

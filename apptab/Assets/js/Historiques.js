@@ -187,11 +187,11 @@ function GetHistoriques() {
                     dateFile: isNullOrUndefined(v.DATEAFB) ? '' : v.DATEAFB,
                     site: isNullOrUndefined(v.SITE) ? '' : v.SITE,
                     Date: isNullOrUndefined(v.DATE) ? '' : v.DATE,
-                    Guichet: isNullOrUndefined(v.GUICHET) ? '' : formatCurrency(String(v.GUICHET).replace(",", ".")),
-                    Journal: isNullOrUndefined(v.CODE_J) ? '' : formatCurrency(String(v.CODE_J).replace(",", ".")),
+                    Guichet: isNullOrUndefined(v.GUICHET) ? '' : v.GUICHET,
+                    Journal: isNullOrUndefined(v.CODE_J) ? '' : v.CODE_J,
                     NomFichier: isNullOrUndefined(v.NOMFICHIER) ? '' : v.NOMFICHIER,
                     Banque: isNullOrUndefined(v.BANQUE) ? '' : v.BANQUE,
-                    Montant: isNullOrUndefined(v.MONTANT) ? '' : v.MONTANT,
+                    Montant: isNullOrUndefined(formatCurrency(v.MONTANT)) ? '' : formatCurrency(v.MONTANT),
                     RIB: isNullOrUndefined(v.RIB) ? '' : v.RIB,
                     login: isNullOrUndefined(v.LOGIN) ? '' : v.LOGIN,
                     Notifications: isNullOrUndefined(v.NOTIFICATION) ? '' : v.NOTIFICATION,
@@ -204,51 +204,17 @@ function GetHistoriques() {
                     dateFile: isNullOrUndefined(v.DATEAFB) ? '' : v.DATEAFB,
                     site: isNullOrUndefined(v.SITE) ? '' : v.SITE,
                     Date: isNullOrUndefined(v.DATE) ? '' : v.DATE,
-                    Guichet: isNullOrUndefined(v.GUICHET) ? '' : formatCurrency(String(v.GUICHET).replace(",", ".")),
-                    Journal: isNullOrUndefined(v.CODE_J) ? '' : formatCurrency(String(v.CODE_J).replace(",", ".")),
+                    Guichet: isNullOrUndefined(v.GUICHET) ? '' : v.GUICHET,
+                    Journal: isNullOrUndefined(v.CODE_J) ? '' : v.CODE_J,
                     NomFichier: isNullOrUndefined(v.NOMFICHIER) ? '' : v.NOMFICHIER,
                     Banque: isNullOrUndefined(v.BANQUE) ? '' : v.BANQUE,
-                    Montant: isNullOrUndefined(v.MONTANT) ? '' : v.MONTANT,
+                    Montant: isNullOrUndefined(formatCurrency(v.MONTANT)) ? '' : formatCurrency(v.MONTANT),
                     RIB: isNullOrUndefined(v.RIB) ? '' : v.RIB,
                     login: isNullOrUndefined(v.LOGIN) ? '' : v.LOGIN,
                     Notifications: isNullOrUndefined(v.NOTIFICATION) ? '' : v.NOTIFICATION,
                 })
             });
-            $.each(ListResult, function (k, v) {
-                data.push({
-                    dateREG: isNullOrUndefined(v.DATEAFB) ? '' : v.DATEAFB,
-                    id: isNullOrUndefined(v.NUMENREG) ? '' : v.NUMENREG,
-                    dateFile: isNullOrUndefined(v.DATEAFB) ? '' : v.DATEAFB,
-                    site: isNullOrUndefined(v.SITE) ? '' : v.SITE,
-                    Date: isNullOrUndefined(v.DATE) ? '' : v.DATE,
-                    Guichet: isNullOrUndefined(v.GUICHET) ? '' : formatCurrency(String(v.GUICHET).replace(",", ".")),
-                    Journal: isNullOrUndefined(v.CODE_J) ? '' : formatCurrency(String(v.CODE_J).replace(",", ".")),
-                    NomFichier: isNullOrUndefined(v.NOMFICHIER) ? '' : v.NOMFICHIER,
-                    Banque: isNullOrUndefined(v.BANQUE) ? '' : v.BANQUE,
-                    Montant: isNullOrUndefined(v.MONTANT) ? '' : v.MONTANT,
-                    RIB: isNullOrUndefined(v.RIB) ? '' : v.RIB,
-                    login: isNullOrUndefined(v.LOGIN) ? '' : v.LOGIN,
-                    Notifications: isNullOrUndefined(v.NOTIFICATION) ? '' : v.NOTIFICATION,
-                })
-
-            });
-            $.each(ListResultBr, function (k, v) {
-                data.push({
-                    dateREG: isNullOrUndefined(v.DATEAFB) ? '' : v.DATEAFB,
-                    id: isNullOrUndefined(v.NUMENREG) ? '' : v.NUMENREG,
-                    dateFile: isNullOrUndefined(v.DATEAFB) ? '' : v.DATEAFB,
-                    site: isNullOrUndefined(v.SITE) ? '' : v.SITE,
-                    Date: isNullOrUndefined(v.DATE) ? '' : v.DATE,
-                    Guichet: isNullOrUndefined(v.GUICHET) ? '' : formatCurrency(String(v.GUICHET).replace(",", ".")),
-                    Journal: isNullOrUndefined(v.CODE_J) ? '' : formatCurrency(String(v.CODE_J).replace(",", ".")),
-                    NomFichier: isNullOrUndefined(v.NOMFICHIER) ? '' : v.NOMFICHIER,
-                    Banque: isNullOrUndefined(v.BANQUE) ? '' : v.BANQUE,
-                    Montant: isNullOrUndefined(v.MONTANT) ? '' : v.MONTANT,
-                    RIB: isNullOrUndefined(v.RIB) ? '' : v.RIB,
-                    login: isNullOrUndefined(v.LOGIN) ? '' : v.LOGIN,
-                    Notifications: isNullOrUndefined(v.NOTIFICATION) ? 'NOTIFICATIONS' : v.NOTIFICATION,
-                })
-            });
+          
             if (table !== undefined) {
                 table.destroy();
             }
@@ -528,3 +494,17 @@ function GetTypeP() {
         }
     });
 };
+function numStr(a, b) {
+    a = '' + a;
+    b = b || ' ';
+    var c = '',
+        d = 0;
+    while (a.match(/^0[0-9]/)) {
+        a = a.substr(1);
+    }
+    for (var i = a.length - 1; i >= 0; i--) {
+        c = (d != 0 && d % 3 == 0) ? a[i] + b + c : a[i] + c;
+        d++;
+    }
+    return c;
+}

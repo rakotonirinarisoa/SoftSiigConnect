@@ -278,6 +278,8 @@
     <Compile Include="Models\GA_AVANCE_MOUVEMENT.cs" />
     <Compile Include="Data\Entities\GA_AVANCE_DETAILS.cs" />
     <Compile Include="Models\ListPaimentV.cs" />
+    <Compile Include="Models\Model1.cs" />
+    <Compile Include="Models\RBANQUES.cs" />
     <Compile Include="Models\RPAYS.cs" />
     <Compile Include="Models\SI_SITE.cs" />
     <Compile Include="Models\SI_USERSHISTO.cs" />
