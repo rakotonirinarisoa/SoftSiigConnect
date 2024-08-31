@@ -257,19 +257,23 @@ $('[data-action="GenereR"]').click(function () {
                         id: v.No,
                         soa: v.SOA,
                         projet: v.PROJET,
-                        site: v.SITE,
                         type: v.TYPE,
+                        site: v.SITE,
                         ref: v.REF,
-                        benef: v.BENEF,
+                        obj: v.OBJ,
+                        titul: v.TITUL,
                         DATENGAGEMENT: formatDate(v.DATENGAGEMENT),
-                        MONTENGAGEMENT: formatCurrency(String(v.MONTENGAGEMENT).replace(",", ".")),
-                        DATEPAIE: formatDate(v.DATEPAIE),
-                        MONTPAIE: formatCurrency(String(v.MONTPAIE).replace(",", ".")),
-                        //imputation: '',
-                        //piecesJustificatives: '',
-                        //document: '',
-                        /*rejeter: '',*/
-                        /*isLATE: v.isLATE*/
+                        compte: v.COMPTE,
+                        PCOP: v.PCOP,
+                        MONT: formatCurrency(String(v.MONT).replace(",", ".")),
+                        MONTi: formatCurrency(String(v.MONTi).replace(",", ".")),
+
+                        DATEDEF: formatDate(v.DATEDEF),
+                        DATETEF: formatDate(v.DATETEF),
+                        DATEBE: formatDate(v.DATEBE),
+                        imputation: '',
+                        piecesJustificatives: '',
+                        document: '',
                     });
                 });
 
@@ -280,25 +284,60 @@ $('[data-action="GenereR"]').click(function () {
                 table = $('#TBD_PROJET_MANDAT').DataTable({
                     data,
                     columns: [
-                        {
-                            data: 'id',
-                            render: function (data, _, _, _) {
-                                return `
-                                    <input type="checkbox" name="checkprod" compteg-ischecked class="chk" onchange="checkdel('${data}')" />
-                                `;
-                            },
-                            orderable: false
-                        },
+                        //{
+                        //    data: 'id',
+                        //    render: function (data, _, _, _) {
+                        //        return `
+                        //            <input type="checkbox" name="checkprod" compteg-ischecked class="chk" onchange="checkdel('${data}')" />
+                        //        `;
+                        //    },
+                        //    orderable: false
+                        //},
                         { data: 'soa' },
                         { data: 'projet' },
-                        { data: 'site' },
                         { data: 'type' },
+                        { data: 'site' },
                         { data: 'ref' },
-                        { data: 'benef' },
+                        { data: 'obj' },
+                        { data: 'titul' },
                         { data: 'DATENGAGEMENT' },
-                        { data: 'MONTENGAGEMENT' },
-                        { data: 'DATEPAIE' },
-                        { data: 'MONTPAIE' },
+                        { data: 'compte' },
+                        { data: 'PCOP' },
+                        { data: 'MONT' },
+                        { data: 'MONTi' },
+                        { data: 'DATEDEF' },
+                        { data: 'DATETEF' },
+                        { data: 'DATEBE' },
+                        {
+                            data: 'imputation',
+                            render: function (_, _, row, _) {
+                                return `
+                                    <div onclick="modalD('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-danger elerfr"></i>
+                                    </div>
+                                `;
+                            }
+                        },
+                        {
+                            data: 'piecesJustificatives',
+                            render: function (_, _, row, _) {
+                                return `
+                                    <div onclick="modalF('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-success elerfr"></i>
+                                    </div>
+                                `;
+                            }
+                        },
+                        {
+                            data: 'document',
+                            render: function (_, _, row, _) {
+                                return `
+                                    <div onclick="modalLIAS('${row.id}')">
+                                        <i class="fa fa-tags fa-lg text-info elerfr"></i>
+                                    </div>
+                                `;
+                            }
+                        }
                     ],
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
@@ -334,7 +373,7 @@ $('[data-action="GenereR"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-pdf',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
                             },
                             customize: function (doc) {
                                 doc.defaultStyle.alignment = 'left';
@@ -353,7 +392,7 @@ $('[data-action="GenereR"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-excel',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (typeof data === 'undefined') {
@@ -362,7 +401,7 @@ $('[data-action="GenereR"]').click(function () {
                                         if (data == null) {
                                             return data;
                                         }
-                                        if (column === 8 || column === 10) {
+                                        if (column === 10 || column === 11) {
                                             var arr = data.split(',');
                                             if (arr.length == 1) { return data; }
 

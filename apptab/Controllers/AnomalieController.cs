@@ -102,7 +102,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> ModalF(SI_USERS suser, string IdF, string projet)
+        public async Task<JsonResult> ModalF(SI_USERS suser, string IdF, string iProjet)
         {
             var exist = await db.SI_USERS.FirstOrDefaultAsync(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -110,7 +110,7 @@ namespace apptab.Controllers
 
             try
             {
-                int crpt = db.SI_PROJETS.FirstOrDefault(a => a.PROJET == projet && a.DELETIONDATE == null).ID;
+                int crpt = int.Parse(iProjet);
 
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
                 SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -144,7 +144,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> ModalD(SI_USERS suser, Guid IdF, string projet)
+        public async Task<JsonResult> ModalD(SI_USERS suser, Guid IdF, string iProjet)
         {
             var exist = await db.SI_USERS.FirstOrDefaultAsync(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -152,7 +152,7 @@ namespace apptab.Controllers
 
             try
             {
-                int crpt = db.SI_PROJETS.FirstOrDefault(a => a.PROJET == projet && a.DELETIONDATE == null).ID;
+                int crpt = int.Parse(iProjet);
 
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
                 SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -182,7 +182,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> ModalLIAS(SI_USERS suser, string IdF, string projet)
+        public async Task<JsonResult> ModalLIAS(SI_USERS suser, string IdF, string iProjet)
         {
             var exist = await db.SI_USERS.FirstOrDefaultAsync(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -190,7 +190,8 @@ namespace apptab.Controllers
 
             try
             {
-                int crpt = db.SI_PROJETS.FirstOrDefault(a => a.PROJET == projet && a.DELETIONDATE == null).ID;
+                //int crpt = db.SI_PROJETS.FirstOrDefault(a => a.PROJET == iProjet && a.DELETIONDATE == null).ID;
+                int crpt = int.Parse(iProjet);
 
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
                 SOFTCONNECTOM tom = new SOFTCONNECTOM();
