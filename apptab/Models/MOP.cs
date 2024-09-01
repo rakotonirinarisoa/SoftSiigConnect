@@ -1,8 +1,10 @@
 namespace apptab.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
 
     [Table("MOP")]
     public partial class MOP
@@ -138,5 +140,8 @@ namespace apptab.Models
         public decimal? TAXECOMMISSION { get; set; }
 
         public bool? PAYE { get; set; }
+
+        [StringLength(4000)]
+        public string LIEN { get; set; }
     }
 }

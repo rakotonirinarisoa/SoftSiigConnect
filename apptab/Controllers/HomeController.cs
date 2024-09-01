@@ -2996,7 +2996,7 @@ namespace apptab.Controllers
                     BANQUE = x.BANQUE,
                     GUICHET = x.GUICHET,
                     LOGIN = user.LOGIN,
-                    NOTIFICATION = true,
+                    NOTIFICATION = x,
                 })
                 .OrderBy(x => x.DATE).DistinctBy(x => x.NUMENREG).ToList();
                 var queryBr = db.OPA_HISTORIQUEBR
@@ -3015,6 +3015,7 @@ namespace apptab.Controllers
                         BANQUE = reglement.BANQUE,
                         GUICHET = reglement.GUICHET,
                         SITE = histo.SITE,
+                        LIEN = histo.LIEN,
                     }).Join(db.SI_USERS, x => x.IDUSER, user => user.ID, (x, user) => new
                     {
                         NUMENREG = x.NUMENREG,
@@ -3030,7 +3031,7 @@ namespace apptab.Controllers
                         GUICHET = x.GUICHET,
                         LOGIN = user.LOGIN,
                         SITE = x.SITE,
-                        NOTIFICATION = true,
+                        NOTIFICATION = x.LIEN != null ? true : false,
                     })
                     .OrderBy(x => x.DATE).DistinctBy(x=> x.NUMENREG).ToList();
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = query, databr = queryBr }, settings));

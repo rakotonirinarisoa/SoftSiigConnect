@@ -17,6 +17,8 @@ namespace apptab.Extension
 {
     public class AFB160
     {
+
+        private readonly SOFTCONNECTGED ged = new SOFTCONNECTGED();
         public ISO20022xml CreateISO20022(bool devise, string codeJ, SI_USERS user, string codeproject, List<AvanceDetails> list)
         {
             XmlDocument xd = new XmlDocument();
@@ -119,8 +121,61 @@ namespace apptab.Extension
 
                     rbanque = tom.RBANQUES.Where(x => x.CODE == djournal.BANQUE).FirstOrDefault();
                     i++;
-                    //MessageBox.Show(fact.MONTANT.ToString());
 
+                    //MessageBox.Show(fact.MONTANT.ToString());
+                    var LienDoc = "";
+                    string link = "";
+                    string email = "";
+                    string objet = "";
+                    string message = "";
+                    string title = "";
+                    string document = "";
+                    if (opp.AVANCE == true)
+                    {
+
+                        if (tom.MOP.Where(x => x.NUMEROOP == bnfcr.NUM).FirstOrDefault().LIEN != null) {
+                            LienDoc = tom.MOP.Where(x => x.NUMEROOP == bnfcr.NUM).FirstOrDefault().LIEN;
+                            link = LienDoc.Split('/').Last();
+                            var s = ged.Documents.Where(x => x.Id == Guid.Parse(link)).Join(ged.Suppliers ,doc => doc.SenderId ,sup =>sup.Id ,(doc,sup)=> new
+                            {
+                                DocumentID = doc.Id,
+                                SenderId = sup.Id,
+                                EMAIL = sup.MAIL,
+                                Document = doc.OriginalFilename,
+                                MESSAGE = doc.Message,
+                                OBJECT = doc.Object,
+                                Title = doc.Title,
+                            }).FirstOrDefault();
+                            email = s.EMAIL;
+                            document = s.Document;
+                            objet = s.OBJECT;
+                            message = s.MESSAGE;
+                            title = s.Title;
+                         };
+                    }
+                    else
+                    {
+
+                        if (tom.GA_AVANCE.Where(x => x.NUMERO == bnfcr.NUM).FirstOrDefault().LIEN != null) { 
+                            LienDoc = tom.GA_AVANCE.Where(x => x.NUMERO == bnfcr.NUM).FirstOrDefault().LIEN;
+                            link = LienDoc.Split('/').Last();
+                            var s = ged.Documents.Where(x => x.Id == Guid.Parse(link)).Join(ged.Suppliers, doc => doc.SenderId, sup => sup.Id, (doc, sup) => new
+                            {
+                                DocumentID = doc.Id,
+                                SenderId = sup.Id,
+                                EMAIL = sup.MAIL,
+                                Document = doc.OriginalFilename,
+                                MESSAGE = doc.Message,
+                                OBJECT = doc.Object,
+                                Title = doc.Title,
+                            }).FirstOrDefault();
+                            email = s.EMAIL;
+                            document = s.Document;
+                            objet = s.OBJECT;
+                            message = s.MESSAGE;
+                            title = s.Title;
+                        }
+                    }
                     if (bnfcr.LIBELLE.Length > 11)
                     {
                         historique.NUMENREG = bnfcr.NUM;
@@ -129,6 +184,12 @@ namespace apptab.Extension
                         historique.AFB = fileName;
                         historique.IDSOCIETE = PROJECTID;
                         historique.SITE = bnfcr.SITE;
+                        historique.LIEN = email;
+                        historique.OBJET = objet;
+                        historique.MESSAGE = message;
+                        historique.TITLE = title;
+                        historique.DOC = document;
+
                     }
                     else
                     {
@@ -138,6 +199,11 @@ namespace apptab.Extension
                         historique.AFB = fileName;
                         historique.IDSOCIETE = PROJECTID;
                         historique.SITE = bnfcr.SITE;
+                        historique.LIEN = email;
+                        historique.OBJET = objet;
+                        historique.MESSAGE = message;
+                        historique.TITLE = title;
+                        historique.DOC = document;
                     }
                     db.OPA_HISTORIQUEBR.Add(historique);
 
@@ -2812,6 +2878,7 @@ namespace apptab.Extension
                                             Mandat = nord.NUMEROLIQUIDATION,
                                             NUMEREG = reglement.NUMENREG,
                                             CogeFourniseur = reglement.COGEFOURNISSEUR,
+                                            SITE = reglement.SITE
                                         });
                                     }
 
