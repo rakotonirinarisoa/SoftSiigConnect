@@ -292,7 +292,7 @@ namespace apptab.Controllers
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            if (exist.IDUSERGED == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Veuillez parametrer le mappage GED ET PROJET. " }, settings));
+            if (exist.IDUSERGED == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez parametrer le mappage GED ET PROJET. " }, settings));
 
             SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
@@ -336,7 +336,7 @@ namespace apptab.Controllers
                 {
                     foreach (var y in ged.Users.Where(a => a.ProjectId == x.IDGED && a.DeletionDate == null/* && site.Contains(a.Sites)*/).ToList())
                     {
-                        foreach (var z in ged.Documents.Where(a => a.SenderId == y.Id && a.DeletionDate == null && site.Contains(a.Site)).ToList())
+                        foreach (var z in ged.Documents.Where(a => a.SenderId == y.Id && a.DeletionDate == null && site.Contains(a.Site) && a.RSF == true).ToList())
                         {
                             var islink = lienGEd + "/documents/shared/" + z.Id.ToString();
                             if (!db.SI_RSF.Any(a => a.LIEN == islink))
