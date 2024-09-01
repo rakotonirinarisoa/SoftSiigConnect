@@ -235,7 +235,7 @@ function GetHistoriques() {
                         data: 'Notifications',
                         render: function (data, _, row, _) {
                             return `
-                                        <div onclick="showLiquidationModal('${codeproject}', '${row.numeroliquidations}', '${row.estAvance}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
+                                        <div onclick="showLiquidationModal('${codeproject}', '${row.id}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
                                             ${data}
                                         </div>
                                     `;
@@ -507,4 +507,54 @@ function numStr(a, b) {
         d++;
     }
     return c;
+}
+function showLiquidationModal(PROJECTID,idLiquidation ) {
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
+    formData.append("PROJECTID", PROJECTID);
+    formData.append("idLiquidation", idLiquidation);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/SendEmailSuppliersGED',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+            baseName = Datas;
+            if (baseName == 1) {
+                $(`[code_Type]`).val('');
+                $(`[code_Type]`).val('BR');
+
+            } else {
+                $(`[code_Type]`).val('');
+                $(`[code_Type]`).val('COMPTA');
+            }
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
 }

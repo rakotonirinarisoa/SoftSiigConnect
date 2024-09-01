@@ -30,6 +30,8 @@ using System.IO.Compression;
 using System.Collections;
 using static apptab.Controllers.RSFController;
 using Microsoft.Ajax.Utilities;
+using System.Web.Mail;
+using System.Data.Entity;
 
 namespace apptab.Controllers
 {
@@ -3349,6 +3351,74 @@ namespace apptab.Controllers
 
             }).ToList();
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès.", data = DataAnomalie , datas = DataAnomalieJournal }, settings));
+        }
+        public JsonResult SendEmailSuppliersGED(SI_USERS suser,int PROJECTID, string idLiquidation)
+        {
+            SOFTCONNECTOM.connex = new Data.Extension().GetCon(PROJECTID);
+            SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            string MailAdresse = "";
+            string mdpMail = "";
+
+            if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).SENDMAIL != null && db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).SENDPWD != null)
+            {
+                MailAdresse = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).SENDMAIL;
+                mdpMail = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).SENDPWD;
+            }
+            else
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mail émetteur (Notifications et Alertes)" }, settings));
+            } 
+
+            var send = db.OPA_HISTORIQUEBR.Where(x => x.NUMENREG == idLiquidation && x.IDSOCIETE == PROJECTID).FirstOrDefault();
+            string email = send.LIEN;
+            string Obj = send.OBJET;
+            string Title = send.TITLE;
+            string doc = send.DOC;
+            string message = send.MESSAGE;
+            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == PROJECTID && a.DELETIONDATE == null).FirstOrDefault().PROJET;
+            using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
+            {
+                SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
+                smtp.UseDefaultCredentials = true;
+
+                mail.From = new MailAddress(MailAdresse);
+
+                mail.To.Add(MailAdresse);
+                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE != null)
+                {
+                    string[] separators = { ";" };
+
+                    var Tomail = mail;
+                    if (Tomail != null)
+                    {
+                        string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE;
+                        string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                        foreach (var mailto in mailListe)
+                        {
+                            mail.To.Add(mailto);
+                        }
+                    }
+                }
+
+                mail.Subject = "Validations des Documents" + Obj;
+                mail.IsBodyHtml = true;
+                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que le document" + doc + " que vous avez transmis à " + ProjetIntitule + ".<br/><br>" +
+                            " <b><u>Titre du document</u></b>: " + Title + " <br/>" +
+                            " <b><u>Objet</u></b>: " + Obj + " <br/>" +
+                            " <b><u>Message</u></b>: " + message + " <br/>" +
+                            "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
+                smtp.Port = 587;
+                smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
+                smtp.EnableSsl = true;
+
+                try { smtp.Send(mail); }
+                catch (Exception) { }
+            }
+            return Json(JsonConvert.SerializeObject(new { msg = "Email envoyer avec Succes", data = "" }));
         }
     }
 }
