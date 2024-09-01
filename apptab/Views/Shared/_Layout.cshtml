@@ -1025,9 +1025,6 @@
                             && (int.Parse(Session["RTDB1GED"].ToString()) != 0 || int.Parse(Session["RTDB2GED"].ToString()) != 0 || int.Parse(Session["RTDB3GED"].ToString()) != 0
                             || int.Parse(Session["RTDB4GED"].ToString()) != 0 || int.Parse(Session["RTDB5GED"].ToString()) != 0 || int.Parse(Session["RTDB6GED"].ToString()) != 0)))
                         {
-
-                        }
-
                             <hr />
                             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
                                 <li class="nav-item menu-open" onclick="myFunction('6')">
@@ -1122,26 +1119,26 @@
 
                                 </ul>
                             </div>
+                        }
 
+                        @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                            || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RGED"].ToString()) != 0)))
+                        {
+                            <hr />
+                            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
+                                <li class="nav-item menu-open">
+                                    <a href="@Session["GED"]" class="nav-link active bg-gradient-success" target="_blank">
+                                        <img src="~/Assets/icons/analytics-statistics-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
+                                        <p>
+                                            GED
+                                        </p>
+                                    </a>
+                                </li>
+                            </ul>
+                        }
+                        @*<img src="~/Assets/img/logo-soft.png" alt="AdminLTE Logo" class="brand-image elevation-0 imageHoverLogo" style="opacity: .7; bottom: 0; position: absolute; width: 60%; padding-bottom: 15%;">*@
 
-                            @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                                || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RGED"].ToString()) != 0)))
-                            {
-                                <hr />
-                                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
-                                    <li class="nav-item menu-open">
-                                        <a href="@Session["GED"]" class="nav-link active bg-gradient-success" target="_blank">
-                                            <img src="~/Assets/icons/analytics-statistics-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
-                                            <p>
-                                                GED
-                                            </p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            }
-        @*<img src="~/Assets/img/logo-soft.png" alt="AdminLTE Logo" class="brand-image elevation-0 imageHoverLogo" style="opacity: .7; bottom: 0; position: absolute; width: 60%; padding-bottom: 15%;">*@
-
-</nav>
+                    </nav>
                 </div>
 
                 <a href="https://www.softwell.mg" target="_blank">
