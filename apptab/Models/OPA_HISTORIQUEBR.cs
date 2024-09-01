@@ -22,9 +22,20 @@ namespace apptab.Models
 
         public int? IDSOCIETE { get; set; }
 
-        public bool? NOTIF { get; set; }
-
         [StringLength(50)]
         public string SITE { get; set; }
+
+        public bool? NOTIF { get; set; }
+
+        [StringLength(255)]
+        public string LIEN { get; set; }
+
+        public string OBJET { get; set; }
+
+        public string TITLE { get; set; }
+
+        public string DOC { get; set; }
+
+        public string MESSAGE { get; set; }
     }
 }
