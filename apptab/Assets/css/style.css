@@ -13,6 +13,9 @@
     overflow: auto;
     max-height: 70vh;
 }
+.greenClass .btn{
+    background-color : green !important;
+}
 
 td.AnomalieClass {
     /*color: #dd4141d6;*/

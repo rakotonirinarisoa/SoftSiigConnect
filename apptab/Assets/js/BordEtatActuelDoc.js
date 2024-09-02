@@ -584,9 +584,9 @@ $('[data-action="GenereLISTE"]').click(function () {
                 });
 
                 $('#TBD_PROJET_ORDSEC tfoot th').each(function (i) {
-                    if (i == 0) {
-                        $(this).addClass("NOTVISIBLE");
-                    }
+                    //if (i == 0) {
+                    //    $(this).addClass("NOTVISIBLE");
+                    //}
                 });
             }
         },
