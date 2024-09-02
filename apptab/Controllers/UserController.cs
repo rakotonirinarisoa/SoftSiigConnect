@@ -505,7 +505,6 @@ namespace apptab.Controllers
                     {
                         return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { LOGIN = user.LOGIN, ROLE = user.ROLE, PROJET = proj, USERGEDid = user.IDUSERGED, USERGEDname = "" } }, settings));
                     }
-                   
                 }
                 else
                 {

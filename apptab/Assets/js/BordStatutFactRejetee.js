@@ -326,9 +326,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                         MONTANT: v.MONTANT,
                         TYPE: v.TYPE,
                         STEPNOW: v.STEPNOW,
-                        STEPNEXT: v.STEPNEXT,
-                        VALIDATEURNEXT: v.VALIDATEURNEXT,
-                        DUREENEXT: v.DUREENEXT,
+                        STEPNEXT: v.STEPNEXT
                     });
                 });
 
@@ -346,8 +344,6 @@ $('[data-action="GenereLISTE"]').click(function () {
                         { data: 'TYPE' },
                         { data: 'STEPNOW' },
                         { data: 'STEPNEXT' },
-                        { data: 'VALIDATEURNEXT' },
-                        { data: 'DUREENEXT' },
                     ],
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
@@ -370,17 +366,17 @@ $('[data-action="GenereLISTE"]').click(function () {
                     buttons: ['colvis',
                         {
                             extend: 'pdfHtml5',
-                            title: 'SITUATION DES ETAPES PAR TYPE DE DOCUMENT',
-                            messageTop: 'Liste situation des étapes par type de document',
+                            title: 'FACTURES FOURNISSEUR REJETEES',
+                            messageTop: 'Statistique des factures fournisseur rejetées',
                             text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
                             charset: "utf-8",
                             bom: true,
                             className: 'custombutton-collection-pdf',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-                            },
+                            //exportOptions: {
+                            //    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                            //},
                             customize: function (doc) {
                                 doc.defaultStyle.alignment = 'left';
                                 //doc.defaultStyle.margin = [12, 12, 12, 12];
@@ -389,8 +385,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                         },
                         {
                             extend: 'excelHtml5',
-                            title: 'SITUATION DES ETAPES PAR TYPE DE DOCUMENT',
-                            messageTop: 'Liste situation des étapes par type de document',
+                            title: 'FACTURES FOURNISSEUR REJETEES',
+                            messageTop: 'Statistique des factures fournisseur rejetées',
                             text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
@@ -398,7 +394,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-excel',
                             exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                //columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (typeof data === 'undefined') {
@@ -407,7 +403,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                                         if (data == null) {
                                             return data;
                                         }
-                                        if (column === 8 || column === 10) {
+                                        if (column === 3) {
                                             var arr = data.split(',');
                                             if (arr.length == 1) { return data; }
 
