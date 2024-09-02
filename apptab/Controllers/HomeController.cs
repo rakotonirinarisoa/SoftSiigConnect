@@ -3018,6 +3018,7 @@ namespace apptab.Controllers
                         GUICHET = reglement.GUICHET,
                         SITE = histo.SITE,
                         LIEN = histo.LIEN,
+                        NOTIF = histo.NOTIF,
                     }).Join(db.SI_USERS, x => x.IDUSER, user => user.ID, (x, user) => new
                     {
                         NUMENREG = x.NUMENREG,
@@ -3033,7 +3034,8 @@ namespace apptab.Controllers
                         GUICHET = x.GUICHET,
                         LOGIN = user.LOGIN,
                         SITE = x.SITE,
-                        NOTIFICATION = x.LIEN != null ? true : false,
+                        NOTIF = x.NOTIF,
+                        NOTIFICATION = x.NOTIF == true ? true : false,
                     })
                     .OrderBy(x => x.DATE).DistinctBy(x=> x.NUMENREG).ToList();
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = query, databr = queryBr }, settings));
@@ -3404,18 +3406,29 @@ namespace apptab.Controllers
                     }
                 }
 
-                mail.Subject = "Validations des Documents" + Obj;
+                mail.Subject = "Avis de réglement";
                 mail.IsBodyHtml = true;
-                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que le document" + doc + " que vous avez transmis à " + ProjetIntitule + ".<br/><br>" +
+                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que le paiement en relation avec  le document " + doc + " que vous avez transmis à " + ProjetIntitule + " a été efféctué.<br/><br>" +
                             " <b><u>Titre du document</u></b>: " + Title + " <br/>" +
                             " <b><u>Objet</u></b>: " + Obj + " <br/>" +
                             " <b><u>Message</u></b>: " + message + " <br/>" +
-                            "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
+                            "'<br/><br>" + "Cordialement";
                 smtp.Port = 587;
                 smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
                 smtp.EnableSsl = true;
 
-                try { smtp.Send(mail); }
+                try {
+                    smtp.Send(mail);
+                    send.NOTIF = true;
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch
+                    {
+                        throw;
+                    }
+                }
                 catch (Exception) { }
             }
             return Json(JsonConvert.SerializeObject(new { msg = "Email envoyer avec Succes", data = "" }));

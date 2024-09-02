@@ -195,6 +195,7 @@ function GetHistoriques() {
                     RIB: isNullOrUndefined(v.RIB) ? '' : v.RIB,
                     login: isNullOrUndefined(v.LOGIN) ? '' : v.LOGIN,
                     Notifications: isNullOrUndefined(v.NOTIFICATION) ? '' : v.NOTIFICATION,
+                    Notif: isNullOrUndefined(v.NOTIF),
                 })
             });
             $.each(ListResultBr, function (k, v) {
@@ -212,6 +213,7 @@ function GetHistoriques() {
                     RIB: isNullOrUndefined(v.RIB) ? '' : v.RIB,
                     login: isNullOrUndefined(v.LOGIN) ? '' : v.LOGIN,
                     Notifications: isNullOrUndefined(v.NOTIFICATION) ? '' : v.NOTIFICATION,
+                    Notif: isNullOrUndefined(v.NOTIF),
                 })
             });
           
@@ -235,8 +237,8 @@ function GetHistoriques() {
                         data: 'Notifications',
                         render: function (data, _, row, _) {
                             return `
-                                        <div onclick="showLiquidationModal('${codeproject}', '${row.id}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
-                                            ${data}
+                                        <div onclick="showLiquidationModal('${codeproject}', '${row.id}')" class="btn btn-primary" style="color: #ffffff; text-decoration: underline; cursor: pointer;">
+                                            Notification
                                         </div>
                                     `;
                         }
@@ -254,12 +256,17 @@ function GetHistoriques() {
                     if (data.estAvance) {
                         $(row).children('td').eq(0).addClass("AVANCECSS");
                     }
+                   
+                    if (data.Notifications) {
+                        console.log(data.Notifications);
+                        $(row).children('td').eq(10).addClass("greenClass");
+                    }
                   
                 },
                 columnDefs: [
                     {
                         targets: [-1],
-                        className: 'elerfr'
+                        className: 'elefdrn'
                     }
                 ],
                 colReorder: {

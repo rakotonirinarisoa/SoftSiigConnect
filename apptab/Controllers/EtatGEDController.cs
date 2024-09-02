@@ -304,14 +304,14 @@ namespace apptab.Controllers
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance projet SET-GED. " }, settings));
 
                 if (db.SI_USERS.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null && a.ID == exist.ID).IDUSERGED == null)
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings)); 
                 else
                 {
-                    var IDUSERGED = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == PROJECTID && b.DELETIONDATE == null && b.ID == exist.ID).IDUSERGED;
+                    var IDUSERGED = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == PROJECTID && b.DELETIONDATE == null && b.ID == exist.ID).IDUSERGED; ;
                     if (!ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
-                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
+                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings)); ;
                 }
-                Guid iddoc = Guid.Parse("09E1F88D-AB38-4F49-8F3A-B1C600BA31E0");
+                Guid iddoc = Guid.Parse("09E1F88D-AB38-4F49-8F3A-B1C600BA31E0"); ;
                 var validationhistorique = ged.ValidationsHistory.Where(x => x.DocumentId == iddoc).OrderByDescending(x => x.CreationDate).Join(ged.DocumentSteps, valhist => valhist.ToDocumentStepId, docstep => docstep.Id, (valhist, docstep) => new
                 {
                     ID = valhist.DocumentId,
@@ -320,19 +320,19 @@ namespace apptab.Controllers
                 }).Join(ged.UsersSteps, idsteps => idsteps.IDDOCUMENTSTEP, userstep => userstep.DocumentStepId, (idsteps, userstep) => new
                 {
                     userStep = userstep.UserId,
-                }).FirstOrDefault();//id documentstep
+                }).FirstOrDefault(); ;//id documentstep
 
-                var user_validation = validationhistorique != null ? ged.Users.Where(x => x.Id == validationhistorique.userStep).FirstOrDefault() : null;
-                var isUserSet = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == PROJECTID && b.DELETIONDATE == null && b.ID == exist.ID);
-                var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null);
-                List<DocS> documentF = new List<DocS>();
+                var user_validation = validationhistorique != null ? ged.Users.Where(x => x.Id == validationhistorique.userStep).FirstOrDefault() : null; ;
+                var isUserSet = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == PROJECTID && b.DELETIONDATE == null && b.ID == exist.ID); ;
+                var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null); ;
+                List<DocS> documentF = new List<DocS>(); ;
                 //var isListeTypeD = ged.DocumentTypes.Where(a => a.ProjectId == isUserGed.ProjectId && a.DeletionDate == null).ToList();
-                Guid IDsup = Guid.Parse(fournisseur);
-                Guid IDref = Guid.Parse(reference);
+                Guid IDsup = Guid.Parse(fournisseur); ;
+                Guid IDref = Guid.Parse(reference); ;
 
-                var suppliersname = ged.Suppliers.Where(x => x.Id == IDsup).FirstOrDefault();
-                var referenS = ged.SuppliersDocumentsAcknowledgements.Where(x => x.Id == IDref).FirstOrDefault();
-                var doco = ged.Documents.Where(x => x.DeletionDate == null && x.CreationDate >= DateDebut && x.CreationDate <= DateFin && x.Status == status).ToList();
+                var suppliersname = ged.Suppliers.Where(x => x.Id == IDsup).FirstOrDefault(); ;
+                var referenS = ged.SuppliersDocumentsAcknowledgements.Where(x => x.Id == IDref).Select(x=>x.ReferenceInterne).ToList(); ;
+
                 var RefDoc = ged.Documents.Where(x => x.DeletionDate == null && x.CreationDate >= DateDebut && x.CreationDate <= DateFin).Join(ged.SuppliersDocumentsAcknowledgements, dcm => dcm.Id, sdal => sdal.Id, (dcm, sdal) => new
                 {
                     ID = dcm.SenderId,
@@ -341,7 +341,7 @@ namespace apptab.Controllers
                     Fournisseur = "",
                     Acusse = dcm.CreationDate,
                     Validateur = "",
-                    Montant = 0,
+                    Montant = dcm.Montant,
                     Date = dcm.CreationDate,
                     Encours = dcm.Status,
                     ARCHIVES = "",
@@ -355,21 +355,71 @@ namespace apptab.Controllers
                     Objet = dcm.Objet,
                     Fournisseur = sup.Name,
                     Acusse = dcm.Acusse,
-                    Montant = 0,
+                    Montant = dcm.Montant,
                     Encours = dcm.Encours,
-                    ARCHIVES = dcm.Encours == 3 ? dcm.Date.ToString() : "NON ARCHIVER",
+                    ARCHIVES = dcm.Date.ToString(),
                     Lien = dcm.Lien,
                     Site = dcm.Site,
                     DocumentID = dcm.DocumentID,
                     Validateur = ""
-                }).Where(x => x.Fournisseur == suppliersname.Name && x.Encours == status && x.reference == referenS.ReferenceInterne).ToList();
+                }).Join(ged.DocumentSteps , dcm => dcm.DocumentID , docstep => docstep.DocumentId ,(dcm,docstep) => new
+                {
+                    ID = dcm.ID,
+                    reference = dcm.reference,
+                    Objet = dcm.Objet,
+                    Fournisseur = dcm.Fournisseur,
+                    Acusse = dcm.Acusse,
+                    Montant = dcm.Montant,
+                    Encours = dcm.Encours,
+                    Etape = docstep.ProcessingDescription,
+                    ARCHIVES = dcm.Encours == 3 ? dcm.ARCHIVES.ToString() : "",
+                    Lien = dcm.Lien,
+                    Site = dcm.Site,
+                    DocumentID = dcm.DocumentID,
+                    Validateur = "",
+                    DocumentStepID = docstep.Id,
+                }).Join(ged.UsersSteps , dcm => dcm.DocumentStepID , userStep => userStep.DocumentStepId , (dcm, userStep) => new
+                {
+                    ID = dcm.ID,
+                    reference = dcm.reference,
+                    Objet = dcm.Objet,
+                    Fournisseur = dcm.Fournisseur,
+                    Acusse = dcm.Acusse,
+                    Montant = dcm.Montant,
+                    Encours = dcm.Encours,
+                    Etape = dcm.Etape,
+                    ARCHIVES = dcm.Encours == 3 ? dcm.ARCHIVES.ToString() : "",
+                    Lien = dcm.Lien,
+                    Site = dcm.Site,
+                    DocumentID = dcm.DocumentID,
+                    IDvalidateur = userStep.UserId,
+                    Validateur ="",
+                    DocumentStepID = dcm.DocumentStepID,
+                }).Join(ged.Users , dcm => dcm.IDvalidateur , us=>us.Id , (dcm,us)=> new
+                {
+                    ID = dcm.ID,
+                    reference = dcm.reference,
+                    Objet = dcm.Objet,
+                    Fournisseur = dcm.Fournisseur,
+                    Acusse = dcm.Acusse,
+                    Montant = dcm.Montant,
+                    Encours = dcm.Encours,
+                    Etape = dcm.Etape,
+                    ARCHIVES = dcm.Encours == 3 ? dcm.ARCHIVES.ToString() : "",
+                    Lien = dcm.Lien,
+                    Site = dcm.Site,
+                    DocumentID = dcm.DocumentID,
+                    IDvalidateur = dcm.IDvalidateur,
+                    Validateur = us.FirstName,
+                    DocumentStepID = dcm.DocumentStepID,
+                }).Where(x => x.Fournisseur == suppliersname.Name && x.Encours == status /*&& referenS.Contains(x.reference)*/).ToList();
 
                 if (RefDoc != null)
                 {
                     foreach (var typD in RefDoc)
                     {
                         string uservalidateur = "";
-                        uservalidateur = ged.ValidationsHistory.Where(x => x.DocumentId == typD.DocumentID).Join(ged.Users, dc => dc.FromUserId, res => res.Id, (dc, res) => res.Username).FirstOrDefault();
+                        //uservalidateur = ged.ValidationsHistory.Where(x => x.DocumentId == typD.DocumentID).Join(ged.Users, dc => dc.FromUserId, res => res.Id, (dc, res) => res.Username).FirstOrDefault();
                         string SSITE = typD.Site;
                         documentF.Add(new DocS
                         {
@@ -379,39 +429,14 @@ namespace apptab.Controllers
                             ACCUSE = typD.Acusse,
                             VALIDATEUR = typD.Validateur,
                             Montant = typD.Montant.ToString(),
-                            Encours = typD.Encours.ToString(),
+                            Encours = typD.Etape.ToString(),
                             ARCHIVES = typD.ARCHIVES.ToString(),
                             Lien = typD.Lien.ToString(),
-                            Validations = uservalidateur != null ? uservalidateur : "",
+                            //Validations = uservalidateur != null ? uservalidateur : "",
                         });
                     }
                 }
-                documentF.Add(new DocS
-                {
-                    REF = "0001/24/02",
-                    Objet = "20240813042914-Géo.pdf",
-                    FOURNISSEUR = "SOFTWELL",
-                    ACCUSE = DateTime.Now,
-                    VALIDATEUR = "SOFT1",
-                    Montant = "50000",
-                    Encours = "VALIDATION DU DOCUMENT",
-                    ARCHIVES = "PAS ENCORE",
-                    Lien = "",
-                    Validations =""
-                });
-                documentF.Add(new DocS
-                {
-                    REF = "0001/24/02",
-                    Objet = "20240813042914-Géo.pdf",
-                    FOURNISSEUR = "SOFTWELL",
-                    ACCUSE = DateTime.Now,
-                    VALIDATEUR = "SOFT1",
-                    Montant = "50000",
-                    Encours = "VALIDATION CPT",
-                    ARCHIVES = "PAS ENCORE",
-                    Lien = "",
-                    Validations =""
-                });
+               
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = documentF }, settings));
             }
             catch (Exception e)
