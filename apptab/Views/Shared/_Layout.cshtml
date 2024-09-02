@@ -1095,7 +1095,7 @@
                                         || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RTDB5GED"].ToString()) != 0)))
                                     {
                                         <li class="nav-item">
-                                            <a href="#" class="nav-link" data-child-id="6">
+                                            <a href="../EtatGED/EtapFactRejete" class="nav-link" data-child-id="6">
                                                 <i class="nav-icon fa fa-file-alt" style="color: #338B85"></i>
                                                 <p>
                                                     @Session["TDB5GED"]@*Statistique des factures fournisseur rejetées*@

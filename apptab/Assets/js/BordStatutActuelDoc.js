@@ -379,9 +379,9 @@ $('[data-action="GenereLISTE"]').click(function () {
                             charset: "utf-8",
                             bom: true,
                             className: 'custombutton-collection-pdf',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-                            },
+                            //exportOptions: {
+                            //    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                            //},
                             customize: function (doc) {
                                 doc.defaultStyle.alignment = 'left';
                                 //doc.defaultStyle.margin = [12, 12, 12, 12];
@@ -399,7 +399,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-excel',
                             exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+                                //columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (typeof data === 'undefined') {
@@ -408,7 +408,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                                         if (data == null) {
                                             return data;
                                         }
-                                        if (column === 8 || column === 10) {
+                                        if (column === 3) {
                                             var arr = data.split(',');
                                             if (arr.length == 1) { return data; }
 

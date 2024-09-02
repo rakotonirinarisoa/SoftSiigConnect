@@ -2486,6 +2486,7 @@
     <Content Include="Assets\img\LogoS1.png" />
     <Content Include="Assets\js\AnomalieDPA.js" />
     <Content Include="Assets\js\AnomalieJSJournal .js" />
+    <Content Include="Assets\js\BordStatutFactRejetee.js" />
     <Content Include="Assets\js\BordStatutActuelDocBIS.js" />
     <Content Include="Assets\js\BordSituationDoc.js" />
     <Content Include="Assets\js\BordEtatActuelDoc.js" />
@@ -5029,6 +5030,7 @@
     <Content Include="Views\EtatGED\EtapTypeDocsBIS.cshtml" />
     <Content Include="Views\EtatGED\EtapActuelDocs.cshtml" />
     <Content Include="Views\EtatGED\SituationDetailleDoc.cshtml" />
+    <Content Include="Views\EtatGED\EtapFactRejete.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
