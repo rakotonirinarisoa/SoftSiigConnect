@@ -441,6 +441,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                         StepID: v.ProcessingDescription,
                         Datevalidations: formatDate(v.Datevalidations),
                         VALIDATEUR: v.UserName,
+                        Fournisseur: v.Fournisseur,
+                        Document: v.FileName,
                         Commentaire: v.Comment,
                     });
                 });
@@ -454,6 +456,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                     columns: [
                         { data: 'StepID' },
                         { data: 'VALIDATEUR' },
+                        { data: 'Fournisseur' },
+                        { data: 'Document' },
                         { data: 'Datevalidations' },
                         { data: 'Commentaire' },
                     ],
@@ -587,9 +591,9 @@ $('[data-action="GenereLISTE"]').click(function () {
                 });
 
                 $('#TBD_PROJET_ORDSEC tfoot th').each(function (i) {
-                    if (i == 0) {
-                        $(this).addClass("NOTVISIBLE");
-                    }
+                    //if (i == 0) {
+                    //    $(this).addClass("NOTVISIBLE");
+                    //}
                 });
             }
         },

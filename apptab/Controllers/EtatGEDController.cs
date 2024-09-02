@@ -283,7 +283,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult GenereLISTE(SI_USERS suser, int PROJECTID, DateTime DateDebut, DateTime DateFin, string listSite, int status, string fournisseur, string reference)
+        public JsonResult GenereLISTE(SI_USERS suser, int PROJECTID, DateTime DateDebut, DateTime DateFin, string listSite, int status, string fournisseur /*string reference*/)
         {
             SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
@@ -328,10 +328,10 @@ namespace apptab.Controllers
                 List<DocS> documentF = new List<DocS>(); ;
                 //var isListeTypeD = ged.DocumentTypes.Where(a => a.ProjectId == isUserGed.ProjectId && a.DeletionDate == null).ToList();
                 Guid IDsup = Guid.Parse(fournisseur); ;
-                Guid IDref = Guid.Parse(reference); ;
+                //Guid IDref = Guid.Parse(reference); ;
 
                 var suppliersname = ged.Suppliers.Where(x => x.Id == IDsup).FirstOrDefault(); ;
-                var referenS = ged.SuppliersDocumentsAcknowledgements.Where(x => x.Id == IDref).Select(x=>x.ReferenceInterne).ToList(); ;
+                //var referenS = ged.SuppliersDocumentsAcknowledgements.Where(x => x.Id == IDref).Select(x=>x.ReferenceInterne).ToList(); ;
 
                 var RefDoc = ged.Documents.Where(x => x.DeletionDate == null && x.CreationDate >= DateDebut && x.CreationDate <= DateFin).Join(ged.SuppliersDocumentsAcknowledgements, dcm => dcm.Id, sdal => sdal.Id, (dcm, sdal) => new
                 {
@@ -838,6 +838,14 @@ namespace apptab.Controllers
                 CreationDate = doc.CreationDate,
                 FileName = doc.Filename,
                 Type = docsend.Type,
+            }).Join(ged.SuppliersDocumentsAcknowledgements , doc => doc.IDDOCUMENT, ackn => ackn.Id ,(doc,ackn) => new
+            {
+                IDDOCUMENT = doc.IDDOCUMENT,
+                SenderId = doc.SenderId,
+                CreationDate = doc.CreationDate,
+                FileName = doc.FileName,
+                Type = doc.Type,
+                referenceinterne = ackn.ReferenceInterne,
             }).Join(ged.DocumentSteps, doc => doc.IDDOCUMENT, docstep => docstep.DocumentId, (doc, docstep) => new
             {
                 IDDOCUMENT = doc.IDDOCUMENT,
@@ -847,6 +855,7 @@ namespace apptab.Controllers
                 StepNumber = docstep.StepNumber,
                 ProcessingDescription = docstep.ProcessingDescription,
                 IDDOCSTEP = docstep.Id,
+                referenceinterne =doc.referenceinterne,
             }).Join(ged.UsersSteps, res => res.IDDOCSTEP, usrstep => usrstep.DocumentStepId, (res, usrstep) => new
             {
                 IDDOCUMENT = res.IDDOCUMENT,
@@ -857,6 +866,7 @@ namespace apptab.Controllers
                 ProcessingDescription = res.ProcessingDescription,
                 IDDOCSTEP = res.IDDOCSTEP,
                 UserID = usrstep.UserId,
+                referenceinterne = res.referenceinterne,
             }).Join(ged.ValidationsHistory, res => res.IDDOCUMENT, valHisto => valHisto.DocumentId, (res, valhisto) => new
             {
                 IDDOCUMENT = res.IDDOCUMENT,
@@ -870,6 +880,7 @@ namespace apptab.Controllers
                 FromUserID = valhisto.FromUserId,
                 Comment = valhisto.Comment,
                 DATEValidations = valhisto.CreationDate,
+                referenceinterne = res.referenceinterne,
             }).Join(ged.Users, res => res.FromUserID, usr => usr.Id, (res, usr) => new
             {
                 IDDOCUMENT = res.IDDOCUMENT,
@@ -884,40 +895,26 @@ namespace apptab.Controllers
                 Comment = res.Comment,
                 DATEValidations = res.CreationDate,
                 UserName = usr.Username,
-            }).ToList();
-            var Fictif = new List<DocumentInfosFicti>();
+                referenceinterne = res.referenceinterne,
+            }).Join(ged.Suppliers , res => res.SenderId , supl => supl.Id, (res,supl) => new
+            {
+                IDDOCUMENT = res.IDDOCUMENT,
+                SenderId = res.SenderId,
+                CreationDate = res.CreationDate,
+                FileName = res.FileName,
+                StepNumber = res.StepNumber,
+                ProcessingDescription = res.ProcessingDescription,
+                IDDOCSTEP = res.IDDOCSTEP,
+                UserID = res.UserID,
+                FromUserID = res.FromUserID,
+                Comment = res.Comment,
+                DATEValidations = res.CreationDate,
+                UserName = res.UserName,
+                referenceinterne = res.referenceinterne,
+                Fournisseur = supl.Name,
+            }).Where(x => x.referenceinterne == referenS.ReferenceInterne).ToList();
 
-            Fictif.Add(new DocumentInfosFicti
-            {
-                IDDOCUMENT = "E782192C-4D49-4C60-B0E8-B1D800AB3524",
-                Validateur = "SOFT1",
-                CreationDate = "2024-08-26 10:26:03.833",
-                DocuMent = "FACT01",
-                StepNumber = "0",
-                ProcessingDescription = "VISA DU DOCUMENT",
-                IDDOCSTEP = "",
-                UserID = "",
-                FromUserID = "",
-                Comment = "OK",
-                DATEValidations = "2024-08-26 10:26:03.833",
-                UserName = "SOFT1",
-            });
-            Fictif.Add(new DocumentInfosFicti
-            {
-                IDDOCUMENT = "E782192C-4D49-4C60-B0E8-B1D800AB3524",
-                Validateur = "SOFT1",
-                CreationDate = "2024-08-26 10:26:03.833",
-                DocuMent = "FACT02",
-                StepNumber = "0",
-                ProcessingDescription = "VALIDATION DU DOCUMENT",
-                IDDOCSTEP = "",
-                UserID = "",
-                FromUserID = "",
-                Comment = "RAS",
-                DATEValidations = "2024-08-26 10:26:03.833",
-                UserName = "SOFT1",
-            });
-            return Json(JsonConvert.SerializeObject(new { type = "success", data = Fictif }));
+            return Json(JsonConvert.SerializeObject(new { type = "success", data = informationsDoc }));
         }
         public class DocumentInfos
         {

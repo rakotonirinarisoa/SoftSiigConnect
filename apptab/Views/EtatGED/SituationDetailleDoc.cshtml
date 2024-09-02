@@ -1,6 +1,6 @@
 ﻿@{
-    ViewBag.Title = "Situation des étapes par type de document";
-    ViewData["Controller"] = "Situation des étapes par type de document";
+    ViewBag.Title = "Situation détaillé par document";
+    ViewData["Controller"] = "Situation détaillé par document";
 }
 
 <meta charset="utf-8" />
@@ -50,7 +50,7 @@
     </div>
 </div>
 
-<div class="form-row">
+@*<div class="form-row">
     <div class="input-group mb-3 col">
         <div class="input-group-prepend custom-label">
             <span class="input-group-text text-bold" id="inputGroup-sizing-default">NIF</span>
@@ -76,7 +76,7 @@
         <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="cin" data-id="cin-list">
         </select>
     </div>
-</div>
+</div>*@
 
 <div class="form-row">
     <div class="input-group mb-3 col">
@@ -92,6 +92,8 @@
             <tr class="thead-accueil1" style="white-space: nowrap;">
                 <td style="font-weight:bold; text-align:center">ETAPE</td>
                 <td style="font-weight:bold; text-align:center">Validateur</td>
+                <td style="font-weight:bold; text-align:center">Fournisseur</td>
+                <td style="font-weight:bold; text-align:center">Document</td>
                 <td style="font-weight:bold; text-align:center">Date</td>
                 <td style="font-weight: bold; text-align: center">Commentaire</td>
             </tr>
@@ -101,6 +103,8 @@
             <tr>
                 <th>Etape</th>
                 <th>Validateur</th>
+                <th>Fournisseur</th>
+                <th>Document</th>
                 <th>Date</th>
                 <th>Commentaire</th>
             </tr>
