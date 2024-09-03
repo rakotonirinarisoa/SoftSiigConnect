@@ -105,7 +105,6 @@ function GetTypeDocs() {
     let formData = new FormData();
 
     formData.append("iProjet", $("#proj").val());
-    formData.append("iSite", $("#site").val());
 
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
@@ -113,7 +112,7 @@ function GetTypeDocs() {
 
     $.ajax({
         type: "POST",
-        url: Origin + '/EtatGED/GETALLTYPEDOCS',
+        url: Origin + '/EtatGED/GETALLFOURNISSEUR',
         data: formData,
         cache: false,
         contentType: false,
@@ -130,9 +129,9 @@ function GetTypeDocs() {
             if (Datas.type == "error") {
                 alert(Datas.msg);
 
-                $(`[data-id="typeDoc-list"]`).text("");
+                $(`[data-id="fournisseur-list"]`).text("");
                 var code1 = ``;
-                $(`[data-id="typeDoc-list"]`).append(code1);
+                $(`[data-id="fournisseur-list"]`).append(code1);
 
                 return;
             }
@@ -142,14 +141,14 @@ function GetTypeDocs() {
                 return;
             }
 
-            $(`[data-id="typeDoc-list"]`).text("");
+            $(`[data-id="fournisseur-list"]`).text("");
             var code1 = `<option value="">Tous</option>`;
             $.each(Datas.data.etat, function (k, v) {
                 code1 += `
-                    <option value="${v.Id}">${v.Title}</option>
+                    <option value="${v.Id}">${v.Nom}</option>
                 `;
             });
-            $(`[data-id="typeDoc-list"]`).append(code1);
+            $(`[data-id="fournisseur-list"]`).append(code1);
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -276,11 +275,11 @@ $('[data-action="GenereLISTE"]').click(function () {
 
     formData.append("listProjet", $("#proj").val());
     formData.append("listSite", $("#site").val());
-    formData.append("TypeDoc", $("#typeDoc").val());
+    formData.append("fournisseur", $("#ListFournisseur").val());
 
     $.ajax({
         type: "POST",
-        url: Origin + '/EtatGED/GenereLISTERFR',
+        url: Origin + '/EtatGED/GenereLISTEREFUS',
         data: formData,
         cache: false,
         contentType: false,
@@ -327,9 +326,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                         MONTANT: v.MONTANT,
                         TYPE: v.TYPE,
                         STEPNOW: v.STEPNOW,
-                        STEPNEXT: v.STEPNEXT,
-                        VALIDATEURNEXT: v.VALIDATEURNEXT,
-                        DUREENEXT: v.DUREENEXT,
+                        STEPNEXT: v.STEPNEXT
                     });
                 });
 
@@ -347,8 +344,6 @@ $('[data-action="GenereLISTE"]').click(function () {
                         { data: 'TYPE' },
                         { data: 'STEPNOW' },
                         { data: 'STEPNEXT' },
-                        { data: 'VALIDATEURNEXT' },
-                        { data: 'DUREENEXT' },
                     ],
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
@@ -371,8 +366,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                     buttons: ['colvis',
                         {
                             extend: 'pdfHtml5',
-                            title: 'SITUATION DES ETAPES PAR TYPE DE DOCUMENT',
-                            messageTop: 'Liste situation des étapes par type de document',
+                            title: 'FACTURES FOURNISSEUR REJETEES',
+                            messageTop: 'Statistique des factures fournisseur rejetées',
                             text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
@@ -390,8 +385,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                         },
                         {
                             extend: 'excelHtml5',
-                            title: 'SITUATION DES ETAPES PAR TYPE DE DOCUMENT',
-                            messageTop: 'Liste situation des étapes par type de document',
+                            title: 'FACTURES FOURNISSEUR REJETEES',
+                            messageTop: 'Statistique des factures fournisseur rejetées',
                             text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',

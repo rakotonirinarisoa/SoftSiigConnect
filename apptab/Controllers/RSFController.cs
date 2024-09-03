@@ -353,25 +353,25 @@ namespace apptab.Controllers
                 }
             }
 
-                //foreach (var x in db.SI_PROGED.Where(a => a.DELETIONDATE == null))
-                //{
-                //    foreach (var y in ged.Users.Where(a => a.ProjectId == x.IDGED && a.DeletionDate == null).ToList())
-                //    {
-                //        foreach (var z in ged.Documents.Where(a => a.SenderId == y.Id && a.DeletionDate == null).ToList())
-                //        {
-                //            var islink = lienGEd + "/documents/shared/" + z.Id.ToString();
-                //            if (db.SI_RSF.Where(a => a.LIEN == islink && a.DELETIONDATE == null).Count() == 0)
-                //            {
-                //                linkAll.Add(new PROGED()
-                //                {
-                //                    LIEN = islink,
-                //                    TITLE = z.Title,
-                //                    //IDDOC = z.Id
-                //                });
-                //            }
-                //        }
-                //    }
-                //}
+            //foreach (var x in db.SI_PROGED.Where(a => a.DELETIONDATE == null))
+            //{
+            //    foreach (var y in ged.Users.Where(a => a.ProjectId == x.IDGED && a.DeletionDate == null).ToList())
+            //    {
+            //        foreach (var z in ged.Documents.Where(a => a.SenderId == y.Id && a.DeletionDate == null).ToList())
+            //        {
+            //            var islink = lienGEd + "/documents/shared/" + z.Id.ToString();
+            //            if (db.SI_RSF.Where(a => a.LIEN == islink && a.DELETIONDATE == null).Count() == 0)
+            //            {
+            //                linkAll.Add(new PROGED()
+            //                {
+            //                    LIEN = islink,
+            //                    TITLE = z.Title,
+            //                    //IDDOC = z.Id
+            //                });
+            //            }
+            //        }
+            //    }
+            //}
 
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = linkAll }, settings));
         }
