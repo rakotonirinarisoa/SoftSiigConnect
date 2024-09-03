@@ -294,6 +294,7 @@ function ChargeLoad() {
                         
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
+                            $(row).attr('numereg-id', data.numereg);
 
                             $(row).addClass('select-text');
                             if (data.isLATE) {
@@ -1145,6 +1146,7 @@ $('[data-action="ChargerJs"]').click(function () {
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
+                            $(row).attr('numereg-id', data.numereg);
                             $(row).addClass('select-text');
                             if (data.isLATE) {
                                 //$(row).addClass("demoRayure");
@@ -1244,23 +1246,25 @@ function getelementCheckJs(){
     if (baseName == "2") {
         for (let i = 0; i < checkList.length; i += 1) {
             const id = $(checkList[i]).attr("compteG-id");
+            const numeroreg = $(checkList[i]).attr("numereg-id");
 
             const item = arr.find(item => item.id === Number(id));
             list.push({
                 id,
                 estAvance: item.estAvance,
-                numereg: item.numereg
+                numereg: numeroreg
             });
         }
     } else {
         for (let i = 0; i < checkList.length; i += 1) {
             const id = $(checkList[i]).attr("compteG-id");
+            const numeroreg = $(checkList[i]).attr("numereg-id");
 
             const item = arr.find(item => item.id === id);
             list.push({
                 id,
                 estAvance: item.estAvance,
-                numereg: item.numereg
+                numereg: numeroreg
             });
         }
     }

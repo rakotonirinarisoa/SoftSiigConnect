@@ -37,5 +37,7 @@ namespace apptab.Models
         public string DOC { get; set; }
 
         public string MESSAGE { get; set; }
+
+        public int? NUMREG { get; set; }
     }
 }
