@@ -625,7 +625,7 @@ namespace apptab.Controllers
             //    IDREGLEMENT = x.IDREGLEMENT.ToString(),
             //    NUMEREG = x.NUMEREG.ToString(),
             //}).ToList();
-            var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID).Select(x => x.NUMEREG.ToString()).ToArray();
+            var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID).Select(x => x.IDREGLEMENT.ToString()).ToArray();
             List<DataListTomOP> list = new List<DataListTomOP>();
             List<DataListTomOP> tempList = new List<DataListTomOP>();
             if (hstSiig != null)
