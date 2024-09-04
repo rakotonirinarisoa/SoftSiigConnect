@@ -528,7 +528,7 @@ $('[data-action="ChargerJs"]').click(function () {
                     $.each(listResult, function (_, v) {
                         data.push({
                             checkbox: '',
-                            id: isNullOrUndefined(v.No) ? '' : v.No,
+                            id: isNullOrUndefined(v.No) ? '' : v.No + ' ' + v.NUMEREG,
                             dateOrdre: isNullOrUndefined(v.dateOrdre) ? '' : v.dateOrdre,
                             Auxi: isNullOrUndefined(v.AUXI)? '' :v.AUXI,
                             noPiece: isNullOrUndefined(v.NoPiece) ? '' : v.NoPiece,
@@ -825,6 +825,7 @@ $('[data-action="ChargerJs"]').click(function () {
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
+                            $(row).attr('numereg-id', data.numereg);
                             
                             $(row).addClass('select-text');
                             //if (data.isLATE) {
@@ -927,23 +928,24 @@ function getelementCheckJs() {
     if (baseName == "2") {
         for (let i = 0; i < checkList.length; i += 1) {
             const id = $(checkList[i]).attr("compteG-id");
+            const numeroregulation = $(checkList[i]).attr("numereg-id");
 
             const item = arr.find(item => item.id === Number(id));
             list.push({
                 id,
                 estAvance: item.estAvance,
-                numereg: item.numereg
+                numereg: numeroregulation
             });
         }
     } else {
         for (let i = 0; i < checkList.length; i += 1) {
             const id = $(checkList[i]).attr("compteG-id");
-
+            const numeroregulation = $(checkList[i]).attr("numereg-id");
             const item = arr.find(item => item.id === id);
             list.push({
                 id,
                 estAvance: item.estAvance,
-                numereg: item.numereg
+                numereg: numeroregulation
             });
         }
     }

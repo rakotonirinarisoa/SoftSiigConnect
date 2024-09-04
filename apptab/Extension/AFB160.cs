@@ -86,8 +86,9 @@ namespace apptab.Extension
             List<OPA_REGLEMENTBR> beneficiaires = new List<OPA_REGLEMENTBR>();
             foreach (var item in list)
             {
+                int numeroreg = int.Parse(item.Numereg);
                 beneficiaires.AddRange((from dordre in db.OPA_REGLEMENTBR
-                                        where dordre.IDSOCIETE == PROJECTID && dordre.NUM == item.Id && dordre.APPLICATION == "BR" && dordre.ETAT == "0"
+                                        where dordre.IDSOCIETE == PROJECTID && dordre.NUM == item.Id && dordre.NUMEREG == numeroreg && dordre.APPLICATION == "BR" && dordre.ETAT == "0"
                                         select dordre).ToList());
             }
 
@@ -97,7 +98,7 @@ namespace apptab.Extension
             {
                 bnfcr.ETAT = "1";
                 db.SaveChanges();
-                var opp = db.OPA_VALIDATIONS.Where(e => e.IDREGLEMENT == bnfcr.NUM).FirstOrDefault();
+                var opp = db.OPA_VALIDATIONS.Where(e => e.IDREGLEMENT == bnfcr.NUM && e.NUMEREG == bnfcr.NUMEREG).FirstOrDefault();
                 historique = new OPA_HISTORIQUEBR();
                 if (opp != null)
                 {
@@ -108,12 +109,12 @@ namespace apptab.Extension
                     else
                     {
                         mont = (from bul in tom.MOP
-                                where bul.NUMEROOP == bnfcr.NUM
+                                where bul.NUMEROOP == bnfcr.NUM && bul.NUMENREG == bnfcr.NUMEREG
                                 select bul).FirstOrDefault();
                     }
                     //var jrnl = "jrnl";
                     var jrnl = (from mct in tom.FOP
-                                where mct.NUMEROOP == bnfcr.NUM
+                                where mct.NUMEROOP == bnfcr.NUM 
                                 select mct.JOURNAL).FirstOrDefault();
 
                     if (jrnl == null)
@@ -161,7 +162,7 @@ namespace apptab.Extension
                     else
                     {
 
-                        if (tom.MOP.Where(x => x.NUMEROOP == bnfcr.NUM).FirstOrDefault().LIEN != null) {
+                        if (tom.MOP.Where(x => x.NUMEROOP == bnfcr.NUM && x.NUMENREG == bnfcr.NUMEREG).FirstOrDefault().LIEN != null) {
                             LienDoc = tom.MOP.Where(x => x.NUMEROOP == bnfcr.NUM).FirstOrDefault().LIEN;
                             link = LienDoc.Split('/').Last();
                             var s = ged.Documents.Where(x => x.Id == Guid.Parse(link)).Join(ged.Suppliers ,doc => doc.SenderId ,sup =>sup.Id ,(doc,sup)=> new
@@ -194,6 +195,7 @@ namespace apptab.Extension
                         historique.MESSAGE = message;
                         historique.TITLE = title;
                         historique.DOC = document;
+                        historique.NUMREG = bnfcr.NUMEREG;
 
                     }
                     else
@@ -209,6 +211,7 @@ namespace apptab.Extension
                         historique.MESSAGE = message;
                         historique.TITLE = title;
                         historique.DOC = document;
+                        historique.NUMREG = bnfcr.NUMEREG;
                     }
                     db.OPA_HISTORIQUEBR.Add(historique);
 
@@ -231,7 +234,7 @@ namespace apptab.Extension
 
             foreach (var num in nums_2)
             {
-                var pop = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == num.NUM).FirstOrDefault();
+                var pop = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == num.NUM && a.NUMEREG == num.NUMEREG).FirstOrDefault();
                 if (pop.AVANCE == true)
                 {
                     mont = tom.GA_AVANCE.Where(a => a.NUMERO == num.NUM).Join(tom.GA_AVANCE_MOUVEMENT, ga => ga.NUMERO, av => av.NUMERO, (ga, av) => new
@@ -262,7 +265,7 @@ namespace apptab.Extension
                 {
 
                     mont = (from mn in tom.MOP
-                            where mn.NUMEROOP == num.NUM
+                            where mn.NUMEROOP == num.NUM && mn.NUMENREG == num.NUMEREG
                             select mn).FirstOrDefault();
                     if (devise)
                     {
@@ -319,7 +322,7 @@ namespace apptab.Extension
                                 new XElement("Ctry", donneurOrde.PAYS.Trim(' ')),
                                 new XElement("AdrLine", donneurOrde.VILLE))
                                 ));
-                    var op = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == bnfr.NUM).FirstOrDefault();
+                    var op = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == bnfr.NUM && a.NUMEREG == bnfr.NUMEREG).FirstOrDefault();
 
                     contacts.Add(new XElement("PmtInf",
                        new XElement("PmtInfId", op.Libelle.Trim(' ').TrimEnd(' ')),
@@ -366,7 +369,7 @@ namespace apptab.Extension
                     {
                         foreach (var item in beneficiaires)
                         {
-                            var opop = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.NUM).FirstOrDefault();
+                            var opop = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.NUM && a.NUMEREG == bnfr.NUMEREG).FirstOrDefault();
                             var regle = (from journl in tom.RJL1
                                                     where journl.CODE == item.CODE_J && journl.JLTRESOR == true && journl.NATURE == "2"
                                                     select journl).Single();
@@ -874,8 +877,9 @@ namespace apptab.Extension
             List<OPA_REGLEMENTBR> beneficiaires = new List<OPA_REGLEMENTBR>();
             foreach (var item in list)
             {
+                int numeroreg = int.Parse(item.Numereg);
                 beneficiaires.AddRange(from dordre in db.OPA_REGLEMENTBR
-                                       where dordre.IDSOCIETE == PROJECTID && dordre.NUM == item.Id && dordre.APPLICATION == "BR" && dordre.ETAT == "0"
+                                       where dordre.IDSOCIETE == PROJECTID && dordre.NUM == item.Id && dordre.APPLICATION == "BR" && dordre.NUMEREG == numeroreg && dordre.ETAT == "0"
                                        select dordre);
             }
 
@@ -883,7 +887,7 @@ namespace apptab.Extension
             foreach (var bnfcr in beneficiaires)
             {
                
-                var opp = db.OPA_VALIDATIONS.Where(e => e.IDREGLEMENT == bnfcr.NUM).FirstOrDefault();
+                var opp = db.OPA_VALIDATIONS.Where(e => e.IDREGLEMENT == bnfcr.NUM && e.IDPROJET == PROJECTID && e.NUMEREG == bnfcr.NUMEREG).FirstOrDefault();
                 var ribOp = "";
                 var guicherOP = "";
                 var numEtabOP = "";
@@ -903,7 +907,7 @@ namespace apptab.Extension
                     else
                     {
                         mont = (from bul in tom.MOP
-                                where bul.NUMEROOP == bnfcr.NUM
+                                where bul.NUMEROOP == bnfcr.NUM && bul.NUMENREG == bnfcr.NUMEREG
                                 select bul).FirstOrDefault();//Changer OPAVALIDATION A l'avenir
 
                     }
@@ -954,7 +958,7 @@ namespace apptab.Extension
                     else
                     {
 
-                        if (tom.MOP.Where(x => x.NUMEROOP == bnfcr.NUM).FirstOrDefault().LIEN != null)
+                        if (tom.MOP.Where(x => x.NUMEROOP == bnfcr.NUM && x.NUMENREG == bnfcr.NUMEREG).FirstOrDefault().LIEN != null)
                         {
                             LienDoc = tom.MOP.Where(x => x.NUMEROOP == bnfcr.NUM).FirstOrDefault().LIEN;
                             link = LienDoc.Split('/').Last();
@@ -1046,6 +1050,7 @@ namespace apptab.Extension
                         historique.MESSAGE = message;
                         historique.TITLE = title;
                         historique.DOC = document;
+                        historique.NUMENREG = bnfcr.NUMEREG.ToString();
                     }
                     else
                     {
@@ -1074,6 +1079,7 @@ namespace apptab.Extension
                         historique.MESSAGE = message;
                         historique.TITLE = title;
                         historique.DOC = document;
+                        historique.NUMREG = bnfcr.NUMEREG;
                     }
                     db.OPA_HISTORIQUEBR.Add(historique);
 
@@ -1112,7 +1118,7 @@ namespace apptab.Extension
 
             foreach (var num in nums_2)
             {
-                var pop = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == num.NUM).FirstOrDefault();
+                var pop = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == num.NUM && a.NUMEREG == num.NUMEREG).FirstOrDefault();
                 if (pop.AVANCE == true)
                 {
                     mont = tom.GA_AVANCE.Where(a => a.NUMERO == num.NUM).Join(tom.GA_AVANCE_MOUVEMENT, ga => ga.NUMERO, av => av.NUMERO, (ga, av) => new
@@ -1132,9 +1138,9 @@ namespace apptab.Extension
                 {
 
                     mont = (from mn in tom.MOP
-                            where mn.NUMEROOP == num.NUM
+                            where mn.NUMEROOP == num.NUM && mn.NUMENREG == num.NUMEREG
                             select mn).FirstOrDefault();
-                    var oppa = db.OPA_VALIDATIONS.Where(x => x.IDREGLEMENT == num.NUM).FirstOrDefault();
+                    var oppa = db.OPA_VALIDATIONS.Where(x => x.IDREGLEMENT == num.NUM && x.NUMEREG == num.NUMEREG).FirstOrDefault();
                     if (devise)
                     {
                         montant += mont.MONTANTDEV; //à voir avec Faramalala
@@ -1416,14 +1422,14 @@ namespace apptab.Extension
             }
             return list;
         }
-        public List<DataListTomOP> getREGLEMENTBR(SI_USERS user, int PROJECTID,List<string>site)
+        public List<DataListTomOP> getREGLEMENTBR(SI_USERS user,int numeroreg, int PROJECTID,List<string>site)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
             /**************Remplissage dataGridFactSelect*********/
 
             List<OPA_REGLEMENTBR> numRegs = (from num in db.OPA_REGLEMENTBR
-                                             where num.IDSOCIETE == PROJECTID && num.ETAT == "0"
+                                             where num.IDSOCIETE == PROJECTID && num.NUMEREG == numeroreg && num.ETAT == "0"
                                              select num).ToList();
 
             List<DataListTomOP> listEcritureSelect = new List<DataListTomOP>();
@@ -1431,7 +1437,7 @@ namespace apptab.Extension
 
             foreach (OPA_REGLEMENTBR num in numRegs)
             {
-                var OPAV = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == num.NUM && site.Contains(a.SITE)).FirstOrDefault();
+                var OPAV = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == num.NUM && site.Contains(a.SITE) && a.NUMEREG == numeroreg).FirstOrDefault();
                 if (OPAV != null)
                 {
                     if (OPAV.AVANCE == true)
@@ -1462,7 +1468,7 @@ namespace apptab.Extension
                     else
                     {
                         DataListTomOP ligneRegs = (from mcpt in tom.MOP
-                                                   where mcpt.NUMEROOP == num.NUM && site.Contains(mcpt.SITE)
+                                                   where mcpt.NUMEROOP == num.NUM && mcpt.NUMENREG == numeroreg && site.Contains(mcpt.SITE)
                                                    select new DataListTomOP()
                                                    {
                                                        No = mcpt.NUMEROOP,
@@ -3269,7 +3275,7 @@ namespace apptab.Extension
             string textdate = day + mounth + year;
             return this.couperText(5, textdate);
         }
-        public void SaveValideSelectEcritureBR(string numBR, string journal, string etat, bool devise, SI_USERS user, int PROJECTID, bool avance,List<string>site)
+        public void SaveValideSelectEcritureBR(string numBR,string numereg, string journal, string etat, bool devise, SI_USERS user, int PROJECTID, bool avance,List<string>site)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -3408,8 +3414,9 @@ namespace apptab.Extension
                 //string num = row.Id;
                 try
                 {
+                    int numeroge = int.Parse(numereg);
                     var ecriture = (from mcpt in tom.MOP
-                                    where mcpt.NUMEROOP == numBR && site.Contains(mcpt.SITE)/*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
+                                    where mcpt.NUMEROOP == numBR && mcpt.NUMENREG == numeroge && site.Contains(mcpt.SITE)/*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
                                     select new DataListTomOP()
                                     {
                                         No = mcpt.NUMEROOP,

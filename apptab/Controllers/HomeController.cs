@@ -619,14 +619,29 @@ namespace apptab.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Votre RIB du journal " + journal + " est incomplet ", data = "" }, settings));
             }
-         
-            var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID /*&& x.ComptaG == comptaG*//* && x.Journal == journal && x.AVANCE == false*/).Select(x =>  x.IDREGLEMENT.ToString()
-            ).ToArray();
+
+            //var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID).Select(x => new
+            //{
+            //    IDREGLEMENT = x.IDREGLEMENT.ToString(),
+            //    NUMEREG = x.NUMEREG.ToString(),
+            //}).ToList();
+            var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID).Select(x => x.IDREGLEMENT.ToString()).ToArray();
             List<DataListTomOP> list = new List<DataListTomOP>();
             List<DataListTomOP> tempList = new List<DataListTomOP>();
             if (hstSiig != null)
             {
-                var sss = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID,site).Where(x => !hstSiig.Contains(x.No.ToString() )).ToList();
+                //foreach (var item in hstSiig)
+                //{
+                //    var sss = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site).Where(x => !item.IDREGLEMENT.Contains(x.No) && !item.NUMEREG.Contains(x.NUMEREG.ToString())/*&& item.NUMEREG.Contains(x.NUMEREG.ToString())*/).ToList();
+                //    foreach (var s1 in sss)
+                //    {
+                //        if (list.Find(x => x.No != s1.No) == null)
+                //        {
+                //            list.AddRange(sss);
+                //        }
+                //    }
+                //}
+                var sss = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site).Where(x => !hstSiig.Contains(x.No.ToString())).ToList();
                 foreach (var s1 in sss)
                 {
                     if (list.Find(x => x.No != s1.No) == null)
@@ -964,12 +979,12 @@ namespace apptab.Controllers
                     mdpMail = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null && a.SITE == item).SENDPWD;
 
                     string auxi1 = auxi;
-                    AFB160 afb160 = new AFB160();
+                    AFB160 afb160 = new AFB160();//ty miova
                     var hst = db.OPA_HISTORIQUEBR.Where(x => x.SITE == item).Select(x => x.NUMENREG.ToString()).ToArray();
                     foreach (var h in list)
                     {
                         int a = int.Parse(h.Numereg);
-
+                        
                         var listA = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site).Where(x => x.No.ToString() == h.Id && x.NUMEREG == a && x.SITE == item).ToList();
                         foreach (var Lst in listA)
                         {
@@ -1127,8 +1142,13 @@ namespace apptab.Controllers
             }
             else
             {
-                var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG).ToArray();
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0 && /*(ecriture.ComptaG == comptaG || ecriture.ComptaG == null)*/ ecriture.ComptaG == comptaG && site.Contains(ecriture.SITE) && ecriture.Journal == journal && ecriture.dateOrdre >= datein && ecriture.dateOrdre <= dateout && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
+                //var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG).ToArray();
+                //var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => new
+                //{
+                //    No = x.NUMENREG,
+                //    NUMREG = x.NUMREG.ToString()
+                //}).ToList();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0 && ecriture.ComptaG == comptaG && site.Contains(ecriture.SITE) && ecriture.Journal == journal && ecriture.dateOrdre >= datein && ecriture.dateOrdre <= dateout).ToList();
                 foreach (var item in avalider)
                 {
                     bool isLate = false;
@@ -1158,8 +1178,10 @@ namespace apptab.Controllers
                         NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                         AUTREOP = item.AUTREOP,
                         SITE = item.SITE,
+                        NUMEREG = item.NUMEREG
                     });
                 }
+
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés. ", data = list }, settings));
             }
@@ -1232,9 +1254,12 @@ namespace apptab.Controllers
             }
             else
             {
-                var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG).ToArray();
-               
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0 && site.Contains(ecriture.SITE) && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
+                //var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => new
+                //{
+                //    No = x.NUMENREG,
+                //    NUMREG = x.NUMREG.ToString()
+                //}).ToList();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 0 && site.Contains(ecriture.SITE)).ToList();
 
                 foreach (var item in avalider)
                 {
@@ -1267,7 +1292,7 @@ namespace apptab.Controllers
                             NUMEROLIQUIDATION = item.NUMEROLIQUIDATION,
                             NUMEREG = item.NUMEREG,
                             AUTREOP = item.AUTREOP,
-                            SITE  = item.SITE,
+                            SITE = item.SITE,
                         });
                     }
                     else
@@ -1300,6 +1325,7 @@ namespace apptab.Controllers
                         });
                     }
                 }
+               
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés.", data = list }, settings));
             }
@@ -1355,10 +1381,10 @@ namespace apptab.Controllers
             var numBR = JsonConvert.DeserializeObject<List<AvanceDetails>>(listCompte);
 
             var AvaliderList = new List<OPA_VALIDATIONS>();
-
+            int numeroReg = 0;
             foreach (var item in list)
             {
-                int numeroReg = int.Parse(item.Numereg);
+                numeroReg = int.Parse(item.Numereg);
                 AvaliderList.Add(db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.Id && a.ETAT == 0 && a.NUMEREG == numeroReg).FirstOrDefault());
             }
 
@@ -1386,7 +1412,7 @@ namespace apptab.Controllers
                 {
                     foreach (var item in AvaliderList)
                     {
-                        aFB160.SaveValideSelectEcritureBR(item.IDREGLEMENT, item.Journal, item.ETAT.ToString(), devise, suser, PROJECTID, (bool)item.AVANCE,site);
+                        aFB160.SaveValideSelectEcritureBR(item.IDREGLEMENT,item.NUMEREG.ToString(), item.Journal, item.ETAT.ToString(), devise, suser, PROJECTID, (bool)item.AVANCE,site);
                     }
 
                 }
@@ -1473,7 +1499,7 @@ namespace apptab.Controllers
                         {
                             
                             //int b = int.Parse(item);
-                            avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == Lt.Id && a.ETAT == 0 && a.SITE == item).FirstOrDefault();
+                            avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == Lt.Id && a.ETAT == 0 && a.SITE == item && a.NUMEREG == numeroReg).FirstOrDefault();
                             if (avalider != null)
                             {
                                 try
@@ -1550,7 +1576,7 @@ namespace apptab.Controllers
                 {
                     foreach (var item in AvaliderList)
                     {
-                        aFB160.SaveValideSelectEcritureBR(item.IDREGLEMENT, item.Journal, item.ETAT.ToString(), devise, suser, PROJECTID, (bool)item.AVANCE, site);
+                        aFB160.SaveValideSelectEcritureBR(item.IDREGLEMENT,item.NUMEREG.ToString(), item.Journal, item.ETAT.ToString(), devise, suser, PROJECTID, (bool)item.AVANCE, site);
                     }
 
                 }
@@ -1566,7 +1592,7 @@ namespace apptab.Controllers
                 }
                 else
                 {
-                    listRegBR = aFB160.getREGLEMENTBR(suser, PROJECTID,site);
+                    listRegBR = aFB160.getREGLEMENTBR(suser,numeroReg, PROJECTID,site);
                 }
 
                 if (basename == "2")
@@ -1579,7 +1605,7 @@ namespace apptab.Controllers
                         foreach (var Lt in list)
                         {
                             int b = int.Parse(Lt.Id);
-                            avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == b.ToString() && a.ETAT == 0 && a.SITE == item).FirstOrDefault();
+                            avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == b.ToString() && a.ETAT == 0 && a.SITE == item && a.NUMEREG == numeroReg).FirstOrDefault();
                             if (avalider != null)
                             {
                                 try
@@ -1654,7 +1680,7 @@ namespace apptab.Controllers
                         foreach (var Lt in numBR)
                         {
                             //int b = int.Parse(item);
-                            avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == Lt.Id && a.ETAT == 0 && a.SITE == item).FirstOrDefault();
+                            avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == Lt.Id && a.ETAT == 0 && a.SITE == item && a.NUMEREG == numeroReg).FirstOrDefault();
                             if (avalider != null)
                             {
                                 try
@@ -1827,7 +1853,7 @@ namespace apptab.Controllers
                         foreach (var Lt in AvaliderList)
                         {
                             //int b = int.Parse(item);
-                            avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == Lt.IDREGLEMENT && a.ETAT == 1 && a.SITE == item).FirstOrDefault();
+                            avalider = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == Lt.IDREGLEMENT && a.ETAT == 1 && a.SITE == item && a.NUMEREG == Lt.NUMEREG).FirstOrDefault();
                             if (avalider != null)
                             {
                                 try
@@ -2201,6 +2227,7 @@ namespace apptab.Controllers
                         AVANCE = item.AVANCE,
                         AUTREOP = item.AUTREOP,
                         SITE = item.SITE,
+                        NUMEREG = item.NUMEREG
                     });
                 }
                 //var list = aFB160.getListEcritureCompta(journal, datein, dateout, comptaG, auxi, auxi1, dateP, suser).Where(x => avalider.Contains((int)x.No)).ToList();
@@ -2208,8 +2235,8 @@ namespace apptab.Controllers
             }
             else
             {
-                var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG.ToString()).ToArray();
-                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && /*(ecriture.ComptaG == comptaG || ecriture.ComptaG == null)*/ ecriture.ComptaG == comptaG && ecriture.Journal == journal && !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())).ToList();
+                //var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG.ToString()).ToArray();
+                var avalider = db.OPA_VALIDATIONS.Where(ecriture => ecriture.IDPROJET == PROJECTID && ecriture.ETAT == 2 && /*(ecriture.ComptaG == comptaG || ecriture.ComptaG == null)*/ ecriture.ComptaG == comptaG && ecriture.Journal == journal /*&& !HistoAFB.Contains(ecriture.IDREGLEMENT.ToString())*/).ToList();
                 //var list = aFB160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser).Where(x => avalider.ToString().Contains(x.No)).ToList();
                 foreach (var item in avalider)
                 {
@@ -2238,6 +2265,7 @@ namespace apptab.Controllers
                         AVANCE = item.AVANCE,
                         AUTREOP = item.AUTREOP,
                         SITE = item.SITE,
+                        NUMEREG = item.NUMEREG
                     });
                 }
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succés.  ", data = list }, settings));
@@ -2254,6 +2282,7 @@ namespace apptab.Controllers
             List<DataListTomOP> listRegBR__ = new List<DataListTomOP>();
             AFB160 aFB160 = new AFB160();
             int PROJECTID = int.Parse(codeproject);
+            int numeroreg = 0;
 
             int countTraitement = 0;
             var lien = db.SI_SETLIEN.FirstOrDefault().LIEN;
@@ -2289,14 +2318,17 @@ namespace apptab.Controllers
 
             //List<string> list = listCompte.Split(',').ToList();
             var list = JsonConvert.DeserializeObject<List<AvanceDetails>>(listCompte);
-
+            foreach (var item in list)
+            {
+                numeroreg = int.Parse(item.Numereg);
+            }
             if (baseName == "2")
             {
                 listReg = aFB160.getREGLEMENT(suser, PROJECTID,site);
             }
             else
             {
-                listRegBR = aFB160.getREGLEMENTBR(suser, PROJECTID,site);
+                listRegBR = aFB160.getREGLEMENTBR(suser,numeroreg, PROJECTID,site);
             }
 
             var AvaliderList = new List<OPA_VALIDATIONS>();
