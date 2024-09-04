@@ -477,6 +477,12 @@ namespace apptab.Controllers
             }
         }
 
+        public class siteR
+        {
+            public string CODE { get; set; }
+            public string INTITULE { get; set; }
+        }
+
         [HttpPost]
         public ActionResult GETALLSITE(SI_USERS suser, int iProjet, int iUser)
         {
@@ -499,7 +505,7 @@ namespace apptab.Controllers
 
                 if (crpto != null)
                 {
-                    var SITE = new List<string>();
+                    var SITE = new List<siteR>();
 
                     if (db.SI_SITE.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.IDUSER == iUser))
                     {
@@ -514,7 +520,11 @@ namespace apptab.Controllers
 
                             foreach (var a in lst)
                             {
-                                SITE.Add(a);
+                                SITE.Add(new siteR()
+                                {
+                                   CODE = a,
+                                   INTITULE = tom.RSITE.FirstOrDefault(n => n.CODE == a).LIBELLE
+                                });
                             }
                         }
                     }
