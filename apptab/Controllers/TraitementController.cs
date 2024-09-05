@@ -1323,7 +1323,7 @@ namespace apptab.Controllers
 
                 if (tom.CPTADMIN_FLIQUIDATION.Any(a => site.Contains(a.SITE)))
                 {
-                    foreach (var x in tom.CPTADMIN_FLIQUIDATION.OrderBy(a => a.DATELIQUIDATION).ToList())
+                    foreach (var x in tom.CPTADMIN_FLIQUIDATION.Where(a => site.Contains(a.SITE)).OrderBy(a => a.DATELIQUIDATION).ToList())
                     {
                         decimal MTN = 0;
                         decimal MTNPJ = 0;
@@ -1973,11 +1973,11 @@ namespace apptab.Controllers
                 if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO. " }, settings));
 
-                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEF) == null)
+                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEFA) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 1 n'est pas paramétré sur TOM²PRO. " }, settings));
-                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEF) == null)
+                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEFA) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 2 n'est pas paramétré sur TOM²PRO. " }, settings));
-                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
+                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.BEA) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO. " }, settings));
 
                 if (isAvance)
