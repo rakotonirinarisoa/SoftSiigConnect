@@ -1050,7 +1050,7 @@ namespace apptab.Extension
                         historique.MESSAGE = message;
                         historique.TITLE = title;
                         historique.DOC = document;
-                        historique.NUMENREG = bnfcr.NUMEREG.ToString();
+                        historique.NUMREG = bnfcr.NUMEREG;
                     }
                     else
                     {
@@ -3285,12 +3285,12 @@ namespace apptab.Extension
             //RJL1 djournal = (from jrnl in tom.RJL1
             //                 where jrnl.CODE == journal
             //                 select jrnl).Single();
+            //TSY MAINTSY BANQUE A BANQUE NY AUTRE OP NY CAISSE TSISY RIB MANKO
             RJL1 djournal = (from jrnl in tom.RJL1
-                             where jrnl.CODE == journal && jrnl.JLTRESOR == true && jrnl.NATURE == "2"
+                             where jrnl.CODE == journal && jrnl.JLTRESOR == true && jrnl.NATURE == "2" /*(jrnl.NATURE == "2" || jrnl.NATURE == "1")*/
                              select jrnl).Single();
             if (avance == true)
             {
-                
                 try
                 {
                     var ecriture = tom.GA_AVANCE.Where(a => a.NUMERO == numBR && site.Contains(a.SITE)).Join(tom.GA_AVANCE_MOUVEMENT, ga => ga.NUMERO, av => av.NUMERO, (ga, av) => new
