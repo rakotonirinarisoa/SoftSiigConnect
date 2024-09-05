@@ -386,7 +386,7 @@ namespace apptab.Controllers
                                                 PCOP = PCOP,//PCOP
 
                                                 MONT = Math.Round(MTN, 2).ToString(),//Montant imputations
-                                                MONTi = Math.Round(MTN, 2).ToString(),//Montant pièces justificatives
+                                                MONTi = Math.Round(MTNPJ, 2).ToString(),//Montant pièces justificatives
 
                                                 DATEDEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF && site.Contains(a.CODE_SITE)).DATECA,//Date STATUT 1
                                                 DATETEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF && site.Contains(a.CODE_SITE)).DATECA,//Date STATUT 2
@@ -484,7 +484,7 @@ namespace apptab.Controllers
                                                 PCOP = PCOP,//PCOP
 
                                                 MONT = Math.Round(MTN, 2).ToString(),//Montant imputations
-                                                MONTi = Math.Round(MTN, 2).ToString(),//Montant pièces justificatives
+                                                MONTi = Math.Round(MTNPJ, 2).ToString(),//Montant pièces justificatives
 
                                                 DATEDEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.DEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,//Date STATUT 1
                                                 DATETEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.TEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,//Date STATUT 2
