@@ -770,6 +770,8 @@ function OKOK() {
             $.each(CheckList, (k, v) => {
                 list.push($(v).remove());
             });
+
+            $('#verification-modal').modal('toggle');
         },
         error: function () {
             alert("Problème de connexion. ");

@@ -1108,7 +1108,7 @@ function OKOK() {
                     list.push($(v).remove());
                 });
 
-                //$('#verification-modal').modal('toggle');
+                $('#verification-modal').modal('toggle');
             }
             
         },
