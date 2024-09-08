@@ -3404,7 +3404,7 @@ namespace apptab.Controllers
             else
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mail émetteur (Notifications et Alertes)" }, settings));
-            } 
+            }
 
             var send = db.OPA_HISTORIQUEBR.Where(x => x.NUMENREG == idLiquidation && x.IDSOCIETE == PROJECTID).FirstOrDefault();
             string email = send.LIEN;

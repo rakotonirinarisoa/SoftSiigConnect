@@ -153,8 +153,10 @@ namespace apptab.Controllers
 
             Guid isDocs = Guid.Parse(Lien.Split('/').Last());
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(IDProjet);
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+            if (exist.IDUSERGED == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
 
             var isTit = ged.Documents.FirstOrDefault(a => a.Id == isDocs).Title;
 
@@ -294,7 +296,8 @@ namespace apptab.Controllers
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
             if (exist.IDUSERGED == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez parametrer le mappage GED ET PROJET. " }, settings));
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == exist.IDPROJET && a.DELETIONDATE == null).IDPROJET.Value);
+            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
             if (!db.SI_PROGED.Any(a => a.IDPROJET == exist.IDPROJET))
@@ -475,12 +478,9 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            //Guid isDocs = Guid.Parse(Lien.Split('/').Last());
-
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == IDProjet && a.DELETIONDATE == null).IDPROJET.Value);
+            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
-
-            //var isTit = ged.Documents.FirstOrDefault(a => a.Id == isDocs).Title;
 
             try
             {
@@ -754,7 +754,8 @@ namespace apptab.Controllers
 
             try
             {
-                SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+                SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(b => b.IDPROJET == exist.IDPROJET && b.DELETIONDATE == null).IDPROJET.Value);
+                if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
                 SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
                 List<PROGED> a = new List<PROGED>();
@@ -838,7 +839,8 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == exist.IDPROJET && a.DELETIONDATE == null).IDPROJET.Value);
+            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
             var Projet = db.SI_PROJETS.FirstOrDefault(a => a.ID == societe.IDPROJET && a.DELETIONDATE == null).ID;
@@ -920,7 +922,8 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == exist.IDPROJET && a.DELETIONDATE == null).IDPROJET.Value);
+            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
             if (IDPROSOA != null)

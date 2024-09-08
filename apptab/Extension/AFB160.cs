@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
+using System.Runtime;
 using System.Security.Policy;
 using System.Text;
 using System.Xml;
@@ -12,6 +14,7 @@ using apptab.apptab;
 using apptab.Data;
 using apptab.Data.Entities;
 using apptab.Models;
+using Newtonsoft.Json;
 using static System.Windows.Forms.LinkLabel;
 
 namespace apptab.Extension
@@ -28,7 +31,7 @@ namespace apptab.Extension
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == user.IDPROJET && a.DELETIONDATE == null).IDPROJET.Value);
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
             var OP = db.OPA_VALIDATIONS.Where(a => a.IDPROJET == PROJECTID).FirstOrDefault();
@@ -815,7 +818,7 @@ namespace apptab.Extension
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).IDPROJET.Value);
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
             var OP = db.OPA_VALIDATIONS.Where(a => a.IDPROJET == PROJECTID).FirstOrDefault();

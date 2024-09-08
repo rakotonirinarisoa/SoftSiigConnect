@@ -38,13 +38,13 @@ namespace apptab.Data
             return (CONN);
         }
 
-        public string GetConGED()
+        public string GetConGED(int IDPROJET)
         {
             var CONN = "";
 
-            if (db.SI_MAPPAGES_GED.Any())
+            if (db.SI_MAPPAGES_GED.Any(a => a.IDPROJET == IDPROJET))
             {
-                var isPS = db.SI_MAPPAGES_GED.FirstOrDefault();
+                var isPS = db.SI_MAPPAGES_GED.FirstOrDefault(a => a.IDPROJET == IDPROJET);
 
                 var instance = isPS.INSTANCE;
                 var auth = isPS.AUTH;
