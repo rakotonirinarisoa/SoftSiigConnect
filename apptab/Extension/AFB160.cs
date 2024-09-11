@@ -955,10 +955,14 @@ namespace apptab.Extension
                         }
 
                     }
-                    else
+                    else if (opp.AUTREOP == true)
                     {
 
-                        if (tom.MOP.Where(x => x.NUMEROOP == bnfcr.NUM && x.NUMENREG == bnfcr.NUMEREG).FirstOrDefault().LIEN != null)
+                    }
+                    else
+                    {
+                        var linkMOP = tom.MOP.Where(x => x.NUMEROOP == bnfcr.NUM && x.NUMENREG == bnfcr.NUMEREG).FirstOrDefault();
+                        if (linkMOP.LIEN != null)
                         {
                             LienDoc = tom.MOP.Where(x => x.NUMEROOP == bnfcr.NUM).FirstOrDefault().LIEN;
                             link = LienDoc.Split('/').Last();
