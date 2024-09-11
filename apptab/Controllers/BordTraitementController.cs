@@ -1719,7 +1719,7 @@ namespace apptab.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<JsonResult> GenerePaiementREJETE(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin, string listSite)
+        public async Task<JsonResult> GenerePaiementREJETE (SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin, string listSite)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));

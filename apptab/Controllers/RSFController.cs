@@ -153,8 +153,10 @@ namespace apptab.Controllers
 
             Guid isDocs = Guid.Parse(Lien.Split('/').Last());
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(IDProjet);
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+            if (exist.IDUSERGED == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
 
             var isTit = ged.Documents.FirstOrDefault(a => a.Id == isDocs).Title;
 
@@ -294,7 +296,8 @@ namespace apptab.Controllers
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
             if (exist.IDUSERGED == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez parametrer le mappage GED ET PROJET. " }, settings));
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == exist.IDPROJET && a.DELETIONDATE == null).IDPROJET.Value);
+            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
             if (!db.SI_PROGED.Any(a => a.IDPROJET == exist.IDPROJET))
@@ -475,12 +478,9 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            //Guid isDocs = Guid.Parse(Lien.Split('/').Last());
-
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == IDProjet && a.DELETIONDATE == null).IDPROJET.Value);
+            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
-
-            //var isTit = ged.Documents.FirstOrDefault(a => a.Id == isDocs).Title;
 
             try
             {
@@ -754,26 +754,29 @@ namespace apptab.Controllers
 
             try
             {
-                SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
-                SOFTCONNECTGED ged = new SOFTCONNECTGED();
-
                 List<PROGED> a = new List<PROGED>();
 
                 if (db.SI_PROGED.Any(x => x.DELETIONDATE == null))
                 {
                     foreach (var x in db.SI_PROGED.Where(x => x.DELETIONDATE == null).ToList())
                     {
-                        if (ged.Projects.Any(b => b.Id == x.IDGED && x.DELETIONDATE == null))
+                        SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(b => b.IDPROJET == x.IDPROJET && b.DELETIONDATE == null).IDPROJET.Value);
+                        if (SOFTCONNECTGED.connex != "")
                         {
-                            if (db.SI_PROJETS.Any(b => b.ID == x.IDPROJET && b.DELETIONDATE == null))
+                            SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+                            if (ged.Projects.Any(b => b.Id == x.IDGED && x.DELETIONDATE == null))
                             {
-                                a.Add(new PROGED()
+                                if (db.SI_PROJETS.Any(b => b.ID == x.IDPROJET && b.DELETIONDATE == null))
                                 {
-                                    PROJET = db.SI_PROJETS.FirstOrDefault(b => b.ID == x.IDPROJET && b.DELETIONDATE == null).PROJET,
-                                    GED = ged.Projects.Any(b => b.Id == x.IDGED) ? ged.Projects.FirstOrDefault(b => b.Id == x.IDGED).Name : "",
-                                    ID = x.ID,
-                                    DELETIONDATE = x.DELETIONDATE
-                                });
+                                    a.Add(new PROGED()
+                                    {
+                                        PROJET = db.SI_PROJETS.FirstOrDefault(b => b.ID == x.IDPROJET && b.DELETIONDATE == null).PROJET,
+                                        GED = ged.Projects.Any(b => b.Id == x.IDGED) ? ged.Projects.FirstOrDefault(b => b.Id == x.IDGED).Name : "",
+                                        ID = x.ID,
+                                        DELETIONDATE = x.DELETIONDATE
+                                    });
+                                }
                             }
                         }
                     }
@@ -838,7 +841,8 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == exist.IDPROJET && a.DELETIONDATE == null).IDPROJET.Value);
+            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
             var Projet = db.SI_PROJETS.FirstOrDefault(a => a.ID == societe.IDPROJET && a.DELETIONDATE == null).ID;
@@ -915,45 +919,91 @@ namespace apptab.Controllers
 
         //GET ALL PROJET GED//
         [HttpPost]
-        public ActionResult GetAllSOA(SI_USERS suser, string IDPROSOA)
+        public ActionResult GetAllSOA(SI_USERS suser/*, string IDPROSOA*/)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
-            SOFTCONNECTGED ged = new SOFTCONNECTGED();
-
-            if (IDPROSOA != null)
+            var SOA = new List<PRO>();
+            if (db.SI_MAPPAGES_GED.Any())
             {
-                int? PROSOAID = int.Parse(IDPROSOA);
-                var idsoa = db.SI_PROGED.Where(a => a.ID == PROSOAID && a.DELETIONDATE == null).Select(a => a.IDGED).FirstOrDefault();
-
-                var SOA = ged.Projects.Where(x => x.Id != idsoa && x.DeletionDate == null).Select(a => new
+                foreach (var z in db.SI_MAPPAGES_GED.ToList())
                 {
-                    SOA = a.Name,
-                    ID = a.Id,
-                    DELETIONDATE = a.DeletionDate
-                }).ToList();
+                    if (z.IDPROJET != null)
+                    {
+                        SOFTCONNECTGED.connex = new Data.Extension().GetConGED(z.IDPROJET.Value);
+                        SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
-                var soa1 = ged.Projects.Where(x => x.Id == idsoa && x.DeletionDate == null).Select(x => new
-                {
-                    SOA = x.Name,
-                    ID = x.Id,
-                    DELETIONDATE = x.DeletionDate
-                }).ToList();
-
-                List<SI_SOAS> SOAf = new List<SI_SOAS>();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = soa1, datas = SOA }, settings));
+                        if (ged.Projects.Any(a => a.DeletionDate == null))
+                        {
+                            foreach (var b in ged.Projects.ToList())
+                            {
+                                SOA.Add(new PRO()
+                                {
+                                    SOA = b.Name,
+                                    ID = b.Id
+                                });
+                            }
+                        }
+                    }
+                }
             }
-            else
-            {
-                var SOA = ged.Projects.Where(x => x.DeletionDate == null).Select(a => new
-                {
-                    SOA = a.Name,
-                    ID = a.Id
-                }).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = SOA }, settings));
-            }
+
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = SOA }, settings));
+
+            //if (IDPROSOA != null)
+            //{
+            //    int? PROSOAID = int.Parse(IDPROSOA);
+            //    var idsoa = db.SI_PROGED.Where(a => a.ID == PROSOAID && a.DELETIONDATE == null).Select(a => a.IDGED).FirstOrDefault();
+            //    var iP = db.SI_PROGED.Where(a => a.ID == PROSOAID && a.DELETIONDATE == null).Select(a => a.IDPROJET).FirstOrDefault();
+
+            //    SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == iP && a.DELETIONDATE == null).IDPROJET.Value);
+            //    if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
+            //    SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+            //    var SOA = ged.Projects.Where(x => x.Id != idsoa && x.DeletionDate == null).Select(a => new
+            //    {
+            //        SOA = a.Name,
+            //        ID = a.Id,
+            //        DELETIONDATE = a.DeletionDate
+            //    }).ToList();
+
+            //    var soa1 = ged.Projects.Where(x => x.Id == idsoa && x.DeletionDate == null).Select(x => new
+            //    {
+            //        SOA = x.Name,
+            //        ID = x.Id,
+            //        DELETIONDATE = x.DeletionDate
+            //    }).ToList();
+
+            //    List<SI_SOAS> SOAf = new List<SI_SOAS>();
+            //    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = soa1, datas = SOA }, settings));
+            //}
+            //else
+            //{
+            //    var SOA = new List<PRO>();
+            //    foreach (var y in db.SI_PROGED.Where(a => a.DELETIONDATE == null).ToList())
+            //    {
+            //        SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == y.IDPROJET && a.DELETIONDATE == null).IDPROJET.Value);
+            //        if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
+            //        SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+            //        var iss = ged.Projects.FirstOrDefault(x => x.DeletionDate == null && x.Id == y.IDGED);
+
+            //        SOA.Add(new PRO()
+            //        {
+            //            SOA = iss.Name,
+            //            ID = iss.Id
+            //        });
+            //    }
+
+            //    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = SOA }, settings));
+            //}
+        }
+
+        public class PRO
+        {
+            public Guid ID { get; set; }
+            public string SOA { get; set; }
         }
 
         public ActionResult SuperAdminDetailFPROSOA(SI_USERS suser, string PROSOAID)

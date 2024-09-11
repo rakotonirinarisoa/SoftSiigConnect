@@ -54,9 +54,6 @@ namespace apptab.Controllers
             ViewBag.Role = exist.ROLE;
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
-            SOFTCONNECTGED ged = new SOFTCONNECTGED();
-
             List<ListeUser> users = new List<ListeUser>();
 
             try
@@ -66,23 +63,34 @@ namespace apptab.Controllers
                 if (test.ROLE == (int)Role.SAdministrateur)
                 {
                     var adminUser = db.SI_USERS.Where(x => x.ROLE != Role.SAdministrateur && x.DELETIONDATE == null).ToList();
+
                     foreach (var a in adminUser)
                     {
-                        var tt = "";
-                        if (ged.Users.Any(z => z.Id == a.IDUSERGED && z.DeletionDate == null))
-                            tt = ged.Users.FirstOrDefault(z => z.Id == a.IDUSERGED && z.DeletionDate == null).Username;
-
-                        users.Add(new ListeUser()
+                        if (db.SI_PROGED.Any(b => b.IDPROJET == a.IDPROJET && b.DELETIONDATE == null))
                         {
-                            LOGIN = a.LOGIN,
-                            PWD = a.PWD,
-                            ROLE = a.ROLE.ToString(),
-                            ID = a.ID,
-                            PROJET = a.IDPROJET == 0 ? "MULTIPLES" : db.SI_PROJETS.Where(z => z.ID == a.IDPROJET && z.DELETIONDATE == null).FirstOrDefault().PROJET,
-                            DELETONDATE = a.DELETIONDATE != null ? a.DELETIONDATE : null,
-                            CREAT = a.CREATIONDATE != null ? a.CREATIONDATE : null,
-                            USERGED = tt
-                        });
+                            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(b => b.IDPROJET == a.IDPROJET && b.DELETIONDATE == null).IDPROJET.Value);
+
+                            if (SOFTCONNECTGED.connex != "")
+                            {
+                                SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+                                var tt = "";
+                                if (ged.Users.Any(z => z.Id == a.IDUSERGED && z.DeletionDate == null))
+                                    tt = ged.Users.FirstOrDefault(z => z.Id == a.IDUSERGED && z.DeletionDate == null).Username;
+
+                                users.Add(new ListeUser()
+                                {
+                                    LOGIN = a.LOGIN,
+                                    PWD = a.PWD,
+                                    ROLE = a.ROLE.ToString(),
+                                    ID = a.ID,
+                                    PROJET = a.IDPROJET == 0 ? "MULTIPLES" : db.SI_PROJETS.Where(z => z.ID == a.IDPROJET && z.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    DELETONDATE = a.DELETIONDATE != null ? a.DELETIONDATE : null,
+                                    CREAT = a.CREATIONDATE != null ? a.CREATIONDATE : null,
+                                    USERGED = tt
+                                });
+                            }
+                        }
                     }
                     //OrderBy(a => a.PROJET).OrderBy(a => a.LOGIN).ToList();
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = users }, settings));
@@ -92,21 +100,31 @@ namespace apptab.Controllers
                     var testss = db.SI_USERS.Where(x => x.ROLE != Role.SAdministrateur && x.ROLE != Role.Organe_de_Suivi && x.ROLE != Role.Validateur_paiements && x.IDPROJET == exist.IDPROJET && x.DELETIONDATE == null).ToList();
                     foreach (var a in testss)
                     {
-                        var tt = "";
-                        if (ged.Users.Any(z => z.Id == a.IDUSERGED && z.DeletionDate == null))
-                            tt = ged.Users.FirstOrDefault(z => z.Id == a.IDUSERGED && z.DeletionDate == null).Username;
-
-                        users.Add(new ListeUser()
+                        if (db.SI_PROGED.Any(b => b.IDPROJET == a.IDPROJET && b.DELETIONDATE == null))
                         {
-                            LOGIN = a.LOGIN,
-                            PWD = a.PWD,
-                            ROLE = a.ROLE.ToString(),
-                            ID = a.ID,
-                            PROJET = a.IDPROJET == 0 ? "MULTIPLES" : db.SI_PROJETS.Where(z => z.ID == a.IDPROJET && z.DELETIONDATE == null).FirstOrDefault().PROJET,
-                            DELETONDATE = a.DELETIONDATE != null ? a.DELETIONDATE : null,
-                            CREAT = a.CREATIONDATE != null ? a.CREATIONDATE : null,
-                            USERGED = tt
-                        });
+                            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(b => b.IDPROJET == a.IDPROJET && b.DELETIONDATE == null).IDPROJET.Value);
+
+                            if (SOFTCONNECTGED.connex != "")
+                            {
+                                SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+                                var tt = "";
+                                if (ged.Users.Any(z => z.Id == a.IDUSERGED && z.DeletionDate == null))
+                                    tt = ged.Users.FirstOrDefault(z => z.Id == a.IDUSERGED && z.DeletionDate == null).Username;
+
+                                users.Add(new ListeUser()
+                                {
+                                    LOGIN = a.LOGIN,
+                                    PWD = a.PWD,
+                                    ROLE = a.ROLE.ToString(),
+                                    ID = a.ID,
+                                    PROJET = a.IDPROJET == 0 ? "MULTIPLES" : db.SI_PROJETS.Where(z => z.ID == a.IDPROJET && z.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    DELETONDATE = a.DELETIONDATE != null ? a.DELETIONDATE : null,
+                                    CREAT = a.CREATIONDATE != null ? a.CREATIONDATE : null,
+                                    USERGED = tt
+                                });
+                            }
+                        }
                     }
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = users }, settings));
                 }
@@ -470,9 +488,6 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDPROJET == suser.IDPROJET*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
-            SOFTCONNECTGED ged = new SOFTCONNECTGED();
-
             try
             {
                 int useID = int.Parse(UserId);
@@ -496,6 +511,10 @@ namespace apptab.Controllers
 
                 if (user != null)
                 {
+                    SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == user.IDPROJET && a.DELETIONDATE == null).IDPROJET.Value);
+                    if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
+                    SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
                     var usergename = ged.Users.FirstOrDefault(a => a.Id == user.IDUSERGED && a.DeletionDate == null);
                     if (usergename != null)
                     {
@@ -774,9 +793,10 @@ namespace apptab.Controllers
                     Session["RTDB6GED"] = isMenu.TDB6GED;
                 }
 
-                if (db.SI_GEDLIEN.Any())
+                Session["GED"] = "#";
+                if (db.SI_GEDLIEN.Any(a => a.IDPROJET == test.IDPROJET))
                 {
-                    var isMenu = db.SI_GEDLIEN.FirstOrDefault();
+                    var isMenu = db.SI_GEDLIEN.FirstOrDefault(a => a.IDPROJET == test.IDPROJET);
                     Session["GED"] = isMenu.LIEN;
                 }
 
@@ -803,7 +823,7 @@ namespace apptab.Controllers
                 Session["UserName"] = test.LOGIN;
 
                 Session["VERSIONCONNNECT"] = "1.0.0";
-                Session["VERSION"] = "1.9.23";
+                Session["VERSION"] = "1.10.0";
 
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", Data = new { test.ROLE, test.IDPROJET } }, settings));
             }
@@ -865,9 +885,6 @@ namespace apptab.Controllers
 
             try
             {
-                SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
-                SOFTCONNECTGED ged = new SOFTCONNECTGED();
-
                 if (!String.IsNullOrEmpty(iProjet))
                 {
                     string[] separators = { "," };
@@ -881,6 +898,21 @@ namespace apptab.Controllers
                         {
                             var idP = int.Parse(a);
                             var projet = db.SI_PROGED.FirstOrDefault(b => b.IDPROJET == idP && b.DELETIONDATE == null);
+
+                            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(b => b.IDPROJET == projet.IDPROJET && b.DELETIONDATE == null).IDPROJET.Value);
+                            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
+                            SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+                        }
+
+                        foreach (var a in lst)
+                        {
+                            var idP = int.Parse(a);
+                            var projet = db.SI_PROGED.FirstOrDefault(b => b.IDPROJET == idP && b.DELETIONDATE == null);
+
+                            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(b => b.IDPROJET == projet.IDPROJET && b.DELETIONDATE == null).IDPROJET.Value);
+                            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
+                            SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
                             if (projet != null)
                             {
@@ -907,6 +939,10 @@ namespace apptab.Controllers
                 else
                 {
                     var idP = exist.IDPROJET;
+
+                    SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == idP && a.DELETIONDATE == null).IDPROJET.Value);
+                    if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
+                    SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
                     var projet = db.SI_PROGED.FirstOrDefault(b => b.IDPROJET == idP && b.DELETIONDATE == null);
 

@@ -56,9 +56,8 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            if (exist.IDUSERGED == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
-
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(int.Parse(iProjet));
+            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
             try
@@ -123,7 +122,8 @@ namespace apptab.Controllers
 
             if (exist.IDUSERGED == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(int.Parse(iProjet));
+            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
             try
@@ -203,7 +203,8 @@ namespace apptab.Controllers
 
             if (exist.IDUSERGED == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(int.Parse(iProjet));
+            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
             try
@@ -301,7 +302,8 @@ namespace apptab.Controllers
         [HttpPost]
         public JsonResult GenereLISTE(SI_USERS suser, int PROJECTID, DateTime DateDebut, DateTime DateFin, string listSite, int status, string fournisseur /*string reference*/)
         {
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(PROJECTID);
+            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
@@ -452,7 +454,7 @@ namespace apptab.Controllers
                         });
                     }
                 }
-               
+
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = documentF }, settings));
             }
             catch (Exception e)
@@ -465,7 +467,8 @@ namespace apptab.Controllers
         [HttpPost]
         public JsonResult GenereREFERENCE(SI_USERS suser, int PROJECTID, string listSite)
         {
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(PROJECTID);
+            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
@@ -537,9 +540,6 @@ namespace apptab.Controllers
 
             if (exist.IDUSERGED == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
-            SOFTCONNECTGED ged = new SOFTCONNECTGED();
-
             List<TDB> list = new List<TDB>();
 
             List<Guid> Projet = new List<Guid>();
@@ -551,7 +551,14 @@ namespace apptab.Controllers
             foreach (var item in listProjet.Split(','))
             {
                 int idd = int.Parse(item);
-                Projet.Add(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == idd && a.DELETIONDATE == null).IDGED.Value);
+
+                var isPG = db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == idd && a.DELETIONDATE == null);
+
+                Projet.Add(isPG.IDGED.Value);
+
+                SOFTCONNECTGED.connex = new Data.Extension().GetConGED(isPG.IDPROJET.Value);
+                if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
+                SOFTCONNECTGED ged = new SOFTCONNECTGED();
             }
 
             DateTime DD = new DateTime(DateDebut.Year, DateDebut.Month, DateDebut.Day, 0, 0, 0);
@@ -565,6 +572,10 @@ namespace apptab.Controllers
                     foreach (var x in Projet)
                     {
                         Guid idProjet = x;
+
+                        SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDGED == idProjet && a.DELETIONDATE == null).IDPROJET.Value);
+                        if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
+                        SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
                         foreach (var y in ged.Documents.Where(a => a.CreationDate >= DD && a.CreationDate <= DF && site.Contains(a.Site)
                         && a.DocumentsSenders.Type == 1 && a.DeletionDate == null
@@ -818,8 +829,10 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(PROJECTID);
+            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
 
             var Infos = ged.Suppliers.Where(x => x.DeletionDate == null).Select(x => new {
                 ID = x.Id,
@@ -836,12 +849,15 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(PROJECTID);
+            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+
             List<Documents> Infos = new List<Documents>();
-            Guid idDoc = Guid.Parse("028AC262-9CAD-47DC-B88D-D8847BDD939E");
+
             Guid IDref = Guid.Parse(REFERENCE);
-            //var DocTypes = ged.DocumentTypesSteps.Where(x =>  x.DeletionDate == null).ToList();
+
             Infos = ged.Documents.ToList();
             var documentypes = ged.DocumentTypes.ToList();
             List<DocumentInfos> Infosdoc = new List<DocumentInfos>();
@@ -977,9 +993,6 @@ namespace apptab.Controllers
 
             if (exist.IDUSERGED == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
-            SOFTCONNECTGED ged = new SOFTCONNECTGED();
-
             List<TDB> list = new List<TDB>();
 
             List<Guid> Projet = new List<Guid>();
@@ -991,7 +1004,14 @@ namespace apptab.Controllers
             foreach (var item in listProjet.Split(','))
             {
                 int idd = int.Parse(item);
-                Projet.Add(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == idd && a.DELETIONDATE == null).IDGED.Value);
+
+                var isPG = db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == idd && a.DELETIONDATE == null);
+
+                Projet.Add(isPG.IDGED.Value);
+
+                SOFTCONNECTGED.connex = new Data.Extension().GetConGED(isPG.IDPROJET.Value);
+                if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
+                SOFTCONNECTGED ged = new SOFTCONNECTGED();
             }
 
             DateTime DD = new DateTime(DateDebut.Year, DateDebut.Month, DateDebut.Day, 0, 0, 0);
@@ -1005,6 +1025,10 @@ namespace apptab.Controllers
                 foreach (var x in Projet)
                 {
                     Guid idProjet = x;
+
+                    SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDGED == idProjet && a.DELETIONDATE == null).IDPROJET.Value);
+                    if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
+                    SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
                     nombreEtape = 0;
 
@@ -1146,9 +1170,6 @@ namespace apptab.Controllers
 
             if (exist.IDUSERGED == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED();
-            SOFTCONNECTGED ged = new SOFTCONNECTGED();
-
             List<TDB> list = new List<TDB>();
 
             List<Guid> Projet = new List<Guid>();
@@ -1160,7 +1181,14 @@ namespace apptab.Controllers
             foreach (var item in listProjet.Split(','))
             {
                 int idd = int.Parse(item);
-                Projet.Add(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == idd && a.DELETIONDATE == null).IDGED.Value);
+
+                var isPG = db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == idd && a.DELETIONDATE == null);
+
+                Projet.Add(isPG.IDGED.Value);
+
+                SOFTCONNECTGED.connex = new Data.Extension().GetConGED(isPG.IDPROJET.Value);
+                if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
+                SOFTCONNECTGED ged = new SOFTCONNECTGED();
             }
 
             DateTime DD = new DateTime(DateDebut.Year, DateDebut.Month, DateDebut.Day, 0, 0, 0);
@@ -1174,6 +1202,10 @@ namespace apptab.Controllers
                     foreach (var x in Projet)
                     {
                         Guid idProjet = x;
+
+                        SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDGED == idProjet && a.DELETIONDATE == null).IDPROJET.Value);
+                        if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
+                        SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
                         foreach (var y in ged.Documents.Where(a => a.CreationDate >= DD && a.CreationDate <= DF && site.Contains(a.Site)
                         && a.DocumentsSenders.Type == 1 && a.DeletionDate == null && a.Status == 2
