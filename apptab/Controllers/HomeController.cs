@@ -217,7 +217,7 @@ namespace apptab.Controllers
             }
         }
 
-        public XmlDocument SaveDocument(string pathchemin, String path)
+        public XmlDocument SaveDocument(string pathchemin, string path)
         {
             var xmlDoc = new XmlDocument();
             xmlDoc.Load(pathchemin);
@@ -638,8 +638,8 @@ namespace apptab.Controllers
                     foreach (var s1 in sss)
                     {
                         List<DataListTomOP> dlt = (from dp in list
-                                             where dp.No == s1.No && dp.NUMEREG == s1.NUMEREG
-                                             select dp).ToList();
+                                                   where dp.No == s1.No && dp.NUMEREG == s1.NUMEREG
+                                                   select dp).ToList();
                         if (dlt.Count() == 0)
                         {
                             list.Add(s1);

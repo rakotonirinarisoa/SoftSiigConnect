@@ -31,7 +31,7 @@ namespace apptab.Extension
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == user.IDPROJET && a.DELETIONDATE == null).IDPROJET.Value);
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).IDPROJET.Value);
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
             var OP = db.OPA_VALIDATIONS.Where(a => a.IDPROJET == PROJECTID).FirstOrDefault();
@@ -284,7 +284,7 @@ namespace apptab.Extension
             DateTime dtcrdt = DateTime.Now;
             string xmlconst = "";
             int iteration = 1;
-            string path = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + fileName ;
+            string path = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + fileName + ".txt";
             try
             {
                 // Create the file, or overwrite if the file exists.
@@ -3007,8 +3007,8 @@ namespace apptab.Extension
                                             Marche = "",
                                             Status = etat,
                                             Avance = true,
-                                            Mandat = ""
-
+                                            Mandat = "",
+                                            SITE = reglement.SITE
                                         });
                                     }
                                 }

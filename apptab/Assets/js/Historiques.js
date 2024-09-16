@@ -207,7 +207,7 @@ function GetHistoriques() {
                     Date: isNullOrUndefined(v.DATE) ? '' : v.DATE,
                     Guichet: isNullOrUndefined(v.GUICHET) ? '' : v.GUICHET,
                     Journal: isNullOrUndefined(v.CODE_J) ? '' : v.CODE_J,
-                    NomFichier: isNullOrUndefined(v.NOMFICHIER) ? '' : v.NOMFICHIER,
+                    NomFichier: isNullOrUndefined(v.LIBELLE) ? '' : v.LIBELLE,
                     Banque: isNullOrUndefined(v.BANQUE) ? '' : v.BANQUE,
                     Montant: isNullOrUndefined(formatCurrency(v.MONTANT)) ? '' : formatCurrency(v.MONTANT),
                     RIB: isNullOrUndefined(v.RIB) ? '' : v.RIB,
