@@ -975,48 +975,48 @@ div.dt-container .dt-paging .dt-paging-button {
     margin-left: 0px !important;
 }
 .small-box.tdbinitier {
-    background-color: #427ed7 /*#4970cb*/;
+    background-color: #CBEFB6;
     height: 75%;
     opacity: 80%;
 }
-.small-box.tdbinitier:hover {
-    background-color: #427ed7 /*#4970cb*/;
-    height: 75%;
-    opacity: 100%;
-}
+    .small-box.tdbinitier:hover {
+        background-color: #CBEFB6;
+        height: 75%;
+        opacity: 100%;
+    }
 
 .small-box.tbdattente {
-    background-color: #0a5cb8 /*#FFD463*/;
+    background-color: #A0C6A9;
     height: 75%;
     opacity: 80%;
 }
-.small-box.tbdattente:hover {
-    background-color: #0a5cb8 /*#FFD463*/;
-    height: 75%;
-    opacity: 100%;
-}
+    .small-box.tbdattente:hover {
+        background-color: #A0C6A9;
+        height: 75%;
+        opacity: 100%;
+    }
 
 .small-box.tdbvalider {
-    background-color: #005187 /*#eb7575*/;
+    background-color: #99B5AC;
     height: 75%;
     opacity: 80%;
 }
-.small-box.tdbvalider:hover {
-    background-color: #005187 /*#eb7575*/;
-    height: 75%;
-    opacity: 100%;
-}
+    .small-box.tdbvalider:hover {
+        background-color: #99B5AC;
+        height: 75%;
+        opacity: 100%;
+    }
 
 .small-box.tdblast {
-    background-color: #2f2c79 /*#338B85*/;
+    background-color: #E1FEC5;
     height: 75%;
     opacity: 80%;
 }
-.small-box.tdblast:hover {
-    background-color: #2f2c79 /*#338B85*/;
-    height: 75%;
-    opacity: 100%;
-}
+    .small-box.tdblast:hover {
+        background-color: #E1FEC5;
+        height: 75%;
+        opacity: 100%;
+    }
 
 .custombutton-collection-pdf {
     background: salmon !important;
