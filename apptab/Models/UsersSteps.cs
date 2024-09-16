@@ -1,4 +1,4 @@
-namespace apptab
+﻿namespace apptab
 {
     using System;
     using System.Collections.Generic;
@@ -19,6 +19,9 @@ namespace apptab
         public DateTime? ProcessingDate { get; set; }
 
         public DateTime? DeletionDate { get; set; }
+        public string Comment { get; set; }
+
+        public bool? IsValidator { get; set; }
 
         public virtual DocumentSteps DocumentSteps { get; set; }
 
