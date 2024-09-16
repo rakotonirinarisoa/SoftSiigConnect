@@ -403,6 +403,7 @@
     <Compile Include="Models\SI_TRAITPROJETANO.cs" />
     <Compile Include="Models\Sites.cs" />
     <Compile Include="Models\Soas.cs" />
+    <Compile Include="Models\RedirectionsHistory.cs" />
     <Compile Include="SOFTCONNECTGED.cs" />
     <Compile Include="SOFTCONNECTOM.cs" />
     <Compile Include="SOFTCONNECTSIIG.cs" />

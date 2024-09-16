@@ -80,6 +80,9 @@
 
         public string Sites { get; set; }
 
+        [StringLength(255)]
+        public string Fonction { get; set; }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Attachements> Attachements { get; set; }
 

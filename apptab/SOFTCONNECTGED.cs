@@ -52,6 +52,8 @@ namespace apptab
         public virtual DbSet<VerificationTokensHistory> VerificationTokensHistory { get; set; }
         public virtual DbSet<DocumentTypeUnion> DocumentTypeUnion { get; set; }
 
+        public virtual DbSet<RedirectionsHistory> RedirectionsHistory { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<DigitalSignatures>()
