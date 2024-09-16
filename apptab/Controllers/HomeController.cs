@@ -32,6 +32,7 @@ using static apptab.Controllers.RSFController;
 using Microsoft.Ajax.Utilities;
 using System.Web.Mail;
 using System.Data.Entity;
+using System.Configuration;
 
 namespace apptab.Controllers
 {
@@ -620,33 +621,29 @@ namespace apptab.Controllers
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Votre RIB du journal " + journal + " est incomplet ", data = "" }, settings));
             }
 
-            //var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID).Select(x => new
-            //{
-            //    IDREGLEMENT = x.IDREGLEMENT.ToString(),
-            //    NUMEREG = x.NUMEREG.ToString(),
-            //}).ToList();
-            var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID).Select(x => x.IDREGLEMENT.ToString()).ToArray();
+            var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID).Select(x => new
+            {
+                IDREGLEMENT = x.IDREGLEMENT.ToString(),
+                NUMEREG = x.NUMEREG.ToString(),
+            }).ToList();
+            //var hstSiig = db.OPA_VALIDATIONS.Where(x => x.ETAT != 4 && x.IDPROJET == PROJECTID).Select(x => x.IDREGLEMENT.ToString()).ToArray();
             List<DataListTomOP> list = new List<DataListTomOP>();
             List<DataListTomOP> tempList = new List<DataListTomOP>();
-            if (hstSiig != null)
+            List<string> concat = new List<string>();
+            if (hstSiig.Count != 0)
             {
-                //foreach (var item in hstSiig)
-                //{
-                //    var sss = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site).Where(x => !item.IDREGLEMENT.Contains(x.No) && !item.NUMEREG.Contains(x.NUMEREG.ToString())/*&& item.NUMEREG.Contains(x.NUMEREG.ToString())*/).ToList();
-                //    foreach (var s1 in sss)
-                //    {
-                //        if (list.Find(x => x.No != s1.No) == null)
-                //        {
-                //            list.AddRange(sss);
-                //        }
-                //    }
-                //}
-                var sss = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site).Where(x => !hstSiig.Contains(x.No.ToString())).ToList();
-                foreach (var s1 in sss)
+                foreach (var item in hstSiig)
                 {
-                    if (list.Find(x => x.No != s1.No) == null)
+                    List<DataListTomOP> sss = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site).Where(x => (!item.IDREGLEMENT.Contains(x.No) && !item.NUMEREG.Contains(x.NUMEREG.ToString())) || (item.IDREGLEMENT.Contains(x.No) && !item.NUMEREG.Contains(x.NUMEREG.ToString()))).DistinctBy(x => x.No).ToList();
+                    foreach (var s1 in sss)
                     {
-                        list.AddRange(sss);
+                        List<DataListTomOP> dlt = (from dp in list
+                                             where dp.No == s1.No && dp.NUMEREG == s1.NUMEREG
+                                             select dp).ToList();
+                        if (dlt.Count() == 0)
+                        {
+                            list.Add(s1);
+                        }
                     }
                 }
             }
