@@ -220,13 +220,7 @@ namespace apptab.Controllers
         public XmlDocument SaveDocument(string pathchemin, string path)
         {
             var xmlDoc = new XmlDocument();
-            try
-            {
-                xmlDoc.Load(pathchemin);
-            }
-            catch (Exception ex) {
-                var s =  ex.Message;
-            }
+            xmlDoc.Load(pathchemin);
             var address = xmlDoc.GetElementsByTagName("original");
 
             using (StreamWriter stream = new StreamWriter(path, false, Encoding.GetEncoding("iso-8859-7")))
