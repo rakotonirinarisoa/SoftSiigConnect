@@ -3,7 +3,7 @@ var table = undefined;
 let list = [];
 
 //const NUMBER_OF_ROWS = 5;
-const NUMBER_OF_ROWS = 3;
+const NUMBER_OF_ROWS = 2;
 
 function setSum(array, startIndex, endIndex) {
     let total = 0;
@@ -46,7 +46,7 @@ function parseList(array) {
 
                 switch (k) {
                     case 0:
-                        etape = 'Transfert et Validation';
+                        etape = 'Tris et Validation';
                         dateTraitement = array[i].TraitementsEngagementsDetails[j].DATETRANSFERTRAF === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATETRANSFERTRAF);
                         beneficiaire = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
                         montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
@@ -54,15 +54,15 @@ function parseList(array) {
                         dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTTRANSFERTRAF;
 
                         break;
-                    case 1:
-                        etape = 'Validation';
-                        dateTraitement = array[i].TraitementsEngagementsDetails[j].DATEVALORDSEC === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATEVALORDSEC);
-                        beneficiaire = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
-                        montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
-                        agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].VALORDSECAGENT;
-                        dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTVALORDSEC;
+                    //case 1:
+                    //    etape = 'Validation';
+                    //    dateTraitement = array[i].TraitementsEngagementsDetails[j].DATEVALORDSEC === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATEVALORDSEC);
+                    //    beneficiaire = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].BENEFICIAIRE;
+                    //    montant = dateTraitement === '' ? '' : formatCurrency(String(array[i].TraitementsEngagementsDetails[j].MONTENGAGEMENT).replace(',', '.'));
+                    //    agent = dateTraitement === '' ? '' : array[i].TraitementsEngagementsDetails[j].VALORDSECAGENT;
+                    //    dureeTraitement = array[i].TraitementsEngagementsDetails[j].DUREETRAITEMENTVALORDSEC;
 
-                        break;
+                    //    break;
                     //case 2:
                     //    etape = 'Transféré SIIGFP';
                     //    dateTraitement = array[i].TraitementsEngagementsDetails[j].DATESENDSIIG === undefined ? '' : formatDate(array[i].TraitementsEngagementsDetails[j].DATESENDSIIG);
@@ -172,68 +172,68 @@ function setDataTable() {
             }
         },
         deferRender: true,
-        dom: 'Bfrtip',
-        buttons: ['colvis'],
+        //dom: 'Bfrtip',
+        //buttons: ['colvis'],
         //pageLength: 25,
         caption: 'SOFT EXPENDITURES TRACKERS ' + new Date().toLocaleDateString(),
-        buttons: ['colvis',
-            {
-                extend: 'pdfHtml5',
-                title: 'DELAIS DE TRAITEMENT DES DEPENSES A PAYER et AVANCES',
-                messageTop: 'Suvi des délais de traitement des dépenses à payer et avances',
-                text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
-                orientation: 'landscape',
-                pageSize: 'A4',
-                charset: "utf-8",
-                bom: true,
-                className: 'custombutton-collection-pdf',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-                },
-                customize: function (doc) {
-                    doc.defaultStyle.alignment = 'left';
-                    //doc.defaultStyle.margin = [12, 12, 12, 12];
-                },
-                download: 'open'
-            },
-            {
-                extend: 'excelHtml5',
-                title: 'DELAIS DE TRAITEMENT DES DEPENSES A PAYER et AVANCES',
-                messageTop: 'Suvi des délais de traitement des dépenses à payer et avances',
-                text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
-                orientation: 'landscape',
-                pageSize: 'A4',
-                charset: "utf-8",
-                bom: true,
-                className: 'custombutton-collection-excel',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-                    format: {
-                        body: function (data, row, column, node) {
-                            if (typeof data === 'undefined') {
-                                return;
-                            }
-                            if (data == null) {
-                                return data;
-                            }
-                            if (column === 7) {
-                                var arr = data.split(',');
-                                if (arr.length == 1) { return data; }
+        //buttons: ['colvis',
+        //    {
+        //        extend: 'pdfHtml5',
+        //        title: 'DELAIS DE TRAITEMENT DES DEPENSES A PAYER et AVANCES',
+        //        messageTop: 'Suvi des délais de traitement des dépenses à payer et avances',
+        //        text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
+        //        orientation: 'landscape',
+        //        pageSize: 'A4',
+        //        charset: "utf-8",
+        //        bom: true,
+        //        className: 'custombutton-collection-pdf',
+        //        exportOptions: {
+        //            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        //        },
+        //        customize: function (doc) {
+        //            doc.defaultStyle.alignment = 'left';
+        //            //doc.defaultStyle.margin = [12, 12, 12, 12];
+        //        },
+        //        download: 'open'
+        //    },
+        //    {
+        //        extend: 'excelHtml5',
+        //        title: 'DELAIS DE TRAITEMENT DES DEPENSES A PAYER et AVANCES',
+        //        messageTop: 'Suvi des délais de traitement des dépenses à payer et avances',
+        //        text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
+        //        orientation: 'landscape',
+        //        pageSize: 'A4',
+        //        charset: "utf-8",
+        //        bom: true,
+        //        className: 'custombutton-collection-excel',
+        //        exportOptions: {
+        //            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        //            format: {
+        //                body: function (data, row, column, node) {
+        //                    if (typeof data === 'undefined') {
+        //                        return;
+        //                    }
+        //                    if (data == null) {
+        //                        return data;
+        //                    }
+        //                    if (column === 7) {
+        //                        var arr = data.split(',');
+        //                        if (arr.length == 1) { return data; }
 
-                                arr[0] = arr[0].toString().replace(/[\.]/g, "");
-                                if (arr[0] > '' || arr[1] > '') {
-                                    data = arr[0] + '.' + arr[1];
-                                } else {
-                                    return '';
-                                }
-                                return data.toString().replace(/[^\d.-]/g, "");
-                            }
-                            return data;
-                        }
-                    }
-                },
-            }
-        ],
+        //                        arr[0] = arr[0].toString().replace(/[\.]/g, "");
+        //                        if (arr[0] > '' || arr[1] > '') {
+        //                            data = arr[0] + '.' + arr[1];
+        //                        } else {
+        //                            return '';
+        //                        }
+        //                        return data.toString().replace(/[^\d.-]/g, "");
+        //                    }
+        //                    return data;
+        //                }
+        //            }
+        //        },
+        //    }
+        //],
     });
 }
 
@@ -493,8 +493,8 @@ function emptyTable() {
         info: false,
         colReorder: false,
         deferRender: true,
-        dom: 'Bfrtip',
-        buttons: ['colvis'],
-        pageLength: 25,
+        //dom: 'Bfrtip',
+        //buttons: ['colvis'],
+        //pageLength: 25,
     });
 }

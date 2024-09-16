@@ -296,7 +296,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                         { data: 'benef' },
                         { data: 'MONTENGAGEMENT' },
                         { data: 'DATETRANSFERTRAF' },
-                        { data: 'DATEVALORDSEC' },
+                        //{ data: 'DATEVALORDSEC' },
                         //{ data: 'DATESENDSIIG' },
                         //{ data: 'DATESIIGFP' },
 
@@ -352,7 +352,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                     deferRender: true,
                     dom: 'Bfrtip',
                     pageLength: 25,
-                    buttons: ['colvis'],
+                    //buttons: ['colvis'],
                     caption: 'SOFT EXPENDITURES TRACKERS ' + new Date().toLocaleDateString(),
                     buttons: ['colvis',
                         {
@@ -366,7 +366,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-pdf',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9/*, 10*/]
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8/*, 9, 10*/]
                             },
                             customize: function (doc) {
                                 doc.defaultStyle.alignment = 'left';
@@ -385,7 +385,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-excel',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9/*, 10*/],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8/*, 9, 10*/],
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (typeof data === 'undefined') {

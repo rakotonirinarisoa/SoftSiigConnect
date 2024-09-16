@@ -1098,40 +1098,43 @@ namespace apptab.Controllers
 
                     for (int j = 0; j < traitprojets.Count; j += 1)
                     {
-                        result[lastIndex].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
+                        if ((Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE) - durPrevu.DELRAF.Value) > 0)
                         {
-                            PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
-                            TYPE = "Dépenses à payer",
-                            NUM_ENGAGEMENT = traitprojets[j].REF,
-                            SITE = traitprojets[j].SITE,
-                            BENEFICIAIRE = traitprojets[j].TITUL,
-                            MONTENGAGEMENT = Cipher.Decrypt(traitprojets[j].MONT, "Oppenheimer").ToString(),
+                            result[lastIndex].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
+                            {
+                                PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
+                                TYPE = "Dépenses à payer",
+                                NUM_ENGAGEMENT = traitprojets[j].REF,
+                                SITE = traitprojets[j].SITE,
+                                BENEFICIAIRE = traitprojets[j].TITUL,
+                                MONTENGAGEMENT = Cipher.Decrypt(traitprojets[j].MONT, "Oppenheimer").ToString(),
 
-                            DATETRANSFERTRAF = traitprojets[j].DATECRE,
-                            DATEVALORDSEC = traitprojets[j].DATEVALIDATION,
-                            //DATESENDSIIG = traitprojets[j].DATENVOISIIGFP,
-                            //DATESIIGFP = traitprojets[j].DATESIIG,
+                                DATETRANSFERTRAF = traitprojets[j].DATECRE,
+                                //DATEVALORDSEC = traitprojets[j].DATEVALIDATION,
+                                //DATESENDSIIG = traitprojets[j].DATENVOISIIGFP,
+                                //DATESIIGFP = traitprojets[j].DATESIIG,
 
-                            TRANSFERTRAFAGENT = await GetAgent(traitprojets[j].IDUSERCREATE),
-                            VALORDSECAGENT = await GetAgent(traitprojets[j].IDUSERVALIDATE),
-                            //SENDSIIGAGENT = await GetAgent(traitprojets[j].IDUSERENVOISIIGFP),
-                            //SIIGFPAGENT = "",
+                                TRANSFERTRAFAGENT = await GetAgent(traitprojets[j].IDUSERCREATE),
+                                //VALORDSECAGENT = await GetAgent(traitprojets[j].IDUSERVALIDATE),
+                                //SENDSIIGAGENT = await GetAgent(traitprojets[j].IDUSERENVOISIIGFP),
+                                //SIIGFPAGENT = "",
 
-                            DUREETRAITEMENTTRANSFERTRAF = Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
-                            DUREETRAITEMENTVALORDSEC = Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE),
-                            //DUREETRAITEMENTSENDSIIG = Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION),
-                            //DUREETRAITEMENTSIIGFP = Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP),
+                                DUREETRAITEMENTTRANSFERTRAF = Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE),
+                                //DUREETRAITEMENTVALORDSEC = Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE),
+                                //DUREETRAITEMENTSENDSIIG = Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION),
+                                //DUREETRAITEMENTSIIGFP = Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP),
 
-                            DURPREVUTRANSFERT = durPrevu != null ? durPrevu.DELRAF.Value : 0,
-                            DURPREVUVALIDATION = durPrevu != null ? durPrevu.DELTV.Value : 0,
-                            //DURPREVUTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value : 0,
-                            //DURPREVUSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value : 0,
+                                DURPREVUTRANSFERT = durPrevu != null ? durPrevu.DELRAF.Value : 0,
+                                //DURPREVUVALIDATION = durPrevu != null ? durPrevu.DELTV.Value : 0,
+                                //DURPREVUTRANSFSIIG = durPrevu != null ? durPrevu.DELENVOISIIGFP.Value : 0,
+                                //DURPREVUSIIG = durPrevu != null ? durPrevu.DELSIIGFP.Value : 0,
 
-                            DEPASTRANSFERT = durPrevu != null ? Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE) - durPrevu.DELRAF.Value : 0,
-                            DEPASVALIDATION = durPrevu != null ? Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE) - durPrevu.DELTV.Value : 0,
-                            //DEPASTRANSFSIIG = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) - durPrevu.DELENVOISIIGFP.Value : 0,
-                            //DEPASSIIG = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) - durPrevu.DELSIIGFP.Value : 0
-                        });
+                                DEPASTRANSFERT = durPrevu != null ? Date.GetDifference(traitprojets[j].DATECRE, traitprojets[j].DATEBE) - durPrevu.DELRAF.Value : 0,
+                                //DEPASVALIDATION = durPrevu != null ? Date.GetDifference(traitprojets[j].DATEVALIDATION, traitprojets[j].DATECRE) - durPrevu.DELTV.Value : 0,
+                                //DEPASTRANSFSIIG = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) - durPrevu.DELENVOISIIGFP.Value : 0,
+                                //DEPASSIIG = durPrevu != null ? Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) - durPrevu.DELSIIGFP.Value : 0
+                            });
+                        }
                     }
 
                     lastIndexAVANCE += 1;
@@ -1144,40 +1147,43 @@ namespace apptab.Controllers
 
                     for (int j = 0; j < traitprojetsAVANCE.Count; j += 1)
                     {
-                        result[lastIndexAVANCE].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
+                        if ((Date.GetDifference(traitprojetsAVANCE[j].DATECRE, traitprojetsAVANCE[j].DATEBE) - durPrevuAVANCE.DELRAF.Value) > 0)
                         {
-                            PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
-                            TYPE = "Avance",
-                            NUM_ENGAGEMENT = traitprojetsAVANCE[j].REF,
-                            SITE = traitprojetsAVANCE[j].SITE,
-                            BENEFICIAIRE = traitprojetsAVANCE[j].TITUL,
-                            MONTENGAGEMENT = Cipher.Decrypt(traitprojetsAVANCE[j].MONT, "Oppenheimer").ToString(),
+                            result[lastIndexAVANCE].TraitementsEngagementsDetails.Add(new TraitementEngagementDetails
+                            {
+                                PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
+                                TYPE = "Avance",
+                                NUM_ENGAGEMENT = traitprojetsAVANCE[j].REF,
+                                SITE = traitprojetsAVANCE[j].SITE,
+                                BENEFICIAIRE = traitprojetsAVANCE[j].TITUL,
+                                MONTENGAGEMENT = Cipher.Decrypt(traitprojetsAVANCE[j].MONT, "Oppenheimer").ToString(),
 
-                            DATETRANSFERTRAF = traitprojetsAVANCE[j].DATECRE,
-                            DATEVALORDSEC = traitprojetsAVANCE[j].DATEVALIDATION,
-                            //DATESENDSIIG = traitprojetsAVANCE[j].DATENVOISIIGFP,
-                            //DATESIIGFP = traitprojetsAVANCE[j].DATESIIG,
+                                DATETRANSFERTRAF = traitprojetsAVANCE[j].DATECRE,
+                                //DATEVALORDSEC = traitprojetsAVANCE[j].DATEVALIDATION,
+                                //DATESENDSIIG = traitprojetsAVANCE[j].DATENVOISIIGFP,
+                                //DATESIIGFP = traitprojetsAVANCE[j].DATESIIG,
 
-                            TRANSFERTRAFAGENT = await GetAgent(traitprojetsAVANCE[j].IDUSERCREATE),
-                            VALORDSECAGENT = await GetAgent(traitprojetsAVANCE[j].IDUSERVALIDATE),
-                            //SENDSIIGAGENT = await GetAgent(traitprojetsAVANCE[j].IDUSERENVOISIIGFP),
-                            //SIIGFPAGENT = "",
+                                TRANSFERTRAFAGENT = await GetAgent(traitprojetsAVANCE[j].IDUSERCREATE),
+                                //VALORDSECAGENT = await GetAgent(traitprojetsAVANCE[j].IDUSERVALIDATE),
+                                //SENDSIIGAGENT = await GetAgent(traitprojetsAVANCE[j].IDUSERENVOISIIGFP),
+                                //SIIGFPAGENT = "",
 
-                            DUREETRAITEMENTTRANSFERTRAF = Date.GetDifference(traitprojetsAVANCE[j].DATECRE, traitprojetsAVANCE[j].DATEBE),
-                            DUREETRAITEMENTVALORDSEC = Date.GetDifference(traitprojetsAVANCE[j].DATEVALIDATION, traitprojetsAVANCE[j].DATECRE),
-                            //DUREETRAITEMENTSENDSIIG = Data.Date.GetDifference(traitprojetsAVANCE[j].DATENVOISIIGFP, traitprojetsAVANCE[j].DATEVALIDATION),
-                            //DUREETRAITEMENTSIIGFP = Data.Date.GetDifference(traitprojetsAVANCE[j].DATESIIG, traitprojetsAVANCE[j].DATENVOISIIGFP),
+                                DUREETRAITEMENTTRANSFERTRAF = Date.GetDifference(traitprojetsAVANCE[j].DATECRE, traitprojetsAVANCE[j].DATEBE),
+                                //DUREETRAITEMENTVALORDSEC = Date.GetDifference(traitprojetsAVANCE[j].DATEVALIDATION, traitprojetsAVANCE[j].DATECRE),
+                                //DUREETRAITEMENTSENDSIIG = Data.Date.GetDifference(traitprojetsAVANCE[j].DATENVOISIIGFP, traitprojetsAVANCE[j].DATEVALIDATION),
+                                //DUREETRAITEMENTSIIGFP = Data.Date.GetDifference(traitprojetsAVANCE[j].DATESIIG, traitprojetsAVANCE[j].DATENVOISIIGFP),
 
-                            DURPREVUTRANSFERT = durPrevuAVANCE != null ? durPrevuAVANCE.DELRAF.Value : 0,
-                            DURPREVUVALIDATION = durPrevuAVANCE != null ? durPrevuAVANCE.DELTV.Value : 0,
-                            //DURPREVUTRANSFSIIG = durPrevuAVANCE != null ? durPrevuAVANCE.DELENVOISIIGFP.Value : 0,
-                            //DURPREVUSIIG = durPrevuAVANCE != null ? durPrevuAVANCE.DELSIIGFP.Value : 0,
+                                DURPREVUTRANSFERT = durPrevuAVANCE != null ? durPrevuAVANCE.DELRAF.Value : 0,
+                                //DURPREVUVALIDATION = durPrevuAVANCE != null ? durPrevuAVANCE.DELTV.Value : 0,
+                                //DURPREVUTRANSFSIIG = durPrevuAVANCE != null ? durPrevuAVANCE.DELENVOISIIGFP.Value : 0,
+                                //DURPREVUSIIG = durPrevuAVANCE != null ? durPrevuAVANCE.DELSIIGFP.Value : 0,
 
-                            DEPASTRANSFERT = durPrevuAVANCE != null ? Date.GetDifference(traitprojetsAVANCE[j].DATECRE, traitprojetsAVANCE[j].DATEBE) - durPrevuAVANCE.DELRAF.Value : 0,
-                            DEPASVALIDATION = durPrevuAVANCE != null ? Date.GetDifference(traitprojetsAVANCE[j].DATEVALIDATION, traitprojetsAVANCE[j].DATECRE) - durPrevuAVANCE.DELTV.Value : 0,
-                            //DEPASTRANSFSIIG = durPrevuAVANCE != null ? Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) - durPrevuAVANCE.DELENVOISIIGFP.Value : 0,
-                            //DEPASSIIG = durPrevuAVANCE != null ? Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) - durPrevuAVANCE.DELSIIGFP.Value : 0
-                        });
+                                DEPASTRANSFERT = durPrevuAVANCE != null ? Date.GetDifference(traitprojetsAVANCE[j].DATECRE, traitprojetsAVANCE[j].DATEBE) - durPrevuAVANCE.DELRAF.Value : 0,
+                                //DEPASVALIDATION = durPrevuAVANCE != null ? Date.GetDifference(traitprojetsAVANCE[j].DATEVALIDATION, traitprojetsAVANCE[j].DATECRE) - durPrevuAVANCE.DELTV.Value : 0,
+                                //DEPASTRANSFSIIG = durPrevuAVANCE != null ? Data.Date.GetDifference(traitprojets[j].DATENVOISIIGFP, traitprojets[j].DATEVALIDATION) - durPrevuAVANCE.DELENVOISIIGFP.Value : 0,
+                                //DEPASSIIG = durPrevuAVANCE != null ? Data.Date.GetDifference(traitprojets[j].DATESIIG, traitprojets[j].DATENVOISIIGFP) - durPrevuAVANCE.DELSIIGFP.Value : 0
+                            });
+                        }
                     }
                 }
 
