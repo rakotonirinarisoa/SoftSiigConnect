@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="iso-8859-7" standalone="no"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03">
+  <CstmrCdtTrfInitn>
+    <GrpHdr>
+      <MsgId>13094MATP_PACT000015</MsgId>
+      <CreDtTm>2024-09-13T13:11:27.7283793+03:00</CreDtTm>
+      <NbOfTxs>1</NbOfTxs>
+      <CtrlSum>40052200.00</CtrlSum>
+      <InitgPty>
+        <Nm>MATP_PACT</Nm>
+        <Id>
+          <OrgId>
+            <Othr>
+              <Id>00009</Id>
+            </Othr>
+          </OrgId>
+        </Id>
+      </InitgPty>
+      <Nm>MATP_PACT</Nm>
+      <PstlAdr>
+        <AdrTp>RDC MAISON DES PROJET</AdrTp>
+        <TwnNm>ANTANANARIVO</TwnNm>
+        <Ctry>MDG</Ctry>
+        <AdrLine>ANTANANARIVO</AdrLine>
+      </PstlAdr>
+    </GrpHdr>
+    <PmtInf>
+      <PmtInfId>Fact n°010 de TECHNOSTAR, acquisition ordinateur portable pour PACT</PmtInfId>
+      <PmtMtd>TRF</PmtMtd>
+      <BtchBookg>false</BtchBookg>
+      <NbOfTxs>1</NbOfTxs>
+      <CtrlSum>40052200.00</CtrlSum>
+      <PmtTpInf>
+        <InstrPrty>NORM</InstrPrty>
+      </PmtTpInf>
+      <ReqdExctnDt>13/09/2024</ReqdExctnDt>
+      <Dbtr>
+        <Nm>MATP_PACT</Nm>
+        <PstlAdr>
+          <AdrTp>RDC MAISON DES PROJET</AdrTp>
+          <TwnNm>ANTANANARIVO</TwnNm>
+          <Ctry>MDG</Ctry>
+          <AdrLine>ANTANANARIVO</AdrLine>
+        </PstlAdr>
+      </Dbtr>
+      <Id>
+        <OrgId>
+          <Othr>
+            <Id />
+          </Othr>
+        </OrgId>
+      </Id>
+    </PmtInf>
+    <DbtrAcct>
+      <Id>
+        <Othr>
+          <Id>000090509518918370003</Id>
+        </Othr>
+      </Id>
+      <Ccy>MGA</Ccy>
+    </DbtrAcct>
+    <DbtrAgt>
+      <FinInstnId>
+        <BIC>BOAMGMG</BIC>
+      </FinInstnId>
+    </DbtrAgt>
+  </CstmrCdtTrfInitn>
+</Document>
