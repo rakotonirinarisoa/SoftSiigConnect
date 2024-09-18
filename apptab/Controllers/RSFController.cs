@@ -936,7 +936,7 @@ namespace apptab.Controllers
 
                         if (ged.Projects.Any(a => a.DeletionDate == null))
                         {
-                            foreach (var b in ged.Projects.ToList())
+                            foreach (var b in ged.Projects.Where(a => a.DeletionDate == null).ToList())
                             {
                                 SOA.Add(new PRO()
                                 {

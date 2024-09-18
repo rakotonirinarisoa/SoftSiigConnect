@@ -326,7 +326,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                         MONTANT: v.MONTANT,
                         TYPE: v.TYPE,
                         STEPNOW: v.STEPNOW,
-                        STEPNEXT: v.STEPNEXT
+                        STEPNEXT: v.STEPNEXT,
+                        COMM: v.COMM
                     });
                 });
 
@@ -344,6 +345,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                         { data: 'TYPE' },
                         { data: 'STEPNOW' },
                         { data: 'STEPNEXT' },
+                        { data: 'COMM' },
                     ],
                     createdRow: function (row, data, _) {
                         $(row).attr('compteG-id', data.id);
