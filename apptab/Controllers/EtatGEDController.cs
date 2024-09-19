@@ -297,6 +297,7 @@ namespace apptab.Controllers
             public string DUREENEXT { get; set; }
             public string ARCHIVEDATE { get; set; }
             public string RATTACHTOM { get; set; }
+            public string COMM { get; set; }
 
             public List<string> DATESTEP { get; set; }
         }
@@ -556,7 +557,7 @@ namespace apptab.Controllers
             try
             {
                 //Tous//
-                if (TypeDoc == "")
+                if (String.IsNullOrEmpty(TypeDoc))
                 {
                     foreach (var x in Projet)
                     {
@@ -567,7 +568,7 @@ namespace apptab.Controllers
                         SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
                         foreach (var y in ged.Documents.Where(a => a.CreationDate >= DD && a.CreationDate <= DF && site.Contains(a.Site)
-                        && a.DocumentsSenders.Type == 1 && a.DeletionDate == null
+                        && a.DocumentsSenders.Type == 1 && a.DeletionDate == null && (a.Status == 1 || a.Status == 3)
                         && a.ProjectId == idProjet))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
                         {
                             //Document type// na tonga dia document no ijerena ny type misy azy
@@ -577,7 +578,7 @@ namespace apptab.Controllers
                                 var typedoc = ged.DocumentTypes.FirstOrDefault(a => a.Id == IdDocTypes /*&& a.DeletionDate == null*/);
 
                                 //Accusé de récéption//
-                                if (ged.SuppliersDocumentsAcknowledgements.Any(a => a.Id == y.Id) && y.Status == 1 /*&& y.DeletionDate == null*/) //Status == 1 => Création circuit : OK
+                                if (ged.SuppliersDocumentsAcknowledgements.Any(a => a.Id == y.Id) /*&& y.DeletionDate == null*/) //Status == 1 => Création circuit : OK
                                 {
                                     var reference = ged.SuppliersDocumentsAcknowledgements.FirstOrDefault(a => a.Id == y.Id /*&& y.DeletionDate == null*/).ReferenceInterne;
                                     var document = y.Object;
@@ -592,76 +593,81 @@ namespace apptab.Controllers
                                     var validationHistoNEXT = "";
                                     var validationHistoNEXTvalidateur = "";
                                     var validationHistoNEXTduree = "";
-                                    if (ged.ValidationsHistory.Any(a => a.DocumentId == y.Id && a.ActionType == 0))
+                                    if (ged.ValidationsHistory.Any(a => a.DocumentId == y.Id && (a.ActionType == 0 || a.ActionType == 3)))
                                     {
-                                        var validationInProgress = ged.ValidationsHistory.Where(a => a.DocumentId == y.Id && a.ActionType == 0).OrderByDescending(a => a.CreationDate).FirstOrDefault();
+                                        var validationInProgress = ged.ValidationsHistory.Where(a => a.DocumentId == y.Id && (a.ActionType == 0 || a.ActionType == 3)).OrderByDescending(a => a.CreationDate).FirstOrDefault();
                                         var documentStep = ged.DocumentSteps.FirstOrDefault(a => a.Id == validationInProgress.ToDocumentStepId /*&& a.DeletionDate == null*/);
 
-                                        var stepNumber = documentStep.StepNumber;
-
-                                        //Get steps information//
-                                        var isStepType = ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumber /*&& a.DeletionDate == null*/);
-
-                                        validationHisto = "Etape " + stepNumber + " : " + isStepType.ProcessingDescription;
-
-                                        if (ged.DocumentTypesSteps.Any(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumber + 1 /*&& a.DeletionDate == null*/))
+                                        if (documentStep == null)
                                         {
-                                            var isStepTypeNEXT = ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumber + 1 /*&& a.DeletionDate == null*/);
+                                            var validationInProgressFin = ged.ValidationsHistory.Where(a => a.DocumentId == y.Id && a.ActionType == 0).OrderByDescending(a => a.CreationDate).FirstOrDefault();
+                                            var documentStepFin = ged.DocumentSteps.FirstOrDefault(a => a.Id == validationInProgressFin.ToDocumentStepId /*&& a.DeletionDate == null*/);
+                                            var stepNumberFin = documentStepFin.StepNumber;
 
-                                            validationHistoNEXT = "Etape " + (stepNumber + 1) + " : " + isStepTypeNEXT.ProcessingDescription;
-
-                                            validationHistoNEXTduree = isStepTypeNEXT.ProcessingDuration.ToString();
-
-                                            var isStepNext = ged.DocumentSteps.FirstOrDefault(a => a.DocumentId == y.Id && a.StepNumber == (stepNumber + 1) /*&& a.DeletionDate == null*/);
-                                            var userStep = ged.UsersSteps.FirstOrDefault(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/);
-                                            validationHistoNEXTvalidateur = ged.Users.FirstOrDefault(a => a.Id == userStep.UserId /*&& a.DeletionDate == null*/).Username;
-
-                                            if (ged.UsersSteps.Where(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/).Count() > 1)
-                                            {
-                                                validationHistoNEXTvalidateur = "";
-                                                foreach (var vhe in ged.UsersSteps.Where(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/).ToList())
-                                                {
-                                                    validationHistoNEXTvalidateur += ged.Users.FirstOrDefault(a => a.Id == vhe.UserId /*&& a.DeletionDate == null*/).Username + ",";
-                                                }
-                                                validationHistoNEXTvalidateur.TrimEnd(',');
-                                            }
+                                            validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin /*&& a.DeletionDate == null*/).ProcessingDescription;
+                                            validationHistoNEXT = "Terminé";
+                                            validationHistoNEXTvalidateur = "Terminé";
+                                            validationHistoNEXTduree = "0";
                                         }
                                         else
                                         {
-                                            var isStepTypeNEXT = ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumber /*&& a.DeletionDate == null*/);
+                                            var stepNumber = documentStep.StepNumber;
 
-                                            validationHistoNEXT = validationHisto;
-
-                                            validationHistoNEXTduree = isStepTypeNEXT.ProcessingDuration.ToString();
-
-                                            var isStepNext = ged.DocumentSteps.FirstOrDefault(a => a.DocumentId == y.Id && a.StepNumber == stepNumber /*&& a.DeletionDate == null*/);
-                                            var userStep = ged.UsersSteps.FirstOrDefault(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/);
-                                            validationHistoNEXTvalidateur = ged.Users.FirstOrDefault(a => a.Id == userStep.UserId /*&& a.DeletionDate == null*/).Username;
-
-                                            if (ged.UsersSteps.Where(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/ && a.DeletionDate == null).Count() > 1)
+                                            //Get steps information//
+                                            var isStepType = ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == (stepNumber - 1) /*&& a.DeletionDate == null*/);
+                                            if (isStepType == null)
                                             {
-                                                validationHistoNEXTvalidateur = "";
-                                                foreach (var vhe in ged.UsersSteps.Where(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/).ToList())
+                                                validationHisto = "Etape " + stepNumber + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumber /*&& a.DeletionDate == null*/).ProcessingDescription;
+                                                validationHistoNEXT = "Terminé";
+                                                validationHistoNEXTvalidateur = "Terminé";
+                                                validationHistoNEXTduree = "0";
+                                            }
+                                            else
+                                            {
+                                                validationHisto = "Etape " + (stepNumber - 1) + " : " + isStepType.ProcessingDescription;
+
+                                                var isStepTypeNEXT = ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumber /*&& a.DeletionDate == null*/);
+
+                                                validationHistoNEXT = "Etape " + (stepNumber) + " : " + isStepTypeNEXT.ProcessingDescription;
+
+                                                validationHistoNEXTduree = isStepTypeNEXT.ProcessingDuration.ToString();
+
+                                                var isStepNext = ged.DocumentSteps.FirstOrDefault(a => a.DocumentId == y.Id && a.StepNumber == stepNumber /*&& a.DeletionDate == null*/);
+                                                var userStep = ged.UsersSteps.FirstOrDefault(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/);
+                                                var isuu = ged.Users.FirstOrDefault(a => a.Id == userStep.UserId /*&& a.DeletionDate == null*/);
+                                                validationHistoNEXTvalidateur = (String.IsNullOrEmpty(isuu.Fonction) ? "SANS FONCTION" : isuu.Fonction + " : ") +
+                                                            (String.IsNullOrEmpty(isuu.Username) ? "" : isuu.Username + " : ") +
+                                                            (String.IsNullOrEmpty(isuu.LastName) ? "" : isuu.LastName + " ") +
+                                                            (String.IsNullOrEmpty(isuu.FirstName) ? "" : isuu.FirstName);
+
+                                                if (ged.UsersSteps.Where(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/).Count() > 1)
                                                 {
-                                                    validationHistoNEXTvalidateur += ged.Users.FirstOrDefault(a => a.Id == vhe.UserId /*&& a.DeletionDate == null*/).Username + ",";
+                                                    validationHistoNEXTvalidateur = "";
+                                                    foreach (var vhe in ged.UsersSteps.Where(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/).ToList())
+                                                    {
+                                                        var isUser = ged.Users.FirstOrDefault(a => a.Id == vhe.UserId);
+                                                        validationHistoNEXTvalidateur += "<li>" + ((String.IsNullOrEmpty(isuu.Fonction) ? "SANS FONCTION" : isuu.Fonction + " : ") +
+                                                            (String.IsNullOrEmpty(isuu.Username) ? "" : isuu.Username + " : ") +
+                                                            (String.IsNullOrEmpty(isuu.LastName) ? "" : isuu.LastName + " ") +
+                                                            (String.IsNullOrEmpty(isuu.FirstName) ? "" : isuu.FirstName)) + "</li>";
+                                                    }
                                                 }
-                                                validationHistoNEXTvalidateur.TrimEnd(',');
                                             }
                                         }
-                                    }
 
-                                    list.Add(new TDB
-                                    {
-                                        REFERENCE = reference,
-                                        DOCUMENT = document,
-                                        FOURNISSEUR = fournisseur,
-                                        MONTANT = montant,
-                                        TYPE = typedoc.Title,
-                                        STEPNOW = validationHisto,
-                                        STEPNEXT = validationHistoNEXT,
-                                        VALIDATEURNEXT = validationHistoNEXTvalidateur,
-                                        DUREENEXT = validationHistoNEXTduree
-                                    });
+                                        list.Add(new TDB
+                                        {
+                                            REFERENCE = reference,
+                                            DOCUMENT = document,
+                                            FOURNISSEUR = fournisseur,
+                                            MONTANT = montant,
+                                            TYPE = typedoc.Title,
+                                            STEPNOW = validationHisto,
+                                            STEPNEXT = validationHistoNEXT,
+                                            VALIDATEURNEXT = validationHistoNEXTvalidateur,
+                                            DUREENEXT = validationHistoNEXTduree
+                                        });
+                                    }
                                 }
                             }
                         }
@@ -679,17 +685,16 @@ namespace apptab.Controllers
 
                         //Mbola misy code eto ijerena ny type de docs WHERE @io ambany io//
                         foreach (var y in ged.Documents.Where(a => a.CreationDate >= DD && a.CreationDate <= DF && site.Contains(a.Site)
-                        && a.DocumentsSenders.Type == 1 && a.DeletionDate == null
+                        && a.DocumentsSenders.Type == 1 && a.DeletionDate == null && (a.Status == 1 || a.Status == 3)
                         && a.ProjectId == idProjet))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
                         {
                             if (ged.DocumentTypeUnion.Any(a => a.DocumentID == y.Id && a.TypeDocID == typedoc.Id))
                             {
                                 //Accusé de récéption//
-                                if (ged.SuppliersDocumentsAcknowledgements.Any(a => a.Id == y.Id) && y.Status == 1 /*&& y.DeletionDate == null*/) //Status == 1 => Création circuit : OK pour un document
+                                if (ged.SuppliersDocumentsAcknowledgements.Any(a => a.Id == y.Id) /*&& y.DeletionDate == null*/) //Status == 1 => Création circuit : OK
                                 {
                                     var reference = ged.SuppliersDocumentsAcknowledgements.FirstOrDefault(a => a.Id == y.Id /*&& y.DeletionDate == null*/).ReferenceInterne;
                                     var document = y.Object;
-
                                     var fournisseur = "";
                                     if (ged.Suppliers.Any(a => a.Id == y.DocumentsSenders.Id /*&& a.DeletionDate == null*/ && a.ProjectId == idProjet))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
                                         fournisseur = ged.Suppliers.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id /*&& a.DeletionDate == null*/ && a.ProjectId == idProjet).Name;
@@ -701,66 +706,81 @@ namespace apptab.Controllers
                                     var validationHistoNEXT = "";
                                     var validationHistoNEXTvalidateur = "";
                                     var validationHistoNEXTduree = "";
-                                    if (ged.ValidationsHistory.Any(a => a.DocumentId == y.Id && a.ActionType == 0))
+                                    if (ged.ValidationsHistory.Any(a => a.DocumentId == y.Id && (a.ActionType == 0 || a.ActionType == 3)))
                                     {
-                                        var validationInProgress = ged.ValidationsHistory.Where(a => a.DocumentId == y.Id && a.ActionType == 0).OrderByDescending(a => a.CreationDate).FirstOrDefault();
+                                        var validationInProgress = ged.ValidationsHistory.Where(a => a.DocumentId == y.Id && (a.ActionType == 0 || a.ActionType == 3)).OrderByDescending(a => a.CreationDate).FirstOrDefault();
                                         var documentStep = ged.DocumentSteps.FirstOrDefault(a => a.Id == validationInProgress.ToDocumentStepId /*&& a.DeletionDate == null*/);
 
-                                        var stepNumber = documentStep.StepNumber;
-
-                                        //Get steps information//
-                                        var isStepType = ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumber /*&& a.DeletionDate == null*/);
-
-                                        validationHisto = "Etape " + stepNumber + " : " + isStepType.ProcessingDescription;
-
-                                        if (ged.DocumentTypesSteps.Any(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumber + 1 /*&& a.DeletionDate == null*/))
+                                        if (documentStep == null)
                                         {
-                                            var isStepTypeNEXT = ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumber + 1 /*&& a.DeletionDate == null*/);
+                                            var validationInProgressFin = ged.ValidationsHistory.Where(a => a.DocumentId == y.Id && a.ActionType == 0).OrderByDescending(a => a.CreationDate).FirstOrDefault();
+                                            var documentStepFin = ged.DocumentSteps.FirstOrDefault(a => a.Id == validationInProgressFin.ToDocumentStepId /*&& a.DeletionDate == null*/);
+                                            var stepNumberFin = documentStepFin.StepNumber;
 
-                                            validationHistoNEXT = "Etape " + (stepNumber + 1) + " : " + isStepTypeNEXT.ProcessingDescription;
-
-                                            validationHistoNEXTduree = isStepTypeNEXT.ProcessingDuration.ToString();
-
-                                            var isStepNext = ged.DocumentSteps.FirstOrDefault(a => a.DocumentId == y.Id && a.StepNumber == (stepNumber + 1) /*&& a.DeletionDate == null*/);
-                                            var userStep = ged.UsersSteps.FirstOrDefault(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/);
-                                            validationHistoNEXTvalidateur = ged.Users.FirstOrDefault(a => a.Id == userStep.UserId /*&& a.DeletionDate == null*/).Username;
+                                            validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin /*&& a.DeletionDate == null*/).ProcessingDescription;
+                                            validationHistoNEXT = "Terminé";
+                                            validationHistoNEXTvalidateur = "Terminé";
+                                            validationHistoNEXTduree = "0";
                                         }
                                         else
                                         {
-                                            var isStepTypeNEXT = ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumber /*&& a.DeletionDate == null*/);
+                                            var stepNumber = documentStep.StepNumber;
 
-                                            validationHistoNEXT = validationHisto;
-
-                                            validationHistoNEXTduree = isStepTypeNEXT.ProcessingDuration.ToString();
-
-                                            var isStepNext = ged.DocumentSteps.FirstOrDefault(a => a.DocumentId == y.Id && a.StepNumber == stepNumber /*&& a.DeletionDate == null*/);
-                                            var userStep = ged.UsersSteps.FirstOrDefault(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/);
-                                            validationHistoNEXTvalidateur = ged.Users.FirstOrDefault(a => a.Id == userStep.UserId /*&& a.DeletionDate == null*/).Username;
-
-                                            if (ged.UsersSteps.Where(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/).Count() > 1)
+                                            //Get steps information//
+                                            var isStepType = ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == (stepNumber - 1) /*&& a.DeletionDate == null*/);
+                                            if (isStepType == null)
                                             {
-                                                validationHistoNEXTvalidateur = "";
-                                                foreach (var vhe in ged.UsersSteps.Where(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/).ToList())
+                                                validationHisto = "Etape " + stepNumber + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumber /*&& a.DeletionDate == null*/).ProcessingDescription;
+                                                validationHistoNEXT = "Terminé";
+                                                validationHistoNEXTvalidateur = "Terminé";
+                                                validationHistoNEXTduree = "0";
+                                            }
+                                            else
+                                            {
+                                                validationHisto = "Etape " + (stepNumber - 1) + " : " + isStepType.ProcessingDescription;
+
+                                                var isStepTypeNEXT = ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumber /*&& a.DeletionDate == null*/);
+
+                                                validationHistoNEXT = "Etape " + (stepNumber) + " : " + isStepTypeNEXT.ProcessingDescription;
+
+                                                validationHistoNEXTduree = isStepTypeNEXT.ProcessingDuration.ToString();
+
+                                                var isStepNext = ged.DocumentSteps.FirstOrDefault(a => a.DocumentId == y.Id && a.StepNumber == stepNumber /*&& a.DeletionDate == null*/);
+                                                var userStep = ged.UsersSteps.FirstOrDefault(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/);
+                                                var isuu = ged.Users.FirstOrDefault(a => a.Id == userStep.UserId /*&& a.DeletionDate == null*/);
+                                                validationHistoNEXTvalidateur = (String.IsNullOrEmpty(isuu.Fonction) ? "SANS FONCTION" : isuu.Fonction + " : ") +
+                                                            (String.IsNullOrEmpty(isuu.Username) ? "" : isuu.Username + " : ") +
+                                                            (String.IsNullOrEmpty(isuu.LastName) ? "" : isuu.LastName + " ") +
+                                                            (String.IsNullOrEmpty(isuu.FirstName) ? "" : isuu.FirstName);
+
+                                                if (ged.UsersSteps.Where(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/).Count() > 1)
                                                 {
-                                                    validationHistoNEXTvalidateur += ged.Users.FirstOrDefault(a => a.Id == vhe.UserId /*&& a.DeletionDate == null*/).Username + ",";
+                                                    validationHistoNEXTvalidateur = "";
+                                                    foreach (var vhe in ged.UsersSteps.Where(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/).ToList())
+                                                    {
+                                                        var isUser = ged.Users.FirstOrDefault(a => a.Id == vhe.UserId);
+                                                        validationHistoNEXTvalidateur += "<li>" + ((String.IsNullOrEmpty(isuu.Fonction) ? "SANS FONCTION" : isuu.Fonction + " : ") +
+                                                            (String.IsNullOrEmpty(isuu.Username) ? "" : isuu.Username + " : ") +
+                                                            (String.IsNullOrEmpty(isuu.LastName) ? "" : isuu.LastName + " ") +
+                                                            (String.IsNullOrEmpty(isuu.FirstName) ? "" : isuu.FirstName)) + "</li>";
+                                                    }
                                                 }
-                                                validationHistoNEXTvalidateur.TrimEnd(',');
                                             }
                                         }
-                                    }
 
-                                    list.Add(new TDB
-                                    {
-                                        REFERENCE = reference,
-                                        DOCUMENT = document,
-                                        FOURNISSEUR = fournisseur,
-                                        MONTANT = montant,
-                                        TYPE = typedoc.Title,
-                                        STEPNOW = validationHisto,
-                                        STEPNEXT = validationHistoNEXT,
-                                        VALIDATEURNEXT = validationHistoNEXTvalidateur,
-                                        DUREENEXT = validationHistoNEXTduree
-                                    });
+                                        list.Add(new TDB
+                                        {
+                                            REFERENCE = reference,
+                                            DOCUMENT = document,
+                                            FOURNISSEUR = fournisseur,
+                                            MONTANT = montant,
+                                            TYPE = typedoc.Title,
+                                            STEPNOW = validationHisto,
+                                            STEPNEXT = validationHistoNEXT,
+                                            VALIDATEURNEXT = validationHistoNEXTvalidateur,
+                                            DUREENEXT = validationHistoNEXTduree
+                                        });
+                                    }
                                 }
                             }
                         }
@@ -771,31 +791,6 @@ namespace apptab.Controllers
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
             }
-
-            //list.Add(new TDB
-            //{
-            //    REFERENCE = "0001/24/01",
-            //    DOCUMENT = "Document01",
-            //    FOURNISSEUR = "TELMA",
-            //    MONTANT = "200000",
-            //    TYPE = "Facture",
-            //    STEPNOW = "USER1",
-            //    STEPNEXT = "Validation 2",
-            //    VALIDATEURNEXT = "USER 2",
-            //    DUREENEXT = "24"
-            //});
-            //list.Add(new TDB
-            //{
-            //    REFERENCE = "0001/24/02",
-            //    DOCUMENT = "Document02",
-            //    FOURNISSEUR = "TELMA",
-            //    MONTANT = "500000",
-            //    TYPE = "BC",
-            //    STEPNOW = "USER1",
-            //    STEPNEXT = "Validation 2",
-            //    VALIDATEURNEXT = "USER 2",
-            //    DUREENEXT = "24"
-            //});
 
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list }, settings));
         }
@@ -1047,13 +1042,13 @@ namespace apptab.Controllers
 
                         //Mbola misy code eto ijerena ny type de docs WHERE @io ambany io//
                         foreach (var y in ged.Documents.Where(a => a.CreationDate >= DD && a.CreationDate <= DF && site.Contains(a.Site)
-                        && a.DocumentsSenders.Type == 1 && a.DeletionDate == null
+                        && a.DocumentsSenders.Type == 1 && a.DeletionDate == null && (a.Status == 1 || a.Status == 3)
                         && a.ProjectId == idProjet))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
                         {
                             if (ged.DocumentTypeUnion.Any(a => a.DocumentID == y.Id && a.TypeDocID == typedoc.Id))
                             {
                                 //Accusé de récéption//
-                                if (ged.SuppliersDocumentsAcknowledgements.Any(a => a.Id == y.Id) && y.Status == 1 /*&& y.DeletionDate == null*/) //Status == 1 => Création circuit : OK pour un document
+                                if (ged.SuppliersDocumentsAcknowledgements.Any(a => a.Id == y.Id) /*&& y.DeletionDate == null*/) //Status == 1 => Création circuit : OK pour un document
                                 {
                                     List<string> dateStep = new List<string>();
 
@@ -1081,13 +1076,18 @@ namespace apptab.Controllers
 
                                         if (DocSteps != null)
                                         {
-                                            var UsersStep = ged.UsersSteps.FirstOrDefault(a => a.DocumentStepId == DocSteps.Id /*&& a.DeletionDate == null*/);//A verifier le ACTIONTYPE dans ValidationHistory si besoin (0 : validation ou 3 : archivage)
+                                            var UsersStep = ged.UsersSteps.FirstOrDefault(a => a.DocumentStepId == DocSteps.Id && a.ProcessingDate != null && a.IsValidator == true/*&& a.DeletionDate == null*/);//A verifier le ACTIONTYPE dans ValidationHistory si besoin (0 : validation ou 3 : archivage)
 
                                             var dateValidation = " ";
-                                            if (UsersStep.ProcessingDate != null)
+                                            if (UsersStep != null)
                                             {
-                                                dateValidation = UsersStep.ProcessingDate.Value.ToShortDateString();
-                                                //dateStep.Add(dateValidation);
+                                                var isuu = ged.Users.FirstOrDefault(a => a.Id == UsersStep.UserId /*&& a.DeletionDate == null*/);
+                                                dateValidation = UsersStep.ProcessingDate.Value.ToShortDateString() + "<br/>" +
+                                                    ((String.IsNullOrEmpty(isuu.Fonction) ? "SANS FONCTION" : isuu.Fonction + " : ") +
+                                                    (String.IsNullOrEmpty(isuu.Username) ? "" : isuu.Username + " : ") +
+                                                    (String.IsNullOrEmpty(isuu.LastName) ? "" : isuu.LastName + " ") +
+                                                    (String.IsNullOrEmpty(isuu.FirstName) ? "" : isuu.FirstName)) + "<br/>" +
+                                                    UsersStep.Comment;
                                             }
 
                                             dateStep.Add(dateValidation);
@@ -1196,7 +1196,7 @@ namespace apptab.Controllers
             try
             {
                 //Tous//
-                if (ListFournisseur == "")
+                if (String.IsNullOrEmpty(ListFournisseur))
                 {
                     foreach (var x in Projet)
                     {
@@ -1214,7 +1214,7 @@ namespace apptab.Controllers
                             if (ged.DocumentTypeUnion.Any(a => a.DocumentID == y.Id))
                             {
                                 //Accusé de récéption//
-                                if (ged.SuppliersDocumentsAcknowledgements.Any(a => a.Id == y.Id) && y.Status == 1 /*&& y.DeletionDate == null*/) //Status == 1 => Création circuit : OK
+                                if (ged.SuppliersDocumentsAcknowledgements.Any(a => a.Id == y.Id) /*&& y.DeletionDate == null*/) //Status == 1 => Création circuit : OK
                                 {
                                     var reference = ged.SuppliersDocumentsAcknowledgements.FirstOrDefault(a => a.Id == y.Id /*&& y.DeletionDate == null*/).ReferenceInterne;
                                     var document = y.Object;
@@ -1229,19 +1229,26 @@ namespace apptab.Controllers
                                     var DateAnn = "";
                                     //var EtapeNumberAnn = "";
                                     var UserAnn = "";
+                                    var comm = "";
                                     if (ged.DocumentSteps.Any(a => a.DocumentId == y.Id /*&& a.DeletionDate == null*/))
                                     {
                                         foreach (var s in ged.DocumentSteps.Where(a => a.DocumentId == y.Id /*&& a.DeletionDate == null*/).ToList())
                                         {
-                                            if (ged.UsersSteps.Any(a => a.DocumentStepId == s.Id && a.DeletionDate != null))// != NULL suite requête de GED : GetTotalNumberOfCanceledDocuments
+                                            if (ged.UsersSteps.Any(a => a.DocumentStepId == s.Id && a.DeletionDate != null && a.IsValidator == true))// != NULL suite requête de GED : GetTotalNumberOfCanceledDocuments
                                             {
-                                                var isAnnul = ged.UsersSteps.FirstOrDefault(a => a.DocumentStepId == s.Id && a.DeletionDate != null);
+                                                var isAnnul = ged.UsersSteps.FirstOrDefault(a => a.DocumentStepId == s.Id /*&& a.DeletionDate != null */ && a.IsValidator == true);
 
                                                 DescriptAnn = "Etape " + s.StepNumber.ToString() + " : " + s.ProcessingDescription;
 
                                                 DateAnn = isAnnul.ProcessingDate.Value.ToString();
 
-                                                UserAnn = ged.Users.FirstOrDefault(a => a.Id == isAnnul.UserId).Username;
+                                                var isuu = ged.Users.FirstOrDefault(a => a.Id == isAnnul.UserId);
+                                                UserAnn = ((String.IsNullOrEmpty(isuu.Fonction) ? "SANS FONCTION" : isuu.Fonction + " : ") +
+                                                    (String.IsNullOrEmpty(isuu.Username) ? "" : isuu.Username + " : ") +
+                                                    (String.IsNullOrEmpty(isuu.LastName) ? "" : isuu.LastName + " ") +
+                                                    (String.IsNullOrEmpty(isuu.FirstName) ? "" : isuu.FirstName));
+
+                                                comm = isAnnul.Comment;
                                             }
                                         }
                                     }
@@ -1255,6 +1262,7 @@ namespace apptab.Controllers
                                         TYPE = DescriptAnn,
                                         STEPNOW = DateAnn,
                                         STEPNEXT = UserAnn,
+                                        COMM = comm
                                     });
                                 }
                             }
@@ -1294,19 +1302,26 @@ namespace apptab.Controllers
                                     var DateAnn = "";
                                     //var EtapeNumberAnn = "";
                                     var UserAnn = "";
+                                    var comm = "";
                                     if (ged.DocumentSteps.Any(a => a.DocumentId == y.Id /*&& a.DeletionDate == null*/))
                                     {
                                         foreach (var s in ged.DocumentSteps.Where(a => a.DocumentId == y.Id /*&& a.DeletionDate == null*/).ToList())
                                         {
-                                            if (ged.UsersSteps.Any(a => a.DocumentStepId == s.Id && a.DeletionDate != null))// != NULL suite requête de GED : GetTotalNumberOfCanceledDocuments
+                                            if (ged.UsersSteps.Any(a => a.DocumentStepId == s.Id && a.DeletionDate != null && a.IsValidator == true))// != NULL suite requête de GED : GetTotalNumberOfCanceledDocuments
                                             {
-                                                var isAnnul = ged.UsersSteps.FirstOrDefault(a => a.DocumentStepId == s.Id && a.DeletionDate != null);
+                                                var isAnnul = ged.UsersSteps.FirstOrDefault(a => a.DocumentStepId == s.Id /*&& a.DeletionDate != null */ && a.IsValidator == true);
 
                                                 DescriptAnn = "Etape " + s.StepNumber.ToString() + " : " + s.ProcessingDescription;
 
                                                 DateAnn = isAnnul.ProcessingDate.Value.ToString();
 
-                                                UserAnn = ged.Users.FirstOrDefault(a => a.Id == isAnnul.UserId).Username;
+                                                var isuu = ged.Users.FirstOrDefault(a => a.Id == isAnnul.UserId);
+                                                UserAnn = ((String.IsNullOrEmpty(isuu.Fonction) ? "SANS FONCTION" : isuu.Fonction + " : ") +
+                                                    (String.IsNullOrEmpty(isuu.Username) ? "" : isuu.Username + " : ") +
+                                                    (String.IsNullOrEmpty(isuu.LastName) ? "" : isuu.LastName + " ") +
+                                                    (String.IsNullOrEmpty(isuu.FirstName) ? "" : isuu.FirstName));
+
+                                                comm = isAnnul.Comment;
                                             }
                                         }
                                     }
@@ -1320,6 +1335,7 @@ namespace apptab.Controllers
                                         TYPE = DescriptAnn,
                                         STEPNOW = DateAnn,
                                         STEPNEXT = UserAnn,
+                                        COMM = comm
                                     });
                                 }
                             }
