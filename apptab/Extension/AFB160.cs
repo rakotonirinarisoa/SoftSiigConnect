@@ -337,7 +337,6 @@ namespace apptab.Extension
 
                        new XElement("PmtTpInf",
                        new XElement("InstrPrty", "NORM")),//a saisir selon l'utilisateur
-                      // new XElement("ReqdExctnDt", dtcrdt.Date.ToShortDateString()),//string.Format("{0:dd/MM/yyyy}", DateTime.Now)
                        new XElement("ReqdExctnDt", ddt),
                        new XElement("Dbtr",
                            new XElement("PstlAdr",
@@ -355,53 +354,99 @@ namespace apptab.Extension
                         new XElement("DbtrAcct",
                            new XElement("Id",
                                new XElement("Othr",
-                                   new XElement("Id", donneurOrde.CODE_GUICHET + donneurOrde.NUM_COMPTE + donneurOrde.CODE_BANQUE))),//RIB RJL1 // beneficiaire.rib
+                                   new XElement("Id", donneurOrde.CODE_GUICHET + donneurOrde.NUM_COMPTE + donneurOrde.CODE_BANQUE))),
                            new XElement("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ').Trim(' '))
                        ),
                        new XElement("DbtrAgt",
                        new XElement("FinInstnId",
                        new XElement("BIC", rbanque.CODEBIC.Trim(' '))
                        )));
-                    if (beneficiaires.Count() > 1)
+                    foreach (var item in beneficiaires)
                     {
-                        foreach (var item in beneficiaires)
-                        {
-                            var opop = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.NUM && a.NUMEREG == bnfr.NUMEREG).FirstOrDefault();
+                        var opop = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.NUM && a.NUMEREG == bnfr.NUMEREG).FirstOrDefault();
 
-                            var regle = (from journl in tom.RJL1
-                                                    where journl.CODE == item.CODE_J && journl.JLTRESOR == true && journl.NATURE == "2"
-                                                    select journl).Single();
-
-                            rbanque = tom.RBANQUES.Where(a => a.CODE == regle.BANQUE).FirstOrDefault();
-                            //eto no miverina virment
-                            contacts.Add(new XElement("CdtTrfTxInf",
-                            new XElement("PmtId",
-                            new XElement("InstrId", formaterTexte(35, item.LIBELLE.TrimEnd(' ') + item.BENEFICIAIRE.TrimEnd(' ') + opop.auxi.TrimEnd(' '))),
-                            new XElement("EndToEndId", opop.auxi.TrimEnd(' ').Trim(' ')),
-                            new XElement("Amt", new XElement("InstdAmt", new XAttribute("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ')), Convert.ToDecimal( String.Format("{0:0.00}",item.MONTANT)))
-                            ),
-                            new XElement("ChrgBr", "SHAR"),
+                        var regle = (from journl in tom.RJL1
+                                     where journl.CODE == item.CODE_J && journl.JLTRESOR == true && journl.NATURE == "2"
+                                     select journl).Single();
+                        decimal ere = Convert.ToDecimal(String.Format("{0:0.00}", item.MONTANT));
+                        rbanque = tom.RBANQUES.Where(a => a.CODE == regle.BANQUE).FirstOrDefault();
+                        //eto no miverina virment
+                        contacts.Add(new XElement("CdtTrfTxInf",
+                        new XElement("PmtId",
+                        //new XElement("InstrId", formaterTexte(35, item.LIBELLE.TrimEnd(' ') + item.BENEFICIAIRE.TrimEnd(' ') + opop.auxi.TrimEnd(' '))),
+                        //new XElement("EndToEndId", opop.auxi.TrimEnd(' ').Trim(' ')),
+                        new XElement("InstrId", formaterTexte(35, bnfr.RIB.TrimEnd(' '))),
+                        new XElement("EndToEndId", formaterTexte(35, bnfr.RIB.TrimEnd(' '))),
+                        new XElement("Amt",
+                            new XElement("InstdAmt",
+                            new XAttribute("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ')), ere)),
+                        //new XElement("ChrgBr", "SHAR"),
                             new XElement("CdtrAgt",
                                 new XElement("FinInstnId",
-                                new XElement("BIC", rbanque.CODEBIC),
-                                new XElement("Nm", formaterTexte(35, rbanque.NOM).TrimEnd(' ')),
-                                new XElement("PstlAdr", new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' '))))),
-                            new XElement("Cdtr",
-                                new XElement("Nm", formaterTexte(35, item.BENEFICIAIRE).TrimEnd(' ')),
-                                new XElement("PstlAdr",
-                                    new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')),
-                                    new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')),
-                                    new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' ')))
-                                ),
-                              new XElement("CdtrAcct",
-                                new XElement("Id",
-                                    new XElement("Othr",
-                                        new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB)
-                                    ))
-                                ))));
-                            iteration = iteration + 1;
-                        }
+                                new XElement("BIC", rbanque.CODEBIC)
+                                //new XElement("Nm", formaterTexte(35, rbanque.NOM).TrimEnd(' ')),
+                                //new XElement("PstlAdr", new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ')))
+                            )),
+                             new XElement("Cdtr",
+                                new XElement("Nm", formaterTexte(35, item.BENEFICIAIRE).TrimEnd(' '))
+                             ),
+                          //new XElement("PstlAdr",
+                          //    new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')),
+                          //    new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')),
+                          //    new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' ')))
+                          //),
+                          new XElement("CdtrAcct",
+                            new XElement("Id",
+                                new XElement("Othr",
+                                    new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB)
+                                ))
+                            ))));
+                        iteration = iteration + 1;
                     }
+                    #region
+                    //if (beneficiaires.Count() > 1)
+                    //{
+                    //    foreach (var item in beneficiaires)
+                    //    {
+                    //        var opop = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.NUM && a.NUMEREG == bnfr.NUMEREG).FirstOrDefault();
+
+                    //        var regle = (from journl in tom.RJL1
+                    //                     where journl.CODE == item.CODE_J && journl.JLTRESOR == true && journl.NATURE == "2"
+                    //                     select journl).Single();
+
+                    //        rbanque = tom.RBANQUES.Where(a => a.CODE == regle.BANQUE).FirstOrDefault();
+                    //        //eto no miverina virment
+                    //        contacts.Add(new XElement("CdtTrfTxInf",
+                    //        new XElement("PmtId",
+                    //        //new XElement("InstrId", formaterTexte(35, item.LIBELLE.TrimEnd(' ') + item.BENEFICIAIRE.TrimEnd(' ') + opop.auxi.TrimEnd(' '))),
+                    //        //new XElement("EndToEndId", opop.auxi.TrimEnd(' ').Trim(' ')),
+                    //        new XElement("InstrId", formaterTexte(35, bnfr.RIB)),
+                    //        new XElement("EndToEndId", formaterTexte(35, bnfr.RIB)),
+                    //        new XElement("Amt", new XElement("InstdAmt", new XAttribute("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ')), Convert.ToDecimal(String.Format("{0:0.00}", item.MONTANT)))
+                    //        ),
+                    //        new XElement("ChrgBr", "SHAR"),
+                    //        new XElement("CdtrAgt",
+                    //            new XElement("FinInstnId",
+                    //            new XElement("BIC", rbanque.CODEBIC),
+                    //            new XElement("Nm", formaterTexte(35, rbanque.NOM).TrimEnd(' ')),
+                    //            new XElement("PstlAdr", new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' '))))),
+                    //        new XElement("Cdtr",
+                    //            new XElement("Nm", formaterTexte(35, item.BENEFICIAIRE).TrimEnd(' ')),
+                    //            new XElement("PstlAdr",
+                    //                new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')),
+                    //                new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')),
+                    //                new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' ')))
+                    //            ),
+                    //          new XElement("CdtrAcct",
+                    //            new XElement("Id",
+                    //                new XElement("Othr",
+                    //                    new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB)
+                    //                ))
+                    //            ))));
+                    //        iteration = iteration + 1;
+                    //    }
+                    //}
+                    #endregion
                     fs.Write(info, 0, info.Length);
                     info = new UTF8Encoding(true).GetBytes(contacts.ToString());
                     fs.Write(info, 0, info.Length);
