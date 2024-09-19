@@ -77,6 +77,7 @@ namespace apptab.Controllers
                     if (SExist.HOTE != param.HOTE || SExist.IDENTIFIANT != param.IDENTIFIANT || SExist.FTPPWD != param.FTPPWD || SExist.PATH != param.PATH /*|| SExist.PORT != param.PORT*/)
                     {
                         SExist.HOTE = param.HOTE;
+                        SExist.PORT = param.PORT;
                         SExist.IDENTIFIANT = param.IDENTIFIANT;
                         SExist.FTPPWD = param.FTPPWD;
                         SExist.PATH = param.PATH;
@@ -112,6 +113,7 @@ namespace apptab.Controllers
                     var newPara = new OPA_FTP()
                     {
                         HOTE = param.HOTE,
+                        PORT = param.PORT,
                         IDENTIFIANT = param.IDENTIFIANT,
                         FTPPWD = param.FTPPWD,
                         PATH = param.PATH,
@@ -127,6 +129,7 @@ namespace apptab.Controllers
                     var newElemH = new HOPA_FTP()
                     {
                         HOTE = param.HOTE,
+                        PORT = param.PORT,
                         IDENTIFIANT = param.IDENTIFIANT,
                         FTPPWD = param.FTPPWD,
                         PATH = param.PATH,

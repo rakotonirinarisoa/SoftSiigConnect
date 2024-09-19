@@ -1,6 +1,7 @@
 ﻿var table = undefined;
 var FilenameUsr;
 const pass = $('#user-password');
+let idtype = 0;
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
@@ -1529,13 +1530,16 @@ function getelementCheckJs() {
             });
         }
     }
-    console.log(list);
-    getelementTXT(0, list);
+    //console.log(list);
+    console.log(idtype);
+    //getelementTXT(0, list);
+    getelementTXT(idtype, list);
 }
 
 $('[data-action="SaveV"]').click(function () {
     let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
-
+    let typeF = $(this).attr(`data-type`);
+    idtype = typeF;
     let list = [];
     $.each(CheckList, (k, v) => {
         list.push($(v).attr("compteG-id"));
@@ -1553,6 +1557,7 @@ $('[data-action="SaveV"]').click(function () {
 
 $('#get-user-password-btn').on('click', () => {
     let formData = new FormData();
+    console.log(idtype);
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);

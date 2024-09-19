@@ -311,24 +311,24 @@ namespace apptab.Extension
                                 new XElement("CtrlSum", Convert.ToDecimal(String.Format("{0:0.00}", montant))),
 
                                 new XElement("InitgPty",
-                                    new XElement("Nm", donneurOrde.DONNEUR_ORDRE.TrimEnd(' ').Trim(' ')),
+                                    new XElement("Nm", formaterTexte(35, donneurOrde.DONNEUR_ORDRE).TrimEnd(' ')),
                                     new XElement("Id",
                                     new XElement("OrgId",
                                         new XElement("Othr",
                                             new XElement("Id", donneurOrde.CODE_BANQUE.TrimEnd(' '))
                                         )
                                 ))),
-                                new XElement("Nm", donneurOrde.DONNEUR_ORDRE.TrimEnd(' ').Trim(' ')),
+                                new XElement("Nm", formaterTexte(35,donneurOrde.DONNEUR_ORDRE).TrimEnd(' ')),
                                 new XElement("PstlAdr",
-                                new XElement("AdrTp",donneurOrde.ADDRESSE1),
-                                new XElement("TwnNm", donneurOrde.VILLE),
+                                new XElement("AdrTp",formaterTexte(35,donneurOrde.ADDRESSE1).TrimEnd(' ')),
+                                new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')),
                                 new XElement("Ctry", donneurOrde.PAYS.Trim(' ')),
                                 new XElement("AdrLine", donneurOrde.VILLE))
                                 ));
                     var op = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == bnfr.NUM && a.NUMEREG == bnfr.NUMEREG).FirstOrDefault();
 
                     contacts.Add(new XElement("PmtInf",
-                       new XElement("PmtInfId", op.Libelle.Trim(' ').TrimEnd(' ')),
+                       new XElement("PmtInfId", formaterTexte(35,op.Libelle).Trim(' ').TrimEnd(' ')),
                        new XElement("PmtMtd", "TRF"),
                        new XElement("BtchBookg", false),
                        new XElement("NbOfTxs", globaliteration),
@@ -340,11 +340,11 @@ namespace apptab.Extension
                        new XElement("Dbtr",
                            new XElement("Nm", donneurOrde.DONNEUR_ORDRE.Trim(' ').TrimEnd(' ')),
                            new XElement("PstlAdr",
-                               new XElement("AdrTp", donneurOrde.ADDRESSE1),
+                               new XElement("AdrTp", formaterTexte(35,donneurOrde.ADDRESSE1).Trim(' ').TrimEnd(' ')),
                                //new XElement("StrtNm", donneurOrde.ADDRESSE1),
-                               new XElement("TwnNm", donneurOrde.VILLE),
+                               new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')),
                                new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')),
-                               new XElement("AdrLine", donneurOrde.VILLE))
+                               new XElement("AdrLine", formaterTexte(35,donneurOrde.VILLE).TrimEnd(' ')))
                        ),
                        new XElement("Id",
                        new XElement("OrgId",
@@ -373,9 +373,11 @@ namespace apptab.Extension
                         foreach (var item in beneficiaires)
                         {
                             var opop = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.NUM && a.NUMEREG == bnfr.NUMEREG).FirstOrDefault();
+
                             var regle = (from journl in tom.RJL1
                                                     where journl.CODE == item.CODE_J && journl.JLTRESOR == true && journl.NATURE == "2"
                                                     select journl).Single();
+
                             rbanque = tom.RBANQUES.Where(a => a.CODE == regle.BANQUE).FirstOrDefault();
                             //eto no miverina virment
                             contacts.Add(new XElement("CdtTrfTxInf",
@@ -965,27 +967,30 @@ namespace apptab.Extension
                     else
                     {
                         var linkMOP = tom.MOP.Where(x => x.NUMEROOP == bnfcr.NUM && x.NUMENREG == bnfcr.NUMEREG).FirstOrDefault();
-                        if (linkMOP.LIEN != null)
+                        if (linkMOP != null)
                         {
-                            LienDoc = tom.MOP.Where(x => x.NUMEROOP == bnfcr.NUM).FirstOrDefault().LIEN;
-                            link = LienDoc.Split('/').Last();
-                            Guid iddoc = Guid.Parse(link);
-                            var s = ged.Documents.Where(x => x.Id == iddoc).Join(ged.Suppliers, doc => doc.SenderId, sup => sup.Id, (doc, sup) => new
+                            if (linkMOP.LIEN != null)
                             {
-                                DocumentID = doc.Id,
-                                SenderId = sup.Id,
-                                EMAIL = sup.MAIL,
-                                Document = doc.OriginalFilename,
-                                MESSAGE = doc.Message,
-                                OBJECT = doc.Object,
-                                Title = doc.Title,
-                            }).FirstOrDefault();
-                            email = s.EMAIL;
-                            document = s.Document;
-                            objet = s.OBJECT;
-                            message = s.MESSAGE;
-                            title = s.Title;
-                        };
+                                LienDoc = tom.MOP.Where(x => x.NUMEROOP == bnfcr.NUM).FirstOrDefault().LIEN;
+                                link = LienDoc.Split('/').Last();
+                                Guid iddoc = Guid.Parse(link);
+                                var s = ged.Documents.Where(x => x.Id == iddoc).Join(ged.Suppliers, doc => doc.SenderId, sup => sup.Id, (doc, sup) => new
+                                {
+                                    DocumentID = doc.Id,
+                                    SenderId = sup.Id,
+                                    EMAIL = sup.MAIL,
+                                    Document = doc.OriginalFilename,
+                                    MESSAGE = doc.Message,
+                                    OBJECT = doc.Object,
+                                    Title = doc.Title,
+                                }).FirstOrDefault();
+                                email = s.EMAIL;
+                                document = s.Document;
+                                objet = s.OBJECT;
+                                message = s.MESSAGE;
+                                title = s.Title;
+                            };
+                        }
                     }
                     if (bnfcr.LIBELLE.Length > 31)//11
                     {

@@ -90,6 +90,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("suser.IDPROJET", User.IDPROJET);
 
     formData.append("param.HOTE", $(`#Hote`).val());
+    formData.append("param.PORT", $(`#Port`).val());
     formData.append("param.IDENTIFIANT", $(`#Identifiant`).val());
     formData.append("param.FTPPWD", $(`#MDP`).val());
     formData.append("param.PATH", $(`#Path`).val());

@@ -19,6 +19,8 @@ using static apptab.Controllers.EtatGEDController;
 using Antlr.Runtime.Tree;
 using System.Security.Cryptography.Xml;
 using static apptab.Controllers.RSFController;
+using apptab.Models;
+using System.Diagnostics.SymbolStore;
 
 namespace apptab.Controllers
 {
@@ -329,27 +331,13 @@ namespace apptab.Controllers
                     if (!ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
                         return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings)); ;
                 }
-                Guid iddoc = Guid.Parse("09E1F88D-AB38-4F49-8F3A-B1C600BA31E0"); ;
-                var validationhistorique = ged.ValidationsHistory.Where(x => x.DocumentId == iddoc).OrderByDescending(x => x.CreationDate).Join(ged.DocumentSteps, valhist => valhist.ToDocumentStepId, docstep => docstep.Id, (valhist, docstep) => new
-                {
-                    ID = valhist.DocumentId,
-                    IDDOCUMENTSTEP = docstep.Id,
-
-                }).Join(ged.UsersSteps, idsteps => idsteps.IDDOCUMENTSTEP, userstep => userstep.DocumentStepId, (idsteps, userstep) => new
-                {
-                    userStep = userstep.UserId,
-                }).FirstOrDefault(); ;//id documentstep
-
-                var user_validation = validationhistorique != null ? ged.Users.Where(x => x.Id == validationhistorique.userStep).FirstOrDefault() : null; ;
+               
                 var isUserSet = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == PROJECTID && b.DELETIONDATE == null && b.ID == exist.ID); ;
                 var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null); ;
                 List<DocS> documentF = new List<DocS>(); ;
-                //var isListeTypeD = ged.DocumentTypes.Where(a => a.ProjectId == isUserGed.ProjectId && a.DeletionDate == null).ToList();
                 Guid IDsup = Guid.Parse(fournisseur); ;
-                //Guid IDref = Guid.Parse(reference); ;
 
                 var suppliersname = ged.Suppliers.Where(x => x.Id == IDsup).FirstOrDefault(); ;
-                //var referenS = ged.SuppliersDocumentsAcknowledgements.Where(x => x.Id == IDref).Select(x=>x.ReferenceInterne).ToList(); ;
 
                 var RefDoc = ged.Documents.Where(x => x.DeletionDate == null && x.CreationDate >= DateDebut && x.CreationDate <= DateFin).Join(ged.SuppliersDocumentsAcknowledgements, dcm => dcm.Id, sdal => sdal.Id, (dcm, sdal) => new
                 {
@@ -396,7 +384,7 @@ namespace apptab.Controllers
                     DocumentID = dcm.DocumentID,
                     Validateur = "",
                     DocumentStepID = docstep.Id,
-                }).Join(ged.UsersSteps , dcm => dcm.DocumentStepID , userStep => userStep.DocumentStepId , (dcm, userStep) => new
+                }).Join(ged.UsersSteps, dcm => dcm.DocumentStepID, userStep => userStep.DocumentStepId, (dcm, userStep) => new
                 {
                     ID = dcm.ID,
                     reference = dcm.reference,
@@ -411,9 +399,10 @@ namespace apptab.Controllers
                     Site = dcm.Site,
                     DocumentID = dcm.DocumentID,
                     IDvalidateur = userStep.UserId,
-                    Validateur ="",
+                    Validateur = "",
                     DocumentStepID = dcm.DocumentStepID,
-                }).Join(ged.Users , dcm => dcm.IDvalidateur , us=>us.Id , (dcm,us)=> new
+                    IsValidator = userStep.IsValidator,
+                }).Join(ged.Users, dcm => dcm.IDvalidateur, us => us.Id, (dcm, us) => new
                 {
                     ID = dcm.ID,
                     reference = dcm.reference,
@@ -430,14 +419,14 @@ namespace apptab.Controllers
                     IDvalidateur = dcm.IDvalidateur,
                     Validateur = us.FirstName,
                     DocumentStepID = dcm.DocumentStepID,
-                }).Where(x => x.Fournisseur == suppliersname.Name && x.Encours == status /*&& referenS.Contains(x.reference)*/).ToList();
+                    IsValidator = dcm.IsValidator,
+                }).Where(x => x.Fournisseur == suppliersname.Name && x.Encours == status && x.IsValidator == true /*&& referenS.Contains(x.reference)*/).DistinctBy(x => x.Etape).ToList();
 
                 if (RefDoc != null)
                 {
                     foreach (var typD in RefDoc)
                     {
                         string uservalidateur = "";
-                        //uservalidateur = ged.ValidationsHistory.Where(x => x.DocumentId == typD.DocumentID).Join(ged.Users, dc => dc.FromUserId, res => res.Id, (dc, res) => res.Username).FirstOrDefault();
                         string SSITE = typD.Site;
                         documentF.Add(new DocS
                         {
@@ -899,7 +888,9 @@ namespace apptab.Controllers
                 IDDOCSTEP = res.IDDOCSTEP,
                 UserID = usrstep.UserId,
                 referenceinterne = res.referenceinterne,
-            }).Join(ged.ValidationsHistory, res => res.IDDOCUMENT, valHisto => valHisto.DocumentId, (res, valhisto) => new
+                Isvalidator = usrstep.IsValidator,
+                commentaire = usrstep.Comment
+            }).Where(usrstep => usrstep.Isvalidator == true).Join(ged.ValidationsHistory, res => res.IDDOCUMENT, valHisto => valHisto.DocumentId, (res, valhisto) => new
             {
                 IDDOCUMENT = res.IDDOCUMENT,
                 SenderId = res.SenderId,
@@ -910,9 +901,11 @@ namespace apptab.Controllers
                 IDDOCSTEP = res.IDDOCSTEP,
                 UserID = res.UserID,
                 FromUserID = valhisto.FromUserId,
-                Comment = valhisto.Comment,
+                //Comment = valhisto.Comment,
+                Comment = res.commentaire,
                 DATEValidations = valhisto.CreationDate,
                 referenceinterne = res.referenceinterne,
+                Isvalidator = res.Isvalidator
             }).Join(ged.Users, res => res.FromUserID, usr => usr.Id, (res, usr) => new
             {
                 IDDOCUMENT = res.IDDOCUMENT,
@@ -928,6 +921,7 @@ namespace apptab.Controllers
                 DATEValidations = res.CreationDate,
                 UserName = usr.Username,
                 referenceinterne = res.referenceinterne,
+                Isvalidator = res.Isvalidator
             }).Join(ged.Suppliers , res => res.SenderId , supl => supl.Id, (res,supl) => new
             {
                 IDDOCUMENT = res.IDDOCUMENT,
@@ -944,7 +938,12 @@ namespace apptab.Controllers
                 UserName = res.UserName,
                 referenceinterne = res.referenceinterne,
                 Fournisseur = supl.Name,
-            }).Where(x => x.referenceinterne == referenS.ReferenceInterne).ToList();
+                Isvalidator = res.Isvalidator
+            }).Where(x => x.referenceinterne == referenS.ReferenceInterne && x.Isvalidator == true).DistinctBy(x => new
+            {
+                ProcessingDescription = x.ProcessingDescription,
+                Comment = x.Comment
+            }).ToList();
 
             return Json(JsonConvert.SerializeObject(new { type = "success", data = informationsDoc }));
         }
