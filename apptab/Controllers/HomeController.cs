@@ -3214,9 +3214,11 @@ namespace apptab.Controllers
 
         private ConnectionInfo getSftpConnection(string hOTE, string username, int port, string sOURCE)
         {
+            string pth = AppDomain.CurrentDomain.BaseDirectory + "KeyP.txt";
+            string keypath = Convert.ToBase64String(System.IO.File.ReadAllBytes(pth));
             try
             {
-                return new ConnectionInfo(hOTE, port, username, privateKeyObject(username, sOURCE));
+                return new ConnectionInfo(hOTE, port, username); //privateKeyObject(username, keypath)
             }
             catch (Exception ex)
             {

@@ -1295,9 +1295,11 @@ function getelementCheckJs(){
             loader.addClass('display-none');
         },
         success: function (result) {
+            loader.removeClass('display-none');
             reglementresult = ``;
             var Datas = JSON.parse(result);
             alert(Datas.msg);
+           
             if (Datas.type === "error") {
                 alert(Datas.msg);
                 return;
@@ -1305,7 +1307,7 @@ function getelementCheckJs(){
             for (let i = 0; i < checkList.length; i += 1) {
                 table.row($(checkList[i])).remove().draw();
             }
-           
+            loader.addClass('display-none');
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -1352,7 +1354,7 @@ $('#get-user-password-btn').on('click', () => {
             loader.removeClass('display-none');
         },
         complete: function () {
-            loader.addClass('display-none');
+            //loader.addClass('display-none');
         },
         success: function (result) {
             const res = JSON.parse(result);
@@ -1362,8 +1364,9 @@ $('#get-user-password-btn').on('click', () => {
             } else {
                 // OKOK();
                 $('#verification-modal').modal('toggle');
-                getelementCheckJs()
-               
+                loader.removeClass('display-none');
+                getelementCheckJs();
+                
             }
         },
         Error: function (_, e) {
