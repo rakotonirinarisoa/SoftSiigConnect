@@ -303,8 +303,8 @@ namespace apptab.Extension
 
                     var bnfr = beneficiaires.FirstOrDefault();
                     XElement contacts = new XElement("CstmrCdtTrfInitn",
-                                 new XElement("GrpHdr",
-                                new XElement("MsgId", infdonneurOrdre.Trim(' ').TrimEnd(' ')),
+                         new XElement("GrpHdr",
+                             new XElement("MsgId", infdonneurOrdre.Trim(' ').TrimEnd(' ')),
                                 new XElement("CreDtTm", dtcrdt),
                                 new XElement("NbOfTxs", globaliteration),//a etudier
                                 //new XElement("CtrlSum", bnfr.MONTANT),
@@ -354,7 +354,7 @@ namespace apptab.Extension
                         new XElement("DbtrAcct",
                            new XElement("Id",
                                new XElement("Othr",
-                                   new XElement("Id", donneurOrde.CODE_GUICHET + donneurOrde.NUM_COMPTE + donneurOrde.CODE_BANQUE))),
+                                   new XElement("Id", donneurOrde.CODE_BANQUE + donneurOrde.CODE_GUICHET + donneurOrde.NUM_COMPTE))),
                            new XElement("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ').Trim(' '))
                        ),
                        new XElement("DbtrAgt",
