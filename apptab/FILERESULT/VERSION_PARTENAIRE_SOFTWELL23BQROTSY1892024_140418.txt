@@ -1,0 +1,3 @@
+0302                     18094SOFTWELL                000014                          0001805001417221                                               00005      
+0602              51BQ00000011KANTO_VATOSOA           BFV SG MADAGAS                  00018050014172220000000004500000TEST OP LIQUIDATION KANTO      00008      
+0802                                                                                                  0000000004500000                                          

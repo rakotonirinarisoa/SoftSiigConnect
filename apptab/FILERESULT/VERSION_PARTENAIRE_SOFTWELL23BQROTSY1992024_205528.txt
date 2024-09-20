@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="iso-8859-7" standalone="no"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03">
+  <CstmrCdtTrfInitn>
+    <GrpHdr>
+      <MsgId>19094SOFTWELL000028</MsgId>
+      <CreDtTm>2024-09-19T20:55:28.8615777+03:00</CreDtTm>
+      <NbOfTxs>1</NbOfTxs>
+      <CtrlSum>100000.00</CtrlSum>
+      <InitgPty>
+        <Nm>SOFTWELL</Nm>
+        <Id>
+          <OrgId>
+            <Othr>
+              <Id>00005</Id>
+            </Othr>
+          </OrgId>
+        </Id>
+      </InitgPty>
+      <Nm>SOFTWELL</Nm>
+      <PstlAdr>
+        <AdrTp>
+        </AdrTp>
+        <TwnNm>
+        </TwnNm>
+        <Ctry>MG</Ctry>
+        <AdrLine>
+        </AdrLine>
+      </PstlAdr>
+    </GrpHdr>
+    <PmtInf>
+      <PmtInfId>ACHAT FOURNITURE</PmtInfId>
+      <PmtMtd>TRF</PmtMtd>
+      <BtchBookg>false</BtchBookg>
+      <NbOfTxs>1</NbOfTxs>
+      <CtrlSum>100000.00</CtrlSum>
+      <PmtTpInf>
+        <InstrPrty>NORM</InstrPrty>
+      </PmtTpInf>
+      <ReqdExctnDt>2024-09-19</ReqdExctnDt>
+      <Dbtr>
+        <PstlAdr>
+          <AdrTp>
+          </AdrTp>
+          <TwnNm>
+          </TwnNm>
+          <Ctry>MG</Ctry>
+          <AdrLine>
+          </AdrLine>
+        </PstlAdr>
+      </Dbtr>
+      <Id>
+        <OrgId>
+          <Othr>
+            <Id />
+          </Othr>
+        </OrgId>
+      </Id>
+    </PmtInf>
+    <DbtrAcct>
+      <Id>
+        <Othr>
+          <Id>000180500141722100005</Id>
+        </Othr>
+      </Id>
+      <Ccy>MGA</Ccy>
+    </DbtrAcct>
+    <DbtrAgt>
+      <FinInstnId>
+        <BIC>CLMDMGMG</BIC>
+      </FinInstnId>
+    </DbtrAgt>
+    <CdtTrfTxInf>
+      <PmtId>
+        <InstrId>05001417222                        </InstrId>
+        <EndToEndId>05001417222                        </EndToEndId>
+        <Amt>
+          <InstdAmt Ccy="MGA">100000.00</InstdAmt>
+        </Amt>
+        <CdtrAgt>
+          <FinInstnId>
+            <BIC>CLMDMGMG</BIC>
+          </FinInstnId>
+        </CdtrAgt>
+        <Cdtr>
+          <Nm>KANTO VATOSOA</Nm>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <Othr>
+              <Id>000080001805001417222</Id>
+            </Othr>
+          </Id>
+        </CdtrAcct>
+      </PmtId>
+    </CdtTrfTxInf>
+  </CstmrCdtTrfInitn>
+</Document>

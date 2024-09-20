@@ -1,6 +1,7 @@
 ﻿var table = undefined;
 var FilenameUsr;
 const pass = $('#user-password');
+let idtype = 0;
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
@@ -358,7 +359,7 @@ function getelementTXT(a , list) {
                 loader.removeClass('display-none');
             },
             complete: function (result) {
-                loader.addClass('display-none');
+                //loader.addClass('display-none');
                 alert("Traitement avec succés.");
 
                 window.location.reload();
@@ -369,6 +370,7 @@ function getelementTXT(a , list) {
                 GetFileNameAnarana(blobUrl);
                 //window.location = '/Home/GetFile?file=' + Datas.data;
                 $('#verification-modal').modal('toggle');
+                loader.addClass('display-none');
             },
             error: function () {
                 alert("Problème de connexion. ");
@@ -1499,6 +1501,7 @@ function getelementCheckJsISO() {
     }
     console.log(list);
     getelementISO2022(0, list);
+    loader.addClass('display-none');
 }
 function getelementCheckJs() {
     let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
@@ -1529,13 +1532,17 @@ function getelementCheckJs() {
             });
         }
     }
-    console.log(list);
-    getelementTXT(0, list);
+    //console.log(list);
+    console.log(idtype);
+    //getelementTXT(0, list);
+    getelementTXT(idtype, list);
+    loader.addClass('display-none');
 }
 
 $('[data-action="SaveV"]').click(function () {
     let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
-
+    let typeF = $(this).attr(`data-type`);
+    idtype = typeF;
     let list = [];
     $.each(CheckList, (k, v) => {
         list.push($(v).attr("compteG-id"));
@@ -1553,6 +1560,7 @@ $('[data-action="SaveV"]').click(function () {
 
 $('#get-user-password-btn').on('click', () => {
     let formData = new FormData();
+    console.log(idtype);
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
@@ -1571,7 +1579,7 @@ $('#get-user-password-btn').on('click', () => {
             loader.removeClass('display-none');
         },
         complete: function () {
-            loader.addClass('display-none');
+            //loader.addClass('display-none');
         },
         //error: function (result) {
         //    var Datas = JSON.parse(result);
@@ -1636,7 +1644,7 @@ $('#get-user-password-btnISO').on('click', () => {
             loader.removeClass('display-none');
         },
         complete: function () {
-            loader.addClass('display-none');
+            //loader.addClass('display-none');
         },
         //error: function (result) {
         //    var Datas = JSON.parse(result);

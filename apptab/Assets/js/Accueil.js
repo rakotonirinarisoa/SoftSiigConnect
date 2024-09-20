@@ -971,7 +971,7 @@ function getelementCheckJs() {
     formData.append("auxi1", $('#auxi').val());
     formData.append("dateP", $('#Pay').val());
     formData.append("etat", $('#etat').val());
-
+    loader.removeClass('display-none');
     $.ajax({
         type: "POST",
         url: Origin + '/Home/GetCheckedCompte',
@@ -987,11 +987,12 @@ function getelementCheckJs() {
         },
         success: function (result) {
             var Datas = JSON.parse(result);
+            loader.removeClass('display-none');
             alert(Datas.msg);
             for (let i = 0; i < checkList.length; i += 1) {
                 table.row($(checkList[i])).remove().draw();
             }
-            
+            loader.addClass('display-none');
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -1024,7 +1025,7 @@ $('#get-user-password-btn').on('click', () => {
     formData.append("suser.IDPROJET", User.IDSOCIETE);
 
     formData.append("userPassword", $("#password").val());
-
+    loader.removeClass('display-none');
     $.ajax({
         type: "POST",
         url: Origin + '/Traitement/Password',
@@ -1036,7 +1037,7 @@ $('#get-user-password-btn').on('click', () => {
             loader.removeClass('display-none');
         },
         complete: function () {
-            loader.addClass('display-none');
+            //loader.addClass('display-none');
         },
         //error: function (result) {
         //    var Datas = JSON.parse(result);
@@ -1048,13 +1049,16 @@ $('#get-user-password-btn').on('click', () => {
         //}
         success: function (result) {
             const res = JSON.parse(result);
+            
             if (res.type === 'error') {
                 pass.css({ 'color': 'red' });
                 pass.text('Identifiants incorrects.');
             } else {
                 // OKOK();
                 $('#verification-modal').modal('toggle');
-                getelementCheckJs()
+                
+                getelementCheckJs();
+                //loader.addClass('display-none');
             }
         },
         Error: function (_, e) {
@@ -1101,16 +1105,17 @@ function OKOK() {
         },
         success: function (result) {
             var Datas = JSON.parse(result);
+            loader.removeClass('display-none');
             if (Datas.type == "error") {
                 alert(Datas.msg);
             } else {
                 $.each(CheckList, (k, v) => {
                     list.push($(v).remove());
                 });
-
+                loader.addClass('display-none');
                 $('#verification-modal').modal('toggle');
             }
-            
+           
         },
         error: function () {
             alert("Problème de connexion. ");

@@ -33,6 +33,7 @@ using Microsoft.Ajax.Utilities;
 using System.Web.Mail;
 using System.Data.Entity;
 using System.Configuration;
+using Renci.SshNet.Sftp;
 
 namespace apptab.Controllers
 {
@@ -357,13 +358,17 @@ namespace apptab.Controllers
                     Anarana = pathfile.Chemin;
                     send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
-                    SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
+                    string pport = ftp.PORT.ToString();
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport);
+                    //SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                 }
                 else
                 {
                     Anarana = pathfile.Chemin;
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
-                    SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
+                    string pport = ftp.PORT.ToString();
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport);
+                    //SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                     return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
                 }
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archivage avec succès. ", data = send }, settings));
@@ -387,15 +392,22 @@ namespace apptab.Controllers
                 {
                     Anarana = pathfile.Chemin;
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
-                    SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
-                    return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
+                    //SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
+                    //SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE)
+                    string pport = ftp.PORT.ToString();
+                    CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport);
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = "" }, settings));
                 }
                 else
                 {
                     Anarana = pathfile.Chemin;
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
-                    SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
-                    return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
+                    string pport = ftp.PORT.ToString();
+                    CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport);
+                    //SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = "" }, settings));
                 }
 
                 if (avalider != null)
@@ -634,7 +646,8 @@ namespace apptab.Controllers
             {
                 foreach (var item in hstSiig)
                 {
-                    List<DataListTomOP> sss = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site).Where(x => (!item.IDREGLEMENT.Contains(x.No) && !item.NUMEREG.Contains(x.NUMEREG.ToString())) || (item.IDREGLEMENT.Contains(x.No) && !item.NUMEREG.Contains(x.NUMEREG.ToString()))).DistinctBy(x => x.No).ToList();
+                    List<DataListTomOP> sss = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site).Where(x => (!item.IDREGLEMENT.Contains(x.No) && !item.NUMEREG.Contains(x.NUMEREG.ToString())) || (item.IDREGLEMENT.Contains(x.No) && !item.NUMEREG.Contains(x.NUMEREG.ToString())) || x.No != item.IDREGLEMENT).DistinctBy(x => x.No).ToList();
+
                     foreach (var s1 in sss)
                     {
                         List<DataListTomOP> dlt = (from dp in list
@@ -3179,37 +3192,47 @@ namespace apptab.Controllers
             }
             return Json(JsonConvert.SerializeObject(new { msg = "success", data = result, datebr = resultBR }));
         }
-        public JsonResult SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE)
+        public JsonResult SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE,string port)
         {
+            int pport = int.Parse(port);
+            string pth = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + SOURCE + ".txt";
             //Console.WriteLine("Create client Object");
-            using (SftpClient sftpClient = new SftpClient(getSftpConnection(HOTE, USERFTP, 22, SOURCE)))
+            using (SftpClient sftpClient = new SftpClient(getSftpConnection(HOTE, USERFTP.ToString(), pport, pth)))
             {
                 //Console.WriteLine("Connect to server");
                 sftpClient.Connect();
                 //Console.WriteLine("Creating FileStream object to stream a file");
-                using (FileStream fs = new FileStream("filePath", FileMode.Open))
+                using (FileStream fs = new FileStream(pth, FileMode.Open))
                 {
                     sftpClient.BufferSize = 1024;
-                    sftpClient.UploadFile(fs, Path.GetFileName("filePath"));
+                    sftpClient.UploadFile(fs, Path.GetFileName(pth));
                 }
                 sftpClient.Dispose();
             }
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = "" }, settings));
         }
 
-        private ConnectionInfo getSftpConnection(string hOTE, string uSERFTP, int v, string sOURCE)
+        private ConnectionInfo getSftpConnection(string hOTE, string username, int port, string sOURCE)
         {
-            throw new NotImplementedException();
+            string pth = AppDomain.CurrentDomain.BaseDirectory + "KeyP.txt";
+            string keypath = Convert.ToBase64String(System.IO.File.ReadAllBytes(pth));
+            try
+            {
+                return new ConnectionInfo(hOTE, port, username); //privateKeyObject(username, keypath)
+            }
+            catch (Exception ex)
+            {
+
+                throw new NotImplementedException();
+            }
+            
         }
         private static AuthenticationMethod[] privateKeyObject(string username, string publicKeyPath)
         {
             PrivateKeyFile privateKeyFile = new PrivateKeyFile(publicKeyPath);
             PrivateKeyAuthenticationMethod privateKeyAuthenticationMethod =
-               new PrivateKeyAuthenticationMethod(username, privateKeyFile);
-            return new AuthenticationMethod[]
-             {
-        privateKeyAuthenticationMethod
-             };
+                 new PrivateKeyAuthenticationMethod(username, privateKeyFile);
+            return new AuthenticationMethod[] { privateKeyAuthenticationMethod };
         }
         private string couperText(int x, string str)
         {

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="iso-8859-7" standalone="no"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03">
+  <CstmrCdtTrfInitn>
+    <GrpHdr>
+      <MsgId>17094PRODIGY000001</MsgId>
+      <CreDtTm>2024-09-17T18:50:59.4738565+03:00</CreDtTm>
+      <NbOfTxs>2</NbOfTxs>
+      <CtrlSum>1372800.00</CtrlSum>
+      <InitgPty>
+        <Nm>PRODIGY</Nm>
+        <Id>
+          <OrgId>
+            <Othr>
+              <Id>00008</Id>
+            </Othr>
+          </OrgId>
+        </Id>
+      </InitgPty>
+      <Nm>PRODIGY</Nm>
+      <PstlAdr>
+        <AdrTp>Villa Mampianina, Lot IIM 85 Ter An</AdrTp>
+        <TwnNm>Antananarivo - 101</TwnNm>
+        <Ctry>MG</Ctry>
+        <AdrLine>Antananarivo - 101</AdrLine>
+      </PstlAdr>
+    </GrpHdr>
+    <PmtInf>
+      <PmtInfId>IMP 8% RAKOTONIAINA Joachim Michel-</PmtInfId>
+      <PmtMtd>TRF</PmtMtd>
+      <BtchBookg>false</BtchBookg>
+      <NbOfTxs>2</NbOfTxs>
+      <CtrlSum>686400.00</CtrlSum>
+      <PmtTpInf>
+        <InstrPrty>NORM</InstrPrty>
+      </PmtTpInf>
+      <ReqdExctnDt>17/09/2024</ReqdExctnDt>
+      <Dbtr>
+        <Nm>PRODIGY</Nm>
+        <PstlAdr>
+          <AdrTp>Villa Mampianina, Lot IIM 85 Ter An</AdrTp>
+          <TwnNm>Antananarivo - 101</TwnNm>
+          <Ctry>MG</Ctry>
+          <AdrLine>Antananarivo - 101</AdrLine>
+        </PstlAdr>
+      </Dbtr>
+      <Id>
+        <OrgId>
+          <Othr>
+            <Id />
+          </Othr>
+        </OrgId>
+      </Id>
+    </PmtInf>
+    <DbtrAcct>
+      <Id>
+        <Othr>
+          <Id>000160001124101584782</Id>
+        </Othr>
+      </Id>
+      <Ccy>MGA</Ccy>
+    </DbtrAcct>
+    <DbtrAgt>
+      <FinInstnId>
+        <BIC>BFAVMGMG</BIC>
+      </FinInstnId>
+    </DbtrAgt>
+    <CdtTrfTxInf>
+      <PmtId>
+        <InstrId>9410IMP 8% RAKOTONIAINA Joachim Mic</InstrId>
+        <EndToEndId>F321</EndToEndId>
+        <Amt>
+          <InstdAmt Ccy="MGA">686400.00</InstdAmt>
+        </Amt>
+        <ChrgBr>SHAR</ChrgBr>
+        <CdtrAgt>
+          <FinInstnId>
+            <BIC>BFAVMGMG</BIC>
+            <Nm>SOCIETE GENERALE MADAGASCAR</Nm>
+            <PstlAdr>
+              <Ctry>MG</Ctry>
+            </PstlAdr>
+          </FinInstnId>
+        </CdtrAgt>
+        <Cdtr>
+          <Nm>RAKOTONIAINA Joachim Michel (Cabinet FLASH)</Nm>
+          <PstlAdr>
+            <Ctry>MG</Ctry>
+            <AdrLine>LOT 340 parcelle 14/31 Ambohijafy-Nord</AdrLine>
+            <AdrLine />
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <Othr>
+              <Id>000160001124101584782</Id>
+            </Othr>
+          </Id>
+        </CdtrAcct>
+      </PmtId>
+    </CdtTrfTxInf>
+    <CdtTrfTxInf>
+      <PmtId>
+        <InstrId>9410IMP 8% RAKOTONIAINA Joachim Mic</InstrId>
+        <EndToEndId>F321</EndToEndId>
+        <Amt>
+          <InstdAmt Ccy="MGA">686400.00</InstdAmt>
+        </Amt>
+        <ChrgBr>SHAR</ChrgBr>
+        <CdtrAgt>
+          <FinInstnId>
+            <BIC>BFAVMGMG</BIC>
+            <Nm>SOCIETE GENERALE MADAGASCAR</Nm>
+            <PstlAdr>
+              <Ctry>MG</Ctry>
+            </PstlAdr>
+          </FinInstnId>
+        </CdtrAgt>
+        <Cdtr>
+          <Nm>RAKOTONIAINA Joachim Michel (Cabinet FLASH)</Nm>
+          <PstlAdr>
+            <Ctry>MG</Ctry>
+            <AdrLine>LOT 340 parcelle 14/31 Ambohijafy-Nord</AdrLine>
+            <AdrLine />
+          </PstlAdr>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <Othr>
+              <Id>000160001124101584782</Id>
+            </Othr>
+          </Id>
+        </CdtrAcct>
+      </PmtId>
+    </CdtTrfTxInf>
+  </CstmrCdtTrfInitn>
+</Document>
