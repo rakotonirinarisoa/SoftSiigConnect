@@ -1,5 +1,0 @@
-0302                     10094SOFTWELL                000001                          0500010125219141                                               00009      
-0602              BQAN00000001FOURNISSEUR_ANDO        BVF                             1234 111111111110000000200000000OP 014ACHAT CONSOMMABLE INFORMA02000      
-0602              BQAN00000002FOURNISSEUR_ANDO        BVF                             1234 111111111110000000200000000OP 014ACHAT CONSOMMABLE INFORMA02000      
-0602              BQAN00000003FOURNISSEUR_ANDO        BVF                             1234 111111111110000000200000000OP 014ACHAT CONSOMMABLE INFORMA02000      
-0802                                                                                                  0000000600000000                                          
