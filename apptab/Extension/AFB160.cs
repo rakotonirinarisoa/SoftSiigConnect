@@ -124,8 +124,12 @@ namespace apptab.Extension
                     {
                         jrnl = tom.GA_AVANCE.Where(x => x.NUMERO == bnfcr.NUM).Select(x => x.JOURNAL).FirstOrDefault();
                     }
+                    if (jrnl == null)
+                    {
+                        jrnl = tom.CPTADMIN_FAUTREOPERATION.Where(x => x.NUMEROOPERATION == bnfcr.NUM).Select(x => x.JOURNALPAIEMENT).FirstOrDefault();
+                    }
                     RJL1 djournal = (from journl in tom.RJL1
-                                     where journl.CODE == jrnl && journl.JLTRESOR == true && journl.NATURE == "2"
+                                     where journl.CODE == jrnl && journl.JLTRESOR == true && (journl.NATURE == "2" || journl.NATURE == "1")
                                      select journl).Single();
 
                     rbanque = tom.RBANQUES.Where(x => x.CODE == djournal.BANQUE).FirstOrDefault();
@@ -160,7 +164,11 @@ namespace apptab.Extension
                             message = s.MESSAGE;
                             title = s.Title;
                         }
-                        
+
+                    }
+                    if (opp.AUTREOP == true)
+                    {
+
                     }
                     else
                     {
@@ -303,64 +311,121 @@ namespace apptab.Extension
 
                     var bnfr = beneficiaires.FirstOrDefault();
                     XElement contacts = new XElement("CstmrCdtTrfInitn",
-                                 new XElement("GrpHdr",
-                                new XElement("MsgId", infdonneurOrdre.Trim(' ').TrimEnd(' ')),
-                                new XElement("CreDtTm", dtcrdt),
-                                new XElement("NbOfTxs", globaliteration),//a etudier
-                                //new XElement("CtrlSum", bnfr.MONTANT),
-                                new XElement("CtrlSum", Convert.ToDecimal(String.Format("{0:0.00}", montant))),
+                        new XElement("GrpHdr",
+                            new XElement("MsgId", infdonneurOrdre.Trim(' ').TrimEnd(' ')),
+                            new XElement("CreDtTm", dtcrdt),
+                            new XElement("NbOfTxs", globaliteration),//a etudier
+                            //new XElement("CtrlSum", bnfr.MONTANT),
+                            new XElement("CtrlSum", Convert.ToDecimal(String.Format("{0:0.00}", montant))),
 
-                                new XElement("InitgPty",
-                                    new XElement("Nm", formaterTexte(35, donneurOrde.DONNEUR_ORDRE).TrimEnd(' ')),
+                            new XElement("InitgPty",
+                                new XElement("Nm", formaterTexte(35, donneurOrde.DONNEUR_ORDRE).TrimEnd(' ')),
                                     new XElement("Id",
-                                    new XElement("OrgId",
-                                        new XElement("Othr",
-                                            new XElement("Id", donneurOrde.CODE_BANQUE.TrimEnd(' '))
+                                        new XElement("OrgId",
+                                            new XElement("Othr",
+                                                new XElement("Id", donneurOrde.CODE_BANQUE.TrimEnd(' '))
+                                            )
                                         )
-                                ))),
-                                new XElement("Nm", formaterTexte(35,donneurOrde.DONNEUR_ORDRE).TrimEnd(' ')),
-                                new XElement("PstlAdr",
-                                new XElement("AdrTp",formaterTexte(35,donneurOrde.ADDRESSE1).TrimEnd(' ')),
-                                new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')),
-                                new XElement("Ctry", donneurOrde.PAYS.Trim(' ')),
-                                new XElement("AdrLine", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')))
-                                ));
+                                    )
+                            )
+                            //new XElement("Nm", formaterTexte(35,donneurOrde.DONNEUR_ORDRE).TrimEnd(' ')),
+                            //new XElement("PstlAdr",
+                            //new XElement("AdrTp",formaterTexte(35,donneurOrde.ADDRESSE1).TrimEnd(' ')),
+                            //new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')),
+                            //new XElement("Ctry", donneurOrde.PAYS.Trim(' ')),
+                            //new XElement("AdrLine", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')))
+                            )
+                        );
                     var op = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == bnfr.NUM && a.NUMEREG == bnfr.NUMEREG).FirstOrDefault();
                     string ddt = dtcrdt.ToString("yyyy-MM-dd");
+                    //string lib = couperText(35, op.Libelle);
+                    if (op.Libelle.Length >35)
+                    {
+                        contacts.Add(
+                            new XElement("PmtInf",
+                                new XElement("PmtInfId", formaterTexte(35, op.Libelle).TrimEnd(' ')),
+                                new XElement("PmtInfId", formatLibelle0702(op.Libelle).TrimEnd(' ')),
 
-                    contacts.Add(new XElement("PmtInf",
-                       new XElement("PmtInfId", formaterTexte(35,op.Libelle).Trim(' ').TrimEnd(' ')),
-                       new XElement("PmtMtd", "TRF"),
-                       new XElement("BtchBookg", false),
-                       new XElement("NbOfTxs", globaliteration),
-                       new XElement("CtrlSum", Convert.ToDecimal(String.Format("{0:0.00}",bnfr.MONTANT))),
+                                new XElement("PmtMtd", "TRF"),
+                                new XElement("BtchBookg", false),
+                                new XElement("NbOfTxs", globaliteration),
+                                new XElement("CtrlSum", Convert.ToDecimal(String.Format("{0:0.00}", bnfr.MONTANT))),
 
-                       new XElement("PmtTpInf",
-                       new XElement("InstrPrty", "NORM")),//a saisir selon l'utilisateur
-                       new XElement("ReqdExctnDt", ddt),
-                       new XElement("Dbtr",
-                           new XElement("PstlAdr",
-                               new XElement("AdrTp", formaterTexte(35,donneurOrde.ADDRESSE1).Trim(' ').TrimEnd(' ')),
-                               new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')),
-                               new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')),
-                               new XElement("AdrLine", formaterTexte(35,donneurOrde.VILLE).TrimEnd(' ')))
-                       ),
-                       new XElement("Id",
-                       new XElement("OrgId",
-                           new XElement("Othr",
-                           new XElement("Id", donneurOrde.NIF)//NIF a sauvegarder a opa_donneurdordre
-                           )))
-                        ),
-                        new XElement("DbtrAcct",
-                           new XElement("Id",
-                               new XElement("Othr",
-                                   new XElement("Id", donneurOrde.CODE_GUICHET + donneurOrde.NUM_COMPTE + donneurOrde.CODE_BANQUE))),
-                           new XElement("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ').Trim(' '))
-                       ),
-                       new XElement("DbtrAgt",
-                       new XElement("FinInstnId",
-                       new XElement("BIC", rbanque.CODEBIC.Trim(' '))
-                       )));
+                                new XElement("PmtTpInf",
+                                new XElement("InstrPrty", "NORM")),//a saisir selon l'utilisateur
+                                new XElement("ReqdExctnDt", ddt),
+                                    new XElement("Dbtr",
+                                        new XElement("PstlAdr",
+                                            new XElement("AdrTp", formaterTexte(35, donneurOrde.ADDRESSE1).Trim(' ').TrimEnd(' ')),
+                                            new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')),
+                                            new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')),
+                                            new XElement("AdrLine", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')))
+                                    ),
+                                    new XElement("Id",
+                                            new XElement("OrgId",
+                                                new XElement("Othr",
+                                                    new XElement("Id", donneurOrde.NIF)//NIF a sauvegarder a opa_donneurdordre
+                                                )
+                                            )
+                                    )
+                            ),
+                            new XElement("DbtrAcct",
+                                new XElement("Id",
+                                    new XElement("Othr",
+                                        new XElement("Id", donneurOrde.CODE_BANQUE + donneurOrde.CODE_GUICHET + donneurOrde.NUM_COMPTE + donneurOrde.CLE))),
+                                new XElement("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ').Trim(' '))
+                            ),
+                            new XElement("DbtrAgt",
+                                new XElement("FinInstnId",
+                                    new XElement("BIC", rbanque.CODEBIC.Trim(' '))
+                                )
+                            )
+                        );
+                    }
+                    else
+                    {
+                        contacts.Add(
+                            new XElement("PmtInf",
+                                new XElement("PmtInfId", formaterTexte(35, op.Libelle).TrimEnd(' ')),
+                                //new XElement("PmtInfId", formatLibelle0702(op.Libelle).TrimEnd(' ')),
+
+                                new XElement("PmtMtd", "TRF"),
+                                new XElement("BtchBookg", false),
+                                new XElement("NbOfTxs", globaliteration),
+                                new XElement("CtrlSum", Convert.ToDecimal(String.Format("{0:0.00}", bnfr.MONTANT))),
+
+                                new XElement("PmtTpInf",
+                                new XElement("InstrPrty", "NORM")),//a saisir selon l'utilisateur
+                                new XElement("ReqdExctnDt", ddt),
+                                    new XElement("Dbtr",
+                                        new XElement("PstlAdr",
+                                            new XElement("AdrTp", formaterTexte(35, donneurOrde.ADDRESSE1).Trim(' ').TrimEnd(' ')),
+                                            new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')),
+                                            new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')),
+                                            new XElement("AdrLine", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')))
+                                    ),
+                                    new XElement("Id",
+                                            new XElement("OrgId",
+                                                new XElement("Othr",
+                                                    new XElement("Id", donneurOrde.NIF)//NIF a sauvegarder a opa_donneurdordre
+                                                )
+                                            )
+                                    )
+                            ),
+                            new XElement("DbtrAcct",
+                                new XElement("Id",
+                                    new XElement("Othr",
+                                        new XElement("Id", donneurOrde.CODE_BANQUE + donneurOrde.CODE_GUICHET + donneurOrde.NUM_COMPTE + donneurOrde.CLE))),
+                                new XElement("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ').Trim(' '))
+                            ),
+                            new XElement("DbtrAgt",
+                                new XElement("FinInstnId",
+                                    new XElement("BIC", rbanque.CODEBIC.Trim(' '))
+                                )
+                            )
+                        );
+                    }
+                   
                     foreach (var item in beneficiaires)
                     {
                         var opop = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.NUM && a.NUMEREG == bnfr.NUMEREG).FirstOrDefault();
@@ -371,36 +436,43 @@ namespace apptab.Extension
                         decimal ere = Convert.ToDecimal(String.Format("{0:0.00}", item.MONTANT));
                         rbanque = tom.RBANQUES.Where(a => a.CODE == regle.BANQUE).FirstOrDefault();
                         //eto no miverina virment
-                        contacts.Add(new XElement("CdtTrfTxInf",
-                        new XElement("PmtId",
-                        //new XElement("InstrId", formaterTexte(35, item.LIBELLE.TrimEnd(' ') + item.BENEFICIAIRE.TrimEnd(' ') + opop.auxi.TrimEnd(' '))),
-                        //new XElement("EndToEndId", opop.auxi.TrimEnd(' ').Trim(' ')),
-                        new XElement("InstrId", formaterTexte(35, bnfr.RIB.TrimEnd(' '))),
-                        new XElement("EndToEndId", formaterTexte(35, bnfr.RIB.TrimEnd(' '))),
-                        new XElement("Amt",
-                            new XElement("InstdAmt",
-                            new XAttribute("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ')), ere)),
-                        //new XElement("ChrgBr", "SHAR"),
-                            new XElement("CdtrAgt",
-                                new XElement("FinInstnId",
-                                new XElement("BIC", rbanque.CODEBIC)
-                                //new XElement("Nm", formaterTexte(35, rbanque.NOM).TrimEnd(' ')),
-                                //new XElement("PstlAdr", new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ')))
-                            )),
-                             new XElement("Cdtr",
-                                new XElement("Nm", formaterTexte(35, item.BENEFICIAIRE).TrimEnd(' '))
-                             ),
-                          //new XElement("PstlAdr",
-                          //    new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')),
-                          //    new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')),
-                          //    new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' ')))
-                          //),
-                          new XElement("CdtrAcct",
-                            new XElement("Id",
-                                new XElement("Othr",
-                                    new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB)
-                                ))
-                            ))));
+                        contacts.Add(
+                            new XElement("CdtTrfTxInf",
+                                new XElement("PmtId",
+                                    //new XElement("InstrId", formaterTexte(35, item.LIBELLE.TrimEnd(' ') + item.BENEFICIAIRE.TrimEnd(' ') + opop.auxi.TrimEnd(' '))),
+                                    //new XElement("EndToEndId", opop.auxi.TrimEnd(' ').Trim(' ')),
+                                    new XElement("InstrId",  bnfr.RIB.TrimEnd(' ')),
+                                    new XElement("EndToEndId", bnfr.RIB.TrimEnd(' ')),
+                                        new XElement("Amt",
+                                                new XElement("InstdAmt",
+                                                new XAttribute("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ')), ere)
+                                        ),
+                                        //new XElement("ChrgBr", "SHAR"),
+                                        new XElement("CdtrAgt",
+                                            new XElement("FinInstnId",
+                                                new XElement("BIC", rbanque.CODEBIC)
+                                                //new XElement("Nm", formaterTexte(35, rbanque.NOM).TrimEnd(' ')),
+                                                //new XElement("PstlAdr", new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ')))
+                                            )
+                                        ),
+                                            new XElement("Cdtr",
+                                                new XElement("Nm", formaterTexte(35, item.BENEFICIAIRE).TrimEnd(' '))
+                                            ),
+                                        //new XElement("PstlAdr",
+                                        //    new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')),
+                                        //    new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')),
+                                        //    new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' ')))
+                                        //),
+                                        new XElement("CdtrAcct",
+                                            new XElement("Id",
+                                                new XElement("Othr",
+                                                    new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB)
+                                                )
+                                            )
+                                        )
+                                )
+                            )
+                        );
                         iteration = iteration + 1;
                     }
                     #region
@@ -1873,6 +1945,7 @@ namespace apptab.Extension
                 tdonneur1.ADDRESSE1 = projet.ADDRESSE1;
                 tdonneur1.ADDRESSE2 = projet.ADDRESSE2;
                 tdonneur1.PAYS = projet.PAYS;
+                tdonneur1.CLE = djournal.CLE;
             }
             catch (Exception)
             {
@@ -1892,6 +1965,7 @@ namespace apptab.Extension
                 donordre.ADDRESSE1 = projet.ADDRESSE1;
                 donordre.ADDRESSE2 = projet.ADDRESSE2;
                 donordre.PAYS = projet.PAYS;
+                donordre.CLE = djournal.CLE;
 
                 db.OPA_DONNEURORDRE.Add(donordre);
 
@@ -3203,8 +3277,8 @@ namespace apptab.Extension
         private string formatLibelle0702(string lib)
         {
             string libelle0702 = "";
-            libelle0702 = lib.Substring(11, lib.Length - 11);
-            libelle0702 = this.formaterTexte(11, libelle0702);
+            libelle0702 = lib.Substring(35, lib.Length - 35);
+            libelle0702 = this.formaterTexte(35, libelle0702);
             return libelle0702;
         }
         private string formaterTexte(int x, string texte)
