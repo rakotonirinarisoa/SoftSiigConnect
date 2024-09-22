@@ -230,14 +230,14 @@ namespace apptab.Controllers
                     xmlTextWriter.Formatting = System.Xml.Formatting.Indented;
                     xmlTextWriter.Indentation = 6; // Nombre d'espaces pour l'indentation
                                                    //xmlDoc.WriteTo(xmlTextWriter);
-                    //xmlDoc.Save(xmlTextWriter);
+                    xmlDoc.Save(xmlTextWriter);
                 }
                 System.IO.File.WriteAllText(pathchemin, stringWriter.ToString());
             }
-            using (StreamWriter stream = new StreamWriter(pathchemin, false, Encoding.GetEncoding("UTF-8")))
-            {
-                xmlDoc.Save(stream);
-            }
+            //using (StreamWriter stream = new StreamWriter(pathchemin, false, Encoding.GetEncoding("UTF-8")))
+            //{
+            //    xmlDoc.Save(stream);
+            //}
             return (xmlDoc);
         }
 
@@ -3495,6 +3495,35 @@ namespace apptab.Controllers
                 catch (Exception) { }
             }
             return Json(JsonConvert.SerializeObject(new { msg = "Email envoyer avec Succes", data = "" }));
+        }
+        public string GetTypeBanque(string codeproject , SI_USERS suser)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            int PROJECTid = int.Parse(codeproject);
+            if (exist == null) return "";
+
+            if (exist.IDPROJET != 0)
+            {
+                var TypeFileBQ = db.SI_TYPEBANQUE.FirstOrDefault(a => a.IDPROJET == PROJECTid).TYPE;
+                return TypeFileBQ.ToString();
+            }
+            else
+            {
+                //var mapuser = db.SI_MAPUSERPROJET.Where(a => a.IDUS == exist.ID).ToList();
+                int PROJECTID = int.Parse(codeproject);
+                var ii = db.SI_TYPECRITURE.FirstOrDefault(a => a.IDPROJET == PROJECTID);
+                var TypeFileBQ = "";
+                if (ii != null)
+                {
+                    TypeFileBQ = ii.TYPE.ToString();
+                }
+                else
+                {
+                    TypeFileBQ = "Veuillez parametrer votre type de fichier";
+                }
+                return TypeFileBQ.ToString();
+            }
+            //return TypeFileBQ;
         }
     }
 }

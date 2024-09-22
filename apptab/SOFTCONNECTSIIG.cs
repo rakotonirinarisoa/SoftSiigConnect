@@ -92,6 +92,7 @@ namespace apptab
         public virtual DbSet<ANOMALIE_G> ANOMALIE_G { get; set; }
         public virtual DbSet<SI_SETLIEN> SI_SETLIEN { get; set; }
         public virtual DbSet<SI_TRAITPROJETANO> SI_TRAITPROJETANO { get; set; }
+        public virtual DbSet<SI_TYPEBANQUE> SI_TYPEBANQUE { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

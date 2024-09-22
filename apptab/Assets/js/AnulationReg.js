@@ -119,16 +119,16 @@ function GetHistoriques() {
                     { data: 'Montant' },
                     { data: 'RIB' },
                     { data: 'login' },
-                    {
-                        data: 'Notifications',
-                        render: function (data, _, row, _) {
-                            return `
-                                        <div onclick="showLiquidationModal('${codeproject}', '${row.numeroliquidations}', '${row.estAvance}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
-                                            ${data}
-                                        </div>
-                                    `;
-                        }
-                    },
+                    //{
+                    //    data: 'Notifications',
+                    //    render: function (data, _, row, _) {
+                    //        return `
+                    //                    <div onclick="showLiquidationModal('${codeproject}', '${row.numeroliquidations}', '${row.estAvance}')" style="color: #007bff; text-decoration: underline; cursor: pointer;">
+                    //                        ${data}
+                    //                    </div>
+                    //                `;
+                    //    }
+                    //},
                 ],
                 createdRow: function (row, data, _) {
                     $(row).attr('compteG-id', data.id);

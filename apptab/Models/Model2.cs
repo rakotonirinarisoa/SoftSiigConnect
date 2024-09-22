@@ -16,65 +16,10 @@ namespace apptab.Models
         {
         }
 
-        public virtual DbSet<MOP> MOP { get; set; }
+        public virtual DbSet<SI_TYPEBANQUE> SI_TYPEBANQUE { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<MOP>()
-                .Property(e => e.MONTANTLOC)
-                .HasPrecision(30, 6);
-
-            modelBuilder.Entity<MOP>()
-                .Property(e => e.MONTANTDEV)
-                .HasPrecision(30, 6);
-
-            modelBuilder.Entity<MOP>()
-                .Property(e => e.MONTANTRAP)
-                .HasPrecision(30, 6);
-
-            modelBuilder.Entity<MOP>()
-                .Property(e => e.MONTANTTVA)
-                .HasPrecision(30, 6);
-
-            modelBuilder.Entity<MOP>()
-                .Property(e => e.MONTANTAUTRETAXE)
-                .HasPrecision(30, 6);
-
-            modelBuilder.Entity<MOP>()
-                .Property(e => e.MONTANTRETENUE)
-                .HasPrecision(30, 6);
-
-            modelBuilder.Entity<MOP>()
-                .Property(e => e.MONTANTTVADEV)
-                .HasPrecision(30, 6);
-
-            modelBuilder.Entity<MOP>()
-                .Property(e => e.MONTANTTVARAP)
-                .HasPrecision(30, 6);
-
-            modelBuilder.Entity<MOP>()
-                .Property(e => e.MONTANTAUTRETAXEDEV)
-                .HasPrecision(30, 6);
-
-            modelBuilder.Entity<MOP>()
-                .Property(e => e.MONTANTAUTRETAXERAP)
-                .HasPrecision(30, 6);
-
-            modelBuilder.Entity<MOP>()
-                .Property(e => e.MONTANTRETENUEDEV)
-                .HasPrecision(30, 6);
-
-            modelBuilder.Entity<MOP>()
-                .Property(e => e.MONTANTRETENUERAP)
-                .HasPrecision(30, 6);
-
-            modelBuilder.Entity<MOP>()
-                .Property(e => e.MONTANTCOMMISSION)
-                .HasPrecision(30, 6);
-
-            modelBuilder.Entity<MOP>()
-                .Property(e => e.TAXECOMMISSION)
-                .HasPrecision(30, 6);
         }
     }
 }

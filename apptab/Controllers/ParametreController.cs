@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using apptab.Models;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Web.Mvc;
@@ -1421,6 +1422,81 @@ namespace apptab.Controllers
             }
         }
 
+        public ActionResult TypeFileBanque()
+        {
+            ViewBag.Controller = "Paramétrage type de Fichier";
+
+            return View();
+        }
+        [HttpPost]
+        public ActionResult DetailsTypeBanque(SI_USERS suser, int iProjet)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                int crpt = iProjet;
+
+                var crpto = db.SI_TYPEBANQUE.FirstOrDefault(a => a.IDPROJET == crpt);
+                if (crpto != null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = crpto }, settings));
+                }
+                else
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le type d'écriture. " }, settings));
+                }
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
+        [HttpPost]
+        public JsonResult UpdateTypeBanque(SI_USERS suser, SI_TYPEBANQUE param, int iProjet)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            try
+            {
+                int IdS = iProjet;
+                var SExist = db.SI_TYPEBANQUE.FirstOrDefault(a => a.IDPROJET == IdS);
+
+                if (SExist != null)
+                {
+                    if (SExist.TYPE != param.TYPE)
+                    {
+                        SExist.TYPE = param.TYPE;
+                        SExist.IDUSER = exist.ID;
+                        SExist.CREATIONDATE = DateTime.Now;
+                        db.SaveChanges();
+                    }
+
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Enregistrement avec succès. ", data = param }, settings));
+                }
+                else
+                {
+                    var newPara = new SI_TYPEBANQUE()
+                    {
+                        TYPE = param.TYPE,
+                        IDPROJET = IdS,
+                        CREATIONDATE = DateTime.Now,
+                        IDUSER = exist.ID
+                    };
+
+                    db.SI_TYPEBANQUE.Add(newPara);
+                    db.SaveChanges();
+
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Enregistrement avec succès. ", data = param }, settings));
+                }
+            }
+            catch (Exception)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur d'enregistrement de l'information. " }, settings));
+            }
+        }
         //TYPE FLOW//
         public ActionResult TypeFlowCreate()
         {

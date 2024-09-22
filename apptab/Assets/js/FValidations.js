@@ -2,6 +2,7 @@
 var FilenameUsr;
 const pass = $('#user-password');
 let idtype = 0;
+let TypeBanque; 
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
@@ -478,6 +479,7 @@ function GetAllProjectUser() {
 
             $("#Fproject").html(listproject);
             GetTypeP();
+            GetTypeBanque();
             GetListCodeJournal();
             LoadValidate();
         },
@@ -737,7 +739,8 @@ $(document).ready(() => {
     Origin = User.origin;
 
     $(`[data-id="username"]`).text(User.LOGIN);
-    
+    $(".ISO20022HS").addClass('display-none');
+    $(".Afb160HS").addClass('display-none');
     GetAllProjectUser();
 });
 
@@ -1671,3 +1674,53 @@ $('#get-user-password-btnISO').on('click', () => {
 });
 var baseName = "2";
 
+function GetTypeBanque() {
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
+
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/GetTypeBanque',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+            TypeBanque = Datas;
+            if (TypeBanque == 1) {
+                $(".ISO20022HS").addClass('display-none');
+                $(".Afb160HS").removeClass('display-none');
+            } else {
+                $(".ISO20022HS").removeClass('display-none');
+                $(".Afb160HS").addClass('display-none');
+            }
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+};
