@@ -225,18 +225,18 @@ namespace apptab.Controllers
             var address = xmlDoc.GetElementsByTagName("original");
             using (StringWriter stringWriter = new StringWriter())
             {
-                using (StreamWriter stream = new StreamWriter(pathchemin, false, Encoding.GetEncoding("UTF-8")))
-                {
-                   // xmlDoc.Save(stream);
-                }
                 using (XmlTextWriter xmlTextWriter = new XmlTextWriter(stringWriter))
                 {
                     xmlTextWriter.Formatting = System.Xml.Formatting.Indented;
                     xmlTextWriter.Indentation = 6; // Nombre d'espaces pour l'indentation
-                    //xmlDoc.WriteTo(xmlTextWriter);
-                    xmlDoc.Save(xmlTextWriter);
+                                                   //xmlDoc.WriteTo(xmlTextWriter);
+                    //xmlDoc.Save(xmlTextWriter);
                 }
                 System.IO.File.WriteAllText(pathchemin, stringWriter.ToString());
+            }
+            using (StreamWriter stream = new StreamWriter(pathchemin, false, Encoding.GetEncoding("UTF-8")))
+            {
+                xmlDoc.Save(stream);
             }
             return (xmlDoc);
         }
