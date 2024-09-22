@@ -286,6 +286,7 @@
     <Compile Include="Models\Model5.cs" />
     <Compile Include="Models\Model6.cs" />
     <Compile Include="Models\Model7.cs" />
+    <Compile Include="Models\Model8.cs" />
     <Compile Include="Models\RBANQUES.cs" />
     <Compile Include="Models\RPAYS.cs" />
     <Compile Include="Models\SI_SITE.cs" />

@@ -73,5 +73,8 @@ namespace apptab.Models
 
         [StringLength(50)]
         public string SITE { get; set; }
+
+        [StringLength(2)]
+        public string CLE { get; set; }
     }
 }

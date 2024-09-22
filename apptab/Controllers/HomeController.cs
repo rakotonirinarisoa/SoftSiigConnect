@@ -223,10 +223,20 @@ namespace apptab.Controllers
             var xmlDoc = new XmlDocument();
             xmlDoc.Load(pathchemin);
             var address = xmlDoc.GetElementsByTagName("original");
-
-            using (StreamWriter stream = new StreamWriter(path, false, Encoding.GetEncoding("iso-8859-7")))
+            using (StringWriter stringWriter = new StringWriter())
             {
-                xmlDoc.Save(stream);
+                using (StreamWriter stream = new StreamWriter(pathchemin, false, Encoding.GetEncoding("UTF-8")))
+                {
+                   // xmlDoc.Save(stream);
+                }
+                using (XmlTextWriter xmlTextWriter = new XmlTextWriter(stringWriter))
+                {
+                    xmlTextWriter.Formatting = System.Xml.Formatting.Indented;
+                    xmlTextWriter.Indentation = 6; // Nombre d'espaces pour l'indentation
+                    //xmlDoc.WriteTo(xmlTextWriter);
+                    xmlDoc.Save(xmlTextWriter);
+                }
+                System.IO.File.WriteAllText(pathchemin, stringWriter.ToString());
             }
             return (xmlDoc);
         }
@@ -484,12 +494,13 @@ namespace apptab.Controllers
                     //XmlDocument xd = new XmlDocument();
                     //xd.LoadXml(Anarana);
                     //return CreateFileAFBXML(pathfile.Chemin, pathfile.Fichier);
+                    
                     xmlResult = SaveDocument(Anarana, Anarana);
                 }
             }
             byte[] fileBytes = System.IO.File.ReadAllBytes(path);
-            FileInfo fi = new FileInfo(path + ".xml");
-            string contentType = MimeMapping.GetMimeMapping(path + ".xml");
+            FileInfo fi = new FileInfo(path);
+            string contentType = MimeMapping.GetMimeMapping(path);
 
             var cd = new System.Net.Mime.ContentDisposition
             {
@@ -3218,7 +3229,7 @@ namespace apptab.Controllers
             string keypath = Convert.ToBase64String(System.IO.File.ReadAllBytes(pth));
             try
             {
-                return new ConnectionInfo(hOTE, port, username); //privateKeyObject(username, keypath)
+                return new ConnectionInfo(hOTE, port, username, privateKeyObject(username, keypath)); //
             }
             catch (Exception ex)
             {

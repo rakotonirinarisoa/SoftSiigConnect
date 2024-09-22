@@ -186,6 +186,13 @@ namespace apptab
             modelBuilder.Entity<OPA_VALIDATIONS>()
                 .Property(e => e.MONTANT)
                 .HasPrecision(18, 0);
+            modelBuilder.Entity<OPA_REGLEMENTBR>()
+                .Property(e => e.ID)
+                .HasPrecision(18, 0);
+
+            modelBuilder.Entity<OPA_REGLEMENTBR>()
+                .Property(e => e.MONTANT)
+                .HasPrecision(18, 0);
         }
     }
 }
