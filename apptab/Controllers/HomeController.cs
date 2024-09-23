@@ -3102,7 +3102,7 @@ namespace apptab.Controllers
             List<OPA_HISTORIQUE> result = new List<OPA_HISTORIQUE>();
             List<OPA_HISTORIQUEBR> resultBR = new List<OPA_HISTORIQUEBR>();
             List<OPA_VALIDATIONS> OPABR = new List<OPA_VALIDATIONS>();
-            var user = db.SI_USERS.Where(x => x.LOGIN == suser.LOGIN && x.PWD == suser.PWD && x.DELETIONDATE== null).FirstOrDefault();
+            var user = db.SI_USERS.Where(x => x.LOGIN == suser.LOGIN && x.PWD == suser.PWD && x.DELETIONDATE == null).FirstOrDefault();
             var TYPE = db.SI_TYPECRITURE.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault().TYPE;
 
             int countTraitement = 0;

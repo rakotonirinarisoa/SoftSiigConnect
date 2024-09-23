@@ -1,6 +1,8 @@
 ﻿let contentpaie;
 var table = undefined;
 let arr = [];
+let idtype = 0;
+const pass = $('#user-password');
 $(document).ready(() => {
 
     User = JSON.parse(sessionStorage.getItem("user"));
@@ -223,60 +225,7 @@ function GetHistoriques() {
 
 
 $('[data-action="GetElementChecked"]').click(function () {
-    let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
-    let list = [];
-    $.each(CheckList, (k, v) => {
-        list.push($(v).attr("compteG-id"));
-    });
-    let codeproject = $("#Fproject").val();
-
-    let formData = new FormData();
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDPROJET", User.IDPROJET);
-    formData.append("listCompte", list);
-    formData.append("baseName", baseName);
-    formData.append("journal", $('#commercial').val());
-    formData.append("etat", "");
-    formData.append("devise", false);
-    formData.append("codeproject", codeproject);
-
-    let listid = list.splice(',');
-    $.ajax({
-        type: "POST",
-        url: Origin + '/Home/GetCancel',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        beforeSend: function () {
-            loader.removeClass('display-none');
-        },
-        complete: function () {
-            loader.addClass('display-none');
-        },
-        success: function (result) {
-            var Datas = JSON.parse(result);
-            //alert(Datas.data)
-            if (Datas.type == "error") {
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-                window.location = window.location.origin;
-                return;
-            }
-            ListResult = Datas.data;
-            content = ``;
-            GetHistoriques()
-            //window.location = '/Home/GetFile?file=' + Datas.data;
-
-        },
-        error: function () {
-            alert("Problème de connexion. ");
-        }
-    });
+   
 });
 $(`[tab="autre"]`).hide();
 
@@ -382,3 +331,118 @@ function GetTypeP() {
         }
     });
 };
+
+$('[data-action="SaveV"]').click(function () {
+    let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
+    let typeF = $(this).attr(`data-type`);
+    idtype = typeF;
+    let list = [];
+    $.each(CheckList, (k, v) => {
+        list.push($(v).attr("compteG-id"));
+    });
+
+    if (list.length == 0) {
+        alert("Veuillez sélectionner au moins un mandat afin de l'enregistrer et l'envoyer pour validation. ");
+        return;
+    }
+
+    pass.text('');
+    $('#password').val('');
+    $('#verification-modal').modal('toggle');
+});
+
+$('#get-user-password-btn').on('click', () => {
+    let formData = new FormData();
+    console.log(idtype);
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDSOCIETE);
+
+    formData.append("userPassword", $("#password").val());
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Traitement/Password',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            //loader.addClass('display-none');
+        },
+        success: function (result) {
+            const res = JSON.parse(result);
+            if (res.type === 'error') {
+                pass.css({ 'color': 'red' });
+                pass.text('Identifiants incorrects.');
+            } else {
+                // OKOK();
+                getCancelWithPsw();
+            }
+        },
+        Error: function (_, e) {
+            alert(e);
+        }
+    });
+});
+
+function getCancelWithPsw() {
+    let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
+    let list = [];
+    $.each(CheckList, (k, v) => {
+        list.push($(v).attr("compteG-id"));
+    });
+    let codeproject = $("#Fproject").val();
+
+    let formData = new FormData();
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
+    formData.append("listCompte", list);
+    formData.append("baseName", baseName);
+    formData.append("journal", $('#commercial').val());
+    formData.append("etat", "");
+    formData.append("devise", false);
+    formData.append("codeproject", codeproject);
+
+    let listid = list.splice(',');
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/GetCancel',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+            //alert(Datas.data)
+            if (Datas.type == "error") {
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+            ListResult = Datas.data;
+            content = ``;
+            GetHistoriques()
+            //window.location = '/Home/GetFile?file=' + Datas.data;
+
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
