@@ -360,15 +360,13 @@ function getelementTXT(a , list) {
                 loader.removeClass('display-none');
             },
             complete: function (result) {
-                //loader.addClass('display-none');
-                alert("Traitement avec succés.");
-
                 window.location.reload();
             },
             success: function (result) {
-                console.log(result);
-                let blobUrl = URL.createObjectURL(result);
-                GetFileNameAnarana(blobUrl);
+                //console.log(result);
+                //let blobUrl = URL.createObjectURL(result);
+                alert(result.msg)
+                //GetFileNameAnarana(blobUrl);
                 //window.location = '/Home/GetFile?file=' + Datas.data;
                 $('#verification-modal').modal('toggle');
                 loader.addClass('display-none');
@@ -500,6 +498,8 @@ function LoadValidate() {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
     formData.append("suser.IDPROJET", User.IDPROJET);
+    let CodeJournal = $("#commercial").val();
+    formData.append("CodeJournal", CodeJournal);
 
     $.ajax({
         type: "POST",
@@ -747,6 +747,7 @@ $(document).ready(() => {
 $(document).on("change", "[compG-list]", () => {
     FillAUXI();
     FillCompteName();
+   
 });
 
 $(document).on("change", "[code-project]", () => {
@@ -763,6 +764,7 @@ $(document).on("change", "[auxi-list]", () => {
 $(document).on("change", "[codej-list]", () => {
     var code = ListCodeJournal.filter(function (e) { return e.CODE == $(`[codej-list]`).val(); })[0];
     $(`[codej-libelle]`).val(code.LIBELLE);
+    LoadValidate();
 });
 
 $(document).on("click", "[data-target]", function () {

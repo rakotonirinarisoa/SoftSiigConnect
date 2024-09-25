@@ -675,8 +675,6 @@ namespace apptab.Extension
                                     );
                                 }
                             }
-                         
-
                           
                         }
                         else
