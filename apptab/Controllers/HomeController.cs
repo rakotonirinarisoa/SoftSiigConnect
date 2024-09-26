@@ -230,14 +230,14 @@ namespace apptab.Controllers
                     xmlTextWriter.Formatting = System.Xml.Formatting.Indented;
                     xmlTextWriter.Indentation = 6; // Nombre d'espaces pour l'indentation
                                                    //xmlDoc.WriteTo(xmlTextWriter);
-                    //xmlDoc.Save(xmlTextWriter);
+                    xmlDoc.Save(xmlTextWriter);
                 }
                 System.IO.File.WriteAllText(pathchemin, stringWriter.ToString());
             }
-            using (StreamWriter stream = new StreamWriter(pathchemin, false, Encoding.GetEncoding("UTF-8")))
-            {
-                xmlDoc.Save(stream);
-            }
+            //using (StreamWriter stream = new StreamWriter(pathchemin, false, Encoding.GetEncoding("UTF-8")))
+            //{
+            //    xmlDoc.Save(stream);
+            //}
             return (xmlDoc);
         }
 
@@ -331,36 +331,56 @@ namespace apptab.Controllers
                     avalider.AddRange(db.OPA_VALIDATIONS.Where(a => a.IDPROJET == PROJECTID && a.ETAT == 2 && a.IDREGLEMENT == item.Id && a.NUMEREG == b && a.SITE == SIT).ToList());
                 };
             }
-            if (avalider != null)
-            {
-                foreach (var item in avalider)
-                {
-                    try
-                    {
-                        item.DATETRANS = DateTime.Now;
-
-                        item.IDUSTRANS = exist.ID;
-                        item.ETAT = 3;
-                        db.SaveChanges();
-                    }
-                    catch (Exception ex)
-                    {
-                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
-                        throw;
-                    }
-                }
-            }
+            
             if (baseName == "2")
             {
                 var pathfile = aFB160.CreateTOMPROAFB160(devise, codeJ, suser, codeproject);
                 if (intbasetype == 0)
                 {
                     Anarana = pathfile.Chemin;
+                    if (avalider != null)
+                    {
+                        foreach (var item in avalider)
+                        {
+                            try
+                            {
+                                item.DATETRANS = DateTime.Now;
+
+                                item.IDUSTRANS = exist.ID;
+                                item.ETAT = 3;
+                                db.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                                throw;
+                            }
+                        }
+                    }
                     return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                 }
                 else if (intbasetype == 1)
                 {
                     Anarana = pathfile.Chemin;
+                    if (avalider != null)
+                    {
+                        foreach (var item in avalider)
+                        {
+                            try
+                            {
+                                item.DATETRANS = DateTime.Now;
+
+                                item.IDUSTRANS = exist.ID;
+                                item.ETAT = 3;
+                                db.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                                throw;
+                            }
+                        }
+                    }
                     return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
                 }
                 else if (intbasetype == 2)
@@ -370,6 +390,53 @@ namespace apptab.Controllers
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     string pport = ftp.PORT.ToString();
                     SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport);
+                    if (avalider != null)
+                    {
+                        foreach (var item in avalider)
+                        {
+                            try
+                            {
+                                item.DATETRANS = DateTime.Now;
+
+                                item.IDUSTRANS = exist.ID;
+                                item.ETAT = 3;
+                                db.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                                throw;
+                            }
+                        }
+                    }
+                    //SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
+                }
+                else if (intbasetype == 3)
+                {
+                    Anarana = pathfile.Chemin;
+                    send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
+                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
+                    string pport = ftp.PORT.ToString();
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport);
+                    if (avalider != null)
+                    {
+                        foreach (var item in avalider)
+                        {
+                            try
+                            {
+                                item.DATETRANS = DateTime.Now;
+
+                                item.IDUSTRANS = exist.ID;
+                                item.ETAT = 3;
+                                db.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                                throw;
+                            }
+                        }
+                    }
                     //SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                 }
                 else
@@ -379,66 +446,155 @@ namespace apptab.Controllers
                     string pport = ftp.PORT.ToString();
                     SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport);
                     //SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
+                    if (avalider != null)
+                    {
+                        foreach (var item in avalider)
+                        {
+                            try
+                            {
+                                item.DATETRANS = DateTime.Now;
+
+                                item.IDUSTRANS = exist.ID;
+                                item.ETAT = 3;
+                                db.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                                throw;
+                            }
+                        }
+                    }
                     return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
                 }
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archivage avec succès. ", data = send }, settings));
             }
             else
             {
-                var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser, codeproject, list);
+                //var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser, codeproject, list);
 
 
                 if (intbasetype == 0)
                 {
+                    var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser, codeproject, list);
                     Anarana = pathfile.Chemin;
                     return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                 }
                 else if (intbasetype == 1)
                 {
+                    var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser, codeproject, list);
                     Anarana = pathfile.Chemin;
                     return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
                 }
                 else if (intbasetype == 2)
                 {
+                    var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser, codeproject, list);
                     Anarana = pathfile.Chemin;
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     //SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                     //SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE)
                     string pport = ftp.PORT.ToString();
+                    string res = "";
                     CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport);
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = "" }, settings));
+                    try
+                    {
+                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport);
+                        if (avalider != null)
+                        {
+                            foreach (var item in avalider)
+                            {
+                                try
+                                {
+                                    item.DATETRANS = DateTime.Now;
+
+                                    item.IDUSTRANS = exist.ID;
+                                    item.ETAT = 3;
+                                    db.SaveChanges();
+                                }
+                                catch (Exception ex)
+                                {
+                                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                                    throw;
+                                }
+                            }
+                        }
+                        res = "Fichier bien transferet ! ";
+                    }
+                    catch (Exception ex)
+                    {
+                        res = ex.Message;
+                    }
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = res, data = "" }, settings));
+                }
+                else if (intbasetype == 3)
+                {
+                    var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list);
+                    Anarana = pathfile.Chemin;
+                    send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
+                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
+                    string pport = ftp.PORT.ToString();
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport);
+                    if (avalider != null)
+                    {
+                        foreach (var item in avalider)
+                        {
+                            try
+                            {
+                                item.DATETRANS = DateTime.Now;
+
+                                item.IDUSTRANS = exist.ID;
+                                item.ETAT = 3;
+                                db.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                                throw;
+                            }
+                        }
+                    }
+                    return Json(JsonConvert.SerializeObject(new { type = "sucess", msg = "Traitement avec Succées", data = "" }, settings));
+                    //SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                 }
                 else
                 {
+                    var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser, codeproject, list);
                     Anarana = pathfile.Chemin;
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     string pport = ftp.PORT.ToString();
                     CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport);
+                    string res = "";
+                    try
+                    {
+                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport);
+                        if (avalider != null)
+                        {
+                            foreach (var item in avalider)
+                            {
+                                try
+                                {
+                                    item.DATETRANS = DateTime.Now;
+
+                                    item.IDUSTRANS = exist.ID;
+                                    item.ETAT = 3;
+                                    db.SaveChanges();
+                                }
+                                catch (Exception ex)
+                                {
+                                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                                    throw;
+                                }
+                            }
+                        }
+                        res = "Fichier bien transferet ! ";
+                    }
+                    catch (Exception ex)
+                    {
+                        res = ex.Message;
+                    }
                     //SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = "" }, settings));
                 }
-
-                if (avalider != null)
-                {
-                    foreach (var item in avalider)
-                    {
-                        try
-                        {
-                            item.DATETRANS = DateTime.Now;
-                            item.IDUSTRANS = exist.ID;
-                            item.ETAT = 3;
-                            db.SaveChanges();
-                        }
-                        catch (Exception ex)
-                        {
-                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
-                            throw;
-                        }
-                    }
-                }
-
             }
         }
         [HttpPost]
@@ -2551,7 +2707,7 @@ namespace apptab.Controllers
         //END ETAT = 1
         //======================================================================================================Fvalidations=================================================================
         [HttpPost]
-        public JsonResult LoadValidateEcriture(SI_USERS suser, string codeproject)
+        public JsonResult LoadValidateEcriture(SI_USERS suser, string codeproject,string CodeJournal)
         {
             AFB160 aFB160 = new AFB160();
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
@@ -2577,7 +2733,7 @@ namespace apptab.Controllers
             {
                 //var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG).ToArray();
                 //var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 && !HistoAFB.Contains(a.IDREGLEMENT.ToString())).ToList();
-                var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 && site.Contains(a.SITE)).ToList();
+                var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.Journal == CodeJournal && a.IDPROJET == PROJECTID && a.ETAT == 2 && site.Contains(a.SITE)).ToList();
                 foreach (var item in val)
                 {
                     bool isLate = false;
@@ -2615,7 +2771,7 @@ namespace apptab.Controllers
             {
                 //var HistoAFB = db.OPA_HISTORIQUE.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG.ToString()).ToArray();
                 //var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 && !HistoAFB.Contains(a.IDREGLEMENT.ToString())).ToList();
-                var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 && site.Contains(a.SITE)).ToList();
+                var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.Journal == CodeJournal && a.IDPROJET == PROJECTID && a.ETAT == 2 && site.Contains(a.SITE)).ToList();
                 foreach (var item in val)
                 {
                     bool isLate = false;
@@ -2660,7 +2816,6 @@ namespace apptab.Controllers
 
             int PROJECTID = int.Parse(codeproject);
             var cancel = db.OPA_VALIDATIONS.Where(x => x.IDREGLEMENT == id.ToString() && x.IDPROJET == PROJECTID).FirstOrDefault();
-            //OPA_HCANCEL Hcancel = new OPA_HCANCEL();
             if (cancel != null)
             {
                 if (motif != "")
@@ -2670,16 +2825,6 @@ namespace apptab.Controllers
                     cancel.COMS = commentaire;
                     cancel.DATEANNULER = DateTime.Now;
                     cancel.IDUSER = exist.ID;
-                    //historique
-                    //Hcancel.IDREGLEMENT = id;
-                    //Hcancel.COMS = commentaire;
-                    //Hcancel.MOTIF = motif;
-                    //Hcancel.DATECANCEL = DateTime.Now;
-                    //Hcancel.IDUSER = exist.ID;
-                    //Hcancel.IDPROJETS = suser.IDPROJET;
-                    //Hcancel.ETAT = 4;
-
-                    //db.OPA_HCANCEL.Add(Hcancel);
                     db.SaveChanges();
 
                     var lien = db.SI_SETLIEN.FirstOrDefault().LIEN;
@@ -3102,7 +3247,7 @@ namespace apptab.Controllers
             List<OPA_HISTORIQUE> result = new List<OPA_HISTORIQUE>();
             List<OPA_HISTORIQUEBR> resultBR = new List<OPA_HISTORIQUEBR>();
             List<OPA_VALIDATIONS> OPABR = new List<OPA_VALIDATIONS>();
-            var user = db.SI_USERS.Where(x => x.LOGIN == suser.LOGIN && x.PWD == suser.PWD && x.DELETIONDATE== null).FirstOrDefault();
+            var user = db.SI_USERS.Where(x => x.LOGIN == suser.LOGIN && x.PWD == suser.PWD && x.DELETIONDATE == null).FirstOrDefault();
             var TYPE = db.SI_TYPECRITURE.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault().TYPE;
 
             int countTraitement = 0;
@@ -3206,21 +3351,38 @@ namespace apptab.Controllers
         public JsonResult SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE,string port)
         {
             int pport = int.Parse(port);
-            string pth = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + SOURCE + ".txt";
-            //Console.WriteLine("Create client Object");
-            using (SftpClient sftpClient = new SftpClient(getSftpConnection(HOTE, USERFTP.ToString(), pport, pth)))
+            string pth = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + SOURCE + ".txt";
+            string remoteFilePath = @"\public\";
+            var res = ""; 
+            try
             {
-                //Console.WriteLine("Connect to server");
-                sftpClient.Connect();
-                //Console.WriteLine("Creating FileStream object to stream a file");
-                using (FileStream fs = new FileStream(pth, FileMode.Open))
+                // Créer une connexion SFTP
+                //using (var sftp = new SftpClient(HOTE, pport, USERFTP.ToString(), PWDFTP))
+                using (var sftp = new SftpClient("151.80.218.41", 22, "tester", "password"))
                 {
-                    sftpClient.BufferSize = 1024;
-                    sftpClient.UploadFile(fs, Path.GetFileName(pth));
+                    sftp.Connect();
+
+                    using (var fileStream = new FileStream(pth, FileMode.Open))
+                    {
+                       //var sss =  sftp.ListDirectory("//");
+                        // Envoyer le fichier
+                        sftp.UploadFile(fileStream, remoteFilePath + Path.GetFileName(pth), x =>
+                        {
+                            var az = x.ToString();
+                        });
+                        //Console.WriteLine("Fichier envoyé avec succès !");
+                        res = "Fichier envoyé avec succès !";
+                    }
+
+                    sftp.Disconnect();
                 }
-                sftpClient.Dispose();
             }
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès. ", data = "" }, settings));
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erreur : {ex.Message}");
+                res = ex.Message;
+            }
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = res, data = "" }, settings));
         }
 
         private ConnectionInfo getSftpConnection(string hOTE, string username, int port, string sOURCE)
@@ -3495,6 +3657,35 @@ namespace apptab.Controllers
                 catch (Exception) { }
             }
             return Json(JsonConvert.SerializeObject(new { msg = "Email envoyer avec Succes", data = "" }));
+        }
+        public string GetTypeBanque(string codeproject , SI_USERS suser)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            int PROJECTid = int.Parse(codeproject);
+            if (exist == null) return "";
+
+            if (exist.IDPROJET != 0)
+            {
+                var TypeFileBQ = db.SI_TYPEBANQUE.FirstOrDefault(a => a.IDPROJET == PROJECTid).TYPE;
+                return TypeFileBQ.ToString();
+            }
+            else
+            {
+                //var mapuser = db.SI_MAPUSERPROJET.Where(a => a.IDUS == exist.ID).ToList();
+                int PROJECTID = int.Parse(codeproject);
+                var ii = db.SI_TYPECRITURE.FirstOrDefault(a => a.IDPROJET == PROJECTID);
+                var TypeFileBQ = "";
+                if (ii != null)
+                {
+                    TypeFileBQ = ii.TYPE.ToString();
+                }
+                else
+                {
+                    TypeFileBQ = "Veuillez parametrer votre type de fichier";
+                }
+                return TypeFileBQ.ToString();
+            }
+            //return TypeFileBQ;
         }
     }
 }

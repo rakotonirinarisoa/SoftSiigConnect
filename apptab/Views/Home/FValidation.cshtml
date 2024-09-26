@@ -118,9 +118,9 @@
         <li class="nav-item">
             <div class="nav-link" data-type="switch_tab" data-target="tordre">Donneur d'ordre</div>
         </li>*@
-    <li class="nav-item">
+    @*<li class="nav-item">
         <div class="nav-link" data-type="switch_tab" data-target="tanomalie" data-action="GetAnomalieListes">Anomalie</div>
-    </li>
+    </li>*@
 </ul>
 <div id="tfacture" data-type="tab">
     <div class="table-responsive mb-3 OPF" style="max-height:400px" tab="autre">
@@ -199,32 +199,52 @@
 || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RMP4"].ToString()) == 2)))
     {
         <div class="form-row">
-            <div class="mb-3 col">
-                <div class="btn btn-flat bg-gradient-primary col-12" @*data-action="ISO2022"*@ data-action="SaveVISO">
-                    <i class="fa fa-download"></i> Créer ISO2022
+            <div class="mb-3 col ISO20022HS">
+                <div class="btn btn-flat bg-gradient-primary col-12 " data-action="SaveVISO">
+                    <i class="fa fa-download"></i> Créer ISO20022
                 </div>
             </div>
-            <div class="mb-3 col">
-                <div class="btn btn-flat bg-gradient-primary col-12" @*data-action="CreateTxt"*@ data-action="SaveV"  data-type="0">
+            <div class="mb-3 col Afb160HS">
+                <div class="btn btn-flat bg-gradient-primary col-12 " data-action="SaveV" data-type="0">
                     <i class="fa fa-download"></i> Créer fichier AFB
                 </div>
             </div>
         </div>
 
         <div class="form-row">
-            <div class="mb-3 col">
-                <div class="btn btn-flat bg-gradient-red col-12" @*data-action="CreateTxtCrypter"*@ data-action="SaveV"  data-type="1">
+            <div class="mb-3 col Afb160HS">
+                <div class="btn btn-flat bg-gradient-red col-12 " data-action="SaveV" data-type="1">
                     <i class="fa fa-file-archive"></i> Créer fichier AFB crypté
                 </div>
             </div>
-            <div class="mb-3 col">
-                <div class="btn btn-flat bg-gradient-red col-12" @*data-action="CreateTxtSend"*@ data-action="SaveV" data-type="2">
-                    <i class="fa fa-paper-plane"></i> Envoyer FTP fichier AFB
+            <div class="mb-3 col Afb160HS">
+                <div class="btn btn-flat bg-gradient-red col-12 " data-action="SaveV" data-type="2">
+                    <i class="fa fa-paper-plane"></i> Envoyer SFTP fichier AFB
                 </div>
             </div>
-            <div class="mb-3 col">
-                <div class="btn btn-flat bg-gradient-red col-12" data-action="CreateTxtFTPCrypter">
-                    <i class="fa fa-paper-plane"></i> Envoyer FTP fichier AFB crypté
+            <div class="mb-3 col Afb160HS">
+                <div class="mb-3 col Afb160HS">
+                    <div class="btn btn-flat bg-gradient-red col-12 " data-action="CreateTxtFTPCrypter">
+                        <i class="fa fa-paper-plane"></i> Envoyer SFTP fichier AFB crypté
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+
+            <div class="mb-3 col ISO20022HS">
+                <div class="btn btn-flat bg-gradient-red col-12 " data-action="SaveV" data-type="3">
+                    <i class="fa fa-file-archive"></i> Créer fichier ISO 20022 crypté
+                </div>
+            </div>
+            <div class="mb-3 col ISO20022HS">
+                <div class="btn btn-flat bg-gradient-red col-12 " data-action="SaveV" data-type="4">
+                    <i class="fa fa-paper-plane"></i> Envoyer SFTP fichier ISO
+                </div>
+            </div>
+            <div class="mb-3 col ISO20022HS">
+                <div class="btn btn-flat bg-gradient-red col-12 " data-action="CreateTxtFTPCrypter" data-type="5">
+                    <i class="fa fa-paper-plane"></i> Envoyer SFTP fichier ISO crypté
                 </div>
             </div>
         </div>

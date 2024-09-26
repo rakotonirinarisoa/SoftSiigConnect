@@ -2,6 +2,7 @@
 var FilenameUsr;
 const pass = $('#user-password');
 let idtype = 0;
+let TypeBanque; 
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
@@ -359,15 +360,13 @@ function getelementTXT(a , list) {
                 loader.removeClass('display-none');
             },
             complete: function (result) {
-                //loader.addClass('display-none');
-                alert("Traitement avec succés.");
-
                 window.location.reload();
             },
             success: function (result) {
-                console.log(result);
-                let blobUrl = URL.createObjectURL(result);
-                GetFileNameAnarana(blobUrl);
+                //console.log(result);
+                //let blobUrl = URL.createObjectURL(result);
+                alert(result.msg)
+                //GetFileNameAnarana(blobUrl);
                 //window.location = '/Home/GetFile?file=' + Datas.data;
                 $('#verification-modal').modal('toggle');
                 loader.addClass('display-none');
@@ -478,6 +477,7 @@ function GetAllProjectUser() {
 
             $("#Fproject").html(listproject);
             GetTypeP();
+            GetTypeBanque();
             GetListCodeJournal();
             LoadValidate();
         },
@@ -498,6 +498,8 @@ function LoadValidate() {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
     formData.append("suser.IDPROJET", User.IDPROJET);
+    let CodeJournal = $("#commercial").val();
+    formData.append("CodeJournal", CodeJournal);
 
     $.ajax({
         type: "POST",
@@ -737,13 +739,15 @@ $(document).ready(() => {
     Origin = User.origin;
 
     $(`[data-id="username"]`).text(User.LOGIN);
-    
+    $(".ISO20022HS").addClass('display-none');
+    $(".Afb160HS").addClass('display-none');
     GetAllProjectUser();
 });
 
 $(document).on("change", "[compG-list]", () => {
     FillAUXI();
     FillCompteName();
+   
 });
 
 $(document).on("change", "[code-project]", () => {
@@ -760,6 +764,7 @@ $(document).on("change", "[auxi-list]", () => {
 $(document).on("change", "[codej-list]", () => {
     var code = ListCodeJournal.filter(function (e) { return e.CODE == $(`[codej-list]`).val(); })[0];
     $(`[codej-libelle]`).val(code.LIBELLE);
+    LoadValidate();
 });
 
 $(document).on("click", "[data-target]", function () {
@@ -1671,3 +1676,53 @@ $('#get-user-password-btnISO').on('click', () => {
 });
 var baseName = "2";
 
+function GetTypeBanque() {
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
+
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/GetTypeBanque',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+            TypeBanque = Datas;
+            if (TypeBanque == 1) {
+                $(".ISO20022HS").addClass('display-none');
+                $(".Afb160HS").removeClass('display-none');
+            } else {
+                $(".ISO20022HS").removeClass('display-none');
+                $(".Afb160HS").addClass('display-none');
+            }
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+};

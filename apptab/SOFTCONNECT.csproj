@@ -281,15 +281,10 @@
     <Compile Include="Models\ListPaimentV.cs" />
     <Compile Include="Models\Model1.cs" />
     <Compile Include="Models\Model2.cs" />
-    <Compile Include="Models\Model3.cs" />
-    <Compile Include="Models\Model4.cs" />
-    <Compile Include="Models\Model5.cs" />
-    <Compile Include="Models\Model6.cs" />
-    <Compile Include="Models\Model7.cs" />
-    <Compile Include="Models\Model8.cs" />
     <Compile Include="Models\RBANQUES.cs" />
     <Compile Include="Models\RPAYS.cs" />
     <Compile Include="Models\SI_SITE.cs" />
+    <Compile Include="Models\SI_TYPEBANQUE.cs" />
     <Compile Include="Models\SI_USERSHISTO.cs" />
     <Compile Include="Models\TxtPAIEMENT.cs" />
     <Compile Include="Models\TxLISTETRAIT.cs" />
@@ -2576,6 +2571,7 @@
     <Content Include="Assets\js\TraitmandatModalT.js" />
     <Content Include="Assets\js\TraitmandatOA.js" />
     <Content Include="Assets\js\TraitmandatO.js" />
+    <Content Include="Assets\js\TypeBanque.js" />
     <Content Include="Assets\js\TypeProc.js" />
     <Content Include="Assets\js\TypeC.js" />
     <Content Include="Assets\js\TeacherValidations.js" />
@@ -5036,6 +5032,7 @@
     <Content Include="Views\EtatGED\SituationDetailleDoc.cshtml" />
     <Content Include="Views\EtatGED\EtapFactRejete.cshtml" />
     <Content Include="Views\Privilege\SuperAdminDetailFPROSOA.cshtml" />
+    <Content Include="Views\Parametre\TypeFileBanque.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
