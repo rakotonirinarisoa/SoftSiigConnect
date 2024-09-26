@@ -46,57 +46,8 @@ function GetListUser() {
             $(`[data-id="ubody"]`).text("");
 
             var code = ``;
+            let i = 0;
             $.each(Datas.data, function (k, v) {
-
-                //let MENUPAR1N = "", MENUPAR1R = "", MENUPAR1A = "";
-                //if (v.MENUPAR1 == 0) MENUPAR1N = "checked";
-                //if (v.MENUPAR1 == 1) MENUPAR1R = "checked";
-                //if (v.MENUPAR1 == 2) MENUPAR1A = "checked";
-
-                //let MENUPAR2N = "", MENUPAR2R = "", MENUPAR2A = "";
-                //if (v.MENUPAR2 == 0) MENUPAR2N = "checked";
-                //if (v.MENUPAR2 == 1) MENUPAR2R = "checked";
-                //if (v.MENUPAR2 == 2) MENUPAR2A = "checked";
-
-                //let MENUPAR3N = "", MENUPAR3R = "", MENUPAR3A = "";
-                //if (v.MENUPAR3 == 0) MENUPAR3N = "checked";
-                //if (v.MENUPAR3 == 1) MENUPAR3R = "checked";
-                //if (v.MENUPAR3 == 2) MENUPAR3A = "checked";
-
-                //let MENUPAR4N = "", MENUPAR4R = "", MENUPAR4A = "";
-                //if (v.MENUPAR4 == 0) MENUPAR4N = "checked";
-                //if (v.MENUPAR4 == 1) MENUPAR4R = "checked";
-                //if (v.MENUPAR4 == 2) MENUPAR4A = "checked";
-
-                //let MENUPAR5N = "", MENUPAR5R = "", MENUPAR5A = "";
-                //if (v.MENUPAR5 == 0) MENUPAR5N = "checked";
-                //if (v.MENUPAR5 == 1) MENUPAR5R = "checked";
-                //if (v.MENUPAR5 == 2) MENUPAR5A = "checked";
-
-                //let MENUPAR6N = "", MENUPAR6R = "", MENUPAR6A = "";
-                //if (v.MENUPAR6 == 0) MENUPAR6N = "checked";
-                //if (v.MENUPAR6 == 1) MENUPAR6R = "checked";
-                //if (v.MENUPAR6 == 2) MENUPAR6A = "checked";
-
-                //let MENUPAR7N = "", MENUPAR7R = "", MENUPAR7A = "";
-                //if (v.MENUPAR7 == 0) MENUPAR7N = "checked";
-                //if (v.MENUPAR7 == 1) MENUPAR7R = "checked";
-                //if (v.MENUPAR7 == 2) MENUPAR7A = "checked";
-
-                //let MENUPAR8N = "", MENUPAR8R = "", MENUPAR8A = "";
-                //if (v.MENUPAR8 == 0) MENUPAR8N = "checked";
-                //if (v.MENUPAR8 == 1) MENUPAR8R = "checked";
-                //if (v.MENUPAR8 == 2) MENUPAR8A = "checked";
-
-                //let MENUPAR9N = "", MENUPAR9R = "", MENUPAR9A = "";
-                //if (v.MENUPAR9 == 0) MENUPAR9N = "checked";
-                //if (v.MENUPAR9 == 1) MENUPAR9R = "checked";
-                //if (v.MENUPAR9 == 2) MENUPAR9A = "checked";
-
-                //let MENUPAR10N = "", MENUPAR10R = "", MENUPAR10A = "";
-                //if (v.MENUPAR10 == 0) MENUPAR10N = "checked";
-                //if (v.MENUPAR10 == 1) MENUPAR10R = "checked";
-                //if (v.MENUPAR10 == 2) MENUPAR10A = "checked";
 
                 let MTNONN = "", MTNONR = "", MTNONA = "";
                 if (v.MTNON == 0) MTNONN = "checked";
@@ -112,11 +63,6 @@ function GetListUser() {
                 if (v.MT1 == 0) MT1N = "checked";
                 if (v.MT1 == 1) MT1R = "checked";
                 if (v.MT1 == 2) MT1A = "checked";
-
-                //let MT2N = "", MT2R = "", MT2A = "";
-                //if (v.MT2 == 0) MT2N = "checked";
-                //if (v.MT2 == 1) MT2R = "checked";
-                //if (v.MT2 == 2) MT2A = "checked";
 
                 let MP1N = "", MP1R = "", MP1A = "";
                 if (v.MP1 == 0) MP1N = "checked";
@@ -228,11 +174,6 @@ function GetListUser() {
                 if (v.MD2 == 1) MD2R = "checked";
                 if (v.MD2 == 2) MD2A = "checked";
 
-                //let MD3N = "", MD3R = "", MD3A = "";
-                //if (v.MD3 == 0) MD3N = "checked";
-                //if (v.MD3 == 1) MD3R = "checked";
-                //if (v.MD3 == 2) MD3A = "checked";
-
                 let J0N = "", J0R = "", J0A = "";
                 if (v.J0 == 0) J0N = "checked";
                 if (v.J0 == 1) J0R = "checked";
@@ -252,21 +193,6 @@ function GetListUser() {
                 if (v.J3 == 0) J3N = "checked";
                 if (v.J3 == 1) J3R = "checked";
                 if (v.J3 == 2) J3A = "checked";
-
-                //let MOP0N = "", MOP0R = "", MOP0A = "";
-                //if (v.MOP0 == 0) MOP0N = "checked";
-                //if (v.MOP0 == 1) MOP0R = "checked";
-                //if (v.MOP0 == 2) MOP0A = "checked";
-
-                //let MOP1N = "", MOP1R = "", MOP1A = "";
-                //if (v.MOP1 == 0) MOP1N = "checked";
-                //if (v.MOP1 == 1) MOP1R = "checked";
-                //if (v.MOP1 == 2) MOP1A = "checked";
-
-                //let MOP2N = "", MOP2R = "", MOP2A = "";
-                //if (v.MOP2 == 0) MOP2N = "checked";
-                //if (v.MOP2 == 1) MOP2R = "checked";
-                //if (v.MOP2 == 2) MOP2A = "checked";
 
                 let TDB14N = "", TDB14R = "", TDB14A = "";
                 if (v.TDB14 == 0) TDB14N = "checked";
@@ -323,6 +249,11 @@ function GetListUser() {
                         <td>${v.PROJET}</td>
                         <td>${v.LOGIN}</td>
                         <td>${v.ROLE}</td>
+                        <td style="text-align:center">
+                            <input type="checkbox" class="checkbox none-checkbox" value="none"/> None<br>
+                            <input type="checkbox" class="checkbox read-checkbox" value="read"/> Read<br>
+                            <input type="checkbox" class="checkbox all-checkbox" value="all"/> All<br>
+                        </td>
 
                         <td text-align:center>
                             <div class="form-check form-check-inline">
@@ -796,9 +727,32 @@ function GetListUser() {
                             <div onclick="SavePRIV('${v.ID}')"><i class="fa fa-save fa-lg text-danger"></i></div>
                         </td>
                     </tr >`;
+                i++;
             });
 
             $(`[data-id="ubody"]`).append(code);
+
+            $('.none-checkbox').on('click', function () {
+                const isChecked = $(this).is(':checked');
+                const row = $(this).closest('tr');
+
+                // Cochez ou décochez tous les radios avec value="0" dans la ligne
+                row.find('input[type="radio"][value="0"]').prop('checked', isChecked);
+            });
+            $('.read-checkbox').on('click', function () {
+                const isChecked = $(this).is(':checked');
+                const row = $(this).closest('tr');
+
+                // Cochez ou décochez tous les radios avec value="0" dans la ligne
+                row.find('input[type="radio"][value="1"]').prop('checked', isChecked);
+            });
+            $('.all-checkbox').on('click', function () {
+                const isChecked = $(this).is(':checked');
+                const row = $(this).closest('tr');
+
+                // Cochez ou décochez tous les radios avec value="0" dans la ligne
+                row.find('input[type="radio"][value="2"]').prop('checked', isChecked);
+            });
         },
         error: function () {
             alert("Problème de connexion. ");
