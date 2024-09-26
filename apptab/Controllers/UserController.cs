@@ -847,6 +847,14 @@ namespace apptab.Controllers
                 {
                     user.DELETIONDATE = DateTime.Now;
                     db.SaveChanges();
+
+                    var userSite = db.SI_SITE.FirstOrDefault(a => a.IDUSER == useID && a.DELETIONDATE == null);
+                    if (userSite != null)
+                    {
+                        userSite.DELETIONDATE = DateTime.Now;
+                        db.SaveChanges();
+                    }
+
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Suppression avec succès. " }, settings));
                 }
                 else

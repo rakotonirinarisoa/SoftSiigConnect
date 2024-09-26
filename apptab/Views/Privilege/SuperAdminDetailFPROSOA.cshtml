@@ -1,0 +1,55 @@
+﻿
+@{
+    ViewBag.Title = "Détails site";
+    ViewData["Controller"] = "Détails site";
+    /*Layout = "~/Views/Shared/_Layout.cshtml";*/
+}
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">PROJET</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="proj" data-id="proj-list" disabled/>
+    </div>
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Utilisateur</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="user" data-id="user-list" disabled/>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Sites</span>
+        </div>
+        <select class="form-control selectTOO" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="site" data-id="site-list" multiple="multiple">
+        </select>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="mb-3 col">
+        <div class="btn btn-flat bg-gradient-olive col-12" data-action="AddSITE">
+            <i class="fa fa-save"></i> Enregistrer
+        </div>
+    </div>
+</div>
+
+<!-- Droit.js -->
+<script src="~/Assets/js/SITEDetails.js?version=@Session["VERSION"]"></script>
+<script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
+<script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
+
+<script>
+    $("#site").select2({
+        tags: true,
+        tokenSeparators: [',', ' ']
+    })
+</script>
+
+<script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
+<script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
+
