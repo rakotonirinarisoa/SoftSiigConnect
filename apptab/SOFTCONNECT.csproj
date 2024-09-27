@@ -2495,6 +2495,7 @@
     <Content Include="Assets\js\AnulationReg.js" />
     <Content Include="Assets\js\MappagUserGED.js" />
     <Content Include="Assets\js\MaPSListGED.js" />
+    <Content Include="Assets\js\SITEDetails.js" />
     <Content Include="Assets\js\SITE.js" />
     <Content Include="Assets\js\PROGED.js" />
     <Content Include="Assets\js\RSFDetails.js" />
@@ -5031,6 +5032,7 @@
     <Content Include="Views\EtatGED\EtapActuelDocs.cshtml" />
     <Content Include="Views\EtatGED\SituationDetailleDoc.cshtml" />
     <Content Include="Views\EtatGED\EtapFactRejete.cshtml" />
+    <Content Include="Views\Privilege\SuperAdminDetailFPROSOA.cshtml" />
     <Content Include="Views\Parametre\TypeFileBanque.cshtml" />
     <Content Include="Views\SuperAdmin\SuperAdminMaPListGED.cshtml" />
     <None Include="Web.Debug.config">

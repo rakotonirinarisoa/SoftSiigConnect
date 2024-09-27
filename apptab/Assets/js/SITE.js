@@ -55,6 +55,9 @@ function GetListSociete() {
                         <td>${v.SITES}</td>
                         
                         <td class="elerfr">
+                            <div onclick="DetailPROSOA('${v.ID}')"><i class="fa fa-pen-alt text-warning"></i></div>
+                        </td>
+                        <td class="elerfr">
                             <div onclick="deletePROSOA('${v.ID}')"><i class="fa fa-trash text-danger"></i></div>
                         </td>
                     </tr>
@@ -68,6 +71,10 @@ function GetListSociete() {
             alert("Problème de connexion. ");
         }
     });
+}
+
+function DetailPROSOA(id) {
+    window.location = Origin + "/Privilege/SuperAdminDetailFPROSOA?PROSOAID=" + id;
 }
 
 function deletePROSOA(id) {
@@ -114,7 +121,6 @@ function GetListProjet() {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
 
-
     $.ajax({
         type: "POST",
         url: Origin + '/Privilege/GetAllPROJET',
@@ -143,7 +149,7 @@ function GetListProjet() {
 
             $(`[data-id="proj-list"]`).text("");
             var code = `<option value=""></option>`;
-            $.each(Datas.data, function (k, v) {
+            $.each(Datas.data.List, function (k, v) {
                 code += `
                     <option value="${v.ID}">${v.PROJET}</option>
                 `;
@@ -293,7 +299,9 @@ function GetSITE() {
             });
             $(`[data-id="site-list"]`).append(code1);
 
-            $("#site").val([...Datas.data.SITE]).trigger('change');
+            let issite = Datas.data.site;
+
+            $("#site").val([...issite]).trigger('change');
         },
         error: function () {
             alert("Problème de connexion. ");
