@@ -364,10 +364,11 @@ function getelementTXT(a , list) {
             },
             success: function (result) {
                 //console.log(result);
-                //let blobUrl = URL.createObjectURL(result);
-                alert(result.msg)
-                //GetFileNameAnarana(blobUrl);
-                //window.location = '/Home/GetFile?file=' + Datas.data;
+                var Datas = JSON.parse(result);
+                let blobUrl = URL.createObjectURL(result);
+                alert(result)
+                GetFileNameAnarana(blobUrl);
+                window.location = '/Home/GetFile?file=' + Datas.data;
                 $('#verification-modal').modal('toggle');
                 loader.addClass('display-none');
             },

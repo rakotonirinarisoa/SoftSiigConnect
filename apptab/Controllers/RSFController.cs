@@ -648,43 +648,51 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult MappageCreate(SI_USERS suser, SI_MAPPAGES_GED user)
+        public JsonResult MappageCreate(SI_USERS suser, SI_MAPPAGES_GED user,string idProject)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-
+            int PROJECTID = int.Parse(idProject);
             try
             {
-                var isMapp = db.SI_MAPPAGES_GED.FirstOrDefault();
-                if (isMapp == null)
+                var testBlock = db.SI_MAPPAGES_GED.Where(x => x.IDPROJET == PROJECTID && x.DBASE == user.DBASE && x.INSTANCE == user.INSTANCE).FirstOrDefault();
+                if (testBlock != null)
                 {
-                    var newUser = new SI_MAPPAGES_GED()
-                    {
-                        INSTANCE = user.INSTANCE,
-                        AUTH = user.AUTH,
-                        CONNEXION = user.CONNEXION,
-                        CONNEXPWD = user.CONNEXPWD,
-                        DBASE = user.DBASE,
-                        CREATIONDATE = DateTime.Now,
-                        IDUSER = exist.ID
-                    };
-                    db.SI_MAPPAGES_GED.Add(newUser);
-                    db.SaveChanges();
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Mappage déja existant! ", data = user }, settings));
                 }
                 else
                 {
-                    isMapp.INSTANCE = user.INSTANCE;
-                    isMapp.AUTH = user.AUTH;
-                    isMapp.CONNEXION = user.CONNEXION;
-                    isMapp.CONNEXPWD = user.CONNEXPWD;
-                    isMapp.DBASE = user.DBASE;
-                    isMapp.CREATIONDATE = DateTime.Now;
-                    isMapp.IDUSER = exist.ID;
-
-                    db.SaveChanges();
+                    var isMapp = db.SI_MAPPAGES_GED.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
+                    if (isMapp == null)
+                    {
+                        var newUser = new SI_MAPPAGES_GED()
+                        {
+                            INSTANCE = user.INSTANCE,
+                            AUTH = user.AUTH,
+                            CONNEXION = user.CONNEXION,
+                            CONNEXPWD = user.CONNEXPWD,
+                            DBASE = user.DBASE,
+                            CREATIONDATE = DateTime.Now,
+                            IDUSER = exist.ID,
+                            IDPROJET = PROJECTID
+                        };
+                        db.SI_MAPPAGES_GED.Add(newUser);
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        isMapp.INSTANCE = user.INSTANCE;
+                        isMapp.AUTH = user.AUTH;
+                        isMapp.CONNEXION = user.CONNEXION;
+                        isMapp.CONNEXPWD = user.CONNEXPWD;
+                        isMapp.DBASE = user.DBASE;
+                        isMapp.CREATIONDATE = DateTime.Now;
+                        isMapp.IDUSER = exist.ID;
+                        isMapp.IDPROJET = PROJECTID;
+                        db.SaveChanges();
+                    }
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Enregistrement avec succès. ", data = user }, settings));
                 }
-
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Enregistrement avec succès. ", data = user }, settings));
             }
             catch (Exception e)
             {

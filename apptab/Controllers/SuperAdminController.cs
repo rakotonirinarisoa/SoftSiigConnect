@@ -345,7 +345,34 @@ namespace apptab.Controllers
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
             }
         }
+        //MAPPAGEGED
+        public ActionResult SuperAdminMaPListGED()
+        {
+            return View();
+        }
+        [HttpPost]
+        public JsonResult FillTableMAPPGED(SI_USERS suser)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
+            try
+            {
+                var mapp = db.SI_MAPPAGES_GED.Select(a => new
+                {
+                    db.SI_PROJETS.FirstOrDefault(x => x.ID == a.IDPROJET && x.DELETIONDATE == null).PROJET,
+                    a.INSTANCE,
+                    a.DBASE,
+                    a.ID
+                }).Where(a => a.PROJET != null).ToList();
+
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = mapp }, settings));
+            }
+            catch (Exception e)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+            }
+        }
         //MAPPAGE DELETE//
         [HttpPost]
         public JsonResult DeleteMAPP(SI_USERS suser, string MAPPId)
