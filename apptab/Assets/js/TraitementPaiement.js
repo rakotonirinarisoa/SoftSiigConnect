@@ -437,7 +437,5 @@ function emptyTable() {
         info: false,
         colReorder: false,
         deferRender: true,
-        dom: 'Bfrtip',
-        buttons: ['colvis'],
     });
 }

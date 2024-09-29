@@ -1365,7 +1365,7 @@ namespace apptab.Controllers
         }
         public ActionResult TraitementsPaiement()
         {
-            ViewBag.Controller = "Suvi des délais de traitement des paiements";
+            ViewBag.Controller = "Suivi des délais de traitement des paiements";
             return View();
         }
         [HttpPost]
@@ -1536,7 +1536,7 @@ namespace apptab.Controllers
         }
         public ActionResult TraitementPaiementSoufrance()
         {
-            ViewBag.Controller = "Liste des traitements en souffrance(par rapport au délai moyen)";
+            ViewBag.Controller = "Liste des traitements en souffrance (par rapport au délai moyen)";
             return View();
         }
         [HttpPost]
