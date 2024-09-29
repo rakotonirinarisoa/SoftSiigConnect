@@ -582,7 +582,6 @@ namespace apptab.Extension
                                                                 new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' '))
                                                             )
                                                         ),
-                                                   
                                                     new XElement("CdtrAcct",
                                                         new XElement("Id",
                                                             new XElement("Othr",

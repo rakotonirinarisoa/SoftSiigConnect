@@ -52,7 +52,7 @@ function GetListUser() {
                         <td>${v.INSTANCE}</td>
                         <td>${v.DBASE}</td>                     
                         <td class="elerfr">
-                            <div onclick="DetailUpdateMAPP('${v.ID}')"><i class="fa fa-pen-alt text-warning"></i></div>
+                            <div onclick="DetailUpdateMAPPGED('${v.ID}')"><i class="fa fa-pen-alt text-warning"></i></div>
                         </td>
                         <td class="elerfr">
                             <div onclick="deleteMAPP('${v.ID}')"><i class="fa fa-trash text-danger"></i></div>
@@ -116,6 +116,6 @@ function deleteMAPP(id) {
     });
 }
 
-function DetailUpdateMAPP(id) {
-    window.location = Origin + "/SuperAdmin/DetailsMAPP?UserId=" + id;
+function DetailUpdateMAPPGED(id) {
+    window.location = Origin + "/SuperAdmin/DetailsMAPPGED?UserId=" + id;
 }

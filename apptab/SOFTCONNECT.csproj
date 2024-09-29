@@ -2493,6 +2493,7 @@
     <Content Include="Assets\js\BordJRA.js" />
     <Content Include="Assets\js\AnomalieJS.js" />
     <Content Include="Assets\js\AnulationReg.js" />
+    <Content Include="Assets\js\MappagUserDetailsGED.js" />
     <Content Include="Assets\js\MappagUserGED.js" />
     <Content Include="Assets\js\MaPSListGED.js" />
     <Content Include="Assets\js\SITEDetails.js" />
@@ -5035,6 +5036,7 @@
     <Content Include="Views\Privilege\SuperAdminDetailFPROSOA.cshtml" />
     <Content Include="Views\Parametre\TypeFileBanque.cshtml" />
     <Content Include="Views\SuperAdmin\SuperAdminMaPListGED.cshtml" />
+    <Content Include="Views\SuperAdmin\DetailsMAPPGED.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
