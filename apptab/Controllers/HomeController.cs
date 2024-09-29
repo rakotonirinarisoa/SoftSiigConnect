@@ -3518,6 +3518,7 @@ namespace apptab.Controllers
                     SAUVEANOMALIE.TYPE = "TIERS";
                     SAUVEANOMALIE.GUICHET = "";
                     SAUVEANOMALIE.AGENCE = "";
+                    SAUVEANOMALIE.SITE = "";
                     try
                     {
                         db.ANOMALIE_G.Add(SAUVEANOMALIE);
@@ -3547,6 +3548,7 @@ namespace apptab.Controllers
                     SAUVEANOMALIE.AUXI = "";
                     SAUVEANOMALIE.DOM1 = "";
                     SAUVEANOMALIE.AD2 = "";
+                    SAUVEANOMALIE.SITE = "";
                     try
                     {
                         db.ANOMALIE_G.Add(SAUVEANOMALIE);
@@ -3574,7 +3576,7 @@ namespace apptab.Controllers
                 TYPE = x.TYPE,
 
 
-            }).Join(db.SI_PROJETS,anomalie => anomalie.IDPROJECT,projet => projet.ID ,(anomalie, projet) => new
+            }).Join(db.SI_PROJETS, anomalie => anomalie.IDPROJECT, projet => projet.ID, (anomalie, projet) => new
             {
                 ID = anomalie.ID,
                 COMPTE_BANQUE = anomalie.COMPTE_BANQUE,
@@ -3588,6 +3590,8 @@ namespace apptab.Controllers
                 GUICHET = anomalie.GUICHET,
                 AGENCE = anomalie.AGENCE,
                 TYPE = anomalie.TYPE,
+                JOURNAL = "",
+                LIBELLE = "",
 
             }).ToList();
             var DataAnomalieJournal = db.ANOMALIE_G.Where(x => x.IDPROJECT == PROJECTID && x.TYPE == "JOURNAL").Select(x => new
@@ -3625,6 +3629,7 @@ namespace apptab.Controllers
                 LIBELLE = anomalie.LIBELLE
 
             }).ToList();
+            DataAnomalie.AddRange(DataAnomalieJournal);
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès.", data = DataAnomalie , datas = DataAnomalieJournal }, settings));
         }
         public JsonResult SendEmailSuppliersGED(SI_USERS suser,int PROJECTID, string idLiquidation)
