@@ -1,7 +1,7 @@
 ﻿
 @{
-    ViewBag.Title = "Nouvelle mappage SOFTGED";
-    ViewData["Controller"] = "Nouvelle mappage SOFTGED";
+    ViewBag.Title = "Détails mappage";
+    ViewData["Controller"] = "Détails Mappage des GED";
     /*Layout = "~/Views/Shared/_Layout.cshtml";*/
 }
 
@@ -10,7 +10,7 @@
         <div class="input-group-prepend custom-label">
             <span class="input-group-text text-bold" id="inputGroup-sizing-default">PROJET</span>
         </div>
-        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="IDProjet" data-id="societe-list">
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="IDProjet" data-id="societe-list" disabled>
         </select>
     </div>
 </div>
@@ -64,21 +64,20 @@
                 <span class="input-group-text text-bold" id="inputGroup-sizing-default">Base de données</span>
             </div>
             <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="DataBase" data-id="base-list">
-                <option value="value"></option>
             </select>
         </div>
     </div>
 
     <div class="form-row">
         <div class="mb-3 col">
-            <div class="btn btn-flat bg-gradient-olive col-12" data-action="AddnewUser">
+            <div class="btn btn-flat bg-gradient-olive col-12" data-action="UpdateMAPP">
                 <i class="fa fa-save"></i> Enregistrer
             </div>
         </div>
     </div>
 </div>
 
-<script src="~/Assets/js/MappagUserGED.js?version=@Session["VERSION"]"></script>
+<script src="~/Assets/js/MappagUserDetailsGED.js?version=@Session["VERSION"]" ></script>
 
 <script>
     const togglePassword = document
