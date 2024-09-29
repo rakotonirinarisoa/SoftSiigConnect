@@ -100,6 +100,12 @@ namespace apptab.Controllers
             }
         }
 
+        public class siteList
+        {
+            public string CODE { get; set; }
+            public string LIBELLE { get; set; }
+        }
+
         [HttpPost]
         public ActionResult GETALLSITE(SI_USERS suser, int iProjet)
         {
@@ -110,13 +116,26 @@ namespace apptab.Controllers
             {
                 int crpt = iProjet;
 
-                List<string> site = new List<string>();
+                if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
+
+                SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
+                List<siteList> site = new List<siteList>();
                 var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
                 if (siteS == null)
                     return Json(JsonConvert.SerializeObject(new { type = "notYet", msg = "Veuillez paramétrer votre site. " }, settings));
+
                 foreach (var item in siteS.Split(','))
                 {
-                    site.Add(item);
+                    var etatSite = tom.RSITE.FirstOrDefault(a => a.CODE == item).LIBELLE;
+
+                    site.Add(new siteList()
+                    {
+                        CODE = item,
+                        LIBELLE = item + "-" + etatSite
+                    });
                 }
 
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { etat = site } }, settings));
