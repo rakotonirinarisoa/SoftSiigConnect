@@ -219,7 +219,7 @@ function setDataTable() {
             }
         },
         deferRender: true,
-        dom: 'Bfrtip',
+        //dom: 'Bfrtip',
         //buttons: ['colvis'],
         //caption: 'SOFT EXPENDITURES TRACKERS ' + new Date().toLocaleDateString(),
         //buttons: ['colvis',
@@ -545,7 +545,7 @@ function emptyTable() {
         info: false,
         colReorder: false,
 
-        deferRender: true,
+        //deferRender: true,
         //dom: 'Bfrtip',
         //buttons: ['colvis'],
     });

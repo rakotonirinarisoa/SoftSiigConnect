@@ -1633,31 +1633,37 @@ namespace apptab.Controllers
                         double dateOP = Date.GetDifference(paielst[j].DATESEND, paielst[j].DATECREA);
                         double dateAC = Date.GetDifference(paielst[j].DATEVAL, paielst[j].DATESEND);
                         double dateBK = Date.GetDifference(paielst[j].DATEVAL, paielst[j].DATESEND);
-                        result[lastIndex].TraitementPaiementDetails.Add(new TraitementPaiementDetails
+                        double countDate = dateOP - Convert.ToDouble(durerTraite.FirstOrDefault().DELAISOP);
+                        double countDate2 = dateAC -  Convert.ToDouble(durerTraite.FirstOrDefault().DELAISAC);
+                        double countDate3 = dateBK - Convert.ToDouble(durerTraite.FirstOrDefault().DELAISBK);
+                        if (countDate > 0 || countDate2 > 0 || countDate3 > 0)
                         {
-                            PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
-                            NUM_ENGAGEMENT = paielst[j].NUM,
-                            BENEFICIAIRE = paielst[j].BENEFICIAIRE,
-                            MONTENGAGEMENT = paielst[j].MONTANT.ToString(),
-                            DATETRANSFERTRAF = paielst[j].DATECREA,
-                            TRANSFERTRAFAGENT = await GetAgent(paielst[j].IDUSCREA),
-                            DATEVALORDSEC = paielst[j].DATEVAL,
-                            VALORDSECAGENT = await GetAgent(paielst[j].IDUSVAL),
-                            DATESENDSIIG = paielst[j].DATESEND,
-                            SENDSIIGAGENT = await GetAgent(paielst[j].IDUSSEND),
-                            DUREETRAITEMENTTRANSFERTOP = dateOP,
-                            DUREETRAITEMENTTRANSFERTAC = dateAC,
-                            DUREETRAITEMENTTRANSFERTBK = dateBK,
+                            result[lastIndex].TraitementPaiementDetails.Add(new TraitementPaiementDetails
+                            {
+                                PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
+                                NUM_ENGAGEMENT = paielst[j].NUM,
+                                BENEFICIAIRE = paielst[j].BENEFICIAIRE,
+                                MONTENGAGEMENT = paielst[j].MONTANT.ToString(),
+                                DATETRANSFERTRAF = paielst[j].DATECREA,
+                                TRANSFERTRAFAGENT = await GetAgent(paielst[j].IDUSCREA),
+                                DATEVALORDSEC = paielst[j].DATEVAL,
+                                VALORDSECAGENT = await GetAgent(paielst[j].IDUSVAL),
+                                DATESENDSIIG = paielst[j].DATESEND,
+                                SENDSIIGAGENT = await GetAgent(paielst[j].IDUSSEND),
+                                DUREETRAITEMENTTRANSFERTOP = dateOP,
+                                DUREETRAITEMENTTRANSFERTAC = dateAC,
+                                DUREETRAITEMENTTRANSFERTBK = dateBK,
 
-                            DUREETRAITEMENTPREVUEOP = Convert.ToDouble(durerTraite.FirstOrDefault().DELAISOP),
-                            DUREETRAITEMENTPREVUEAC = Convert.ToDouble(durerTraite.FirstOrDefault().DELAISAC),
-                            DUREETRAITEMENTPREVUEBK = Convert.ToDouble(durerTraite.FirstOrDefault().DELAISBK),
+                                DUREETRAITEMENTPREVUEOP = Convert.ToDouble(durerTraite.FirstOrDefault().DELAISOP),
+                                DUREETRAITEMENTPREVUEAC = Convert.ToDouble(durerTraite.FirstOrDefault().DELAISAC),
+                                DUREETRAITEMENTPREVUEBK = Convert.ToDouble(durerTraite.FirstOrDefault().DELAISBK),
 
-                            DEPASSEMENTOP = durerTraite.FirstOrDefault().DELAISOP != null ? Convert.ToDouble(durerTraite.FirstOrDefault().DELAISOP) - dateOP : 0,
-                            DEPASSEMENTAC = durerTraite.FirstOrDefault().DELAISAC != null ? Convert.ToDouble(durerTraite.FirstOrDefault().DELAISAC) - dateAC : 0,
-                            DEPASSEMENTBK = durerTraite.FirstOrDefault().DELAISBK != null ? Convert.ToDouble(durerTraite.FirstOrDefault().DELAISBK) - dateBK : 0,
-                            SITE = paielst[j].SITE,
-                        });
+                                DEPASSEMENTOP = countDate > 0 ? countDate : 0,
+                                DEPASSEMENTAC = countDate2 > 0 ? countDate2 : 0,
+                                DEPASSEMENTBK = countDate3 > 0 ? countDate3 : 0,
+                                SITE = paielst[j].SITE,
+                            });
+                        }
                     }
                 }
                 else
