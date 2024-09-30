@@ -173,7 +173,7 @@ namespace apptab.Controllers
                                 }
 
                                 //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
-                                if (Math.Round(MTN, 3) == Math.Round(MTNPJ, 3))
+                                if (Math.Truncate(MTN) == Math.Truncate(MTNPJ))
                                 {
                                     //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
                                     var canBeDEF = true;
@@ -232,7 +232,7 @@ namespace apptab.Controllers
                                 }
 
                                 //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
-                                if (Math.Round(MTN, 3) == Math.Round(MTNPJ, 3))
+                                if (Math.Truncate(MTN) == Math.Truncate(MTNPJ))
                                 {
                                     //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
                                     var canBeDEFA = true;
@@ -410,7 +410,7 @@ namespace apptab.Controllers
                                     }
 
                                     //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
-                                    if (Math.Round(MTN, 3) == Math.Round(MTNPJ, 3))
+                                    if (Math.Truncate(MTN) == Math.Truncate(MTNPJ))
                                     {
                                         //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
                                         var canBeDEF = true;
@@ -469,7 +469,7 @@ namespace apptab.Controllers
                                     }
 
                                     //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
-                                    if (Math.Round(MTN, 3) == Math.Round(MTNPJ, 3))
+                                    if (Math.Truncate(MTN) == Math.Truncate(MTNPJ))
                                     {
                                         //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
                                         var canBeDEFA = true;
@@ -650,7 +650,7 @@ namespace apptab.Controllers
                                     }
 
                                     //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
-                                    if (Math.Round(MTN, 3) == Math.Round(MTNPJ, 3))
+                                    if (Math.Truncate(MTN) == Math.Truncate(MTNPJ))
                                     {
                                         //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
                                         var canBeDEF = true;
@@ -709,7 +709,7 @@ namespace apptab.Controllers
                                     }
 
                                     //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
-                                    if (Math.Round(MTN, 3) == Math.Round(MTNPJ, 3))
+                                    if (Math.Truncate(MTN) == Math.Truncate(MTNPJ))
                                     {
                                         //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
                                         var canBeDEFA = true;
