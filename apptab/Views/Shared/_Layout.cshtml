@@ -57,21 +57,13 @@
     <script src="~/Assets/otherJs/pdfmake.min.js?version=@Session["VERSION"]"></script>
     <script src="~/Assets/otherJs/vfs_fonts.js?version=@Session["VERSION"]"></script>
     <script src="~/Assets/otherJs/buttons.html5.min.js?version=@Session["VERSION"]"></script>
-
-
-
-    @*https://www.svgrepo.com/collection/market-and-economics/*@
 </head>
 
     <body class="hold-transition sidebar-mini layout-fixed" style="background-color: #f4f6f9;">
         <div id="loader" class="lds-dual-ring display-none overlay"></div>
 
         <div class="wrapper">
-            <!--<div class="preloader flex-column justify-content-center align-items-center">
-                <img class="animation__shake" src="~/Assets/img/df.gif" alt="AdminLTELogo" style="width:5% !important; height:10% !important">
-            </div>-->
-
-            <nav class="main-header navbar navbar-expand navbar-white navbar-light" style=" position: fixed; right: 0; left: 0; top:0">
+            <nav class="main-header navbar navbar-expand navbar-white navbar-light">
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
@@ -79,20 +71,38 @@
                 </ul>
 
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link d-flex" style="align-items: center;" data-toggle="dropdown" href="#">
-                            <i class="far fa-user-circle fa-2x fade-in">@*@Session["UserName"]*@</i><div data-id="username" style="padding-left:5px;"></div>
+                    <li class="nav-item dropdown user-menu">
+                        <a class="nav-link d-flex dropdown-toggle" data-toggle="dropdown" href="#">
+                            <img src="~/Assets/admlte/dist/img/765-default-avatar.png" class="img-circle img-sm elevation-1 mr-2" alt="User Image">
+                            <span id="userName" class="direct-chat-name ml-2">@Session["UserName"]</span>
+                            <div data-id="user" style="padding-left:5px;"></div>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right p-1  " style="left: inherit; right: 0px;">
+                            <div class="card card-widget widget-user">
+                                <div class="widget-user-header bg-info">
+                                    <span class="direct-chat-name" id="user-username-header">@Session["UserName"]</span>
+                                    <small><span id="user-desc-header"></span></small>
+                                </div>
+                                <div class="widget-user-image">
+                                    <img class="img-circle elevation-2" src="~/Assets/admlte/dist/img/765-default-avatar.png" alt="User Avatar">
+                                </div>
+                                <div class="card-footer"></div>
+                            </div>
                             <div class="dropdown-divider"></div>
                             <a href="../User/Param" class="dropdown-item">
-                                <i class="fa fa-wrench mr-2"></i> Changer le mot de passe
+                                <i class="fa fa-edit mr-2"></i> Changer le mot de passe
                             </a>
                             <div class="dropdown-divider"></div>
-                            <div class="dropdown-item" data-id="disconnect" onclick="disconnect()">
+                            <a href="#" class="dropdown-item" data-id="disconnect" onclick="disconnect()">
                                 <i class="fa fa-power-off mr-2"></i> Déconnexion
-                            </div>
+                            </a>
                         </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                            <i class="fas fa-expand-arrows-alt"></i>
+                        </a>
                     </li>
                 </ul>
             </nav>
@@ -217,9 +227,9 @@
                                     }
 
                                     @*@if (int.Parse(Session["RMENUPAR1"].ToString()) != 0)
-                    {
+                                {
 
-                    }*@
+                                }*@
                                     <li class="nav-item SuperAd" data-io data-menu-accordion="2">
                                         <a class="nav-link">
                                             <i class="nav-icon fas fa-cogs"></i>
@@ -315,9 +325,9 @@
 
                                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
                                     @*@if (int.Parse(Session["RMENUPAR2"].ToString()) != 0)
-                    {
+                                {
 
-                    }*@
+                                }*@
                                     <li class="nav-item" data-io>
                                         <a href="../User/List" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-users"></i>
@@ -327,9 +337,9 @@
                                         </a>
                                     </li>
                                     @*@if (int.Parse(Session["RMENUPAR3"].ToString()) != 0)
-                    {
+                                {
 
-                    }*@
+                                }*@
 
                                     <li class="nav-item" data-io>
                                         <a href="../Privilege/List" class="nav-link" data-child-id="1">
@@ -350,9 +360,9 @@
                                     </li>
 
                                     @*@if (int.Parse(Session["RMENUPAR4"].ToString()) != 0)
-                    {
+                                {
 
-                    }*@
+                                }*@
                                     <li class="nav-item" data-io>
                                         <a href="../Parametre/CorrEtatCreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-cog"></i>
@@ -362,9 +372,9 @@
                                         </a>
                                     </li>
                                     @*@if (int.Parse(Session["RMENUPAR5"].ToString()) != 0)
-                    {
+                                {
 
-                    }*@
+                                }*@
                                     <li class="nav-item" data-io>
                                         <a href="../SuperAdmin/DelaisCreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-clock"></i>
@@ -374,9 +384,9 @@
                                         </a>
                                     </li>
                                     @*@if (int.Parse(Session["RMENUPAR6"].ToString()) != 0)
-                    {
+                                {
 
-                    }*@
+                                }*@
                                     <li class="nav-item" data-io>
                                         <a href="../SuperAdmin/MAILCreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-envelope"></i>
@@ -386,9 +396,9 @@
                                         </a>
                                     </li>
                                     @*@if (int.Parse(Session["RMENUPAR7"].ToString()) != 0)
-                    {
+                                {
 
-                    }*@
+                                }*@
                                     <li class="nav-item" data-io>
                                         <a href="../Crypto/CryptoCreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-key"></i>
@@ -398,9 +408,9 @@
                                         </a>
                                     </li>
                                     @*@if (int.Parse(Session["RMENUPAR8"].ToString()) != 0)
-                    {
+                                {
 
-                    }*@
+                                }*@
                                     <li class="nav-item" data-io>
                                         <a href="../FTP/FtpCreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fas fa-paper-plane"></i>
@@ -410,9 +420,9 @@
                                         </a>
                                     </li>
                                     @*@if (int.Parse(Session["RMENUPAR9"].ToString()) != 0)
-                    {
+                                {
 
-                    }*@
+                                }*@
                                     <li class="nav-item" data-io>
                                         <a href="../Parametre/TypeECreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fa fa-exclamation-triangle"></i>
@@ -422,7 +432,7 @@
                                         </a>
                                     </li>
                                     @*@if (int.Parse(Session["RMENUPAR10"].ToString()) != 0)
-                    {*@
+                                {*@
                                     <li class="nav-item" data-io>
                                         <a href="../Parametre/TypeFileBanque" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fa fa-exclamation-triangle"></i>
@@ -432,9 +442,9 @@
                                         </a>
                                     </li>
                                     @*@if (int.Parse(Session["RMENUPAR10"].ToString()) != 0)
-                    {
+                                {
 
-                    }*@
+                                }*@
                                     <li class="nav-item" data-io>
                                         <a href="../Parametre/TypeFlowCreate" class="nav-link" data-child-id="1">
                                             <i class="nav-icon fa fa-question-circle"></i>
@@ -503,16 +513,16 @@
                                         }
                                     }
                                     @*@if (int.Parse(Session["RMT2"].ToString()) != 0)
-                    {
-                        <li class="nav-item">
-                            <a href="../Traitement/TraitementSENDSIIGFP" class="nav-link" data-child-id="2">
-                                <i class="nav-icon fas fa-tasks" style="color: #338B85"></i>
-                                <p>
-                                    @Session["MT2"]
-                                </p>
-                            </a>
-                        </li>
-                    }*@
+                                {
+                                    <li class="nav-item">
+                                        <a href="../Traitement/TraitementSENDSIIGFP" class="nav-link" data-child-id="2">
+                                            <i class="nav-icon fas fa-tasks" style="color: #338B85"></i>
+                                            <p>
+                                                @Session["MT2"]
+                                            </p>
+                                        </a>
+                                    </li>
+                                }*@
                                 </ul>
                             </div>
                         }
@@ -588,16 +598,16 @@
                                                     }
                                                 }
                                                 @*@if (int.Parse(Session["RMD3"].ToString()) != 0)
-                                {
-                                    <li class="nav-item">
-                                        <a href="../TraitementAvance/TraitementSENDSIIGFP" class="nav-link" data-child-id="3">
-                                            <i class="nav-icon fas fa-tasks" style="color: #338B85"></i>
-                                            <p>
-                                                @Session["MD3"]
-                                            </p>
-                                        </a>
-                                    </li>
-                                }*@
+                                            {
+                                                <li class="nav-item">
+                                                    <a href="../TraitementAvance/TraitementSENDSIIGFP" class="nav-link" data-child-id="3">
+                                                        <i class="nav-icon fas fa-tasks" style="color: #338B85"></i>
+                                                        <p>
+                                                            @Session["MD3"]
+                                                        </p>
+                                                    </a>
+                                                </li>
+                                            }*@
                                             </ul>
                                         </li>
                                     }
@@ -1162,7 +1172,7 @@
                 <a href="https://www.softwell.mg" target="_blank">
                     <img src="~/Assets/img/logo-soft.png?version=@Session["VERSION"]" alt="AdminLTE Logo" class="brand-image elevation-0 imageHoverLogo" style="opacity: .7; bottom: 0; position: absolute; width: 60%; padding-bottom: 15%;" />
                 </a>
-                
+
             </aside>
 
             <div class="content-wrapper">
