@@ -175,7 +175,7 @@ function GetSuppliers(id) {
             }
 
             $(`[data-id="fournisseur-list"]`).text("");
-            var code1 = ``;
+            var code1 = ` <option value="0">Tous</option>`;
             $.each(Datas.data.etat, function (k, v) {
                 code1 += `
                     <option value="${v.Id}">${v.Nom}</option>
