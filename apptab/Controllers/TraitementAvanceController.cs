@@ -214,7 +214,7 @@ namespace apptab.Controllers
                         }
 
                         //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
-                        if (Math.Truncate(MTN) == Math.Truncate(MTNPJ))
+                        if (Math.Round(MTN, 3) == Math.Round(MTNPJ, 3))
                         {
                             //Check si F a déjà passé les 3 étapes (DEFA, TEFA et BEA) pour avoir les dates => BEA étape finale//
                             var canBe = true;
@@ -359,7 +359,7 @@ namespace apptab.Controllers
                         }
 
                         //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
-                        if (Math.Truncate(MTN) == Math.Truncate(MTNPJ))
+                        if (Math.Round(MTN, 3) == Math.Round(MTNPJ, 3))
                         {
                             //Check si F a déjà passé les 3 étapes (DEFA, TEFA et BEA) pour avoir les dates => BEA étape finale//
                             var canBe = true;
@@ -1289,7 +1289,7 @@ namespace apptab.Controllers
                         }
 
                         //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
-                        if (Math.Truncate(MTN) == Math.Truncate(MTNPJ))
+                        if (Math.Round(MTN, 3) == Math.Round(MTNPJ, 3))
                         {
                             //Check si F a déjà passé les 3 étapes (DEFA, TEFA et BEA) pour avoir les dates => BEA étape finale//
                             var canBeDEF = true;
@@ -1434,7 +1434,7 @@ namespace apptab.Controllers
                         }
 
                         //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
-                        if (Math.Truncate(MTN) == Math.Truncate(MTNPJ))
+                        if (Math.Round(MTN, 3) == Math.Round(MTNPJ, 3))
                         {
                             //Check si F a déjà passé les 3 étapes (DEFA, TEFA et BEA) pour avoir les dates => BEA étape finale//
                             var canBeDEF = true;

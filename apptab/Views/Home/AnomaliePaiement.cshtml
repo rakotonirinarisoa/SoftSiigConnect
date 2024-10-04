@@ -1,7 +1,7 @@
 ﻿
 @{
     ViewBag.Title = "Anomalie de réglement";
-    ViewData["Controller"] = "Anomalie de réglement";
+    ViewData["Controller"] = "Anullation de réglement";
 }
 
 <div class="form-row">
@@ -20,15 +20,24 @@
     </div>
 </div>
 
+@*<div class="d-flex flex-wrap justify-content-between">
+        <div></div>
+        <div class="input-group mb-3 col-sm-5">
+            <div class="input-group-prepend custom-label">
+                <span class="input-group-text text-bold" id="basic-addon3"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control col" id="ticket" placeholder="Rechercher...">
+        </div>
+    </div>*@
+<input type="text" id="myInput" onkeyup="SearchFuncAnomalie()" placeholder="Recherche">
 <div class="table-responsive tbodyDiv">
-    <table class="table table-hover table-striped table-bordered" display responsive nowrap" width="100%" id="idTable">
-        <thead style="position:sticky">
-            <tr class="thead-accueil1" style="white-space: nowrap;">
+    <table class="table table-hover table-striped" id="idTable">
+        <thead class="thead-green">
+            <tr>
                 <th>COMPTE GENERALE</th>
                 <th>AUXI</th>
                 <th>NOM / RAISON SOCIALE</th>
                 <th>NOM BANQUE</th>
-                <th>Journal</th>
                 <th>ADRESSE</th>
                 <th>RIB</th>
                 <th>TYPE</th>
@@ -36,54 +45,10 @@
 
             </tr>
         </thead>
-        <tbody id="historiques">
+        <tbody ticket-list id="historiques">
         </tbody>
-        <tfoot style="opacity:50%">
-            <tr>
-                <th>COMPTE GENERALE</th>
-                <th>AUXI</th>
-                <th>NOM / RAISON SOCIALE</th>
-                <th>NOM BANQUE</th>
-                <th>Journal</th>
-                <th>ADRESSE</th>
-                <th>RIB</th>
-                <th>TYPE</th>
-                <th>PROJET</th>
-            </tr>
-        </tfoot>
     </table>
 </div>
 
-<div class="form-row">
-    <div class="input-group mb-3 col">
-        <div class="btn btn-flat bg-gradient-red col-12" id="export-to-pdf-btn">
-            <i class="fa fa-file-pdf"></i> Export PDF
-        </div>
-    </div>
-</div>
-
 <script src="~/Assets/js/SearchJsSet.js?version=@Session["VERSION"]"></script>
-<script src="~/Assets/js/AnomalieJS.js?version=@Session["VERSION"]" "></script>
-
-<script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
-<script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
-
-<script>
-    $("#proj").select2({
-        tags: true,
-        tokenSeparators: [',', ' ']
-    })
-
-    $("#site").select2({
-        tags: true,
-        tokenSeparators: [',', ' ']
-    })
-
-</script>
-
-<script defer>
-    $('#export-to-pdf-btn').on('click', () => {
-        exportTableToPdf('idTable', 'ANOMALIE PAIEMENTS, `<p style="font-weight: bold /*text-align:center*/;">ANOMALIE PAIEMENTS</p><p>Anomalie paiements</p>`, `<p style="font-weight: bold;">SOFT EXPENDITURES TRACKERS </p>`, []);
-        /*exportTableToPdf('dashboard', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);*/
-    });
-</script>
+<script src="~/Assets/js/AnomalieJS.js?version=@Session["VERSION"]""></script>

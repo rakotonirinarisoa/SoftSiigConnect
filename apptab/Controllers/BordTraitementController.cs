@@ -100,12 +100,6 @@ namespace apptab.Controllers
             }
         }
 
-        public class siteList
-        {
-            public string CODE { get; set; }
-            public string LIBELLE { get; set; }
-        }
-
         [HttpPost]
         public ActionResult GETALLSITE(SI_USERS suser, int iProjet)
         {
@@ -116,26 +110,13 @@ namespace apptab.Controllers
             {
                 int crpt = iProjet;
 
-                if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
-
-                SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
-                SOFTCONNECTOM tom = new SOFTCONNECTOM();
-
-                List<siteList> site = new List<siteList>();
+                List<string> site = new List<string>();
                 var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
                 if (siteS == null)
                     return Json(JsonConvert.SerializeObject(new { type = "notYet", msg = "Veuillez paramétrer votre site. " }, settings));
-
                 foreach (var item in siteS.Split(','))
                 {
-                    var etatSite = tom.RSITE.FirstOrDefault(a => a.CODE == item).LIBELLE;
-
-                    site.Add(new siteList()
-                    {
-                        CODE = item,
-                        LIBELLE = item + "-" + etatSite
-                    });
+                    site.Add(item);
                 }
 
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { etat = site } }, settings));
@@ -1365,7 +1346,7 @@ namespace apptab.Controllers
         }
         public ActionResult TraitementsPaiement()
         {
-            ViewBag.Controller = "Suivi des délais de traitement des paiements";
+            ViewBag.Controller = "Suvi des délais de traitement des paiements";
             return View();
         }
         [HttpPost]
@@ -1536,7 +1517,7 @@ namespace apptab.Controllers
         }
         public ActionResult TraitementPaiementSoufrance()
         {
-            ViewBag.Controller = "Liste des traitements en souffrance (par rapport au délai moyen)";
+            ViewBag.Controller = "Liste des traitements en souffrance(par rapport au délai moyen)";
             return View();
         }
         [HttpPost]
@@ -1633,37 +1614,31 @@ namespace apptab.Controllers
                         double dateOP = Date.GetDifference(paielst[j].DATESEND, paielst[j].DATECREA);
                         double dateAC = Date.GetDifference(paielst[j].DATEVAL, paielst[j].DATESEND);
                         double dateBK = Date.GetDifference(paielst[j].DATEVAL, paielst[j].DATESEND);
-                        double countDate = dateOP - Convert.ToDouble(durerTraite.FirstOrDefault().DELAISOP);
-                        double countDate2 = dateAC -  Convert.ToDouble(durerTraite.FirstOrDefault().DELAISAC);
-                        double countDate3 = dateBK - Convert.ToDouble(durerTraite.FirstOrDefault().DELAISBK);
-                        if (countDate > 0 || countDate2 > 0 || countDate3 > 0)
+                        result[lastIndex].TraitementPaiementDetails.Add(new TraitementPaiementDetails
                         {
-                            result[lastIndex].TraitementPaiementDetails.Add(new TraitementPaiementDetails
-                            {
-                                PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
-                                NUM_ENGAGEMENT = paielst[j].NUM,
-                                BENEFICIAIRE = paielst[j].BENEFICIAIRE,
-                                MONTENGAGEMENT = paielst[j].MONTANT.ToString(),
-                                DATETRANSFERTRAF = paielst[j].DATECREA,
-                                TRANSFERTRAFAGENT = await GetAgent(paielst[j].IDUSCREA),
-                                DATEVALORDSEC = paielst[j].DATEVAL,
-                                VALORDSECAGENT = await GetAgent(paielst[j].IDUSVAL),
-                                DATESENDSIIG = paielst[j].DATESEND,
-                                SENDSIIGAGENT = await GetAgent(paielst[j].IDUSSEND),
-                                DUREETRAITEMENTTRANSFERTOP = dateOP,
-                                DUREETRAITEMENTTRANSFERTAC = dateAC,
-                                DUREETRAITEMENTTRANSFERTBK = dateBK,
+                            PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
+                            NUM_ENGAGEMENT = paielst[j].NUM,
+                            BENEFICIAIRE = paielst[j].BENEFICIAIRE,
+                            MONTENGAGEMENT = paielst[j].MONTANT.ToString(),
+                            DATETRANSFERTRAF = paielst[j].DATECREA,
+                            TRANSFERTRAFAGENT = await GetAgent(paielst[j].IDUSCREA),
+                            DATEVALORDSEC = paielst[j].DATEVAL,
+                            VALORDSECAGENT = await GetAgent(paielst[j].IDUSVAL),
+                            DATESENDSIIG = paielst[j].DATESEND,
+                            SENDSIIGAGENT = await GetAgent(paielst[j].IDUSSEND),
+                            DUREETRAITEMENTTRANSFERTOP = dateOP,
+                            DUREETRAITEMENTTRANSFERTAC = dateAC,
+                            DUREETRAITEMENTTRANSFERTBK = dateBK,
 
-                                DUREETRAITEMENTPREVUEOP = Convert.ToDouble(durerTraite.FirstOrDefault().DELAISOP),
-                                DUREETRAITEMENTPREVUEAC = Convert.ToDouble(durerTraite.FirstOrDefault().DELAISAC),
-                                DUREETRAITEMENTPREVUEBK = Convert.ToDouble(durerTraite.FirstOrDefault().DELAISBK),
+                            DUREETRAITEMENTPREVUEOP = Convert.ToDouble(durerTraite.FirstOrDefault().DELAISOP),
+                            DUREETRAITEMENTPREVUEAC = Convert.ToDouble(durerTraite.FirstOrDefault().DELAISAC),
+                            DUREETRAITEMENTPREVUEBK = Convert.ToDouble(durerTraite.FirstOrDefault().DELAISBK),
 
-                                DEPASSEMENTOP = countDate > 0 ? countDate : 0,
-                                DEPASSEMENTAC = countDate2 > 0 ? countDate2 : 0,
-                                DEPASSEMENTBK = countDate3 > 0 ? countDate3 : 0,
-                                SITE = paielst[j].SITE,
-                            });
-                        }
+                            DEPASSEMENTOP = durerTraite.FirstOrDefault().DELAISOP != null ? Convert.ToDouble(durerTraite.FirstOrDefault().DELAISOP) - dateOP : 0,
+                            DEPASSEMENTAC = durerTraite.FirstOrDefault().DELAISAC != null ? Convert.ToDouble(durerTraite.FirstOrDefault().DELAISAC) - dateAC : 0,
+                            DEPASSEMENTBK = durerTraite.FirstOrDefault().DELAISBK != null ? Convert.ToDouble(durerTraite.FirstOrDefault().DELAISBK) - dateBK : 0,
+                            SITE = paielst[j].SITE,
+                        });
                     }
                 }
                 else
@@ -3243,6 +3218,8 @@ namespace apptab.Controllers
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+            var lienGEd = db.SI_GEDLIEN.FirstOrDefault();
 
             try
             {

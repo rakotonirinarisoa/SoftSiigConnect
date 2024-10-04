@@ -55,9 +55,6 @@ function GetListSociete() {
                         <td>${v.SITES}</td>
                         
                         <td class="elerfr">
-                            <div onclick="DetailPROSOA('${v.ID}')"><i class="fa fa-pen-alt text-warning"></i></div>
-                        </td>
-                        <td class="elerfr">
                             <div onclick="deletePROSOA('${v.ID}')"><i class="fa fa-trash text-danger"></i></div>
                         </td>
                     </tr>
@@ -71,10 +68,6 @@ function GetListSociete() {
             alert("Problème de connexion. ");
         }
     });
-}
-
-function DetailPROSOA(id) {
-    window.location = Origin + "/Privilege/SuperAdminDetailFPROSOA?PROSOAID=" + id;
 }
 
 function deletePROSOA(id) {
@@ -121,6 +114,7 @@ function GetListProjet() {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
 
+
     $.ajax({
         type: "POST",
         url: Origin + '/Privilege/GetAllPROJET',
@@ -149,7 +143,7 @@ function GetListProjet() {
 
             $(`[data-id="proj-list"]`).text("");
             var code = `<option value=""></option>`;
-            $.each(Datas.data.List, function (k, v) {
+            $.each(Datas.data, function (k, v) {
                 code += `
                     <option value="${v.ID}">${v.PROJET}</option>
                 `;
@@ -278,7 +272,7 @@ function GetSITE() {
                 alert(Datas.msg);
 
                 $(`[data-id="site-list"]`).text("");
-                var code1 = `<option value="All">Select All</option>`;
+                var code1 = ``;
                 $.each(Datas.data.etat, function (k, v) {
                     code1 += `
                     <option value="${v.CODE}">${v.LIBELLE}</option>
@@ -289,12 +283,9 @@ function GetSITE() {
                 return;
             }
 
-            // Désactivé-ko lo le evenement onchange fa lasa boucle//
-            $("#site").off('change').on('change', handleSelectAll);
-
             $(`[data-id="site-list"]`).text("");
 
-            var code1 = `<option value="All">Select All</option>`;
+            var code1 = ``;
             $.each(Datas.data.etat, function (k, v) {
                 code1 += `
                     <option value="${v.CODE}">${v.LIBELLE}</option>
@@ -302,62 +293,13 @@ function GetSITE() {
             });
             $(`[data-id="site-list"]`).append(code1);
 
-            let issite = Datas.data.site;
-            $("#site").val([...issite]).trigger('change');
-            $("#site").select2();
+            $("#site").val([...Datas.data.SITE]).trigger('change');
         },
         error: function () {
             alert("Problème de connexion. ");
         }
     });
 }
-
-//Fonction handleSelectAll
-var issite2 = [];
-var isHandlingSelectAll = false;
-
-function handleSelectAll() {
-    try {
-
-        if (isHandlingSelectAll) {
-            return;
-        }
-
-        isHandlingSelectAll = true;
-
-        var selectedValues = $("#site").val() || [];
-        var allOptionSelected = selectedValues.includes('All');
-
-        if (allOptionSelected) {
-            issite2 = $("#site option").not('[value="All"]').map(function () {
-                return $(this).val();
-            }).get();
-
-            if (issite2.length > 0) {
-                $("#site").val(issite2).trigger('change');
-                //$("#site").select2();
-            }
-        } else {
-            var siteSansAll = selectedValues.filter(function (value) {
-                return value !== 'All';
-            })
-
-            if (siteSansAll.length > 0) {
-                $("#site").val([...siteSansAll]).trigger('change');
-                //$("#site").select2();
-            }
-        }
-
-        isHandlingSelectAll = false;
-    } catch (error) {
-        
-    } finally {
-        
-    }
-}
-
-//Ajoutez l'événement "change" au dropdown du site//
-$("#site").on('change', handleSelectAll);
 
 $(`[data-action="AddSITE"]`).click(function () {
     let formData = new FormData();

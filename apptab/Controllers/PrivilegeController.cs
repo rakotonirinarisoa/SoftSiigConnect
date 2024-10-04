@@ -297,75 +297,38 @@ namespace apptab.Controllers
 
         //GET ALL PROJET//
         [HttpPost]
-        public ActionResult GetAllPROJET(SI_USERS suser)
+        public ActionResult GetAllPROJET(SI_USERS suser, string IDPROSOA)
         {
-            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            var site = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == exist.IDPROJET).Select(x => x.SITE).ToList();
 
-            try
+            if (IDPROSOA != null)
             {
-                var test = db.SI_USERS.Where(x => x.LOGIN == exist.LOGIN && x.PWD == exist.PWD && x.DELETIONDATE == null).FirstOrDefault();
-                var proj = new List<int>();
-
-                if (test.ROLE == (int)Role.SAdministrateur)
+                int? PROSOAID = int.Parse(IDPROSOA);
+                var idPro = db.SI_PROSOA.Where(a => a.ID == PROSOAID && a.DELETIONDATE == null).Select(a => a.IDPROJET).FirstOrDefault();
+                var FProfet = db.SI_PROJETS.Where(a => a.ID != idPro && a.DELETIONDATE == null).Select(a => new
                 {
-                    var user = db.SI_PROJETS.Select(a => new
+                    PROJET = a.PROJET,
+                    ID = a.ID
+
+                }).ToList();
+                var FprojetFirst = db.SI_PROJETS.Where(a => a.ID == idPro && a.DELETIONDATE == null).Select(a => new
+                {
+                    PROJET = a.PROJET,
+                    ID = a.ID
+                }).ToList();
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = FprojetFirst, datas = FProfet }, settings));
+            }
+            else
+            {
+                var user = db.SI_PROJETS
+                    .Where(a => a.DELETIONDATE == null).Select(a => new
                     {
                         PROJET = a.PROJET,
-                        ID = a.ID,
-                        DELETIONDATE = a.DELETIONDATE,
-                    }).Where(a => a.DELETIONDATE == null).ToList();
+                        ID = a.ID
+                    }).ToList();
 
-                    foreach (var x in user)
-                    {
-                        proj.Add(x.ID);
-                    }
-
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { List = user, PROJET = proj } }, settings));
-                }
-                else
-                {
-                    if (test.IDPROJET != 0)
-                    {
-                        var user = db.SI_PROJETS.Select(a => new
-                        {
-                            PROJET = a.PROJET,
-                            ID = a.ID,
-                            DELETIONDATE = a.DELETIONDATE,
-                        }).Where(a => a.DELETIONDATE == null && a.ID == test.IDPROJET).ToList();
-
-                        foreach (var x in user)
-                        {
-                            proj.Add(x.ID);
-                        }
-
-                        return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { List = user, PROJET = proj } }, settings));
-                    }
-                    else
-                    {
-                        var user = (from usr in db.SI_PROJETS
-                                    join prj in db.SI_MAPUSERPROJET on usr.ID equals prj.IDPROJET
-                                    where prj.IDUS == test.ID && usr.DELETIONDATE == null
-                                    select new
-                                    {
-                                        PROJET = usr.PROJET,
-                                        ID = usr.ID,
-                                        DELETIONDATE = usr.DELETIONDATE,
-                                    }).ToList();
-
-                        foreach (var x in user)
-                        {
-                            proj.Add(x.ID);
-                        }
-
-                        return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { List = user, PROJET = proj } }, settings));
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user, datas = "" }, settings));
             }
         }
 
@@ -381,7 +344,7 @@ namespace apptab.Controllers
         public JsonResult FillTableSITE(SI_USERS suser)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
-            //ViewBag.Role = exist.ROLE;
+            ViewBag.Role = exist.ROLE;
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             try
@@ -394,25 +357,14 @@ namespace apptab.Controllers
                 {
                     foreach (var x in db.SI_SITE.Where(x => x.DELETIONDATE == null).ToList())
                     {
-                        if (db.SI_PROJETS.FirstOrDefault(b => b.ID == x.IDPROJET && b.DELETIONDATE == null) != null && db.SI_USERS.Any(z => z.ID == x.IDUSER && z.DELETIONDATE == null))
+                        if (db.SI_PROJETS.FirstOrDefault(b => b.ID == x.IDPROJET && b.DELETIONDATE == null) != null)
                         {
-                            var nameSite = "";
-                            try
-                            {
-                                SOFTCONNECTOM.connex = new Data.Extension().GetCon(x.IDPROJET.Value);
-                                SOFTCONNECTOM tom = new SOFTCONNECTOM();
-
-                                foreach (string s in x.SITE.Split(',').ToList())
-                                    nameSite += "<li>" + s + "-" + tom.RSITE.FirstOrDefault(n => n.CODE == s).LIBELLE + "</li>";
-                            }
-                            catch (Exception ex) { continue; }
-
                             a.Add(new SITE()
                             {
                                 PROJET = db.SI_PROJETS.FirstOrDefault(b => b.ID == x.IDPROJET && b.DELETIONDATE == null).PROJET,
                                 ID = x.ID,
                                 USER = db.SI_USERS.FirstOrDefault(z => z.ID == x.IDUSER && z.DELETIONDATE == null).LOGIN,
-                                SITES = nameSite
+                                SITES = x.SITE
                             });
                         }
                     }
@@ -421,25 +373,14 @@ namespace apptab.Controllers
                 {
                     foreach (var x in db.SI_SITE.Where(x => x.DELETIONDATE == null && x.IDPROJET == exist.IDPROJET).ToList())
                     {
-                        if (db.SI_PROJETS.FirstOrDefault(b => b.ID == x.IDPROJET && b.DELETIONDATE == null) != null && db.SI_USERS.Any(z => z.ID == x.IDUSER && z.DELETIONDATE == null))
+                        if (db.SI_PROJETS.FirstOrDefault(b => b.ID == x.IDPROJET && b.DELETIONDATE == null) != null)
                         {
-                            var nameSite = "";
-                            try
-                            {
-                                SOFTCONNECTOM.connex = new Data.Extension().GetCon(x.IDPROJET.Value);
-                                SOFTCONNECTOM tom = new SOFTCONNECTOM();
-
-                                foreach (string s in x.SITE.Split(',').ToList())
-                                    nameSite += "<li>" + s + "-" + tom.RSITE.FirstOrDefault(n => n.CODE == s).LIBELLE + "</li>";
-                            }
-                            catch (Exception ex) { continue; }
-
                             a.Add(new SITE()
                             {
                                 PROJET = db.SI_PROJETS.FirstOrDefault(b => b.ID == x.IDPROJET && b.DELETIONDATE == null).PROJET,
                                 ID = x.ID,
                                 USER = db.SI_USERS.FirstOrDefault(z => z.ID == x.IDUSER && z.DELETIONDATE == null).LOGIN,
-                                SITES = nameSite
+                                SITES = x.SITE
                             });
                         }
                     }
@@ -536,10 +477,10 @@ namespace apptab.Controllers
             }
         }
 
-        public class siteList
+        public class siteR
         {
             public string CODE { get; set; }
-            public string LIBELLE { get; set; }
+            public string INTITULE { get; set; }
         }
 
         [HttpPost]
@@ -560,20 +501,12 @@ namespace apptab.Controllers
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
                 SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
-                var etatSite = tom.RSITE.OrderBy(a => a.CODE).ToList();
-                var etat = new List<siteList>();
-                foreach (var x in etatSite)
-                {
-                    etat.Add(new siteList()
-                    {
-                        CODE = x.CODE,
-                        LIBELLE = x.CODE + "-" + x.LIBELLE
-                    });
-                }
+                var etat = tom.RSITE.OrderBy(a => a.CODE).ToList();
 
-                var site = new List<string>();
                 if (crpto != null)
                 {
+                    var SITE = new List<siteR>();
+
                     if (db.SI_SITE.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.IDUSER == iUser))
                     {
                         var isSITE = db.SI_SITE.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.IDUSER == iUser).SITE;
@@ -587,16 +520,20 @@ namespace apptab.Controllers
 
                             foreach (var a in lst)
                             {
-                                site.Add(a);
+                                SITE.Add(new siteR()
+                                {
+                                   CODE = a,
+                                   INTITULE = tom.RSITE.FirstOrDefault(n => n.CODE == a).LIBELLE
+                                });
                             }
                         }
                     }
 
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { etat = etat, IDP = crpt, site = site } }, settings));
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { etat = etat, IDP = crpt, SITE = SITE } }, settings));
                 }
                 else
                 {
-                    return Json(JsonConvert.SerializeObject(new { type = "notYet", msg = "Veuillez créer les privilèges SITE. ", data = new { etat = etat, IDP = crpt, site = site } }, settings));
+                    return Json(JsonConvert.SerializeObject(new { type = "notYet", msg = "Veuillez créer les privilèges SITE. ", data = new { etat = etat, IDP = crpt } }, settings));
                 }
             }
             catch (Exception e)
@@ -644,69 +581,6 @@ namespace apptab.Controllers
             catch (Exception e)
             {
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
-            }
-        }
-
-        public ActionResult SuperAdminDetailFPROSOA(SI_USERS suser, string PROSOAID)
-        {
-            return View();
-        }
-
-        public ActionResult DetailsMAPP(SI_USERS suser, string MappageId)
-        {
-            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
-            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-
-            try
-            {
-                int mapId = int.Parse(MappageId);
-                var map = db.SI_SITE.FirstOrDefault(a => a.ID == mapId && a.DELETIONDATE == null);
-
-                if (map != null)
-                {
-                    var mapp = new
-                    {
-                        idprojet = db.SI_PROJETS.FirstOrDefault(a => a.ID == map.IDPROJET).ID,
-                        projectname = db.SI_PROJETS.FirstOrDefault(a => a.ID == map.IDPROJET).PROJET,
-                        iduser = map.IDUSER,
-                        username = db.SI_USERS.FirstOrDefault(a => a.IDPROJET == map.IDPROJET && a.DELETIONDATE == null && a.ID == map.IDUSER).LOGIN,
-                        site = map.SITE,
-                    };
-
-                    List<string> SITE = mapp.site.Split(',').ToList();
-
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { PROJET = mapp.idprojet, USER = mapp.iduser, SITE = SITE, PROJETNAME = mapp.projectname, USERNAME = mapp.username } }, settings));
-                }
-                else
-                {
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "message" }, settings));
-                }
-            }
-            catch (Exception e)
-            {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
-            }
-        }
-
-        public JsonResult UpdateSite(SI_USERS suser, string idMppage, string listSite)
-        {
-            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
-            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-
-            int idUp = int.Parse(idMppage);
-
-            var CorrespondanceExist = db.SI_SITE.FirstOrDefault(a => a.ID == idUp && a.DELETIONDATE == null);
-
-            if (CorrespondanceExist != null)
-            {
-                CorrespondanceExist.SITE = listSite;
-                db.SaveChanges();
-
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Enregistrement avec succès. ", data = idMppage }, settings));
-            }
-            else
-            {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Correspondance SITE déjà existante. " }, settings));
             }
         }
     }

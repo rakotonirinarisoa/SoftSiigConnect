@@ -34,7 +34,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <UseWinFormsOutOfProcDesigner>True</UseWinFormsOutOfProcDesigner>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,7 +43,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <UseWinFormsOutOfProcDesigner>True</UseWinFormsOutOfProcDesigner>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Aspose.Zip, Version=20.9.1.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
@@ -2495,10 +2493,7 @@
     <Content Include="Assets\js\BordJRA.js" />
     <Content Include="Assets\js\AnomalieJS.js" />
     <Content Include="Assets\js\AnulationReg.js" />
-    <Content Include="Assets\js\MappagUserDetailsGED.js" />
     <Content Include="Assets\js\MappagUserGED.js" />
-    <Content Include="Assets\js\MaPSListGED.js" />
-    <Content Include="Assets\js\SITEDetails.js" />
     <Content Include="Assets\js\SITE.js" />
     <Content Include="Assets\js\PROGED.js" />
     <Content Include="Assets\js\RSFDetails.js" />
@@ -5035,10 +5030,7 @@
     <Content Include="Views\EtatGED\EtapActuelDocs.cshtml" />
     <Content Include="Views\EtatGED\SituationDetailleDoc.cshtml" />
     <Content Include="Views\EtatGED\EtapFactRejete.cshtml" />
-    <Content Include="Views\Privilege\SuperAdminDetailFPROSOA.cshtml" />
     <Content Include="Views\Parametre\TypeFileBanque.cshtml" />
-    <Content Include="Views\SuperAdmin\SuperAdminMaPListGED.cshtml" />
-    <Content Include="Views\SuperAdmin\DetailsMAPPGED.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

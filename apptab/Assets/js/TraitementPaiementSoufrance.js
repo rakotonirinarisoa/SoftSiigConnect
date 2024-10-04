@@ -219,68 +219,68 @@ function setDataTable() {
             }
         },
         deferRender: true,
-        //dom: 'Bfrtip',
-        //buttons: ['colvis'],
-        //caption: 'SOFT EXPENDITURES TRACKERS ' + new Date().toLocaleDateString(),
-        //buttons: ['colvis',
-        //    {
-        //        extend: 'pdfHtml5',
-        //        title: 'TRAITEMENTS EN SOUFFRANCE (PAR RAPPORT AU DELAI MOYEN)',
-        //        messageTop: 'Liste des paiements en souffrance (par rapport au délai moyen)',
-        //        text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
-        //        orientation: 'landscape',
-        //        pageSize: 'A4',
-        //        charset: "utf-8",
-        //        bom: true,
-        //        className: 'custombutton-collection-pdf',
-        //        exportOptions: {
-        //            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-        //            //grouped_array_index: [1] //note the brackets, i think this is so you can group by multiple columns.
-        //        },
-        //        customize: function (doc) {
-        //            doc.defaultStyle.alignment = 'left';
-        //            //doc.defaultStyle.margin = [12, 12, 12, 12];
-        //        },
-        //        download: 'open'
-        //    },
-        //    {
-        //        extend: 'excelHtml5',
-        //        title: 'TRAITEMENTS EN SOUFFRANCE (PAR RAPPORT AU DELAI MOYEN)',
-        //        messageTop: 'Liste des paiements en souffrance (par rapport au délai moyen)',
-        //        text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
-        //        orientation: 'landscape',
-        //        pageSize: 'A4',
-        //        charset: "utf-8",
-        //        bom: true,
-        //        className: 'custombutton-collection-excel',
-        //        exportOptions: {
-        //            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-        //            format: {
-        //                body: function (data, row, column, node) {
-        //                    if (typeof data === 'undefined') {
-        //                        return;
-        //                    }
-        //                    if (data == null) {
-        //                        return data;
-        //                    }
-        //                    if (column === 7) {
-        //                        var arr = data.split(',');
-        //                        if (arr.length == 1) { return data; }
+        dom: 'Bfrtip',
+        buttons: ['colvis'],
+        caption: 'SOFT EXPENDITURES TRACKERS ' + new Date().toLocaleDateString(),
+        buttons: ['colvis',
+            {
+                extend: 'pdfHtml5',
+                title: 'TRAITEMENTS EN SOUFFRANCE (PAR RAPPORT AU DELAI MOYEN)',
+                messageTop: 'Liste des paiements en souffrance (par rapport au délai moyen)',
+                text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
+                orientation: 'landscape',
+                pageSize: 'A4',
+                charset: "utf-8",
+                bom: true,
+                className: 'custombutton-collection-pdf',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    //grouped_array_index: [1] //note the brackets, i think this is so you can group by multiple columns.
+                },
+                customize: function (doc) {
+                    doc.defaultStyle.alignment = 'left';
+                    //doc.defaultStyle.margin = [12, 12, 12, 12];
+                },
+                download: 'open'
+            },
+            {
+                extend: 'excelHtml5',
+                title: 'TRAITEMENTS EN SOUFFRANCE (PAR RAPPORT AU DELAI MOYEN)',
+                messageTop: 'Liste des paiements en souffrance (par rapport au délai moyen)',
+                text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
+                orientation: 'landscape',
+                pageSize: 'A4',
+                charset: "utf-8",
+                bom: true,
+                className: 'custombutton-collection-excel',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    format: {
+                        body: function (data, row, column, node) {
+                            if (typeof data === 'undefined') {
+                                return;
+                            }
+                            if (data == null) {
+                                return data;
+                            }
+                            if (column === 7) {
+                                var arr = data.split(',');
+                                if (arr.length == 1) { return data; }
 
-        //                        arr[0] = arr[0].toString().replace(/[\.]/g, "");
-        //                        if (arr[0] > '' || arr[1] > '') {
-        //                            data = arr[0] + '.' + arr[1];
-        //                        } else {
-        //                            return '';
-        //                        }
-        //                        return data.toString().replace(/[^\d.-]/g, "");
-        //                    }
-        //                    return data;
-        //                }
-        //            }
-        //        },
-        //    }
-        //],
+                                arr[0] = arr[0].toString().replace(/[\.]/g, "");
+                                if (arr[0] > '' || arr[1] > '') {
+                                    data = arr[0] + '.' + arr[1];
+                                } else {
+                                    return '';
+                                }
+                                return data.toString().replace(/[^\d.-]/g, "");
+                            }
+                            return data;
+                        }
+                    }
+                },
+            }
+        ],
     });
 }
 
@@ -437,81 +437,27 @@ function GetSITE() {
                 alert(Datas.msg);
 
                 $(`[data-id="site-list"]`).text("");
-                var code1 = `<option value="All">Select All</option>`;
+                var code1 = ``;
                 $(`[data-id="site-list"]`).append(code1);
 
                 return;
             }
 
-            // Désactivé-ko lo le evenement onchange fa lasa boucle//
-            $("#site").off('change').on('change', handleSelectAll);
-
             $(`[data-id="site-list"]`).text("");
 
-            var code1 = `<option value="All">Select All</option>`;
+            var code1 = ``;
             $.each(Datas.data.etat, function (k, v) {
                 code1 += `
-                    <option value="${v.CODE}">${v.LIBELLE}</option>
+                    <option value="${v}">${v}</option>
                 `;
             });
             $(`[data-id="site-list"]`).append(code1);
-
-
-            $("#site").val([]).trigger('change');
-            $("#site").select2();
         },
         error: function () {
             alert("Problème de connexion. ");
         }
     });
 }
-
-//Fonction handleSelectAll
-var issite2 = [];
-var isHandlingSelectAll = false;
-
-function handleSelectAll() {
-    try {
-
-        if (isHandlingSelectAll) {
-            return;
-        }
-
-        isHandlingSelectAll = true;
-
-        var selectedValues = $("#site").val() || [];
-        var allOptionSelected = selectedValues.includes('All');
-
-        if (allOptionSelected) {
-            issite2 = $("#site option").not('[value="All"]').map(function () {
-                return $(this).val();
-            }).get();
-
-            if (issite2.length > 0) {
-                $("#site").val(issite2).trigger('change');
-                //$("#site").select2();
-            }
-        } else {
-            var siteSansAll = selectedValues.filter(function (value) {
-                return value !== 'All';
-            })
-
-            if (siteSansAll.length > 0) {
-                $("#site").val([...siteSansAll]).trigger('change');
-                //$("#site").select2();
-            }
-        }
-
-        isHandlingSelectAll = false;
-    } catch (error) {
-
-    } finally {
-
-    }
-}
-
-//Ajoutez l'événement "change" au dropdown du site//
-$("#site").on('change', handleSelectAll);
 
 $('#site').on('change', () => {
     emptyTable();
@@ -599,8 +545,8 @@ function emptyTable() {
         info: false,
         colReorder: false,
 
-        //deferRender: true,
-        //dom: 'Bfrtip',
-        //buttons: ['colvis'],
+        deferRender: true,
+        dom: 'Bfrtip',
+        buttons: ['colvis'],
     });
 }

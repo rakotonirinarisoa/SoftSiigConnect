@@ -16,9 +16,7 @@
 .greenClass .btn{
     background-color : green !important;
 }
-body.sidebar-mini.layout-fixed {
-    overflow: hidden;
-}
+
 td.AnomalieClass {
     /*color: #dd4141d6;*/
     background: linear-gradient(45deg, #eb7575 0%, #fff 0%, #fff 50%, #eb7575 50%, #eb7575 51%, #fff 0%, #fff 100%, #eb7575 100%) !important;
@@ -33,7 +31,7 @@ td.AnomalieClass {
     background: #3d9970;
 }
 #myInput {
-    /*background-image: url('/css/searchicon.png');*/ /* Add a search icon to input */
+    background-image: url('/css/searchicon.png'); /* Add a search icon to input */
     background-position: 10px 12px; /* Position the search icon */
     background-repeat: no-repeat; /* Do not repeat the icon image */
     width: 100%; /* Full-width */

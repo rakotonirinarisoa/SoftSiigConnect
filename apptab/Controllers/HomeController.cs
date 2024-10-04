@@ -171,14 +171,6 @@ namespace apptab.Controllers
 
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = "" }, settings));
         }
-        public XmlDocument SaveDocument(XmlDocument document, String path)
-        {
-            using (StreamWriter stream = new StreamWriter(path, false, Encoding.GetEncoding("iso-8859-7")))
-            {
-                document.Save(stream);
-            }
-            return (document);
-        }
         public string CreateAFBTXT(string pathchemin, string pathfiles)
         {
             try
@@ -419,11 +411,10 @@ namespace apptab.Controllers
                     }
                     //SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                 }
-                else if (intbasetype == 4)
+                else if (intbasetype == 3)
                 {
                     Anarana = pathfile.Chemin;
-                    //send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
-                    SaveDocument(pathfile.Chemin, pathfile.Fichier);
+                    send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     string pport = ftp.PORT.ToString();
                     SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport);
@@ -487,50 +478,12 @@ namespace apptab.Controllers
                 {
                     var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser, codeproject, list);
                     Anarana = pathfile.Chemin;
-                    if (avalider != null)
-                    {
-                        foreach (var item in avalider)
-                        {
-                            try
-                            {
-                                item.DATETRANS = DateTime.Now;
-
-                                item.IDUSTRANS = exist.ID;
-                                item.ETAT = 3;
-                                db.SaveChanges();
-                            }
-                            catch (Exception ex)
-                            {
-                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
-                                throw;
-                            }
-                        }
-                    }
                     return CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                 }
                 else if (intbasetype == 1)
                 {
                     var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser, codeproject, list);
                     Anarana = pathfile.Chemin;
-                    if (avalider != null)
-                    {
-                        foreach (var item in avalider)
-                        {
-                            try
-                            {
-                                item.DATETRANS = DateTime.Now;
-
-                                item.IDUSTRANS = exist.ID;
-                                item.ETAT = 3;
-                                db.SaveChanges();
-                            }
-                            catch (Exception ex)
-                            {
-                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
-                                throw;
-                            }
-                        }
-                    }
                     return CreateAFBTXTArch(pathfile.Chemin, pathfile.Fichier, ps);
                 }
                 else if (intbasetype == 2)
@@ -573,15 +526,14 @@ namespace apptab.Controllers
                     }
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = res, data = "" }, settings));
                 }
-                else if (intbasetype == 4)
+                else if (intbasetype == 3)
                 {
                     var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list);
                     Anarana = pathfile.Chemin;
-                    //send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
-                    SaveDocument(pathfile.Chemin, pathfile.NomFichier);
+                    send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport);
                     if (avalider != null)
                     {
                         foreach (var item in avalider)
@@ -2755,7 +2707,7 @@ namespace apptab.Controllers
         //END ETAT = 1
         //======================================================================================================Fvalidations=================================================================
         [HttpPost]
-        public JsonResult LoadValidateEcriture(SI_USERS suser, string codeproject,string CodeJournal)
+        public JsonResult LoadValidateEcriture(SI_USERS suser, string codeproject)
         {
             AFB160 aFB160 = new AFB160();
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
@@ -2781,7 +2733,7 @@ namespace apptab.Controllers
             {
                 //var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG).ToArray();
                 //var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 && !HistoAFB.Contains(a.IDREGLEMENT.ToString())).ToList();
-                var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.Journal == CodeJournal && a.IDPROJET == PROJECTID && a.ETAT == 2 && site.Contains(a.SITE)).ToList();
+                var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 && site.Contains(a.SITE)).ToList();
                 foreach (var item in val)
                 {
                     bool isLate = false;
@@ -2819,7 +2771,7 @@ namespace apptab.Controllers
             {
                 //var HistoAFB = db.OPA_HISTORIQUE.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG.ToString()).ToArray();
                 //var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 && !HistoAFB.Contains(a.IDREGLEMENT.ToString())).ToList();
-                var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.Journal == CodeJournal && a.IDPROJET == PROJECTID && a.ETAT == 2 && site.Contains(a.SITE)).ToList();
+                var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 && site.Contains(a.SITE)).ToList();
                 foreach (var item in val)
                 {
                     bool isLate = false;
@@ -3399,8 +3351,8 @@ namespace apptab.Controllers
         public JsonResult SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE,string port)
         {
             int pport = int.Parse(port);
-            string pth = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + SOURCE;
-            string remoteFilePath = @"\";
+            string pth = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + SOURCE + ".txt";
+            string remoteFilePath = @"\public\";
             var res = ""; 
             try
             {
@@ -3410,7 +3362,7 @@ namespace apptab.Controllers
                 {
                     sftp.Connect();
 
-                    using (var fileStream = new FileStream(SOURCE, FileMode.Open))
+                    using (var fileStream = new FileStream(pth, FileMode.Open))
                     {
                        //var sss =  sftp.ListDirectory("//");
                         // Envoyer le fichier
@@ -3518,7 +3470,6 @@ namespace apptab.Controllers
                     SAUVEANOMALIE.TYPE = "TIERS";
                     SAUVEANOMALIE.GUICHET = "";
                     SAUVEANOMALIE.AGENCE = "";
-                    SAUVEANOMALIE.SITE = "";
                     try
                     {
                         db.ANOMALIE_G.Add(SAUVEANOMALIE);
@@ -3548,7 +3499,6 @@ namespace apptab.Controllers
                     SAUVEANOMALIE.AUXI = "";
                     SAUVEANOMALIE.DOM1 = "";
                     SAUVEANOMALIE.AD2 = "";
-                    SAUVEANOMALIE.SITE = "";
                     try
                     {
                         db.ANOMALIE_G.Add(SAUVEANOMALIE);
@@ -3576,7 +3526,7 @@ namespace apptab.Controllers
                 TYPE = x.TYPE,
 
 
-            }).Join(db.SI_PROJETS, anomalie => anomalie.IDPROJECT, projet => projet.ID, (anomalie, projet) => new
+            }).Join(db.SI_PROJETS,anomalie => anomalie.IDPROJECT,projet => projet.ID ,(anomalie, projet) => new
             {
                 ID = anomalie.ID,
                 COMPTE_BANQUE = anomalie.COMPTE_BANQUE,
@@ -3590,8 +3540,6 @@ namespace apptab.Controllers
                 GUICHET = anomalie.GUICHET,
                 AGENCE = anomalie.AGENCE,
                 TYPE = anomalie.TYPE,
-                JOURNAL = "",
-                LIBELLE = "",
 
             }).ToList();
             var DataAnomalieJournal = db.ANOMALIE_G.Where(x => x.IDPROJECT == PROJECTID && x.TYPE == "JOURNAL").Select(x => new
@@ -3629,7 +3577,6 @@ namespace apptab.Controllers
                 LIBELLE = anomalie.LIBELLE
 
             }).ToList();
-            DataAnomalie.AddRange(DataAnomalieJournal);
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès.", data = DataAnomalie , datas = DataAnomalieJournal }, settings));
         }
         public JsonResult SendEmailSuppliersGED(SI_USERS suser,int PROJECTID, string idLiquidation)

@@ -102,7 +102,7 @@ namespace apptab.Controllers
                             crpto.Add(new SiteGED()
                             {
                                 Id = guid,
-                                Code = ged.Sites.Any(a => a.Id == guid && a.DeletionDate == null) ? (ged.Sites.FirstOrDefault(a => a.Id == guid && a.DeletionDate == null).SiteId + "-" + ged.Sites.FirstOrDefault(a => a.Id == guid && a.DeletionDate == null).Name) : ""
+                                Code = ged.Sites.Any(a => a.Id == guid && a.DeletionDate == null) ? ged.Sites.FirstOrDefault(a => a.Id == guid && a.DeletionDate == null).SiteId : ""
                             });
                         }
                     }
@@ -339,7 +339,7 @@ namespace apptab.Controllers
                 Guid IDsup = Guid.Parse(fournisseur); ;
 
                 var suppliersname = ged.Suppliers.Where(x => x.Id == IDsup).FirstOrDefault(); ;
-
+               
                 var RefDoc = ged.Documents.Where(x => x.DeletionDate == null && x.CreationDate >= DateDebut && x.CreationDate <= DateFin).Join(ged.SuppliersDocumentsAcknowledgements, dcm => dcm.Id, sdal => sdal.Id, (dcm, sdal) => new
                 {
                     ID = dcm.SenderId,
@@ -421,27 +421,91 @@ namespace apptab.Controllers
                     Validateur = us.FirstName,
                     DocumentStepID = dcm.DocumentStepID,
                     IsValidator = dcm.IsValidator,
-                }).Where(x => x.Fournisseur == suppliersname.Name && x.Encours == status && x.IsValidator == true /*&& referenS.Contains(x.reference)*/).DistinctBy(x => x.Etape).ToList();
+                }).Where(x => x.IsValidator == true ).DistinctBy(x => x.Etape).ToList();// x.Fournisseur == suppliersname.Name && x.Encours == status &&
 
                 if (RefDoc != null)
                 {
-                    foreach (var typD in RefDoc)
+                    if (status != 4 || fournisseur != "0")
                     {
-                        string uservalidateur = "";
-                        string SSITE = typD.Site;
-                        documentF.Add(new DocS
+                        foreach (var typD in RefDoc.Where(x => x.Encours == status && x.Fournisseur == suppliersname.Name))
                         {
-                            REF = typD.reference,
-                            Objet = typD.Objet,
-                            FOURNISSEUR = typD.Fournisseur,
-                            ACCUSE = typD.Acusse,
-                            VALIDATEUR = typD.Validateur,
-                            Montant = typD.Montant.ToString(),
-                            Encours = typD.Etape.ToString(),
-                            ARCHIVES = typD.ARCHIVES.ToString(),
-                            Lien = typD.Lien.ToString(),
-                            //Validations = uservalidateur != null ? uservalidateur : "",
-                        });
+                            string uservalidateur = "";
+                            string SSITE = typD.Site;
+                            documentF.Add(new DocS
+                            {
+                                REF = typD.reference,
+                                Objet = typD.Objet,
+                                FOURNISSEUR = typD.Fournisseur,
+                                ACCUSE = typD.Acusse,
+                                VALIDATEUR = typD.Validateur,
+                                Montant = typD.Montant.ToString(),
+                                Encours = typD.Etape.ToString(),
+                                ARCHIVES = typD.ARCHIVES.ToString(),
+                                Lien = typD.Lien.ToString(),
+                                //Validations = uservalidateur != null ? uservalidateur : "",
+                            });
+                        }
+                    }else if(status != 4 || fournisseur == "0")
+                    {
+                        foreach (var typD in RefDoc.Where(x => x.Encours == status ))
+                        {
+                            string uservalidateur = "";
+                            string SSITE = typD.Site;
+                            documentF.Add(new DocS
+                            {
+                                REF = typD.reference,
+                                Objet = typD.Objet,
+                                FOURNISSEUR = typD.Fournisseur,
+                                ACCUSE = typD.Acusse,
+                                VALIDATEUR = typD.Validateur,
+                                Montant = typD.Montant.ToString(),
+                                Encours = typD.Etape.ToString(),
+                                ARCHIVES = typD.ARCHIVES.ToString(),
+                                Lien = typD.Lien.ToString(),
+                                //Validations = uservalidateur != null ? uservalidateur : "",
+                            });
+                        }
+                    }else if (status == 4 || fournisseur != "0")
+                    {
+                        foreach (var typD in RefDoc.Where(x => x.Fournisseur == suppliersname.Name))
+                        {
+                            string uservalidateur = "";
+                            string SSITE = typD.Site;
+                            documentF.Add(new DocS
+                            {
+                                REF = typD.reference,
+                                Objet = typD.Objet,
+                                FOURNISSEUR = typD.Fournisseur,
+                                ACCUSE = typD.Acusse,
+                                VALIDATEUR = typD.Validateur,
+                                Montant = typD.Montant.ToString(),
+                                Encours = typD.Etape.ToString(),
+                                ARCHIVES = typD.ARCHIVES.ToString(),
+                                Lien = typD.Lien.ToString(),
+                                //Validations = uservalidateur != null ? uservalidateur : "",
+                            });
+                        }
+                    }
+                    else
+                    {
+                        foreach (var typD in RefDoc)
+                        {
+                            string uservalidateur = "";
+                            string SSITE = typD.Site;
+                            documentF.Add(new DocS
+                            {
+                                REF = typD.reference,
+                                Objet = typD.Objet,
+                                FOURNISSEUR = typD.Fournisseur,
+                                ACCUSE = typD.Acusse,
+                                VALIDATEUR = typD.Validateur,
+                                Montant = typD.Montant.ToString(),
+                                Encours = typD.Etape.ToString(),
+                                ARCHIVES = typD.ARCHIVES.ToString(),
+                                Lien = typD.Lien.ToString(),
+                                //Validations = uservalidateur != null ? uservalidateur : "",
+                            });
+                        }
                     }
                 }
 

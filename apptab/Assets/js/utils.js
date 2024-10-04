@@ -1,20 +1,3 @@
-$(document).ready(() => {
-    var today = new Date();
-    var year = today.getFullYear();
-    var month = ("0" + (today.getMonth() + 1)).slice(-2);
-    var day = ("0" + today.getDate()).slice(-2);
-
-    var formattedDateD = year + '-' + "01" + '-' + "01";
-    var formattedDateF = year + '-' + month + '-' + day;
-
-    // Définir la valeur par défaut de l'input de type date
-    $('#dateD').val(formattedDateD);
-    $('#dateF').val(formattedDateF);
-
-    $('#Pdu').val(formattedDateD);
-    $('#Pau').val(formattedDateF);
-    $('#Pay').val(formattedDateF);
-});
 function formatCurrency(amount) {
     let nombre = amount.toLocaleString("fr-FR",{
                 style: 'decimal',

@@ -96,84 +96,8 @@ namespace apptab.Controllers
         {
             ViewBag.Controller = "Liste des PROJETS";
             return View();
-        } 
-        public ActionResult DetailsMAPPGED()
-        {
-            ViewBag.Controller = "Détails Liste des MAPPAGE-GED";
-            return View();
         }
-        [HttpPost]
-        public ActionResult DetailsMAPPGED(SI_USERS suser, string UserId)
-        {
-            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
-            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            try
-            {
-                int useID = int.Parse(UserId);
-                var map = db.SI_MAPPAGES_GED.FirstOrDefault(a => a.ID == useID);
-
-                if (map != null)
-                {
-                    var mapp = new
-                    {
-                        soc = db.SI_PROJETS.FirstOrDefault(a => a.ID == map.IDPROJET).ID,
-                        inst = map.INSTANCE,
-                        auth = map.AUTH,
-                        conn = map.CONNEXION,
-                        mdp = map.CONNEXPWD,
-                        baseD = map.DBASE,
-                        id = map.ID
-                    };
-
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { PROJET = mapp.soc, INSTANCE = mapp.inst, AUTH = mapp.auth, CONNEXION = mapp.conn, MDP = mapp.mdp, BASED = mapp.baseD, mapp.id } }, settings));
-                }
-                else
-                {
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "message" }, settings));
-                }
-            }
-            catch (Exception e)
-            {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
-            }
-        }
-        [HttpPost]
-        public JsonResult SuperAdminMaPUpdateGED(SI_USERS suser, SI_MAPPAGES user, string UserId)
-        {
-            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
-            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-
-            try
-            {
-                int userId = int.Parse(UserId);
-                var userExist = db.SI_MAPPAGES_GED.FirstOrDefault(a => a.IDPROJET == user.IDPROJET && a.INSTANCE == user.INSTANCE && a.DBASE == user.DBASE);
-                var userupdate = db.SI_MAPPAGES_GED.FirstOrDefault(a => a.ID == userId);
-                if (userExist == null)
-                {
-                    userupdate.INSTANCE = user.INSTANCE;
-                    userupdate.AUTH = user.AUTH;
-                    userupdate.CONNEXION = user.CONNEXION;
-                    userupdate.CONNEXPWD = user.CONNEXPWD;
-                    userupdate.DBASE = user.DBASE;
-                    userupdate.IDPROJET = user.IDPROJET;
-                    userupdate.IDUSER = suser.ID;
-
-                    //var eeee = db.GetValidationErrors();
-                    db.SaveChanges();
-
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Enregistrement avec succès. ", data = user }, settings));
-                }
-                else
-                {
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le mappage existe déjà. " }, settings));
-                }
-            }
-            catch (Exception e)
-            {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
-            }
-        }
         public JsonResult FillTableSOA(SI_USERS suser)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
@@ -421,34 +345,7 @@ namespace apptab.Controllers
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
             }
         }
-        //MAPPAGEGED
-        public ActionResult SuperAdminMaPListGED()
-        {
-            return View();
-        }
-        [HttpPost]
-        public JsonResult FillTableMAPPGED(SI_USERS suser)
-        {
-            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
-            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            try
-            {
-                var mapp = db.SI_MAPPAGES_GED.Select(a => new
-                {
-                    db.SI_PROJETS.FirstOrDefault(x => x.ID == a.IDPROJET && x.DELETIONDATE == null).PROJET,
-                    a.INSTANCE,
-                    a.DBASE,
-                    a.ID
-                }).Where(a => a.PROJET != null).ToList();
-
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = mapp }, settings));
-            }
-            catch (Exception e)
-            {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
-            }
-        }
         //MAPPAGE DELETE//
         [HttpPost]
         public JsonResult DeleteMAPP(SI_USERS suser, string MAPPId)
@@ -650,43 +547,7 @@ namespace apptab.Controllers
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
             }
         }
-        //MAPPAGE UPDATE//
-        [HttpPost]
-        public JsonResult SuperAdminMaPGEDUpdate(SI_USERS suser, SI_MAPPAGES user, string UserId)
-        {
-            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
-            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            try
-            {
-                int userId = int.Parse(UserId);
-                var userExist = db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == user.IDPROJET && a.INSTANCE == user.INSTANCE && a.DBASE == user.DBASE);
-                var userupdate = db.SI_MAPPAGES.FirstOrDefault(a => a.ID == userId);
-                if (userExist == null)
-                {
-                    userupdate.INSTANCE = user.INSTANCE;
-                    userupdate.AUTH = user.AUTH;
-                    userupdate.CONNEXION = user.CONNEXION;
-                    userupdate.CONNEXPWD = user.CONNEXPWD;
-                    userupdate.DBASE = user.DBASE;
-                    userupdate.IDPROJET = user.IDPROJET;
-                    userupdate.IDUSER = suser.ID;
-
-                    //var eeee = db.GetValidationErrors();
-                    db.SaveChanges();
-
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Enregistrement avec succès. ", data = user }, settings));
-                }
-                else
-                {
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le mappage existe déjà. " }, settings));
-                }
-            }
-            catch (Exception e)
-            {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
-            }
-        }
         //DELETE SOA
         [HttpPost]
         public JsonResult DeleteFSOA(SI_USERS suser, string SOAid)
@@ -928,12 +789,6 @@ namespace apptab.Controllers
             return View();
         }
 
-        public class siteList
-        {
-            public string CODE { get; set; }
-            public string LIBELLE { get; set; }
-        }
-
         [HttpPost]
         public ActionResult GETALLSITE(SI_USERS suser, int iProjet)
         {
@@ -944,25 +799,17 @@ namespace apptab.Controllers
             {
                 int crpt = iProjet;
 
+                var crpto = db.SI_SITE.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+
                 if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
 
                 SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
                 SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
-                List<siteList> site = new List<siteList>();
-
                 var etat = tom.RSITE.OrderBy(a => a.CODE).ToList();
-                foreach (var item in etat)
-                {
-                    site.Add(new siteList()
-                    {
-                        CODE = item.CODE,
-                        LIBELLE = item.CODE + "-" + item.LIBELLE
-                    });
-                }
 
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { etat = site, IDP = crpt } }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { etat = etat, IDP = crpt } }, settings));
             }
             catch (Exception)
             {

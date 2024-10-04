@@ -70,7 +70,7 @@ function GetSITE() {
             var code1 = ``;
             $.each(Datas.data.etat, function (k, v) {
                 code1 += `
-                    <option value="${v.CODE}">${v.LIBELLE}</option>
+                    <option value="${v.CODE}">${v.CODE}</option>
                 `;
             });
 

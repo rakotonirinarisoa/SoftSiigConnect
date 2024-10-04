@@ -5,9 +5,6 @@
     /*Layout = "~/Views/Shared/_Layout.cshtml";*/
 }
 
-<meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-
 <div class="form-row">
     <div class="input-group mb-3 col">
         <div class="input-group-prepend custom-label">
@@ -30,7 +27,7 @@
         <div class="input-group-prepend custom-label">
             <span class="input-group-text text-bold" id="inputGroup-sizing-default">Sites</span>
         </div>
-        <select class="form-control selectTOO" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="site" data-id="site-list" multiple="multiple" @*onchange="handleSelectAll()"*@>
+        <select class="form-control selectTOO" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="site" data-id="site-list" multiple="multiple">
         </select>
     </div>
 </div>
@@ -63,24 +60,6 @@
         tags: true,
         tokenSeparators: [',', ' ']
     })
-
-    //var issite2 = [];
-    //function handleSelectAll() {
-    //    var selectedValues = $("#site").val(); // Sélectionnez les valeurs actuelles
-    //    var allOptionSelected = selectedValues && selectedValues.includes('All'); // Vérifiez si l'option "All" est sélectionnée
-
-    //    if (allOptionSelected) {
-    //        // Si "Select All" est sélectionné, sélectionnez toutes les autres options
-    //        issite2 = $("#site option").not('[value="All"]').map(function () {
-    //            return $(this).val();
-    //        }).get();
-    //    } else {
-    //        issite2 = [];
-    //    }
-
-    //    // Appliquez les sélections au dropdown
-    //    $("#site").val(issite2).trigger('change');
-    //}
 </script>
 
 <script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>

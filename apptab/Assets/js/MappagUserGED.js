@@ -22,57 +22,8 @@
     $("#base-container").hide();
 
     GetMAPP();
-    GetListProjet();
 });
-function GetListProjet() {
-    let formData = new FormData();
 
-    formData.append("suser.LOGIN", User.LOGIN);
-    formData.append("suser.PWD", User.PWD);
-    formData.append("suser.ROLE", User.ROLE);
-    formData.append("suser.IDPROJET", User.IDPROJET);
-
-    $.ajax({
-        type: "POST",
-        url: Origin + '/SuperAdmin/GetAllPROJET',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        beforeSend: function () {
-            loader.removeClass('display-none');
-        },
-        complete: function () {
-            loader.addClass('display-none');
-        },
-        success: function (result) {
-            var Datas = JSON.parse(result);
-
-            if (Datas.type == "error") {
-                alert(Datas.msg);
-                return;
-            }
-            if (Datas.type == "login") {
-                alert(Datas.msg);
-                window.location = window.location.origin;
-                return;
-            }
-
-            $(`[data-id="societe-list"]`).text("");
-            var code = ``;
-            $.each(Datas.data, function (k, v) {
-                code += `
-                    <option value="${v.ID}">${v.PROJET}</option>
-                `;
-            });
-            $(`[data-id="societe-list"]`).append(code);
-
-        },
-        error: function (e) {
-            alert("Problème de connexion. ");
-        }
-    })
-}
 $(`[data-id="connex"]`).click(function () {
     let usr = $("#Connex").val();
     let psw = $("#MDP").val();
@@ -165,8 +116,7 @@ $(`[data-action="AddnewUser"]`).click(function () {
     formData.append("user.CONNEXION", $(`#Connex`).val());
     formData.append("user.CONNEXPWD", $(`#MDP`).val());
     formData.append("user.DBASE", $(`#DataBase`).val());
-    let idProject = $("#IDProjet").val();
-    formData.append("idProject", idProject);
+
     $.ajax({
         type: "POST",
         url: Origin + '/RSF/MappageCreate',
