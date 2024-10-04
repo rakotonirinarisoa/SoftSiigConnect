@@ -138,7 +138,7 @@ function handleSelectAll() {
 //Ajoutez l'événement "change" au dropdown du site//
 $("#site").on('change', handleSelectAll);
 
-$('#site').on('change', () => {
+$('#site').on('input', () => {
     emptyTable();
 
     $(`[data-id="typeDoc-list"]`).text("");

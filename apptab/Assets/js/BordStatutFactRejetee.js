@@ -139,12 +139,13 @@ function handleSelectAll() {
 $("#site").on('change', handleSelectAll);
 
 
-$('#site').on('change', () => {
+$('#site').on('input', () => {
+
     emptyTable();
 
-    $(`[data-id="typeDoc-list"]`).text("");
+    $(`[data-id="fournisseur-list"]`).text("");
     var code1 = ``;
-    $(`[data-id="typeDoc-list"]`).append(code1);
+    $(`[data-id="fournisseur-list"]`).append(code1);
 
     GetTypeDocs();
 });
