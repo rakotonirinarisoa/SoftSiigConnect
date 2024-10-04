@@ -459,7 +459,54 @@ function GetSITE() {
     });
 }
 
-$('#site').on('change', () => {
+//Fonction handleSelectAll
+var issite2 = [];
+var isHandlingSelectAll = false;
+
+function handleSelectAll() {
+    try {
+
+        if (isHandlingSelectAll) {
+            return;
+        }
+
+        isHandlingSelectAll = true;
+
+        var selectedValues = $("#site").val() || [];
+        var allOptionSelected = selectedValues.includes('All');
+
+        if (allOptionSelected) {
+            issite2 = $("#site option").not('[value="All"]').map(function () {
+                return $(this).val();
+            }).get();
+
+            if (issite2.length > 0) {
+                $("#site").val(issite2).trigger('change');
+                //$("#site").select2();
+            }
+        } else {
+            var siteSansAll = selectedValues.filter(function (value) {
+                return value !== 'All';
+            })
+
+            if (siteSansAll.length > 0) {
+                $("#site").val([...siteSansAll]).trigger('change');
+                //$("#site").select2();
+            }
+        }
+
+        isHandlingSelectAll = false;
+    } catch (error) {
+
+    } finally {
+
+    }
+}
+
+//Ajoutez l'événement "change" au dropdown du site//
+$("#site").on('change', handleSelectAll);
+
+$('#site').on('input', () => {
     emptyTable();
 });
 

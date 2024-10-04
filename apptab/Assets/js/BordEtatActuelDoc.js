@@ -192,12 +192,12 @@ function GetReference(id) {
     });
 }
 //GETALLFOURNISSEUR
-$('#site').on('change', () => {
+$('#site').on('input', () => {
     emptyTable();
     let id = $("#site").val();
-    $(`[data-id="typeDoc-list"]`).text("");
+    $(`[data-id="fournisseur-list"]`).text("");
     var code1 = ``;
-    $(`[data-id="typeDoc-list"]`).append(code1);
+    $(`[data-id="fournisseur-list"]`).append(code1);
 
     //GetTypeDocs();
     GetSuppliers(id);
@@ -232,9 +232,9 @@ function GetTypeDocs() {
             if (Datas.type == "error") {
                 alert(Datas.msg);
 
-                $(`[data-id="typeDoc-list"]`).text("");
+                $(`[data-id="fournisseur-list"]`).text("");
                 var code1 = ``;
-                $(`[data-id="typeDoc-list"]`).append(code1);
+                $(`[data-id="fournisseur-list"]`).append(code1);
 
                 return;
             }
@@ -244,14 +244,14 @@ function GetTypeDocs() {
                 return;
             }
 
-            $(`[data-id="typeDoc-list"]`).text("");
+            $(`[data-id="fournisseur-list"]`).text("");
             var code1 = ``;
             $.each(Datas.data.etat, function (k, v) {
                 code1 += `
                     <option value="${v.Id}">${v.Title}</option>
                 `;
             });
-            $(`[data-id="typeDoc-list"]`).append(code1);
+            $(`[data-id="fournisseur-list"]`).append(code1);
         },
         error: function () {
             alert("Problème de connexion. ");
