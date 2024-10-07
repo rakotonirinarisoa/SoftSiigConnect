@@ -149,10 +149,19 @@ function GetTypeDocs() {
         return;
     }
 
+    let selectedValues = $("#site").val() || [];
+    let allOptionSelected = selectedValues.includes('All');
+
+    if (allOptionSelected) {
+        selectedValues = $("#site option").not('[value="All"]').map(function () {
+            return $(this).val();
+        }).get();
+    }
+
     let formData = new FormData();
 
-    formData.append("iProjet", $("#proj").val());
-    formData.append("iSite", $("#site").val());
+    formData.append("iProjet", pr);
+    formData.append("iSite", selectedValues);
 
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
