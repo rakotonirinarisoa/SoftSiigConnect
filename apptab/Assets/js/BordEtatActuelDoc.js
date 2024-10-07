@@ -441,7 +441,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                     table.destroy();
                 }
 
-                table = $('#TBD_PROJET_ORDSEC').DataTable({
+                table = $('#TBD_GED_DOCS').DataTable({
                     data,
                     columns: [
                         { data: 'id', },
@@ -479,8 +479,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                     buttons: ['colvis',
                         {
                             extend: 'pdfHtml5',
-                            title: 'DEPENSES A PAYER, AVANCES et PAIEMENTS',
-                            messageTop: 'Liste des dépenses à payer, avances et des paiements',
+                            title: 'ETAT ACTUEL DOCUMENTS',
+                            messageTop: 'Liste des etats actuel documents',
                             text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
@@ -488,7 +488,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-pdf',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                                columns: [0,1, 2, 3, 4, 5, 6, 7, 8],
                             },
                             customize: function (doc) {
                                 doc.defaultStyle.alignment = 'left';
@@ -498,8 +498,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                         },
                         {
                             extend: 'excelHtml5',
-                            title: 'DEPENSES A PAYER, AVANCES et PAIEMENTS',
-                            messageTop: 'Liste des dépenses à payer, avances et des paiements',
+                            title: 'ETAT ACTUEL DOCUMENTS',
+                            messageTop: 'Liste des etats actuel documents',
                             text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
@@ -507,7 +507,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-excel',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                                columns: [0,1, 2, 3, 4, 5, 6, 7, 8],
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (typeof data === 'undefined') {

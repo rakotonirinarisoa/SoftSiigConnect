@@ -437,7 +437,8 @@ function getCancelWithPsw() {
             }
             ListResult = Datas.data;
             content = ``;
-            GetHistoriques()
+            GetHistoriques();
+            $('#verification-modal').modal('toggle');
             //window.location = '/Home/GetFile?file=' + Datas.data;
 
         },

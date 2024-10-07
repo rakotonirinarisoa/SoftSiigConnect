@@ -841,13 +841,18 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == exist.IDPROJET && a.DELETIONDATE == null).IDPROJET.Value);
+            var test = db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == societe.IDPROJET && a.DELETIONDATE == null);
+            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == societe.IDPROJET && a.DELETIONDATE == null).IDPROJET.Value);
             if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
             SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
             var Projet = db.SI_PROJETS.FirstOrDefault(a => a.ID == societe.IDPROJET && a.DELETIONDATE == null).ID;
-            var Soa = ged.Projects.FirstOrDefault(a => a.Id == societe.IDGED && a.DeletionDate == null).Id;
-
+            var SoaS = ged.Projects.FirstOrDefault(a => a.Id == societe.IDGED && a.DeletionDate == null);
+            Guid Soa = new Guid();
+            if (SoaS != null)
+            {
+                Soa = SoaS.Id;
+            }
             if (!db.SI_PROGED.Any(a => a.IDPROJET == Projet /*|| a.IDGED == Soa*/ && a.DELETIONDATE == null))
             {
                 var newSociete = new SI_PROGED()

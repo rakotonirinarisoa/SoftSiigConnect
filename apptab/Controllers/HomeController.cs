@@ -2707,7 +2707,7 @@ namespace apptab.Controllers
         //END ETAT = 1
         //======================================================================================================Fvalidations=================================================================
         [HttpPost]
-        public JsonResult LoadValidateEcriture(SI_USERS suser, string codeproject)
+        public JsonResult LoadValidateEcriture(SI_USERS suser, string codeproject,string journal)
         {
             AFB160 aFB160 = new AFB160();
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
@@ -2733,7 +2733,7 @@ namespace apptab.Controllers
             {
                 //var HistoAFB = db.OPA_HISTORIQUEBR.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG).ToArray();
                 //var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 && !HistoAFB.Contains(a.IDREGLEMENT.ToString())).ToList();
-                var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 && site.Contains(a.SITE)).ToList();
+                var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 && site.Contains(a.SITE) && a.Journal == journal).ToList();
                 foreach (var item in val)
                 {
                     bool isLate = false;
@@ -2771,7 +2771,7 @@ namespace apptab.Controllers
             {
                 //var HistoAFB = db.OPA_HISTORIQUE.Where(a => a.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG.ToString()).ToArray();
                 //var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 && !HistoAFB.Contains(a.IDREGLEMENT.ToString())).ToList();
-                var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 && site.Contains(a.SITE)).ToList();
+                var val = db.OPA_VALIDATIONS.Where(a => a.DATESEND != null && a.IDPROJET == PROJECTID && a.ETAT == 2 && site.Contains(a.SITE) && a.Journal == journal).ToList();
                 foreach (var item in val)
                 {
                     bool isLate = false;

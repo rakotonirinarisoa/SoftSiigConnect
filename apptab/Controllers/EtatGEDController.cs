@@ -336,10 +336,18 @@ namespace apptab.Controllers
                 var isUserSet = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == PROJECTID && b.DELETIONDATE == null && b.ID == exist.ID); ;
                 var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null); ;
                 List<DocS> documentF = new List<DocS>(); ;
-                Guid IDsup = Guid.Parse(fournisseur); ;
-
-                var suppliersname = ged.Suppliers.Where(x => x.Id == IDsup).FirstOrDefault(); ;
-               
+                List<string> suppliersnameList = new List<string>();
+                Guid IDsup = new Guid();
+                if (fournisseur == "0")
+                {
+                    suppliersnameList.AddRange(ged.Suppliers.Select(a => a.Name).ToList()); ;
+                }
+                else
+                {
+                    IDsup = Guid.Parse(fournisseur); ;
+                    suppliersnameList.Add(ged.Suppliers.Where(a => a.Id == IDsup).Select(a => a.Name).FirstOrDefault()); ;
+                }
+                var suppliersname = ged.Suppliers.FirstOrDefault(); ;
                 var RefDoc = ged.Documents.Where(x => x.DeletionDate == null && x.CreationDate >= DateDebut && x.CreationDate <= DateFin).Join(ged.SuppliersDocumentsAcknowledgements, dcm => dcm.Id, sdal => sdal.Id, (dcm, sdal) => new
                 {
                     ID = dcm.SenderId,
@@ -427,7 +435,8 @@ namespace apptab.Controllers
                 {
                     if (status != 4 || fournisseur != "0")
                     {
-                        foreach (var typD in RefDoc.Where(x => x.Encours == status && x.Fournisseur == suppliersname.Name))
+                        //foreach (var typD in RefDoc.Where(x => x.Encours == status && x.Fournisseur == suppliersname.Name))
+                        foreach (var typD in RefDoc.Where(x => x.Encours == status && suppliersnameList.Contains(x.Fournisseur)))
                         {
                             string uservalidateur = "";
                             string SSITE = typD.Site;
@@ -447,7 +456,7 @@ namespace apptab.Controllers
                         }
                     }else if(status != 4 || fournisseur == "0")
                     {
-                        foreach (var typD in RefDoc.Where(x => x.Encours == status ))
+                        foreach (var typD in RefDoc)
                         {
                             string uservalidateur = "";
                             string SSITE = typD.Site;
@@ -467,7 +476,7 @@ namespace apptab.Controllers
                         }
                     }else if (status == 4 || fournisseur != "0")
                     {
-                        foreach (var typD in RefDoc.Where(x => x.Fournisseur == suppliersname.Name))
+                        foreach (var typD in RefDoc.Where(x => suppliersnameList.Contains(x.Fournisseur)))
                         {
                             string uservalidateur = "";
                             string SSITE = typD.Site;

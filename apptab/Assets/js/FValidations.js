@@ -488,16 +488,18 @@ function GetAllProjectUser() {
 }
 //==============================================================================================Load Page===================================================================================
 
-function LoadValidate() {
+function LoadValidate(journal) {
 
     let formData = new FormData();
     let codeproject = $("#Fproject").val();
+    
     formData.append("codeproject", codeproject);
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
     formData.append("suser.IDPROJET", User.IDPROJET);
+    formData.append("journal", journal);
 
     $.ajax({
         type: "POST",
@@ -761,6 +763,8 @@ $(document).on("change", "[auxi-list]", () => {
 $(document).on("change", "[codej-list]", () => {
     var code = ListCodeJournal.filter(function (e) { return e.CODE == $(`[codej-list]`).val(); })[0];
     $(`[codej-libelle]`).val(code.LIBELLE);
+    let journal = $("#commercial").val();
+    LoadValidate(journal);
 });
 
 $(document).on("click", "[data-target]", function () {
