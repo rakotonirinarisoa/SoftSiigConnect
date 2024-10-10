@@ -472,8 +472,6 @@ namespace apptab.Controllers
             else
             {
                 //var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser, codeproject, list);
-
-
                 if (intbasetype == 0)
                 {
                     var pathfile = aFB160.CreateBRAFB160(devise, codeJ, suser, codeproject, list);
@@ -526,14 +524,15 @@ namespace apptab.Controllers
                     }
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = res, data = "" }, settings));
                 }
-                else if (intbasetype == 3)
+                else if (intbasetype == 4)//testISO20022
                 {
                     var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list);
                     Anarana = pathfile.Chemin;
                     send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport);
+
                     if (avalider != null)
                     {
                         foreach (var item in avalider)
@@ -553,8 +552,7 @@ namespace apptab.Controllers
                             }
                         }
                     }
-                    return Json(JsonConvert.SerializeObject(new { type = "sucess", msg = "Traitement avec Succées", data = "" }, settings));
-                    //SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec Succées", data = "" }, settings));
                 }
                 else
                 {
@@ -3348,21 +3346,23 @@ namespace apptab.Controllers
             }
             return Json(JsonConvert.SerializeObject(new { msg = "success", data = result, datebr = resultBR }));
         }
-        public JsonResult SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE,string port)
+        public void SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE,string port)
         {
             int pport = int.Parse(port);
-            string pth = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + SOURCE + ".txt";
-            string remoteFilePath = @"\public\";
+            string pth = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + SOURCE;
+            //string pth = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + SOURCE;
+            //string remoteFilePath = @"\public\";
+            string remoteFilePath = @"\acq\";
             var res = ""; 
             try
             {
                 // Créer une connexion SFTP
-                //using (var sftp = new SftpClient(HOTE, pport, USERFTP.ToString(), PWDFTP))
-                using (var sftp = new SftpClient("151.80.218.41", 22, "tester", "password"))
+                using (var sftp = new SftpClient(HOTE, pport, USERFTP.ToString(), PWDFTP))
+                //using (var sftp = new SftpClient("151.80.218.41", 22, "tester", "password"))
                 {
                     sftp.Connect();
 
-                    using (var fileStream = new FileStream(pth, FileMode.Open))
+                    using (var fileStream = new FileStream(SOURCE, FileMode.Open))
                     {
                        //var sss =  sftp.ListDirectory("//");
                         // Envoyer le fichier
@@ -3382,7 +3382,6 @@ namespace apptab.Controllers
                 Console.WriteLine($"Erreur : {ex.Message}");
                 res = ex.Message;
             }
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = res, data = "" }, settings));
         }
 
         private ConnectionInfo getSftpConnection(string hOTE, string username, int port, string sOURCE)

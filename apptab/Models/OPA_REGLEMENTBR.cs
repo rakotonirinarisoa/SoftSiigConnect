@@ -76,5 +76,8 @@ namespace apptab.Models
 
         [StringLength(2)]
         public string CLE { get; set; }
+
+        [StringLength(10)]
+        public string PAYS { get; set; }
     }
 }

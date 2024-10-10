@@ -281,6 +281,7 @@
     <Compile Include="Models\ListPaimentV.cs" />
     <Compile Include="Models\Model1.cs" />
     <Compile Include="Models\Model2.cs" />
+    <Compile Include="Models\Model3.cs" />
     <Compile Include="Models\RBANQUES.cs" />
     <Compile Include="Models\RPAYS.cs" />
     <Compile Include="Models\SI_SITE.cs" />

@@ -360,12 +360,13 @@ function getelementTXT(a , list) {
                 loader.removeClass('display-none');
             },
             complete: function (result) {
+                alert(result);
                 window.location.reload();
             },
             success: function (result) {
-                //console.log(result);
+                console.log(result.type);
                 //let blobUrl = URL.createObjectURL(result);
-                alert(result.msg)
+                //alert(result.msg)
                 //GetFileNameAnarana(blobUrl);
                 //window.location = '/Home/GetFile?file=' + Datas.data;
                 $('#verification-modal').modal('toggle');
