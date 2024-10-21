@@ -90,6 +90,8 @@ namespace apptab.Controllers
                         J1 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J1 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J1 : 0,
                         J2 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J2 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J2 : 0,
                         J3 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J3 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J3 : 0,
+                        J4 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J4 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J4 : 0,
+                        J5 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J5 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J5 : 0,
                         JR = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JR != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JR : 0,
                         JRA = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JRA != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JRA : 0,
 
@@ -170,6 +172,8 @@ namespace apptab.Controllers
                         J1 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J1 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J1 : 0,
                         J2 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J2 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J2 : 0,
                         J3 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J3 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J3 : 0,
+                        J4 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J4 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J4 : 0,
+                        J5 = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J5 != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).J5 : 0,
                         JR = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JR != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JR : 0,
                         JRA = db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JRA != null ? db.SI_PRIVILEGE.FirstOrDefault(x => x.IDUSERPRIV == a.ID).JRA : 0,
 
@@ -266,6 +270,8 @@ namespace apptab.Controllers
                 J1 = privilege.J1,
                 J2 = privilege.J2,
                 J3 = privilege.J3,
+                J4 = privilege.J4,
+                J5 = privilege.J5,
                 JR = privilege.JR,
                 JRA = privilege.JRA,
 

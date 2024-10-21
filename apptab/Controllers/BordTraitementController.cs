@@ -1725,7 +1725,7 @@ namespace apptab.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<JsonResult> GenerePaiementREJETE (SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin, string listSite)
+        public async Task<JsonResult> GenerePaiementREJETE(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin, string listSite)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -1828,7 +1828,7 @@ namespace apptab.Controllers
         //Statut des Justificatifs et reversements//
         public ActionResult StatutJR()
         {
-            ViewBag.Controller = "Statut des justificatifs et reversements";
+            ViewBag.Controller = "Statut des justificatifs, reversements et compléments";
 
             return View();
         }
@@ -1962,6 +1962,44 @@ namespace apptab.Controllers
                                 });
                             }
                         }
+                        if (db.SI_TRAITCOMPLEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)) != null)
+                        {
+                            foreach (var x in db.SI_TRAITCOMPLEMENT.Where(a => a.IDPROJET == crpt && a.ETAT != 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
+                            {
+                                var soa = (from soas in db.SI_SOAS
+                                           join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                           where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                           select new
+                                           {
+                                               soas.SOA
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
+
+                                list.Add(new TxLISTETRAIT
+                                {
+                                    No = x.No,
+                                    REF = x.REF,
+                                    BENEF = x.TITUL,
+
+                                    NPIECE = x.NPIECE,
+
+                                    MONTENGAGEMENT = Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+
+                                    DATETRANSFERTRAF = x.DATECRE != null ? x.DATECRE : null,
+                                    DATEVALORDSEC = x.DATEVALIDATION != null ? x.DATEVALIDATION : null,
+
+                                    SOA = soa,
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    TYPE = "Complément",
+                                    SITE = x.SITE
+                                });
+                            }
+                        }
                     }
                 }
 
@@ -1976,7 +2014,7 @@ namespace apptab.Controllers
         //Justificatifs et reversements rejetés//
         public ActionResult StatutJRA()
         {
-            ViewBag.Controller = "Liste des justificatifs et reversements rejetés";
+            ViewBag.Controller = "Liste des justificatifs, reversements et compléments rejetés";
 
             return View();
         }
@@ -2125,6 +2163,55 @@ namespace apptab.Controllers
                                     SOA = soa,
                                     PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                     TYPE = "Reversement",
+                                    SITE = x.SITE
+                                });
+                            }
+                        }
+                        if (db.SI_TRAITCOMPLEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)) != null)
+                        {
+                            foreach (var x in db.SI_TRAITCOMPLEMENT.Where(a => a.IDPROJET == crpt && a.ETAT == 2 && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATEMANDAT).OrderBy(a => a.DATECRE).ToList())
+                            {
+                                var soa = (from soas in db.SI_SOAS
+                                           join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                           where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                           select new
+                                           {
+                                               soas.SOA
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
+
+                                var isRejet = (from user in db.SI_USERS
+                                               join rejet in db.SI_TRAITANNULREVERS on user.ID equals rejet.IDUSER
+                                               where rejet.IDPROJET == crpt && rejet.No == x.No
+                                               orderby rejet.DATEANNUL descending
+                                               select new
+                                               {
+                                                   IDUSER = rejet.IDUSER,
+                                                   DATEREJE = rejet.DATEANNUL,
+                                                   MOTIF = rejet.MOTIF,
+                                                   COMMENTAIRE = rejet.COMMENTAIRE
+                                               }).FirstOrDefault();
+
+                                list.Add(new TxLISTETRAIT
+                                {
+                                    No = x.No,
+                                    REF = x.REF,
+                                    NPIECE = x.NPIECE,
+                                    BENEF = x.TITUL,
+                                    MONTENGAGEMENT = Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                    AGENTREJETE = isRejet != null ? await GetAgent(isRejet.IDUSER) : "",
+                                    DATEREJETE = isRejet != null ? isRejet.DATEREJE : null,
+                                    MOTIF = isRejet != null ? isRejet.MOTIF : "",
+                                    COMMENTAIRE = isRejet != null ? isRejet.COMMENTAIRE : "",
+
+                                    SOA = soa,
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    TYPE = "Complément",
                                     SITE = x.SITE
                                 });
                             }
@@ -2309,7 +2396,7 @@ namespace apptab.Controllers
                                     {
                                         if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "ACTI")
                                         {
-                                            foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.ACTI == PCOP && site.Contains(a.SITE)).ToList())
+                                            foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.ACTI == PCOP && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT == null).ToList())
                                             {
                                                 MTNENGA += xx.MONTANT.Value;
                                             }
@@ -2344,7 +2431,7 @@ namespace apptab.Controllers
                                             {
                                                 if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "ACTI")
                                                 {
-                                                    foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.ACTI == PCOP && site.Contains(a.SITE)).ToList())
+                                                    foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.ACTI == PCOP && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT == null).ToList())
                                                     {
                                                         MTNPAYE += opaV.MONTANT.Value;
                                                     }
@@ -2535,7 +2622,7 @@ namespace apptab.Controllers
                                     {
                                         if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "GEO")
                                         {
-                                            foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.GEO == PCOP && site.Contains(a.SITE)).ToList())
+                                            foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.GEO == PCOP && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT == null).ToList())
                                             {
                                                 MTNENGA += xx.MONTANT.Value;
                                             }
@@ -2570,7 +2657,7 @@ namespace apptab.Controllers
                                             {
                                                 if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "GEO")
                                                 {
-                                                    foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.GEO == PCOP && site.Contains(a.SITE)).ToList())
+                                                    foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.GEO == PCOP && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT == null).ToList())
                                                     {
                                                         MTNPAYE += opaV.MONTANT.Value;
                                                     }
@@ -2761,7 +2848,7 @@ namespace apptab.Controllers
                                     {
                                         if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "PLAN6")
                                         {
-                                            foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.PLAN6 == PCOP && site.Contains(a.SITE)).ToList())
+                                            foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.PLAN6 == PCOP && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT == null).ToList())
                                             {
                                                 MTNENGA += xx.MONTANT.Value;
                                             }
@@ -2796,7 +2883,7 @@ namespace apptab.Controllers
                                             {
                                                 if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "PLAN6")
                                                 {
-                                                    foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.PLAN6 == PCOP).ToList())
+                                                    foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.PLAN6 == PCOP && a.NUMERO_COMPLEMENT == null).ToList())
                                                     {
                                                         MTNPAYE += opaV.MONTANT.Value;
                                                     }
@@ -2988,7 +3075,7 @@ namespace apptab.Controllers
                                     {
                                         if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "POSTE")
                                         {
-                                            foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.POSTE == PCOP).ToList())
+                                            foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.POSTE == PCOP && a.NUMERO_COMPLEMENT == null).ToList())
                                             {
                                                 MTNENGA += xx.MONTANT.Value;
                                             }
@@ -3023,7 +3110,7 @@ namespace apptab.Controllers
                                             {
                                                 if (db.SI_PCOP.Any(a => a.ID == isParam.PCOP) && db.SI_PCOP.FirstOrDefault(a => a.ID == isParam.PCOP).PCOP == "POSTE")
                                                 {
-                                                    foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.POSTE == PCOP && site.Contains(a.SITE)).ToList())
+                                                    foreach (var yy in tom.GA_AVANCE_MOUVEMENT.Where(a => a.IDENTIFIANT == xx.NUMERO_AVANCE_MOUVEMENT && a.POSTE == PCOP && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT == null).ToList())
                                                     {
                                                         MTNPAYE += opaV.MONTANT.Value;
                                                     }

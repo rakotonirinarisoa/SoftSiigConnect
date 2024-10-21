@@ -161,7 +161,7 @@ namespace apptab.Controllers
                         }
 
                         //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
-                        if (Math.Round(MTN, 3) == Math.Round(MTNPJ, 3))
+                        if (Math.Truncate(MTN) == Math.Truncate(MTNPJ))
                         {
                             //Check si F a déjà passé les 3 étapes (DEFA, TEFA et BEA) pour avoir les dates => BEA étape finale//
                             var canBe = true;
@@ -224,7 +224,7 @@ namespace apptab.Controllers
                                                 MONT = Math.Round(y.MONTANT.Value, 2).ToString(),
                                                 COMPTE = isGA != null ? isGA.COGE : "",
                                                 DATE = y.DATE.Value.Date,
-                                                PCOP = tom.GA_AVANCE_MOUVEMENT.Any(a => a.IDENTIFIANT == y.NUMERO_AVANCE_MOUVEMENT && site.Contains(a.SITE)) ? tom.GA_AVANCE_MOUVEMENT.FirstOrDefault(a => a.IDENTIFIANT == y.NUMERO_AVANCE_MOUVEMENT && site.Contains(a.SITE)).POSTE : "",
+                                                PCOP = tom.GA_AVANCE_MOUVEMENT.Any(a => a.IDENTIFIANT == y.NUMERO_AVANCE_MOUVEMENT && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT == null) ? tom.GA_AVANCE_MOUVEMENT.FirstOrDefault(a => a.IDENTIFIANT == y.NUMERO_AVANCE_MOUVEMENT && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT == null).POSTE : "",
                                                 DATEDEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO_AVANCE && a.NUMEROETAPE == numCaEtapAPP.DEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
                                                 DATETEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO_AVANCE && a.NUMEROETAPE == numCaEtapAPP.TEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
                                                 DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO_AVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
@@ -324,7 +324,7 @@ namespace apptab.Controllers
                         }
 
                         //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
-                        if (Math.Round(MTN, 3) == Math.Round(MTNPJ, 3))
+                        if (Math.Truncate(MTN) == Math.Truncate(MTNPJ))
                         {
                             //Check si F a déjà passé les 3 étapes (DEFA, TEFA et BEA) pour avoir les dates => BEA étape finale//
                             var canBe = true;
@@ -387,7 +387,7 @@ namespace apptab.Controllers
                                                 MONT = Math.Round(y.MONTANT.Value, 2).ToString(),
                                                 COMPTE = isGA != null ? isGA.COGE : "",
                                                 DATE = y.DATE.Value.Date,
-                                                PCOP = tom.GA_AVANCE_MOUVEMENT.Any(a => a.IDENTIFIANT == y.NUMERO_AVANCE_MOUVEMENT && site.Contains(a.SITE)) ? tom.GA_AVANCE_MOUVEMENT.FirstOrDefault(a => a.IDENTIFIANT == y.NUMERO_AVANCE_MOUVEMENT && site.Contains(a.SITE)).POSTE : "",
+                                                PCOP = tom.GA_AVANCE_MOUVEMENT.Any(a => a.IDENTIFIANT == y.NUMERO_AVANCE_MOUVEMENT && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT == null) ? tom.GA_AVANCE_MOUVEMENT.FirstOrDefault(a => a.IDENTIFIANT == y.NUMERO_AVANCE_MOUVEMENT && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT == null).POSTE : "",
                                                 DATEDEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO_AVANCE && a.NUMEROETAPE == numCaEtapAPP.DEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
                                                 DATETEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO_AVANCE && a.NUMEROETAPE == numCaEtapAPP.TEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
                                                 DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO_AVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
@@ -504,7 +504,7 @@ namespace apptab.Controllers
                                 MONT = Data.Cipher.Encrypt((Math.Round(isPiece.MONTANT.Value, 2)).ToString(), "Oppenheimer"),
                                 COMPTE = isGA != null ? isGA.COGE : "",
                                 DATEMANDAT = isPiece.DATE.Value.Date,
-                                PCOP = tom.GA_AVANCE_MOUVEMENT.Any(a => a.IDENTIFIANT == isPiece.NUMERO_AVANCE_MOUVEMENT && a.SITE == item) ? tom.GA_AVANCE_MOUVEMENT.FirstOrDefault(a => a.IDENTIFIANT == isPiece.NUMERO_AVANCE_MOUVEMENT && a.SITE == item).POSTE : "",
+                                PCOP = tom.GA_AVANCE_MOUVEMENT.Any(a => a.IDENTIFIANT == isPiece.NUMERO_AVANCE_MOUVEMENT && a.SITE == item && a.NUMERO_COMPLEMENT == null) ? tom.GA_AVANCE_MOUVEMENT.FirstOrDefault(a => a.IDENTIFIANT == isPiece.NUMERO_AVANCE_MOUVEMENT && a.SITE == item && a.NUMERO_COMPLEMENT == null).POSTE : "",
                                 DATEDEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == isPiece.NUMERO_AVANCE && a.NUMEROETAPE == numCaEtapAPP.DEFA && a.CODE_SITE == item).DATETRAITEMENT,
                                 DATETEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == isPiece.NUMERO_AVANCE && a.NUMEROETAPE == numCaEtapAPP.TEFA && a.CODE_SITE == item).DATETRAITEMENT,
                                 DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == isPiece.NUMERO_AVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA && a.CODE_SITE == item).DATETRAITEMENT,
@@ -618,8 +618,8 @@ namespace apptab.Controllers
                         list.Add(new DATATRPROJET
                         {
                             REF = isGA != null ? isGA.LIBELLE : "",
-                            OBJ = tom.GA_AVANCE_MOUVEMENT.Any(a => a.IDENTIFIANT == x.NUMERO_AVANCE_MOUVEMENT && site.Contains(a.SITE)) ? tom.GA_AVANCE_MOUVEMENT.FirstOrDefault(a => a.IDENTIFIANT == x.NUMERO_AVANCE_MOUVEMENT && site.Contains(a.SITE)).COGE : "",
-                            TITUL = tom.GA_AVANCE_MOUVEMENT.Any(a => a.IDENTIFIANT == x.NUMERO_AVANCE_MOUVEMENT && site.Contains(a.SITE)) ? tom.GA_AVANCE_MOUVEMENT.FirstOrDefault(a => a.IDENTIFIANT == x.NUMERO_AVANCE_MOUVEMENT && site.Contains(a.SITE)).POSTE : "",
+                            OBJ = tom.GA_AVANCE_MOUVEMENT.Any(a => a.IDENTIFIANT == x.NUMERO_AVANCE_MOUVEMENT && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT == null) ? tom.GA_AVANCE_MOUVEMENT.FirstOrDefault(a => a.IDENTIFIANT == x.NUMERO_AVANCE_MOUVEMENT && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT == null).COGE : "",
+                            TITUL = tom.GA_AVANCE_MOUVEMENT.Any(a => a.IDENTIFIANT == x.NUMERO_AVANCE_MOUVEMENT && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT == null) ? tom.GA_AVANCE_MOUVEMENT.FirstOrDefault(a => a.IDENTIFIANT == x.NUMERO_AVANCE_MOUVEMENT && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT == null).POSTE : "",
                             MONT = x.MONTANT != null ? Math.Round(x.MONTANT.Value, 2).ToString() : "0",
                         });
                     }

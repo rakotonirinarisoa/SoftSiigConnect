@@ -601,7 +601,7 @@
                                             <a class="nav-link">
                                                 <i class="nav-icon fa fa-check-square"></i>
                                                 <p>
-                                                    Justificatifs et reversements
+                                                    Justificatifs, reversements et compléments
                                                 </p>
                                             </a>
 
@@ -611,7 +611,7 @@
                                                 {
                                                     <li class="nav-item">
                                                         <a href="../TraitementJustif/TraitementPROJET" class="nav-link" data-child-id="3">
-                                                            <i class="nav-icon fas fa-list" style="color: #17A2B8"></i>
+                                                            <i class="nav-icon fas fa-list" style="color: #4970cb"></i>
                                                             <p>
                                                                 @Session["J0"]
                                                             </p>
@@ -655,6 +655,33 @@
                                                                 <i class="nav-icon fas fa-tasks" style="color: #3EB059"></i>
                                                                 <p>
                                                                     @Session["J3"]
+                                                                </p>
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                }
+                                                @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                                    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ4"].ToString()) != 0)))
+                                                {
+                                                    <li class="nav-item">
+                                                        <a href="../TraitementComplement/TraitementPROJET" class="nav-link" data-child-id="3">
+                                                            <i class="nav-icon fa fa-file" style="color: #DF4857"></i>
+                                                            <p>
+                                                                @Session["J4"]
+                                                            </p>
+                                                        </a>
+                                                    </li>
+                                                }
+                                                @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
+                                                {
+                                                    if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                                       || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ5"].ToString()) != 0)))
+                                                    {
+                                                        <li class="nav-item">
+                                                            <a href="../TraitementComplement/TraitementORDSEC" class="nav-link" data-child-id="3">
+                                                                <i class="nav-icon fas fa-file-alt" style="color: #3EB059"></i>
+                                                                <p>
+                                                                    @Session["J5"]
                                                                 </p>
                                                             </a>
                                                         </li>
@@ -748,7 +775,7 @@
                         {
                             <hr />
                             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
-                                <li class="nav-item menu-open" onclick="myFunction('6')">
+                                <li class="nav-item menu-open" onclick="myFunction('10')">
                                     <a href="../RSF/Index" class="nav-link active" style="background: #4a9ae9 ">
                                         <img src="~/Assets/icons/icon-of-bag-for-commuting-svgrepo-com.svg?version=@Session["VERSION"]" style="width: 25px; margin-right: 5px;" />
                                         <p>

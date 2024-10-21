@@ -1,6 +1,7 @@
 ﻿@{
-    ViewBag.Title = "Statut des justificatifs, reversements et compléments";
-    ViewData["Controller"] = "Statut des justificatifs, reversements et compléments";
+    ViewBag.Title = "Tris et validation des compléments";
+    ViewData["Controller"] = "Tris et validation des compléments";
+    /*Layout = "~/Views/Shared/_Layout.cshtml";*/
 }
 
 <meta charset="utf-8" />
@@ -11,17 +12,7 @@
         <div class="input-group-prepend custom-label">
             <span class="input-group-text text-bold" id="inputGroup-sizing-default">PROJET</span>
         </div>
-        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="proj" data-id="proj-list">
-        </select>
-    </div>
-</div>
-
-<div class="form-row">
-    <div class="input-group mb-3 col">
-        <div class="input-group-prepend custom-label">
-            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Sites</span>
-        </div>
-        <select class="form-control selectTOO" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="site" data-id="site-list" multiple="multiple">
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="projMANDAT" data-id="proj-listMANDAT">
         </select>
     </div>
 </div>
@@ -43,14 +34,14 @@
 
 <div class="form-row">
     <div class="input-group mb-3 col">
-        <div class="btn btn-flat bg-gradient-success col-12" data-action="GenereLISTE">
+        <div class="btn btn-flat bg-gradient-success col-12" data-action="GenereR">
             <i class="fa fa-download"></i> Générer
         </div>
     </div>
 </div>
 
-<div class="table-responsive mb-3" @*style=" max-height: calc(600px - 0.6rem * 2  );"*@ tab="ordsec">
-    <table class="table table-hover table-striped table-bordered" display responsive nowrap" width="100%" id="TBD_PROJET_ORDSEC">
+<div class="table-responsive mb-3" @*style="max-height: calc(600px - 0.6rem * 2 ); "*@ tab="paie">
+    <table class="table table-hover table-striped table-bordered" display responsive nowrap" width="100%" id="TBD_PROJET_MANDAT">
         <thead style="position:sticky">
             <tr class="thead-accueil1" style="white-space: nowrap;">
                 <td style="text-align:center">
@@ -59,39 +50,63 @@
                 <td style="font-weight:bold; text-align:center">SOA</td>
                 <td style="font-weight:bold; text-align:center">Projet</td>
                 <td style="font-weight:bold; text-align:center">Site</td>
-                <td style="font-weight:bold; text-align:center">Type</td>
-                <td style="font-weight:bold; text-align:center">Numéro</td>
+                <td style="font-weight:bold; text-align:center">Référence complément</td>
                 <td style="font-weight:bold; text-align:center">Numéro pièce</td>
-                <td style="font-weight: bold; text-align: center">Bénéficiaire</td>
+                <td style="font-weight: bold; text-align: center">Objet</td>
+                <td style="font-weight: bold; text-align: center">Titulaire</td>
+                <td style="font-weight: bold; text-align: center">Date complément</td>
+                <td style="font-weight: bold; text-align: center">Compte bénéficiaire</td>
+                <td style="font-weight: bold; text-align: center">PCOP</td>
                 <td style="font-weight: bold; text-align: center">Montant</td>
-                <td style="font-weight: bold; text-align: center">Tris et validation</td>
-                <td style="font-weight: bold; text-align: center">Validation</td>
-
-                @*<td style="font-weight: bold; text-align: center">Imputation</td>
+                <td style="font-weight: bold; text-align: center">Date STATUT 1</td>
+                <td style="font-weight: bold; text-align: center">Date STATUT 2</td>
+                <td style="font-weight: bold; text-align: center">Date STATUT 3</td>
+                <td style="font-weight: bold; text-align: center">Imputation</td>
                 <td style="font-weight: bold; text-align: center">Pièce justificative</td>
-                <td style="font-weight: bold; text-align: center">Document</td>*@
+                <td style="font-weight: bold; text-align: center">Document</td>
             </tr>
         </thead>
-        <tbody class="traitementORDSEC"></tbody>
+        <tbody class="TRAITEMENTProjet"></tbody>
         <tfoot style="opacity:50%">
             <tr>
                 <th></th>
                 <th>SOA</th>
                 <th>Projet</th>
                 <th>Site</th>
-                <th>Type</th>
-                <th>Numéro</th>
+                <th>Référence complément</th>
                 <th>Numéro pièce</th>
-                <th>Bénéficiaire</th>
+                <th>Objet</th>
+                <th>Titulaire</th>
+                <th>Date complément</th>
+                <th>Compte bénéficiaire</th>
+                <th>PCOP</th>
                 <th>Montant</th>
-                <th>Tris et validation</th>
-                <th>Validation</th>
+                <th>Date STATUT 1</th>
+                <th>Date STATUT 2</th>
+                <th>Date STATUT 3</th>
+                <th></th>
+                <th></th>
+                <th></th>
             </tr>
         </tfoot>
     </table>
 </div>
 
 <div class="form-row">
+    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ4"].ToString()) == 2)))
+    {
+        <div class="input-group mb-3 col">
+            <div class="btn btn-flat bg-gradient-red col-12" data-action="SaveV">
+                <i class="fa fa-check-double"></i> Enregistrer et valider
+            </div>
+        </div>
+    }
+    @*<div class="input-group mb-3 col">
+            <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TBD_PROJET_MANDAT', 'JUSTIFICATIFS')">
+                <i class="fa fa-file-excel"></i> Exporter
+            </div>
+        </div>*@
     <div class="input-group mb-3 col">
         <div class="btn btn-flat bg-gradient-red col-12" id="export-to-pdf-btn">
             <i class="fa fa-file-pdf"></i> Export PDF
@@ -99,13 +114,61 @@
     </div>
 </div>
 
-@*<div class="form-row">
-    <div class="input-group mb-3 col">
-        <div class="btn btn-flat bg-gradient-yellow col-12" onclick="tableToExcel('TBD_PROJET_ORDSEC', 'STATUT DES JUSTIFICATIFS ET REVERSEMENTS')">
-            <i class="fa fa-file-excel"></i> Exporter
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="verification-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<h5 class="modal-title">Mot de passe</h5>*@
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="loader" class="lds-dual-ring display-none overlay"></div>
+                <div class="auth-login">
+                    <div class="login-box">
+                        <div>
+                            <div class="card-body">
+                                <p class="login-box-msg font-weight-bold" style="color: #3d9970">
+                                    Veuillez confirmer votre mot de passe
+                                </p>
+
+                                <form method="post">
+                                    <div class="input-group mb-3">
+                                        <input type="password" class="form-control" placeholder="Mot de passe" id="password">
+                                        <div class="input-group-append">
+                                            <div class="input-group-text bg-gradient-secondary">
+                                                <span class="fas fa-lock"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="button type--B" id="get-user-password-btn" style="cursor: pointer;">
+                                                <div class="button__line"></div>
+                                                <div class="button__line"></div>
+                                                <span class="button__text">Vérifier</span>
+                                                <div class="button__drow1"></div>
+                                                <div class="button__drow2"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <br />
+                                    <br />
+
+                                    <p id="user-password" style="margin-top: 10px; margin-bottom: 10px"></p>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>*@
+</div>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="password-modal">
     <div class="modal-dialog modal-xl" role="document" @*style="width:fit-content"*@>
@@ -120,11 +183,6 @@
                 <table class="table table-hover table-striped table-bordered" id="TBDMODAL">
                     <thead style="position:sticky">
                         <tr class="thead-green" style="white-space: nowrap;">
-                            <td style="font-weight:bold; text-align:center">Type</td>
-                            <td style="font-weight: bold; text-align: center">Numéro</td>
-                            <td style="font-weight: bold; text-align: center">Nombre exemplaire</td>
-                            <td style="font-weight: bold; text-align: center">Date</td>
-                            <td style="font-weight: bold; text-align: center">Montant</td>
                             <td style="font-weight: bold; text-align: center">Lien</td>
                         </tr>
                     </thead>
@@ -185,30 +243,26 @@
     </div>
 </div>
 
-<script src="~/Assets/js/BordStatutJR.js?version=@Session["VERSION"]"></script>
+<script src="~/Assets/js/TraitmandatCO.js?version=@Session["VERSION"]"></script>
 <script src="~/Assets/js/utils.js?version=@Session["VERSION"]"></script>
-<script src="~/Assets/js/TDBDOC.js?version=@Session["VERSION"]"></script>
-<script src="~/Assets/js/TDBLIAS.js?version=@Session["VERSION"]"></script>
-<script src="~/Assets/js/TDBModal.js?version=@Session["VERSION"]"></script>
+
+<script src="~/Assets/js/TraitmandatDOCCO.js?version=@Session["VERSION"]"></script>
+<script src="~/Assets/js/TraitmandatModalCO.js?version=@Session["VERSION"]"></script>
+<script src="~/Assets/js/TraitmandatLIASCO.js?version=@Session["VERSION"]"></script>
 
 <script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
 <script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
 
-<script>
-    $("#proj").select2({
-        tags: true,
-        tokenSeparators: [',', ' ']
-    })
-
-    $("#site").select2({
-        tags: true,
-        tokenSeparators: [',', ' ']
-    })
-</script>
-
 <script defer>
     $('#export-to-pdf-btn').on('click', () => {
-        exportTableToPdf('TBD_PROJET_ORDSEC', 'STATUTS JUSTIFICATIFS, REVERSEMENTS et COMPLEMENTS-PDF', `<p style="font-weight: bold /*text-align:center*/;">STATUTS JUSTIFICATIFS, REVERSEMENTS et COMPLEMENTS</p><p>Liste des statuts des justifcatifs, reversements et compléments</p>`, `<p style="font-weight: bold;">SOFT EXPENDITURES TRACKERS </p>`, [0]);
+        exportTableToPdf('TBD_PROJET_MANDAT', 'COMPLEMENTS A ENVOYER POUR VALIDATION-PDF', `<p style="font-weight: bold /*text-align:center*/;">COMPLEMENTS A ENVOYER POUR VALIDATION</p><p>Liste des compléments en attente envoi pour validation</p>`, `<p style="font-weight: bold;">SOFT EXPENDITURES TRACKERS </p>`, [0, 15, 16, 17]);
         /*exportTableToPdf('dashboard', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);*/
     });
+</script>
+
+<script>
+    $("#projMANDAT").select2({
+        tags: true,
+        tokenSeparators: [',', ' ']
+    })
 </script>

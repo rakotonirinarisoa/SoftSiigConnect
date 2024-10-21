@@ -72,6 +72,8 @@ function GetUsers() {
             $("#J1").val(Datas.data.J1);
             $("#J2").val(Datas.data.J2);
             $("#J3").val(Datas.data.J3);
+            $("#J4").val(Datas.data.J4);
+            $("#J5").val(Datas.data.J5);
             $("#JR").val(Datas.data.JR);
             $("#JRA").val(Datas.data.JRA);
             $("#RSF").val(Datas.data.RSF);
@@ -156,6 +158,8 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let J1 = $("#J1").val();
     let J2 = $("#J2").val();
     let J3 = $("#J3").val();
+    let J4 = $("#J4").val();
+    let J5 = $("#J5").val();
     let JR = $("#JR").val();
     let JRA = $("#JRA").val();
 
@@ -210,7 +214,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
 
     if (!ParaV0 || !ParaV || !ParaS /*|| !ParaSiig*/ || !ParaPe || !ParaPv || !ParaPp || !ParaPb || !Md0 || !Md1 || !Md2 /*|| !Md3 || !Mop0 || !Mop1 || !Mop2*/
         || !Tdb0 || !Tdb1 || !Tdb2 || !Tdb3 || !Tdb4 || !Tdb5 || !Tdb6 || !Tdb7 || !Tdb8
-        || !J0 || !J1 || !J2 || !J3 || !JR || !JRA || !RSF || !RSFT || !Tdb9 || !Tdb11 || !Tdb12 || !Tdb13 || !Tdb14
+        || !J0 || !J1 || !J2 || !J3 || !J4 || !J5 || !JR || !JRA || !RSF || !RSFT || !Tdb9 || !Tdb11 || !Tdb12 || !Tdb13 || !Tdb14
         || !Tdb1GED || !Tdb2GED || !Tdb3GED || !Tdb4GED || !Tdb5GED || !Tdb6GED) {
         alert("Veuillez renseigner les intitulés des menus. ");
         return;
@@ -255,6 +259,8 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("param.J1", $(`#J1`).val());
     formData.append("param.J2", $(`#J2`).val());
     formData.append("param.J3", $(`#J3`).val());
+    formData.append("param.J4", $(`#J4`).val());
+    formData.append("param.J5", $(`#J5`).val());
     formData.append("param.JR", $(`#JR`).val());
     formData.append("param.JRA", $(`#JRA`).val());
 

@@ -93,6 +93,8 @@ namespace apptab
         public virtual DbSet<SI_SETLIEN> SI_SETLIEN { get; set; }
         public virtual DbSet<SI_TRAITPROJETANO> SI_TRAITPROJETANO { get; set; }
         public virtual DbSet<SI_TYPEBANQUE> SI_TYPEBANQUE { get; set; }
+        public virtual DbSet<SI_TRAITANNULCOMPLEMENT> SI_TRAITANNULCOMPLEMENT { get; set; }
+        public virtual DbSet<SI_TRAITCOMPLEMENT> SI_TRAITCOMPLEMENT { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

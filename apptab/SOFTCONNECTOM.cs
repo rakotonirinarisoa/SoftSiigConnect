@@ -72,6 +72,7 @@ namespace apptab
         public virtual DbSet<RGEO1> RGEO1 { get; set; }
         public virtual DbSet<RPLAN6> RPLAN6 { get; set; }
         public virtual DbSet<RSITE> RSITE { get; set; }
+        public virtual DbSet<GA_AVANCE_COMPLEMENT> GA_AVANCE_COMPLEMENT { get; set; }
 
         public virtual DbSet<RBANQUES> RBANQUES { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

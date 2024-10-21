@@ -253,6 +253,16 @@ function GetListUser() {
                 if (v.J3 == 1) J3R = "checked";
                 if (v.J3 == 2) J3A = "checked";
 
+                let J4N = "", J4R = "", J4A = "";
+                if (v.J4 == 0) J4N = "checked";
+                if (v.J4 == 1) J4R = "checked";
+                if (v.J4 == 2) J4A = "checked";
+
+                let J5N = "", J5R = "", J5A = "";
+                if (v.J5 == 0) J5N = "checked";
+                if (v.J5 == 1) J5R = "checked";
+                if (v.J5 == 2) J5A = "checked";
+
                 //let MOP0N = "", MOP0R = "", MOP0A = "";
                 //if (v.MOP0 == 0) MOP0N = "checked";
                 //if (v.MOP0 == 1) MOP0R = "checked";
@@ -441,6 +451,30 @@ function GetListUser() {
                             </div></br>
                             <div class="form-check form-check-inline">
                                 <input type="radio" id="writeJ3${v.ID}" name="droneJ3${v.ID}" value="2" ${J3A}/><label class="ml-1" for="writeJ3${v.ID}" style="font-weight:normal">All</label>
+                            </div>
+                        </td>
+
+                        <td text-align:center>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="noneJ4${v.ID}" name="droneJ4${v.ID}" value="0" ${J4N}/><label class="ml-1" for="noneJ4${v.ID}" style="font-weight:normal">None</label>
+                            </div></br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="readJ4${v.ID}" name="droneJ4${v.ID}" value="1" ${J4R}/><label class="ml-1" for="readJ4${v.ID}" style="font-weight:normal">Read</label>
+                            </div></br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="writeJ4${v.ID}" name="droneJ4${v.ID}" value="2" ${J4A}/><label class="ml-1" for="writeJ4${v.ID}" style="font-weight:normal">All</label>
+                            </div>
+                        </td>
+
+                        <td text-align:center>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="noneJ5${v.ID}" name="droneJ5${v.ID}" value="0" ${J5N}/><label class="ml-1" for="noneJ5${v.ID}" style="font-weight:normal">None</label>
+                            </div></br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="readJ5${v.ID}" name="droneJ5${v.ID}" value="1" ${J5R}/><label class="ml-1" for="readJ5${v.ID}" style="font-weight:normal">Read</label>
+                            </div></br>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" id="writeJ5${v.ID}" name="droneJ5${v.ID}" value="2" ${J5A}/><label class="ml-1" for="writeJ5${v.ID}" style="font-weight:normal">All</label>
                             </div>
                         </td>
 
@@ -846,6 +880,8 @@ function SavePRIV(id) {
     formData.append("privilege.J1", $(`input[name="droneJ1${id}"]:checked`).val());
     formData.append("privilege.J2", $(`input[name="droneJ2${id}"]:checked`).val());
     formData.append("privilege.J3", $(`input[name="droneJ3${id}"]:checked`).val());
+    formData.append("privilege.J4", $(`input[name="droneJ4${id}"]:checked`).val());
+    formData.append("privilege.J5", $(`input[name="droneJ5${id}"]:checked`).val());
 
     //formData.append("privilege.MOP0", $(`input[name="droneMOP0${id}"]:checked`).val());
     //formData.append("privilege.MOP1", $(`input[name="droneMOP1${id}"]:checked`).val());
