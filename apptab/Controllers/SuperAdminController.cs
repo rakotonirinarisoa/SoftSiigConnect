@@ -102,6 +102,7 @@ namespace apptab.Controllers
             ViewBag.Controller = "Détails Liste des MAPPAGE-GED";
             return View();
         }
+
         [HttpPost]
         public ActionResult DetailsMAPPGED(SI_USERS suser, string UserId)
         {
@@ -138,6 +139,7 @@ namespace apptab.Controllers
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
             }
         }
+
         [HttpPost]
         public JsonResult SuperAdminMaPUpdateGED(SI_USERS suser, SI_MAPPAGES user, string UserId)
         {

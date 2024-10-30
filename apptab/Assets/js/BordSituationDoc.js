@@ -258,12 +258,12 @@ function GetReference(id) {
     });
 }
 //GETALLFOURNISSEUR
-$('#site').on('change', () => {
+$('#site').on('input', () => {
     emptyTable();
     let id = $("#site").val();
-    $(`[data-id="typeDoc-list"]`).text("");
+    $(`[data-id="reference-list"]`).text("");
     var code1 = ``;
-    $(`[data-id="typeDoc-list"]`).append(code1);
+    $(`[data-id="reference-list"]`).append(code1);
 
     //GetTypeDocs();
     //GetSuppliers(id);

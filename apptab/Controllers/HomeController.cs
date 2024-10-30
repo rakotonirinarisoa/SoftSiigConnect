@@ -3496,13 +3496,17 @@ namespace apptab.Controllers
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
            
             ANOMALIE_G SAUVEANOMALIE = new ANOMALIE_G();
-            var GetallAnomalieProjet = db.ANOMALIE_G.Where(x => x.IDPROJECT == PROJECTID).ToList();
-            foreach (var Sup in GetallAnomalieProjet)
+            if (db.ANOMALIE_G.Any(x => x.IDPROJECT == PROJECTID))
             {
-                db.ANOMALIE_G.Remove(Sup);
+                var GetallAnomalieProjet = db.ANOMALIE_G.Where(x => x.IDPROJECT == PROJECTID).ToList();
+                foreach (var Sup in GetallAnomalieProjet)
+                {
+                    db.ANOMALIE_G.Remove(Sup);
+                }
+                //db.ANOMALIE_G.RemoveRange(db.ANOMALIE_G);
+                db.SaveChanges();
             }
-            //db.ANOMALIE_G.RemoveRange(db.ANOMALIE_G);
-            db.SaveChanges();
+
             if (Anomalie.Count != 0)
             {
                 foreach (var item in Anomalie)

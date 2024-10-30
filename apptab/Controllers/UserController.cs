@@ -543,7 +543,7 @@ namespace apptab.Controllers
 
 
         [HttpPost]
-        [RequireHttps]
+        //[RequireHttps]
         public ActionResult Login(SI_USERS Users)
         {
             try

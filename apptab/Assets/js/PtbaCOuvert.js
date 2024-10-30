@@ -142,7 +142,7 @@ function handleSelectAll() {
 $("#site").on('change', handleSelectAll);
 
 
-$('#site').on('change', () => {
+$('#site').on('input', () => {
     emptyTable();
 });
 
