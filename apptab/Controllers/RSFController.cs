@@ -322,8 +322,6 @@ namespace apptab.Controllers
                 site.Add(guid);
             }
 
-            var lienGEd = db.SI_GEDLIEN.FirstOrDefault().LIEN;
-
             List<PROGED> linkAll = new List<PROGED>();
 
             linkAll.Add(new PROGED()
@@ -335,13 +333,15 @@ namespace apptab.Controllers
 
             if (exist.IDPROJET != 0)
             {
+                var lienGEd = db.SI_GEDLIEN.FirstOrDefault(a => a.IDPROJET == exist.IDPROJET).LIEN;
+
                 foreach (var x in db.SI_PROGED.Where(a => a.IDPROJET == exist.IDPROJET && a.DELETIONDATE == null))
                 {
                     foreach (var y in ged.Users.Where(a => a.ProjectId == x.IDGED && a.DeletionDate == null/* && site.Contains(a.Sites)*/).ToList())
                     {
                         foreach (var z in ged.Documents.Where(a => a.SenderId == y.Id && a.DeletionDate == null && site.Contains(a.Site) && a.RSF == true).ToList())
                         {
-                            var islink = lienGEd + "/documents/shared/" + z.Id.ToString();
+                            var islink = /*lienGEd +*/ "/documents/shared/" + z.Id.ToString();
                             if (!db.SI_RSF.Any(a => a.LIEN == islink))
                             {
                                 linkAll.Add(new PROGED()
@@ -389,8 +389,6 @@ namespace apptab.Controllers
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-
-            var lienGEd = db.SI_GEDLIEN.FirstOrDefault();
 
             try
             {

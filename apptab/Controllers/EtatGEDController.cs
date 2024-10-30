@@ -102,7 +102,7 @@ namespace apptab.Controllers
                             crpto.Add(new SiteGED()
                             {
                                 Id = guid,
-                                Code = ged.Sites.Any(a => a.Id == guid && a.DeletionDate == null) ? (ged.Sites.FirstOrDefault(a => a.Id == guid && a.DeletionDate == null).SiteId + ged.Sites.FirstOrDefault(a => a.Id == guid && a.DeletionDate == null).Name) : ""
+                                Code = ged.Sites.Any(a => a.Id == guid && a.DeletionDate == null) ? (ged.Sites.FirstOrDefault(a => a.Id == guid && a.DeletionDate == null).SiteId + "-" + ged.Sites.FirstOrDefault(a => a.Id == guid && a.DeletionDate == null).Name) : ""
                             });
                         }
                     }
