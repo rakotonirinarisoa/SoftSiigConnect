@@ -188,6 +188,8 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\TraitementComplementController.cs" />
+    <Compile Include="Models\GA_AVANCE_COMPLEMENT.cs" />
     <Compile Include="Models\DocumentTypeUnion.cs" />
     <Compile Include="Models\Attachements.cs" />
     <Compile Include="Controllers\AnomalieController.cs" />
@@ -231,6 +233,7 @@
     <Compile Include="Extension\ISO20022xml.cs" />
     <Compile Include="Models\FieldTypes.cs" />
     <Compile Include="Models\ANOMALIE_G.cs" />
+    <Compile Include="Models\GA_AVANCE_COMPLEMENT.cs" />
     <Compile Include="Models\HSI_PROGED.cs" />
     <Compile Include="Models\MBUDALLOC.cs" />
     <Compile Include="Models\MBUDGET.cs" />
@@ -281,11 +284,11 @@
     <Compile Include="Models\GA_AVANCE_MOUVEMENT.cs" />
     <Compile Include="Data\Entities\GA_AVANCE_DETAILS.cs" />
     <Compile Include="Models\ListPaimentV.cs" />
-    <Compile Include="Models\Model1.cs" />
-    <Compile Include="Models\Model2.cs" />
     <Compile Include="Models\RBANQUES.cs" />
     <Compile Include="Models\RPAYS.cs" />
     <Compile Include="Models\SI_SITE.cs" />
+    <Compile Include="Models\SI_TRAITANNULCOMPLEMENT.cs" />
+    <Compile Include="Models\SI_TRAITCOMPLEMENT.cs" />
     <Compile Include="Models\SI_TYPEBANQUE.cs" />
     <Compile Include="Models\SI_USERSHISTO.cs" />
     <Compile Include="Models\TxtPAIEMENT.cs" />
@@ -402,6 +405,8 @@
     <Compile Include="Models\Sites.cs" />
     <Compile Include="Models\Soas.cs" />
     <Compile Include="Models\RedirectionsHistory.cs" />
+    <Compile Include="Models\SI_TRAITANNULCOMPLEMENT.cs" />
+    <Compile Include="Models\SI_TRAITCOMPLEMENT.cs" />
     <Compile Include="SOFTCONNECTGED.cs" />
     <Compile Include="SOFTCONNECTOM.cs" />
     <Compile Include="SOFTCONNECTSIIG.cs" />
@@ -2511,7 +2516,9 @@
     <Content Include="Assets\js\PaiementsRejets.js" />
     <Content Include="Assets\js\BordSoufTraitement.js" />
     <Content Include="Assets\js\SearchJsSet.js" />
+    <Content Include="Assets\js\SITEDetails.js" />
     <Content Include="Assets\js\TraitementENVOISIIGFA.js" />
+    <Content Include="Assets\js\TraitementORDSECCO.js" />
     <Content Include="Assets\js\TraitementORDSECRV.js" />
     <Content Include="Assets\js\TraitementORDSECJU.js" />
     <Content Include="Assets\js\TraitementORDSECA.js" />
@@ -2537,16 +2544,24 @@
     <Content Include="Assets\js\TraitementENVOISIIGF.js" />
     <Content Include="Assets\js\TraitementORDSEC.js" />
     <Content Include="Assets\js\TDBDOC.js" />
+    <Content Include="Assets\js\TraitmandatANNULOCO.js" />
     <Content Include="Assets\js\TraitmandatANNULORV.js" />
     <Content Include="Assets\js\TraitmandatANNULOJU.js" />
+    <Content Include="Assets\js\TraitmandatCO.js" />
+    <Content Include="Assets\js\TraitmandatDOCCO.js" />
+    <Content Include="Assets\js\TraitmandatDOCOCO.js" />
     <Content Include="Assets\js\TraitmandatDOCORV.js" />
     <Content Include="Assets\js\TraitmandatDOCRV.js" />
     <Content Include="Assets\js\TraitmandatDOCOJU.js" />
     <Content Include="Assets\js\TraitmandatDOCJU.js" />
     <Content Include="Assets\js\AnomalieDOCT.js" />
+    <Content Include="Assets\js\TraitmandatLIASCO.js" />
+    <Content Include="Assets\js\TraitmandatLIASOCO.js" />
     <Content Include="Assets\js\TraitmandatLIASORV.js" />
     <Content Include="Assets\js\TraitmandatLIASRV.js" />
     <Content Include="Assets\js\AnomalieLIAST.js" />
+    <Content Include="Assets\js\TraitmandatModalCO.js" />
+    <Content Include="Assets\js\TraitmandatModalOCO.js" />
     <Content Include="Assets\js\TraitmandatModalORV.js" />
     <Content Include="Assets\js\TraitmandatModalRV.js" />
     <Content Include="Assets\js\AnomalieModalT.js" />
@@ -5039,6 +5054,8 @@
     <Content Include="Views\Parametre\TypeFileBanque.cshtml" />
     <Content Include="Views\SuperAdmin\SuperAdminMaPListGED.cshtml" />
     <Content Include="Views\SuperAdmin\DetailsMAPPGED.cshtml" />
+    <Content Include="Views\TraitementComplement\TraitementPROJET.cshtml" />
+    <Content Include="Views\TraitementComplement\TraitementORDSEC.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -5082,7 +5099,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>1066</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>https://localhost:44334/</IISUrl>
+          <IISUrl>http://localhost:44334/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

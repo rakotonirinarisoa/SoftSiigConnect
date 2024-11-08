@@ -614,6 +614,8 @@ namespace apptab.Controllers
                     Session["J1"] = isMenu.J1;
                     Session["J2"] = isMenu.J2;
                     Session["J3"] = isMenu.J3;
+                    Session["J4"] = isMenu.J4;
+                    Session["J5"] = isMenu.J5;
 
                     Session["JR"] = isMenu.JR;
                     Session["JRA"] = isMenu.JRA;
@@ -703,6 +705,8 @@ namespace apptab.Controllers
                 Session["RJ1"] = 0;
                 Session["RJ2"] = 0;
                 Session["RJ3"] = 0;
+                Session["RJ4"] = 0;
+                Session["RJ5"] = 0;
 
                 Session["RJR"] = 0;
                 Session["RJRA"] = 0;
@@ -772,6 +776,8 @@ namespace apptab.Controllers
                     Session["RJ1"] = isMenu.J1;
                     Session["RJ2"] = isMenu.J2;
                     Session["RJ3"] = isMenu.J3;
+                    Session["RJ4"] = isMenu.J4;
+                    Session["RJ5"] = isMenu.J5;
 
                     Session["RJR"] = isMenu.JR;
                     Session["RJRA"] = isMenu.JRA;
