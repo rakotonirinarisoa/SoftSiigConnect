@@ -1,4 +1,5 @@
 ﻿var table = undefined;
+//var baseName = "2";
 var baseName = "2";
 const pass = $('#user-password');
 
