@@ -1,4 +1,4 @@
-namespace apptab.Models
+﻿namespace apptab.Models
 {
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -55,5 +55,6 @@ namespace apptab.Models
 
         [StringLength(20)]
         public string PLAN8 { get; set; }
+        public int? NUMERO_COMPLEMENT { get; set; }
     }
 }

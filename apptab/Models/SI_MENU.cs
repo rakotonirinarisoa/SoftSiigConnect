@@ -35,6 +35,8 @@
         public string J1 { get; set; }
         public string J2 { get; set; }
         public string J3 { get; set; }
+        public string J4 { get; set; }
+        public string J5 { get; set; }
         public string JR { get; set; }
         public string JRA { get; set; }
         public string RSF { get; set; }

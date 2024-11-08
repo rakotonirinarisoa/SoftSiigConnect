@@ -1463,6 +1463,8 @@ namespace apptab.Controllers
                     SExist.J1 = param.J1;
                     SExist.J2 = param.J2;
                     SExist.J3 = param.J3;
+                    SExist.J4 = param.J4;
+                    SExist.J5 = param.J5;
                     SExist.JR = param.JR;
                     SExist.JRA = param.JRA;
 
@@ -1547,6 +1549,8 @@ namespace apptab.Controllers
                         J1 = param.J1,
                         J2 = param.J2,
                         J3 = param.J3,
+                        J4 = param.J4,
+                        J5 = param.J5,
                         JR = param.JR,
                         JRA = param.JRA,
 
