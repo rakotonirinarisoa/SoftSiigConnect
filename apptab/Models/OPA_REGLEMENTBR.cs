@@ -1,4 +1,4 @@
-namespace apptab.Models
+﻿namespace apptab.Models
 {
     using System;
     using System.Collections.Generic;
@@ -76,5 +76,8 @@ namespace apptab.Models
 
         [StringLength(2)]
         public string CLE { get; set; }
+
+        [StringLength(10)]
+        public string PAYS { get; set; }
     }
 }
