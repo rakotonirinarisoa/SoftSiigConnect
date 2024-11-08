@@ -526,7 +526,8 @@ namespace apptab.Controllers
                 }
                 else if (intbasetype == 4)//testISO20022
                 {
-                    var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list);
+                    int typeDevise = 0;
+                    var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise);
                     Anarana = pathfile.Chemin;
                     send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
@@ -596,7 +597,7 @@ namespace apptab.Controllers
             }
         }
         [HttpPost]
-        public ActionResult CreateZipFileISO2022(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte)
+        public ActionResult CreateZipFileISO2022(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte,int typeDevise)
         {
             AFB160 aFB160 = new AFB160();
             XmlDocument xmlResult = new XmlDocument();
@@ -621,7 +622,7 @@ namespace apptab.Controllers
             var Nomfichier = "";
             if (avalider != null)
             {
-                var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list);
+                var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise);
                 path = pathfile.Chemin;
                 Nomfichier = pathfile.NomFichier + ".xml";
                 if (avalider != null)

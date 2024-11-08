@@ -385,6 +385,11 @@ function getelementISO2022(a, list) {
     let formData = new FormData();
     if (window.confirm("Le fichier de la banque ne pourra plus être régénéré à nouveau, voulez-vous confirmer?")) {
         let codeproject = $("#Fproject").val();
+        let elementDevise = $('#ChkDevise').prop('checked');
+        let typeDevise = "0";
+        if (elementDevise) {
+            typeDevise = $('input[name="deviseType"]:checked').val();
+        }
         formData.append("codeproject", codeproject);
 
         formData.append("suser.LOGIN", User.LOGIN);
@@ -394,7 +399,8 @@ function getelementISO2022(a, list) {
         formData.append("suser.IDSOCIETE", User.IDSOCIETE);
         formData.append("baseName", baseName);
         formData.append("codeJ", $('#commercial').val());
-        formData.append("devise", false);
+        formData.append("devise", elementDevise);
+        formData.append("typeDevise", typeDevise);
         formData.append("intbasetype", a);
 
         formData.append("listCompte", JSON.stringify(list));
@@ -501,7 +507,7 @@ function LoadValidate() {
     formData.append("suser.IDPROJET", User.IDPROJET);
     formData.append("suser.IDPROJET", User.IDPROJET);
     let CodeJournal = $("#commercial").val();
-    formData.append("CodeJournal", CodeJournal);
+    formData.append("journal", CodeJournal);
 
     $.ajax({
         type: "POST",
@@ -744,6 +750,15 @@ $(document).ready(() => {
     $(".ISO20022HS").addClass('display-none');
     $(".Afb160HS").addClass('display-none');
     GetAllProjectUser();
+    $('#ChkDevise').change(function () {
+        if ($(this).prop('checked')) {
+            // Si la case est cochée, on retire l'attribut 'hidden' de l'élément
+            $('#radioDevise').removeAttr('hidden');
+        } else {
+            // Si la case est décochée, on ajoute l'attribut 'hidden' pour cacher l'élément
+            $('#radioDevise').attr('hidden', true);
+        }
+    });
 });
 
 $(document).on("change", "[compG-list]", () => {

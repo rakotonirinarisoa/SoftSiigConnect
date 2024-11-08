@@ -24,7 +24,7 @@ namespace apptab.Extension
     {
 
         private readonly SOFTCONNECTGED ged = new SOFTCONNECTGED();
-        public ISO20022xml CreateISO20022(bool devise, string codeJ, SI_USERS user, string codeproject, List<AvanceDetails> list)
+        public ISO20022xml CreateISO20022(bool devise, string codeJ, SI_USERS user, string codeproject, List<AvanceDetails> list,int typeDevise)
         {
             XmlDocument xd = new XmlDocument();
 
@@ -246,7 +246,7 @@ namespace apptab.Extension
 
             /********              0802       *********/
             decimal? montant = 0;
-
+            string ccyiso = "";
             foreach (var num in nums_2)
             {
                 var pop = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == num.NUM && a.NUMEREG == num.NUMEREG).FirstOrDefault();
@@ -258,7 +258,7 @@ namespace apptab.Extension
                     }).FirstOrDefault();
                     if (devise)
                     {
-                        montant += mont.MONTANT; //à voir avec Faramalala
+                        montant += mont.MONTANT; 
                     }
                     else
                     {
@@ -270,7 +270,15 @@ namespace apptab.Extension
                     mont = tom.CPTADMIN_FAUTREOPERATION.Where(x => x.NUMEROOPERATION == num.NUM).FirstOrDefault();
                     if (devise)
                     {
-                        montant += mont.MONTANTDEVISE; //à voir avec Faramalala
+                        if (typeDevise == 0)
+                        {
+                            montant += mont.MONTANTDEVISE;
+                        }
+                        else
+                        {
+                            montant += mont.MONTANTRAPPORT; 
+                        }
+                       
                     }
                     else
                     {
@@ -298,6 +306,21 @@ namespace apptab.Extension
             string xmlconst = "";
             int iteration = 1;
             string path = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + fileName + ".xml";
+            decimal? Price = 0;
+            if (devise)
+            {
+                if (typeDevise == 0)
+                {
+                    ccyiso = tom.RPROJET.Select(x => x.MONNAIEREP).FirstOrDefault();
+                    
+                }
+                else
+                {
+                    ccyiso = tom.RPROJET.Select(x => x.MONNAIERAPP).FirstOrDefault();
+                }
+            }else {
+                ccyiso = tom.RPROJET.Select(x => x.MONNAIELOC).FirstOrDefault();
+             }
             try
             {
                 // Create the file, or overwrite if the file exists.
@@ -334,6 +357,30 @@ namespace apptab.Extension
                     XElement pmtinf = new XElement("PmtInf");
                     var op = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == bnfr.NUM && a.NUMEREG == bnfr.NUMEREG).FirstOrDefault();
                     string ddt = dtcrdt.ToString("yyyy-MM-dd");
+                    if (op.AUTREOP == true)
+                    {
+                        if (devise)
+                        {
+                            if (typeDevise == 0)
+                            {
+                                Price = tom.CPTADMIN_FAUTREOPERATION.Where(x => x.NUMEROOPERATION == bnfr.NUM).Select(x => x.MONTANTDEVISE).FirstOrDefault();
+
+                            }
+                            else
+                            {
+                                Price = tom.CPTADMIN_FAUTREOPERATION.Where(x => x.NUMEROOPERATION == bnfr.NUM).Select(x => x.MONTANTRAPPORT).FirstOrDefault();
+                            }
+                        }
+                        else
+                        {
+                            Price = bnfr.MONTANT;
+                        }
+                    }
+                    else
+                    {
+                        Price = bnfr.MONTANT;
+                    }
+
                     if (op.Libelle.Length > 140)
                     {
                         pmtinf.Add(
@@ -341,7 +388,7 @@ namespace apptab.Extension
                                  new XElement("PmtMtd", "TRF"),
                                  new XElement("BtchBookg", false),
                                  new XElement("NbOfTxs", globaliteration),
-                                 new XElement("CtrlSum", Convert.ToDecimal(String.Format("{0:0.00}", bnfr.MONTANT))),
+                                 new XElement("CtrlSum", Convert.ToDecimal(String.Format("{0:0.00}", Price))),
 
                                 new XElement("PmtTpInf",
                                 new XElement("InstrPrty", "NORM")),//a saisir selon l'utilisateur
@@ -359,7 +406,7 @@ namespace apptab.Extension
                                 new XElement("Id",
                                     new XElement("Othr",
                                         new XElement("Id", donneurOrde.CODE_BANQUE + donneurOrde.CODE_GUICHET + donneurOrde.NUM_COMPTE + donneurOrde.CLE))),
-                                new XElement("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ').Trim(' '))
+                                new XElement("Ccy", ccyiso)
                             ),
                             new XElement("DbtrAgt",
                                 new XElement("FinInstnId",
@@ -375,7 +422,7 @@ namespace apptab.Extension
                                  new XElement("PmtMtd", "TRF"),
                                  new XElement("BtchBookg", false),
                                  new XElement("NbOfTxs", globaliteration),
-                                 new XElement("CtrlSum", Convert.ToDecimal(String.Format("{0:0.00}", bnfr.MONTANT))),
+                                 new XElement("CtrlSum", Convert.ToDecimal(String.Format("{0:0.00}", Price))),
 
                                 new XElement("PmtTpInf",
                                 new XElement("InstrPrty", "NORM")),//a saisir selon l'utilisateur
@@ -392,7 +439,7 @@ namespace apptab.Extension
                                 new XElement("Id",
                                     new XElement("Othr",
                                         new XElement("Id", donneurOrde.CODE_BANQUE + donneurOrde.CODE_GUICHET + donneurOrde.NUM_COMPTE + donneurOrde.CLE))),
-                                new XElement("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ').Trim(' '))
+                                new XElement("Ccy", ccyiso)
                             ),
                             new XElement("DbtrAgt",
                                 new XElement("FinInstnId",
@@ -408,7 +455,7 @@ namespace apptab.Extension
                                      new XElement("PmtMtd", "TRF"),
                                      new XElement("BtchBookg", false),
                                      new XElement("NbOfTxs", globaliteration),
-                                     new XElement("CtrlSum", Convert.ToDecimal(String.Format("{0:0.00}", bnfr.MONTANT))),
+                                     new XElement("CtrlSum", Convert.ToDecimal(String.Format("{0:0.00}", Price))),
 
                                     new XElement("PmtTpInf",
                                     new XElement("InstrPrty", "NORM")),//a saisir selon l'utilisateur
@@ -425,7 +472,7 @@ namespace apptab.Extension
                                     new XElement("Id",
                                         new XElement("Othr",
                                             new XElement("Id", donneurOrde.CODE_BANQUE + donneurOrde.CODE_GUICHET + donneurOrde.NUM_COMPTE + donneurOrde.CLE))),
-                                    new XElement("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ').Trim(' '))
+                                    new XElement("Ccy", ccyiso)
                                 ),
                                 new XElement("DbtrAgt",
                                     new XElement("FinInstnId",
@@ -443,7 +490,7 @@ namespace apptab.Extension
                                     new XElement("PmtMtd", "TRF"),
                                     new XElement("BtchBookg", false),
                                     new XElement("NbOfTxs", globaliteration),
-                                    new XElement("CtrlSum", Convert.ToDecimal(String.Format("{0:0.00}", bnfr.MONTANT))),
+                                    new XElement("CtrlSum", Convert.ToDecimal(String.Format("{0:0.00}", Price))),
 
                                     new XElement("PmtTpInf",
                                     new XElement("InstrPrty", "NORM")),//a saisir selon l'utilisateur
@@ -460,7 +507,7 @@ namespace apptab.Extension
                                     new XElement("Id",
                                         new XElement("Othr",
                                             new XElement("Id", donneurOrde.CODE_BANQUE + donneurOrde.CODE_GUICHET + donneurOrde.NUM_COMPTE + donneurOrde.CLE))),
-                                    new XElement("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ').Trim(' '))
+                                    new XElement("Ccy", ccyiso)
                                 ),
                                 new XElement("DbtrAgt",
                                     new XElement("FinInstnId",
@@ -477,8 +524,8 @@ namespace apptab.Extension
                         var regle = (from journl in tom.RJL1
                                      where journl.CODE == item.CODE_J && journl.JLTRESOR == true && journl.NATURE == "2"
                                      select journl).Single();
-                        decimal ere = Convert.ToDecimal(String.Format("{0:0.00}", item.MONTANT));
-
+                        decimal? ere = Convert.ToDecimal(String.Format("{0:0.00}", item.MONTANT));
+                        decimal? beficPrice = 0;
                         //eto no miverina virment
                         if (opop.AUTREOP == true)
                         {
@@ -489,6 +536,21 @@ namespace apptab.Extension
 
                             var opp = db.OPA_VALIDATIONS.Where(e => e.IDREGLEMENT == item.NUM && e.IDPROJET == PROJECTID && e.NUMEREG == item.NUMEREG).FirstOrDefault();
                             var Autre = tom.RJL1.Where(a => a.CODE == opp.Journal).FirstOrDefault();
+                            if (devise)
+                            {
+                                if (typeDevise == 0)
+                                {
+                                    beficPrice = tom.CPTADMIN_FAUTREOPERATION.Where(x => x.NUMEROOPERATION == item.NUM).Select(x => x.MONTANTDEVISE).FirstOrDefault();
+                                    ere = Convert.ToDecimal(String.Format("{0:0.00}", beficPrice));
+                                }
+                                else
+                                {
+                                    beficPrice = tom.CPTADMIN_FAUTREOPERATION.Where(x => x.NUMEROOPERATION == item.NUM).Select(x => x.MONTANTRAPPORT).FirstOrDefault();
+                                    ere = Convert.ToDecimal(String.Format("{0:0.00}", beficPrice));
+                                }
+
+                            }
+
                             if (Autre != null)
                             {
                                 ribOp = Autre.RIB;
@@ -505,7 +567,7 @@ namespace apptab.Extension
                                                ),
                                                new XElement("Amt",
                                                         new XElement("InstdAmt",
-                                                        new XAttribute("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ')), ere)
+                                                        new XAttribute("Ccy", ccyiso), ere)
                                                ),
 
                                                new XElement("CdtrAgt",
@@ -543,7 +605,7 @@ namespace apptab.Extension
                                             ),
                                             new XElement("Amt",
                                                     new XElement("InstdAmt",
-                                                    new XAttribute("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ')), ere)
+                                                    new XAttribute("Ccy", ccyiso), ere)
                                             ),
                                             new XElement("CdtrAgt",
                                                 new XElement("FinInstnId",
@@ -579,7 +641,7 @@ namespace apptab.Extension
                                            ),
                                             new XElement("Amt",
                                                     new XElement("InstdAmt",
-                                                    new XAttribute("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ')), ere)
+                                                    new XAttribute("Ccy", ccyiso), ere)
                                             ),
 
                                             new XElement("CdtrAgt",
@@ -619,7 +681,7 @@ namespace apptab.Extension
                                             ),
                                             new XElement("Amt",
                                                     new XElement("InstdAmt",
-                                                    new XAttribute("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ')), ere)
+                                                    new XAttribute("Ccy", ccyiso), ere)
                                             ),
 
                                             new XElement("CdtrAgt",
@@ -662,7 +724,7 @@ namespace apptab.Extension
                                         ),
                                         new XElement("Amt",
                                                 new XElement("InstdAmt",
-                                                new XAttribute("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ')), ere)
+                                                new XAttribute("Ccy", ccyiso), ere)
                                         ),
 
                                         new XElement("ChrgBr", "SHAR"),
@@ -703,7 +765,7 @@ namespace apptab.Extension
                                         ),
                                         new XElement("Amt",
                                                 new XElement("InstdAmt",
-                                                new XAttribute("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ')), ere)
+                                                new XAttribute("Ccy", ccyiso), ere)
                                         ),
 
                                         new XElement("ChrgBr", "SHAR"),
@@ -743,7 +805,7 @@ namespace apptab.Extension
                                         ),
                                         new XElement("Amt",
                                                 new XElement("InstdAmt",
-                                                new XAttribute("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ')), ere)
+                                                new XAttribute("Ccy", ccyiso), ere)
                                         ),
 
                                         new XElement("ChrgBr", "SHAR"),
@@ -782,7 +844,7 @@ namespace apptab.Extension
                                        ),
                                         new XElement("Amt",
                                                 new XElement("InstdAmt",
-                                                new XAttribute("Ccy", donneurOrde.MONNAIELOCAL.TrimEnd(' ')), ere)
+                                                new XAttribute("Ccy", ccyiso), ere)
                                         ),
 
                                         new XElement("ChrgBr", "SHAR"),
