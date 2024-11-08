@@ -1,4 +1,5 @@
 ﻿var table = undefined;
+//var table = undefined;
 
 $(document).ready(() => {
     User = JSON.parse(sessionStorage.getItem("user"));
