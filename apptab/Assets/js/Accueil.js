@@ -134,7 +134,7 @@ function GetEtat() {
 
     let codeproject = $("#Fproject").val();
     formData.append("codeproject", codeproject);
-    
+
     $.ajax({
         type: "POST",
         url: Origin + '/Home/GetEtat',
@@ -212,7 +212,7 @@ function GetListCompG() {
                 return;
             }
 
-            let code = ` <option value="Autre Opérations">Autre Opérations</option>`;
+            let code = `<option value="Tous">Tous</option> <option value="Autre Opérations">Autre Opérations</option>`;
 
             ListCompteG = Datas.data;
             console.log(GetListCompG);
@@ -457,7 +457,7 @@ $('[data-action="ChargerJs"]').click(function () {
     let dateFin = $('#Pau').val();
     let datePaie = $('#Pay').val();
 
-    if ( !dateDeb || !dateFin || !datePaie)  {
+    if (!dateDeb || !dateFin || !datePaie) {
         alert("Veuillez renseigner les dates afin de générer les payements.")
         return;
     }
@@ -470,9 +470,9 @@ $('[data-action="ChargerJs"]').click(function () {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDSOCIETE", User.IDSOCIETE);
     formData.append("ChoixBase", baseName);
-    
+
     if (baseName == "2") {
-       
+
         formData.append("datein", $('#Pdu').val());
         formData.append("dateout", $('#Pau').val());
         formData.append("journal", $('#commercial').val());
@@ -481,7 +481,7 @@ $('[data-action="ChargerJs"]').click(function () {
         formData.append("auxi1", $('#auxi').val());
         formData.append("dateP", $('#Pay').val());
 
-      
+
 
         if ($('#ChkDevise').prop("checked") == true) {
             formData.append("devise", true);
@@ -523,14 +523,14 @@ $('[data-action="ChargerJs"]').click(function () {
                     listResult = Datas.data;
 
                     const data = [];
-                   
+
 
                     $.each(listResult, function (_, v) {
                         data.push({
                             checkbox: '',
                             id: isNullOrUndefined(v.No) ? '' : v.No + ' ' + v.NUMEREG,
                             dateOrdre: isNullOrUndefined(v.dateOrdre) ? '' : v.dateOrdre,
-                            Auxi: isNullOrUndefined(v.AUXI)? '' :v.AUXI,
+                            Auxi: isNullOrUndefined(v.AUXI) ? '' : v.AUXI,
                             noPiece: isNullOrUndefined(v.NoPiece) ? '' : v.NoPiece,
                             compte: isNullOrUndefined(v.Compte) ? '' : v.Compte,
                             libelle: isNullOrUndefined(v.Libelle) ? '' : v.Libelle,
@@ -597,7 +597,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                     `;
                                 }
                             },
-                            
+
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
@@ -671,11 +671,11 @@ $('[data-action="ChargerJs"]').click(function () {
                             });
                         }
                     });
-                          $('#TDB_OPA tfoot th').each(function (i) {
-                              if (i == 0 ) {
-                                  $(this).addClass("NOTVISIBLE");
-                              }
-                          });
+                    $('#TDB_OPA tfoot th').each(function (i) {
+                        if (i == 0) {
+                            $(this).addClass("NOTVISIBLE");
+                        }
+                    });
                 }
             },
             error: function () {
@@ -763,11 +763,11 @@ $('[data-action="ChargerJs"]').click(function () {
                             journal: isNullOrUndefined(v.Journal) ? '' : v.Journal,
                             marche: isNullOrUndefined(v.Marche) ? '' : v.Marche,
                             estAvance: v.Avance,
-                            AUTREOP:v.AUTREOPERATIONS,
+                            AUTREOP: v.AUTREOPERATIONS,
                             numeroliquidations: v.NUMEROLIQUIDATION,
                             Site: v.SITE,
                             //type: v.Avance ? 'Avance' : 'Engagement',
-                           
+
                             numeroliquidations: v.Mandat,
                             numereg: isNullOrUndefined(v.NUMEREG) ? '' : v.NUMEREG,
                         });
@@ -792,7 +792,7 @@ $('[data-action="ChargerJs"]').click(function () {
                                 orderable: false
                             },
                             { data: 'Site' },
-                            {data: 'type'},
+                            { data: 'type' },
                             { data: 'id' },
                             { data: 'date' },
                             { data: 'Auxi' },
@@ -820,13 +820,13 @@ $('[data-action="ChargerJs"]').click(function () {
                                     `;
                                 }
                             },
-                           
-                            
+
+
                         ],
                         createdRow: function (row, data, _) {
                             $(row).attr('compteG-id', data.id);
                             $(row).attr('numereg-id', data.numereg);
-                            
+
                             $(row).addClass('select-text');
                             //if (data.isLATE) {
                             //    //$(row).attr('style', "background-color: #FF7F7F !important;");
@@ -1049,14 +1049,14 @@ $('#get-user-password-btn').on('click', () => {
         //}
         success: function (result) {
             const res = JSON.parse(result);
-            
+
             if (res.type === 'error') {
                 pass.css({ 'color': 'red' });
                 pass.text('Identifiants incorrects.');
             } else {
                 // OKOK();
                 $('#verification-modal').modal('toggle');
-                
+
                 getelementCheckJs();
                 //loader.addClass('display-none');
             }
@@ -1115,7 +1115,7 @@ function OKOK() {
                 loader.addClass('display-none');
                 $('#verification-modal').modal('toggle');
             }
-           
+
         },
         error: function () {
             alert("Problème de connexion. ");

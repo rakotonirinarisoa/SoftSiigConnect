@@ -31,9 +31,17 @@
             </div>
             <select class="form-control col combobox" id="commercial" codej-list>
             </select>
-            <div class="input-group-append">
+            <div class="input-group-append" >
                 <label class="input-group-text text-bold" id="inputGroup-sizing-default">
-                    <input type="checkbox" class="form-check" style="margin-right:5px" id="ChkDevise" /> En devise
+                    <input type="checkbox" class="form-check" style="margin-right:5px" id="ChkDevise" /> Autres monnaies
+                </label>
+            </div>
+            <div class="input-group-append" id="radioDevise" hidden>
+                <label class="input-group-text text-bold" id="inputGroup-sizing-default">
+                    <input type="radio" class="form-check" style="margin-right:5px" name="deviseType" value="0" /> En devise
+                </label>
+                <label class="input-group-text text-bold" id="inputGroup-sizing-default">
+                    <input type="radio" class="form-check" style="margin-right:5px" name="deviseType" value="1"/> En rapport
                 </label>
             </div>
         </div>
