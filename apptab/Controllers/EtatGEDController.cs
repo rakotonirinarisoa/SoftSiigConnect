@@ -332,7 +332,7 @@ namespace apptab.Controllers
                     if (!ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
                         return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings)); ;
                 }
-               
+
                 var isUserSet = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == PROJECTID && b.DELETIONDATE == null && b.ID == exist.ID); ;
                 var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null); ;
                 List<DocS> documentF = new List<DocS>(); ;

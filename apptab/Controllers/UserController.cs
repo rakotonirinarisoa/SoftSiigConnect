@@ -974,14 +974,13 @@ namespace apptab.Controllers
                 }
                 else
                 {
-                    var idP = exist.IDPROJET;
-                    if (idP != null)
+                    foreach (var t in db.SI_PROGED.Where(b => b.DELETIONDATE == null).ToList())
                     {
-                        SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == idP && a.DELETIONDATE == null).IDPROJET.Value);
+                        SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == t.IDPROJET && a.DELETIONDATE == null).IDPROJET.Value);
                         if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
                         SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
-                        var projet = db.SI_PROGED.FirstOrDefault(b => b.IDPROJET == idP && b.DELETIONDATE == null);
+                        var projet = db.SI_PROGED.FirstOrDefault(b => b.IDPROJET == t.IDPROJET && b.DELETIONDATE == null);
 
                         if (projet != null)
                         {
@@ -998,37 +997,6 @@ namespace apptab.Controllers
                                             Username = y.Username,
                                             Id = y.Id
                                         });
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        foreach (var t in db.SI_PROGED.Where(b => b.DELETIONDATE == null).ToList())
-                        {
-                            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == t.IDPROJET && a.DELETIONDATE == null).IDPROJET.Value);
-                            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
-                            SOFTCONNECTGED ged = new SOFTCONNECTGED();
-
-                            var projet = db.SI_PROGED.FirstOrDefault(b => b.IDPROJET == t.IDPROJET && b.DELETIONDATE == null);
-
-                            if (projet != null)
-                            {
-                                var projetGED = ged.Projects.FirstOrDefault(b => b.Id == projet.IDGED && b.DeletionDate == null);
-
-                                if (projetGED != null)
-                                {
-                                    foreach (var y in ged.Users.Where(b => b.ProjectId == projetGED.Id && b.DeletionDate == null).ToList())
-                                    {
-                                        if (!db.SI_USERS.Any(z => z.IDUSERGED == y.Id && z.DELETIONDATE == null))
-                                        {
-                                            crpto.Add(new ListeUserGEd()
-                                            {
-                                                Username = y.Username,
-                                                Id = y.Id
-                                            });
-                                        }
                                     }
                                 }
                             }

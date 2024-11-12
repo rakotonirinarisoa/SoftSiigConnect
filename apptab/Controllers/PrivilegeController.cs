@@ -334,12 +334,29 @@ namespace apptab.Controllers
                 {
                     if (test.IDPROJET != 0)
                     {
-                        var user = db.SI_PROJETS.Select(a => new
-                        {
-                            PROJET = a.PROJET,
-                            ID = a.ID,
-                            DELETIONDATE = a.DELETIONDATE,
-                        }).Where(a => a.DELETIONDATE == null && a.ID == test.IDPROJET).ToList();
+                        //var user = db.SI_PROJETS.Select(a => new
+                        //{
+                        //    PROJET = a.PROJET,
+                        //    ID = a.ID,
+                        //    DELETIONDATE = a.DELETIONDATE,
+                        //}).Where(a => a.DELETIONDATE == null && a.ID == test.IDPROJET).ToList();
+
+                        //foreach (var x in user)
+                        //{
+                        //    proj.Add(x.ID);
+                        //}
+
+                        //return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { List = user, PROJET = proj } }, settings));
+
+                        var user = (from usr in db.SI_PROJETS
+                                    join prj in db.SI_MAPUSERPROJET on usr.ID equals prj.IDPROJET
+                                    where prj.IDUS == test.ID && usr.DELETIONDATE == null
+                                    select new
+                                    {
+                                        PROJET = usr.PROJET,
+                                        ID = usr.ID,
+                                        DELETIONDATE = usr.DELETIONDATE,
+                                    }).ToList();
 
                         foreach (var x in user)
                         {
@@ -411,7 +428,7 @@ namespace apptab.Controllers
                                 foreach (string s in x.SITE.Split(',').ToList())
                                     nameSite += "<li>" + s + "-" + tom.RSITE.FirstOrDefault(n => n.CODE == s).LIBELLE + "</li>";
                             }
-                            catch (Exception ex) { continue; }
+                            catch (Exception) { continue; }
 
                             a.Add(new SITE()
                             {
@@ -425,7 +442,15 @@ namespace apptab.Controllers
                 }
                 else
                 {
-                    foreach (var x in db.SI_SITE.Where(x => x.DELETIONDATE == null && x.IDPROJET == exist.IDPROJET).ToList())
+                    var listeP = new List<int>();
+                    listeP.Add(exist.IDPROJET.Value);
+                    foreach (var itm in db.SI_MAPUSERPROJET.Where(b => b.IDUS == exist.ID).ToList())
+                    {
+                        if (!listeP.Contains(itm.IDPROJET.Value))
+                            listeP.Add(itm.IDPROJET.Value);
+                    }
+
+                    foreach (var x in db.SI_SITE.Where(x => x.DELETIONDATE == null && listeP.Contains(x.IDPROJET.Value)).ToList())
                     {
                         if (db.SI_PROJETS.FirstOrDefault(b => b.ID == x.IDPROJET && b.DELETIONDATE == null) != null && db.SI_USERS.Any(z => z.ID == x.IDUSER && z.DELETIONDATE == null))
                         {
@@ -438,7 +463,7 @@ namespace apptab.Controllers
                                 foreach (string s in x.SITE.Split(',').ToList())
                                     nameSite += "<li>" + s + "-" + tom.RSITE.FirstOrDefault(n => n.CODE == s).LIBELLE + "</li>";
                             }
-                            catch (Exception ex) { continue; }
+                            catch (Exception) { continue; }
 
                             a.Add(new SITE()
                             {
@@ -506,7 +531,22 @@ namespace apptab.Controllers
             {
                 int crpt = iProjet;
 
-                var crpto = db.SI_USERS.Where(a => a.IDPROJET == crpt && a.DELETIONDATE == null).ToList();
+                var crpto1 = db.SI_USERS.Where(a => a.IDPROJET == crpt && a.DELETIONDATE == null).ToList();
+                var crpto2 = db.SI_MAPUSERPROJET.Where(a => a.IDPROJET == crpt).ToList();
+
+                List<int> listeid = new List<int>();
+                foreach (var item in crpto1)
+                {
+                    if (!listeid.Contains(item.ID))
+                        listeid.Add(item.ID);
+                }
+                foreach (var item in crpto2)
+                {
+                    if (!listeid.Contains(item.IDUS.Value))
+                        listeid.Add(item.IDUS.Value);
+                }
+
+                var crpto = db.SI_USERS.Where(a => listeid.Contains(a.ID) && a.DELETIONDATE == null).ToList();
 
                 if (crpto != null)
                 {
@@ -627,9 +667,9 @@ namespace apptab.Controllers
 
             try
             {
-                if (db.SI_SITE.Any(a => a.IDUSER == site.IDUSER))
+                if (db.SI_SITE.Any(a => a.IDUSER == site.IDUSER && a.IDPROJET == site.IDPROJET))
                 {
-                    var isUs = db.SI_SITE.FirstOrDefault(a => a.IDUSER == site.IDUSER);
+                    var isUs = db.SI_SITE.FirstOrDefault(a => a.IDUSER == site.IDUSER && a.IDPROJET == site.IDPROJET);
                     db.SI_SITE.Remove(isUs);
                     db.SaveChanges();
                 }
@@ -675,7 +715,7 @@ namespace apptab.Controllers
                         idprojet = db.SI_PROJETS.FirstOrDefault(a => a.ID == map.IDPROJET).ID,
                         projectname = db.SI_PROJETS.FirstOrDefault(a => a.ID == map.IDPROJET).PROJET,
                         iduser = map.IDUSER,
-                        username = db.SI_USERS.FirstOrDefault(a => a.IDPROJET == map.IDPROJET && a.DELETIONDATE == null && a.ID == map.IDUSER).LOGIN,
+                        username = db.SI_USERS.FirstOrDefault(a => a.DELETIONDATE == null && a.ID == map.IDUSER).LOGIN,
                         site = map.SITE,
                     };
 
