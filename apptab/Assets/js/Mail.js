@@ -139,8 +139,11 @@ function GetUsers() {
                 $("#MailJ1").val("");
                 $("#MailJ2").val("");
                 $("#MailJ3").val("");
+                $("#MailJ4").val("");
+                $("#MailJ5").val("");
                 $("#MAILREJETJUST").val("");
                 $("#MAILREJETREV").val("");
+                $("#MAILREJETCOM").val("");
 
                 $("#EMM").val("");
                 $("#EMP").val("");
@@ -173,8 +176,11 @@ function GetUsers() {
             $("#MailJ1").val(Datas.data.MAILJ1);
             $("#MailJ2").val(Datas.data.MAILJ2);
             $("#MailJ3").val(Datas.data.MAILJ3);
+            $("#MailJ4").val(Datas.data.MAILJ4);
+            $("#MailJ5").val(Datas.data.MAILJ5);
             $("#MAILREJETJUST").val(Datas.data.MAILREJETJUST);
             $("#MAILREJETREV").val(Datas.data.MAILREJETREV);
+            $("#MAILREJETCOM").val(Datas.data.MAILREJETCOM);
 
             $("#EMM").val(Datas.data.SENDMAIL);
             $("#EMP").val(Datas.data.SENDPWD);
@@ -212,15 +218,18 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let MailJ1 = $("#MailJ1").val();
     let MailJ2 = $("#MailJ2").val();
     let MailJ3 = $("#MailJ3").val();
+    let MailJ4 = $("#MailJ4").val();
+    let MailJ5 = $("#MailJ5").val();
     let MAILREJETREV = $("#MAILREJETREV").val();
     let MAILREJETJUST = $("#MAILREJETJUST").val();
+    let MAILREJETJUST = $("#MAILREJETCOM").val();
 
     let EMM = $("#EMM").val();
     let EMP = $("#EMP").val();
     //let ParaPb = $("#ParaPb").val();
 
     if (!ParaT || !ParaV /*|| !ParaSiig*/ || !ParaREJET || !ParaPi || !ParaPe || !ParaPv || !ParaPp || !ParaREJETPAIE /*|| !ParaPb*/ || !ParaTA || !ParaVA /*|| !ParaSiigA*/ || !ParaREJETA
-        || !MailJ0 || !MailJ1 || !MailJ2 || !MailJ3 || !MAILREJETJUST || !MAILREJETREV || !EMM || !EMP) {
+        || !MailJ0 || !MailJ1 || !MailJ2 || !MailJ3 || !MailJ4 || !MailJ5 || !MAILREJETJUST || !MAILREJETREV || !EMM || !EMP || !MAILREJETCOM) {
         alert("Veuillez renseigner les mails. ");
         return;
     }
@@ -258,6 +267,8 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("param.MAILJ1", $(`#MailJ1`).val());
     formData.append("param.MAILJ2", $(`#MailJ2`).val());
     formData.append("param.MAILJ3", $(`#MailJ3`).val());
+    formData.append("param.MAILJ4", $(`#MailJ4`).val());
+    formData.append("param.MAILJ5", $(`#MailJ5`).val());
     formData.append("param.MAILREJETJUST", $(`#MAILREJETJUST`).val());
     formData.append("param.MAILREJETREV", $(`#MAILREJETREV`).val());
 

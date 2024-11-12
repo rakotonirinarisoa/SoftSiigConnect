@@ -44,8 +44,11 @@
         public string MAILJ1 { get; set; }
         public string MAILJ2 { get; set; }
         public string MAILJ3 { get; set; }
+        public string MAILJ4 { get; set; }
+        public string MAILJ5 { get; set; }
         public string MAILREJETJUST { get; set; }
         public string MAILREJETREV { get; set; }
+        public string MAILREJETCOM { get; set; }
 
         public int? IDUSER { get; set; }
 

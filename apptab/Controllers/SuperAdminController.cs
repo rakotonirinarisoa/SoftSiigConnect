@@ -1029,15 +1029,18 @@ namespace apptab.Controllers
             bool MAILJ1 = new Data.Extension().TestMail(param.MAILJ1);
             bool MAILJ2 = new Data.Extension().TestMail(param.MAILJ2);
             bool MAILJ3 = new Data.Extension().TestMail(param.MAILJ3);
+            bool MAILJ4 = new Data.Extension().TestMail(param.MAILJ4);
+            bool MAILJ5 = new Data.Extension().TestMail(param.MAILJ5);
             bool MAILREJETREV = new Data.Extension().TestMail(param.MAILREJETREV);
             bool MAILREJETJUST = new Data.Extension().TestMail(param.MAILREJETJUST);
+            bool MAILREJETCOM = new Data.Extension().TestMail(param.MAILREJETCOM);
 
             //bool MAILPB = new Extension().TestMAIL(param.MAILPB);
 
             if (MAILTE == false || MAILTV == false /*|| MAILSIIG == false*/ || MAILTEA == false || MAILTVA == false /*|| MAILSIIGA == false*/
                 || MAILREJET == false || MAILREJETPAIE == false || MAILREJETA == false
                 || MAILPI == false || MAILPE == false || MAILPV == false || MAILPP == false/* || MAILPB == false*/
-                || MAILJ0 == false || MAILJ1 == false || MAILJ2 == false || MAILJ3 == false || MAILREJETJUST == false || MAILREJETREV == false
+                || MAILJ0 == false || MAILJ1 == false || MAILJ2 == false || MAILJ3 == false || MAILJ4 == false || MAILJ5 == false || MAILREJETJUST == false || MAILREJETREV == false || MAILREJETCOM == false
                 || EMM == false)
                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'une des adresses mail renseignée n'est pas valide. " }, settings));
 
@@ -1050,7 +1053,7 @@ namespace apptab.Controllers
                 {
                     if (SExist.MAILTE != param.MAILTE || SExist.MAILTV != param.MAILTV /*|| SExist.MAILSIIG != param.MAILSIIG*/ || SExist.MAILTEA != param.MAILTEA || SExist.MAILTVA != param.MAILTVA /*|| SExist.MAILSIIGA != param.MAILSIIGA*/
                         || SExist.MAILREJET != param.MAILREJET || SExist.MAILREJETA != param.MAILREJETA
-                        || SExist.MAILJ0 != param.MAILJ0 || SExist.MAILJ1 != param.MAILJ1 || SExist.MAILJ3 != param.MAILJ3 || SExist.MAILJ2 != param.MAILJ2 || SExist.MAILREJETREV != param.MAILREJETREV || SExist.MAILREJETJUST != param.MAILREJETJUST
+                        || SExist.MAILJ0 != param.MAILJ0 || SExist.MAILJ1 != param.MAILJ1 || SExist.MAILJ3 != param.MAILJ3 || SExist.MAILJ2 != param.MAILJ2 || SExist.MAILJ4 != param.MAILJ4 || SExist.MAILJ5 != param.MAILJ5 || SExist.MAILREJETREV != param.MAILREJETREV || SExist.MAILREJETJUST != param.MAILREJETJUST || SExist.MAILREJETCOM != param.MAILREJETCOM
                         || SExist.MAILPI != param.MAILPI || SExist.MAILPE != param.MAILPE || SExist.MAILPV != param.MAILPV || SExist.MAILPP != param.MAILPP || SExist.MAILPB != param.MAILPB
                         || SExist.SENDMAIL != param.SENDMAIL || SExist.SENDPWD != param.SENDPWD)
                     {
@@ -1073,8 +1076,11 @@ namespace apptab.Controllers
                         SExist.MAILJ1 = param.MAILJ1;
                         SExist.MAILJ2 = param.MAILJ2;
                         SExist.MAILJ3 = param.MAILJ3;
+                        SExist.MAILJ4 = param.MAILJ4;
+                        SExist.MAILJ5 = param.MAILJ5;
                         SExist.MAILREJETJUST = param.MAILREJETJUST;
                         SExist.MAILREJETREV = param.MAILREJETREV;
+                        SExist.MAILREJETCOM = param.MAILREJETCOM;
 
                         SExist.SENDMAIL = param.SENDMAIL;
                         SExist.SENDPWD = param.SENDPWD;
@@ -1113,8 +1119,11 @@ namespace apptab.Controllers
                             MAILJ1 = param.MAILJ1,
                             MAILJ2 = param.MAILJ2,
                             MAILJ3 = param.MAILJ3,
+                            MAILJ4 = param.MAILJ4,
+                            MAILJ5 = param.MAILJ5,
                             MAILREJETREV = param.MAILREJETREV,
                             MAILREJETJUST = param.MAILREJETJUST,
+                            MAILREJETCOM = param.MAILREJETCOM,
 
                             SENDMAIL = param.SENDMAIL,
                             SENDPWD = param.SENDPWD,
@@ -1151,8 +1160,11 @@ namespace apptab.Controllers
                         MAILJ1 = param.MAILJ1,
                         MAILJ2 = param.MAILJ2,
                         MAILJ3 = param.MAILJ3,
+                        MAILJ4 = param.MAILJ4,
+                        MAILJ5 = param.MAILJ5,
                         MAILREJETREV = param.MAILREJETREV,
                         MAILREJETJUST = param.MAILREJETJUST,
+                        MAILREJETCOM = param.MAILREJETCOM,
 
                         SENDMAIL = param.SENDMAIL,
                         SENDPWD = param.SENDPWD,
@@ -1165,7 +1177,7 @@ namespace apptab.Controllers
 
                     var isElemH = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.MAILTE == param.MAILTE && a.MAILTV == param.MAILTV /*&& a.MAILSIIG == param.MAILSIIG*/ && a.MAILREJET == param.MAILREJET
                     && a.MAILTEA == param.MAILTEA && a.MAILTVA == param.MAILTVA /*&& a.MAILSIIGA == param.MAILSIIGA*/ && a.MAILREJETA == param.MAILREJETA
-                    && a.MAILJ0 == param.MAILJ0 && a.MAILJ1 == param.MAILJ1 && a.MAILJ2 == param.MAILJ2 && a.MAILJ3 == param.MAILJ3 && a.MAILREJETREV == param.MAILREJETREV && a.MAILREJETJUST == param.MAILREJETJUST
+                    && a.MAILJ0 == param.MAILJ0 && a.MAILJ1 == param.MAILJ1 && a.MAILJ2 == param.MAILJ2 && a.MAILJ3 == param.MAILJ3 && a.MAILJ4 == param.MAILJ4 && a.MAILJ5 == param.MAILJ5 && a.MAILREJETREV == param.MAILREJETREV && a.MAILREJETJUST == param.MAILREJETJUST && a.MAILREJETCOM == param.MAILREJETCOM
                     && a.MAILPE == param.MAILPE && a.MAILPV == param.MAILPV && a.MAILPP == param.MAILPP && a.MAILPI == param.MAILPI && a.SENDMAIL == param.SENDMAIL && a.SENDPWD == param.SENDPWD && a.DELETIONDATE == null
                     && a.SITE == iSite);
 
@@ -1194,6 +1206,8 @@ namespace apptab.Controllers
                         MAILJ1 = param.MAILJ1,
                         MAILJ2 = param.MAILJ2,
                         MAILJ3 = param.MAILJ3,
+                        MAILJ4 = param.MAILJ4,
+                        MAILJ5 = param.MAILJ5,
                         MAILREJETREV = param.MAILREJETREV,
                         MAILREJETJUST = param.MAILREJETJUST,
 

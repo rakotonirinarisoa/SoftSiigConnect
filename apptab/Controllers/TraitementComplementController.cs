@@ -563,14 +563,14 @@ namespace apptab.Controllers
                         mail.From = new MailAddress(MailAdresse);
 
                         mail.To.Add(MailAdresse);
-                        if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item).MAILJ0 != null)
+                        if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item).MAILJ4 != null)
                         {
                             string[] separators = { ";" };
 
                             var Tomail = mail;
                             if (Tomail != null)
                             {
-                                string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item).MAILJ0;
+                                string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item).MAILJ4;
                                 string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
                                 foreach (var mailto in mailListe)
@@ -854,14 +854,14 @@ namespace apptab.Controllers
                         mail.From = new MailAddress(MailAdresse);
 
                         mail.To.Add(MailAdresse);
-                        if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null && a.SITE == item).MAILREJETJUST != null)
+                        if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null && a.SITE == item).MAILREJETCOM != null)
                         {
                             string[] separators = { ";" };
 
                             var Tomail = mail;
                             if (Tomail != null)
                             {
-                                string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null && a.SITE == item).MAILREJETJUST;
+                                string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null && a.SITE == item).MAILREJETCOM;
                                 string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
                                 foreach (var mailto in mailListe)
@@ -1170,14 +1170,14 @@ namespace apptab.Controllers
                         mail.From = new MailAddress(MailAdresse);
 
                         mail.To.Add(MailAdresse);
-                        if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item).MAILJ1 != null)
+                        if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item).MAILJ5 != null)
                         {
                             string[] separators = { ";" };
 
                             var Tomail = mail;
                             if (Tomail != null)
                             {
-                                string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item).MAILJ1;
+                                string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.SITE == item).MAILJ5;
                                 string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
                                 foreach (var mailto in mailListe)
