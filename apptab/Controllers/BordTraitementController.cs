@@ -133,7 +133,7 @@ namespace apptab.Controllers
             {
                 foreach (var elem in iProjet.Split(',').ToList())
                 {
-                    int crpt = int.Parse(iProjet);
+                    int crpt = int.Parse(elem);
 
                     if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
                         return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
