@@ -2990,12 +2990,23 @@ namespace apptab.Controllers
                 {
                     if (test.IDPROJET != 0)
                     {
-                        var user = db.SI_PROJETS.Select(a => new
-                        {
-                            PROJET = a.PROJET,
-                            ID = a.ID,
-                            DELETIONDATE = a.DELETIONDATE,
-                        }).Where(a => a.DELETIONDATE == null && a.ID == test.IDPROJET).ToList();
+                        //var user = db.SI_PROJETS.Select(a => new
+                        //{
+                        //    PROJET = a.PROJET,
+                        //    ID = a.ID,
+                        //    DELETIONDATE = a.DELETIONDATE,
+                        //}).Where(a => a.DELETIONDATE == null && a.ID == test.IDPROJET).ToList();
+
+                        //return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès.", data = user }, settings));
+                        var user = (from usr in db.SI_PROJETS
+                                    join prj in db.SI_MAPUSERPROJET on usr.ID equals prj.IDPROJET
+                                    where prj.IDUS == test.ID && usr.DELETIONDATE == null
+                                    select new
+                                    {
+                                        PROJET = usr.PROJET,
+                                        ID = usr.ID,
+                                        DELETIONDATE = usr.DELETIONDATE,
+                                    }).ToList();
 
                         return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec succès.", data = user }, settings));
                     }
