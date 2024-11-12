@@ -213,7 +213,7 @@ function GetListCompG() {
                 return;
             }
 
-            let code = `<option value="Tous">Tous</option> <option value="Autre Opérations">Autre Opérations</option>`;
+            let code = `<option value="Autre Opérations">Autre Opérations</option>`;
 
             ListCompteG = Datas.data;
             console.log(GetListCompG);
