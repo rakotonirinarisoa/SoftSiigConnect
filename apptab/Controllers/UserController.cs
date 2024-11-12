@@ -406,7 +406,7 @@ namespace apptab.Controllers
                             foreach (var a in lst)
                             {
                                 var newRel = new SI_MAPUSERPROJET()
-                                {
+                                { 
                                     IDUS = userId,
                                     IDPROJET = int.Parse(a),
                                     CREATIONDATE = DateTime.Now,
