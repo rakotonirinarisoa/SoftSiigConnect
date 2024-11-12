@@ -228,65 +228,43 @@ namespace apptab.Controllers
                     if (db.SI_USERS.Any(a => a.LOGIN == user.LOGIN && a.DELETIONDATE == null))
                         return Json(JsonConvert.SerializeObject(new { type = "error", msg = "L'utilisateur existe déjà. " }, settings));
 
-                    if (test.ROLE == Role.SAdministrateur)
+                    if (listProjet == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Veuillez sélectionner au moins un projet. " }, settings));
+
+                    if (user.ROLE == Role.Administrateur || user.ROLE == Role.Autre)
                     {
-                        if (listProjet == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Veuillez sélectionner au moins un projet. " }, settings));
-
-                        if (user.ROLE == Role.Administrateur || user.ROLE == Role.Autre)
+                        var newUser = new SI_USERS()
                         {
-                            int TestProjetRole = 0;
-                            if (!int.TryParse(listProjet, out TestProjetRole))
-                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vous ne pouvez pas affecter plusieurs projets à ce type d'utilisateur. " }, settings));
+                            LOGIN = user.LOGIN,
+                            PWD = user.PWD,
+                            IDPROJET = int.Parse(listProjet.FirstOrDefault().ToString()),
+                            ROLE = user.ROLE,
+                            CREATIONDATE = DateTime.Now,
+                            IDUSER = exist.ID,
+                            IDUSERGED = userGED
+                        };
+                        db.SI_USERS.Add(newUser);
+                        db.SaveChanges();
 
-                            var newUser = new SI_USERS()
-                            {
-                                LOGIN = user.LOGIN,
-                                PWD = user.PWD,
-                                IDPROJET = int.Parse(listProjet),
-                                ROLE = user.ROLE,
-                                CREATIONDATE = DateTime.Now,
-                                IDUSER = exist.ID,
-                                IDUSERGED = userGED
-                            };
-                            db.SI_USERS.Add(newUser);
-                            db.SaveChanges();
-                        }
-                        else
+                        var userExistTest = db.SI_USERS.FirstOrDefault(a => a.LOGIN == user.LOGIN && a.PWD == user.PWD && a.IDPROJET == 0 && a.ROLE == user.ROLE && a.DELETIONDATE == null/* && a.IDPROJET == exist.IDPROJET*/);
+
+                        string[] separators = { "," };
+                        var pro = listProjet;
+                        if (pro != null)
                         {
-                            var newUser = new SI_USERS()
+                            string listUser = pro.ToString();
+                            string[] lst = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                            foreach (var a in lst)
                             {
-                                LOGIN = user.LOGIN,
-                                PWD = user.PWD,
-                                IDPROJET = 0,
-                                ROLE = user.ROLE,
-                                CREATIONDATE = DateTime.Now,
-                                IDUSER = exist.ID,
-                                IDUSERGED = userGED
-                            };
-                            db.SI_USERS.Add(newUser);
-                            db.SaveChanges();
-
-                            var userExistTest = db.SI_USERS.FirstOrDefault(a => a.LOGIN == user.LOGIN && a.PWD == user.PWD && a.IDPROJET == 0 && a.ROLE == user.ROLE && a.DELETIONDATE == null/* && a.IDPROJET == exist.IDPROJET*/);
-
-                            string[] separators = { "," };
-                            var pro = listProjet;
-                            if (pro != null)
-                            {
-                                string listUser = pro.ToString();
-                                string[] lst = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-
-                                foreach (var a in lst)
+                                var newRel = new SI_MAPUSERPROJET()
                                 {
-                                    var newRel = new SI_MAPUSERPROJET()
-                                    {
-                                        IDUS = userExistTest.ID,
-                                        IDPROJET = int.Parse(a),
-                                        CREATIONDATE = DateTime.Now,
-                                        IDUSER = exist.ID
-                                    };
-                                    db.SI_MAPUSERPROJET.Add(newRel);
-                                    db.SaveChanges();
-                                }
+                                    IDUS = userExistTest.ID,
+                                    IDPROJET = int.Parse(a),
+                                    CREATIONDATE = DateTime.Now,
+                                    IDUSER = exist.ID
+                                };
+                                db.SI_MAPUSERPROJET.Add(newRel);
+                                db.SaveChanges();
                             }
                         }
                     }
@@ -296,15 +274,37 @@ namespace apptab.Controllers
                         {
                             LOGIN = user.LOGIN,
                             PWD = user.PWD,
-                            IDPROJET = exist.IDPROJET,
+                            IDPROJET = 0,
                             ROLE = user.ROLE,
                             CREATIONDATE = DateTime.Now,
                             IDUSER = exist.ID,
                             IDUSERGED = userGED
                         };
                         db.SI_USERS.Add(newUser);
-
                         db.SaveChanges();
+
+                        var userExistTest = db.SI_USERS.FirstOrDefault(a => a.LOGIN == user.LOGIN && a.PWD == user.PWD && a.IDPROJET == 0 && a.ROLE == user.ROLE && a.DELETIONDATE == null/* && a.IDPROJET == exist.IDPROJET*/);
+
+                        string[] separators = { "," };
+                        var pro = listProjet;
+                        if (pro != null)
+                        {
+                            string listUser = pro.ToString();
+                            string[] lst = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                            foreach (var a in lst)
+                            {
+                                var newRel = new SI_MAPUSERPROJET()
+                                {
+                                    IDUS = userExistTest.ID,
+                                    IDPROJET = int.Parse(a),
+                                    CREATIONDATE = DateTime.Now,
+                                    IDUSER = exist.ID
+                                };
+                                db.SI_MAPUSERPROJET.Add(newRel);
+                                db.SaveChanges();
+                            }
+                        }
                     }
 
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Enregistrement avec succès. ", data = user }, settings));
@@ -335,62 +335,44 @@ namespace apptab.Controllers
                 {
                     if (userExist.PWD != oldPassword) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Ancien mot de passe non valide. ", data = user }, settings));
 
-                    if (test.ROLE == Role.SAdministrateur)
+                    if (user.ROLE == Role.Administrateur || user.ROLE == Role.Autre)
                     {
-                        if (user.ROLE == Role.Administrateur || user.ROLE == Role.Autre)
+                        //userExist.LOGIN = user.LOGIN;
+                        userExist.PWD = user.PWD;
+                        userExist.IDPROJET = int.Parse(listProjet.FirstOrDefault().ToString());
+                        userExist.ROLE = user.ROLE;
+                        userExist.IDUSER = exist.ID;
+                        userExist.IDUSERGED = userGED;
+
+                        db.SaveChanges();
+
+                        if (db.SI_MAPUSERPROJET.Any(a => a.IDUS == userId))
                         {
-                            int TestProjetRole = 0;
-                            if (!int.TryParse(listProjet, out TestProjetRole))
-                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Vous ne pouvez pas affecter plusieurs projets à ce type d'utilisateur. " }, settings));
-
-                            //userExist.LOGIN = user.LOGIN;
-                            userExist.PWD = user.PWD;
-                            userExist.IDPROJET = int.Parse(listProjet);
-                            userExist.ROLE = user.ROLE;
-                            userExist.IDUSER = exist.ID;
-                            userExist.IDUSERGED = userGED;
-
-                            db.SaveChanges();
-                        }
-                        else
-                        {
-                            //userExist.LOGIN = user.LOGIN;
-                            userExist.PWD = user.PWD;
-                            userExist.IDPROJET = 0;
-                            userExist.ROLE = user.ROLE;
-                            userExist.IDUSER = exist.ID;
-                            userExist.IDUSERGED = userGED;
-
-                            db.SaveChanges();
-
-                            if (db.SI_MAPUSERPROJET.Any(a => a.IDUS == userId))
+                            foreach (var x in db.SI_MAPUSERPROJET.Where(a => a.IDUS == userId).ToList())
                             {
-                                foreach (var x in db.SI_MAPUSERPROJET.Where(a => a.IDUS == userId).ToList())
-                                {
-                                    db.SI_MAPUSERPROJET.Remove(x);
-                                    db.SaveChanges();
-                                }
+                                db.SI_MAPUSERPROJET.Remove(x);
+                                db.SaveChanges();
                             }
+                        }
 
-                            string[] separators = { "," };
-                            var pro = listProjet;
-                            if (pro != null)
+                        string[] separators = { "," };
+                        var pro = listProjet;
+                        if (pro != null)
+                        {
+                            string listUser = pro.ToString();
+                            string[] lst = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                            foreach (var a in lst)
                             {
-                                string listUser = pro.ToString();
-                                string[] lst = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-
-                                foreach (var a in lst)
+                                var newRel = new SI_MAPUSERPROJET()
                                 {
-                                    var newRel = new SI_MAPUSERPROJET()
-                                    {
-                                        IDUS = userId,
-                                        IDPROJET = int.Parse(a),
-                                        CREATIONDATE = DateTime.Now,
-                                        IDUSER = exist.ID
-                                    };
-                                    db.SI_MAPUSERPROJET.Add(newRel);
-                                    db.SaveChanges();
-                                }
+                                    IDUS = userId,
+                                    IDPROJET = int.Parse(a),
+                                    CREATIONDATE = DateTime.Now,
+                                    IDUSER = exist.ID
+                                };
+                                db.SI_MAPUSERPROJET.Add(newRel);
+                                db.SaveChanges();
                             }
                         }
                     }
@@ -398,12 +380,42 @@ namespace apptab.Controllers
                     {
                         //userExist.LOGIN = user.LOGIN;
                         userExist.PWD = user.PWD;
-                        userExist.IDPROJET = exist.IDPROJET;
+                        userExist.IDPROJET = 0;
                         userExist.ROLE = user.ROLE;
                         userExist.IDUSER = exist.ID;
                         userExist.IDUSERGED = userGED;
 
                         db.SaveChanges();
+
+                        if (db.SI_MAPUSERPROJET.Any(a => a.IDUS == userId))
+                        {
+                            foreach (var x in db.SI_MAPUSERPROJET.Where(a => a.IDUS == userId).ToList())
+                            {
+                                db.SI_MAPUSERPROJET.Remove(x);
+                                db.SaveChanges();
+                            }
+                        }
+
+                        string[] separators = { "," };
+                        var pro = listProjet;
+                        if (pro != null)
+                        {
+                            string listUser = pro.ToString();
+                            string[] lst = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                            foreach (var a in lst)
+                            {
+                                var newRel = new SI_MAPUSERPROJET()
+                                {
+                                    IDUS = userId,
+                                    IDPROJET = int.Parse(a),
+                                    CREATIONDATE = DateTime.Now,
+                                    IDUSER = exist.ID
+                                };
+                                db.SI_MAPUSERPROJET.Add(newRel);
+                                db.SaveChanges();
+                            }
+                        }
                     }
 
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Enregistrement avec succès. ", data = user }, settings));
@@ -507,6 +519,14 @@ namespace apptab.Controllers
                 else
                 {
                     proj.Add(user.IDPROJET.Value);
+
+                    if (db.SI_MAPUSERPROJET.Any(a => a.IDUS == useID))
+                    {
+                        foreach (var x in db.SI_MAPUSERPROJET.Where(a => a.IDUS == useID).ToList())
+                        {
+                            if (!proj.Contains(x.IDPROJET.Value)) { proj.Add(x.IDPROJET.Value); }
+                        }
+                    }
                 }
 
                 if (user != null)
@@ -955,7 +975,7 @@ namespace apptab.Controllers
                 else
                 {
                     var idP = exist.IDPROJET;
-                    if (idP != 0)
+                    if (idP != null)
                     {
                         SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDPROJET == idP && a.DELETIONDATE == null).IDPROJET.Value);
                         if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));

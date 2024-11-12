@@ -8,8 +8,8 @@
     GetListRole();
     
     const id = $('#PROJET').val();
+    $(`[data-id="proj-list"]`).off("change");
    
-    GetUsersGED(id);
     GetListProjet();
 });
 
@@ -78,13 +78,13 @@ function GetUsersGED(id) {
                 `;
                 });
                 $(`[data-id="user-list"]`).append(code1);
-
-                GetUsers();
             }
         },
         error: function () {
             alert("Problème de connexion. ");
         }
+    }).done(() => {
+        GetUsers();
     });
 }
 
@@ -230,12 +230,15 @@ function GetUsers() {
 
                 $("#Role").val(`${Datas.data.ROLE}`);
 
-                //$("#PROJET").val([...Datas.data.PROJET]).trigger('change');
+                $("#PROJET").val([...Datas.data.PROJET]).trigger('change');
+                $("#PROJET").select2();
 
                 code += `<option value="${Datas.data.USERGEDid}">${Datas.data.USERGEDname}</option>`;
                 $(`[data-id="user-list"]`).append(code);
                 $("#user").val(`${Datas.data.USERGEDid}`);
             }
+
+            $(`[data-id="proj-list"]`).on("change");
         },
         error: function () {
             alert("Problème de connexion. ");
