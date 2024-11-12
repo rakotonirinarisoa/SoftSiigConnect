@@ -236,7 +236,7 @@ namespace apptab.Controllers
                         {
                             LOGIN = user.LOGIN,
                             PWD = user.PWD,
-                            IDPROJET = int.Parse(listProjet.FirstOrDefault().ToString()),
+                            IDPROJET = int.Parse(listProjet.Split(',').FirstOrDefault().ToString()),
                             ROLE = user.ROLE,
                             CREATIONDATE = DateTime.Now,
                             IDUSER = exist.ID,
@@ -339,7 +339,7 @@ namespace apptab.Controllers
                     {
                         //userExist.LOGIN = user.LOGIN;
                         userExist.PWD = user.PWD;
-                        userExist.IDPROJET = int.Parse(listProjet.FirstOrDefault().ToString());
+                        userExist.IDPROJET = int.Parse(listProjet.Split(',').FirstOrDefault().ToString());
                         userExist.ROLE = user.ROLE;
                         userExist.IDUSER = exist.ID;
                         userExist.IDUSERGED = userGED;
@@ -406,7 +406,7 @@ namespace apptab.Controllers
                             foreach (var a in lst)
                             {
                                 var newRel = new SI_MAPUSERPROJET()
-                                { 
+                                {
                                     IDUS = userId,
                                     IDPROJET = int.Parse(a),
                                     CREATIONDATE = DateTime.Now,
