@@ -680,7 +680,7 @@
                                                 }
 
                                                 @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-|| (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ4"].ToString()) != 0)))
+                                                    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ4"].ToString()) != 0)))
                                                 {
                                                     <li class="nav-item">
                                                         <a href="../TraitementComplement/TraitementPROJET" class="nav-link" data-child-id="3">
