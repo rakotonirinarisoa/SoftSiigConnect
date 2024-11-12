@@ -43,6 +43,7 @@ namespace apptab.Extension
             SI_MAPPAGES dbt = db.SI_MAPPAGES.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
 
 
+
             string texteAFB160 = "";
             OPA_HISTORIQUEBR historique;
 
