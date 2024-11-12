@@ -145,15 +145,18 @@ namespace apptab.Controllers
                     if (siteS == null)
                         return Json(JsonConvert.SerializeObject(new { type = "notYet", msg = "Veuillez paramétrer votre site. " }, settings));
 
+                    var rsiteDictionary = tom.RSITE.ToDictionary(a => a.CODE, a => a.LIBELLE);
                     foreach (var item in siteS.Split(','))
                     {
                         var etatSite = tom.RSITE.FirstOrDefault(a => a.CODE == item).LIBELLE;
-
-                        site.Add(new siteList()
+                        if (!site.Any(s => s.CODE == item))
                         {
-                            CODE = item,
-                            LIBELLE = item + "-" + etatSite
-                        });
+                            site.Add(new siteList()
+                            {
+                                CODE = item,
+                                LIBELLE = item + "-" + etatSite
+                            });
+                        }
                     }
                 }
 
