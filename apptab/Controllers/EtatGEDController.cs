@@ -58,10 +58,6 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(int.Parse(iProjet));
-            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
-            SOFTCONNECTGED ged = new SOFTCONNECTGED();
-
             try
             {
                 List<int> idProjet = new List<int>();
@@ -77,6 +73,10 @@ namespace apptab.Controllers
                 {
                     foreach (var crpt in idProjet)
                     {
+                        SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
+                        if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
+                        SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
                         if (!db.SI_PROGED.Any(a => a.IDPROJET == crpt))
                             return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance projet SET-GED. " }, settings));
 
@@ -92,18 +92,32 @@ namespace apptab.Controllers
 
                     foreach (var crpt in idProjet)
                     {
+                        SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
+                        if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
+                        SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
                         var isUserSet = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == crpt && b.DELETIONDATE == null && b.ID == exist.ID);
                         var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null);
 
                         Guid[] guidArray = DeserializeJsonToGuidArray(isUserGed.Sites);
 
+                        var validSites = ged.Sites.Where(a => a.DeletionDate == null).ToDictionary(a => a.Id, a => a);
+
                         foreach (Guid guid in guidArray)
                         {
-                            crpto.Add(new SiteGED()
+                            if (validSites.TryGetValue(guid, out var site))
                             {
-                                Id = guid,
-                                Code = ged.Sites.Any(a => a.Id == guid && a.DeletionDate == null) ? (ged.Sites.FirstOrDefault(a => a.Id == guid && a.DeletionDate == null).SiteId + "-" + ged.Sites.FirstOrDefault(a => a.Id == guid && a.DeletionDate == null).Name) : ""
-                            });
+                                crpto.Add(new SiteGED()
+                                {
+                                    Id = guid,
+                                    Code = site.SiteId + "-" + site.Name
+                                });
+                            }
+                            //crpto.Add(new SiteGED()
+                            //{
+                            //    Id = guid,
+                            //    Code = ged.Sites.Any(a => a.Id == guid && a.DeletionDate == null) ? (ged.Sites.FirstOrDefault(a => a.Id == guid && a.DeletionDate == null).SiteId + "-" + ged.Sites.FirstOrDefault(a => a.Id == guid && a.DeletionDate == null).Name) : ""
+                            //});
                         }
                     }
                 }
