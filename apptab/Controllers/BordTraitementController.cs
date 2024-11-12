@@ -122,35 +122,39 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public ActionResult GETALLSITE(SI_USERS suser, int iProjet)
+        public ActionResult GETALLSITE(SI_USERS suser, string iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
+            List<siteList> site = new List<siteList>();
+
             try
             {
-                int crpt = iProjet;
-
-                if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
-
-                SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
-                SOFTCONNECTOM tom = new SOFTCONNECTOM();
-
-                List<siteList> site = new List<siteList>();
-                var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
-                if (siteS == null)
-                    return Json(JsonConvert.SerializeObject(new { type = "notYet", msg = "Veuillez paramétrer votre site. " }, settings));
-
-                foreach (var item in siteS.Split(','))
+                foreach (var elem in iProjet.Split(',').ToList())
                 {
-                    var etatSite = tom.RSITE.FirstOrDefault(a => a.CODE == item).LIBELLE;
+                    int crpt = int.Parse(iProjet);
 
-                    site.Add(new siteList()
+                    if (db.SI_MAPPAGES.FirstOrDefault(a => a.IDPROJET == crpt) == null)
+                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Le projet n'est pas mappé à une base de données TOM²PRO. " }, settings));
+
+                    SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
+                    SOFTCONNECTOM tom = new SOFTCONNECTOM();
+
+                    var siteS = db.SI_SITE.Where(x => x.IDUSER == exist.ID && x.IDPROJET == crpt).Select(x => x.SITE).FirstOrDefault();
+                    if (siteS == null)
+                        return Json(JsonConvert.SerializeObject(new { type = "notYet", msg = "Veuillez paramétrer votre site. " }, settings));
+
+                    foreach (var item in siteS.Split(','))
                     {
-                        CODE = item,
-                        LIBELLE = item + "-" + etatSite
-                    });
+                        var etatSite = tom.RSITE.FirstOrDefault(a => a.CODE == item).LIBELLE;
+
+                        site.Add(new siteList()
+                        {
+                            CODE = item,
+                            LIBELLE = item + "-" + etatSite
+                        });
+                    }
                 }
 
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { etat = site } }, settings));
