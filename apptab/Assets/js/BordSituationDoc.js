@@ -565,7 +565,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-excel',
                             exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5],
+                                //columns: [0, 1, 2, 3, 4, 5],
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (typeof data === 'undefined') {
