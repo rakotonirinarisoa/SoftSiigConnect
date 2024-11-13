@@ -469,7 +469,7 @@ $('[data-action="GenereLISTE"]').click(function () {
             loader.removeClass('display-none');
         },
         complete: function () {
-            loader.addClass('display-none');
+            //loader.addClass('display-none');
         },
         success: function (result) {
             var Datas = JSON.parse(result);
@@ -658,6 +658,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                     //    $(this).addClass("NOTVISIBLE");
                     //}
                 });
+                loader.addClass('display-none');
             }
         },
         error: function () {
