@@ -8,7 +8,6 @@
 
         [StringLength(50)]
         public string INTITULES { get; set; }
-      
     }
     public enum Role
     {

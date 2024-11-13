@@ -55,24 +55,19 @@ namespace apptab.Controllers
                 {
                     if (test.IDPROJET != 0)
                     {
-                        //var user = db.SI_PROJETS.Select(a => new
-                        //{
-                        //    PROJET = a.PROJET,
-                        //    ID = a.ID,
-                        //    DELETIONDATE = a.DELETIONDATE,
-                        //}).Where(a => a.DELETIONDATE == null && a.ID == test.IDPROJET).ToList();
+                        var pp = db.SI_PROJETS
+                        .Where(a => a.DELETIONDATE == null && a.ID == test.IDPROJET)
+                        .Select(a => new { a.PROJET, a.ID, a.DELETIONDATE });
 
-                        //return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
+                        var user = new List<int>();
+                        user.AddRange(pp.Select(x => x.ID));
 
-                        var user = (from usr in db.SI_PROJETS
+                        var user2 = from usr in db.SI_PROJETS
                                     join prj in db.SI_MAPUSERPROJET on usr.ID equals prj.IDPROJET
                                     where prj.IDUS == test.ID && usr.DELETIONDATE == null
-                                    select new
-                                    {
-                                        PROJET = usr.PROJET,
-                                        ID = usr.ID,
-                                        DELETIONDATE = usr.DELETIONDATE,
-                                    }).ToList();
+                                    select new { usr.PROJET, usr.ID, usr.DELETIONDATE };
+                        user.AddRange(user2.Select(x => x.ID));
+                        user = user.Distinct().ToList();
 
                         return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = user }, settings));
                     }

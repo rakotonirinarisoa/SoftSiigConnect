@@ -58,7 +58,7 @@ namespace apptab.Controllers
 
             try
             {
-                var test = db.SI_USERS.Where(x => x.ROLE == exist.ROLE && x.IDPROJET == exist.IDPROJET && x.DELETIONDATE == null).FirstOrDefault();
+                var test = db.SI_USERS.Where(x => x.LOGIN == exist.LOGIN && x.ROLE == exist.ROLE && x.DELETIONDATE == null).FirstOrDefault();
                 //var test = db.SI_USERS.Where(x => x.ROLE == suser.ROLE && x.IDPROJET == suser.IDPROJET).FirstOrDefault();
                 if (test.ROLE == (int)Role.SAdministrateur)
                 {
@@ -274,7 +274,7 @@ namespace apptab.Controllers
                         {
                             LOGIN = user.LOGIN,
                             PWD = user.PWD,
-                            IDPROJET = 0,
+                            IDPROJET = int.Parse(listProjet.Split(',').FirstOrDefault().ToString()),
                             ROLE = user.ROLE,
                             CREATIONDATE = DateTime.Now,
                             IDUSER = exist.ID,
@@ -380,7 +380,7 @@ namespace apptab.Controllers
                     {
                         //userExist.LOGIN = user.LOGIN;
                         userExist.PWD = user.PWD;
-                        userExist.IDPROJET = 0;
+                        userExist.IDPROJET = int.Parse(listProjet.Split(',').FirstOrDefault().ToString());
                         userExist.ROLE = user.ROLE;
                         userExist.IDUSER = exist.ID;
                         userExist.IDUSERGED = userGED;

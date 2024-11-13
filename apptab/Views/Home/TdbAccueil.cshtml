@@ -172,9 +172,9 @@
             }
 
             if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ0"].ToString()) != 0 || int.Parse(Session["RJ1"].ToString()) != 0 || int.Parse(Session["RJ2"].ToString()) != 0 || int.Parse(Session["RJ3"].ToString()) != 0)))
+                || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ0"].ToString()) != 0 || int.Parse(Session["RJ1"].ToString()) != 0 || int.Parse(Session["RJ2"].ToString()) != 0 || int.Parse(Session["RJ3"].ToString()) != 0 || int.Parse(Session["RJ4"].ToString()) != 0 || int.Parse(Session["RJ5"].ToString()) != 0)))
             {
-                <h1>Justificatifs et Reversements</h1>
+                <h1>Justificatifs, Reversements et Compléments</h1>
                 <div class="row">
                     @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
             || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ0"].ToString()) != 0)))
@@ -241,6 +241,43 @@
                                         <div class="inner">
                                             <h3 id="J3">0</h3>
                                             <p>Reversements en attente validation</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fas fa-ellipsis-h"></i>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        }
+                    }
+                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+|| (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ4"].ToString()) != 0)))
+                    {
+                        <div class="col" style="cursor:pointer">
+                            <a href="../TraitementComplement/TraitementPROJET">
+                                <div class="small-box tdbinitier">
+                                    <div class="inner">
+                                        <h3 id="J4">0</h3>
+                                        <p>Compéments en attente tris</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="fas fa-exclamation"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                    @if (int.Parse(Session["PROCESDEPS"].ToString()) == 2)
+                    {
+                        if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                           || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RJ5"].ToString()) != 0)))
+                        {
+                            <div class="col" style="cursor:pointer">
+                                <a href="../TraitementComplement/TraitementORDSEC">
+                                    <div class="small-box tbdattente">
+                                        <div class="inner">
+                                            <h3 id="J5">0</h3>
+                                            <p>Compléments en attente validation</p>
                                         </div>
                                         <div class="icon">
                                             <i class="fas fa-ellipsis-h"></i>

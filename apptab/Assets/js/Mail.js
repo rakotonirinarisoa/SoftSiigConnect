@@ -222,7 +222,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let MailJ5 = $("#MailJ5").val();
     let MAILREJETREV = $("#MAILREJETREV").val();
     let MAILREJETJUST = $("#MAILREJETJUST").val();
-    let MAILREJETJUST = $("#MAILREJETCOM").val();
+    let MAILREJETCOM = $("#MAILREJETCOM").val();
 
     let EMM = $("#EMM").val();
     let EMP = $("#EMP").val();
@@ -271,6 +271,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("param.MAILJ5", $(`#MailJ5`).val());
     formData.append("param.MAILREJETJUST", $(`#MAILREJETJUST`).val());
     formData.append("param.MAILREJETREV", $(`#MAILREJETREV`).val());
+    formData.append("param.MAILREJETCOM", $(`#MAILREJETCOM`).val());
 
     formData.append("param.SENDMAIL", $(`#EMM`).val());
     formData.append("param.SENDPWD", $(`#EMP`).val());

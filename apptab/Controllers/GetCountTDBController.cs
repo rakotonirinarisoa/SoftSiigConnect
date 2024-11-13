@@ -47,7 +47,9 @@ namespace apptab.Controllers
                     J0 = 0,
                     J1 = 0,
                     J2 = 0,
-                    J3 = 0
+                    J3 = 0,
+                    J4 = 0,
+                    J5 = 0
                 };
 
                 var test = db.SI_USERS.Where(x => x.LOGIN == exist.LOGIN && x.PWD == exist.PWD && x.DELETIONDATE == null).FirstOrDefault();
@@ -56,6 +58,7 @@ namespace apptab.Controllers
                 var ava = db.SI_TRAITAVANCE.ToList();
                 var justif = db.SI_TRAITJUSTIF.ToList();
                 var revers = db.SI_TRAITREVERS.ToList();
+                var complement = db.SI_TRAITCOMPLEMENT.ToList();
 
                 var typedecriture = db.SI_TYPECRITURE.Where(a => a.IDUSER == test.ID).ToList();
                 //List<ListPaimentV> payement = new List<ListPaimentV>();
@@ -87,6 +90,7 @@ namespace apptab.Controllers
                     int mandatRAFA = 0;
                     int J0 = 0;
                     int J2 = 0;
+                    int J4 = 0;
 
                     var PRJ = db.SI_PROJETS.Select(a => new
                     {
@@ -278,6 +282,17 @@ namespace apptab.Controllers
                                                 }
                                             }
                                         }
+                                        if (tom.GA_AVANCE_MOUVEMENT.Any(a => a.NUMERO == x.NUMEROAVANCE && a.NUMERO_COMPLEMENT != null))
+                                        {
+                                            foreach (var y in tom.GA_AVANCE_MOUVEMENT.Where(a => a.NUMERO == x.NUMEROAVANCE && a.NUMERO_COMPLEMENT != null).OrderBy(a => a.NUMERO).OrderBy(a => a.NUMERO_COMPLEMENT).ToList())
+                                            {
+                                                Guid idJustif = Guid.Parse(y.IDENTIFIANT);
+                                                if (!db.SI_TRAITCOMPLEMENT.Any(a => a.No == idJustif && a.NPIECE == y.NUMERO_COMPLEMENT.ToString() && a.IDPROJET == crpt) || db.SI_TRAITCOMPLEMENT.Any(a => a.No == idJustif && a.ETAT == 2 && a.IDPROJET == crpt))
+                                                {
+                                                    J4++;
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -303,7 +318,9 @@ namespace apptab.Controllers
                         J0 = J0,
                         J1 = justif.Where(a => a.ETAT == 0).Count(),
                         J2 = J2,
-                        J3 = revers.Where(a => a.ETAT == 0).Count()
+                        J3 = revers.Where(a => a.ETAT == 0).Count(),
+                        J4 = J2,
+                        J5 = complement.Where(a => a.ETAT == 0).Count()
                     };
 
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = newElemH }, settings));
@@ -325,6 +342,7 @@ namespace apptab.Controllers
                         int mandatRAFA = 0;
                         int J0 = 0;
                         int J2 = 0;
+                        int J4 = 0;
 
                         paiement.AddRange(db.OPA_VALIDATIONS.Where(a => a.IDPROJET == test.IDPROJET).ToList());
                         foreach (var x in user)
@@ -515,6 +533,17 @@ namespace apptab.Controllers
                                                     }
                                                 }
                                             }
+                                            if (tom.GA_AVANCE_MOUVEMENT.Any(a => a.NUMERO == x.NUMEROAVANCE && a.NUMERO_COMPLEMENT != null))
+                                            {
+                                                foreach (var y in tom.GA_AVANCE_MOUVEMENT.Where(a => a.NUMERO == x.NUMEROAVANCE && a.NUMERO_COMPLEMENT != null).OrderBy(a => a.NUMERO).OrderBy(a => a.NUMERO_COMPLEMENT).ToList())
+                                                {
+                                                    Guid idJustif = Guid.Parse(y.IDENTIFIANT);
+                                                    if (!db.SI_TRAITCOMPLEMENT.Any(a => a.No == idJustif && a.NPIECE == y.NUMERO_COMPLEMENT.ToString() && a.IDPROJET == crpt) || db.SI_TRAITCOMPLEMENT.Any(a => a.No == idJustif && a.ETAT == 2 && a.IDPROJET == crpt))
+                                                    {
+                                                        J4++;
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -543,7 +572,9 @@ namespace apptab.Controllers
                             J0 = J0,
                             J1 = justif.Where(a => a.ETAT == 0).Count(),
                             J2 = J2,
-                            J3 = revers.Where(a => a.ETAT == 0).Count()
+                            J3 = revers.Where(a => a.ETAT == 0).Count(),
+                            J4 = J4,
+                            J5 = complement.Where(a => a.ETAT == 0).Count()
                         };
 
                         return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = newElemH }, settings));
@@ -566,6 +597,7 @@ namespace apptab.Controllers
                         int mandatRAFA = 0;
                         int J0 = 0;
                         int J2 = 0;
+                        int J4 = 0;
 
                         foreach (var x in user)
                         {
@@ -755,6 +787,17 @@ namespace apptab.Controllers
                                                     }
                                                 }
                                             }
+                                            if (tom.GA_AVANCE_MOUVEMENT.Any(a => a.NUMERO == x.NUMEROAVANCE && a.NUMERO_COMPLEMENT != null))
+                                            {
+                                                foreach (var y in tom.GA_AVANCE_MOUVEMENT.Where(a => a.NUMERO == x.NUMEROAVANCE && a.NUMERO_COMPLEMENT != null).OrderBy(a => a.NUMERO).OrderBy(a => a.NUMERO_COMPLEMENT).ToList())
+                                                {
+                                                    Guid idJustif = Guid.Parse(y.IDENTIFIANT);
+                                                    if (!db.SI_TRAITCOMPLEMENT.Any(a => a.No == idJustif && a.NPIECE == y.NUMERO_COMPLEMENT.ToString() && a.IDPROJET == crpt) || db.SI_TRAITCOMPLEMENT.Any(a => a.No == idJustif && a.ETAT == 2 && a.IDPROJET == crpt))
+                                                    {
+                                                        J4++;
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -782,7 +825,9 @@ namespace apptab.Controllers
                                 J0 = J0,
                                 J1 = justif.Where(a => a.ETAT == 0).Count(),
                                 J2 = J2,
-                                J3 = revers.Where(a => a.ETAT == 0).Count()
+                                J3 = revers.Where(a => a.ETAT == 0).Count(),
+                                J4 = J4,
+                                J5 = complement.Where(a => a.ETAT == 0).Count()
                             };
                         }
 

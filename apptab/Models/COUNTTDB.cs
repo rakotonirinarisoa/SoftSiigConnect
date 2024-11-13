@@ -26,5 +26,7 @@ namespace apptab
         public int? J1 { get; set; }
         public int? J2 { get; set; }
         public int? J3 { get; set; }
+        public int? J4 { get; set; }
+        public int? J5 { get; set; }
     }
 }
