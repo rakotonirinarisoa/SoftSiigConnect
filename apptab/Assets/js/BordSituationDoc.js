@@ -22,7 +22,7 @@ $('#proj').on('change', () => {
     $(`[data-id="site-list"]`).append(code1);
 
     GetSITE();
-    GetNifSTATCIN();
+    //GetNifSTATCIN();
     GetReference();
 });
 $('#site').on('change', () => {

@@ -948,15 +948,16 @@ namespace apptab.Controllers
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            List<Suppliers> InfosS = new List<Suppliers>();
+            List<supplierRAF> InfosS = new List<supplierRAF>();
             foreach (var proj in PROJECTID.Split(','))
             {
                 int projS = int.Parse(proj);
                 SOFTCONNECTGED.connex = new Data.Extension().GetConGED(projS);
                 if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
                 SOFTCONNECTGED ged = new SOFTCONNECTGED();
-                var Infos = ged.Suppliers.Where(x => x.DeletionDate == null).Select(x => new Suppliers {
-                    Id = x.Id,
+                var Infos = ged.Suppliers.Where(x => x.DeletionDate == null).Select(x => new supplierRAF
+                {
+                    ID = x.Id,
                     NIF = x.NIF,
                     STAT = x.STAT,
                     CIN = x.CIN,
@@ -965,6 +966,13 @@ namespace apptab.Controllers
             }
            
             return Json(JsonConvert.SerializeObject(new { type = "success", data = InfosS }));
+        }
+        public class supplierRAF
+        {
+            public Guid ID { get; set; }
+            public string NIF { get; set; }
+            public string STAT { get; set; }
+            public string CIN { get; set; }
         }
 
         [HttpPost]
