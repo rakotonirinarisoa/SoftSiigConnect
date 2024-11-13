@@ -327,228 +327,234 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult GenereLISTE(SI_USERS suser, int PROJECTID, DateTime DateDebut, DateTime DateFin, string listSite, int status, string fournisseur /*string reference*/)
+        public JsonResult GenereLISTE(SI_USERS suser, string PROJECTID, DateTime DateDebut, DateTime DateFin, string listSite, int status, string fournisseur /*string reference*/)
         {
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(PROJECTID);
-            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
-            SOFTCONNECTGED ged = new SOFTCONNECTGED();
-
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
             if (exist.IDUSERGED == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez parametrer le mappage GED ET PROJET. " }, settings));
 
             List<string> Projet = new List<string>();
             List<string> site = new List<string>();
+            List<DocS> documentF = new List<DocS>(); ;
+            Guid IDsup;
             foreach (var item in listSite.Split(','))
             {
                 site.Add(item);
             }
-            try
+
+            foreach (var PRJS in PROJECTID.Split(','))
             {
-                if (!db.SI_PROGED.Any(a => a.IDPROJET == PROJECTID))
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance projet SET-GED. " }, settings));
+                int proj = int.Parse(PRJS);
+                SOFTCONNECTGED.connex = new Data.Extension().GetConGED(proj);
+                if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
+                SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
-                if (db.SI_USERS.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null && a.ID == exist.ID).IDUSERGED == null)
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings)); 
-                else
+                try
                 {
-                    var IDUSERGED = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == PROJECTID && b.DELETIONDATE == null && b.ID == exist.ID).IDUSERGED; ;
-                    if (!ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
-                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings)); ;
-                }
+                    if (!db.SI_PROGED.Any(a => a.IDPROJET == proj))
+                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance projet SET-GED. " }, settings));
 
-                var isUserSet = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == PROJECTID && b.DELETIONDATE == null && b.ID == exist.ID); ;
-                var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null); ;
-                List<DocS> documentF = new List<DocS>(); ;
-                Guid IDsup;
-                if (fournisseur != "0")
-                {
-                    IDsup = Guid.Parse(fournisseur); ;
-                }
-                else IDsup = new Guid();
-
-                var RefDoc = ged.Documents.Where(x => x.DeletionDate == null && x.CreationDate >= DateDebut && x.CreationDate <= DateFin).Join(ged.SuppliersDocumentsAcknowledgements, dcm => dcm.Id, sdal => sdal.Id, (dcm, sdal) => new
-                {
-                    ID = dcm.SenderId,
-                    reference = sdal.ReferenceInterne,
-                    Objet = dcm.Object,
-                    Fournisseur = "",
-                    Acusse = dcm.CreationDate,
-                    Validateur = "",
-                    Montant = dcm.Montant,
-                    Date = dcm.CreationDate,
-                    Encours = dcm.Status,
-                    ARCHIVES = "",
-                    Lien = dcm.Url,
-                    Site = dcm.Site,
-                    DocumentID = dcm.Id
-                }).Join(ged.Suppliers, dcm => dcm.ID, sup => sup.Id, (dcm, sup) => new
-                {
-                    ID = dcm.ID,
-                    reference = dcm.reference,
-                    Objet = dcm.Objet,
-                    Fournisseur = sup.Name,
-                    Acusse = dcm.Acusse,
-                    Montant = dcm.Montant,
-                    Encours = dcm.Encours,
-                    ARCHIVES = dcm.Date.ToString(),
-                    Lien = dcm.Lien,
-                    Site = dcm.Site,
-                    DocumentID = dcm.DocumentID,
-                    Validateur = ""
-                }).Join(ged.DocumentSteps , dcm => dcm.DocumentID , docstep => docstep.DocumentId ,(dcm,docstep) => new
-                {
-                    ID = dcm.ID,
-                    reference = dcm.reference,
-                    Objet = dcm.Objet,
-                    Fournisseur = dcm.Fournisseur,
-                    Acusse = dcm.Acusse,
-                    Montant = dcm.Montant,
-                    Encours = dcm.Encours,
-                    Etape = docstep.ProcessingDescription,
-                    ARCHIVES = dcm.Encours == 3 ? dcm.ARCHIVES.ToString() : "",
-                    Lien = dcm.Lien,
-                    Site = dcm.Site,
-                    DocumentID = dcm.DocumentID,
-                    Validateur = "",
-                    DocumentStepID = docstep.Id,
-                }).Join(ged.UsersSteps, dcm => dcm.DocumentStepID, userStep => userStep.DocumentStepId, (dcm, userStep) => new
-                {
-                    ID = dcm.ID,
-                    reference = dcm.reference,
-                    Objet = dcm.Objet,
-                    Fournisseur = dcm.Fournisseur,
-                    Acusse = dcm.Acusse,
-                    Montant = dcm.Montant,
-                    Encours = dcm.Encours,
-                    Etape = dcm.Etape,
-                    ARCHIVES = dcm.Encours == 3 ? dcm.ARCHIVES.ToString() : "",
-                    Lien = dcm.Lien,
-                    Site = dcm.Site,
-                    DocumentID = dcm.DocumentID,
-                    IDvalidateur = userStep.UserId,
-                    Validateur = "",
-                    DocumentStepID = dcm.DocumentStepID,
-                    IsValidator = userStep.IsValidator,
-                }).Join(ged.Users, dcm => dcm.IDvalidateur, us => us.Id, (dcm, us) => new
-                {
-                    ID = dcm.ID,
-                    reference = dcm.reference,
-                    Objet = dcm.Objet,
-                    Fournisseur = dcm.Fournisseur,
-                    Acusse = dcm.Acusse,
-                    Montant = dcm.Montant,
-                    Encours = dcm.Encours,
-                    Etape = dcm.Etape,
-                    ARCHIVES = dcm.Encours == 3 ? dcm.ARCHIVES.ToString() : "",
-                    Lien = dcm.Lien,
-                    Site = dcm.Site,
-                    DocumentID = dcm.DocumentID,
-                    IDvalidateur = dcm.IDvalidateur,
-                    Validateur = us.FirstName,
-                    DocumentStepID = dcm.DocumentStepID,
-                    IsValidator = dcm.IsValidator,
-                    //}).Where(x => x.Fournisseur == suppliersname.Name && x.Encours == status && x.IsValidator == true /*&& referenS.Contains(x.reference)*/).DistinctBy(x => x.Etape).ToList();
-                }).Where(x => x.IsValidator == true).DistinctBy(x => x.Etape).ToList();// x.Fournisseur == suppliersname.Name && x.Encours == status &&
-                var links = db.SI_GEDLIEN.Where(x => x.IDPROJET == PROJECTID).Select(x => x.LIEN).FirstOrDefault();
-                
-                if (RefDoc != null)
-                {
-                    if (status != 4 || fournisseur != "0")
-                    {
-                        var suppliersname = ged.Suppliers.Where(x => x.Id == IDsup).FirstOrDefault(); ;
-                        foreach (var typD in RefDoc.Where(x => x.Encours == status && x.Fournisseur == suppliersname.Name))
-                        {
-                            string uservalidateur = "";
-                            string SSITE = typD.Site;
-                            documentF.Add(new DocS
-                            {
-                                REF = typD.reference,
-                                Objet = typD.Objet,
-                                FOURNISSEUR = typD.Fournisseur,
-                                ACCUSE = typD.Acusse,
-                                VALIDATEUR = typD.Validateur,
-                                Montant = typD.Montant.ToString(),
-                                Encours = typD.Etape.ToString(),
-                                ARCHIVES = typD.ARCHIVES.ToString(),
-                                Lien = links + "/" + typD.Lien.ToString(),
-                                //Validations = uservalidateur != null ? uservalidateur : "",
-                            });
-                        }
-                    }
-                    else if (status != 4 || fournisseur == "0")
-                    {
-                        foreach (var typD in RefDoc)
-                        {
-                            string uservalidateur = "";
-                            string SSITE = typD.Site;
-                            documentF.Add(new DocS
-                            {
-                                REF = typD.reference,
-                                Objet = typD.Objet,
-                                FOURNISSEUR = typD.Fournisseur,
-                                ACCUSE = typD.Acusse,
-                                VALIDATEUR = typD.Validateur,
-                                Montant = typD.Montant.ToString(),
-                                Encours = typD.Etape.ToString(),
-                                ARCHIVES = typD.ARCHIVES.ToString(),
-                                Lien = links + "/" + typD.Lien.ToString(),
-                                //Validations = uservalidateur != null ? uservalidateur : "",
-                            });
-                        }
-                    }
-                    else if (status == 4 || fournisseur != "0")
-                    {
-                        var suppliersname = ged.Suppliers.Where(x => x.Id == IDsup).FirstOrDefault(); ;
-                        foreach (var typD in RefDoc.Where(x => x.Fournisseur == suppliersname.Name))
-                        {
-                            string uservalidateur = "";
-                            string SSITE = typD.Site;
-                            documentF.Add(new DocS
-                            {
-                                REF = typD.reference,
-                                Objet = typD.Objet,
-                                FOURNISSEUR = typD.Fournisseur,
-                                ACCUSE = typD.Acusse,
-                                VALIDATEUR = typD.Validateur,
-                                Montant = typD.Montant.ToString(),
-                                Encours = typD.Etape.ToString(),
-                                ARCHIVES = typD.ARCHIVES.ToString(),
-                                Lien = links + "/" +  typD.Lien.ToString(),
-                                //Validations = uservalidateur != null ? uservalidateur : "",
-                            });
-                        }
-                    }
+                    if (db.SI_USERS.FirstOrDefault(a => a.IDPROJET == proj && a.DELETIONDATE == null && a.ID == exist.ID).IDUSERGED == null)
+                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
                     else
                     {
-                        foreach (var typD in RefDoc)
+                        var IDUSERGED = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == proj &&*/ b.DELETIONDATE == null && b.ID == exist.ID).IDUSERGED; ;
+                        if (!ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings)); ;
+                    }
+
+                    var isUserSet = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == proj &&*/ b.DELETIONDATE == null && b.ID == exist.ID); ;
+                    var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null); ;
+                    
+                    if (fournisseur != "0")
+                    {
+                        IDsup = Guid.Parse(fournisseur); ;
+                    }
+                    else IDsup = new Guid();
+
+                    var RefDoc = ged.Documents.Where(x => x.DeletionDate == null && x.CreationDate >= DateDebut && x.CreationDate <= DateFin).Join(ged.SuppliersDocumentsAcknowledgements, dcm => dcm.Id, sdal => sdal.Id, (dcm, sdal) => new
+                    {
+                        ID = dcm.SenderId,
+                        reference = sdal.ReferenceInterne,
+                        Objet = dcm.Object,
+                        Fournisseur = "",
+                        Acusse = dcm.CreationDate,
+                        Validateur = "",
+                        Montant = dcm.Montant,
+                        Date = dcm.CreationDate,
+                        Encours = dcm.Status,
+                        ARCHIVES = "",
+                        Lien = dcm.Url,
+                        Site = dcm.Site,
+                        DocumentID = dcm.Id
+                    }).Join(ged.Suppliers, dcm => dcm.ID, sup => sup.Id, (dcm, sup) => new
+                    {
+                        ID = dcm.ID,
+                        reference = dcm.reference,
+                        Objet = dcm.Objet,
+                        Fournisseur = sup.Name,
+                        Acusse = dcm.Acusse,
+                        Montant = dcm.Montant,
+                        Encours = dcm.Encours,
+                        ARCHIVES = dcm.Date.ToString(),
+                        Lien = dcm.Lien,
+                        Site = dcm.Site,
+                        DocumentID = dcm.DocumentID,
+                        Validateur = ""
+                    }).Join(ged.DocumentSteps, dcm => dcm.DocumentID, docstep => docstep.DocumentId, (dcm, docstep) => new
+                    {
+                        ID = dcm.ID,
+                        reference = dcm.reference,
+                        Objet = dcm.Objet,
+                        Fournisseur = dcm.Fournisseur,
+                        Acusse = dcm.Acusse,
+                        Montant = dcm.Montant,
+                        Encours = dcm.Encours,
+                        Etape = docstep.ProcessingDescription,
+                        ARCHIVES = dcm.Encours == 3 ? dcm.ARCHIVES.ToString() : "",
+                        Lien = dcm.Lien,
+                        Site = dcm.Site,
+                        DocumentID = dcm.DocumentID,
+                        Validateur = "",
+                        DocumentStepID = docstep.Id,
+                    }).Join(ged.UsersSteps, dcm => dcm.DocumentStepID, userStep => userStep.DocumentStepId, (dcm, userStep) => new
+                    {
+                        ID = dcm.ID,
+                        reference = dcm.reference,
+                        Objet = dcm.Objet,
+                        Fournisseur = dcm.Fournisseur,
+                        Acusse = dcm.Acusse,
+                        Montant = dcm.Montant,
+                        Encours = dcm.Encours,
+                        Etape = dcm.Etape,
+                        ARCHIVES = dcm.Encours == 3 ? dcm.ARCHIVES.ToString() : "",
+                        Lien = dcm.Lien,
+                        Site = dcm.Site,
+                        DocumentID = dcm.DocumentID,
+                        IDvalidateur = userStep.UserId,
+                        Validateur = "",
+                        DocumentStepID = dcm.DocumentStepID,
+                        IsValidator = userStep.IsValidator,
+                    }).Join(ged.Users, dcm => dcm.IDvalidateur, us => us.Id, (dcm, us) => new
+                    {
+                        ID = dcm.ID,
+                        reference = dcm.reference,
+                        Objet = dcm.Objet,
+                        Fournisseur = dcm.Fournisseur,
+                        Acusse = dcm.Acusse,
+                        Montant = dcm.Montant,
+                        Encours = dcm.Encours,
+                        Etape = dcm.Etape,
+                        ARCHIVES = dcm.Encours == 3 ? dcm.ARCHIVES.ToString() : "",
+                        Lien = dcm.Lien,
+                        Site = dcm.Site,
+                        DocumentID = dcm.DocumentID,
+                        IDvalidateur = dcm.IDvalidateur,
+                        Validateur = us.FirstName,
+                        DocumentStepID = dcm.DocumentStepID,
+                        IsValidator = dcm.IsValidator,
+                        //}).Where(x => x.Fournisseur == suppliersname.Name && x.Encours == status && x.IsValidator == true /*&& referenS.Contains(x.reference)*/).DistinctBy(x => x.Etape).ToList();
+                    }).Where(x => x.IsValidator == true).DistinctBy(x => x.Etape).ToList();// x.Fournisseur == suppliersname.Name && x.Encours == status &&
+                    var links = db.SI_GEDLIEN.Where(x => x.IDPROJET == proj).Select(x => x.LIEN).FirstOrDefault();
+
+                    if (RefDoc != null)
+                    {
+                        if (status != 4 || fournisseur != "0")
                         {
-                            string uservalidateur = "";
-                            string SSITE = typD.Site;
-                            documentF.Add(new DocS
+                            var suppliersname = ged.Suppliers.Where(x => x.Id == IDsup).FirstOrDefault(); ;
+                            foreach (var typD in RefDoc.Where(x => x.Encours == status && x.Fournisseur == suppliersname.Name))
                             {
-                                REF = typD.reference,
-                                Objet = typD.Objet,
-                                FOURNISSEUR = typD.Fournisseur,
-                                ACCUSE = typD.Acusse,
-                                VALIDATEUR = typD.Validateur,
-                                Montant = typD.Montant.ToString(),
-                                Encours = typD.Etape.ToString(),
-                                ARCHIVES = typD.ARCHIVES.ToString(),
-                                Lien = links + "/" + typD.Lien.ToString(),
-                                //Validations = uservalidateur != null ? uservalidateur : "",
-                            });
+                                string uservalidateur = "";
+                                string SSITE = typD.Site;
+                                documentF.Add(new DocS
+                                {
+                                    REF = typD.reference,
+                                    Objet = typD.Objet,
+                                    FOURNISSEUR = typD.Fournisseur,
+                                    ACCUSE = typD.Acusse,
+                                    VALIDATEUR = typD.Validateur,
+                                    Montant = typD.Montant.ToString(),
+                                    Encours = typD.Etape.ToString(),
+                                    ARCHIVES = typD.ARCHIVES.ToString(),
+                                    Lien = links + "/" + typD.Lien.ToString(),
+                                    //Validations = uservalidateur != null ? uservalidateur : "",
+                                });
+                            }
+                        }
+                        else if (status != 4 || fournisseur == "0")
+                        {
+                            foreach (var typD in RefDoc)
+                            {
+                                string uservalidateur = "";
+                                string SSITE = typD.Site;
+                                documentF.Add(new DocS
+                                {
+                                    REF = typD.reference,
+                                    Objet = typD.Objet,
+                                    FOURNISSEUR = typD.Fournisseur,
+                                    ACCUSE = typD.Acusse,
+                                    VALIDATEUR = typD.Validateur,
+                                    Montant = typD.Montant.ToString(),
+                                    Encours = typD.Etape.ToString(),
+                                    ARCHIVES = typD.ARCHIVES.ToString(),
+                                    Lien = links + "/" + typD.Lien.ToString(),
+                                    //Validations = uservalidateur != null ? uservalidateur : "",
+                                });
+                            }
+                        }
+                        else if (status == 4 || fournisseur != "0")
+                        {
+                            var suppliersname = ged.Suppliers.Where(x => x.Id == IDsup).FirstOrDefault(); ;
+                            foreach (var typD in RefDoc.Where(x => x.Fournisseur == suppliersname.Name))
+                            {
+                                string uservalidateur = "";
+                                string SSITE = typD.Site;
+                                documentF.Add(new DocS
+                                {
+                                    REF = typD.reference,
+                                    Objet = typD.Objet,
+                                    FOURNISSEUR = typD.Fournisseur,
+                                    ACCUSE = typD.Acusse,
+                                    VALIDATEUR = typD.Validateur,
+                                    Montant = typD.Montant.ToString(),
+                                    Encours = typD.Etape.ToString(),
+                                    ARCHIVES = typD.ARCHIVES.ToString(),
+                                    Lien = links + "/" + typD.Lien.ToString(),
+                                    //Validations = uservalidateur != null ? uservalidateur : "",
+                                });
+                            }
+                        }
+                        else
+                        {
+                            foreach (var typD in RefDoc)
+                            {
+                                string uservalidateur = "";
+                                string SSITE = typD.Site;
+                                documentF.Add(new DocS
+                                {
+                                    REF = typD.reference,
+                                    Objet = typD.Objet,
+                                    FOURNISSEUR = typD.Fournisseur,
+                                    ACCUSE = typD.Acusse,
+                                    VALIDATEUR = typD.Validateur,
+                                    Montant = typD.Montant.ToString(),
+                                    Encours = typD.Etape.ToString(),
+                                    ARCHIVES = typD.ARCHIVES.ToString(),
+                                    Lien = links + "/" + typD.Lien.ToString(),
+                                    //Validations = uservalidateur != null ? uservalidateur : "",
+                                });
+                            }
                         }
                     }
+
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = documentF }, settings));
                 }
-
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = documentF }, settings));
+                catch (Exception e)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+                }
             }
-            catch (Exception e)
-            {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
-            }
-
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = documentF }, settings));
         }
 
         [HttpPost]
