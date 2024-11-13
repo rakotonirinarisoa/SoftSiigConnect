@@ -271,7 +271,11 @@ namespace apptab.Controllers
                         var isUserSet = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt && */b.DELETIONDATE == null && b.ID == exist.ID);
                         var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null);
 
-                        var isListeTypeD = ged.DocumentTypes.Where(a => a.ProjectId == isUserGed.ProjectId && a.DeletionDate == null).ToList();
+                        var isListeTypeD1 = ged.DocumentTypes.Where(a => a.ProjectId == isUserGed.ProjectId && a.DeletionDate == null).ToList();
+                        var autreprojet = ged.Users.Where(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null).FirstOrDefault().ProjectIdOth.Split(',').ToList();
+                        var isListeTypeD2 = ged.DocumentTypes.Where(a => autreprojet.Contains(a.ProjectId.ToString()) && a.DeletionDate == null).ToList();
+
+                        var isListeTypeD = isListeTypeD1.Union(isListeTypeD2).ToList();
 
                         if (isListeTypeD != null)
                         {
@@ -292,11 +296,19 @@ namespace apptab.Controllers
 
                                     if (inlist)
                                     {
-                                        crpto.Add(new TypeDoc()
+                                        if (!crpto.Any(c => c.Id == typD.Id && c.Title == typD.Title))  // Vérification si l'élément existe déjà
                                         {
-                                            Id = typD.Id,
-                                            Title = typD.Title
-                                        });
+                                            crpto.Add(new TypeDoc
+                                            {
+                                                Id = typD.Id,
+                                                Title = typD.Title
+                                            });
+                                        }
+                                        //crpto.Add(new TypeDoc()
+                                        //{
+                                        //    Id = typD.Id,
+                                        //    Title = typD.Title
+                                        //});
                                     }
                                 }
                             }
