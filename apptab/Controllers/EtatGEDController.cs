@@ -21,6 +21,7 @@ using System.Security.Cryptography.Xml;
 using static apptab.Controllers.RSFController;
 using apptab.Models;
 using System.Diagnostics.SymbolStore;
+using System.Windows.Forms;
 
 namespace apptab.Controllers
 {
@@ -946,15 +947,10 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetSituationsDoc(SI_USERS suser, string listesite, string NIF, string STAT, string CIN, int PROJECTID, string REFERENCE)
+        public ActionResult GetSituationsDoc(SI_USERS suser, string listesite, string NIF, string STAT, string CIN, string PROJECTID, string REFERENCE)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(PROJECTID);
-            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
-            SOFTCONNECTGED ged = new SOFTCONNECTGED();
-
 
             List<Documents> Infos = new List<Documents>();
 
@@ -963,102 +959,112 @@ namespace apptab.Controllers
             Infos = ged.Documents.ToList();
             var documentypes = ged.DocumentTypes.ToList();
             List<DocumentInfos> Infosdoc = new List<DocumentInfos>();
-
+            List<documentFdR> resultat = new List<documentFdR>();
             var referenS = ged.SuppliersDocumentsAcknowledgements.Where(x => x.Id == IDref).FirstOrDefault();
-            var informationsDoc = ged.Documents.Join(ged.DocumentsSenders, doc => doc.SenderId, docsend => docsend.Id, (doc, docsend) => new
-            {
-                IDDOCUMENT = doc.Id,
-                SenderId = doc.SenderId,
-                CreationDate = doc.CreationDate,
-                FileName = doc.Filename,
-                Type = docsend.Type,
-            }).Join(ged.SuppliersDocumentsAcknowledgements , doc => doc.IDDOCUMENT, ackn => ackn.Id ,(doc,ackn) => new
-            {
-                IDDOCUMENT = doc.IDDOCUMENT,
-                SenderId = doc.SenderId,
-                CreationDate = doc.CreationDate,
-                FileName = doc.FileName,
-                Type = doc.Type,
-                referenceinterne = ackn.ReferenceInterne,
-            }).Join(ged.DocumentSteps, doc => doc.IDDOCUMENT, docstep => docstep.DocumentId, (doc, docstep) => new
-            {
-                IDDOCUMENT = doc.IDDOCUMENT,
-                SenderId = doc.SenderId,
-                CreationDate = doc.CreationDate,
-                FileName = doc.FileName,
-                StepNumber = docstep.StepNumber,
-                ProcessingDescription = docstep.ProcessingDescription,
-                IDDOCSTEP = docstep.Id,
-                referenceinterne =doc.referenceinterne,
-            }).Join(ged.UsersSteps, res => res.IDDOCSTEP, usrstep => usrstep.DocumentStepId, (res, usrstep) => new
-            {
-                IDDOCUMENT = res.IDDOCUMENT,
-                SenderId = res.SenderId,
-                CreationDate = res.CreationDate,
-                FileName = res.FileName,
-                StepNumber = res.StepNumber,
-                ProcessingDescription = res.ProcessingDescription,
-                IDDOCSTEP = res.IDDOCSTEP,
-                UserID = usrstep.UserId,
-                referenceinterne = res.referenceinterne,
-                Isvalidator = usrstep.IsValidator,
-                commentaire = usrstep.Comment
-            }).Where(usrstep => usrstep.Isvalidator == true).Join(ged.ValidationsHistory, res => res.IDDOCUMENT, valHisto => valHisto.DocumentId, (res, valhisto) => new
-            {
-                IDDOCUMENT = res.IDDOCUMENT,
-                SenderId = res.SenderId,
-                CreationDate = res.CreationDate,
-                FileName = res.FileName,
-                StepNumber = res.StepNumber,
-                ProcessingDescription = res.ProcessingDescription,
-                IDDOCSTEP = res.IDDOCSTEP,
-                UserID = res.UserID,
-                FromUserID = valhisto.FromUserId,
-                //Comment = valhisto.Comment,
-                Comment = res.commentaire,
-                DATEValidations = valhisto.CreationDate,
-                referenceinterne = res.referenceinterne,
-                Isvalidator = res.Isvalidator
-            }).Join(ged.Users, res => res.FromUserID, usr => usr.Id, (res, usr) => new
-            {
-                IDDOCUMENT = res.IDDOCUMENT,
-                SenderId = res.SenderId,
-                CreationDate = res.CreationDate,
-                FileName = res.FileName,
-                StepNumber = res.StepNumber,
-                ProcessingDescription = res.ProcessingDescription,
-                IDDOCSTEP = res.IDDOCSTEP,
-                UserID = res.UserID,
-                FromUserID = res.FromUserID,
-                Comment = res.Comment,
-                DATEValidations = res.CreationDate,
-                UserName = usr.Username,
-                referenceinterne = res.referenceinterne,
-                Isvalidator = res.Isvalidator
-            }).Join(ged.Suppliers , res => res.SenderId , supl => supl.Id, (res,supl) => new
-            {
-                IDDOCUMENT = res.IDDOCUMENT,
-                SenderId = res.SenderId,
-                CreationDate = res.CreationDate,
-                FileName = res.FileName,
-                StepNumber = res.StepNumber,
-                ProcessingDescription = res.ProcessingDescription,
-                IDDOCSTEP = res.IDDOCSTEP,
-                UserID = res.UserID,
-                FromUserID = res.FromUserID,
-                Comment = res.Comment,
-                DATEValidations = res.CreationDate,
-                UserName = res.UserName,
-                referenceinterne = res.referenceinterne,
-                Fournisseur = supl.Name,
-                Isvalidator = res.Isvalidator
-            }).Where(x => x.referenceinterne == referenS.ReferenceInterne && x.Isvalidator == true).DistinctBy(x => new
-            {
-                ProcessingDescription = x.ProcessingDescription,
-                Comment = x.Comment
-            }).ToList();
 
-            return Json(JsonConvert.SerializeObject(new { type = "success", data = informationsDoc }));
+            foreach (var proj in PROJECTID.Split(','))
+            {
+                int projId = int.Parse(proj);
+                SOFTCONNECTGED.connex = new Data.Extension().GetConGED(projId);
+                if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
+                SOFTCONNECTGED ged = new SOFTCONNECTGED();
+                string links = db.SI_GEDLIEN.Where(x=> x.IDPROJET == projId).Select(x => x.LIEN).FirstOrDefault();
+                var informationsDoc = ged.Documents.Join(ged.DocumentsSenders, doc => doc.SenderId, docsend => docsend.Id, (doc, docsend) => new
+                {
+                    IDDOCUMENT = doc.Id,
+                    SenderId = doc.SenderId,
+                    CreationDate = doc.CreationDate,
+                    FileName = doc.Filename,
+                    Type = docsend.Type,
+                }).Join(ged.SuppliersDocumentsAcknowledgements, doc => doc.IDDOCUMENT, ackn => ackn.Id, (doc, ackn) => new
+                {
+                    IDDOCUMENT = doc.IDDOCUMENT,
+                    SenderId = doc.SenderId,
+                    CreationDate = doc.CreationDate,
+                    FileName = doc.FileName,
+                    Type = doc.Type,
+                    referenceinterne = ackn.ReferenceInterne,
+                }).Join(ged.DocumentSteps, doc => doc.IDDOCUMENT, docstep => docstep.DocumentId, (doc, docstep) => new
+                {
+                    IDDOCUMENT = doc.IDDOCUMENT,
+                    SenderId = doc.SenderId,
+                    CreationDate = doc.CreationDate,
+                    FileName = doc.FileName,
+                    StepNumber = docstep.StepNumber,
+                    ProcessingDescription = docstep.ProcessingDescription,
+                    IDDOCSTEP = docstep.Id,
+                    referenceinterne = doc.referenceinterne,
+                }).Join(ged.UsersSteps, res => res.IDDOCSTEP, usrstep => usrstep.DocumentStepId, (res, usrstep) => new
+                {
+                    IDDOCUMENT = res.IDDOCUMENT,
+                    SenderId = res.SenderId,
+                    CreationDate = res.CreationDate,
+                    FileName = res.FileName,
+                    StepNumber = res.StepNumber,
+                    ProcessingDescription = res.ProcessingDescription,
+                    IDDOCSTEP = res.IDDOCSTEP,
+                    UserID = usrstep.UserId,
+                    referenceinterne = res.referenceinterne,
+                    Isvalidator = usrstep.IsValidator,
+                    commentaire = usrstep.Comment
+                }).Where(usrstep => usrstep.Isvalidator == true).Join(ged.ValidationsHistory, res => res.IDDOCUMENT, valHisto => valHisto.DocumentId, (res, valhisto) => new
+                {
+                    IDDOCUMENT = res.IDDOCUMENT,
+                    SenderId = res.SenderId,
+                    CreationDate = res.CreationDate,
+                    FileName = res.FileName,
+                    StepNumber = res.StepNumber,
+                    ProcessingDescription = res.ProcessingDescription,
+                    IDDOCSTEP = res.IDDOCSTEP,
+                    UserID = res.UserID,
+                    FromUserID = valhisto.FromUserId,
+                    //Comment = valhisto.Comment,
+                    Comment = res.commentaire,
+                    DATEValidations = valhisto.CreationDate,
+                    referenceinterne = res.referenceinterne,
+                    Isvalidator = res.Isvalidator
+                }).Join(ged.Users, res => res.FromUserID, usr => usr.Id, (res, usr) => new
+                {
+                    IDDOCUMENT = res.IDDOCUMENT,
+                    SenderId = res.SenderId,
+                    CreationDate = res.CreationDate,
+                    FileName = res.FileName,
+                    StepNumber = res.StepNumber,
+                    ProcessingDescription = res.ProcessingDescription,
+                    IDDOCSTEP = res.IDDOCSTEP,
+                    UserID = res.UserID,
+                    FromUserID = res.FromUserID,
+                    Comment = res.Comment,
+                    DATEValidations = res.CreationDate,
+                    UserName = usr.Username,
+                    referenceinterne = res.referenceinterne,
+                    Isvalidator = res.Isvalidator
+                }).Join(ged.Suppliers, res => res.SenderId, supl => supl.Id, (res, supl) => new documentFdR
+                {
+                    IDDOCUMENT = res.IDDOCUMENT,
+                    SenderId = res.SenderId,
+                    CreationDate = res.CreationDate,
+                    FileName = links + "/" + res.FileName,
+                    StepNumber = res.StepNumber,
+                    ProcessingDescription = res.ProcessingDescription,
+                    IDDOCSTEP = res.IDDOCSTEP,
+                    UserID = res.UserID,
+                    FromUserID = res.FromUserID,
+                    Comment = res.Comment,
+                    DATEValidations = res.CreationDate,
+                    UserName = res.UserName,
+                    referenceinterne = res.referenceinterne,
+                    Fournisseur = supl.Name,
+                    Isvalidator = res.Isvalidator
+                }).Where(x => x.referenceinterne == referenS.ReferenceInterne && x.Isvalidator == true).DistinctBy(x => new
+                {
+                    ProcessingDescription = x.ProcessingDescription,
+                    Comment = x.Comment
+                }).ToList();
+                resultat.AddRange(informationsDoc);
+            }
+
+            return Json(JsonConvert.SerializeObject(new { type = "success", data = resultat }));
         }
         public class DocumentInfos
         {
@@ -1070,6 +1076,25 @@ namespace apptab.Controllers
             public Guid DocumentID { get; set; }
             public Guid StepID { get; set; }
             public Guid UserID { get; set; }
+        }
+        public class documentFdR
+        {
+            public Guid IDDOCUMENT { get; set; }
+            public int Type { get; set; }
+            public Guid SenderId { get; set; }
+            public DateTime? CreationDate { get; set; }
+            public string FileName { get; set; }
+            public int? StepNumber { get; set; }
+            public string ProcessingDescription { get; set; }
+            public Guid IDDOCSTEP { get; set; }
+            public Guid UserID { get; set; }
+            public Guid FromUserID { get; set; }
+            public string Comment { get; set; }
+            public DateTime? DATEValidations { get; set; }
+            public string UserName { get; set; }
+            public string referenceinterne { get; set; }
+            public string Fournisseur { get; set; }
+            public bool? Isvalidator { get; set; }
         }
         public class DocumentInfosFicti
         {

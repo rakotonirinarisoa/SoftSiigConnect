@@ -268,8 +268,12 @@ $('#site').on('input', () => {
 
 function GetTypeDocs() {
     let formData = new FormData();
-
-    formData.append("iProjet", $("#proj").val());
+    let pr = $("#proj").val();
+    if (!pr) {
+        alert("Veuillez sélectionner au moins un projet. ");
+        return;
+    }
+    formData.append("iProjet", pr);
     formData.append("iSite", $("#site").val());
 
     formData.append("suser.LOGIN", User.LOGIN);
@@ -440,7 +444,7 @@ $('[data-action="GenereLISTE"]').click(function () {
     formData.append("DateFin", $('#dateF').val());
 
     formData.append("REFERENCE", $("#Reference").val());
-    formData.append("PROJECTID", $("#proj").val());
+    formData.append("PROJECTID", pr);
     formData.append("listSite", $("#site").val());
     formData.append("CIN", $("#cin").val());
     formData.append("STAT", $("#Stat").val());
