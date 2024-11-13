@@ -79,6 +79,7 @@
         public Guid? DeletedBy { get; set; }
 
         public string Sites { get; set; }
+        public string ProjectIdOth { get; set; }
 
         [StringLength(255)]
         public string Fonction { get; set; }
