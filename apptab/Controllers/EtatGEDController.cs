@@ -248,14 +248,18 @@ namespace apptab.Controllers
                         if (!db.SI_PROGED.Any(a => a.IDPROJET == crpt))
                             return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance projet SET-GED. " }, settings));
 
-                        if (db.SI_USERS.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.ID == exist.ID).IDUSERGED == null)
+                        var IDUSERGED = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt && */b.DELETIONDATE == null && b.ID == exist.ID).IDUSERGED;
+                        if (!ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
                             return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
-                        else
-                        {
-                            var IDUSERGED = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == crpt && b.DELETIONDATE == null && b.ID == exist.ID).IDUSERGED;
-                            if (!ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
-                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
-                        }
+
+                        //if (db.SI_USERS.FirstOrDefault(a => /*a.IDPROJET == crpt && */a.DELETIONDATE == null && a.ID == exist.ID).IDUSERGED == null)
+                        //    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
+                        //else
+                        //{
+                        //    var IDUSERGED = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == crpt && b.DELETIONDATE == null && b.ID == exist.ID).IDUSERGED;
+                        //    if (!ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
+                        //        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
+                        //}
                     }
 
                     foreach (var crpt in idProjet)
@@ -264,7 +268,7 @@ namespace apptab.Controllers
                         if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
                         SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
-                        var isUserSet = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == crpt && b.DELETIONDATE == null && b.ID == exist.ID);
+                        var isUserSet = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt && */b.DELETIONDATE == null && b.ID == exist.ID);
                         var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null);
 
                         var isListeTypeD = ged.DocumentTypes.Where(a => a.ProjectId == isUserGed.ProjectId && a.DeletionDate == null).ToList();
