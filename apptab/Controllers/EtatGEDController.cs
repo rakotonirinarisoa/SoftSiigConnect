@@ -137,11 +137,6 @@ namespace apptab.Controllers
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
             if (exist.IDUSERGED == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
-
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(int.Parse(iProjet));
-            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
-            SOFTCONNECTGED ged = new SOFTCONNECTGED();
-
             try
             {
                 List<int> idProjet = new List<int>();
@@ -157,22 +152,23 @@ namespace apptab.Controllers
                 {
                     foreach (var crpt in idProjet)
                     {
+                        SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
+                        if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
+                        SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
                         if (!db.SI_PROGED.Any(a => a.IDPROJET == crpt))
                             return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance projet SET-GED. " }, settings));
 
-                        if (db.SI_USERS.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.ID == exist.ID).IDUSERGED == null)
+                        if (db.SI_USERS.FirstOrDefault(a => /*a.IDPROJET == crpt &&*/ a.DELETIONDATE == null && a.ID == exist.ID).IDUSERGED == null)
                             return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
                         else
                         {
-                            var IDUSERGED = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == crpt && b.DELETIONDATE == null && b.ID == exist.ID).IDUSERGED;
+                            var IDUSERGED = db.SI_USERS.FirstOrDefault(b =>/* b.IDPROJET == crpt &&*/ b.DELETIONDATE == null && b.ID == exist.ID).IDUSERGED;
                             if (!ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
                                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
                         }
-                    }
 
-                    foreach (var crpt in idProjet)
-                    {
-                        var isUserSet = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == crpt && b.DELETIONDATE == null && b.ID == exist.ID);
+                        var isUserSet = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt &&*/ b.DELETIONDATE == null && b.ID == exist.ID);
                         var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null);
 
                         Guid[] guidArray = DeserializeJsonToGuidArray(isUserGed.Sites);
@@ -191,6 +187,7 @@ namespace apptab.Controllers
                             });
                         }
                     }
+
                 }
 
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { etat = supl } }, settings));
@@ -350,9 +347,12 @@ namespace apptab.Controllers
                 var isUserSet = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == PROJECTID && b.DELETIONDATE == null && b.ID == exist.ID); ;
                 var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null); ;
                 List<DocS> documentF = new List<DocS>(); ;
-                Guid IDsup = Guid.Parse(fournisseur); ;
-
-                var suppliersname = ged.Suppliers.Where(x => x.Id == IDsup).FirstOrDefault(); ;
+                Guid IDsup;
+                if (fournisseur != "0")
+                {
+                    IDsup = Guid.Parse(fournisseur); ;
+                }
+                else IDsup = new Guid();
 
                 var RefDoc = ged.Documents.Where(x => x.DeletionDate == null && x.CreationDate >= DateDebut && x.CreationDate <= DateFin).Join(ged.SuppliersDocumentsAcknowledgements, dcm => dcm.Id, sdal => sdal.Id, (dcm, sdal) => new
                 {
@@ -437,12 +437,13 @@ namespace apptab.Controllers
                     IsValidator = dcm.IsValidator,
                     //}).Where(x => x.Fournisseur == suppliersname.Name && x.Encours == status && x.IsValidator == true /*&& referenS.Contains(x.reference)*/).DistinctBy(x => x.Etape).ToList();
                 }).Where(x => x.IsValidator == true).DistinctBy(x => x.Etape).ToList();// x.Fournisseur == suppliersname.Name && x.Encours == status &&
-
-
+                var links = db.SI_GEDLIEN.Where(x => x.IDPROJET == PROJECTID).Select(x => x.LIEN).FirstOrDefault();
+                
                 if (RefDoc != null)
                 {
                     if (status != 4 || fournisseur != "0")
                     {
+                        var suppliersname = ged.Suppliers.Where(x => x.Id == IDsup).FirstOrDefault(); ;
                         foreach (var typD in RefDoc.Where(x => x.Encours == status && x.Fournisseur == suppliersname.Name))
                         {
                             string uservalidateur = "";
@@ -457,14 +458,14 @@ namespace apptab.Controllers
                                 Montant = typD.Montant.ToString(),
                                 Encours = typD.Etape.ToString(),
                                 ARCHIVES = typD.ARCHIVES.ToString(),
-                                Lien = typD.Lien.ToString(),
+                                Lien = links + "/" + typD.Lien.ToString(),
                                 //Validations = uservalidateur != null ? uservalidateur : "",
                             });
                         }
                     }
                     else if (status != 4 || fournisseur == "0")
                     {
-                        foreach (var typD in RefDoc.Where(x => x.Encours == status))
+                        foreach (var typD in RefDoc)
                         {
                             string uservalidateur = "";
                             string SSITE = typD.Site;
@@ -478,13 +479,14 @@ namespace apptab.Controllers
                                 Montant = typD.Montant.ToString(),
                                 Encours = typD.Etape.ToString(),
                                 ARCHIVES = typD.ARCHIVES.ToString(),
-                                Lien = typD.Lien.ToString(),
+                                Lien = links + "/" + typD.Lien.ToString(),
                                 //Validations = uservalidateur != null ? uservalidateur : "",
                             });
                         }
                     }
                     else if (status == 4 || fournisseur != "0")
                     {
+                        var suppliersname = ged.Suppliers.Where(x => x.Id == IDsup).FirstOrDefault(); ;
                         foreach (var typD in RefDoc.Where(x => x.Fournisseur == suppliersname.Name))
                         {
                             string uservalidateur = "";
@@ -499,7 +501,7 @@ namespace apptab.Controllers
                                 Montant = typD.Montant.ToString(),
                                 Encours = typD.Etape.ToString(),
                                 ARCHIVES = typD.ARCHIVES.ToString(),
-                                Lien = typD.Lien.ToString(),
+                                Lien = links + "/" +  typD.Lien.ToString(),
                                 //Validations = uservalidateur != null ? uservalidateur : "",
                             });
                         }
@@ -520,7 +522,7 @@ namespace apptab.Controllers
                                 Montant = typD.Montant.ToString(),
                                 Encours = typD.Etape.ToString(),
                                 ARCHIVES = typD.ARCHIVES.ToString(),
-                                Lien = typD.Lien.ToString(),
+                                Lien = links + "/" + typD.Lien.ToString(),
                                 //Validations = uservalidateur != null ? uservalidateur : "",
                             });
                         }
@@ -537,49 +539,56 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult GenereREFERENCE(SI_USERS suser, int PROJECTID, string listSite)
+        public JsonResult GenereREFERENCE(SI_USERS suser, string PROJECTID, string listSite)
         {
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(PROJECTID);
-            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
-            SOFTCONNECTGED ged = new SOFTCONNECTGED();
-
-            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
-            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            if (exist.IDUSERGED == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez parametrer le mappage GED ET PROJET. " }, settings));
-
             List<string> Projet = new List<string>();
             List<string> site = new List<string>();
-            foreach (var item in listSite.Split(','))
+            foreach (var Proj in PROJECTID.Split(','))
             {
-                site.Add(item);
-            }
-            try
-            {
-                if (!db.SI_PROGED.Any(a => a.IDPROJET == PROJECTID))
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance projet SET-GED. " }, settings));
+                Projet.Add(Proj);
+                int PROJECTIDS = int.Parse(Proj);
+                SOFTCONNECTGED.connex = new Data.Extension().GetConGED(PROJECTIDS);
+                if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
+                SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
-                if (db.SI_USERS.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null && a.ID == exist.ID).IDUSERGED == null)
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
-                else
+                var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+                if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+                if (exist.IDUSERGED == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez parametrer le mappage GED ET PROJET. " }, settings));
+
+                foreach (var item in listSite.Split(','))
                 {
-                    var IDUSERGED = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == PROJECTID && b.DELETIONDATE == null && b.ID == exist.ID).IDUSERGED;
+                    site.Add(item);
+                }
+                try
+                {
+                    if (!db.SI_PROGED.Any(a => a.IDPROJET == PROJECTIDS))
+                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance projet SET-GED. " }, settings));
+
+                    var IDUSERGED = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == PROJECTIDS &&*/ b.DELETIONDATE == null && b.ID == exist.ID).IDUSERGED;
                     if (!ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
                         return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
+                    //if (db.SI_USERS.FirstOrDefault(a => a.IDPROJET == PROJECTIDS && a.DELETIONDATE == null && a.ID == exist.ID).IDUSERGED == null)
+                    //    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
+                    //else
+                    //{
+                    //    var IDUSERGED = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == PROJECTIDS && b.DELETIONDATE == null && b.ID == exist.ID).IDUSERGED;
+                    //    if (!ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
+                    //        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
+                    //}
+
+
                 }
-
-                var reference = ged.SuppliersDocumentsAcknowledgements.Select(x => new
+                catch (Exception e)
                 {
-                    ID = x.Id,
-                    Reference = x.ReferenceInterne,
-                }).ToList();
-                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = reference }, settings));
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
+                }
             }
-            catch (Exception e)
+            var reference = ged.SuppliersDocumentsAcknowledgements.Select(x => new
             {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
-            }
-
-
+                ID = x.Id,
+                Reference = x.ReferenceInterne,
+            }).ToList();
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = reference }, settings));
         }
 
         public class DocS

@@ -429,7 +429,8 @@ $('[data-action="GenereLISTE"]').click(function () {
     formData.append("DateDebut", $('#dateD').val());
     formData.append("DateFin", $('#dateF').val());
 
-    formData.append("PROJECTID", $("#proj").val());
+    //formData.append("PROJECTID", $("#proj").val());
+    formData.append("PROJECTID", pr);
     formData.append("listSite", $("#site").val());
     formData.append("fournisseur", $("#fournisseur").val());
     formData.append("reference", $("#Reference").val());
