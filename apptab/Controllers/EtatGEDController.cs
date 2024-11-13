@@ -80,14 +80,18 @@ namespace apptab.Controllers
                         if (!db.SI_PROGED.Any(a => a.IDPROJET == crpt))
                             return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance projet SET-GED. " }, settings));
 
-                        if (!db.SI_USERS.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.ID == exist.ID && a.IDUSERGED != null))
+                        var IDUSERGED = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt && */b.DELETIONDATE == null && b.ID == exist.ID).IDUSERGED;
+                        if (!ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
                             return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
-                        else
-                        {
-                            var IDUSERGED = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == crpt && b.DELETIONDATE == null && b.ID == exist.ID).IDUSERGED;
-                            if (!ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
-                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
-                        }
+
+                        //if (!db.SI_USERS.Any(a => a.IDPROJET == crpt && a.DELETIONDATE == null && a.ID == exist.ID && a.IDUSERGED != null))
+                        //    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
+                        //else
+                        //{
+                        //    var IDUSERGED = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == crpt && b.DELETIONDATE == null && b.ID == exist.ID).IDUSERGED;
+                        //    if (!ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
+                        //        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
+                        //}
                     }
 
                     foreach (var crpt in idProjet)
@@ -96,7 +100,7 @@ namespace apptab.Controllers
                         if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
                         SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
-                        var isUserSet = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == crpt && b.DELETIONDATE == null && b.ID == exist.ID);
+                        var isUserSet = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt && */b.DELETIONDATE == null && b.ID == exist.ID);
                         var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null);
 
                         Guid[] guidArray = DeserializeJsonToGuidArray(isUserGed.Sites);
@@ -107,11 +111,16 @@ namespace apptab.Controllers
                         {
                             if (validSites.TryGetValue(guid, out var site))
                             {
-                                crpto.Add(new SiteGED()
+                                var newSite = new SiteGED()
                                 {
                                     Id = guid,
                                     Code = site.SiteId + "-" + site.Name
-                                });
+                                };
+
+                                if (!crpto.Any(s => s.Id == newSite.Id && s.Code == newSite.Code))
+                                {
+                                    crpto.Add(newSite);
+                                }
                             }
                             //crpto.Add(new SiteGED()
                             //{
@@ -219,10 +228,6 @@ namespace apptab.Controllers
 
             if (exist.IDUSERGED == null) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance utilisateur SET-GED. " }, settings));
 
-            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(int.Parse(iProjet));
-            if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
-            SOFTCONNECTGED ged = new SOFTCONNECTGED();
-
             try
             {
                 List<int> idProjet = new List<int>();
@@ -239,6 +244,10 @@ namespace apptab.Controllers
                 {
                     foreach (var crpt in idProjet)
                     {
+                        SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
+                        if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
+                        SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
                         if (!db.SI_PROGED.Any(a => a.IDPROJET == crpt))
                             return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer la correspondance projet SET-GED. " }, settings));
 
@@ -254,6 +263,10 @@ namespace apptab.Controllers
 
                     foreach (var crpt in idProjet)
                     {
+                        SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
+                        if (SOFTCONNECTGED.connex == "") return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mappage SET-GED. " }, settings));
+                        SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
                         var isUserSet = db.SI_USERS.FirstOrDefault(b => b.IDPROJET == crpt && b.DELETIONDATE == null && b.ID == exist.ID);
                         var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null);
 
@@ -683,13 +696,17 @@ namespace apptab.Controllers
                                         if (documentStep == null)
                                         {
                                             var validationInProgressFin = ged.ValidationsHistory.Where(a => a.DocumentId == y.Id && a.ActionType == 0).OrderByDescending(a => a.CreationDate).FirstOrDefault();
-                                            var documentStepFin = ged.DocumentSteps.FirstOrDefault(a => a.Id == validationInProgressFin.ToDocumentStepId /*&& a.DeletionDate == null*/);
-                                            var stepNumberFin = documentStepFin.StepNumber;
 
-                                            validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin /*&& a.DeletionDate == null*/).ProcessingDescription;
-                                            validationHistoNEXT = "Terminé";
-                                            validationHistoNEXTvalidateur = "Terminé";
-                                            validationHistoNEXTduree = "0";
+                                            if (validationInProgressFin != null)
+                                            {
+                                                var documentStepFin = ged.DocumentSteps.FirstOrDefault(a => a.Id == validationInProgressFin.ToDocumentStepId /*&& a.DeletionDate == null*/);
+                                                var stepNumberFin = documentStepFin.StepNumber;
+
+                                                validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin /*&& a.DeletionDate == null*/).ProcessingDescription;
+                                                validationHistoNEXT = "Terminé";
+                                                validationHistoNEXTvalidateur = "Terminé";
+                                                validationHistoNEXTduree = "0";
+                                            }
                                         }
                                         else
                                         {
