@@ -626,7 +626,6 @@ $('[data-action="GenereLISTE"]').click(function () {
                                     if (data.length === 0) {
                                         data = [""];
                                     }
-
                                     //join array into string with regex or (|)
                                     var val = data.join('|');
 
