@@ -321,7 +321,7 @@ function GetFileNameAnarana(blobUrl) {
 
         },
         error: function () {
-            alert("Problème de connexion. ");
+            alert("Problème de connexionAnarana. ");
         }
     });
 }
@@ -363,18 +363,16 @@ function getelementTXT(a , list) {
                 window.location.reload();
             },
             success: function (result) {
-                //console.log(result);
-                console.log(result)
-                //var Datas = JSON.parse(result);
+                var Datas = JSON.parse(result);
+                alert(Datas.data);
                 let blobUrl = URL.createObjectURL(result);
-                
                 GetFileNameAnarana(blobUrl);
                 window.location = '/Home/GetFile?file=""' ;
                 $('#verification-modal').modal('toggle');
                 loader.addClass('display-none');
             },
             error: function () {
-                alert("Problème de connexion. ");
+                alert("Problème de connexionZipFile. ");
             },
 
         });
@@ -425,12 +423,13 @@ function getelementISO2022(a, list) {
                 window.location.reload();
             },
             success: function (result) {
-               
-                alert(result);
+                //var Datas = JSON.parse(result);
                 let blobUrl = URL.createObjectURL(result);
-                GetFileNameAnarana(blobUrl);
-                //window.location = '/Home/GetFile?file=' + Datas.data;
 
+                GetFileNameAnarana(blobUrl);
+                window.location = '/Home/GetFile?file=""';
+                $('#verification-modal').modal('toggle');
+                loader.addClass('display-none');
             },
             error: function (result) {
 
@@ -1494,7 +1493,7 @@ $('[data-action="GetAnomalieListes"]').click(function () {
         }
     });
 });
-function getelementCheckJsISO() {
+function getelementCheckJsISO(a) {
     let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
     let list = [];
     if (baseName == "2") {
@@ -1522,7 +1521,7 @@ function getelementCheckJsISO() {
         }
     }
     console.log(list);
-    getelementISO2022(0, list);
+    getelementISO2022(a, list);
     loader.addClass('display-none');
 }
 function getelementCheckJs() {
@@ -1629,7 +1628,8 @@ $('#get-user-password-btn').on('click', () => {
 
 $('[data-action="SaveVISO"]').click(function () {
     let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
-
+    let typeF = $(this).attr(`data-type`);
+    idtype = typeF;
     let list = [];
     $.each(CheckList, (k, v) => {
         list.push($(v).attr("compteG-id"));
@@ -1683,7 +1683,7 @@ $('#get-user-password-btnISO').on('click', () => {
                 pass.text('Identifiants incorrects.');
             } else {
                 // OKOK();
-                getelementCheckJsISO();
+                getelementCheckJsISO(idtype);
             }
         },
         Error: function (_, e) {

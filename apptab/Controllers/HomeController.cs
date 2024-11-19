@@ -553,7 +553,7 @@ namespace apptab.Controllers
                             }
                         }
                     }
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec Succées", data = "" }, settings));
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Traitement avec Succées", data = "Fichier Envoyer Avec Success" }, settings));
                 }
                 else
                 {
@@ -620,11 +620,19 @@ namespace apptab.Controllers
             };
             var path = "";
             var Nomfichier = "";
-            if (avalider != null)
+            if (intbasetype == 4)
             {
+
                 var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise);
+                Anarana = pathfile.Chemin;
                 path = pathfile.Chemin;
-                Nomfichier = pathfile.NomFichier + ".xml";
+                send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
+
+                xmlResult = SaveDocument(Anarana, Anarana);
+                var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
+                string pport = ftp.PORT.ToString();
+                SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport);
+
                 if (avalider != null)
                 {
                     foreach (var item in avalider)
@@ -632,6 +640,7 @@ namespace apptab.Controllers
                         try
                         {
                             item.DATETRANS = DateTime.Now;
+
                             item.IDUSTRANS = exist.ID;
                             item.ETAT = 3;
                             db.SaveChanges();
@@ -643,14 +652,41 @@ namespace apptab.Controllers
                         }
                     }
                 }
-                if (intbasetype == 0)
+            }
+            else
+            {
+                if (avalider != null)
                 {
-                    Anarana = pathfile.Chemin;
-                    //XmlDocument xd = new XmlDocument();
-                    //xd.LoadXml(Anarana);
-                    //return CreateFileAFBXML(pathfile.Chemin, pathfile.Fichier);
+                    var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise);
+                    path = pathfile.Chemin;
+                    Nomfichier = pathfile.NomFichier + ".xml";
+                    if (avalider != null)
+                    {
+                        foreach (var item in avalider)
+                        {
+                            try
+                            {
+                                item.DATETRANS = DateTime.Now;
+                                item.IDUSTRANS = exist.ID;
+                                item.ETAT = 3;
+                                db.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                                throw;
+                            }
+                        }
+                    }
+                    if (intbasetype == 0)
+                    {
+                        Anarana = pathfile.Chemin;
+                        //XmlDocument xd = new XmlDocument();
+                        //xd.LoadXml(Anarana);
+                        //return CreateFileAFBXML(pathfile.Chemin, pathfile.Fichier);
 
-                    xmlResult = SaveDocument(Anarana, Anarana);
+                        xmlResult = SaveDocument(Anarana, Anarana);
+                    }
                 }
             }
             byte[] fileBytes = System.IO.File.ReadAllBytes(path);
@@ -3378,15 +3414,16 @@ namespace apptab.Controllers
         {
             int pport = int.Parse(port);
             string pth = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + SOURCE;
+            string namefile = SOURCE.Split('\\').Last().Split('.').First();
             //string pth = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + SOURCE;
             //string remoteFilePath = @"\public\";
-            string remoteFilePath = @"\acq\";
+            string remoteFilePath = PATH;
             var res = "";
             try
             {
                 // Créer une connexion SFTP
                 using (var sftp = new SftpClient(HOTE, pport, USERFTP.ToString(), PWDFTP))
-                //using (var sftp = new SftpClient("151.80.218.41", 22, "tester", "password"))
+                //using (var sftp = new SftpClient("72.251.3.20", 22, "tester", "password"))
                 {
                     sftp.Connect();
 
@@ -3394,7 +3431,7 @@ namespace apptab.Controllers
                     {
                         //var sss =  sftp.ListDirectory("//");
                         // Envoyer le fichier
-                        sftp.UploadFile(fileStream, remoteFilePath + Path.GetFileName(pth), x =>
+                        sftp.UploadFile(fileStream, remoteFilePath + namefile, x =>
                         {
                             var az = x.ToString();
                         });
