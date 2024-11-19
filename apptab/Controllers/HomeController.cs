@@ -34,6 +34,8 @@ using System.Web.Mail;
 using System.Data.Entity;
 using System.Configuration;
 using Renci.SshNet.Sftp;
+using Org.BouncyCastle.Bcpg.OpenPgp;
+using Org.BouncyCastle.Bcpg;
 
 namespace apptab.Controllers
 {
@@ -389,7 +391,7 @@ namespace apptab.Controllers
                     send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport, intbasetype);
                     if (avalider != null)
                     {
                         foreach (var item in avalider)
@@ -417,7 +419,7 @@ namespace apptab.Controllers
                     send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport, intbasetype);
                     if (avalider != null)
                     {
                         foreach (var item in avalider)
@@ -444,7 +446,7 @@ namespace apptab.Controllers
                     Anarana = pathfile.Chemin;
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport, intbasetype);
                     //SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                     if (avalider != null)
                     {
@@ -496,7 +498,7 @@ namespace apptab.Controllers
                     CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                     try
                     {
-                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport);
+                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype);
                         if (avalider != null)
                         {
                             foreach (var item in avalider)
@@ -532,7 +534,7 @@ namespace apptab.Controllers
                     send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype);
 
                     if (avalider != null)
                     {
@@ -565,7 +567,7 @@ namespace apptab.Controllers
                     string res = "";
                     try
                     {
-                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport);
+                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype);
                         if (avalider != null)
                         {
                             foreach (var item in avalider)
@@ -597,7 +599,7 @@ namespace apptab.Controllers
             }
         }
         [HttpPost]
-        public ActionResult CreateZipFileISO2022(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte,int typeDevise)
+        public ActionResult CreateZipFileISO2022(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte, int typeDevise)
         {
             AFB160 aFB160 = new AFB160();
             XmlDocument xmlResult = new XmlDocument();
@@ -631,7 +633,7 @@ namespace apptab.Controllers
                 xmlResult = SaveDocument(Anarana, Anarana);
                 var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                 string pport = ftp.PORT.ToString();
-                SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport);
+                SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype);
 
                 if (avalider != null)
                 {
@@ -3410,7 +3412,7 @@ namespace apptab.Controllers
             }
             return Json(JsonConvert.SerializeObject(new { msg = "success", data = result, datebr = resultBR }));
         }
-        public void SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE, string port)
+        public void SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE, string port, int intbasetype)
         {
             int pport = int.Parse(port);
             string pth = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + SOURCE;
@@ -3419,6 +3421,46 @@ namespace apptab.Controllers
             //string remoteFilePath = @"\public\";
             string remoteFilePath = PATH;
             var res = "";
+            if (intbasetype == 4)
+            {
+                string publicKeyFile = AppDomain.CurrentDomain.BaseDirectory + "RSAkeyFile.asc"; // Chemin vers la clé publique PGP
+                string privateKeyFile = AppDomain.CurrentDomain.BaseDirectory + "SOFTWELLSECRET.asc"; // Chemin vers la clé publique PGP
+                string outputFile = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + namefile + ".pgp";    // Chemin vers le fichier de sortie chiffré
+                string outputFileDEC = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + namefile + "DEC.xml";    // Chemin vers le fichier de sortie chiffré
+
+                EncryptFile(SOURCE, publicKeyFile, outputFile);
+                DecryptFile(outputFile, privateKeyFile, outputFileDEC);
+                try
+                {
+                    // Créer une connexion SFTP
+                    using (var sftp = new SftpClient(HOTE, pport, USERFTP.ToString(), PWDFTP))//h2h_pact/IN
+                    //using (var sftp = new SftpClient("72.251.3.20", 22, "tester", "password"))
+                    //using (var sftp = new SftpClient("196.192.47.133", 9222, "h2h_pact", "PKtt,;:9923"))
+                    {
+                        sftp.Connect();
+
+                        using (var fileStream = new FileStream(outputFile, FileMode.Open))
+                        {
+                            //var sss =  sftp.ListDirectory("//");
+                            // Envoyer le fichier
+                            sftp.UploadFile(fileStream, remoteFilePath + namefile, x =>
+                            {
+                                var az = x.ToString();
+                            });
+                            //Console.WriteLine("Fichier envoyé avec succès !");
+                            res = "Fichier envoyé avec succès !";
+                        }
+
+                        sftp.Disconnect();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Erreur : {ex.Message}");
+                    res = ex.Message;
+
+                }
+            }
             try
             {
                 // Créer une connexion SFTP
@@ -3755,6 +3797,136 @@ namespace apptab.Controllers
                 return TypeFileBQ.ToString();
             }
             //return TypeFileBQ;
+        }
+        public static void EncryptFile(string inputFile, string publicKeyFile, string outputFile)
+        {
+            PgpPublicKey publicKey = LoadPublicKey(publicKeyFile);
+
+            using (FileStream inputFileStream = System.IO.File.OpenRead(inputFile))
+            using (FileStream outputFileStream = System.IO.File.Create(outputFile))
+            {
+                // Créer un flux de chiffrement sans compression
+                PgpEncryptedDataGenerator encryptedDataGenerator = CreateEncryptionStream(publicKey);
+
+                // Ouvrir le flux de chiffrement et écrire directement dans le fichier de sortie
+                using (Stream encryptedOut = encryptedDataGenerator.Open(outputFileStream, new byte[1 << 16])) // 64k buffer
+                {
+                    // Copier les données directement dans le flux de chiffrement
+                    inputFileStream.CopyTo(encryptedOut);
+                }
+            }
+        }
+
+        // Fonction pour charger la clé publique à partir du fichier .asc
+        public static PgpPublicKey LoadPublicKey(string publicKeyFile)
+        {
+            using (FileStream keyInStream = System.IO.File.OpenRead(publicKeyFile))
+            {
+                PgpPublicKeyRingBundle keyRingBundle = new PgpPublicKeyRingBundle(PgpUtilities.GetDecoderStream(keyInStream));
+
+                foreach (PgpPublicKeyRing keyRing in keyRingBundle.GetKeyRings())
+                {
+                    return keyRing.GetPublicKey(); // Retourne la première clé publique trouvée
+                }
+
+                throw new Exception("Clé publique non trouvée dans le fichier.");
+            }
+        }
+
+        // Fonction pour créer un générateur de flux de chiffrement PGP
+        public static PgpEncryptedDataGenerator CreateEncryptionStream(PgpPublicKey publicKey)
+        {
+            PgpEncryptedDataGenerator encryptedDataGenerator = new PgpEncryptedDataGenerator(SymmetricKeyAlgorithmTag.Aes256, true);
+            encryptedDataGenerator.AddMethod(publicKey);
+            return encryptedDataGenerator;
+        }
+        public static void DecryptFile(string inputFile, string privateKeyFile, string outputFile)
+        {
+            // Charger la clé privée à partir du fichier sans passphrase
+            PgpPrivateKey privateKey = LoadPrivateKey(privateKeyFile);
+
+            // Assurez-vous que la clé privée a été chargée correctement
+            if (privateKey == null)
+            {
+                throw new Exception("La clé privée n'a pas pu être chargée.");
+            }
+
+            try
+            {
+                // Ouvrir le fichier chiffré en lecture
+                using (FileStream inputFileStream = System.IO.File.OpenRead(inputFile))
+                using (FileStream outputFileStream = System.IO.File.Create(outputFile))
+                {
+                    // Créer un objet PgpObjectFactory pour analyser les objets PGP du fichier
+                    PgpObjectFactory pgpObjectFactory = new PgpObjectFactory(PgpUtilities.GetDecoderStream(inputFileStream));
+
+                    // Récupérer la liste des données chiffrées (PgpEncryptedDataList)
+                    object pgpObject = pgpObjectFactory.NextPgpObject();
+                    PgpEncryptedDataList encryptedDataList = pgpObject as PgpEncryptedDataList;
+
+                    if (encryptedDataList == null)
+                    {
+                        throw new Exception("Le fichier ne contient pas de données chiffrées PGP.");
+                    }
+
+                    // Chercher la première entrée chiffrée valide avec une boucle for
+                    PgpPublicKeyEncryptedData encryptedData = null;
+                    for (int i = 0; i < encryptedDataList.Count; i++)
+                    {
+                        if (encryptedDataList[i] is PgpPublicKeyEncryptedData)
+                        {
+                            encryptedData = (PgpPublicKeyEncryptedData)encryptedDataList[i];
+                            break;
+                        }
+                    }
+
+                    // Vérifier si nous avons trouvé des données chiffrées valides
+                    if (encryptedData == null)
+                    {
+                        throw new Exception("Aucune donnée chiffrée PGP valide trouvée.");
+                    }
+
+                    // Déchiffrer les données avec la clé privée
+                    using (Stream decryptedDataStream = encryptedData.GetDataStream(privateKey))
+                    {
+                        // Copier les données déchiffrées dans le fichier de sortie
+                        decryptedDataStream.CopyTo(outputFileStream);
+                    }
+                }
+            }
+            catch (IOException ex)
+            {
+                throw new Exception("Erreur lors de la lecture ou de l'écriture du fichier.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Une erreur inconnue est survenue lors du déchiffrement du fichier.", ex);
+            }
+        }
+        // Fonction pour charger la clé privée à partir du fichier .asc (avec passphrase)
+        public static PgpPrivateKey LoadPrivateKey(string privateKeyFile)
+        {
+            using (FileStream keyInStream = System.IO.File.OpenRead(privateKeyFile))
+            {
+                // Créer le paquet de clés privées à partir du fichier
+                PgpSecretKeyRingBundle keyRingBundle = new PgpSecretKeyRingBundle(PgpUtilities.GetDecoderStream(keyInStream));
+
+                // Chercher la première clé secrète dans le paquet
+                foreach (PgpSecretKeyRing keyRing in keyRingBundle.GetKeyRings())
+                {
+                    PgpSecretKey secretKey = keyRing.GetSecretKey();
+
+                    // Extraire la clé privée (sans passphrase, si non protégée)
+                    PgpPrivateKey privateKey = secretKey.ExtractPrivateKey(null);  // Passphrase est null car il n'y en a pas
+
+                    if (privateKey != null)
+                    {
+                        return privateKey; // Retourner la première clé privée trouvée
+                    }
+                }
+
+                throw new Exception("Clé privée non trouvée dans le fichier.");
+            }
         }
     }
 }
