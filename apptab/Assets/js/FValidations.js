@@ -363,11 +363,11 @@ function getelementTXT(a , list) {
                 window.location.reload();
             },
             success: function (result) {
-                var Datas = JSON.parse(result);
-                alert(Datas.data);
+                //var Datas = JSON.parse(result);
+                //alert(Datas.data);
                 let blobUrl = URL.createObjectURL(result);
                 GetFileNameAnarana(blobUrl);
-                window.location = '/Home/GetFile?file=""' ;
+                //window.location = '/Home/GetFile?file=""' ;
                 $('#verification-modal').modal('toggle');
                 loader.addClass('display-none');
             },

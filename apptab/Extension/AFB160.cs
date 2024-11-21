@@ -24,7 +24,7 @@ namespace apptab.Extension
     {
 
         private readonly SOFTCONNECTGED ged = new SOFTCONNECTGED();
-        public ISO20022xml CreateISO20022(bool devise, string codeJ, SI_USERS user, string codeproject, List<AvanceDetails> list,int typeDevise)
+        public ISO20022xml CreateISO20022(bool devise, string codeJ, SI_USERS user, string codeproject, List<AvanceDetails> list,int typeDevise,int intbasetype)
         {
             XmlDocument xd = new XmlDocument();
 
@@ -710,6 +710,55 @@ namespace apptab.Extension
                                     );
                                 }
                             }
+
+                        }
+                        else if (intbasetype == 5)
+                        {
+                            rswift = tom.RTIERS.Where(a => a.AUXI == item.AUXI).FirstOrDefault();
+                            //Mise a dsiposition 
+                            pmtinf.Add(
+                                new XElement("CdtTrfTxInf",
+                                    new XElement("PmtId",
+                                        new XElement("InstrId", bnfr.RIB.TrimEnd(' ')),
+                                        new XElement("EndToEndId", bnfr.RIB.TrimEnd(' '))
+                                    ),
+
+                                    new XElement("Amt",
+                                            new XElement("InstdAmt",
+                                            new XAttribute("Ccy", ccyiso), ere)
+                                    ),
+
+                                    new XElement("ChrgBr", "SHAR"),
+                                    new XElement("CdtrAgt",
+                                        new XElement("FinInstnId",
+                                            new XElement("BIC", rswift.BQSWIFT)
+                                        )
+                                    ),
+                                    new XElement("Cdtr",
+                                            new XElement("Nm", item.BENEFICIAIRE),
+                                             new XElement("Id",
+                                                new XElement("OrgId",
+                                                    new XElement("Othr",
+                                                        new XElement("Id", rswift.CONTACT)
+                                                    )
+                                                )
+                                            ),
+                                            //adresse beneficiaire
+                                            new XElement("PstlAdr",
+                                                new XElement("Ctry", item.PAYS != null ? item.PAYS.TrimEnd(' ').Trim(' ') : " "),
+                                                new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')),
+                                                new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' '))
+                                            )
+                                    ),
+                                    new XElement("CdtrAcct",
+                                        new XElement("Id",
+                                            new XElement("Othr",
+                                                new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE)
+                                            )
+                                        )
+                                    )
+                                )
+                            );
 
                         }
                         else

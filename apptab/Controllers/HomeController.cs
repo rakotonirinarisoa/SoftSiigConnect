@@ -36,6 +36,8 @@ using System.Configuration;
 using Renci.SshNet.Sftp;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 using Org.BouncyCastle.Bcpg;
+using System.Web.Services.Description;
+using System.Diagnostics;
 
 namespace apptab.Controllers
 {
@@ -529,7 +531,7 @@ namespace apptab.Controllers
                 else if (intbasetype == 4)//testISO20022
                 {
                     int typeDevise = 0;
-                    var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise);
+                    var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype);
                     Anarana = pathfile.Chemin;
                     send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
@@ -622,10 +624,42 @@ namespace apptab.Controllers
             };
             var path = "";
             var Nomfichier = "";
-            if (intbasetype == 4)
+            if (intbasetype == 3)
             {
 
-                var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise);
+                var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype);
+                Anarana = pathfile.Chemin;
+                path = pathfile.Chemin;
+                send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
+
+                xmlResult = SaveDocument(Anarana, Anarana);
+                var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
+                string pport = ftp.PORT.ToString();
+                SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype);
+
+                if (avalider != null)
+                {
+                    foreach (var item in avalider)
+                    {
+                        try
+                        {
+                            item.DATETRANS = DateTime.Now;
+
+                            item.IDUSTRANS = exist.ID;
+                            item.ETAT = 3;
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                            throw;
+                        }
+                    }
+                }
+            }
+            else if (intbasetype == 5)
+            {
+                var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype);
                 Anarana = pathfile.Chemin;
                 path = pathfile.Chemin;
                 send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
@@ -659,7 +693,7 @@ namespace apptab.Controllers
             {
                 if (avalider != null)
                 {
-                    var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise);
+                    var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype);
                     path = pathfile.Chemin;
                     Nomfichier = pathfile.NomFichier + ".xml";
                     if (avalider != null)
@@ -3412,6 +3446,7 @@ namespace apptab.Controllers
             }
             return Json(JsonConvert.SerializeObject(new { msg = "success", data = result, datebr = resultBR }));
         }
+        
         public void SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE, string port, int intbasetype)
         {
             int pport = int.Parse(port);
@@ -3421,15 +3456,16 @@ namespace apptab.Controllers
             //string remoteFilePath = @"\public\";
             string remoteFilePath = PATH;
             var res = "";
-            if (intbasetype == 4)
+            if (intbasetype == 3)
             {
                 string publicKeyFile = AppDomain.CurrentDomain.BaseDirectory + "RSAkeyFile.asc"; // Chemin vers la clé publique PGP
                 string privateKeyFile = AppDomain.CurrentDomain.BaseDirectory + "SOFTWELLSECRET.asc"; // Chemin vers la clé publique PGP
                 string outputFile = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + namefile + ".pgp";    // Chemin vers le fichier de sortie chiffré
                 string outputFileDEC = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + namefile + "DEC.xml";    // Chemin vers le fichier de sortie chiffré
 
-                EncryptFile(SOURCE, publicKeyFile, outputFile);
-                DecryptFile(outputFile, privateKeyFile, outputFileDEC);
+                //EncryptFile(SOURCE, publicKeyFile, outputFile);
+                EncryptFileWithGPG(SOURCE, publicKeyFile, outputFile);
+                //DecryptFile(outputFile, privateKeyFile, outputFileDEC);
                 try
                 {
                     // Créer une connexion SFTP
@@ -3438,8 +3474,49 @@ namespace apptab.Controllers
                     //using (var sftp = new SftpClient("196.192.47.133", 9222, "h2h_pact", "PKtt,;:9923"))
                     {
                         sftp.Connect();
+                        if (sftp.IsConnected)
+                        {
+                            var directoryList = sftp.ListDirectory("/IN");
+                            foreach (var file in directoryList)
+                            {
+                                Console.WriteLine(file.FullName);
+                            }
+                            using (var fileStream = new FileStream(SOURCE, FileMode.Open))
+                            {
+                                //var sss =  sftp.ListDirectory("//");
+                                // Envoyer le fichier
+                                sftp.UploadFile(fileStream, remoteFilePath + "/" + namefile, x =>
+                                {
+                                    var az = x.ToString();
+                                });
+                                //Console.WriteLine("Fichier envoyé avec succès !");
+                                res = "Fichier envoyé avec succès !";
+                            }
+                        }
 
-                        using (var fileStream = new FileStream(outputFile, FileMode.Open))
+                        sftp.Disconnect();
+                    }
+                }
+                catch (Renci.SshNet.Common.SftpPermissionDeniedException ex)
+                {
+                    res= $"Erreur de permission : {ex.Message}. Assurez-vous que vous avez les permissions d'écriture sur le répertoire distant.";
+                }
+                catch (Exception ex)
+                {
+                    res= $"Erreur générale : {ex.Message}";
+                }
+
+            }
+            else {
+                try
+                {
+                    // Créer une connexion SFTP
+                    using (var sftp = new SftpClient(HOTE, pport, USERFTP.ToString(), PWDFTP))
+                    //using (var sftp = new SftpClient("72.251.3.20", 22, "tester", "password"))
+                    {
+                        sftp.Connect();
+
+                        using (var fileStream = new FileStream(SOURCE, FileMode.Open))
                         {
                             //var sss =  sftp.ListDirectory("//");
                             // Envoyer le fichier
@@ -3458,39 +3535,51 @@ namespace apptab.Controllers
                 {
                     Console.WriteLine($"Erreur : {ex.Message}");
                     res = ex.Message;
-
                 }
-            }
-            try
-            {
-                // Créer une connexion SFTP
-                using (var sftp = new SftpClient(HOTE, pport, USERFTP.ToString(), PWDFTP))
-                //using (var sftp = new SftpClient("72.251.3.20", 22, "tester", "password"))
-                {
-                    sftp.Connect();
-
-                    using (var fileStream = new FileStream(SOURCE, FileMode.Open))
-                    {
-                        //var sss =  sftp.ListDirectory("//");
-                        // Envoyer le fichier
-                        sftp.UploadFile(fileStream, remoteFilePath + namefile, x =>
-                        {
-                            var az = x.ToString();
-                        });
-                        //Console.WriteLine("Fichier envoyé avec succès !");
-                        res = "Fichier envoyé avec succès !";
-                    }
-
-                    sftp.Disconnect();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Erreur : {ex.Message}");
-                res = ex.Message;
             }
         }
-
+        [HttpPost]
+        public JsonResult AlertClient(SI_USERS suser,string codeJournal ,string codeproject,string auxi,string comptaG)
+        {
+            int PROJECTID = int.Parse(codeproject);
+            var user = db.SI_USERS.Where(x => x.LOGIN == suser.LOGIN && x.PWD == suser.PWD && x.DELETIONDATE == null).FirstOrDefault();
+            //var CodeJournalAlert = db.ANOMALIE_G.Where(x => x.IDPROJECT == PROJECTID ).ToList();
+            bool Alert = false;
+            if (comptaG != "Autre Opérations")
+            {
+                if (auxi == "Tous")
+                {
+                    var rjl = __db.RJL1.Where(x => x.CODE == codeJournal).FirstOrDefault();
+                    if (rjl.BANQUE == null || rjl.AGENCE == null || rjl.GUICHET == null || rjl.RIB == null || rjl.CLE == null || rjl.IBAN == null)
+                    {
+                        Alert = true;
+                    }
+                }
+                else
+                {
+                    var rjl = __db.RJL1.Where(x => x.CODE == codeJournal).FirstOrDefault();
+                    var tiers = __db.RTIERS.Where(x => x.AUXI == auxi).FirstOrDefault();
+                    if (rjl.BANQUE == null || rjl.AGENCE == null || rjl.GUICHET == null || rjl.RIB == null || rjl.CLE == null || rjl.IBAN == null)
+                    {
+                        Alert = true;
+                    }
+                    if (tiers.PAYS == null || tiers.AD1 == null || tiers.RIB1 == null || tiers.DOM1 == null || tiers.RIBCLE == null || tiers.RIBGUICHET == null)
+                    {
+                        Alert = true;
+                    }
+                }
+               
+            }
+            else
+            {
+                var rjl = __db.RJL1.Where(x => x.CODE == codeJournal).FirstOrDefault();
+                if (rjl.BANQUE == null || rjl.AGENCE == null || rjl.GUICHET == null || rjl.RIB == null || rjl.CLE == null || rjl.IBAN == null)
+                {
+                    Alert = true;
+                }
+            }
+            return Json(JsonConvert.SerializeObject(new { type = "Success",msg = "Pourriez-vous s'il vous plaît vérifier votre Parametrage dans TOM² PRO ? Il semble qu'il manque une information importante.", data = Alert }));
+        }
         private ConnectionInfo getSftpConnection(string hOTE, string username, int port, string sOURCE)
         {
             string pth = AppDomain.CurrentDomain.BaseDirectory + "KeyP.txt";
@@ -3926,6 +4015,57 @@ namespace apptab.Controllers
                 }
 
                 throw new Exception("Clé privée non trouvée dans le fichier.");
+            }
+        }
+        public JsonResult MiseAdisposition(SI_USERS suser, string codeproject)
+        {
+            int PROJECTID = int.Parse(codeproject);
+            var usr = db.SI_USERS.Where(x => x.LOGIN == suser.LOGIN && x.IDPROJET == PROJECTID && x.DELETIONDATE == null).FirstOrDefault();
+            List<string> site = new List<string>();
+            var siteS = db.SI_SITE.Where(ST => ST.IDUSER == usr.ID && ST.IDPROJET == PROJECTID).Select(ST => ST.SITE).FirstOrDefault();
+            foreach (var item in siteS.Split(','))
+            {
+                site.Add(item);
+            }
+
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "", data = "" }, settings));
+        }
+        public static void EncryptFileWithGPG(string inputFile, string publicKeyFile, string outputFile)
+        {
+            // Ajouter la clé publique GPG au trousseau de clés
+            string importKeyCommand = $"--import \"{publicKeyFile}\"";
+            ExecuteGPGCommand(importKeyCommand);
+
+            // Chiffrer le fichier avec la clé publique
+            string encryptCommand = $"--output \"{outputFile}\" --encrypt --recipient-file \"{publicKeyFile}\" \"{inputFile}\"";
+            ExecuteGPGCommand(encryptCommand);
+        }
+
+        private static void ExecuteGPGCommand(string command)
+        {
+            ProcessStartInfo pro = new ProcessStartInfo
+            {
+                FileName = "gpg", // Exécute le programme GPG
+                Arguments = command, // Ajoute les arguments pour importer ou chiffrer
+                RedirectStandardOutput = true, // Rediriger la sortie pour capturer l'output
+                RedirectStandardError = true, // Rediriger les erreurs pour capturer les messages d'erreur
+                UseShellExecute = false, // Ne pas utiliser le shell (important pour rediriger la sortie)
+                CreateNoWindow = true // Ne pas créer de fenêtre de commande
+            };
+
+            using (Process process = Process.Start(pro))
+            {
+                string output = process.StandardOutput.ReadToEnd();
+                string error = process.StandardError.ReadToEnd();
+
+                process.WaitForExit();
+
+                if (process.ExitCode != 0)
+                {
+                    throw new Exception($"GPG Error: {error}");
+                }
+
+                Console.WriteLine(output); // Afficher la sortie standard de GPG
             }
         }
     }
