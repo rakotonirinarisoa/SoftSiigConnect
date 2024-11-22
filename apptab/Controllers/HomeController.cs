@@ -3460,7 +3460,7 @@ namespace apptab.Controllers
             {
                 string publicKeyFile = AppDomain.CurrentDomain.BaseDirectory + "RSAkeyFile.asc"; // Chemin vers la clé publique PGP
                 string privateKeyFile = AppDomain.CurrentDomain.BaseDirectory + "SOFTWELLSECRET.asc"; // Chemin vers la clé publique PGP
-                string outputFile = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + namefile + ".pgp";    // Chemin vers le fichier de sortie chiffré
+                string outputFile = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + namefile + ".xml.gpg";    // Chemin vers le fichier de sortie chiffré
                 string outputFileDEC = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + namefile + "DEC.xml";    // Chemin vers le fichier de sortie chiffré
 
                 //EncryptFile(SOURCE, publicKeyFile, outputFile);
@@ -3481,11 +3481,11 @@ namespace apptab.Controllers
                             {
                                 Console.WriteLine(file.FullName);
                             }
-                            using (var fileStream = new FileStream(SOURCE, FileMode.Open))
+                            using (var fileStream = new FileStream(outputFile, FileMode.Open))
                             {
                                 //var sss =  sftp.ListDirectory("//");
                                 // Envoyer le fichier
-                                sftp.UploadFile(fileStream, remoteFilePath + "/" + namefile, x =>
+                                sftp.UploadFile(fileStream, remoteFilePath + "/" + namefile + ".xml.gpg", x =>
                                 {
                                     var az = x.ToString();
                                 });
@@ -4040,7 +4040,16 @@ namespace apptab.Controllers
             string encryptCommand = $"--output \"{outputFile}\" --encrypt --recipient-file \"{publicKeyFile}\" \"{inputFile}\"";
             ExecuteGPGCommand(encryptCommand);
         }
+        public static void DecryptFileWithGPG(string inputFile, string privateKeyFile, string outputFile)
+        {
+            // Ajouter la clé privée GPG au trousseau de clés
+            string importKeyCommand = $"--import \"{privateKeyFile}\"";
+            ExecuteGPGCommand(importKeyCommand);
 
+            // Déchiffrer le fichier avec la clé privée
+            string decryptCommand = $"--output \"{outputFile}\" --decrypt \"{inputFile}\"";
+            ExecuteGPGCommand(decryptCommand);
+        }
         private static void ExecuteGPGCommand(string command)
         {
             ProcessStartInfo pro = new ProcessStartInfo
