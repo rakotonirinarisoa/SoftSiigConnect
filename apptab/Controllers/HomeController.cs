@@ -38,6 +38,7 @@ using Org.BouncyCastle.Bcpg.OpenPgp;
 using Org.BouncyCastle.Bcpg;
 using System.Web.Services.Description;
 using System.Diagnostics;
+using Microsoft.SqlServer.Server;
 
 namespace apptab.Controllers
 {
@@ -302,7 +303,7 @@ namespace apptab.Controllers
             //return File(source, System.Net.Mime.MediaTypeNames.Application.Octet);
         }
         [HttpPost]
-        public ActionResult CreateZipFile(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte)
+        public ActionResult CreateZipFile(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte , string journal)
         {
             AFB160 aFB160 = new AFB160();
 
@@ -393,7 +394,7 @@ namespace apptab.Controllers
                     send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport, intbasetype);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport, intbasetype, PROJECTID, journal);
                     if (avalider != null)
                     {
                         foreach (var item in avalider)
@@ -421,7 +422,7 @@ namespace apptab.Controllers
                     send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport, intbasetype);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport, intbasetype, PROJECTID, journal);
                     if (avalider != null)
                     {
                         foreach (var item in avalider)
@@ -448,7 +449,7 @@ namespace apptab.Controllers
                     Anarana = pathfile.Chemin;
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport, intbasetype);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport, intbasetype, PROJECTID, journal);
                     //SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                     if (avalider != null)
                     {
@@ -500,7 +501,7 @@ namespace apptab.Controllers
                     CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                     try
                     {
-                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype);
+                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, journal);
                         if (avalider != null)
                         {
                             foreach (var item in avalider)
@@ -536,7 +537,7 @@ namespace apptab.Controllers
                     send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, journal);
 
                     if (avalider != null)
                     {
@@ -569,7 +570,7 @@ namespace apptab.Controllers
                     string res = "";
                     try
                     {
-                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype);
+                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, journal);
                         if (avalider != null)
                         {
                             foreach (var item in avalider)
@@ -601,7 +602,7 @@ namespace apptab.Controllers
             }
         }
         [HttpPost]
-        public ActionResult CreateZipFileISO2022(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte, int typeDevise)
+        public ActionResult CreateZipFileISO2022(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte, int typeDevise, string journal)
         {
             AFB160 aFB160 = new AFB160();
             XmlDocument xmlResult = new XmlDocument();
@@ -624,19 +625,34 @@ namespace apptab.Controllers
             };
             var path = "";
             var Nomfichier = "";
+            RBANQUES rbanque = new RBANQUES();
+            RJL1 djournal = (from journl in __db.RJL1
+                             where journl.CODE == journal && journl.JLTRESOR == true && (journl.NATURE == "2" || journl.NATURE == "1")
+                             select journl).Single();
+            rbanque = __db.RBANQUES.Where(x => x.CODE == djournal.BANQUE).FirstOrDefault();
+            string directory = "";
+            string projetName = "";
             if (intbasetype == 3)
             {
-
+                projetName = db.SI_PROJETS.Where(x => x.ID == PROJECTID).FirstOrDefault().PROJET;
                 var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype);
                 Anarana = pathfile.Chemin;
                 path = pathfile.Chemin;
                 send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
 
                 xmlResult = SaveDocument(Anarana, Anarana);
-                var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
-                string pport = ftp.PORT.ToString();
-                SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype);
-
+                if (rbanque.CODEBIC.Contains("BOA"))
+                {
+                    directory = "BANQUE//BOA";
+                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BOA").FirstOrDefault();
+                    string pport = ftp.PORT.ToString();
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, journal);
+                }else if (rbanque.CODEBIC.Contains("BNI"))
+                {
+                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BNI").FirstOrDefault();
+                    string pport = ftp.PORT.ToString();
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, journal);
+                }
                 if (avalider != null)
                 {
                     foreach (var item in avalider)
@@ -667,7 +683,7 @@ namespace apptab.Controllers
                 xmlResult = SaveDocument(Anarana, Anarana);
                 var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                 string pport = ftp.PORT.ToString();
-                SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype);
+                SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype,PROJECTID, journal);
 
                 if (avalider != null)
                 {
@@ -3447,7 +3463,7 @@ namespace apptab.Controllers
             return Json(JsonConvert.SerializeObject(new { msg = "success", data = result, datebr = resultBR }));
         }
         
-        public void SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE, string port, int intbasetype)
+        public void SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE, string port, int intbasetype,int PROJECTID,string journal)
         {
             int pport = int.Parse(port);
             string pth = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + SOURCE;
@@ -3456,16 +3472,27 @@ namespace apptab.Controllers
             //string remoteFilePath = @"\public\";
             string remoteFilePath = PATH;
             var res = "";
+            
             if (intbasetype == 3)
             {
-                string publicKeyFile = AppDomain.CurrentDomain.BaseDirectory + "RSAkeyFile.asc"; // Chemin vers la clé publique PGP
-                string privateKeyFile = AppDomain.CurrentDomain.BaseDirectory + "SOFTWELLSECRET.asc"; // Chemin vers la clé publique PGP
-                string outputFile = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + namefile + ".xml.gpg";    // Chemin vers le fichier de sortie chiffré
-                string outputFileDEC = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + namefile + "DEC.xml";    // Chemin vers le fichier de sortie chiffré
+                string publicKeyFile = AppDomain.CurrentDomain.BaseDirectory + "RSAkeyFile.asc"; // Chemin vers la clé publique PGP / gpg
+                //string privateKeyFile = AppDomain.CurrentDomain.BaseDirectory + "SOFTWELLSECRET.asc"; // Chemin vers la clé publique PGP/gpg
+                string outputFile = "";
+                //string outputFileDEC = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + namefile + "DEC.xml";    // Chemin vers le fichier de sortie chiffré
+                var CryptageType = db.SI_TYPEBANQUE.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
+                if (CryptageType.CRYPTAGE == "2")
+                {
+                    outputFile = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + namefile + ".xml.gpg";    // Chemin vers le fichier de sortie chiffré
+                    EncryptFileWithGPG(SOURCE, publicKeyFile, outputFile);
+                    //DecryptFile(outputFile, privateKeyFile, outputFileDEC);
+                    namefile = namefile + ".xml.gpg";
+                } else if (CryptageType.CRYPTAGE == "1")
+                {
+                    outputFile = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + namefile + ".xml.pgp";    // Chemin vers le fichier de sortie chiffré
+                    EncryptFile(SOURCE, publicKeyFile, outputFile);
+                    namefile = namefile + ".xml.pgp";
+                }
 
-                //EncryptFile(SOURCE, publicKeyFile, outputFile);
-                EncryptFileWithGPG(SOURCE, publicKeyFile, outputFile);
-                //DecryptFile(outputFile, privateKeyFile, outputFileDEC);
                 try
                 {
                     // Créer une connexion SFTP
@@ -3476,16 +3503,16 @@ namespace apptab.Controllers
                         sftp.Connect();
                         if (sftp.IsConnected)
                         {
-                            var directoryList = sftp.ListDirectory("/IN");
-                            foreach (var file in directoryList)
-                            {
-                                Console.WriteLine(file.FullName);
-                            }
+                            //var directoryList = sftp.ListDirectory("/IN");
+                            //foreach (var file in directoryList)
+                            //{
+                            //    Console.WriteLine(file.FullName);
+                            //}
                             using (var fileStream = new FileStream(outputFile, FileMode.Open))
                             {
                                 //var sss =  sftp.ListDirectory("//");
                                 // Envoyer le fichier
-                                sftp.UploadFile(fileStream, remoteFilePath + "/" + namefile + ".xml.gpg", x =>
+                                sftp.UploadFile(fileStream, remoteFilePath + "/" + namefile, x =>
                                 {
                                     var az = x.ToString();
                                 });
@@ -3503,7 +3530,7 @@ namespace apptab.Controllers
                 }
                 catch (Exception ex)
                 {
-                    res= $"Erreur générale : {ex.Message}";
+                    res = $"Erreur générale : {ex.Message}";
                 }
 
             }

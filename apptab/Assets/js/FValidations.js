@@ -327,7 +327,7 @@ function GetFileNameAnarana(blobUrl) {
 }
 function getelementTXT(a , list) {
     let formData = new FormData();
-
+    let journal = $("#commercial").val();
    
     if (window.confirm("le fichier de la banque ne pourra plus être régénéré à nouveau, voulez-vous confirmer?")) {
         let codeproject = $("#Fproject").val();
@@ -339,6 +339,7 @@ function getelementTXT(a , list) {
         formData.append("suser.ROLE", User.ROLE);
         formData.append("suser.IDSOCIETE", User.IDSOCIETE);
         formData.append("baseName", baseName);
+        formData.append("journal", journal);
         formData.append("codeJ", $('#commercial').val());
         formData.append("devise", false);
         formData.append("intbasetype", a);
@@ -384,6 +385,7 @@ function getelementISO2022(a, list) {
     if (window.confirm("Le fichier de la banque ne pourra plus être régénéré à nouveau, voulez-vous confirmer?")) {
         let codeproject = $("#Fproject").val();
         let elementDevise = $('#ChkDevise').prop('checked');
+        let journal = $("#commercial").val(); 
         let typeDevise = "0";
         if (elementDevise) {
             typeDevise = $('input[name="deviseType"]:checked').val();
@@ -399,6 +401,7 @@ function getelementISO2022(a, list) {
         formData.append("codeJ", $('#commercial').val());
         formData.append("devise", elementDevise);
         formData.append("typeDevise", typeDevise);
+        formData.append("journal", journal);
         formData.append("intbasetype", a);
 
         formData.append("listCompte", JSON.stringify(list));

@@ -17,5 +17,8 @@ namespace apptab.Models
         public DateTime? CREATIONDATE { get; set; }
 
         public int? IDPROJET { get; set; }
+
+        [StringLength(50)]
+        public string CRYPTAGE { get; set; }
     }
 }
