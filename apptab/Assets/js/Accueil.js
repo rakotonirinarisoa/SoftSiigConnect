@@ -454,6 +454,9 @@ $(document).on("change", "[code-project]", () => {
     GetListCodeJournal();
     emptyTable();
 });
+$('#commercial').change(function () {
+    GetAlertRouge();
+});
 function emptyTable() {
     const data = [];
 

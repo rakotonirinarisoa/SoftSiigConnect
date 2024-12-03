@@ -602,7 +602,7 @@ namespace apptab.Controllers
             }
         }
         [HttpPost]
-        public ActionResult CreateZipFileISO2022(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte, int typeDevise, string journal)
+        public ActionResult CreateZipFileISO2022(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte, int typeDevise)
         {
             AFB160 aFB160 = new AFB160();
             XmlDocument xmlResult = new XmlDocument();
@@ -627,14 +627,15 @@ namespace apptab.Controllers
             var Nomfichier = "";
             RBANQUES rbanque = new RBANQUES();
             RJL1 djournal = (from journl in __db.RJL1
-                             where journl.CODE == journal && journl.JLTRESOR == true && (journl.NATURE == "2" || journl.NATURE == "1")
-                             select journl).Single();
+                             where journl.CODE == codeJ && journl.JLTRESOR == true && (journl.NATURE == "2" || journl.NATURE == "1")
+                             select journl).FirstOrDefault();
             rbanque = __db.RBANQUES.Where(x => x.CODE == djournal.BANQUE).FirstOrDefault();
             string directory = "";
             string projetName = "";
-            if (intbasetype == 3)
+            projetName = db.SI_PROJETS.Where(x => x.ID == PROJECTID).FirstOrDefault().PROJET;
+            if (intbasetype == 3 || intbasetype == 4)//ISO crypter RSA
             {
-                projetName = db.SI_PROJETS.Where(x => x.ID == PROJECTID).FirstOrDefault().PROJET;
+              
                 var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype);
                 Anarana = pathfile.Chemin;
                 path = pathfile.Chemin;
@@ -643,15 +644,29 @@ namespace apptab.Controllers
                 xmlResult = SaveDocument(Anarana, Anarana);
                 if (rbanque.CODEBIC.Contains("BOA"))
                 {
-                    directory = "BANQUE//BOA";
+                    directory = "BANQUE/" + projetName + "/BOA";
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BOA").FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, journal);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory);
                 }else if (rbanque.CODEBIC.Contains("BNI"))
                 {
+                    directory = "BANQUE/" + projetName + "/BNI";
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BNI").FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, journal);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory);
+                }else if(rbanque.CODEBIC.Contains("BFAV"))
+                {
+                    directory = "BANQUE/" + projetName + "/SG";
+                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "SG").FirstOrDefault();
+                    string pport = ftp.PORT.ToString();
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory);
+                }
+                else if (rbanque.CODEBIC.Contains("BMOI"))
+                {
+                    directory = "BANQUE/" + projetName + "/BMOI";
+                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BMOI").FirstOrDefault();
+                    string pport = ftp.PORT.ToString();
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory);
                 }
                 if (avalider != null)
                 {
@@ -673,7 +688,7 @@ namespace apptab.Controllers
                     }
                 }
             }
-            else if (intbasetype == 5)
+            else if (intbasetype == 5)//mise a disposition
             {
                 var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype);
                 Anarana = pathfile.Chemin;
@@ -681,9 +696,34 @@ namespace apptab.Controllers
                 send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
 
                 xmlResult = SaveDocument(Anarana, Anarana);
-                var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
-                string pport = ftp.PORT.ToString();
-                SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype,PROJECTID, journal);
+                if (rbanque.CODEBIC.Contains("BOA"))
+                {
+                    directory = "BANQUE/" + projetName + "/BOA";
+                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BOA").FirstOrDefault();
+                    string pport = ftp.PORT.ToString();
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory);
+                }
+                else if (rbanque.CODEBIC.Contains("BNI"))
+                {
+                    directory = "BANQUE/" + projetName + "/BNI";
+                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BNI").FirstOrDefault();
+                    string pport = ftp.PORT.ToString();
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory);
+                }
+                else if (rbanque.CODEBIC.Contains("BFAV"))
+                {
+                    directory = "BANQUE/" + projetName + "/SG";
+                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "SG").FirstOrDefault();
+                    string pport = ftp.PORT.ToString();
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory);
+                }
+                else if (rbanque.CODEBIC.Contains("BMOI"))
+                {
+                    directory = "BANQUE/" + projetName + "/BMOI";
+                    var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BMOI").FirstOrDefault();
+                    string pport = ftp.PORT.ToString();
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory);
+                }
 
                 if (avalider != null)
                 {
@@ -1173,6 +1213,7 @@ namespace apptab.Controllers
                             avalider.Libelle = LST.Libelle;
                             avalider.Debit = LST.Debit;
                             avalider.Credit = LST.Credit;
+                            avalider.MONTANT = LST.Montant;
                             avalider.MontantDevise = LST.MontantDevise;
                             avalider.Mon = LST.Mon;
                             avalider.Rang = LST.Rang;
@@ -1280,7 +1321,8 @@ namespace apptab.Controllers
                             avalider.NoPiece = Lst.NoPiece;
                             avalider.Compte = Lst.Compte;
                             avalider.Libelle = Lst.Libelle;
-                            avalider.MONTANT = Convert.ToDecimal(couperText(18, Lst.Montant.ToString()));
+                            //avalider.MONTANT = Convert.ToDecimal(couperText(18, Lst.Montant.ToString()));
+                            avalider.MONTANT = Convert.ToDecimal(Lst.Montant.ToString());
                             avalider.MontantDevise = Lst.MontantDevise;
                             avalider.Mon = Lst.Mon;
                             avalider.Rang = Lst.Rang;
@@ -3462,79 +3504,105 @@ namespace apptab.Controllers
             }
             return Json(JsonConvert.SerializeObject(new { msg = "success", data = result, datebr = resultBR }));
         }
-        
-        public void SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE, string port, int intbasetype,int PROJECTID,string journal)
+        public void SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE, string port, int intbasetype,int PROJECTID,string directory)
         {
             int pport = int.Parse(port);
-            string pth = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + SOURCE;
+            string pth = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + SOURCE;
             string namefile = SOURCE.Split('\\').Last().Split('.').First();
-            //string pth = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + SOURCE;
-            //string remoteFilePath = @"\public\";
             string remoteFilePath = PATH;
             var res = "";
-            
-            if (intbasetype == 3)
+            string outputFile = "";
+            if (intbasetype == 3 || intbasetype == 5)
             {
-                string publicKeyFile = AppDomain.CurrentDomain.BaseDirectory + "RSAkeyFile.asc"; // Chemin vers la clé publique PGP / gpg
-                //string privateKeyFile = AppDomain.CurrentDomain.BaseDirectory + "SOFTWELLSECRET.asc"; // Chemin vers la clé publique PGP/gpg
-                string outputFile = "";
-                //string outputFileDEC = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + namefile + "DEC.xml";    // Chemin vers le fichier de sortie chiffré
-                var CryptageType = db.SI_TYPEBANQUE.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
-                if (CryptageType.CRYPTAGE == "2")
-                {
-                    outputFile = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + namefile + ".xml.gpg";    // Chemin vers le fichier de sortie chiffré
-                    EncryptFileWithGPG(SOURCE, publicKeyFile, outputFile);
-                    //DecryptFile(outputFile, privateKeyFile, outputFileDEC);
-                    namefile = namefile + ".xml.gpg";
-                } else if (CryptageType.CRYPTAGE == "1")
-                {
-                    outputFile = AppDomain.CurrentDomain.BaseDirectory + "FILERESULT\\" + namefile + ".xml.pgp";    // Chemin vers le fichier de sortie chiffré
-                    EncryptFile(SOURCE, publicKeyFile, outputFile);
-                    namefile = namefile + ".xml.pgp";
-                }
+                string pthkey = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + directory;
 
-                try
+                if (!Directory.Exists(pthkey))
                 {
-                    // Créer une connexion SFTP
-                    using (var sftp = new SftpClient(HOTE, pport, USERFTP.ToString(), PWDFTP))//h2h_pact/IN
-                    //using (var sftp = new SftpClient("72.251.3.20", 22, "tester", "password"))
-                    //using (var sftp = new SftpClient("196.192.47.133", 9222, "h2h_pact", "PKtt,;:9923"))
+                    Directory.CreateDirectory(pthkey);
+                    res = "Vous n'avez pas de fichier de cryptage!Veuillez contactez votre administrateur";
+                    return;
+                }
+                else
+                {
+                    string publicKeyFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", "/RSAkeyFile.asc");//get file clé public
+                    //C:\inetpub\wwwroot\SOFTSETTEST\FILERESULT\BANQUE\PACT\BOA
+                    var CryptageType = db.SI_TYPEBANQUE.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
+                    try
                     {
-                        sftp.Connect();
-                        if (sftp.IsConnected)
+                        if (!System.IO.File.Exists(publicKeyFile))
                         {
-                            //var directoryList = sftp.ListDirectory("/IN");
-                            //foreach (var file in directoryList)
-                            //{
-                            //    Console.WriteLine(file.FullName);
-                            //}
-                            using (var fileStream = new FileStream(outputFile, FileMode.Open))
-                            {
-                                //var sss =  sftp.ListDirectory("//");
-                                // Envoyer le fichier
-                                sftp.UploadFile(fileStream, remoteFilePath + "/" + namefile, x =>
-                                {
-                                    var az = x.ToString();
-                                });
-                                //Console.WriteLine("Fichier envoyé avec succès !");
-                                res = "Fichier envoyé avec succès !";
-                            }
+                            res = "Vous n'avez pas de fichier de cryptage!Veuillez contactez votre administrateur";
+                            //return ;
                         }
-
-                        sftp.Disconnect();
+                        if (CryptageType.CRYPTAGE == "2")
+                        {
+                            outputFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", namefile + ".xml.gpg");
+                            publicKeyFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", directory , "RSAkeyFile.asc");// Chemin vers le fichier de sortie chiffré
+                            EncryptFileWithGPG(SOURCE, publicKeyFile, outputFile);
+                            //DecryptFile(outputFile, privateKeyFile, outputFileDEC);
+                            namefile = namefile + ".xml.gpg";
+                        }
+                        else if (CryptageType.CRYPTAGE == "1")
+                        {
+                            outputFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", namefile + ".xml.pgp");
+                            publicKeyFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", directory , "RSAkeyFile.asc");// Chemin vers le fichier de sortie chiffré
+                            EncryptFile(SOURCE, publicKeyFile, outputFile);
+                            namefile = namefile + ".xml.pgp";
+                        }
                     }
-                }
-                catch (Renci.SshNet.Common.SftpPermissionDeniedException ex)
-                {
-                    res= $"Erreur de permission : {ex.Message}. Assurez-vous que vous avez les permissions d'écriture sur le répertoire distant.";
-                }
-                catch (Exception ex)
-                {
-                    res = $"Erreur générale : {ex.Message}";
+                    catch(Exception ex)
+                    {
+                        string cheminFichierLog = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + "logErreur.txt";
+
+                        // Créer ou ouvrir le fichier de log
+                        using (StreamWriter writer = new StreamWriter(cheminFichierLog, true)) // 'true' pour ajouter au fichier existant
+                        {
+                            // Écrire l'exception dans le fichier de log
+                            writer.WriteLine("--------------------------------------------------");
+                            writer.WriteLine("Date et heure : " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                            writer.WriteLine("SOURCE : " + SOURCE);
+                            writer.WriteLine("publicKeyFile : " + publicKeyFile);
+                            writer.WriteLine("outputFile : " + outputFile);
+                            writer.WriteLine("Message : " + ex.Message);
+                            writer.WriteLine("StackTrace : " + ex.StackTrace);
+                            writer.WriteLine("--------------------------------------------------");
+                        }
+                    }
+                    try
+                    {
+                        // Créer une connexion SFTP
+                        using (var sftp = new SftpClient(HOTE, pport, USERFTP.ToString(), PWDFTP))//h2h_pact/IN
+                        {
+                            sftp.Connect();
+                            if (sftp.IsConnected)
+                            {
+                                using (var fileStream = new FileStream(outputFile, FileMode.Open))
+                                {
+                                    // Envoyer le fichier
+                                    sftp.UploadFile(fileStream, remoteFilePath + "/" + namefile, x =>
+                                    {
+                                        var az = x.ToString();
+                                    });
+                                    res = "Fichier envoyé avec succès !";
+                                }
+                            }
+
+                            sftp.Disconnect();
+                        }
+                    }
+                    catch (Renci.SshNet.Common.SftpPermissionDeniedException ex)
+                    {
+                        res = $"Erreur de permission : {ex.Message}. Assurez-vous que vous avez les permissions d'écriture sur le répertoire distant.";
+                    }
+                    catch (Exception ex)
+                    {
+                        res = $"Erreur générale : {ex.Message}";
+                    }
                 }
 
             }
-            else {
+            else {//envoye sftp fichier non crypter
+
                 try
                 {
                     // Créer une connexion SFTP
@@ -3547,7 +3615,7 @@ namespace apptab.Controllers
                         {
                             //var sss =  sftp.ListDirectory("//");
                             // Envoyer le fichier
-                            sftp.UploadFile(fileStream, remoteFilePath + namefile, x =>
+                            sftp.UploadFile(fileStream, remoteFilePath + "/" + namefile + ".xml", x =>
                             {
                                 var az = x.ToString();
                             });
@@ -3577,7 +3645,7 @@ namespace apptab.Controllers
                 if (auxi == "Tous")
                 {
                     var rjl = __db.RJL1.Where(x => x.CODE == codeJournal).FirstOrDefault();
-                    if (rjl.BANQUE == null || rjl.AGENCE == null || rjl.GUICHET == null || rjl.RIB == null || rjl.CLE == null || rjl.IBAN == null)
+                    if (rjl.BANQUE == null || rjl.AGENCE == null || rjl.GUICHET == null || rjl.RIB == null || rjl.CLE == null /*|| rjl.IBAN == null*/)
                     {
                         Alert = true;
                     }
@@ -3586,7 +3654,7 @@ namespace apptab.Controllers
                 {
                     var rjl = __db.RJL1.Where(x => x.CODE == codeJournal).FirstOrDefault();
                     var tiers = __db.RTIERS.Where(x => x.AUXI == auxi).FirstOrDefault();
-                    if (rjl.BANQUE == null || rjl.AGENCE == null || rjl.GUICHET == null || rjl.RIB == null || rjl.CLE == null || rjl.IBAN == null)
+                    if (rjl.BANQUE == null || rjl.AGENCE == null || rjl.GUICHET == null || rjl.RIB == null || rjl.CLE == null /*|| rjl.IBAN == null*/)
                     {
                         Alert = true;
                     }
@@ -3595,12 +3663,11 @@ namespace apptab.Controllers
                         Alert = true;
                     }
                 }
-               
             }
             else
             {
                 var rjl = __db.RJL1.Where(x => x.CODE == codeJournal).FirstOrDefault();
-                if (rjl.BANQUE == null || rjl.AGENCE == null || rjl.GUICHET == null || rjl.RIB == null || rjl.CLE == null || rjl.IBAN == null)
+                if (rjl.BANQUE == null || rjl.AGENCE == null || rjl.GUICHET == null || rjl.RIB == null || rjl.CLE == null /*|| rjl.IBAN == null*/)
                 {
                     Alert = true;
                 }
@@ -4079,30 +4146,51 @@ namespace apptab.Controllers
         }
         private static void ExecuteGPGCommand(string command)
         {
-            ProcessStartInfo pro = new ProcessStartInfo
+            string gpgPath = @"C:\Program Files (x86)\GnuPG\bin\gpg.exe";
+            try
             {
-                FileName = "gpg", // Exécute le programme GPG
-                Arguments = command, // Ajoute les arguments pour importer ou chiffrer
-                RedirectStandardOutput = true, // Rediriger la sortie pour capturer l'output
-                RedirectStandardError = true, // Rediriger les erreurs pour capturer les messages d'erreur
-                UseShellExecute = false, // Ne pas utiliser le shell (important pour rediriger la sortie)
-                CreateNoWindow = true // Ne pas créer de fenêtre de commande
-            };
-
-            using (Process process = Process.Start(pro))
-            {
-                string output = process.StandardOutput.ReadToEnd();
-                string error = process.StandardError.ReadToEnd();
-
-                process.WaitForExit();
-
-                if (process.ExitCode != 0)
+                ProcessStartInfo pro = new ProcessStartInfo
                 {
-                    throw new Exception($"GPG Error: {error}");
-                }
+                    //FileName = "gpg", // Exécute le programme GPG
+                    FileName = gpgPath, // Exécute le programme GPG
+                    Arguments = command, // Ajoute les arguments pour importer ou chiffrer
+                    RedirectStandardOutput = true, // Rediriger la sortie pour capturer l'output
+                    RedirectStandardError = true, // Rediriger les erreurs pour capturer les messages d'erreur
+                    UseShellExecute = false, // Ne pas utiliser le shell (important pour rediriger la sortie)
+                    CreateNoWindow = true // Ne pas créer de fenêtre de commande
+                };
 
-                Console.WriteLine(output); // Afficher la sortie standard de GPG
+                using (Process process = Process.Start(pro))
+                {
+                    string output = process.StandardOutput.ReadToEnd();
+                    string error = process.StandardError.ReadToEnd();
+
+                    process.WaitForExit();
+
+                    if (process.ExitCode != 0)
+                    {
+                        throw new Exception($"GPG Error: {error}");
+                    }
+
+                    Console.WriteLine(output); // Afficher la sortie standard de GPG
+                }
             }
+            catch (Exception ex)
+            {
+                string cheminFichierLog = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + "logErreurCMD.txt";
+
+                // Créer ou ouvrir le fichier de log
+                using (StreamWriter writer = new StreamWriter(cheminFichierLog, true)) // 'true' pour ajouter au fichier existant
+                {
+                    // Écrire l'exception dans le fichier de log
+                    writer.WriteLine("--------------------------------------------------");
+                    writer.WriteLine("Date et heure : " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                    writer.WriteLine("Message : " + ex.Message);
+                    writer.WriteLine("StackTrace : " + ex.StackTrace);
+                    writer.WriteLine("--------------------------------------------------");
+                }
+            }
+
         }
     }
 }

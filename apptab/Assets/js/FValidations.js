@@ -381,11 +381,11 @@ function getelementTXT(a , list) {
    
 }
 function getelementISO2022(a, list) {
+
     let formData = new FormData();
     if (window.confirm("Le fichier de la banque ne pourra plus être régénéré à nouveau, voulez-vous confirmer?")) {
         let codeproject = $("#Fproject").val();
         let elementDevise = $('#ChkDevise').prop('checked');
-        let journal = $("#commercial").val(); 
         let typeDevise = "0";
         if (elementDevise) {
             typeDevise = $('input[name="deviseType"]:checked').val();
@@ -401,11 +401,15 @@ function getelementISO2022(a, list) {
         formData.append("codeJ", $('#commercial').val());
         formData.append("devise", elementDevise);
         formData.append("typeDevise", typeDevise);
-        formData.append("journal", journal);
         formData.append("intbasetype", a);
 
         formData.append("listCompte", JSON.stringify(list));
-
+        alert(a);
+        alert(list);
+        alert(typeDevise);
+        alert(elementDevise);
+        alert(baseName);
+        alert($('#commercial').val());
         $.ajax({
             type: "POST",
             url: Origin + '/Home/CreateZipFileISO2022',
@@ -502,13 +506,14 @@ function LoadValidate() {
 
     let formData = new FormData();
     let codeproject = $("#Fproject").val();
+    let CodeJournal = $("#commercial").val();
     formData.append("codeproject", codeproject);
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
     formData.append("suser.IDPROJET", User.IDPROJET);
-    let CodeJournal = $("#commercial").val();
+    
     formData.append("journal", CodeJournal);
 
     $.ajax({
@@ -1523,7 +1528,7 @@ function getelementCheckJsISO(a) {
             });
         }
     }
-    console.log(list);
+    console.log(list); alert(a);
     getelementISO2022(a, list);
     loader.addClass('display-none');
 }
@@ -1633,6 +1638,7 @@ $('[data-action="SaveVISO"]').click(function () {
     let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
     let typeF = $(this).attr(`data-type`);
     idtype = typeF;
+    $("#idtypeModal").text(idtype);
     let list = [];
     $.each(CheckList, (k, v) => {
         list.push($(v).attr("compteG-id"));
@@ -1649,7 +1655,6 @@ $('[data-action="SaveVISO"]').click(function () {
 });
 
 $('#get-user-password-btnISO').on('click', () => {
-    
     let formData = new FormData();
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
@@ -1671,14 +1676,6 @@ $('#get-user-password-btnISO').on('click', () => {
         complete: function () {
             //loader.addClass('display-none');
         },
-        //error: function (result) {
-        //    var Datas = JSON.parse(result);
-        //    alert(Datas.msg);
-        //    return;
-        //},
-        //success: function (result) {
-        //    OKOK();
-        //}
         success: function (result) {
             const res = JSON.parse(result);
             if (res.type === 'error') {

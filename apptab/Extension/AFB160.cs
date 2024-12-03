@@ -259,7 +259,7 @@ namespace apptab.Extension
                     }).FirstOrDefault();
                     if (devise)
                     {
-                        montant += mont.MONTANT; 
+                        montant += mont.MONTANT;
                     }
                     else
                     {
@@ -277,9 +277,8 @@ namespace apptab.Extension
                         }
                         else
                         {
-                            montant += mont.MONTANTRAPPORT; 
+                            montant += mont.MONTANTRAPPORT;
                         }
-                       
                     }
                     else
                     {
@@ -294,7 +293,14 @@ namespace apptab.Extension
                             select mn).FirstOrDefault();
                     if (devise)
                     {
-                        montant += mont.MONTANTDEV; //à voir avec Faramalala
+                        if (typeDevise == 0)
+                        {
+                            montant += mont.MONTANTDEV; //à voir avec Faramalala
+                        }
+                        else
+                        {
+                            montant += mont.MONTANTRAP;
+                        }
                     }
                     else
                     {
@@ -313,7 +319,6 @@ namespace apptab.Extension
                 if (typeDevise == 0)
                 {
                     ccyiso = tom.RPROJET.Select(x => x.MONNAIEREP).FirstOrDefault();
-                    
                 }
                 else
                 {
@@ -321,7 +326,7 @@ namespace apptab.Extension
                 }
             }else {
                 ccyiso = tom.RPROJET.Select(x => x.MONNAIELOC).FirstOrDefault();
-             }
+            }
             try
             {
                 // Create the file, or overwrite if the file exists.
@@ -715,6 +720,7 @@ namespace apptab.Extension
                         else if (intbasetype == 5)
                         {
                             rswift = tom.RTIERS.Where(a => a.AUXI == item.AUXI).FirstOrDefault();
+                            var increBase = db.OPA_BASE.Where(a => a.IDSOCIETE == PROJECTID).FirstOrDefault();
                             //Mise a dsiposition 
                             pmtinf.Add(
                                 new XElement("CdtTrfTxInf",
@@ -739,7 +745,9 @@ namespace apptab.Extension
                                              new XElement("Id",
                                                 new XElement("OrgId",
                                                     new XElement("Othr",
-                                                        new XElement("Id", rswift.CONTACT)
+                                                        new XElement("Id", rswift.CONTACT),
+                                                        new XElement("PyCd", formaterChiffre(6, increBase.INCREMENTATION.ToString())),
+                                                        new XElement("AllocNum", rswift.COGE)
                                                     )
                                                 )
                                             ),
@@ -753,8 +761,10 @@ namespace apptab.Extension
                                     new XElement("CdtrAcct",
                                         new XElement("Id",
                                             new XElement("Othr",
-                                                new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE)
-                                            )
+                                                new XElement("Id", item.GUICHET)),
+                                                new XElement("PstlAdr",
+                                                    new XElement("AdrLine", formaterTexte(35, rswift.DOM1).TrimEnd(' '))
+                                                )
                                         )
                                     )
                                 )
@@ -3986,8 +3996,8 @@ namespace apptab.Extension
                                         NoPiece = mcpt.NUMEROFACTURE,
                                         Compte = mcpt.COGEFOURNISSEUR,
                                         Libelle = mcpt.LIBELLE,
-                                        Montant = mcpt.MONTANTLOC.Value,
-                                        MontantDevise = mcpt.MONTANTDEV.Value,
+                                        Montant = (decimal)mcpt.MONTANTLOC,
+                                        MontantDevise = (decimal)mcpt.MONTANTDEV,
                                         Mon = "",
                                         Rang = mcpt.ACTI,
                                         Poste = mcpt.POSTE,
@@ -4008,8 +4018,8 @@ namespace apptab.Extension
                         NoPiece = "",
                         Compte = "",
                         Libelle = x.DESCRIPTION,
-                        Montant = x.MONTANTLOCAL.Value,
-                        MontantDevise = x.MONTANTDEVISE.Value,
+                        Montant = (decimal)x.MONTANTLOCAL,
+                        MontantDevise = (decimal)x.MONTANTDEVISE,
                         Mon = "",
                         Rang = "",
                         Poste = "",

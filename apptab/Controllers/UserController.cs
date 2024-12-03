@@ -914,7 +914,7 @@ namespace apptab.Controllers
                 Session["UserName"] = test.LOGIN;
 
                 Session["VERSIONCONNNECT"] = "1.0.0";
-                Session["VERSION"] = "2.0.0";
+                Session["VERSION"] = "2.0.1";
 
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", Data = new { test.ROLE, test.IDPROJET } }, settings));
             }
