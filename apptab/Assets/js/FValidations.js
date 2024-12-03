@@ -51,8 +51,8 @@ function GetEtat() {
             $(`[ETAT-list]`).append(etaCode);
 
         },
-        error: function () {
-            alert("Problème de connexion. ");
+        Error: function (_, e) {
+            alert(e);
         }
     });
 }
@@ -102,8 +102,8 @@ function GetTypeP() {
                 return;
             }
         },
-        error: function () {
-            alert("Problème de connexion. ");
+        Error: function (_, e) {
+            alert(e);
         }
     });
 };
@@ -158,8 +158,8 @@ function GetListCompG() {
             FillAUXI();
             FillCompteName();
         },
-        error: function () {
-            alert("Problème de connexion. ");
+        Error: function (_, e) {
+            alert(e);
         }
     });
 }
@@ -208,8 +208,8 @@ function showLiquidationModal(id, numeroliquidations, estAvance) {
                 window.location = Origin + '/Traitement/GenerationPAIEMENTIndex';
             }
         },
-        error: function () {
-            alert("Problème de connexion. ");
+        Error: function (_, e) {
+            alert(e);
         }
     });
 }
@@ -287,8 +287,8 @@ function GetListCodeJournal() {
             $(`[codej-libelle]`).val(ListCodeJournal[0].LIBELLE);
             GetEtat();
         },
-        error: function () {
-            alert("Problème de connexion. ");
+        Error: function (_, e) {
+            alert(e);
         }
     }).done(function (res) {
         GetListCompG();
@@ -320,8 +320,8 @@ function GetFileNameAnarana(blobUrl) {
             a.click();
 
         },
-        error: function () {
-            alert("Problème de connexionAnarana. ");
+        Error: function (_, e) {
+            alert(e);
         }
     });
 }
@@ -372,9 +372,9 @@ function getelementTXT(a , list) {
                 $('#verification-modal').modal('toggle');
                 loader.addClass('display-none');
             },
-            error: function () {
-                alert("Problème de connexionZipFile. ");
-            },
+            Error: function (_, e) {
+                alert(e);
+            }
 
         });
     }
@@ -404,12 +404,7 @@ function getelementISO2022(a, list) {
         formData.append("intbasetype", a);
 
         formData.append("listCompte", JSON.stringify(list));
-        alert(a);
-        alert(list);
-        alert(typeDevise);
-        alert(elementDevise);
-        alert(baseName);
-        alert($('#commercial').val());
+        
         $.ajax({
             type: "POST",
             url: Origin + '/Home/CreateZipFileISO2022',
@@ -438,11 +433,9 @@ function getelementISO2022(a, list) {
                 $('#verification-modal').modal('toggle');
                 loader.addClass('display-none');
             },
-            error: function (result) {
-
-                console.log(result);
-                alert("Problème de connexion ISO. ");
-            },
+            Error: function (_, e) {
+                alert(e);
+            }
 
         });
     }
@@ -495,8 +488,8 @@ function GetAllProjectUser() {
             GetListCodeJournal();
             LoadValidate();
         },
-        error: function () {
-            alert("Problème de connexion. ");
+        Error: function (_, e) {
+            alert(e);
         }
     });
 }
@@ -701,8 +694,8 @@ function LoadValidate() {
                 }
             });
         },
-        error: function () {
-            alert("Problème de connexion. ");
+        Error: function (_, e) {
+            alert(e);
         }
     });
 }
@@ -718,8 +711,6 @@ function exportTableToExcel(filename = 'RAS') {
     const tableSelect = document.getElementById(tableID);
 
     const tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-
-    alert("OK");
 
     // Specify file name
     filename = filename ? filename + '.xls' : 'excel_data.xls';
@@ -1528,7 +1519,7 @@ function getelementCheckJsISO(a) {
             });
         }
     }
-    console.log(list); alert(a);
+    console.log(list);
     getelementISO2022(a, list);
     loader.addClass('display-none');
 }
@@ -1738,8 +1729,8 @@ function GetTypeBanque() {
                 return;
             }
         },
-        error: function () {
-            alert("Problème de connexion. ");
+        Error: function (_, e) {
+            alert(e);
         }
     });
 };
