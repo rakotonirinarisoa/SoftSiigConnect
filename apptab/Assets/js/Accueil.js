@@ -1097,6 +1097,14 @@ $('#get-user-password-btn').on('click', () => {
 
     formData.append("userPassword", $("#password").val());
     loader.removeClass('display-none');
+    
+    if (!isSecondActionPerformed) {
+       // console.log("Première action effectuée.");
+        isSecondActionPerformed = true;
+    } else {
+        alert("Deuxième action effectuée.");
+        isSecondActionPerformed = false;
+    }
     $.ajax({
         type: "POST",
         url: Origin + '/Traitement/Password',

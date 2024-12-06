@@ -56,6 +56,55 @@ function GetEtat() {
         }
     });
 }
+function GetListeBanqueMAD() {
+    let formData = new FormData();
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
+
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/GetListeBanqueMAD',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+            listEtat = Datas.data
+            if (Datas.type == "error") {
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+
+                return;
+            }
+            etaCode = ` `;
+            $.each(listEtat, function (_, v) {
+                etaCode += `
+                    <option value="${v.ID}">${v.NOM_BANQUE + v.REGION}</option>
+                `;
+            });
+            $(`#numeroBanque`).html('');
+            $(`#numeroBanque`).append(etaCode);
+
+        },
+        Error: function (_, e) {
+            alert(e);
+        }
+    });
+}
 function GetTypeP() {
     let formData = new FormData();
 

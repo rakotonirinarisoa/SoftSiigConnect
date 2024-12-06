@@ -1308,6 +1308,14 @@ namespace apptab.Controllers
                         var listA = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site).Where(x => x.No.ToString() == h.Id && x.NUMEREG == a && x.SITE == item).ToList();
                         foreach (var Lst in listA)
                         {
+                            var existingRecord = db.OPA_VALIDATIONS
+                                .FirstOrDefault(x => x.IDREGLEMENT == Lst.No.ToString() && x.NUMEREG == Lst.NUMEREG);
+
+                            if (existingRecord != null)
+                            {
+                                // Si un enregistrement existe déjà, retourner un message d'erreur
+                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = $"L'enregistrement avec IDREGLEMENT = {Lst.No.ToString()} et NUMREG = {Lst.NUMEREG} existe déjà.", data = "" }, settings));
+                            }
                             avalider.IDREGLEMENT = Lst.No;
                             avalider.ETAT = 0;
                             avalider.IDPROJET = PROJECTID;
@@ -4191,6 +4199,12 @@ namespace apptab.Controllers
                 }
             }
 
+        }
+        public JsonResult GetListeBanqueMAD()
+        {
+            var banque = "";
+
+            return Json(JsonConvert.SerializeObject(new { type = "success", data = banque ,msg = "" }, settings));
         }
     }
 }

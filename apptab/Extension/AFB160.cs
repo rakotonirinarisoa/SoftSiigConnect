@@ -773,6 +773,22 @@ namespace apptab.Extension
                         }
                         else
                         {
+                            if (devise)
+                            {
+                                if (typeDevise == 0)
+                                {
+                                    ccyiso = tom.RPROJET.Select(x => x.MONNAIELOC).FirstOrDefault();
+                                }
+                                else
+                                {
+                                    ccyiso = tom.RPROJET.Select(x => x.MONNAIELOC).FirstOrDefault();
+                                }
+                            }
+                            else
+                            {
+                                ccyiso = tom.RPROJET.Select(x => x.MONNAIELOC).FirstOrDefault();
+                            }
+
                             rswift = tom.RTIERS.Where(a => a.AUXI == item.AUXI).FirstOrDefault();
                             if (item.BENEFICIAIRE.Length > 140)
                             {
