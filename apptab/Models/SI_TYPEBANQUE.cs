@@ -20,5 +20,7 @@ namespace apptab.Models
 
         [StringLength(50)]
         public string CRYPTAGE { get; set; }
+
+        public int? TypeBtn { get; set; }
     }
 }

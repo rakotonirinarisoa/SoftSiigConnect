@@ -2,7 +2,7 @@
 //var baseName = "2";
 var baseName = "2";
 const pass = $('#user-password');
-
+let isSecondActionPerformed = false;
 let arr = [];
 
 function checkdel(id) {

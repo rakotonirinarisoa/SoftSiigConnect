@@ -303,7 +303,7 @@ namespace apptab.Controllers
             //return File(source, System.Net.Mime.MediaTypeNames.Application.Octet);
         }
         [HttpPost]
-        public ActionResult CreateZipFile(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte , string journal)
+        public ActionResult CreateZipFile(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte , string journal , int banqueid)
         {
             AFB160 aFB160 = new AFB160();
 
@@ -532,7 +532,7 @@ namespace apptab.Controllers
                 else if (intbasetype == 4)//testISO20022
                 {
                     int typeDevise = 0;
-                    var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype);
+                    var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype, banqueid);
                     Anarana = pathfile.Chemin;
                     send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
@@ -602,7 +602,7 @@ namespace apptab.Controllers
             }
         }
         [HttpPost]
-        public ActionResult CreateZipFileISO2022(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte, int typeDevise)
+        public ActionResult CreateZipFileISO2022(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte, int typeDevise , int banqueid)
         {
             AFB160 aFB160 = new AFB160();
             XmlDocument xmlResult = new XmlDocument();
@@ -636,7 +636,7 @@ namespace apptab.Controllers
             if (intbasetype == 3 || intbasetype == 4)//ISO crypter RSA
             {
               
-                var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype);
+                var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype, banqueid);
                 Anarana = pathfile.Chemin;
                 path = pathfile.Chemin;
                 send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
@@ -690,7 +690,7 @@ namespace apptab.Controllers
             }
             else if (intbasetype == 5)//mise a disposition
             {
-                var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype);
+                var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype, banqueid);
                 Anarana = pathfile.Chemin;
                 path = pathfile.Chemin;
                 send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
@@ -749,7 +749,7 @@ namespace apptab.Controllers
             {
                 if (avalider != null)
                 {
-                    var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype);
+                    var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype, banqueid);
                     path = pathfile.Chemin;
                     Nomfichier = pathfile.NomFichier + ".xml";
                     if (avalider != null)
@@ -4200,11 +4200,40 @@ namespace apptab.Controllers
             }
 
         }
-        public JsonResult GetListeBanqueMAD()
+        public JsonResult GetListeBanqueMAD(SI_USERS suser)
         {
-            var banque = "";
+            var banque = db.OPA_BANQUE.ToList();
 
-            return Json(JsonConvert.SerializeObject(new { type = "success", data = banque ,msg = "" }, settings));
+            return Json(JsonConvert.SerializeObject(new { type = "success", data = banque , msg = "" }, settings));
+        }
+        public string GetChoixBtn(string codeproject, SI_USERS suser)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            int PROJECTid = int.Parse(codeproject);
+            if (exist == null) return "";
+
+            if (exist.IDPROJET != 0)
+            {
+                var TypeBtn = db.SI_TYPEBANQUE.FirstOrDefault(a => a.IDPROJET == PROJECTid).TypeBtn;
+                return TypeBtn.ToString();
+            }
+            else
+            {
+                //var mapuser = db.SI_MAPUSERPROJET.Where(a => a.IDUS == exist.ID).ToList();
+                int PROJECTID = int.Parse(codeproject);
+                var ii = db.SI_TYPECRITURE.FirstOrDefault(a => a.IDPROJET == PROJECTID);
+                var TypeBtn = "";
+                if (ii != null)
+                {
+                    TypeBtn = ii.TYPE.ToString();
+                }
+                else
+                {
+                    TypeBtn = "Veuillez parametrer votre type de fichier";
+                }
+                return TypeBtn.ToString();
+            }
+            //return TypeFileBQ;
         }
     }
 }

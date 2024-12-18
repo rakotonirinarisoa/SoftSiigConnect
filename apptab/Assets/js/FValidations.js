@@ -3,6 +3,7 @@ var FilenameUsr;
 const pass = $('#user-password');
 let idtype = 0;
 let TypeBanque; 
+let TypeBtn;
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
@@ -392,7 +393,7 @@ function getelementTXT(a , list) {
         formData.append("codeJ", $('#commercial').val());
         formData.append("devise", false);
         formData.append("intbasetype", a);
-
+        formData.append("banqueid", banqueId);
         formData.append("listCompte", JSON.stringify(list));
 
         $.ajax({
@@ -451,6 +452,7 @@ function getelementISO2022(a, list) {
         formData.append("devise", elementDevise);
         formData.append("typeDevise", typeDevise);
         formData.append("intbasetype", a);
+        formData.append("banqueid", banqueId);
 
         formData.append("listCompte", JSON.stringify(list));
         
@@ -1693,8 +1695,22 @@ $('[data-action="SaveVISO"]').click(function () {
     $('#password').val('');
     $('#verification-modalISO').modal('toggle');
 });
-
+$('[data-action="MisDISO"]').click(function () {
+    let typeF = $(this).attr(`data-type`);
+    idtype = typeF;
+    GetListeBanqueMAD();
+    $('#Mise-a-dispo-ISO').modal('toggle');
+});
+//get-bq-mad
+let banqueId = 0; 
+$('#get-bq-mad').on('click', () => {
+    $('#Mise-a-dispo-ISO').modal('toggle');
+    banqueId = $("#numeroBanque").val();
+    $('#password').val('');
+    $('#verification-modalISO').modal('toggle');
+});
 $('#get-user-password-btnISO').on('click', () => {
+    $(this).prop('disabled', true);
     let formData = new FormData();
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
@@ -1777,9 +1793,66 @@ function GetTypeBanque() {
                 window.location = window.location.origin;
                 return;
             }
+            GetTypeBtn();
         },
         Error: function (_, e) {
             alert(e);
+        }
+    });
+};
+function GetTypeBtn() {
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
+
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/GetChoixBtn',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+            TypeBtn = Datas;
+            if (TypeBanque == 1) {
+                if (TypeBtn == 0) {
+                    $(".createfileAFB").removeClass('display-none');
+                } else {
+                    $(".createfileAFB").addClass('display-none');
+                }
+            } else {
+                if (TypeBtn == 0) {
+                    $(".createfileISO").removeClass('display-none');
+                } else {
+                    $(".createfileISO").addClass('display-none');
+                }
+            }
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+        },
+        error: function () {
+            alert("Problème de connexion. ");
         }
     });
 };
