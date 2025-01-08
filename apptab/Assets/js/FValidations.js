@@ -431,7 +431,8 @@ function getelementTXT(a , list) {
    
 }
 function getelementISO2022(a, list) {
-
+    //alert(a);
+    //alert(list);
     let formData = new FormData();
     if (window.confirm("Le fichier de la banque ne pourra plus être régénéré à nouveau, voulez-vous confirmer?")) {
         let codeproject = $("#Fproject").val();

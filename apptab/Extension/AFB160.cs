@@ -751,7 +751,6 @@ namespace apptab.Extension
                                                    ),
                                                 new XElement("Cdtr",
                                                         new XElement("Nm", formaterTexte(35, item.BENEFICIAIRE).Replace('"', ' ').TrimEnd(' '))
-                                                       
                                                 ),
                                                  new XElement("CdtrAcct",
                                                                 new XElement("Id",
@@ -1544,12 +1543,12 @@ namespace apptab.Extension
                                     if (typeDevise == 0)
                                     {
                                         ccyiso = tom.RPROJET.Select(x => x.MONNAIELOC).FirstOrDefault();
-                                        ere = tom.MOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().MONTANTDEV;
+                                        ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().MONTANTDEV));
                                     }
                                     else
                                     {
                                         ccyiso = tom.RPROJET.Select(x => x.MONNAIELOC).FirstOrDefault();
-                                        ere = tom.MOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().MONTANTRAP;
+                                        ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().MONTANTRAP));
                                     }
                                 }
                                 else

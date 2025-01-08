@@ -6,7 +6,7 @@
 
     $(`[data-id="username"]`).text(User.LOGIN);
 
-    GetCountTDB();
+    //GetCountTDB();
 });
 
 function GetCountTDB() {

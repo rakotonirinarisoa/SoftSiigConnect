@@ -1275,102 +1275,109 @@ namespace apptab.Controllers
                         if (typeEcriture == 1)
                         {
                             var paielst = (
-                               from r in db.OPA_REGLEMENTBR
-                               join v in db.OPA_VALIDATIONS on r.IDSOCIETE equals v.IDPROJET
-                               where r.NUM == v.IDREGLEMENT && r.IDSOCIETE == crpt && site.Contains(v.SITE)
-                               select new
-                               {
-                                   BENEFICIAIRE = r.BENEFICIAIRE,
-                                   MONTANT = r.MONTANT != null ? r.MONTANT : null,
-                                   NUM = r.NUM,
-                                   DATECREA = v.DATECREA != null ? v.DATECREA : null,
-                                   DATESEND = v.DATESEND != null ? v.DATESEND : null,
-                                   DATETRANS = v.DATETRANS != null ? v.DATETRANS : null,
-                                   TYPE = v.AVANCE == true ? "Avance" : "Réglement",
-                                   SITE = v.SITE
-                               }
-                           ).ToList();
+                                            from r in db.OPA_REGLEMENTBR
+                                            join v in db.OPA_VALIDATIONS on r.IDSOCIETE equals v.IDPROJET
+                                            where r.NUM == v.IDREGLEMENT && r.IDSOCIETE == crpt && site.Contains(v.SITE)
+                                            select new
+                                            {
+                                                BENEFICIAIRE = r.BENEFICIAIRE,
+                                                MONTANT = r.MONTANT != null ? r.MONTANT : null,
+                                                NUM = r.NUM,
+                                                DATECREA = v.DATECREA != null ? v.DATECREA : null,
+                                                DATESEND = v.DATESEND != null ? v.DATESEND : null,
+                                                DATETRANS = v.DATETRANS != null ? v.DATETRANS : null,
+                                                TYPE = v.AVANCE == true ? "Avance" : "Réglement",
+                                                SITE = v.SITE
+                                            }
+                                        ).ToList();
+
+                            HashSet<string> uniqueEntries = new HashSet<string>(); // Utilisation d'un HashSet pour garantir l'unicité des éléments
 
                             foreach (var item in paielst)
                             {
-                                var soa = (from soas in db.SI_SOAS
-                                           join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
-                                           where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
-                                           select new
-                                           {
-                                               soas.SOA
-                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
-                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
-                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
-                                                                          select new
-                                                                          {
-                                                                              soas.SOA
-                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
+                                var soaQuery = (from soas in db.SI_SOAS
+                                                join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                select new { soas.SOA }).FirstOrDefault();
 
-                                list.Add(new TxtPAIEMENT
+                                var soa = soaQuery != null ? soaQuery.SOA : "MULTIPLE";
+
+                                // Créer une clé unique basée sur les propriétés pertinentes pour éviter les doublons
+                                string uniqueKey = $"{item.NUM}-{item.BENEFICIAIRE}-{soa}-{item.SITE}";
+
+                                if (!uniqueEntries.Contains(uniqueKey)) // Vérifier si l'élément est déjà présent
                                 {
-                                    No = item.NUM,
-                                    BENEF = item.BENEFICIAIRE,
-                                    MONTANT = item.MONTANT.ToString(),
-                                    DATEVALIDATIONOP = item.DATECREA,
-                                    DATEVALIDATIONAC = item.DATESEND,
-                                    DATEPAIEBANQUE = item.DATETRANS,
-                                    SOA = soa,
-                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                    TYPE = item.TYPE == "1" ? "Avance" : "Réglement",
-                                    SITE = item.SITE
-                                });
+                                    uniqueEntries.Add(uniqueKey); // Ajouter la clé dans le HashSet pour éviter les doublons
+
+                                    list.Add(new TxtPAIEMENT
+                                    {
+                                        No = item.NUM,
+                                        BENEF = item.BENEFICIAIRE,
+                                        MONTANT = item.MONTANT.ToString(),
+                                        DATEVALIDATIONOP = item.DATECREA,
+                                        DATEVALIDATIONAC = item.DATESEND,
+                                        DATEPAIEBANQUE = item.DATETRANS,
+                                        SOA = soa,
+                                        PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                        TYPE = item.TYPE == "1" ? "Avance" : "Réglement",
+                                        SITE = item.SITE
+                                    });
+                                }
                             }
                         }
                         else
                         {
                             var paielst = (
-                               from r in db.OPA_REGLEMENT
-                               join v in db.OPA_VALIDATIONS on r.IDSOCIETE equals v.IDPROJET
-                               where r.NUM.ToString() == v.IDREGLEMENT && r.IDSOCIETE == crpt && site.Contains(v.SITE)
-                               select new
-                               {
-                                   BENEFICIAIRE = r.BENEFICIAIRE,
-                                   MONTANT = r.MONTANT != null ? r.MONTANT : null,
-                                   NUM = r.NUM,
-                                   DATECREA = v.DATECREA != null ? v.DATECREA : null,
-                                   DATESEND = v.DATESEND != null ? v.DATESEND : null,
-                                   DATETRANS = v.DATETRANS != null ? v.DATETRANS : null,
-                                   TYPE = v.AVANCE == true ? "Avance" : "Réglement",
-                                   SITE = v.SITE
-                               }
-                           ).ToList();
+                                from r in db.OPA_REGLEMENT
+                                join v in db.OPA_VALIDATIONS on r.IDSOCIETE equals v.IDPROJET
+                                where r.NUM.ToString() == v.IDREGLEMENT && r.IDSOCIETE == crpt && site.Contains(v.SITE)
+                                select new
+                                {
+                                    BENEFICIAIRE = r.BENEFICIAIRE,
+                                    MONTANT = r.MONTANT != null ? r.MONTANT : null,
+                                    NUM = r.NUM,
+                                    DATECREA = v.DATECREA != null ? v.DATECREA : null,
+                                    DATESEND = v.DATESEND != null ? v.DATESEND : null,
+                                    DATETRANS = v.DATETRANS != null ? v.DATETRANS : null,
+                                    TYPE = v.AVANCE == true ? "Avance" : "Réglement",
+                                    SITE = v.SITE
+                                }
+                            ).ToList();
+
+                            HashSet<string> uniqueEntries = new HashSet<string>(); // Utilisation d'un HashSet pour vérifier les doublons
 
                             foreach (var item in paielst)
                             {
-                                var soa = (from soas in db.SI_SOAS
-                                           join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
-                                           where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
-                                           select new
-                                           {
-                                               soas.SOA
-                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
-                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
-                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
-                                                                          select new
-                                                                          {
-                                                                              soas.SOA
-                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
+                                var soaQuery = (from soas in db.SI_SOAS
+                                                join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                select new { soas.SOA }).FirstOrDefault();
 
-                                list.Add(new TxtPAIEMENT
+                                var soa = soaQuery != null ? soaQuery.SOA : "MULTIPLE";
+
+                                // Créer une clé unique basée sur les propriétés pertinentes pour éviter les doublons
+                                string uniqueKey = $"{item.NUM}-{item.BENEFICIAIRE}-{soa}";
+
+                                if (!uniqueEntries.Contains(uniqueKey)) // Vérifier si l'élément est déjà ajouté
                                 {
-                                    No = item.NUM.ToString(),
-                                    BENEF = item.BENEFICIAIRE,
-                                    MONTANT = item.MONTANT.ToString(),
-                                    DATEVALIDATIONOP = item.DATECREA,
-                                    DATEVALIDATIONAC = item.DATESEND,
-                                    DATEPAIEBANQUE = item.DATETRANS,
-                                    SOA = soa,
-                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                    TYPE = item.TYPE == "1" ? "Avance" : "Réglement",
-                                    SITE = item.SITE
-                                });
+                                    uniqueEntries.Add(uniqueKey); // Ajouter la clé dans le HashSet pour éviter les doublons
+
+                                    list.Add(new TxtPAIEMENT
+                                    {
+                                        No = item.NUM.ToString(),
+                                        BENEF = item.BENEFICIAIRE,
+                                        MONTANT = item.MONTANT.ToString(),
+                                        DATEVALIDATIONOP = item.DATECREA,
+                                        DATEVALIDATIONAC = item.DATESEND,
+                                        DATEPAIEBANQUE = item.DATETRANS,
+                                        SOA = soa,
+                                        PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                        TYPE = item.TYPE == "1" ? "Avance" : "Réglement",
+                                        SITE = item.SITE
+                                    });
+                                }
                             }
+                        
                         }
                     }
                 }
