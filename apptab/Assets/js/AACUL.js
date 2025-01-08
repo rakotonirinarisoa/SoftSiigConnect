@@ -72,3 +72,6 @@ function GetCountTDB() {
         }
     })
 }
+$('[data-action="Synchro"]').on('click', () => {
+    GetCountTDB()
+});
