@@ -37,7 +37,9 @@ function GetUsers() {
                 $("#Hote").val("");
                 $("#Identifiant").val("");
                 $("#MDP").val("");
+                $("#Port").val("");
                 $("#Path").val("");
+                $("#Banq").val("");
                 return;
             }
             if (Datas.type == "login") {
@@ -48,8 +50,10 @@ function GetUsers() {
 
             $("#Hote").val(Datas.data.HOTE);
             $("#Identifiant").val(Datas.data.IDENTIFIANT);
+            $("#Port").val(Datas.data.FTPPWD);
             $("#MDP").val(Datas.data.FTPPWD);
             $("#Path").val(Datas.data.PATH);
+            $("#Banq").val(Datas.data.BANQUE);
 
             if (Datas.data.IDPROJET != 0)
                 $("#proj").val(`${Datas.data.IDPROJET}`);
@@ -71,6 +75,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
     let user = $("#Hote").val();
     let db = $("#MDP").val();
     let inst = $("#Identifiant").val();
+    let banq = $("#Banq").val();
     if (!user || !db || !inst) {
         alert("Veuillez renseigner les informations sur la connexion FTP. ");
         return;
@@ -94,6 +99,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("param.IDENTIFIANT", $(`#Identifiant`).val());
     formData.append("param.FTPPWD", $(`#MDP`).val());
     formData.append("param.PATH", $(`#Path`).val());
+    formData.append("param.BANQUE", $(`#banq`).val());
 
     formData.append("iProjet", $("#proj").val());
 

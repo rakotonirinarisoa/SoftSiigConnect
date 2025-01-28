@@ -77,6 +77,11 @@ namespace apptab.Controllers
         {
             ViewBag.Controller = "Génération fichier banque";
             return View();
+        } 
+        public ActionResult BanqueCreate()
+        {
+            ViewBag.Controller = "Creation Liste Banque";
+            return View();
         }
         public ActionResult BonPourPaiement()
         {
@@ -243,7 +248,7 @@ namespace apptab.Controllers
             //{
             //    xmlDoc.Save(stream);
             //}
-            return (xmlDoc);
+            return null;// (xmlDoc);
         }
 
         public FileResult CreateFileAFBXML(string pathchemin, string pathfiles)
@@ -394,7 +399,7 @@ namespace apptab.Controllers
                     send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport, intbasetype, PROJECTID, journal);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport, intbasetype, PROJECTID, journal,ftp.BANQUE);
                     if (avalider != null)
                     {
                         foreach (var item in avalider)
@@ -422,7 +427,7 @@ namespace apptab.Controllers
                     send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport, intbasetype, PROJECTID, journal);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport, intbasetype, PROJECTID, journal, ftp.BANQUE);
                     if (avalider != null)
                     {
                         foreach (var item in avalider)
@@ -449,7 +454,7 @@ namespace apptab.Controllers
                     Anarana = pathfile.Chemin;
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport, intbasetype, PROJECTID, journal);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport, intbasetype, PROJECTID, journal, ftp.BANQUE);
                     //SENDFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, send);
                     if (avalider != null)
                     {
@@ -501,7 +506,7 @@ namespace apptab.Controllers
                     CreateFileAFBtXt(pathfile.Chemin, pathfile.Fichier);
                     try
                     {
-                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, journal);
+                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, journal, ftp.BANQUE);
                         if (avalider != null)
                         {
                             foreach (var item in avalider)
@@ -537,7 +542,7 @@ namespace apptab.Controllers
                     send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, journal);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, journal, ftp.BANQUE);
 
                     if (avalider != null)
                     {
@@ -570,7 +575,7 @@ namespace apptab.Controllers
                     string res = "";
                     try
                     {
-                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, journal);
+                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, journal, ftp.BANQUE);
                         if (avalider != null)
                         {
                             foreach (var item in avalider)
@@ -638,8 +643,8 @@ namespace apptab.Controllers
               
                 var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype, banqueid);
                 Anarana = pathfile.Chemin;
-                path = pathfile.Chemin;
-                send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
+                path = pathfile.NomFichier;
+                //send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
 
                 xmlResult = SaveDocument(Anarana, Anarana);
                 if (rbanque.CODEBIC.Contains("BOA"))
@@ -647,26 +652,26 @@ namespace apptab.Controllers
                     directory = "BANQUE/" + projetName + "/BOA";
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BOA").FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory, ftp.BANQUE);
                 }else if (rbanque.CODEBIC.Contains("BNI"))
                 {
                     directory = "BANQUE/" + projetName + "/BNI";
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BNI").FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory, ftp.BANQUE);
                 }else if(rbanque.CODEBIC.Contains("BFAV"))
                 {
                     directory = "BANQUE/" + projetName + "/SG";
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "SG").FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory, ftp.BANQUE);
                 }
                 else if (rbanque.CODEBIC.Contains("BMOI"))
                 {
                     directory = "BANQUE/" + projetName + "/BMOI";
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BMOI").FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory, ftp.BANQUE);
                 }
                 if (avalider != null)
                 {
@@ -692,37 +697,37 @@ namespace apptab.Controllers
             {
                 var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype, banqueid);
                 Anarana = pathfile.Chemin;
-                path = pathfile.Chemin;
-                send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
+                path = pathfile.NomFichier;
+                //send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
 
+                directory = "BANQUE/" + projetName + "/BOA";
                 xmlResult = SaveDocument(Anarana, Anarana);
                 if (rbanque.CODEBIC.Contains("BOA"))
                 {
-                    directory = "BANQUE/" + projetName + "/BOA";
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BOA").FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory, ftp.BANQUE);
                 }
                 else if (rbanque.CODEBIC.Contains("BNI"))
                 {
                     directory = "BANQUE/" + projetName + "/BNI";
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BNI").FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory, ftp.BANQUE);
                 }
                 else if (rbanque.CODEBIC.Contains("BFAV"))
                 {
                     directory = "BANQUE/" + projetName + "/SG";
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "SG").FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory, ftp.BANQUE);
                 }
                 else if (rbanque.CODEBIC.Contains("BMOI"))
                 {
                     directory = "BANQUE/" + projetName + "/BMOI";
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BMOI").FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory, ftp.BANQUE);
                 }
 
                 if (avalider != null)
@@ -750,8 +755,13 @@ namespace apptab.Controllers
                 if (avalider != null)
                 {
                     var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype, banqueid);
-                    path = pathfile.Chemin;
-                    Nomfichier = pathfile.NomFichier + ".xml";
+
+                    path = pathfile.NomFichier;
+                    //Nomfichier = pathfile.NomFichier + ".xml";
+                    directory = "BANQUE/" + projetName + "/BOA";
+                    Anarana = pathfile.Chemin;
+                    //xmlResult = SaveDocument(Anarana, Anarana);
+                    SaveDocument(Anarana, Anarana);
                     if (avalider != null)
                     {
                         foreach (var item in avalider)
@@ -770,32 +780,83 @@ namespace apptab.Controllers
                             }
                         }
                     }
+                    if (rbanque.CODEBIC.Contains("BOA"))
+                    {
+                        var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BOA").FirstOrDefault();
+                        string pport = ftp.PORT.ToString();
+                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory, ftp.BANQUE);
+                    }
+                    else if (rbanque.CODEBIC.Contains("BNI"))
+                    {
+                        directory = "BANQUE/" + projetName + "/BNI";
+                        var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BNI").FirstOrDefault();
+                        string pport = ftp.PORT.ToString();
+                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory,ftp.BANQUE);
+                    }
+                    else if (rbanque.CODEBIC.Contains("BFAV"))
+                    {
+                        directory = "BANQUE/" + projetName + "/SG";
+                        var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "SG").FirstOrDefault();
+                        string pport = ftp.PORT.ToString();
+                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory,ftp.BANQUE);
+                    }
+                    else if (rbanque.CODEBIC.Contains("BMOI"))
+                    {
+                        
+                        directory = "BANQUE/" + projetName + "/BMOI";
+                        var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BMOI").FirstOrDefault();
+                        string pport = ftp.PORT.ToString();
+                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory, ftp.BANQUE);
+                    }
                     if (intbasetype == 0)
                     {
                         Anarana = pathfile.Chemin;
-                        //XmlDocument xd = new XmlDocument();
-                        //xd.LoadXml(Anarana);
-                        //return CreateFileAFBXML(pathfile.Chemin, pathfile.Fichier);
-
-                        xmlResult = SaveDocument(Anarana, Anarana);
+                        SaveDocument(Anarana, Anarana);
                     }
                 }
             }
-            byte[] fileBytes = System.IO.File.ReadAllBytes(path);
-            FileInfo fi = new FileInfo(path);
-            string contentType = MimeMapping.GetMimeMapping(path);
-
-            var cd = new System.Net.Mime.ContentDisposition
+            try
             {
-                FileName = Nomfichier,
-                Inline = false,
-            };
+                path = path.Replace("xml", "docx");
+                // Chemin complet du fichier
+                string pathDown =  path;
+                
+                // Vérifier si le fichier existe
+                if (!System.IO.File.Exists(pathDown))
+                {
+                    return HttpNotFound("Le fichier n'a pas été trouvé.");
+                }
+               
+                // Créer un objet FileInfo pour obtenir des informations supplémentaires sur le fichier
+                FileInfo fi = new FileInfo(pathDown);
+                string fileName = Path.GetFileNameWithoutExtension(fi.Name) + ".docx"; // Forcer l'extension .docx
+                Anarana = fileName;
+                // Définir le type MIME pour un fichier Word (.docx)
+                string contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
-            Response.AppendHeader("Content-Disposition", cd.ToString());
+                // Créer une disposition de contenu pour indiquer le téléchargement
+                var cd = new System.Net.Mime.ContentDisposition
+                {
+                    FileName = fileName, // Nom du fichier à télécharger
+                    Inline = false, // Indique que le fichier doit être téléchargé, pas affiché dans le navigateur
+                };
 
-            //return File(fileBytes, System.Net.Mime.MediaTypeNames.Text.Xml);
-            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet);
-            //return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Archivage avec succès. ", data = xmlResult  }, settings));
+                // Effacer les anciens en-têtes HTTP et ajouter le bon en-tête de disposition de contenu
+                Response.Clear();
+                Response.AppendHeader("Content-Disposition", cd.ToString());
+                Response.ContentType = contentType;
+
+                // Utiliser TransmitFile pour envoyer directement le fichier sans le charger en mémoire
+                Response.TransmitFile(pathDown);
+                Response.End(); // Terminer la réponse HTTP pour éviter d'autres écritures dans la réponse
+
+                return new EmptyResult(); // Fin du traitement
+            }
+            catch (Exception ex)
+            {
+                // Gestion des erreurs
+                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError, "Erreur lors du téléchargement du fichier : " + ex.Message);
+            }
         }
         [HttpPost]
         public JsonResult FileName()
@@ -1316,6 +1377,7 @@ namespace apptab.Controllers
                                 // Si un enregistrement existe déjà, retourner un message d'erreur
                                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = $"L'enregistrement avec IDREGLEMENT = {Lst.No.ToString()} et NUMREG = {Lst.NUMEREG} existe déjà.", data = "" }, settings));
                             }
+
                             avalider.IDREGLEMENT = Lst.No;
                             avalider.ETAT = 0;
                             avalider.IDPROJET = PROJECTID;
@@ -3512,7 +3574,7 @@ namespace apptab.Controllers
             }
             return Json(JsonConvert.SerializeObject(new { msg = "success", data = result, datebr = resultBR }));
         }
-        public void SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE, string port, int intbasetype,int PROJECTID,string directory)
+        public void SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE, string port, int intbasetype,int PROJECTID,string directory,string AgenceBanque)
         {
             int pport = int.Parse(port);
             string pth = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + SOURCE;
@@ -3609,8 +3671,12 @@ namespace apptab.Controllers
                 }
 
             }
-            else {//envoye sftp fichier non crypter
-
+            else
+            {//envoye sftp fichier non crypter
+                if (AgenceBanque.Contains("SG"))
+                {
+                    namefile = "049038JP." + namefile;
+                }
                 try
                 {
                     // Créer une connexion SFTP
@@ -3636,8 +3702,21 @@ namespace apptab.Controllers
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Erreur : {ex.Message}");
-                    res = ex.Message;
+                    string cheminFichierLog = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + "logErreur.txt";
+
+                    // Créer ou ouvrir le fichier de log
+                    using (StreamWriter writer = new StreamWriter(cheminFichierLog, true)) // 'true' pour ajouter au fichier existant
+                    {
+                        // Écrire l'exception dans le fichier de log
+                        writer.WriteLine("--------------------------------------------------");
+                        writer.WriteLine("Date et heure : " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                        writer.WriteLine("SOURCE : " + SOURCE);
+                        writer.WriteLine("publicKeyFile : " );
+                        writer.WriteLine("outputFile : " + outputFile);
+                        writer.WriteLine("Message : " + ex.Message);
+                        writer.WriteLine("StackTrace : " + ex.StackTrace);
+                        writer.WriteLine("--------------------------------------------------");
+                    }
                 }
             }
         }
@@ -4200,8 +4279,10 @@ namespace apptab.Controllers
             }
 
         }
-        public JsonResult GetListeBanqueMAD(SI_USERS suser)
+        public JsonResult GetListeBanqueMAD(SI_USERS suser,string codeproject)
         {
+            var PROJECTID = int.Parse(codeproject);
+            var B = db.OPA_BANQUE.FirstOrDefault();
             var banque = db.OPA_BANQUE.ToList();
 
             return Json(JsonConvert.SerializeObject(new { type = "success", data = banque , msg = "" }, settings));
@@ -4234,6 +4315,31 @@ namespace apptab.Controllers
                 return TypeBtn.ToString();
             }
             //return TypeFileBQ;
+        }
+
+        [HttpPost]
+        public JsonResult UpdateBanque(SI_USERS suser, OPA_FTP param, int iProjet)
+        {
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+
+           
+            try
+            {
+                int IdS = iProjet;
+                var SExist = db.OPA_FTP.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null);
+
+                try
+                {
+                    //request.GetResponse(); 
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Configuration SFTP non valide. " }, settings));
+                }
+                catch { return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Configuration SFTP non valide. " }, settings)); }
+            }
+            catch (Exception)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur d'enregistrement de l'information. " }, settings));
+            }
         }
     }
 }

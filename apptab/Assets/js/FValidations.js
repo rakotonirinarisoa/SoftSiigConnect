@@ -365,7 +365,7 @@ function GetFileNameAnarana(blobUrl) {
 
             let a = document.createElement("a");
             a.href = blobUrl;
-            a.download = FilenameUsr+".txt";
+            a.download = FilenameUsr;
             document.body.appendChild(a);
             a.click();
 
