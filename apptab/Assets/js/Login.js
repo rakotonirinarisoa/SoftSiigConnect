@@ -121,3 +121,47 @@ $(`[login_connect]`).click(() => {
         }
     });
 });
+function GetFileDel() {
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", "a");
+    formData.append("suser.PWD", "a");
+    formData.append("suser.ROLE", "a");
+    formData.append("suser.IDSOCIETE", "a");
+
+    $.ajax({
+        type: "POST",
+        url: urlOrigin + '/Temp/tempMethode',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+            //urlOrigin = Datas.data,
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                return;
+            }
+
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
+
+$("#dell").click(function () {
+    GetFileDel();
+});

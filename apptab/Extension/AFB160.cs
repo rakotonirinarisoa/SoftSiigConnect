@@ -8,6 +8,7 @@ using System.EnterpriseServices.CompensatingResourceManager;
 using System.IO;
 using System.Linq;
 using System.Runtime;
+using System.Runtime.Serialization;
 using System.Security.Cryptography.Xml;
 using System.Security.Policy;
 using System.Text;
@@ -21,6 +22,10 @@ using apptab.Models;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Formatting;
 using Newtonsoft.Json;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.LinkLabel;
@@ -5207,5 +5212,6 @@ namespace apptab.Extension
 
             Console.WriteLine("Le texte a été remplacé.");
         }
+       
     }
 }
