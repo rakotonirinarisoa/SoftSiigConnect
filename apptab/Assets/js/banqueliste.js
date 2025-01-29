@@ -18,12 +18,13 @@ $('#proj').on('change', () => {
 });
 
 $(`[data-action="UpdateUser"]`).click(function () {
-    let user = $("#Hote").val();
-    let db = $("#MDP").val();
-    let inst = $("#Identifiant").val();
-    let banq = $("#Banq").val();
-    if (!user || !db || !inst) {
-        alert("Veuillez renseigner les informations sur la connexion FTP. ");
+    let nm_banque = $("#nm_banque").val();
+    let rib_banq = $("#rib_banq").val();
+    let Agence = $("#Agence").val();
+    let region = $("#region").val();
+    let cle = $("#cle").val();
+    if (!nm_banque || !rib_banq || !Agence || !cle) {
+        alert("Veuillez renseigner tous les informations . ");
         return;
     }
 

@@ -4318,7 +4318,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult UpdateBanque(SI_USERS suser, OPA_FTP param, int iProjet)
+        public JsonResult UpdateBanque(SI_USERS suser, OPA_BANQUE param, int iProjet)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -4326,14 +4326,25 @@ namespace apptab.Controllers
             try
             {
                 int IdS = iProjet;
-                var SExist = db.OPA_FTP.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null);
-
+                //var SExist = db.OPA_BANQUE.FirstOrDefault();
                 try
                 {
                     //request.GetResponse(); 
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Configuration SFTP non valide. " }, settings));
+                    var insertBanque = new OPA_BANQUE()
+                    {
+                        NOM_BANQUE = param.NOM_BANQUE,
+                        RIB_BANQUE = param.RIB_BANQUE,
+                        CLE = param.CLE,
+                        AGENCE = param.AGENCE,
+                        REGION = param.REGION,
+                        GUICHET = param.AGENCE,
+
+                    };
+                    db.OPA_BANQUE.Add(insertBanque);
+                    db.SaveChanges();
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Votre saisie a été enregistrée avec succès." }, settings));
                 }
-                catch { return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Configuration SFTP non valide. " }, settings)); }
+                catch { return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Configuration non valide. " }, settings)); }
             }
             catch (Exception)
             {
