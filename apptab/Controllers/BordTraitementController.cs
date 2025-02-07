@@ -1369,7 +1369,7 @@ namespace apptab.Controllers
                                         MONTANT = item.MONTANT.ToString(),
                                         DATEVALIDATIONOP = item.DATECREA,
                                         DATEVALIDATIONAC = item.DATESEND,
-                                        DATEPAIEBANQUE = item.DATETRANS,
+                                        DATEPAIEBANQUE = item.DATETRANS,//DATEPAIEBANQUE
                                         SOA = soa,
                                         PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
                                         TYPE = item.TYPE == "1" ? "Avance" : "Réglement",

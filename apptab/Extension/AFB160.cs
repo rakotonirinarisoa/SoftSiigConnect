@@ -37,7 +37,7 @@ namespace apptab.Extension
     {
 
         private readonly SOFTCONNECTGED ged = new SOFTCONNECTGED();
-        public ISO20022xml CreateISO20022(bool devise, string codeJ, SI_USERS user, string codeproject, List<AvanceDetails> list,int typeDevise,int intbasetype,int banqueid)
+        public ISO20022xml CreateISO20022(bool devise, string codeJ, SI_USERS user, string codeproject, List<AvanceDetails> list, int typeDevise, int intbasetype, int banqueid)
         {
             XmlDocument xd = new XmlDocument();
 
@@ -1389,9 +1389,9 @@ namespace apptab.Extension
                                                                 new XElement("Id", numEtabOP + guicherOP + ribOp + cleop)
                                                             )
                                                         )
-                                                    )
-                                               )
-                                           );
+                                                    ),
+                                                   new XElement("RmtInf", new XElement("Ustrd", formaterTexte(35, item.LIBELLE))))
+                                               );
                                     }
                                     else if (item.LIBELLE.Length > 70 && item.LIBELLE.Length < 140)
                                     {
@@ -1425,7 +1425,8 @@ namespace apptab.Extension
                                                                     new XElement("Id", numEtabOP + guicherOP + ribOp + cleop)
                                                                 )
                                                             )
-                                                )
+                                                ),
+                                                 new XElement("RmtInf", new XElement("Ustrd", formaterTexte(35, item.LIBELLE) + "\r\t\n" + formatLibelle0702(item.LIBELLE) + "\r\t\n" ))
                                             )
                                         );
                                     }
@@ -1465,7 +1466,8 @@ namespace apptab.Extension
                                                             new XElement("Id", numEtabOP + guicherOP + ribOp + cleop)
                                                         )
                                                     )
-                                                )
+                                                ),
+                                                new XElement("RmtInf", new XElement("Ustrd", formaterTexte(35, item.LIBELLE) + "\r\t\n" + formatLibelle0702(item.LIBELLE) + "\r\t\n" + formatLibelle0802(item.LIBELLE)))
                                            )
                                        );
                                     }
@@ -1502,7 +1504,8 @@ namespace apptab.Extension
                                                             new XElement("Id", numEtabOP + guicherOP + ribOp + cleop)
                                                         )
                                                     )
-                                                )
+                                                ),
+                                                new XElement("RmtInf", new XElement("Ustrd", formaterTexte(35, item.LIBELLE) + "\r\t\n" + formatLibelle0702(item.LIBELLE) + "\r\t\n" + formatLibelle0802(item.LIBELLE)))
                                             )
                                         );
                                     }
@@ -1574,7 +1577,7 @@ namespace apptab.Extension
                                         ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().MONTANTDEV));
                                     }
                                     else
-                                    {
+                                    {//USD USD
                                         ccyiso = tom.RPROJET.Select(x => x.MONNAIELOC).FirstOrDefault();
                                         ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().MONTANTRAP));
                                     }
