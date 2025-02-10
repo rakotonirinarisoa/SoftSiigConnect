@@ -306,7 +306,7 @@ namespace apptab.Controllers
                         db.SI_USERS.Add(newUser);
                         db.SaveChanges();
 
-                        var userExistTest = db.SI_USERS.FirstOrDefault(a => a.LOGIN == user.LOGIN && a.PWD == user.PWD && a.IDPROJET == 0 && a.ROLE == user.ROLE && a.DELETIONDATE == null/* && a.IDPROJET == exist.IDPROJET*/);
+                        var userExistTest = db.SI_USERS.FirstOrDefault(a => a.LOGIN == user.LOGIN && a.PWD == user.PWD /*&& a.IDPROJET == 0*/ && a.ROLE == user.ROLE && a.DELETIONDATE == null/* && a.IDPROJET == exist.IDPROJET*/);
 
                         string[] separators = { "," };
                         var pro = listProjet;
@@ -344,7 +344,7 @@ namespace apptab.Controllers
                         db.SI_USERS.Add(newUser);
                         db.SaveChanges();
 
-                        var userExistTest = db.SI_USERS.FirstOrDefault(a => a.LOGIN == user.LOGIN && a.PWD == user.PWD && a.IDPROJET == 0 && a.ROLE == user.ROLE && a.DELETIONDATE == null/* && a.IDPROJET == exist.IDPROJET*/);
+                        var userExistTest = db.SI_USERS.FirstOrDefault(a => a.LOGIN == user.LOGIN && a.PWD == user.PWD/* && a.IDPROJET == 0*/ && a.ROLE == user.ROLE && a.DELETIONDATE == null/* && a.IDPROJET == exist.IDPROJET*/);
 
                         string[] separators = { "," };
                         var pro = listProjet;
