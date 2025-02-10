@@ -1324,6 +1324,15 @@ namespace apptab.Extension
                             decimal? ere = Convert.ToDecimal(String.Format("{0:0.00}", item.MONTANT));
 
                             decimal? beficPrice = 0;
+                           
+                            if (devise)
+                            {
+                                if (typeDevise == 0)
+                                {
+                                    ccyiso = tom.FOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().DEVISE;
+
+                                }
+                            }
                             //eto no miverina virment
                             if (opop.AUTREOP == true)
                             {
@@ -1515,7 +1524,8 @@ namespace apptab.Extension
                             else if (intbasetype == 5)
                             {
                                 var banqueDispo = db.OPA_BANQUE.Where(x => x.ID == banqueid).FirstOrDefault();
-                                rswift = tom.RTIERS.Where(a => a.AUXI == item.AUXI && a.COGEAUXI == item.CODE_J + item.AUXI).FirstOrDefault();//miova COGEAUXI
+                                var temppp = db.OPA_VALIDATIONS.Where(x => x.IDREGLEMENT == item.NUM).FirstOrDefault();
+                                rswift = tom.RTIERS.Where(a => a.COGEAUXI == temppp.ComptaG + temppp.auxi).FirstOrDefault();//miova COGEAUXI
                                 var increBase = db.OPA_BASE.Where(a => a.IDSOCIETE == PROJECTID).FirstOrDefault();
                                 //Mise a dsiposition 
                                 pmtinf.Add(
@@ -1573,12 +1583,13 @@ namespace apptab.Extension
                                 {
                                     if (typeDevise == 0)
                                     {
-                                        ccyiso = tom.RPROJET.Select(x => x.MONNAIELOC).FirstOrDefault();
+                                        //ccyiso = tom.RPROJET.Select(x => x.MONNAIELOC).FirstOrDefault();
+                                        ccyiso = tom.FOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().DEVISE;
                                         ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().MONTANTDEV));
                                     }
                                     else
                                     {//USD USD
-                                        ccyiso = tom.RPROJET.Select(x => x.MONNAIELOC).FirstOrDefault();
+                                        ccyiso = tom.RPROJET.Select(x => x.MONNAIERAPP).FirstOrDefault();
                                         ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().MONTANTRAP));
                                     }
                                 }
@@ -1751,7 +1762,7 @@ namespace apptab.Extension
                             }
 
                             iteration = iteration + 1;
-                            SaveWordVirement(item.NUM, DateTime.Now.ToString(), montant.ToString(), item.LIBELLE, item.DATE.ToString(), item.ETAT, item.RIB, op.Libelle, donneurOrde.NUM_COMPTE, fileName);
+                            SaveWordVirement(item.NUM, DateTime.Now.ToString(), montant.ToString(), item.LIBELLE, item.DATE.ToString(), item.ETAT, item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE, op.Libelle, donneurOrde.NUM_COMPTE, fileName);
                         }
                         contacts.Add(pmtinf);
                         string sml = contacts.ToString(SaveOptions.None);
