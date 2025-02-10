@@ -240,7 +240,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\TraitementComplementController.cs" />
     <Compile Include="Controllers\TempController.cs" />
-    <Compile Include="Models\GA_AVANCE_COMPLEMENT.cs" />
     <Compile Include="Models\DocumentTypeUnion.cs" />
     <Compile Include="Models\Attachements.cs" />
     <Compile Include="Controllers\AnomalieController.cs" />
