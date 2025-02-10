@@ -1,8 +1,10 @@
-namespace apptab
+namespace apptab.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
 
     public partial class OPA_FTP
     {
@@ -30,5 +32,8 @@ namespace apptab
 
         [Column(TypeName = "smalldatetime")]
         public DateTime? CREATIONDATE { get; set; }
+
+        [StringLength(50)]
+        public string BANQUE { get; set; }
     }
 }

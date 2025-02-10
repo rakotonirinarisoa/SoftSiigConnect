@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using System.Net;
+using apptab.Models;
 
 namespace apptab.Controllers
 {
@@ -55,13 +56,13 @@ namespace apptab.Controllers
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
 
-            String uploadUrl = String.Format("{0}/{1}/", "ftp://" + param.HOTE, param.PATH);
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(uploadUrl);
-            request.Method = WebRequestMethods.Ftp.ListDirectory;
-            request.Credentials = new NetworkCredential(param.IDENTIFIANT, param.FTPPWD);
-            request.Proxy = null;
-            request.KeepAlive = true;
-            request.UseBinary = true;
+            //String uploadUrl = String.Format("{0}/{1}/", "ftp://" + param.HOTE, param.PATH);
+            //FtpWebRequest request = (FtpWebRequest)WebRequest.Create(uploadUrl);
+            //request.Method = WebRequestMethods.Ftp.ListDirectory;
+            //request.Credentials = new NetworkCredential(param.IDENTIFIANT, param.FTPPWD);
+            //request.Proxy = null;
+            //request.KeepAlive = true;
+            //request.UseBinary = true;
 
             try
             {
@@ -69,8 +70,10 @@ namespace apptab.Controllers
                 var SExist = db.OPA_FTP.FirstOrDefault(a => a.IDPROJET == IdS && a.DELETIONDATE == null);
 
                 try
-                { request.GetResponse(); }
-                catch { return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Configuration FTP non valide. " }, settings)); }
+                { 
+                    //request.GetResponse(); 
+                }
+                catch { return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Configuration SFTP non valide. " }, settings)); }
 
                 if (SExist != null)
                 {
@@ -81,7 +84,7 @@ namespace apptab.Controllers
                         SExist.IDENTIFIANT = param.IDENTIFIANT;
                         SExist.FTPPWD = param.FTPPWD;
                         SExist.PATH = param.PATH;
-
+                        SExist.BANQUE = param.BANQUE;
                         db.SaveChanges();
 
                         var H = db.HOPA_FTP.FirstOrDefault(a => a.IDPARENT == SExist.ID && a.DELETIONDATE == null);
@@ -100,7 +103,7 @@ namespace apptab.Controllers
                             IDPROJET = IdS,
                             CREATIONDATE = DateTime.Now,
                             IDUSER = exist.ID,
-                            IDPARENT = SExist.ID
+                            IDPARENT = SExist.ID,
                         };
                         db.HOPA_FTP.Add(newElemH);
                         db.SaveChanges();
@@ -119,7 +122,8 @@ namespace apptab.Controllers
                         PATH = param.PATH,
                         IDPROJET = IdS,
                         CREATIONDATE = DateTime.Now,
-                        IDUSER = exist.ID
+                        IDUSER = exist.ID,
+                        BANQUE = param.BANQUE,
                     };
 
                     db.OPA_FTP.Add(newPara);
@@ -137,6 +141,7 @@ namespace apptab.Controllers
                         CREATIONDATE = isElemH.CREATIONDATE,
                         IDUSER = isElemH.IDUSER,
                         IDPARENT = isElemH.ID
+                        
                     };
                     db.HOPA_FTP.Add(newElemH);
                     db.SaveChanges();

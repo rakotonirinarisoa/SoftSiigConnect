@@ -95,7 +95,7 @@ namespace apptab
         public virtual DbSet<SI_TYPEBANQUE> SI_TYPEBANQUE { get; set; }
         public virtual DbSet<SI_TRAITANNULCOMPLEMENT> SI_TRAITANNULCOMPLEMENT { get; set; }
         public virtual DbSet<SI_TRAITCOMPLEMENT> SI_TRAITCOMPLEMENT { get; set; }
-
+        public virtual DbSet<OPA_BANQUE> OPA_BANQUE { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<OPA_REGLEMENTBR>()

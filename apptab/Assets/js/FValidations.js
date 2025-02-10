@@ -3,6 +3,7 @@ var FilenameUsr;
 const pass = $('#user-password');
 let idtype = 0;
 let TypeBanque; 
+let TypeBtn;
 function checkdel(id) {
     $('.Checkall').prop("checked", false);
 }
@@ -51,8 +52,57 @@ function GetEtat() {
             $(`[ETAT-list]`).append(etaCode);
 
         },
-        error: function () {
-            alert("Problème de connexion. ");
+        Error: function (_, e) {
+            alert(e);
+        }
+    });
+}
+function GetListeBanqueMAD() {
+    let formData = new FormData();
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
+
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/GetListeBanqueMAD',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+            listEtat = Datas.data
+            if (Datas.type == "error") {
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+
+                return;
+            }
+            etaCode = ` `;
+            $.each(listEtat, function (_, v) {
+                etaCode += `
+                    <option value="${v.ID}">${v.NOM_BANQUE + v.REGION}</option>
+                `;
+            });
+            $(`#numeroBanque`).html('');
+            $(`#numeroBanque`).append(etaCode);
+
+        },
+        Error: function (_, e) {
+            alert(e);
         }
     });
 }
@@ -102,8 +152,8 @@ function GetTypeP() {
                 return;
             }
         },
-        error: function () {
-            alert("Problème de connexion. ");
+        Error: function (_, e) {
+            alert(e);
         }
     });
 };
@@ -158,8 +208,8 @@ function GetListCompG() {
             FillAUXI();
             FillCompteName();
         },
-        error: function () {
-            alert("Problème de connexion. ");
+        Error: function (_, e) {
+            alert(e);
         }
     });
 }
@@ -208,8 +258,8 @@ function showLiquidationModal(id, numeroliquidations, estAvance) {
                 window.location = Origin + '/Traitement/GenerationPAIEMENTIndex';
             }
         },
-        error: function () {
-            alert("Problème de connexion. ");
+        Error: function (_, e) {
+            alert(e);
         }
     });
 }
@@ -287,8 +337,8 @@ function GetListCodeJournal() {
             $(`[codej-libelle]`).val(ListCodeJournal[0].LIBELLE);
             GetEtat();
         },
-        error: function () {
-            alert("Problème de connexion. ");
+        Error: function (_, e) {
+            alert(e);
         }
     }).done(function (res) {
         GetListCompG();
@@ -315,19 +365,19 @@ function GetFileNameAnarana(blobUrl) {
 
             let a = document.createElement("a");
             a.href = blobUrl;
-            a.download = FilenameUsr+".txt";
+            a.download = FilenameUsr;
             document.body.appendChild(a);
             a.click();
 
         },
-        error: function () {
-            alert("Problème de connexion. ");
+        Error: function (_, e) {
+            alert(e);
         }
     });
 }
 function getelementTXT(a , list) {
     let formData = new FormData();
-
+    let journal = $("#commercial").val();
    
     if (window.confirm("le fichier de la banque ne pourra plus être régénéré à nouveau, voulez-vous confirmer?")) {
         let codeproject = $("#Fproject").val();
@@ -339,10 +389,11 @@ function getelementTXT(a , list) {
         formData.append("suser.ROLE", User.ROLE);
         formData.append("suser.IDSOCIETE", User.IDSOCIETE);
         formData.append("baseName", baseName);
+        formData.append("journal", journal);
         formData.append("codeJ", $('#commercial').val());
         formData.append("devise", false);
         formData.append("intbasetype", a);
-
+        formData.append("banqueid", banqueId);
         formData.append("listCompte", JSON.stringify(list));
 
         $.ajax({
@@ -363,25 +414,25 @@ function getelementTXT(a , list) {
                 window.location.reload();
             },
             success: function (result) {
-                //console.log(result);
-                console.log(result)
                 //var Datas = JSON.parse(result);
+                //alert(Datas.data);
                 let blobUrl = URL.createObjectURL(result);
-                
                 GetFileNameAnarana(blobUrl);
-                window.location = '/Home/GetFile?file=""' ;
+                //window.location = '/Home/GetFile?file=""' ;
                 $('#verification-modal').modal('toggle');
                 loader.addClass('display-none');
             },
-            error: function () {
-                alert("Problème de connexion. ");
-            },
+            Error: function (_, e) {
+                alert(e);
+            }
 
         });
     }
    
 }
 function getelementISO2022(a, list) {
+    //alert(a);
+    //alert(list);
     let formData = new FormData();
     if (window.confirm("Le fichier de la banque ne pourra plus être régénéré à nouveau, voulez-vous confirmer?")) {
         let codeproject = $("#Fproject").val();
@@ -402,9 +453,10 @@ function getelementISO2022(a, list) {
         formData.append("devise", elementDevise);
         formData.append("typeDevise", typeDevise);
         formData.append("intbasetype", a);
+        formData.append("banqueid", banqueId);
 
         formData.append("listCompte", JSON.stringify(list));
-
+        
         $.ajax({
             type: "POST",
             url: Origin + '/Home/CreateZipFileISO2022',
@@ -425,18 +477,17 @@ function getelementISO2022(a, list) {
                 window.location.reload();
             },
             success: function (result) {
-               
-                alert(result);
+                //var Datas = JSON.parse(result);
                 let blobUrl = URL.createObjectURL(result);
+
                 GetFileNameAnarana(blobUrl);
-                //window.location = '/Home/GetFile?file=' + Datas.data;
-
+                //window.location = '/Home/GetFile?file=""';
+                $('#verification-modal').modal('toggle');
+                loader.addClass('display-none');
             },
-            error: function (result) {
-
-                console.log(result);
-                alert("Problème de connexion ISO. ");
-            },
+            Error: function (_, e) {
+                alert(e);
+            }
 
         });
     }
@@ -489,8 +540,8 @@ function GetAllProjectUser() {
             GetListCodeJournal();
             LoadValidate();
         },
-        error: function () {
-            alert("Problème de connexion. ");
+        Error: function (_, e) {
+            alert(e);
         }
     });
 }
@@ -500,13 +551,14 @@ function LoadValidate() {
 
     let formData = new FormData();
     let codeproject = $("#Fproject").val();
+    let CodeJournal = $("#commercial").val();
     formData.append("codeproject", codeproject);
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
     formData.append("suser.IDPROJET", User.IDPROJET);
-    let CodeJournal = $("#commercial").val();
+    
     formData.append("journal", CodeJournal);
 
     $.ajax({
@@ -694,8 +746,8 @@ function LoadValidate() {
                 }
             });
         },
-        error: function () {
-            alert("Problème de connexion. ");
+        Error: function (_, e) {
+            alert(e);
         }
     });
 }
@@ -711,8 +763,6 @@ function exportTableToExcel(filename = 'RAS') {
     const tableSelect = document.getElementById(tableID);
 
     const tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
-
-    alert("OK");
 
     // Specify file name
     filename = filename ? filename + '.xls' : 'excel_data.xls';
@@ -1494,7 +1544,7 @@ $('[data-action="GetAnomalieListes"]').click(function () {
         }
     });
 });
-function getelementCheckJsISO() {
+function getelementCheckJsISO(a) {
     let checkList = $(`[compteg-ischecked]:checked`).closest("tr");
     let list = [];
     if (baseName == "2") {
@@ -1522,7 +1572,7 @@ function getelementCheckJsISO() {
         }
     }
     console.log(list);
-    getelementISO2022(0, list);
+    getelementISO2022(a, list);
     loader.addClass('display-none');
 }
 function getelementCheckJs() {
@@ -1629,7 +1679,9 @@ $('#get-user-password-btn').on('click', () => {
 
 $('[data-action="SaveVISO"]').click(function () {
     let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
-
+    let typeF = $(this).attr(`data-type`);
+    idtype = typeF;
+    $("#idtypeModal").text(idtype);
     let list = [];
     $.each(CheckList, (k, v) => {
         list.push($(v).attr("compteG-id"));
@@ -1644,9 +1696,22 @@ $('[data-action="SaveVISO"]').click(function () {
     $('#password').val('');
     $('#verification-modalISO').modal('toggle');
 });
-
+$('[data-action="MisDISO"]').click(function () {
+    let typeF = $(this).attr(`data-type`);
+    idtype = typeF;
+    GetListeBanqueMAD();
+    $('#Mise-a-dispo-ISO').modal('toggle');
+});
+//get-bq-mad
+let banqueId = 0; 
+$('#get-bq-mad').on('click', () => {
+    $('#Mise-a-dispo-ISO').modal('toggle');
+    banqueId = $("#numeroBanque").val();
+    $('#password').val('');
+    $('#verification-modalISO').modal('toggle');
+});
 $('#get-user-password-btnISO').on('click', () => {
-    
+    $(this).prop('disabled', true);
     let formData = new FormData();
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
@@ -1668,14 +1733,6 @@ $('#get-user-password-btnISO').on('click', () => {
         complete: function () {
             //loader.addClass('display-none');
         },
-        //error: function (result) {
-        //    var Datas = JSON.parse(result);
-        //    alert(Datas.msg);
-        //    return;
-        //},
-        //success: function (result) {
-        //    OKOK();
-        //}
         success: function (result) {
             const res = JSON.parse(result);
             if (res.type === 'error') {
@@ -1683,7 +1740,7 @@ $('#get-user-password-btnISO').on('click', () => {
                 pass.text('Identifiants incorrects.');
             } else {
                 // OKOK();
-                getelementCheckJsISO();
+                getelementCheckJsISO(idtype);
             }
         },
         Error: function (_, e) {
@@ -1726,6 +1783,63 @@ function GetTypeBanque() {
             } else {
                 $(".ISO20022HS").removeClass('display-none');
                 $(".Afb160HS").addClass('display-none');
+            }
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;
+                return;
+            }
+            GetTypeBtn();
+        },
+        Error: function (_, e) {
+            alert(e);
+        }
+    });
+};
+function GetTypeBtn() {
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
+
+    let codeproject = $("#Fproject").val();
+    formData.append("codeproject", codeproject);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/GetChoixBtn',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+            TypeBtn = Datas;
+            if (TypeBanque == 1) {
+                if (TypeBtn == 0) {
+                    $(".createfileAFB").removeClass('display-none');
+                } else {
+                    $(".createfileAFB").addClass('display-none');
+                }
+            } else {
+                if (TypeBtn == 0) {
+                    $(".createfileISO").removeClass('display-none');
+                } else {
+                    $(".createfileISO").addClass('display-none');
+                }
             }
 
             if (Datas.type == "error") {

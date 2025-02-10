@@ -2,7 +2,7 @@
 //var baseName = "2";
 var baseName = "2";
 const pass = $('#user-password');
-
+let isSecondActionPerformed = false;
 let arr = [];
 
 function checkdel(id) {
@@ -23,6 +23,12 @@ window.onbeforeunload = function (event) {
     return confirmClose;
 
 }
+$('#comptaG').change(function () {
+    GetAlertRouge();
+});
+$('#auxi').change(function () {
+    GetAlertRouge();
+});
 function showLiquidationModal(id, numeroliquidations, estAvance) {
     let formData = new FormData();
 
@@ -175,6 +181,65 @@ function GetEtat() {
     });
 }
 
+function GetAlertRouge() {
+    let formData = new FormData();
+
+    let codeproject = $("#Fproject").val();
+    let codeJournal = $("#commercial").val();
+    let auxi = $("#auxi").val();
+    let comptaG = $("#comptaG").val();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDSOCIETE", User.IDSOCIETE);
+    formData.append("codeproject", codeproject);
+    formData.append("codeJournal", codeJournal);
+    formData.append("auxi", auxi);
+    formData.append("comptaG", comptaG);
+    //formData.append("baseName", id);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/Home/AlertClient',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                //window.location = window.location.origin;
+               
+                return;
+            }
+            if (Datas.data == true) {
+                $("#Genererbtn").hide();
+                alert(Datas.msg);
+                // window.location = window.location.origin;
+                return;
+            } else if (Datas.data == false) {
+                $("#Genererbtn").show();
+            }
+        },
+        error: function () {
+            alert("Problème de connexion. ");
+        }
+    });
+}
+
 function GetListCompG() {
     let formData = new FormData();
 
@@ -227,6 +292,7 @@ function GetListCompG() {
 
             FillAUXI();
             FillCompteName();
+            GetAlertRouge();
         },
         error: function () {
             alert("Problème de connexion. ");
@@ -372,6 +438,7 @@ $(document).ready(() => {
     Origin = User.origin;
 
     $(`[data-id="username"]`).text(User.LOGIN);
+   
     emptyTable();
     GetAllProjectUser();
     window.onbeforeunload = function (e) {
@@ -386,6 +453,9 @@ $(document).on("change", "[code-project]", () => {
     GetTypeP();
     GetListCodeJournal();
     emptyTable();
+});
+$('#commercial').change(function () {
+    GetAlertRouge();
 });
 function emptyTable() {
     const data = [];
@@ -1027,6 +1097,14 @@ $('#get-user-password-btn').on('click', () => {
 
     formData.append("userPassword", $("#password").val());
     loader.removeClass('display-none');
+    
+    if (!isSecondActionPerformed) {
+       // console.log("Première action effectuée.");
+        isSecondActionPerformed = true;
+    } else {
+        alert("Deuxième action effectuée.");
+        isSecondActionPerformed = false;
+    }
     $.ajax({
         type: "POST",
         url: Origin + '/Traitement/Password',

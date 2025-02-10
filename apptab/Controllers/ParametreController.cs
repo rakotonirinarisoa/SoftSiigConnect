@@ -1,5 +1,6 @@
 ﻿using apptab.Models;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Crypto.Engines;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -1480,14 +1481,16 @@ namespace apptab.Controllers
 
                 if (SExist != null)
                 {
-                    if (SExist.TYPE != param.TYPE)
+                    if (SExist.TYPE != param.TYPE || SExist.CRYPTAGE != param.CRYPTAGE || SExist.TypeBtn != param.TypeBtn)
                     {
                         SExist.TYPE = param.TYPE;
                         SExist.IDUSER = exist.ID;
                         SExist.CREATIONDATE = DateTime.Now;
+                        SExist.CRYPTAGE = param.CRYPTAGE;
+                        SExist.TypeBtn = param.TypeBtn;
                         db.SaveChanges();
                     }
-
+                   
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Enregistrement avec succès. ", data = param }, settings));
                 }
                 else
@@ -1497,7 +1500,9 @@ namespace apptab.Controllers
                         TYPE = param.TYPE,
                         IDPROJET = IdS,
                         CREATIONDATE = DateTime.Now,
-                        IDUSER = exist.ID
+                        IDUSER = exist.ID,
+                        CRYPTAGE = param.CRYPTAGE,
+                        TypeBtn = param.TypeBtn,
                     };
 
                     db.SI_TYPEBANQUE.Add(newPara);

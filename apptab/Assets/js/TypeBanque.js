@@ -45,6 +45,8 @@ function GetUsers() {
             }
 
             $(`input[data-id="${Datas.data.TYPE}"]`).click();
+            $(`input[data-id="${Datas.data.CRYPTAGE}"]`).click();
+            $(`input[data-id="${Datas.data.TypeBtn}"]`).click();
 
             if (Datas.data.IDPROJET != 0)
                 $("#proj").val(`${Datas.data.IDPROJET}`);
@@ -83,7 +85,9 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
 
-    formData.append("param.TYPE", $("input[type='radio']:checked").attr("data-id"));
+    formData.append("param.TYPE", $("input[name='options']:checked").attr("data-id"));
+    formData.append("param.CRYPTAGE", $("input[name='optionsCrypt']:checked").attr("data-id"));
+    formData.append("param.TypeBtn", $("input[name='optionsBtn']:checked").attr("data-id"));
 
     formData.append("iProjet", $("#proj").val());
 

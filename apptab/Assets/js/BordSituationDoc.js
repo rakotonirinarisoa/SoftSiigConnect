@@ -22,7 +22,7 @@ $('#proj').on('change', () => {
     $(`[data-id="site-list"]`).append(code1);
 
     GetSITE();
-    GetNifSTATCIN();
+    //GetNifSTATCIN();
     GetReference();
 });
 $('#site').on('change', () => {
@@ -31,8 +31,12 @@ $('#site').on('change', () => {
 });
 function GetSITE() {
     let formData = new FormData();
-
-    formData.append("iProjet", $("#proj").val());
+    let pr = $("#proj").val();
+    if (!pr) {
+        alert("Veuillez sélectionner au moins un projet. ");
+        return;
+    }
+    formData.append("iProjet", pr);
 
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
@@ -134,8 +138,12 @@ $("#site").on('change', handleSelectAll);
 
 function GetNifSTATCIN(id) {
     let formData = new FormData();
-
-    formData.append("PROJECTID", $("#proj").val());
+    let pr = $("#proj").val();
+    if (!pr) {
+        alert("Veuillez sélectionner au moins un projet. ");
+        return;
+    }
+    formData.append("PROJECTID", pr);
 
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
@@ -180,13 +188,13 @@ function GetNifSTATCIN(id) {
             var code3 = ``;
             $.each(Datas.data, function (k, v) {
                 code1 += `
-                    <option value="${v.ID}">${v.NIF}</option>
+                    <option value="${v.Id}">${v.NIF}</option>
                 `;
                 code2 += `
-                    <option value="${v.ID}">${v.STAT}</option>
+                    <option value="${v.Id}">${v.STAT}</option>
                 `;
                 code3 += `
-                    <option value="${v.ID}">${v.CIN}</option>
+                    <option value="${v.Id}">${v.CIN}</option>
                 `;
             });
             $(`[data-id="Nif-list"]`).append(code1);
@@ -461,7 +469,7 @@ $('[data-action="GenereLISTE"]').click(function () {
             loader.removeClass('display-none');
         },
         complete: function () {
-            loader.addClass('display-none');
+            //loader.addClass('display-none');
         },
         success: function (result) {
             var Datas = JSON.parse(result);
@@ -618,7 +626,6 @@ $('[data-action="GenereLISTE"]').click(function () {
                                     if (data.length === 0) {
                                         data = [""];
                                     }
-
                                     //join array into string with regex or (|)
                                     var val = data.join('|');
 
@@ -650,6 +657,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                     //    $(this).addClass("NOTVISIBLE");
                     //}
                 });
+                loader.addClass('display-none');
             }
         },
         error: function () {

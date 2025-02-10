@@ -6,7 +6,7 @@
 
     $(`[data-id="username"]`).text(User.LOGIN);
 
-    GetCountTDB();
+    //GetCountTDB();
 });
 
 function GetCountTDB() {
@@ -72,3 +72,6 @@ function GetCountTDB() {
         }
     })
 }
+$('[data-action="Synchro"]').on('click', () => {
+    GetCountTDB()
+});
