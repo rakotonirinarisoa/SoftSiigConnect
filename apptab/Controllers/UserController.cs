@@ -285,7 +285,7 @@ namespace apptab.Controllers
             try
             {
                 var userExist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == user.LOGIN && a.DELETIONDATE == null/* && a.IDPROJET == exist.IDPROJET*/);
-                var test = db.SI_USERS.Where(x => x.ROLE == exist.ROLE && x.IDPROJET == exist.IDPROJET && x.DELETIONDATE == null).FirstOrDefault();
+                //var test = db.SI_USERS.Where(x => x.ROLE == exist.ROLE && x.IDPROJET == exist.IDPROJET && x.DELETIONDATE == null).FirstOrDefault();
                 if (userExist == null)
                 {
                     if (db.SI_USERS.Any(a => a.LOGIN == user.LOGIN && a.DELETIONDATE == null))
@@ -393,7 +393,7 @@ namespace apptab.Controllers
             {
                 int userId = int.Parse(UserId);
                 var userExist = db.SI_USERS.FirstOrDefault(a => a.ID == userId && a.DELETIONDATE == null);
-                var test = db.SI_USERS.Where(x => x.ROLE == exist.ROLE && x.IDPROJET == exist.IDPROJET && x.DELETIONDATE == null).FirstOrDefault();
+                //var test = db.SI_USERS.Where(x => x.ROLE == exist.ROLE && x.IDPROJET == exist.IDPROJET && x.DELETIONDATE == null).FirstOrDefault();
                 if (userExist != null)
                 {
                     if (userExist.PWD != oldPassword) return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Ancien mot de passe non valide. ", data = user }, settings));
