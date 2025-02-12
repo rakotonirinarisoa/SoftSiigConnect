@@ -4936,11 +4936,11 @@ namespace apptab.Extension
                         OPA_REGLEMENTBR preg = new OPA_REGLEMENTBR();
                         preg.NUM = ecriture.No;
                         preg.DATE = ecriture.Date;
-                        preg.BENEFICIAIRE = beneficiaire.BENEFICIAIRE;
+                        preg.BENEFICIAIRE = this.formaterTexte(100, beneficiaire.BENEFICIAIRE);
                         preg.BANQUE = beneficiaire.BANQUE;
                         preg.GUICHET = beneficiaire.GUICHET;
                         //preg.GUICHET = this.RIB(beneficiaire.COMPTE_BANQUE)[1];
-                        preg.RIB = beneficiaire.COMPTE_BANQUE.TrimEnd(' ').TrimStart(' ');
+                        preg.RIB = this.formaterTexte(11, beneficiaire.COMPTE_BANQUE.TrimEnd(' ').TrimStart(' '));
                         //preg.RIB = this.RIB(beneficiaire.COMPTE_BANQUE)[2];
                         preg.ETAT = etat;
                         preg.NUMEREG = ecriture.NUMEREG;
@@ -4969,8 +4969,8 @@ namespace apptab.Extension
                         //preg.NUM_ETABLISSEMENT = this.RIB(beneficiaire.COMPTE_BANQUE)[0];
                         preg.NUM_ETABLISSEMENT = beneficiaire.ETABLISMENT;
                         preg.CODE_J = journal;
-                        preg.DOM1 = beneficiaire.DOM1;
-                        preg.DOM2 = beneficiaire.DOM2;
+                        preg.DOM1 = this.formaterTexte(200, beneficiaire.DOM1);
+                        preg.DOM2 = this.formaterTexte(200, beneficiaire.DOM2);
                         //preg.CATEGORIE = beneficiaire.CATEGORIE;
                         preg.APPLICATION = "BR";
                         preg.IDSOCIETE = PROJECTID;
