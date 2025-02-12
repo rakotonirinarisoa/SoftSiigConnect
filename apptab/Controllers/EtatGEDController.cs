@@ -81,7 +81,7 @@ namespace apptab.Controllers
                     {
                         SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
 
-                        if (string.IsNullOrEmpty(SOFTCONNECTGED.connex))
+                        if (!string.IsNullOrEmpty(SOFTCONNECTGED.connex))
                         {
                             if (mappingErreur == false)
                                 mappingErreur = true;
@@ -89,7 +89,7 @@ namespace apptab.Controllers
 
                         SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
-                        if (!db.SI_PROGED.Any(a => a.IDPROJET == crpt))
+                        if (db.SI_PROGED.Any(a => a.IDPROJET == crpt))
                         {
                             if (projetErreur == false)
                                 projetErreur = true;
@@ -98,14 +98,14 @@ namespace apptab.Controllers
                         var userT = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt &&*/ b.DELETIONDATE == null && b.ID == exist.ID);
                         var IDUSERGED = userT?.IDUSERGED;
 
-                        if (IDUSERGED == null || !ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
+                        if (IDUSERGED != null && ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
                         {
                             if (utilisateurErreur == false)
                                 utilisateurErreur = true;
                         }
                     }
 
-                    if (mappingErreur)
+                    if (!mappingErreur)
                     {
                         return Json(JsonConvert.SerializeObject(new
                         {
@@ -114,7 +114,7 @@ namespace apptab.Controllers
                         }, settings));
                     }
 
-                    if (projetErreur)
+                    if (!projetErreur)
                     {
                         return Json(JsonConvert.SerializeObject(new
                         {
@@ -123,7 +123,7 @@ namespace apptab.Controllers
                         }, settings));
                     }
 
-                    if (utilisateurErreur)
+                    if (!utilisateurErreur)
                     {
                         return Json(JsonConvert.SerializeObject(new
                         {
@@ -198,7 +198,7 @@ namespace apptab.Controllers
                     {
                         SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
 
-                        if (string.IsNullOrEmpty(SOFTCONNECTGED.connex))
+                        if (!string.IsNullOrEmpty(SOFTCONNECTGED.connex))
                         {
                             if (mappingErreur == false)
                                 mappingErreur = true;
@@ -206,7 +206,7 @@ namespace apptab.Controllers
 
                         SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
-                        if (!db.SI_PROGED.Any(a => a.IDPROJET == crpt))
+                        if (db.SI_PROGED.Any(a => a.IDPROJET == crpt))
                         {
                             if (projetErreur == false)
                                 projetErreur = true;
@@ -215,14 +215,14 @@ namespace apptab.Controllers
                         var userT = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt &&*/ b.DELETIONDATE == null && b.ID == exist.ID);
                         var IDUSERGED = userT?.IDUSERGED;
 
-                        if (IDUSERGED == null || !ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
+                        if (IDUSERGED != null && ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
                         {
                             if (utilisateurErreur == false)
                                 utilisateurErreur = true;
                         }
                     }
 
-                    if (mappingErreur)
+                    if (!mappingErreur)
                     {
                         return Json(JsonConvert.SerializeObject(new
                         {
@@ -231,7 +231,7 @@ namespace apptab.Controllers
                         }, settings));
                     }
 
-                    if (projetErreur)
+                    if (!projetErreur)
                     {
                         return Json(JsonConvert.SerializeObject(new
                         {
@@ -240,7 +240,7 @@ namespace apptab.Controllers
                         }, settings));
                     }
 
-                    if (utilisateurErreur)
+                    if (!utilisateurErreur)
                     {
                         return Json(JsonConvert.SerializeObject(new
                         {
@@ -324,7 +324,7 @@ namespace apptab.Controllers
                     {
                         SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
 
-                        if (string.IsNullOrEmpty(SOFTCONNECTGED.connex))
+                        if (!string.IsNullOrEmpty(SOFTCONNECTGED.connex))
                         {
                             if (mappingErreur == false)
                                 mappingErreur = true;
@@ -332,7 +332,7 @@ namespace apptab.Controllers
 
                         SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
-                        if (!db.SI_PROGED.Any(a => a.IDPROJET == crpt))
+                        if (db.SI_PROGED.Any(a => a.IDPROJET == crpt))
                         {
                             if (projetErreur == false)
                                 projetErreur = true;
@@ -341,14 +341,14 @@ namespace apptab.Controllers
                         var userT = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt &&*/ b.DELETIONDATE == null && b.ID == exist.ID);
                         var IDUSERGED = userT?.IDUSERGED;
 
-                        if (IDUSERGED == null || !ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
+                        if (IDUSERGED != null && ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
                         {
                             if (utilisateurErreur == false)
                                 utilisateurErreur = true;
                         }
                     }
 
-                    if (mappingErreur)
+                    if (!mappingErreur)
                     {
                         return Json(JsonConvert.SerializeObject(new
                         {
@@ -357,7 +357,7 @@ namespace apptab.Controllers
                         }, settings));
                     }
 
-                    if (projetErreur)
+                    if (!projetErreur)
                     {
                         return Json(JsonConvert.SerializeObject(new
                         {
@@ -366,7 +366,7 @@ namespace apptab.Controllers
                         }, settings));
                     }
 
-                    if (utilisateurErreur)
+                    if (!utilisateurErreur)
                     {
                         return Json(JsonConvert.SerializeObject(new
                         {
@@ -479,7 +479,7 @@ namespace apptab.Controllers
 
                 SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
 
-                if (string.IsNullOrEmpty(SOFTCONNECTGED.connex))
+                if (!string.IsNullOrEmpty(SOFTCONNECTGED.connex))
                 {
                     if (mappingErreur == false)
                         mappingErreur = true;
@@ -487,7 +487,7 @@ namespace apptab.Controllers
 
                 SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
-                if (!db.SI_PROGED.Any(a => a.IDPROJET == crpt))
+                if (db.SI_PROGED.Any(a => a.IDPROJET == crpt))
                 {
                     if (projetErreur == false)
                         projetErreur = true;
@@ -496,14 +496,14 @@ namespace apptab.Controllers
                 var userT = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt &&*/ b.DELETIONDATE == null && b.ID == exist.ID);
                 var IDUSERGED = userT?.IDUSERGED;
 
-                if (IDUSERGED == null || !ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
+                if (IDUSERGED != null && ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
                 {
                     if (utilisateurErreur == false)
                         utilisateurErreur = true;
                 }
             }
 
-            if (mappingErreur)
+            if (!mappingErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
@@ -512,7 +512,7 @@ namespace apptab.Controllers
                 }, settings));
             }
 
-            if (projetErreur)
+            if (!projetErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
@@ -521,7 +521,7 @@ namespace apptab.Controllers
                 }, settings));
             }
 
-            if (utilisateurErreur)
+            if (!utilisateurErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
@@ -756,7 +756,7 @@ namespace apptab.Controllers
                 int crpt = int.Parse(Proj);
                 SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
 
-                if (string.IsNullOrEmpty(SOFTCONNECTGED.connex))
+                if (!string.IsNullOrEmpty(SOFTCONNECTGED.connex))
                 {
                     if (mappingErreur == false)
                         mappingErreur = true;
@@ -764,7 +764,7 @@ namespace apptab.Controllers
 
                 SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
-                if (!db.SI_PROGED.Any(a => a.IDPROJET == crpt))
+                if (db.SI_PROGED.Any(a => a.IDPROJET == crpt))
                 {
                     if (projetErreur == false)
                         projetErreur = true;
@@ -773,14 +773,14 @@ namespace apptab.Controllers
                 var userT = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt &&*/ b.DELETIONDATE == null && b.ID == exist.ID);
                 var IDUSERGED = userT?.IDUSERGED;
 
-                if (IDUSERGED == null || !ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
+                if (IDUSERGED != null && ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
                 {
                     if (utilisateurErreur == false)
                         utilisateurErreur = true;
                 }
             }
 
-            if (mappingErreur)
+            if (!mappingErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
@@ -789,7 +789,7 @@ namespace apptab.Controllers
                 }, settings));
             }
 
-            if (projetErreur)
+            if (!projetErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
@@ -798,7 +798,7 @@ namespace apptab.Controllers
                 }, settings));
             }
 
-            if (utilisateurErreur)
+            if (!utilisateurErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
@@ -876,7 +876,7 @@ namespace apptab.Controllers
                 int crpt = int.Parse(item);
                 SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
 
-                if (string.IsNullOrEmpty(SOFTCONNECTGED.connex))
+                if (!string.IsNullOrEmpty(SOFTCONNECTGED.connex))
                 {
                     if (mappingErreur == false)
                         mappingErreur = true;
@@ -884,7 +884,7 @@ namespace apptab.Controllers
 
                 SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
-                if (!db.SI_PROGED.Any(a => a.IDPROJET == crpt))
+                if (db.SI_PROGED.Any(a => a.IDPROJET == crpt))
                 {
                     if (projetErreur == false)
                         projetErreur = true;
@@ -893,14 +893,14 @@ namespace apptab.Controllers
                 var userT = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt &&*/ b.DELETIONDATE == null && b.ID == exist.ID);
                 var IDUSERGED = userT?.IDUSERGED;
 
-                if (IDUSERGED == null || !ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
+                if (IDUSERGED != null && ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
                 {
                     if (utilisateurErreur == false)
                         utilisateurErreur = true;
                 }
             }
 
-            if (mappingErreur)
+            if (!mappingErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
@@ -909,7 +909,7 @@ namespace apptab.Controllers
                 }, settings));
             }
 
-            if (projetErreur)
+            if (!projetErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
@@ -918,7 +918,7 @@ namespace apptab.Controllers
                 }, settings));
             }
 
-            if (utilisateurErreur)
+            if (!utilisateurErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
@@ -1211,7 +1211,7 @@ namespace apptab.Controllers
                 int crpt = int.Parse(proj);
                 SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
 
-                if (string.IsNullOrEmpty(SOFTCONNECTGED.connex))
+                if (!string.IsNullOrEmpty(SOFTCONNECTGED.connex))
                 {
                     if (mappingErreur == false)
                         mappingErreur = true;
@@ -1219,7 +1219,7 @@ namespace apptab.Controllers
 
                 SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
-                if (!db.SI_PROGED.Any(a => a.IDPROJET == crpt))
+                if (db.SI_PROGED.Any(a => a.IDPROJET == crpt))
                 {
                     if (projetErreur == false)
                         projetErreur = true;
@@ -1228,14 +1228,14 @@ namespace apptab.Controllers
                 var userT = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt &&*/ b.DELETIONDATE == null && b.ID == exist.ID);
                 var IDUSERGED = userT?.IDUSERGED;
 
-                if (IDUSERGED == null || !ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
+                if (IDUSERGED != null && ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
                 {
                     if (utilisateurErreur == false)
                         utilisateurErreur = true;
                 }
             }
 
-            if (mappingErreur)
+            if (!mappingErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
@@ -1244,7 +1244,7 @@ namespace apptab.Controllers
                 }, settings));
             }
 
-            if (projetErreur)
+            if (!projetErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
@@ -1253,7 +1253,7 @@ namespace apptab.Controllers
                 }, settings));
             }
 
-            if (utilisateurErreur)
+            if (!utilisateurErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
@@ -1305,7 +1305,7 @@ namespace apptab.Controllers
                 int crpt = int.Parse(proj);
                 SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
 
-                if (string.IsNullOrEmpty(SOFTCONNECTGED.connex))
+                if (!string.IsNullOrEmpty(SOFTCONNECTGED.connex))
                 {
                     if (mappingErreur == false)
                         mappingErreur = true;
@@ -1313,7 +1313,7 @@ namespace apptab.Controllers
 
                 SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
-                if (!db.SI_PROGED.Any(a => a.IDPROJET == crpt))
+                if (db.SI_PROGED.Any(a => a.IDPROJET == crpt))
                 {
                     if (projetErreur == false)
                         projetErreur = true;
@@ -1322,14 +1322,14 @@ namespace apptab.Controllers
                 var userT = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt &&*/ b.DELETIONDATE == null && b.ID == exist.ID);
                 var IDUSERGED = userT?.IDUSERGED;
 
-                if (IDUSERGED == null || !ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
+                if (IDUSERGED != null && ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
                 {
                     if (utilisateurErreur == false)
                         utilisateurErreur = true;
                 }
             }
 
-            if (mappingErreur)
+            if (!mappingErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
@@ -1338,7 +1338,7 @@ namespace apptab.Controllers
                 }, settings));
             }
 
-            if (projetErreur)
+            if (!projetErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
@@ -1347,7 +1347,7 @@ namespace apptab.Controllers
                 }, settings));
             }
 
-            if (utilisateurErreur)
+            if (!utilisateurErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
@@ -1547,7 +1547,7 @@ namespace apptab.Controllers
                 int crpt = int.Parse(item);
                 SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
 
-                if (string.IsNullOrEmpty(SOFTCONNECTGED.connex))
+                if (!string.IsNullOrEmpty(SOFTCONNECTGED.connex))
                 {
                     if (mappingErreur == false)
                         mappingErreur = true;
@@ -1555,7 +1555,7 @@ namespace apptab.Controllers
 
                 SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
-                if (!db.SI_PROGED.Any(a => a.IDPROJET == crpt))
+                if (db.SI_PROGED.Any(a => a.IDPROJET == crpt))
                 {
                     if (projetErreur == false)
                         projetErreur = true;
@@ -1564,14 +1564,14 @@ namespace apptab.Controllers
                 var userT = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt &&*/ b.DELETIONDATE == null && b.ID == exist.ID);
                 var IDUSERGED = userT?.IDUSERGED;
 
-                if (IDUSERGED == null || !ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
+                if (IDUSERGED != null && ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
                 {
                     if (utilisateurErreur == false)
                         utilisateurErreur = true;
                 }
             }
 
-            if (mappingErreur)
+            if (!mappingErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
@@ -1580,7 +1580,7 @@ namespace apptab.Controllers
                 }, settings));
             }
 
-            if (projetErreur)
+            if (!projetErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
@@ -1589,7 +1589,7 @@ namespace apptab.Controllers
                 }, settings));
             }
 
-            if (utilisateurErreur)
+            if (!utilisateurErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
@@ -1783,7 +1783,7 @@ namespace apptab.Controllers
                 int crpt = int.Parse(item);
                 SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
 
-                if (string.IsNullOrEmpty(SOFTCONNECTGED.connex))
+                if (!string.IsNullOrEmpty(SOFTCONNECTGED.connex))
                 {
                     if (mappingErreur == false)
                         mappingErreur = true;
@@ -1791,7 +1791,7 @@ namespace apptab.Controllers
 
                 SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
-                if (!db.SI_PROGED.Any(a => a.IDPROJET == crpt))
+                if (db.SI_PROGED.Any(a => a.IDPROJET == crpt))
                 {
                     if (projetErreur == false)
                         projetErreur = true;
@@ -1800,14 +1800,14 @@ namespace apptab.Controllers
                 var userT = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt &&*/ b.DELETIONDATE == null && b.ID == exist.ID);
                 var IDUSERGED = userT?.IDUSERGED;
 
-                if (IDUSERGED == null || !ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
+                if (IDUSERGED != null && ged.Users.Any(a => a.Id == IDUSERGED && a.DeletionDate == null))
                 {
                     if (utilisateurErreur == false)
                         utilisateurErreur = true;
                 }
             }
 
-            if (mappingErreur)
+            if (!mappingErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
@@ -1816,7 +1816,7 @@ namespace apptab.Controllers
                 }, settings));
             }
 
-            if (projetErreur)
+            if (!projetErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
@@ -1825,7 +1825,7 @@ namespace apptab.Controllers
                 }, settings));
             }
 
-            if (utilisateurErreur)
+            if (!utilisateurErreur)
             {
                 return Json(JsonConvert.SerializeObject(new
                 {
