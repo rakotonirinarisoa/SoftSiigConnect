@@ -132,26 +132,53 @@ namespace apptab.Controllers
                         }, settings));
                     }
 
-                    foreach (var crpt in idProjet)
+                    if (exist.ROLE == Role.Administrateur || exist.ROLE == Role.Autre)
                     {
-                        SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
-                        SOFTCONNECTGED ged = new SOFTCONNECTGED();
-
-                        var isUserSet = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt && */b.DELETIONDATE == null && b.ID == exist.ID);
-                        var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null);
-
-                        Guid[] guidArray = DeserializeJsonToGuidArray(isUserGed.Sites);
-
-                        var validSites = ged.Sites.Where(a => a.DeletionDate == null).ToDictionary(a => a.Id, a => a);
-
-                        foreach (Guid guid in guidArray)
+                        foreach (var crpt in idProjet)
                         {
-                            if (validSites.TryGetValue(guid, out var site))
+                            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
+                            SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+                            var isUserSet = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt && */b.DELETIONDATE == null && b.ID == exist.ID);
+                            var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null);
+
+                            Guid[] guidArray = DeserializeJsonToGuidArray(isUserGed.Sites);
+
+                            var validSites = ged.Sites.Where(a => a.DeletionDate == null).ToDictionary(a => a.Id, a => a);
+
+                            foreach (Guid guid in guidArray)
+                            {
+                                if (validSites.TryGetValue(guid, out var site))
+                                {
+                                    var newSite = new SiteGED()
+                                    {
+                                        Id = guid,
+                                        Code = site.SiteId + "-" + site.Name
+                                    };
+
+                                    if (!crpto.Any(s => s.Id == newSite.Id && s.Code == newSite.Code))
+                                    {
+                                        crpto.Add(newSite);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var crpt in idProjet)
+                        {
+                            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
+                            SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+                            var validSites = ged.Sites.Where(a => a.DeletionDate == null).ToList();
+
+                            foreach (var guid in validSites.ToList())
                             {
                                 var newSite = new SiteGED()
                                 {
-                                    Id = guid,
-                                    Code = site.SiteId + "-" + site.Name
+                                    Id = guid.Id,
+                                    Code = guid.SiteId + "-" + guid.Name
                                 };
 
                                 if (!crpto.Any(s => s.Id == newSite.Id && s.Code == newSite.Code))
@@ -249,33 +276,61 @@ namespace apptab.Controllers
                         }, settings));
                     }
 
-                    foreach (var crpt in idProjet)
+                    if (exist.ROLE == Role.Administrateur || exist.ROLE == Role.Autre)
                     {
-                        SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
-                        SOFTCONNECTGED ged = new SOFTCONNECTGED();
-
-                        var isUserSet = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt && */b.DELETIONDATE == null && b.ID == exist.ID);
-                        var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null);
-
-                        var suppliers1 = ged.Suppliers.Where(a => a.ProjectId == isUserGed.ProjectId && a.DeletionDate == null).ToList();
-                        var autreprojet = ged.Users.Where(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null).FirstOrDefault().ProjectIdOth.Split(',').ToList();
-                        var suppliers2 = ged.Suppliers.Where(a => autreprojet.Contains(a.ProjectId.ToString()) && a.DeletionDate == null).ToList();
-
-                        var suppliers = suppliers1.Union(suppliers2).ToList();
-
-                        foreach (var it in suppliers)
+                        foreach (var crpt in idProjet)
                         {
-                            if (!supl.Any(c => c.Id == it.Id && c.Nom == it.Name))  // Vérification si l'élément existe déjà
+                            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
+                            SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+                            var isUserSet = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt && */b.DELETIONDATE == null && b.ID == exist.ID);
+                            var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null);
+
+                            var suppliers1 = ged.Suppliers.Where(a => a.ProjectId == isUserGed.ProjectId && a.DeletionDate == null).ToList();
+                            var autreprojet = ged.Users.Where(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null).FirstOrDefault().ProjectIdOth.Split(',').ToList();
+                            var suppliers2 = ged.Suppliers.Where(a => autreprojet.Contains(a.ProjectId.ToString()) && a.DeletionDate == null).ToList();
+
+                            var suppliers = suppliers1.Union(suppliers2).ToList();
+
+                            foreach (var it in suppliers)
                             {
-                                supl.Add(new Fournisseur()
+                                if (!supl.Any(c => c.Id == it.Id && c.Nom == it.Name))  // Vérification si l'élément existe déjà
                                 {
-                                    Id = it.Id,
-                                    Nom = it.Name,
-                                });
+                                    supl.Add(new Fournisseur()
+                                    {
+                                        Id = it.Id,
+                                        Nom = it.Name,
+                                    });
+                                }
                             }
                         }
                     }
+                    else
+                    {
+                        foreach (var crpt in idProjet)
+                        {
+                            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
+                            SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
+                            var suppliers1 = ged.Suppliers.Where(a => a.DeletionDate == null).ToList();
+                            var autreprojet = ged.Users.Where(a => a.DeletionDate == null).FirstOrDefault().ProjectIdOth.Split(',').ToList();
+                            var suppliers2 = ged.Suppliers.Where(a => autreprojet.Contains(a.ProjectId.ToString()) && a.DeletionDate == null).ToList();
+
+                            var suppliers = suppliers1.Union(suppliers2).ToList();
+
+                            foreach (var it in suppliers)
+                            {
+                                if (!supl.Any(c => c.Id == it.Id && c.Nom == it.Name))  // Vérification si l'élément existe déjà
+                                {
+                                    supl.Add(new Fournisseur()
+                                    {
+                                        Id = it.Id,
+                                        Nom = it.Name,
+                                    });
+                                }
+                            }
+                        }
+                    }
                 }
 
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { etat = supl } }, settings));
@@ -375,52 +430,109 @@ namespace apptab.Controllers
                         }, settings));
                     }
 
-                    foreach (var crpt in idProjet)
+                    if (exist.ROLE == Role.Administrateur || exist.ROLE == Role.Autre)
                     {
-                        SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
-                        SOFTCONNECTGED ged = new SOFTCONNECTGED();
-
-                        var isUserSet = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt && */b.DELETIONDATE == null && b.ID == exist.ID);
-                        var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null);
-
-                        var isListeTypeD1 = ged.DocumentTypes.Where(a => a.ProjectId == isUserGed.ProjectId && a.DeletionDate == null).ToList();
-                        var autreprojet = ged.Users.Where(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null).FirstOrDefault().ProjectIdOth.Split(',').ToList();
-                        var isListeTypeD2 = ged.DocumentTypes.Where(a => autreprojet.Contains(a.ProjectId.ToString()) && a.DeletionDate == null).ToList();
-
-                        var isListeTypeD = isListeTypeD1.Union(isListeTypeD2).ToList();
-
-                        if (isListeTypeD != null)
+                        foreach (var crpt in idProjet)
                         {
-                            foreach (var typD in isListeTypeD)
+                            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
+                            SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+                            var isUserSet = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt && */b.DELETIONDATE == null && b.ID == exist.ID);
+                            var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null);
+
+                            var isListeTypeD1 = ged.DocumentTypes.Where(a => a.ProjectId == isUserGed.ProjectId && a.DeletionDate == null).ToList();
+                            var autreprojet = ged.Users.Where(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null).FirstOrDefault().ProjectIdOth.Split(',').ToList();
+                            var isListeTypeD2 = ged.DocumentTypes.Where(a => autreprojet.Contains(a.ProjectId.ToString()) && a.DeletionDate == null).ToList();
+
+                            var isListeTypeD = isListeTypeD1.Union(isListeTypeD2).ToList();
+
+                            if (isListeTypeD != null)
                             {
-                                if (ged.DocumentTypesSteps.Any(a => a.DocumentTypeId == typD.Id && a.DeletionDate == null))
+                                foreach (var typD in isListeTypeD)
                                 {
-                                    string[] guidArray = DeserializeJsonToStringArray(typD.Sites);
-                                    var guidArrayList = guidArray.ToList();
-
-                                    var inlist = false;
-
-                                    foreach (var guid in guidArrayList)
+                                    if (ged.DocumentTypesSteps.Any(a => a.DocumentTypeId == typD.Id && a.DeletionDate == null))
                                     {
-                                        if (listSite.Contains(guid))
-                                            inlist = true;
-                                    }
+                                        string[] guidArray = DeserializeJsonToStringArray(typD.Sites);
+                                        var guidArrayList = guidArray.ToList();
 
-                                    if (inlist)
-                                    {
-                                        if (!crpto.Any(c => c.Id == typD.Id && c.Title == typD.Title))  // Vérification si l'élément existe déjà
+                                        var inlist = false;
+
+                                        foreach (var guid in guidArrayList)
                                         {
-                                            crpto.Add(new TypeDoc
-                                            {
-                                                Id = typD.Id,
-                                                Title = typD.Title
-                                            });
+                                            if (listSite.Contains(guid))
+                                                inlist = true;
                                         }
-                                        //crpto.Add(new TypeDoc()
-                                        //{
-                                        //    Id = typD.Id,
-                                        //    Title = typD.Title
-                                        //});
+
+                                        if (inlist)
+                                        {
+                                            if (!crpto.Any(c => c.Id == typD.Id && c.Title == typD.Title))  // Vérification si l'élément existe déjà
+                                            {
+                                                crpto.Add(new TypeDoc
+                                                {
+                                                    Id = typD.Id,
+                                                    Title = typD.Title
+                                                });
+                                            }
+                                            //crpto.Add(new TypeDoc()
+                                            //{
+                                            //    Id = typD.Id,
+                                            //    Title = typD.Title
+                                            //});
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var crpt in idProjet)
+                        {
+                            SOFTCONNECTGED.connex = new Data.Extension().GetConGED(crpt);
+                            SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+                            //var isUserSet = db.SI_USERS.FirstOrDefault(b => /*b.IDPROJET == crpt && */b.DELETIONDATE == null && b.ID == exist.ID);
+                            //var isUserGed = ged.Users.FirstOrDefault(a => a.Id == isUserSet.IDUSERGED && a.DeletionDate == null);
+
+                            var isListeTypeD1 = ged.DocumentTypes.Where(a => a.DeletionDate == null).ToList();
+                            var autreprojet = ged.Users.Where(a => a.DeletionDate == null).FirstOrDefault().ProjectIdOth.Split(',').ToList();
+                            var isListeTypeD2 = ged.DocumentTypes.Where(a => autreprojet.Contains(a.ProjectId.ToString()) && a.DeletionDate == null).ToList();
+
+                            var isListeTypeD = isListeTypeD1.Union(isListeTypeD2).ToList();
+
+                            if (isListeTypeD != null)
+                            {
+                                foreach (var typD in isListeTypeD)
+                                {
+                                    if (ged.DocumentTypesSteps.Any(a => a.DocumentTypeId == typD.Id && a.DeletionDate == null))
+                                    {
+                                        string[] guidArray = DeserializeJsonToStringArray(typD.Sites);
+                                        var guidArrayList = guidArray.ToList();
+
+                                        var inlist = false;
+
+                                        foreach (var guid in guidArrayList)
+                                        {
+                                            if (listSite.Contains(guid))
+                                                inlist = true;
+                                        }
+
+                                        if (inlist)
+                                        {
+                                            if (!crpto.Any(c => c.Id == typD.Id && c.Title == typD.Title))  // Vérification si l'élément existe déjà
+                                            {
+                                                crpto.Add(new TypeDoc
+                                                {
+                                                    Id = typD.Id,
+                                                    Title = typD.Title
+                                                });
+                                            }
+                                            //crpto.Add(new TypeDoc()
+                                            //{
+                                            //    Id = typD.Id,
+                                            //    Title = typD.Title
+                                            //});
+                                        }
                                     }
                                 }
                             }
