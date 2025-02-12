@@ -1331,6 +1331,9 @@ namespace apptab.Extension
                                 {
                                     ccyiso = tom.FOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().DEVISE;
 
+                                }else if(typeDevise == 1)
+                                {
+                                    ccyiso = tom.RPROJET.FirstOrDefault().MONNAIERAPP;
                                 }
                             }
                             //eto no miverina virment
@@ -1523,9 +1526,21 @@ namespace apptab.Extension
                             }
                             else if (intbasetype == 5)
                             {
+                                if (devise)
+                                {
+                                    if (typeDevise == 0)
+                                    {
+                                        ere = tom.MOP.Where(a => a.NUMEROOP == item.NUM && a.NUMENREG == item.NUMEREG).FirstOrDefault().MONTANTDEV;
+
+                                    }
+                                    else if (typeDevise == 1)
+                                    {
+                                       ere = tom.MOP.Where(a => a.NUMEROOP == item.NUM && a.NUMENREG == item.NUMEREG).FirstOrDefault().MONTANTRAP;
+                                    }
+                                }
                                 var banqueDispo = db.OPA_BANQUE.Where(x => x.ID == banqueid).FirstOrDefault();
                                 var temppp = db.OPA_VALIDATIONS.Where(x => x.IDREGLEMENT == item.NUM).FirstOrDefault();
-                                rswift = tom.RTIERS.Where(a => a.COGEAUXI == temppp.ComptaG + temppp.auxi).FirstOrDefault();//miova COGEAUXI
+                                rswift = tom.RTIERS.Where(a => a.COGEAUXI == temppp.ComptaG + " " + temppp.auxi).FirstOrDefault();//miova COGEAUXI
                                 var increBase = db.OPA_BASE.Where(a => a.IDSOCIETE == PROJECTID).FirstOrDefault();
                                 //Mise a dsiposition 
                                 pmtinf.Add(
@@ -1547,7 +1562,7 @@ namespace apptab.Extension
                                             )
                                         ),
                                         new XElement("Cdtr",
-                                                new XElement("Nm", item.BENEFICIAIRE),
+                                                new XElement("Nm", rswift.NOM),
                                                  new XElement("Id",
                                                     new XElement("OrgId",
                                                         new XElement("Othr",
