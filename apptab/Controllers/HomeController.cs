@@ -750,6 +750,56 @@ namespace apptab.Controllers
                     }
                 }
             }
+            else if (intbasetype == 0)
+            {
+                if (avalider != null)
+                {
+                    var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype, banqueid);
+
+                    path = pathfile.NomFichier;
+                    //Nomfichier = pathfile.NomFichier + ".xml";
+                    if (rbanque.CODEBIC.Contains("CLMDMGMG"))
+                    {
+                        directory = "BANQUE/" + projetName + "/BNI";
+                        Anarana = pathfile.Chemin;
+                        //xmlResult = SaveDocument(Anarana, Anarana);
+                        //SaveDocument(Anarana, Anarana);
+                    }
+                    else if (rbanque.CODEBIC.Contains("BF"))
+                    {
+                        directory = "BANQUE/" + projetName + "/SG";
+                        Anarana = pathfile.Chemin;
+                        //xmlResult = SaveDocument(Anarana, Anarana);
+                        SaveDocument(Anarana, Anarana);
+                    }
+                    else
+                    {
+                        directory = "BANQUE/" + projetName + "/BOA";
+                        Anarana = pathfile.Chemin;
+                        //xmlResult = SaveDocument(Anarana, Anarana);
+                        SaveDocument(Anarana, Anarana);
+                    }
+                  
+                    if (avalider != null)
+                    {
+                        foreach (var item in avalider)
+                        {
+                            try
+                            {
+                                item.DATETRANS = DateTime.Now;
+                                item.IDUSTRANS = exist.ID;
+                                item.ETAT = 3;
+                                db.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                                throw;
+                            }
+                        }
+                    }
+                }
+            }
             else
             {
                 if (avalider != null)
@@ -758,7 +808,17 @@ namespace apptab.Controllers
 
                     path = pathfile.NomFichier;
                     //Nomfichier = pathfile.NomFichier + ".xml";
-                    directory = "BANQUE/" + projetName + "/BOA";
+                    if (rbanque.CODEBIC.Contains("CLMDMGMG"))
+                    {
+                        directory = "BANQUE/" + projetName + "/BNI";
+                    }else if (rbanque.CODEBIC.Contains("BF"))
+                    {
+                        directory = "BANQUE/" + projetName + "/SG";
+                    }
+                    else
+                    {
+                        directory = "BANQUE/" + projetName + "/BOA";
+                    }
                     Anarana = pathfile.Chemin;
                     //xmlResult = SaveDocument(Anarana, Anarana);
                     SaveDocument(Anarana, Anarana);
@@ -786,7 +846,7 @@ namespace apptab.Controllers
                         string pport = ftp.PORT.ToString();
                         SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory, ftp.BANQUE);
                     }
-                    else if (rbanque.CODEBIC.Contains("BNI"))
+                    else if (rbanque.CODEBIC.Contains("CLMDMGMG"))
                     {
                         directory = "BANQUE/" + projetName + "/BNI";
                         var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BNI").FirstOrDefault();
@@ -2932,6 +2992,10 @@ namespace apptab.Controllers
 
             List<string> site = new List<string>();
             var siteS = db.SI_SITE.Where(ST => ST.IDUSER == exist.ID && ST.IDPROJET == PROJECTID).Select(ST => ST.SITE).FirstOrDefault();
+            if (siteS == null)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "Error", msg = "Veuillez paramétrer votre Site s'il vous plaît." }, settings));
+            }
             foreach (var item in siteS.Split(','))
             {
                 site.Add(item);
