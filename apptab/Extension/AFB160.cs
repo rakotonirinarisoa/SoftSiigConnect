@@ -1081,12 +1081,12 @@ namespace apptab.Extension
                             virementInfos.Add(new VirementInfo()
                             {
                                 NumOP = item.NUM,
-                                Montant = beficPrice.ToString(),
-                                Libelle = item.LIBELLE,
+                                Montant = ere.ToString(),
+                                Libelle = opop.Libelle,
                                 dateDemander = item.DATE.ToString(),
                                 etat = "Envoyer a Banque via SFTP",
                                 Compte = item.GUICHET + item.RIB + item.CLE,
-                                CompteCredit = donneurOrde.CODE_GUICHET + donneurOrde.CODE_BANQUE + donneurOrde.CLE,
+                                CompteCredit = donneurOrde.CODE_GUICHET + donneurOrde.CODE_BANQUE + donneurOrde.NUM_COMPTE + donneurOrde.CLE,
                                 CompteDebiteur = item.GUICHET + item.RIB + item.CLE,
                                 motif = item.LIBELLE,
                                 references = fileName,
@@ -1826,11 +1826,11 @@ namespace apptab.Extension
                             {
                                 NumOP = item.NUM,
                                 Montant = beficPrice.ToString(),
-                                Libelle = item.LIBELLE,
+                                Libelle = opop.Libelle,
                                 dateDemander = item.DATE.ToString(),
                                 etat = "Envoyer a Banque via SFTP",
                                 Compte = item.GUICHET + item.RIB + item.CLE,
-                                CompteCredit = donneurOrde.CODE_GUICHET + donneurOrde.CODE_BANQUE + donneurOrde.CLE,
+                                CompteCredit = donneurOrde.CODE_GUICHET + donneurOrde.CODE_BANQUE  + donneurOrde.NUM_COMPTE + donneurOrde.CLE,
                                 CompteDebiteur = item.GUICHET + item.RIB + item.CLE,
                                 motif = item.LIBELLE,
                                 references = fileName,
@@ -5425,12 +5425,23 @@ namespace apptab.Extension
                 )
             );
 
+            // Ajouter une ligne fusionnée en haut pour le titre du tableau
+            TableRow titleRow = new TableRow(
+                new TableCell(
+                    new TableCellProperties(
+                        new GridSpan() { Val = 7 }  // Fusionner toutes les 7 colonnes
+                    ),
+                    new Paragraph(new Run(new DocumentFormat.OpenXml.Wordprocessing.Text("Liste des virements")) // Le titre de votre tableau
+                    {
+                    })
+                )
+            );
+            table.Append(titleRow);
+
             // Ajouter l'en-tête du tableau
             TableRow headerRow = new TableRow(
                 new TableCell(new Paragraph(new Run(new DocumentFormat.OpenXml.Wordprocessing.Text("Numero Opérations")))),
                 new TableCell(new Paragraph(new Run(new DocumentFormat.OpenXml.Wordprocessing.Text("Libelle")))),
-                new TableCell(new Paragraph(new Run(new DocumentFormat.OpenXml.Wordprocessing.Text("Compte Débiteur")))),
-                new TableCell(new Paragraph(new Run(new DocumentFormat.OpenXml.Wordprocessing.Text("Motif de payement")))),
                 new TableCell(new Paragraph(new Run(new DocumentFormat.OpenXml.Wordprocessing.Text("Beneficiaire")))),
                 new TableCell(new Paragraph(new Run(new DocumentFormat.OpenXml.Wordprocessing.Text("Compte Credit")))),
                 new TableCell(new Paragraph(new Run(new DocumentFormat.OpenXml.Wordprocessing.Text("Montant"))))
@@ -5443,8 +5454,6 @@ namespace apptab.Extension
                 TableRow dataRow = new TableRow(
                     new TableCell(new Paragraph(new Run(new DocumentFormat.OpenXml.Wordprocessing.Text(virement.NumOP)))),
                     new TableCell(new Paragraph(new Run(new DocumentFormat.OpenXml.Wordprocessing.Text(virement.Libelle)))),
-                    new TableCell(new Paragraph(new Run(new DocumentFormat.OpenXml.Wordprocessing.Text(virement.Compte)))),
-                    new TableCell(new Paragraph(new Run(new DocumentFormat.OpenXml.Wordprocessing.Text(virement.motif)))),
                     new TableCell(new Paragraph(new Run(new DocumentFormat.OpenXml.Wordprocessing.Text(virement.bene)))),
                     new TableCell(new Paragraph(new Run(new DocumentFormat.OpenXml.Wordprocessing.Text(virement.CompteCredit)))),
                     new TableCell(new Paragraph(new Run(new DocumentFormat.OpenXml.Wordprocessing.Text(virement.Montant))))
@@ -5454,6 +5463,7 @@ namespace apptab.Extension
 
             return table;
         }
+
 
     }
 }
