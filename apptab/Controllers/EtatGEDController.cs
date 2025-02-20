@@ -1088,7 +1088,7 @@ namespace apptab.Controllers
 
                                 if (ged.DocumentTypes.Any(a => a.Id == IdDocTypes))
                                 {
-                                    var typedoc = ged.DocumentTypes.FirstOrDefault(a => a.Id == IdDocTypes /*&& a.DeletionDate == null*/);
+                                    var typedoc = ged.DocumentTypes.FirstOrDefault(a => a.Id == IdDocTypes && a.DeletionDate == null);
 
                                     //Accusé de récéption//
                                     if (ged.SuppliersDocumentsAcknowledgements.Any(a => a.Id == y.Id) /*&& y.DeletionDate == null*/) //Status == 1 => Création circuit : OK
@@ -1112,7 +1112,7 @@ namespace apptab.Controllers
                                         if (ged.ValidationsHistory.Any(a => a.DocumentId == y.Id && (a.ActionType == 0 || a.ActionType == 3)))
                                         {
                                             var validationInProgress = ged.ValidationsHistory.Where(a => a.DocumentId == y.Id && (a.ActionType == 0 || a.ActionType == 3)).OrderByDescending(a => a.CreationDate).FirstOrDefault();
-                                            var documentStep = ged.DocumentSteps.FirstOrDefault(a => a.Id == validationInProgress.ToDocumentStepId /*&& a.DeletionDate == null*/);
+                                            var documentStep = ged.DocumentSteps.FirstOrDefault(a => a.Id == validationInProgress.ToDocumentStepId && a.DeletionDate == null);
 
                                             if (documentStep == null)
                                             {
@@ -1120,12 +1120,12 @@ namespace apptab.Controllers
 
                                                 if (validationInProgressFin != null)
                                                 {
-                                                    var documentStepFin = ged.DocumentSteps.FirstOrDefault(a => a.Id == validationInProgressFin.ToDocumentStepId /*&& a.DeletionDate == null*/);
+                                                    var documentStepFin = ged.DocumentSteps.FirstOrDefault(a => a.Id == validationInProgressFin.ToDocumentStepId && a.DeletionDate == null);
                                                     if (documentStepFin != null)
                                                     {
                                                         var stepNumberFin = documentStepFin.StepNumber;
 
-                                                        validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin /*&& a.DeletionDate == null*/).ProcessingDescription;
+                                                        validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin && a.DeletionDate == null).ProcessingDescription;
                                                         validationHistoNEXT = "Terminé";
                                                         validationHistoNEXTvalidateur = "Terminé";
                                                         validationHistoNEXTduree = "0";
@@ -1136,7 +1136,7 @@ namespace apptab.Controllers
 
                                                         var stepNumberFin = documentStepFin.StepNumber;
 
-                                                        validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin /*&& a.DeletionDate == null*/).ProcessingDescription;
+                                                        validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin && a.DeletionDate == null).ProcessingDescription;
                                                         validationHistoNEXT = "Terminé";
                                                         validationHistoNEXTvalidateur = "Terminé";
                                                         validationHistoNEXTduree = "0";
@@ -1148,10 +1148,10 @@ namespace apptab.Controllers
                                                 var stepNumber = documentStep.StepNumber;
 
                                                 //Get steps information//
-                                                var isStepType = ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == (stepNumber - 1) /*&& a.DeletionDate == null*/);
+                                                var isStepType = ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == (stepNumber - 1) && a.DeletionDate == null);
                                                 if (isStepType == null)
                                                 {
-                                                    validationHisto = "Etape " + stepNumber + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumber /*&& a.DeletionDate == null*/).ProcessingDescription;
+                                                    validationHisto = "Etape " + stepNumber + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumber && a.DeletionDate == null).ProcessingDescription;
                                                     validationHistoNEXT = "Terminé";
                                                     validationHistoNEXTvalidateur = "Terminé";
                                                     validationHistoNEXTduree = "0";
@@ -1160,24 +1160,24 @@ namespace apptab.Controllers
                                                 {
                                                     validationHisto = "Etape " + (stepNumber - 1) + " : " + isStepType.ProcessingDescription;
 
-                                                    var isStepTypeNEXT = ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumber /*&& a.DeletionDate == null*/);
+                                                    var isStepTypeNEXT = ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumber && a.DeletionDate == null);
 
                                                     validationHistoNEXT = "Etape " + (stepNumber) + " : " + isStepTypeNEXT.ProcessingDescription;
 
                                                     validationHistoNEXTduree = isStepTypeNEXT.ProcessingDuration.ToString();
 
-                                                    var isStepNext = ged.DocumentSteps.FirstOrDefault(a => a.DocumentId == y.Id && a.StepNumber == stepNumber /*&& a.DeletionDate == null*/);
-                                                    var userStep = ged.UsersSteps.FirstOrDefault(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/);
+                                                    var isStepNext = ged.DocumentSteps.FirstOrDefault(a => a.DocumentId == y.Id && a.StepNumber == stepNumber && a.DeletionDate == null);
+                                                    var userStep = ged.UsersSteps.FirstOrDefault(a => a.DocumentStepId == isStepNext.Id && a.DeletionDate == null);
                                                     var isuu = ged.Users.FirstOrDefault(a => a.Id == userStep.UserId /*&& a.DeletionDate == null*/);
                                                     validationHistoNEXTvalidateur = (String.IsNullOrEmpty(isuu.Fonction) ? "SANS FONCTION" : isuu.Fonction + " : ") +
                                                                 (String.IsNullOrEmpty(isuu.Username) ? "" : isuu.Username + " : ") +
                                                                 (String.IsNullOrEmpty(isuu.LastName) ? "" : isuu.LastName + " ") +
                                                                 (String.IsNullOrEmpty(isuu.FirstName) ? "" : isuu.FirstName);
 
-                                                    if (ged.UsersSteps.Where(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/).Count() > 1)
+                                                    if (ged.UsersSteps.Where(a => a.DocumentStepId == isStepNext.Id && a.DeletionDate == null).Count() > 1)
                                                     {
                                                         validationHistoNEXTvalidateur = "";
-                                                        foreach (var vhe in ged.UsersSteps.Where(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/).ToList())
+                                                        foreach (var vhe in ged.UsersSteps.Where(a => a.DocumentStepId == isStepNext.Id && a.DeletionDate == null).ToList())
                                                         {
                                                             var isUser = ged.Users.FirstOrDefault(a => a.Id == vhe.UserId);
                                                             validationHistoNEXTvalidateur += "<li>" + ((String.IsNullOrEmpty(isuu.Fonction) ? "SANS FONCTION" : isuu.Fonction + " : ") +
@@ -1254,7 +1254,7 @@ namespace apptab.Controllers
                                         if (ged.ValidationsHistory.Any(a => a.DocumentId == y.Id && (a.ActionType == 0 || a.ActionType == 3)))
                                         {
                                             var validationInProgress = ged.ValidationsHistory.Where(a => a.DocumentId == y.Id && (a.ActionType == 0 || a.ActionType == 3)).OrderByDescending(a => a.CreationDate).FirstOrDefault();
-                                            var documentStep = ged.DocumentSteps.FirstOrDefault(a => a.Id == validationInProgress.ToDocumentStepId /*&& a.DeletionDate == null*/);
+                                            var documentStep = ged.DocumentSteps.FirstOrDefault(a => a.Id == validationInProgress.ToDocumentStepId && a.DeletionDate == null);
 
                                             if (documentStep == null)
                                             {
@@ -1262,12 +1262,12 @@ namespace apptab.Controllers
 
                                                 if (validationInProgressFin != null)
                                                 {
-                                                    var documentStepFin = ged.DocumentSteps.FirstOrDefault(a => a.Id == validationInProgressFin.ToDocumentStepId /*&& a.DeletionDate == null*/);
+                                                    var documentStepFin = ged.DocumentSteps.FirstOrDefault(a => a.Id == validationInProgressFin.ToDocumentStepId && a.DeletionDate == null);
                                                     if (documentStepFin != null)
                                                     {
                                                         var stepNumberFin = documentStepFin.StepNumber;
 
-                                                        validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin /*&& a.DeletionDate == null*/).ProcessingDescription;
+                                                        validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin && a.DeletionDate == null).ProcessingDescription;
                                                         validationHistoNEXT = "Terminé";
                                                         validationHistoNEXTvalidateur = "Terminé";
                                                         validationHistoNEXTduree = "0";
@@ -1278,7 +1278,7 @@ namespace apptab.Controllers
 
                                                         var stepNumberFin = documentStepFin.StepNumber;
 
-                                                        validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin /*&& a.DeletionDate == null*/).ProcessingDescription;
+                                                        validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin && a.DeletionDate == null).ProcessingDescription;
                                                         validationHistoNEXT = "Terminé";
                                                         validationHistoNEXTvalidateur = "Terminé";
                                                         validationHistoNEXTduree = "0";
@@ -1298,10 +1298,10 @@ namespace apptab.Controllers
                                                 var stepNumber = documentStep.StepNumber;
 
                                                 //Get steps information//
-                                                var isStepType = ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == (stepNumber - 1) /*&& a.DeletionDate == null*/);
+                                                var isStepType = ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == (stepNumber - 1) && a.DeletionDate == null);
                                                 if (isStepType == null)
                                                 {
-                                                    validationHisto = "Etape " + stepNumber + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumber /*&& a.DeletionDate == null*/).ProcessingDescription;
+                                                    validationHisto = "Etape " + stepNumber + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumber && a.DeletionDate == null).ProcessingDescription;
                                                     validationHistoNEXT = "Terminé";
                                                     validationHistoNEXTvalidateur = "Terminé";
                                                     validationHistoNEXTduree = "0";
@@ -1310,24 +1310,24 @@ namespace apptab.Controllers
                                                 {
                                                     validationHisto = "Etape " + (stepNumber - 1) + " : " + isStepType.ProcessingDescription;
 
-                                                    var isStepTypeNEXT = ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumber /*&& a.DeletionDate == null*/);
+                                                    var isStepTypeNEXT = ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumber && a.DeletionDate == null);
 
                                                     validationHistoNEXT = "Etape " + (stepNumber) + " : " + isStepTypeNEXT.ProcessingDescription;
 
                                                     validationHistoNEXTduree = isStepTypeNEXT.ProcessingDuration.ToString();
 
-                                                    var isStepNext = ged.DocumentSteps.FirstOrDefault(a => a.DocumentId == y.Id && a.StepNumber == stepNumber /*&& a.DeletionDate == null*/);
-                                                    var userStep = ged.UsersSteps.FirstOrDefault(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/);
+                                                    var isStepNext = ged.DocumentSteps.FirstOrDefault(a => a.DocumentId == y.Id && a.StepNumber == stepNumber && a.DeletionDate == null);
+                                                    var userStep = ged.UsersSteps.FirstOrDefault(a => a.DocumentStepId == isStepNext.Id && a.DeletionDate == null);
                                                     var isuu = ged.Users.FirstOrDefault(a => a.Id == userStep.UserId /*&& a.DeletionDate == null*/);
                                                     validationHistoNEXTvalidateur = (String.IsNullOrEmpty(isuu.Fonction) ? "SANS FONCTION" : isuu.Fonction + " : ") +
                                                                 (String.IsNullOrEmpty(isuu.Username) ? "" : isuu.Username + " : ") +
                                                                 (String.IsNullOrEmpty(isuu.LastName) ? "" : isuu.LastName + " ") +
                                                                 (String.IsNullOrEmpty(isuu.FirstName) ? "" : isuu.FirstName);
 
-                                                    if (ged.UsersSteps.Where(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/).Count() > 1)
+                                                    if (ged.UsersSteps.Where(a => a.DocumentStepId == isStepNext.Id && a.DeletionDate == null).Count() > 1)
                                                     {
                                                         validationHistoNEXTvalidateur = "";
-                                                        foreach (var vhe in ged.UsersSteps.Where(a => a.DocumentStepId == isStepNext.Id /*&& a.DeletionDate == null*/).ToList())
+                                                        foreach (var vhe in ged.UsersSteps.Where(a => a.DocumentStepId == isStepNext.Id && a.DeletionDate == null).ToList())
                                                         {
                                                             var isUser = ged.Users.FirstOrDefault(a => a.Id == vhe.UserId);
                                                             validationHistoNEXTvalidateur += "<li>" + ((String.IsNullOrEmpty(isuu.Fonction) ? "SANS FONCTION" : isuu.Fonction + " : ") +
@@ -1821,7 +1821,7 @@ namespace apptab.Controllers
                         {
                             listEtape = new List<string>();
 
-                            foreach (var elem in ged.DocumentTypesSteps.Where(a => a.DocumentTypeId == typedoc.Id /*&& a.DeletionDate == null*/).OrderBy(a => a.StepNumber).ToList())
+                            foreach (var elem in ged.DocumentTypesSteps.Where(a => a.DocumentTypeId == typedoc.Id && a.DeletionDate == null).OrderBy(a => a.StepNumber).ToList())
                             {
                                 listEtape.Add("Etape " + elem.StepNumber + " : " + elem.ProcessingDescription);
                             }
@@ -1855,14 +1855,14 @@ namespace apptab.Controllers
                                         var RATTACHTOM = "";
 
                                         //Liste des etapes avec date de validation//
-                                        foreach (var elem in ged.DocumentTypesSteps.Where(a => a.DocumentTypeId == typedoc.Id /*&& a.DeletionDate == null*/).OrderBy(a => a.StepNumber).ToList())
+                                        foreach (var elem in ged.DocumentTypesSteps.Where(a => a.DocumentTypeId == typedoc.Id && a.DeletionDate == null).OrderBy(a => a.StepNumber).ToList())
                                         {
                                             //var DocTypeUserSteps = ged.DocumentTypesUsersSteps.FirstOrDefault(a => a.StepId == elem.Id);
-                                            var DocSteps = ged.DocumentSteps.FirstOrDefault(a => a.StepNumber == elem.StepNumber && a.DocumentId == y.Id /*&& a.DeletionDate == null*/);
+                                            var DocSteps = ged.DocumentSteps.FirstOrDefault(a => a.StepNumber == elem.StepNumber && a.DocumentId == y.Id && a.DeletionDate == null);
 
                                             if (DocSteps != null)
                                             {
-                                                var UsersStep = ged.UsersSteps.FirstOrDefault(a => a.DocumentStepId == DocSteps.Id && a.ProcessingDate != null && a.IsValidator == true/*&& a.DeletionDate == null*/);//A verifier le ACTIONTYPE dans ValidationHistory si besoin (0 : validation ou 3 : archivage)
+                                                var UsersStep = ged.UsersSteps.FirstOrDefault(a => a.DocumentStepId == DocSteps.Id && a.ProcessingDate != null && a.IsValidator == true && a.DeletionDate == null);//A verifier le ACTIONTYPE dans ValidationHistory si besoin (0 : validation ou 3 : archivage)
 
                                                 var dateValidation = " ";
                                                 if (UsersStep != null)
