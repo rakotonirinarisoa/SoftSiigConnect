@@ -237,6 +237,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\IActionResult.cs" />
     <Compile Include="Controllers\TraitementComplementController.cs" />
     <Compile Include="Controllers\TempController.cs" />
     <Compile Include="Controllers\AnomalieController.cs" />

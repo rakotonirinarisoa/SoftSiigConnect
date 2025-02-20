@@ -407,24 +407,60 @@ function GetAllProjectUser() {
     });
 }
 
+//function FillAUXI() {
+//    var list = ListCompteG.filter(x => x.COGE == $(`[compG-list]`).val()).pop();
+//    console.log(list);
+//    let code = `<option value="Tous"> Tous</option> `;
+//    if (list == undefined) {
+
+//    } else {
+//        $.each(list.AUXI, function (k, v) {
+//            $.each(v, function (x, y) {
+//                code += `
+//                    <option value="${y}">${y}</option>
+//                `;
+//            })
+
+//        });
+//    }
+//    $(`[auxi-list]`).html('');
+//    $(`[auxi-list]`).html(code);
+//}
 function FillAUXI() {
     var list = ListCompteG.filter(x => x.COGE == $(`[compG-list]`).val()).pop();
     console.log(list);
-    let code = `<option value="Tous"> Tous</option> `;
-    if (list == undefined) {
 
-    } else {
+    let code = `
+        <option value="Tous">Tous</option>
+    `;
+
+    // Si la liste est définie, on la parcourt
+    if (list !== undefined) {
         $.each(list.AUXI, function (k, v) {
             $.each(v, function (x, y) {
                 code += `
                     <option value="${y}">${y}</option>
                 `;
-            })
-
+            });
         });
     }
+
+    // Mettre à jour le contenu de la liste déroulante
     $(`[auxi-list]`).html('');
     $(`[auxi-list]`).html(code);
+
+    // Ajouter la fonction de recherche à la liste déroulante
+    $('#auxiSearchInput').on('input', function () {
+        var searchQuery = $(this).val().toLowerCase();  // Récupère la valeur de recherche en minuscule
+        $(`[auxi-list] option`).each(function () {
+            var optionText = $(this).text().toLowerCase();  // Texte de l'option en minuscule
+            if (optionText.includes(searchQuery)) {
+                $(this).show();  // Affiche l'option si elle correspond à la recherche
+            } else {
+                $(this).hide();  // Cache l'option si elle ne correspond pas à la recherche
+            }
+        });
+    });
 }
 
 function FillCompteName() {

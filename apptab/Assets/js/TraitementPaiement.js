@@ -29,7 +29,7 @@ function calculateDuration(array) {
 
 function parseList(array) {
     const result = [];
-
+    //alert(array);
     let rowNumber = 0;
 
     for (let i = 0; i < array.length; i += 1) {
@@ -235,7 +235,7 @@ $('[data-action="GenereLISTE"]').click(async function () {
         },
         success: function (result) {
             const res = JSON.parse(result);
-
+            console.log(res);
             const { type, msg } = res;
 
             if (type === 'error' || type === 'PEtat' || type === 'Prese') {
@@ -403,7 +403,7 @@ function handleSelectAll() {
 }
 
 //Ajoutez l'événement "change" au dropdown du site//
-$("#site").on('change', handleSelectAll);
+//$("#site").on('change', handleSelectAll);
 
 $('#site').on('input', () => {
     emptyTable();

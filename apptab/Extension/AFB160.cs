@@ -480,9 +480,14 @@ namespace apptab.Extension
                                             new XElement("PstlAdr",
                                                 //new XElement("AdrTp", formaterTexte(35, donneurOrde.ADDRESSE1).Trim(' ').TrimEnd(' ')),
                                                 new XElement("AdrTp", "ADDR"),
-                                                new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')),
-                                                new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')),
-                                                new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).Trim(' ').TrimEnd(' ')))
+                                                !string.IsNullOrEmpty(donneurOrde.VILLE) ?
+                                                new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')) :
+                                                null,
+                                                !string.IsNullOrEmpty( donneurOrde.PAYS) ?
+                                                new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')) :
+                                                null,
+                                                !string.IsNullOrEmpty(donneurOrde.ADDRESSE1) ?
+                                                new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).Trim(' ').TrimEnd(' ')) : null)
                                         ),
                                 new XElement("DbtrAcct",
                                     new XElement("Id",
@@ -513,9 +518,9 @@ namespace apptab.Extension
                                             new XElement("Nm", formaterTexte(35, donneurOrde.DONNEUR_ORDRE).TrimEnd(' ')),
                                             new XElement("PstlAdr",
                                                 new XElement("AdrTp", "ADDR"),
-                                                new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')),
-                                                new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')),
-                                                new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).TrimEnd(' ')))
+                                                !string.IsNullOrEmpty(donneurOrde.VILLE) ? new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')) : null,
+                                                !string.IsNullOrEmpty(donneurOrde.PAYS) ? new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')) : null,
+                                                !string.IsNullOrEmpty(donneurOrde.ADDRESSE1) ? new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).TrimEnd(' ')) : null)
                                         ),
                                 new XElement("DbtrAcct",
                                     new XElement("Id",
@@ -546,9 +551,9 @@ namespace apptab.Extension
                                                 new XElement("Nm", formaterTexte(35, donneurOrde.DONNEUR_ORDRE).TrimEnd(' ')),
                                                 new XElement("PstlAdr",
                                                     new XElement("AdrTp", "ADDR"),
-                                                    new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')),
-                                                    new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')),
-                                                    new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).TrimEnd(' ')))
+                                                    !string.IsNullOrEmpty(donneurOrde.VILLE) ? new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')) : null,
+                                                    !string.IsNullOrEmpty(donneurOrde.PAYS) ? new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')) : null,
+                                                    !string.IsNullOrEmpty(donneurOrde.ADDRESSE1) ? new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).TrimEnd(' ')) : null)
                                             ),
                                     new XElement("DbtrAcct",
                                         new XElement("Id",
@@ -581,9 +586,9 @@ namespace apptab.Extension
                                                 new XElement("Nm", formaterTexte(35, donneurOrde.DONNEUR_ORDRE).TrimEnd(' ')),
                                                 new XElement("PstlAdr",
                                                     new XElement("AdrTp", "ADDR"),
-                                                    new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')),
-                                                    new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')),
-                                                    new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).TrimEnd(' ')))
+                                                    !string.IsNullOrEmpty(donneurOrde.VILLE) ? new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')) : null,
+                                                    !string.IsNullOrEmpty(donneurOrde.PAYS) ? new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')) : null,
+                                                    !string.IsNullOrEmpty(donneurOrde.ADDRESSE1) ? new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).TrimEnd(' ')) : null)
                                             ),
                                     new XElement("DbtrAcct",
                                         new XElement("Id",
@@ -677,15 +682,20 @@ namespace apptab.Extension
                                                             //adresse beneficiaire
                                                             new XElement("PstlAdr",
                                                                 new XElement("Ctry", item.PAYS.TrimEnd(' ').Trim(' ')),
-                                                                new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')),
-                                                                new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' '))
+                                                                !string.IsNullOrEmpty(item.AD1) ?
+                                                                new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')) :
+                                                                null,
+                                                                !string.IsNullOrEmpty(item.AD2) ?
+                                                                new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' ')) :
+                                                                null
                                                             )
                                                     ),
                                                     new XElement("CdtrAcct",
                                                         new XElement("Id",
-                                                            new XElement("Othr",
-                                                                new XElement("Id", numEtabOP + guicherOP + ribOp + cleop)
-                                                            )
+                                                            new XElement("IBAN",Autre.IBAN)
+                                                            //new XElement("Othr",
+                                                            //    new XElement("Id", numEtabOP + guicherOP + ribOp + cleop)
+                                                            //)
                                                         )
                                                     ),
                                                    new XElement("RmtInf", new XElement("Ustrd", formaterTexte(35, item.LIBELLE))))
@@ -713,15 +723,20 @@ namespace apptab.Extension
                                                         //adresse beneficiaire
                                                         new XElement("PstlAdr",
                                                             new XElement("Ctry", item.PAYS != null ? item.PAYS.TrimEnd(' ').Trim(' ') : " "),
-                                                            new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')),
-                                                            new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' '))
+                                                            !string.IsNullOrEmpty(item.AD1) ?
+                                                            new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')) :
+                                                            null,
+                                                            !string.IsNullOrEmpty(item.AD2) ?
+                                                            new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' ')) :
+                                                            null
                                                         )
                                                 ),
                                                 new XElement("CdtrAcct",
                                                             new XElement("Id",
-                                                                new XElement("Othr",
-                                                                    new XElement("Id", numEtabOP + guicherOP + ribOp + cleop)
-                                                                )
+                                                                new XElement("IBAN", Autre.IBAN)
+                                                                //new XElement("Othr",
+                                                                //    new XElement("Id", numEtabOP + guicherOP + ribOp + cleop)
+                                                                //)
                                                             )
                                                 ),
                                                  new XElement("RmtInf", new XElement("Ustrd", formaterTexte(35, item.LIBELLE) + "\r\t\n" + formatLibelle0702(item.LIBELLE) + "\r\t\n"))
@@ -754,15 +769,20 @@ namespace apptab.Extension
                                                         //adresse beneficiaire
                                                         new XElement("PstlAdr",
                                                             new XElement("Ctry", item.PAYS != null ? item.PAYS.TrimEnd(' ').Trim(' ') : " "),
-                                                            new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')),
-                                                            new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' '))
+                                                            !string.IsNullOrEmpty(item.AD1) ?
+                                                            new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')) :
+                                                            null,
+                                                            !string.IsNullOrEmpty(item.AD2) ?
+                                                            new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' ')) :
+                                                            null
                                                         )
                                                 ),
                                                 new XElement("CdtrAcct",
                                                     new XElement("Id",
-                                                        new XElement("Othr",
-                                                            new XElement("Id", numEtabOP + guicherOP + ribOp + cleop)
-                                                        )
+                                                    new XElement("IBAN", Autre.IBAN)
+                                                    //new XElement("Othr",
+                                                    //    new XElement("Id", numEtabOP + guicherOP + ribOp + cleop)
+                                                    //)
                                                     )
                                                 ),
                                                 new XElement("RmtInf", new XElement("Ustrd", formaterTexte(35, item.LIBELLE) + "\r\t\n" + formatLibelle0702(item.LIBELLE) + "\r\t\n" + formatLibelle0802(item.LIBELLE)))
@@ -792,15 +812,20 @@ namespace apptab.Extension
                                                         //adresse beneficiaire
                                                         new XElement("PstlAdr",
                                                             new XElement("Ctry", item.PAYS != null ? item.PAYS.TrimEnd(' ').Trim(' ') : " "),
-                                                            new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')),
-                                                            new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' '))
+                                                            !string.IsNullOrEmpty(item.AD1) ?
+                                                            new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')) :
+                                                            null,
+                                                            !string.IsNullOrEmpty(item.AD2) ?
+                                                            new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' ')) :
+                                                            null
                                                         )
                                                 ),
                                                 new XElement("CdtrAcct",
                                                     new XElement("Id",
-                                                        new XElement("Othr",
-                                                            new XElement("Id", numEtabOP + guicherOP + ribOp + cleop)
-                                                        )
+                                                        new XElement("IBAN", Autre.IBAN)
+                                                        //new XElement("Othr",
+                                                        //    new XElement("Id", numEtabOP + guicherOP + ribOp + cleop)
+                                                        //)
                                                     )
                                                 ),
                                                 new XElement("RmtInf", new XElement("Ustrd", formaterTexte(35, item.LIBELLE) + "\r\t\n" + formatLibelle0702(item.LIBELLE) + "\r\t\n" + formatLibelle0802(item.LIBELLE)))
@@ -842,11 +867,13 @@ namespace apptab.Extension
                                         ),
 
                                         new XElement("ChrgBr", "SHAR"),
+                                        !string.IsNullOrEmpty(rswift.BQSWIFT) ?
                                         new XElement("CdtrAgt",
                                             new XElement("FinInstnId",
                                                 new XElement("BIC", rswift.BQSWIFT)
                                             )
-                                        ),
+                                        ) :
+                                        null ,
                                         new XElement("Cdtr",
                                                 new XElement("Nm", rswift.NOM),
                                                  new XElement("Id",
@@ -861,8 +888,12 @@ namespace apptab.Extension
                                                 //adresse beneficiaire
                                                 new XElement("PstlAdr",
                                                     new XElement("Ctry", item.PAYS != null ? item.PAYS.TrimEnd(' ').Trim(' ') : " "),
-                                                    new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')),
-                                                    new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' '))
+                                                        !string.IsNullOrEmpty(item.AD1) ?
+                                                        new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')) :
+                                                        null,
+                                                        !string.IsNullOrEmpty(item.AD2) ?
+                                                        new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' ')) :
+                                                        null
                                                 )
                                         ),
                                         new XElement("CdtrAcct",
@@ -878,7 +909,7 @@ namespace apptab.Extension
                                             new XElement("Ustrd", formaterTexte(140, item.LIBELLE).TrimEnd(' '))
                                         )
                                     )
-                                );
+                                ); 
 
                             }
                             else
@@ -930,15 +961,21 @@ namespace apptab.Extension
                                                     //adresse beneficiaire
                                                     new XElement("PstlAdr",
                                                         new XElement("Ctry", item.PAYS != null ? item.PAYS.TrimEnd(' ').Trim(' ') : " "),
-                                                        new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')),
-                                                        new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' '))
+                                                        !string.IsNullOrEmpty(item.AD1) ?
+                                                        new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')) :
+                                                        null,
+                                                        !string.IsNullOrEmpty(item.AD2) ?
+                                                        new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' ')) :
+                                                        null
                                                     )
                                             ),
                                             new XElement("CdtrAcct",
                                                 new XElement("Id",
-                                                    new XElement("Othr",
-                                                        new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE)
-                                                    )
+                                                    new XElement("Id", rswift.BQIBAN)
+                                                    //new XElement("Othr",
+                                                    //    //new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE)
+                                                    //    new XElement("Id", rswift.BQIBAN)
+                                                    //)
                                                 )
                                             ),
                                              new XElement("RmtInf",
@@ -973,15 +1010,20 @@ namespace apptab.Extension
                                                     //adresse beneficiaire
                                                     new XElement("PstlAdr",
                                                         new XElement("Ctry", item.PAYS != null ? item.PAYS.TrimEnd(' ').Trim(' ') : " "),
-                                                        new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')),
-                                                        new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' '))
+                                                        !string.IsNullOrEmpty(item.AD1) ?
+                                                        new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')) :
+                                                        null,
+                                                        !string.IsNullOrEmpty(item.AD2) ?
+                                                        new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' ')) :
+                                                        null
                                                     )
                                             ),
                                             new XElement("CdtrAcct",
                                                 new XElement("Id",
-                                                    new XElement("Othr",
-                                                        new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE)
-                                                    )
+                                                    new XElement("IBAN", rswift.BQIBAN)
+                                                    //new XElement("Othr",
+                                                    //    //new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE)
+                                                    //)
                                                 )
                                             ),
                                              new XElement("RmtInf",
@@ -1015,15 +1057,20 @@ namespace apptab.Extension
                                                     //adresse beneficiaire
                                                     new XElement("PstlAdr",
                                                         new XElement("Ctry", item.PAYS != null ? item.PAYS.TrimEnd(' ').Trim(' ') : " "),
-                                                        new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')),
-                                                        new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' '))
+                                                        !string.IsNullOrEmpty(item.AD1) ?
+                                                        new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')) :
+                                                        null,
+                                                        !string.IsNullOrEmpty(item.AD2) ?
+                                                        new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' ')) :
+                                                        null
                                                     )
                                             ),
                                             new XElement("CdtrAcct",
                                                 new XElement("Id",
-                                                    new XElement("Othr",
-                                                        new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE)
-                                                    )
+                                                    new XElement("IBAN", rswift.BQIBAN)
+                                                    //new XElement("Othr",
+                                                    //    new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE)
+                                                    //)
                                                 )
                                             ),
                                              new XElement("RmtInf",
@@ -1056,8 +1103,12 @@ namespace apptab.Extension
                                                     //adresse beneficiaire
                                                     new XElement("PstlAdr",
                                                         new XElement("Ctry", item.PAYS != null ? item.PAYS.TrimEnd(' ').Trim(' ') : " "),
-                                                        new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')),
-                                                        new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' '))
+                                                        !string.IsNullOrEmpty(item.AD1) ?
+                                                        new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')) :
+                                                        null,
+                                                        !string.IsNullOrEmpty(item.AD2) ?
+                                                        new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' ')) :
+                                                        null
                                                     )
                                             ),
 
@@ -5429,11 +5480,20 @@ namespace apptab.Extension
             TableRow titleRow = new TableRow(
                 new TableCell(
                     new TableCellProperties(
-                        new GridSpan() { Val = 7 }  // Fusionner toutes les 7 colonnes
+                        new GridSpan() { Val = 7 },  // Fusionner toutes les 7 colonnes
+                        new TableCellVerticalAlignment() { Val = TableVerticalAlignmentValues.Center } // Alignement vertical centré
                     ),
-                    new Paragraph(new Run(new DocumentFormat.OpenXml.Wordprocessing.Text("Liste des virements")) // Le titre de votre tableau
-                    {
-                    })
+                    new Paragraph(
+                        new ParagraphProperties(
+                            new Justification() { Val = JustificationValues.Center }  // Alignement horizontal centré
+                        ),
+                        new Run(
+                            new RunProperties(
+                                new Bold()  // Appliquer le gras
+                            ),
+                            new DocumentFormat.OpenXml.Wordprocessing.Text("Liste des virements") // Le titre de votre tableau
+                        )
+                    )
                 )
             );
             table.Append(titleRow);

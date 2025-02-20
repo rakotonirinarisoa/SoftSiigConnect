@@ -39,6 +39,7 @@ using Org.BouncyCastle.Bcpg;
 using System.Web.Services.Description;
 using System.Diagnostics;
 using Microsoft.SqlServer.Server;
+using System.Runtime.InteropServices;
 
 namespace apptab.Controllers
 {
@@ -4380,40 +4381,16 @@ namespace apptab.Controllers
             }
             //return TypeFileBQ;
         }
-
-        [HttpPost]
-        public JsonResult UpdateBanque(SI_USERS suser, OPA_BANQUE param, int iProjet)
+        [HttpGet]
+        public ActionResult CheckSession()
         {
-            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
-            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-
-            try
+            // Vérifie si la session est active
+            if (Session["UserId"] == null) // "UserId" est un exemple, remplacez par votre clé de session
             {
-                int IdS = iProjet;
-                //var SExist = db.OPA_BANQUE.FirstOrDefault();
-                try
-                {
-                    //request.GetResponse(); 
-                    var insertBanque = new OPA_BANQUE()
-                    {
-                        NOM_BANQUE = param.NOM_BANQUE,
-                        RIB_BANQUE = param.RIB_BANQUE,
-                        CLE = param.CLE,
-                        AGENCE = param.AGENCE,
-                        REGION = param.REGION,
-                        GUICHET = param.AGENCE,
+                return null;  // Session expirée, retourne un statut non autorisé (401)
+            }
 
-                    };
-                    db.OPA_BANQUE.Add(insertBanque);
-                    db.SaveChanges();
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Votre saisie a été enregistrée avec succès." }, settings));
-                }
-                catch { return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Configuration non valide. " }, settings)); }
-            }
-            catch (Exception)
-            {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur d'enregistrement de l'information. " }, settings));
-            }
+            return null;  // Session toujours active, retourne un statut OK (200)
         }
     }
 }

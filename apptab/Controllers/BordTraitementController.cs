@@ -1448,7 +1448,7 @@ namespace apptab.Controllers
                     var paielst = (
                                    from r in db.OPA_REGLEMENTBR
                                    join v in db.OPA_VALIDATIONS on r.IDSOCIETE equals v.IDPROJET
-                                   where r.NUM == v.IDREGLEMENT && r.IDSOCIETE == projectId && site.Contains(v.SITE)
+                                   where r.NUM == v.IDREGLEMENT && r.IDSOCIETE == projectId /*&& site.Contains(r.SITE)*/
                                    select new
                                    {
                                        BENEFICIAIRE = r.BENEFICIAIRE,
@@ -1659,9 +1659,12 @@ namespace apptab.Controllers
                         double dateOP = Date.GetDifference(paielst[j].DATESEND, paielst[j].DATECREA);
                         double dateAC = Date.GetDifference(paielst[j].DATEVAL, paielst[j].DATESEND);
                         double dateBK = Date.GetDifference(paielst[j].DATEVAL, paielst[j].DATESEND);
-                        double countDate = dateOP - Convert.ToDouble(durerTraite.FirstOrDefault().DELAISOP);
-                        double countDate2 = dateAC -  Convert.ToDouble(durerTraite.FirstOrDefault().DELAISAC);
-                        double countDate3 = dateBK - Convert.ToDouble(durerTraite.FirstOrDefault().DELAISBK);
+                        double countDate =  Convert.ToDouble(durerTraite.FirstOrDefault().DELAISOP) - dateOP;
+                        double countDate2 = Convert.ToDouble(durerTraite.FirstOrDefault().DELAISAC) - dateAC;
+                        double countDate3 = Convert.ToDouble(durerTraite.FirstOrDefault().DELAISBK) - dateBK;
+                        //double countDate = dateOP - Convert.ToDouble(durerTraite.FirstOrDefault().DELAISOP);
+                        //double countDate2 = dateAC -  Convert.ToDouble(durerTraite.FirstOrDefault().DELAISAC);
+                        //double countDate3 = dateBK - Convert.ToDouble(durerTraite.FirstOrDefault().DELAISBK);
                         if (countDate > 0 || countDate2 > 0 || countDate3 > 0)
                         {
                             result[lastIndex].TraitementPaiementDetails.Add(new TraitementPaiementDetails
@@ -1691,6 +1694,7 @@ namespace apptab.Controllers
                             });
                         }
                     }
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = result }, settings));
                 }
                 else
                 {
