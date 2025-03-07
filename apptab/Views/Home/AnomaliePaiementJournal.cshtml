@@ -1,0 +1,54 @@
+﻿
+@{
+    ViewBag.Title = "A de réglement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="form-row">
+    <div class="input-group mb-3 col-sm-12 col-md-6">
+        <div class="input-group-prepend">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Projet</span>
+        </div>
+        <select class="form-control col combobox" id="Fproject" code-project>
+        </select>
+    </div>
+    <div class="input-group mb-3 col-sm-12 col-md-6">
+        <div class="input-group-prepend">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Ecriture</span>
+        </div>
+        <input type="text" class="form-control" value="" readonly code_Type />
+    </div>
+</div>
+
+@*<div class="d-flex flex-wrap justify-content-between">
+        <div></div>
+        <div class="input-group mb-3 col-sm-5">
+            <div class="input-group-prepend custom-label">
+                <span class="input-group-text text-bold" id="basic-addon3"><i class="fa fa-search"></i></span>
+            </div>
+            <input type="text" class="form-control col" id="ticket" placeholder="Rechercher...">
+        </div>
+    </div>*@
+<input type="text" id="myInput" onkeyup="SearchFuncAnomalie()" placeholder="Recherche">
+<div class="table-responsive tbodyDiv">
+    <table class="table table-hover table-striped" id="idTable">
+        <thead class="thead-green">
+            <tr>
+                <th>CODE</th>
+                <th>LIBELLE</th>
+                <th>COMPTE GENERALE</th>
+                <th>RIB</th>
+                <th>GUICHET</th>
+                <th>AGENCES</th>
+                <th>TYPE</th>
+                <th>PROJET</th>
+
+            </tr>
+        </thead>
+        <tbody ticket-list id="historiques">
+        </tbody>
+    </table>
+</div>
+
+<script src="~/Assets/js/SearchJsSet.js?version=@Session["VERSION"]"></script>
+<script src="~/Assets/js/AnomalieJSJournal .js?version=@Session["VERSION"]"></script>

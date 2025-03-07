@@ -1,0 +1,303 @@
+﻿
+@{
+    ViewBag.Title = "Paramétrage des mails (Notifications et Alertes)";
+    ViewData["Controller"] = "Paramétrage des mails (Notifications et Alertes)";
+    /*Layout = "~/Views/Shared/_Layout.cshtml";*/
+}
+
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">PROJET</span>
+        </div>
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="proj" data-id="proj-list">
+        </select>
+    </div>
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Sites</span>
+        </div>
+        <select class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="site" data-id="site-list">
+        </select>
+    </div>
+</div>
+
+<h5>Emetteur des notifications et alertes</h5>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Mail de l'émetteur</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="EMM">
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Mot de passe mail de l'émetteur</span>
+        </div>
+        <input type="password" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="EMP">
+        <i class="far fa-eye fa-lg" id="togglePassword" style="margin: 10px; cursor: pointer;"></i>
+    </div>
+</div>
+
+<h5>Traitements dépenses à payer</h5>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Tris et validation des dépenses à payer</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaT">
+        <span class="input-group-text">séparateur " ; "</span>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Validation des dépenses à payer</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaV">
+        <span class="input-group-text">séparateur " ; "</span>
+    </div>
+</div>
+@*<div class="form-row">
+        <div class="input-group mb-3 col">
+            <div class="input-group-prepend custom-label">
+                <span class="input-group-text text-bold" id="inputGroup-sizing-default">Transfert SIIGFP</span>
+            </div>
+            <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaSiig">
+            <span class="input-group-text">séparateur " ; "</span>
+        </div>
+    </div>*@
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Rejet des dépenses à payer</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaREJET">
+        <span class="input-group-text">séparateur " ; "</span>
+    </div>
+</div>
+
+<h5>Traitements avances</h5>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Tris et validation des avances</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaTA">
+        <span class="input-group-text">séparateur " ; "</span>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Validation des avances</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaVA">
+        <span class="input-group-text">séparateur " ; "</span>
+    </div>
+</div>
+@*<div class="form-row">
+        <div class="input-group mb-3 col">
+            <div class="input-group-prepend custom-label">
+                <span class="input-group-text text-bold" id="inputGroup-sizing-default">Transfert SIIGFP</span>
+            </div>
+            <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaSiigA">
+            <span class="input-group-text">séparateur " ; "</span>
+        </div>
+    </div>*@
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Rejet des dépenses à payer</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaREJETA">
+        <span class="input-group-text">séparateur " ; "</span>
+    </div>
+</div>
+
+<h5>Traitements justificatifs</h5>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Tris et validation des justificatifs</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="MailJ0">
+        <span class="input-group-text">séparateur " ; "</span>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Validations des justificatifs</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="MailJ1">
+        <span class="input-group-text">séparateur " ; "</span>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Rejet des justificatifs</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="MAILREJETJUST">
+        <span class="input-group-text">séparateur " ; "</span>
+    </div>
+</div>
+
+<h5>Traitements reversements</h5>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Tris et validation des reversements</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="MailJ2">
+        <span class="input-group-text">séparateur " ; "</span>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Validations des reversements</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="MailJ3">
+        <span class="input-group-text">séparateur " ; "</span>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Rejet des reversements</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="MAILREJETREV">
+        <span class="input-group-text">séparateur " ; "</span>
+    </div>
+</div>
+
+<h5>Traitements compléments</h5>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Tris et validation des compléments</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="MailJ4">
+        <span class="input-group-text">séparateur " ; "</span>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Validations des compléments</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="MailJ5">
+        <span class="input-group-text">séparateur " ; "</span>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Rejet des compléments</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="MAILREJETCOM">
+        <span class="input-group-text">séparateur " ; "</span>
+    </div>
+</div>
+
+<h5>Paiements</h5>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Récupération des paiements</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaPi">
+        <span class="input-group-text">séparateur " ; "</span>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Envoi pour validation</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaPe">
+        <span class="input-group-text">séparateur " ; "</span>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Validation</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaPv">
+        <span class="input-group-text">séparateur " ; "</span>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Paiement</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaPp">
+        <span class="input-group-text">séparateur " ; "</span>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Rejet des paiements</span>
+        </div>
+        <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaREJETPAIE">
+        <span class="input-group-text">séparateur " ; "</span>
+    </div>
+</div>
+@*<div class="form-row">
+        <div class="input-group mb-3 col">
+            <div class="input-group-prepend custom-label">
+                <span class="input-group-text text-bold" id="inputGroup-sizing-default">Retour banque</span>
+            </div>
+            <input type="email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaPb">
+            <span class="input-group-text">séparateur " ; "</span>
+        </div>
+    </div>*@
+
+<div class="form-row">
+    <div class="mb-3 col">
+        <div class="btn btn-flat bg-gradient-olive col-12" data-action="UpdateUser">
+            <i class="fa fa-save"></i> Enregistrer
+        </div>
+    </div>
+</div>
+
+<script src="~/Assets/admlte/plugins/select2/js/select2.js"></script>
+<script src="~/Assets/admlte/plugins/select2/js/select2.min.js"></script>
+
+<script>
+    $("#proj").select2({
+        tags: true,
+        tokenSeparators: [',', ' ']
+    })
+
+    $("#site").select2({
+        tags: true,
+        tokenSeparators: [',', ' ']
+    })
+</script>
+
+<!-- Droit.js -->
+<script src="~/Assets/js/Mail.js?version=@Session["VERSION"]"></script>
+
+<script>
+    const togglePassword = document
+        .querySelector('#togglePassword');
+    const password = document.querySelector('#EMP');
+    togglePassword.addEventListener('click', () => {
+        // Toggle the type attribute using
+        // getAttribure() method
+        const type = password
+            .getAttribute('type') === 'password' ?
+            'text' : 'password';
+        password.setAttribute('type', type);
+        // Toggle the eye and bi-eye icon
+        this.classList.toggle('bi-eye');
+    });
+</script>

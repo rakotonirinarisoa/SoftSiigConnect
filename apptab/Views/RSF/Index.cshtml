@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "RSF trackers";
+    ViewData["Controller"] = "RSF trackers";
+}
+
+@if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+|| (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur) && (int.Parse(Session["RRSF"].ToString()) == 2)))
+{
+    <div class="d-flex flex-wrap justify-content-between">
+        <div class="btn bg-gradient-olive mb-3 btn-flat">
+            <a href="../RSF/Create" style="color:#FFFF">
+                <i class="fa fa-plus-circle"></i> Nouveau Document
+            </a>
+        </div>
+    </div>
+}
+
+    <div class="table-responsive tbodyDiv">
+        <table class="table table-hover table-striped">
+            <thead class="thead-green">
+                <tr>
+                    <th>SOA</th>
+                    <th>PROJET</th>
+                    <th>Titre du document</th>
+                    <th>Année</th>
+                    <th>Mois</th>
+                    <th>Période</th>
+                    <th>Type</th>
+                    <th>Lien</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody data-id="ubody">
+            </tbody>
+        </table>
+    </div>
+
+    <!-- USer.js -->
+    <script src="~/Assets/js/RSF.js?version=@Session["VERSION"]"></script>

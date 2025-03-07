@@ -1,0 +1,59 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
+
+namespace apptab
+{
+    public class TxLISTETRAIT
+    {
+        public Guid? No { get; set; }
+        public string REF { get; set; }
+        public string SITE { get; set; }
+        public string NPIECE { get; set; }
+        public string BENEF { get; set; }
+        public string MONTENGAGEMENT { get; set; }
+        public DateTime? DATENGAGEMENT { get; set; }
+        public string MONTPAIE { get; set; }
+
+
+        public DateTime? DATEPAIE { get; set; }
+        public string SOA { get; set; }
+        public string PROJET { get; set; }
+        public bool? isLATE { get; set; }
+
+
+        public DateTime? DATETRANSFERTRAF { get; set; }
+        public DateTime? DATEVALORDSEC { get; set; }
+        public DateTime? DATESENDSIIG { get; set; }
+        public DateTime? DATESIIGFP { get; set; }
+
+
+        public string AGENTREJETE { get; set; }
+        public DateTime? DATEREJETE { get; set; }
+        public string MOTIF { get; set; }
+        public string COMMENTAIRE { get; set; }
+        public string TYPE { get; set; }
+        public string INTITUT { get; set; }
+
+        public int? IDRSF { get; set; }
+
+        public string SoldPadPayé { get; set; }
+        public string SoldPadPayéP { get; set; }
+        public string SoldPtbaPayé { get; set; }
+        public string SoldPtbaPayéP { get; set; }
+        public string PayeEngage { get; set; }
+
+
+        public string OBJ { get; set; }
+        public string TITUL { get; set; }
+        public string COMPTE { get; set; }
+        public string PCOP { get; set; }
+        public string MONT { get; set; }
+        public string MONTi { get; set; }
+        public DateTime? DATEDEF { get; set; }
+        public DateTime? DATETEF { get; set; }
+        public DateTime? DATEBE { get; set; }
+    }
+}

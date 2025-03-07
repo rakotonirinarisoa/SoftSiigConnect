@@ -1,0 +1,124 @@
+@{
+    Layout = null;
+}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+    <title>PDF Preview</title>
+
+    <link rel="stylesheet" href="~/Assets/admlte/plugins/fontawesome-free/css/all.min.css?version=@Session["VERSION"]">
+    <link rel="stylesheet" href="~/Assets/admlte/dist/css/adminlte.css?version=@Session["VERSION"]">
+
+    <link rel="stylesheet" href="~/Assets/css/style.css?version=@Session["VERSION"]" />
+    <link rel="stylesheet" href="~/Assets/css/loader.css?version=@Session["VERSION"]" />
+    <link href="~/Assets/css/acco.css?version=@Session["VERSION"]" rel="stylesheet" />
+
+    <link href="~/Assets/otherCSS/datatables.min.css?version=@Session["VERSION"]" rel="stylesheet" />
+    <link href="~/Assets/otherCSS/buttons.dataTables.min.css?version=@Session["VERSION"]" rel="stylesheet" />
+
+    <script src="~/Assets/admlte/plugins/jquery/jquery.min.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/js/script.js?version=@Session["VERSION"]"></script>
+
+    <script src="~/Assets/otherJs/jquery-3.7.0.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/otherJs/datatables.min.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/otherJs/dataTables.rowsGroup.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/otherJs/buttons.colVis.min.js?version=@Session["VERSION"]"></script>
+
+    <script src="~/Assets/admlte/plugins/bootstrap/js/bootstrap.bundle.min.js?version=@Session["VERSION"]"></script>
+
+    <script src="~/Assets/admlte/dist/js/adminlte.js?version=@Session["VERSION"]"></script>
+
+    <script src="~/Assets/otherJs/html2canvas.min.js?version=@Session["VERSION"]"></script>
+    <script src="~/Assets/otherJs/jspdf.umd.min.js?version=@Session["VERSION"]"></script>
+
+    <script src="~/Assets/js/utils.js?version=@Session["VERSION"]"></script>
+
+    <style>
+        table {
+            border: none !important;
+        }
+
+        thead {
+            position: initial !important;
+            width: auto;
+        }
+
+        td:not(td[tabindex]), tr[compteg-id], table.table.dataTable.table-striped > tbody > tr:nth-of-type(2n+1) > * {
+            background-color: #ffffff !important;
+            box-shadow: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="pdf-body">
+        <div id="header"></div>
+
+        <div id="dom"></div>
+
+        <div id="footer"></div>
+    </div>
+
+    <script defer>
+        $(document).ready(() => {
+            if (`@ViewData["DomElement"]` === '') {
+                display404();
+
+                return;
+            }
+
+            try {
+                const tableHTML = sanitizeHTML(`@ViewData["DomElement"]`);
+
+                $('#dom').html(tableHTML);
+
+                const headerHTML = sanitizeHTML(`@ViewData["Header"]`);
+
+                $('#header').html(headerHTML);
+
+                const footerHTML = sanitizeHTML(`@ViewData["Footer"]`);
+
+                $('#footer').html(footerHTML);
+
+                const { jsPDF } = window.jspdf;
+
+                const doc = new jsPDF('l', 'px', 'a4');
+
+                let isPdf = document.getElementById('pdf-body');
+
+                doc.html(isPdf, {
+                    html2canvas: {
+                        scale: 0.50
+                    },
+                    margin: [10, 20, 20, 20], // top, right, bottom, left
+                    
+                    callback: function (pdf) {
+                        //let totalPages = pdf.internal.getNumberOfPages();
+
+                        //for (let i = 2; i <= totalPages; i += 1) {
+                        //    pdf.setPage(i);
+                        //    pdf.deletePage(i);
+                        //    i += -1;
+                        //    totalPages -= 1;
+                        //}
+
+                        //window.open(pdf.output('bloburl'));
+
+                        pdf.save(`@ViewData["Filename"]` + '.pdf');
+                    },
+
+                    //x: 12,
+                    //y: 12
+                });
+
+            } catch (err) {
+                console.log(err);
+
+                display404();
+            }
+        });
+    </script>
+</body>

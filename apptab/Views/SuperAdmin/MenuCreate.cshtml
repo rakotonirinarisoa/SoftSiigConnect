@@ -1,0 +1,529 @@
+﻿
+@{
+    ViewBag.Title = "Paramétrage des intitulés des menus";
+    ViewData["Controller"] = "Paramétrage des intitulés des menus";
+    /*Layout = "~/Views/Shared/_Layout.cshtml";*/
+}
+
+<h5>Traitements mandats</h5>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Dépenses initiées</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaV0">
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Tris et validation des dépenses à payer</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaV">
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Validation des dépenses à payer</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaS">
+    </div>
+</div>
+@*<div class="form-row">
+        <div class="input-group mb-3 col">
+            <div class="input-group-prepend custom-label">
+                <span class="input-group-text text-bold" id="inputGroup-sizing-default">Transfert SIIGFP</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaSiig">
+        </div>
+    </div>*@
+
+<h5>Traitements avances</h5>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Avances initiées</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Md0">
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Tris et validation des avances</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Md1">
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Validation des avances</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Md2">
+    </div>
+</div>
+@*<div class="form-row">
+        <div class="input-group mb-3 col">
+            <div class="input-group-prepend custom-label">
+                <span class="input-group-text text-bold" id="inputGroup-sizing-default">Transfert SIIGFP</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Md3">
+        </div>
+    </div>*@
+
+<h5>Traitements justificatifs</h5>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Tris et validation des justificatifs</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="J0">
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Validation des justificatifs</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="J1">
+    </div>
+</div>
+
+<h5>Traitements reversements</h5>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Tris et validation des reversements</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="J2">
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Validation des reversements</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="J3">
+    </div>
+</div>
+
+<h5>Traitements compléments</h5>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Tris et validation des compléments</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="J4">
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Validation des compléments</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="J5">
+    </div>
+</div>
+
+<h5>Paiements</h5>
+@*<div class="form-row">
+        <div class="input-group mb-3 col">
+            <div class="input-group-prepend custom-label">
+                <span class="input-group-text text-bold" id="inputGroup-sizing-default">MOP0 (autres opérations)</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Mop0">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="input-group mb-3 col">
+            <div class="input-group-prepend custom-label">
+                <span class="input-group-text text-bold" id="inputGroup-sizing-default">MOP1 (autres opérations)</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Mop1">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="input-group mb-3 col">
+            <div class="input-group-prepend custom-label">
+                <span class="input-group-text text-bold" id="inputGroup-sizing-default">MOP2 (autres opérations)</span>
+            </div>
+            <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Mop2">
+        </div>
+    </div>*@
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Tris des paiements</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaPe">
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Envoi pour validation</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaPv">
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Validation des paiements</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaPp">
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Bon pour paiement</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="ParaPb">
+    </div>
+</div>
+
+<h5>RSF trackers</h5>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">RSF</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="RSF">
+    </div>
+</div>
+
+<h5>Tableaux de bord SET</h5>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">RSF trackers</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="RSFT">
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Suivi budgétaire</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Tdb9">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" style="margin-right:5px" id="Tdb9CHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Liste des dépenses à payer et des avances par rapport aux paiements</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Tdb0">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" style="margin-right:5px" id="Tdb0CHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Liste des justificatifs, des reversements et des compléments</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="JR">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" class="form-check" style="margin-right:5px" id="JRCHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Justificatifs et reversements rejetés</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="JRA">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" class="form-check" style="margin-right:5px" id="JRACHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Statut des dépenses à payer et avances</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Tdb1">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" class="form-check" style="margin-right:5px" id="Tdb1CHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Délais de traitement des dépenses à payer et avances</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Tdb2">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" class="form-check" style="margin-right:5px" id="Tdb2CHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Traitements des dépenses à payer et avances en souffrance (par rapport au délai moyen)</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Tdb3">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" class="form-check" style="margin-right:5px" id="Tdb3CHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Dépenses à payer et avances rejetés</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Tdb4">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" class="form-check" style="margin-right:5px" id="Tdb4CHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Statut des paiements</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Tdb5">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" class="form-check" style="margin-right:5px" id="Tdb5CHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Délais de traitement des paiements</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Tdb6">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" class="form-check" style="margin-right:5px" id="Tdb6CHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Traitement des paiements en souffrance (par rapport au délai moyen)</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Tdb7">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" class="form-check" style="margin-right:5px" id="Tdb7CHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Paiements rejetés</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Tdb8">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" class="form-check" style="margin-right:5px" id="Tdb8CHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Anomalie générale des dépenses à payer et avances</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Tdb14">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" class="form-check" style="margin-right:5px" id="Tdb14CHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Anomalie générale des paiements</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Tdb11">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" class="form-check" style="margin-right:5px" id="Tdb11CHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Annulation des paiements</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Tdb12">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" class="form-check" style="margin-right:5px" id="Tdb12CHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Historiques des paiements</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Tdb13">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" class="form-check" style="margin-right:5px" id="Tdb13CHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+
+<h5>Tableaux de bord GED</h5>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Situation actuelle de chaque document</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Tdb1GED">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" class="form-check" style="margin-right:5px" id="Tdb1GEDCHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Situation des étapes par type de document</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Tdb2GED">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" class="form-check" style="margin-right:5px" id="Tdb2GEDCHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Etat d'avancement par type de document</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Tdb3GED">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" class="form-check" style="margin-right:5px" id="Tdb3GEDCHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Situation Détaillé par document</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Tdb4GED">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" class="form-check" style="margin-right:5px" id="Tdb4GEDCHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Statistique des factures fournisseur rejetées</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Tdb5GED">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" class="form-check" style="margin-right:5px" id="Tdb5GEDCHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-row">
+    <div class="input-group mb-3 col">
+        <div class="input-group-prepend custom-label">
+            <span class="input-group-text text-bold" id="inputGroup-sizing-default">Liste des documents en retard de traitement</span>
+        </div>
+        <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" id="Tdb6GED">
+
+        <div class="input-group-append">
+            <label class="input-group-text" style="font-weight:100">
+                <input type="checkbox" class="form-check" style="margin-right:5px" id="Tdb6GEDCHK" /> Applicable
+            </label>
+        </div>
+    </div>
+</div>
+
+<div class="form-row">
+    <div class="mb-3 col">
+        <div class="btn btn-flat bg-gradient-olive col-12" data-action="UpdateUser">
+            <i class="fa fa-save"></i> Enregistrer
+        </div>
+    </div>
+</div>
+
+<!-- Droit.js -->
+<script src="~/Assets/js/MenuInt.js?version=@Session["VERSION"]"></script>
+
+
