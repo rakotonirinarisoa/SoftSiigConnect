@@ -1313,62 +1313,62 @@
                    
                 }
             }
-            let sessionCheckInterval;
-            let inactivityTimeout;
+            //let sessionCheckInterval;
+            //let inactivityTimeout;
 
-            // Fonction pour vérifier la session
-            function checkSession() {
-                fetch('/Home/CheckSession')
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Session expirée ou problème serveur');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log(data);
-                        if (!data.isSessionActive) {
-                            window.location.href = window.location.origin; // Redirige vers la page de login
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erreur de vérification de session:', error);
-                        window.location.href = window.location.origin;
-                    });
-            }
+            //// Fonction pour vérifier la session
+            //function checkSession() {
+            //    fetch('/Home/CheckSession')
+            //        .then(response => {
+            //            if (!response.ok) {
+            //                throw new Error('Session expirée ou problème serveur');
+            //            }
+            //            return response.json();
+            //        })
+            //        .then(data => {
+            //            console.log(data);
+            //            if (!data.isSessionActive) {
+            //                window.location.href = window.location.origin; // Redirige vers la page de login
+            //            }
+            //        })
+            //        .catch(error => {
+            //            console.error('Erreur de vérification de session:', error);
+            //            window.location.href = window.location.origin;
+            //        });
+            //}
 
-            // Fonction pour démarrer le `setInterval`
-            function startSessionCheck() {
+            //// Fonction pour démarrer le `setInterval`
+            //function startSessionCheck() {
                 
-                if (!sessionCheckInterval) {
-                    sessionCheckInterval = setInterval(checkSession, 60000); // Vérifie la session toutes les 60 secondes
-                }
-            }
+            //    if (!sessionCheckInterval) {
+            //        sessionCheckInterval = setInterval(checkSession, 60000); // Vérifie la session toutes les 60 secondes
+            //    }
+            //}
 
-            // Fonction pour arrêter le `setInterval`
-            function stopSessionCheck() {
-                if (sessionCheckInterval) {
-                    clearInterval(sessionCheckInterval);
-                    sessionCheckInterval = null;
-                }
-            }
+            //// Fonction pour arrêter le `setInterval`
+            //function stopSessionCheck() {
+            //    if (sessionCheckInterval) {
+            //        clearInterval(sessionCheckInterval);
+            //        sessionCheckInterval = null;
+            //    }
+            //}
 
-            // Fonction pour détecter l'activité utilisateur
-            function userInteracted() {
-                stopSessionCheck(); // Dès qu'il y a une interaction, on stoppe le `setInterval`
+            //// Fonction pour détecter l'activité utilisateur
+            //function userInteracted() {
+            //    stopSessionCheck(); // Dès qu'il y a une interaction, on stoppe le `setInterval`
 
-                // Réactive la vérification après 5 minutes d'inactivité
-                clearTimeout(inactivityTimeout);
-                inactivityTimeout = setTimeout(startSessionCheck, 300000); // 300000 ms = 5 minutes
-            }
+            //    // Réactive la vérification après 5 minutes d'inactivité
+            //    clearTimeout(inactivityTimeout);
+            //    inactivityTimeout = setTimeout(startSessionCheck, 300000); // 300000 ms = 5 minutes
+            //}
 
-            // Ajouter les écouteurs d'événements pour détecter l'activité utilisateur
-            document.addEventListener('mousemove', userInteracted);
-            document.addEventListener('keydown', userInteracted);
-            document.addEventListener('click', userInteracted);
+            //// Ajouter les écouteurs d'événements pour détecter l'activité utilisateur
+            //document.addEventListener('mousemove', userInteracted);
+            //document.addEventListener('keydown', userInteracted);
+            //document.addEventListener('click', userInteracted);
 
-            // Lancer la vérification de session au début
-            startSessionCheck();
+            //// Lancer la vérification de session au début
+            //startSessionCheck();
 
         </script>
     </body>
