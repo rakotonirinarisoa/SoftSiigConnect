@@ -332,11 +332,7 @@ $('#export-excel-btn').on('click', () => {
         return $(this).css('display') === 'none';
     }).remove();
 
-<<<<<<< HEAD
     tableToExcel('dashboard', 'DELAIS DE TRAITEMENT DES DEPENSES A PAYER ET DES AVANCES', setDataTable);
-=======
-    tableToExcel('dashboard', 'DELAIS DE TRAITEMENT DEPENSES A PAYER ET AVANCES', setDataTable);
->>>>>>> a0982203599eb03b3ab66c742cdeb05bd5f771cc
 });
 
 $('#proj').on('change', () => {

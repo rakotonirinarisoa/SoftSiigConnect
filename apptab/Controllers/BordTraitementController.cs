@@ -12,10 +12,7 @@ using System.Security.Policy;
 using System.Web.UI;
 using System.Collections;
 using static apptab.Controllers.PrivilegeController;
-<<<<<<< HEAD
-=======
 using Microsoft.Ajax.Utilities;
->>>>>>> a0982203599eb03b3ab66c742cdeb05bd5f771cc
 
 namespace apptab.Controllers
 {
@@ -319,11 +316,7 @@ namespace apptab.Controllers
         //Liste des engagements, avances et paiements//
         public ActionResult BordListeEngaPaie()
         {
-<<<<<<< HEAD
             ViewBag.Controller = "Liste des dépenses à payer et des avances par rapport aux paiements";
-=======
-            ViewBag.Controller = "Liste des dépenses à payer, avances et des paiements";
->>>>>>> a0982203599eb03b3ab66c742cdeb05bd5f771cc
 
             return View();
         }
@@ -846,11 +839,7 @@ namespace apptab.Controllers
         //Suivi des délais de traitement des engagements et avances//
         public ActionResult DelaisTraitementEngagements()
         {
-<<<<<<< HEAD
             ViewBag.Controller = "Suivi des délais de traitement des dépenses à payer et des avances";
-=======
-            ViewBag.Controller = "Suvi des délais de traitement des dépenses à payer et avances";
->>>>>>> a0982203599eb03b3ab66c742cdeb05bd5f771cc
 
             return View();
         }
@@ -1259,10 +1248,6 @@ namespace apptab.Controllers
             {
                 site.Add(item);
             }
-<<<<<<< HEAD
-
-=======
->>>>>>> a0982203599eb03b3ab66c742cdeb05bd5f771cc
             try
             {
                 List<TxtPAIEMENT> list = new List<TxtPAIEMENT>();
@@ -1302,16 +1287,10 @@ namespace apptab.Controllers
                                                 DATESEND = v.DATESEND != null ? v.DATESEND : null,
                                                 DATETRANS = v.DATETRANS != null ? v.DATETRANS : null,
                                                 TYPE = v.AVANCE == true ? "Avance" : "Réglement",
-<<<<<<< HEAD
-                                                SITE = v.SITE
-                                            }
-                                        ).ToList();
-=======
                                                 SITE = v.SITE,
                                                 NUMREG = v.NUMEREG
                                             }
                                         ).DistinctBy(a => (a.NUM, a.NUMREG)).ToList();
->>>>>>> a0982203599eb03b3ab66c742cdeb05bd5f771cc
 
                             HashSet<string> uniqueEntries = new HashSet<string>(); // Utilisation d'un HashSet pour garantir l'unicité des éléments
 
@@ -1325,11 +1304,7 @@ namespace apptab.Controllers
                                 var soa = soaQuery != null ? soaQuery.SOA : "MULTIPLE";
 
                                 // Créer une clé unique basée sur les propriétés pertinentes pour éviter les doublons
-<<<<<<< HEAD
-                                string uniqueKey = $"{item.NUM}-{item.BENEFICIAIRE}-{soa}-{item.SITE}";
-=======
                                 string uniqueKey = $"{item.NUM}-{item.BENEFICIAIRE}-{soa}-{item.SITE}- {item.NUMREG}";
->>>>>>> a0982203599eb03b3ab66c742cdeb05bd5f771cc
 
                                 if (!uniqueEntries.Contains(uniqueKey)) // Vérifier si l'élément est déjà présent
                                 {
@@ -1663,14 +1638,9 @@ namespace apptab.Controllers
                                        IDUSSEND = v.IDUSSEND != null ? v.IDUSSEND : null,
                                        IDUSVAL = v.IDUSVAL != null ? v.IDUSVAL : null,
                                        SITE = v.SITE != null ? v.SITE : null,
-<<<<<<< HEAD
-                                   }
-                               ).ToList();
-=======
                                        NUMREG = v.NUMEREG
                                    }
                                ).DistinctBy(a => (a.NUM , a.NUMREG)).ToList();
->>>>>>> a0982203599eb03b3ab66c742cdeb05bd5f771cc
 
                     var durerTraite = db.SI_DELAISTRAITEMENT.Where(x => x.IDPROJET == projectId).Select(x => new {
                         DELAISOP = x.DELPP,
@@ -1915,11 +1885,7 @@ namespace apptab.Controllers
         //Statut des Justificatifs et reversements//
         public ActionResult StatutJR()
         {
-<<<<<<< HEAD
             ViewBag.Controller = "Liste des justificatifs, des reversements et des compléments";
-=======
-            ViewBag.Controller = "Statut des justificatifs, reversements et compléments";
->>>>>>> a0982203599eb03b3ab66c742cdeb05bd5f771cc
 
             return View();
         }

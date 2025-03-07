@@ -406,13 +406,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                     buttons: ['colvis',
                         {
                             extend: 'pdfHtml5',
-<<<<<<< HEAD
                             title: 'JUSTIFICATIFS, REVERSEMENTS et COMPLEMENTS',
                             messageTop: 'Liste des justificatifs, des reversements et des compléments',
-=======
-                            title: 'STATUTS JUSTIFICATIFS, REVERSEMENTS et COMPLEMENTS',
-                            messageTop: 'Liste des statuts des justificatifs, reversements et compléments',
->>>>>>> a0982203599eb03b3ab66c742cdeb05bd5f771cc
                             text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
@@ -435,13 +430,8 @@ $('[data-action="GenereLISTE"]').click(function () {
                         },
                         {
                             extend: 'excelHtml5',
-<<<<<<< HEAD
                             title: 'JUSTIFICATIFS, REVERSEMENTS et COMPLEMENTS',
                             messageTop: 'Liste des justificatifs, des reversements et des compléments',
-=======
-                            title: 'STATUTS JUSTIFICATIFS, REVERSEMENTS et COMPLEMENTS',
-                            messageTop: 'Liste des statuts des justificatifs, reversements et compléments',
->>>>>>> a0982203599eb03b3ab66c742cdeb05bd5f771cc
                             text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
