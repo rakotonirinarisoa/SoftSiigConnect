@@ -12,6 +12,7 @@ using System.Security.Policy;
 using System.Web.UI;
 using System.Collections;
 using static apptab.Controllers.PrivilegeController;
+using Microsoft.Ajax.Utilities;
 
 namespace apptab.Controllers
 {
@@ -1247,7 +1248,6 @@ namespace apptab.Controllers
             {
                 site.Add(item);
             }
-
             try
             {
                 List<TxtPAIEMENT> list = new List<TxtPAIEMENT>();
@@ -1287,9 +1287,10 @@ namespace apptab.Controllers
                                                 DATESEND = v.DATESEND != null ? v.DATESEND : null,
                                                 DATETRANS = v.DATETRANS != null ? v.DATETRANS : null,
                                                 TYPE = v.AVANCE == true ? "Avance" : "Réglement",
-                                                SITE = v.SITE
+                                                SITE = v.SITE,
+                                                NUMREG = v.NUMEREG
                                             }
-                                        ).ToList();
+                                        ).DistinctBy(a => (a.NUM, a.NUMREG)).ToList();
 
                             HashSet<string> uniqueEntries = new HashSet<string>(); // Utilisation d'un HashSet pour garantir l'unicité des éléments
 
@@ -1303,7 +1304,7 @@ namespace apptab.Controllers
                                 var soa = soaQuery != null ? soaQuery.SOA : "MULTIPLE";
 
                                 // Créer une clé unique basée sur les propriétés pertinentes pour éviter les doublons
-                                string uniqueKey = $"{item.NUM}-{item.BENEFICIAIRE}-{soa}-{item.SITE}";
+                                string uniqueKey = $"{item.NUM}-{item.BENEFICIAIRE}-{soa}-{item.SITE}- {item.NUMREG}";
 
                                 if (!uniqueEntries.Contains(uniqueKey)) // Vérifier si l'élément est déjà présent
                                 {
@@ -1637,8 +1638,9 @@ namespace apptab.Controllers
                                        IDUSSEND = v.IDUSSEND != null ? v.IDUSSEND : null,
                                        IDUSVAL = v.IDUSVAL != null ? v.IDUSVAL : null,
                                        SITE = v.SITE != null ? v.SITE : null,
+                                       NUMREG = v.NUMEREG
                                    }
-                               ).ToList();
+                               ).DistinctBy(a => (a.NUM , a.NUMREG)).ToList();
 
                     var durerTraite = db.SI_DELAISTRAITEMENT.Where(x => x.IDPROJET == projectId).Select(x => new {
                         DELAISOP = x.DELPP,

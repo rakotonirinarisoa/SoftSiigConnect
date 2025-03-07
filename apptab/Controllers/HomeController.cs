@@ -41,6 +41,8 @@ using System.Diagnostics;
 using Microsoft.SqlServer.Server;
 using System.Runtime.InteropServices;
 using Microsoft.CodeAnalysis;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using static System.Net.WebRequestMethods;
 
 namespace apptab.Controllers
 {
@@ -3689,112 +3691,23 @@ namespace apptab.Controllers
         {
             int pport = int.Parse(port);
             string pth = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + SOURCE;
+            
             string namefile = SOURCE.Split('\\').Last().Split('.').First();
             string remoteFilePath = PATH;
             var res = "";
             string outputFile = "";
-            if (intbasetype == 3 || intbasetype == 5)
+
+            if (PWDFTP == "")
             {
-                string pthkey = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + directory;
-
-                if (!Directory.Exists(pthkey))
-                {
-                    Directory.CreateDirectory(pthkey);
-                    res = "Vous n'avez pas de fichier de cryptage!Veuillez contactez votre administrateur";
-                    return;
-                }
-                else
-                {
-                    string publicKeyFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", "/RSAkeyFile.asc");//get file clé public
-                    //C:\inetpub\wwwroot\SOFTSETTEST\FILERESULT\BANQUE\PACT\BOA
-                    var CryptageType = db.SI_TYPEBANQUE.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
-                    try
-                    {
-                        if (!System.IO.File.Exists(pthkey + publicKeyFile))
-                        {
-                            res = "Vous n'avez pas de fichier de cryptage!Veuillez contactez votre administrateur";
-                            //return ;
-                        }
-                        if (CryptageType.CRYPTAGE == "2")
-                        {
-                            outputFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", namefile + ".xml.gpg");
-                            publicKeyFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", directory , "RSAkeyFile.asc");// Chemin vers le fichier de sortie chiffré
-                            EncryptFileWithGPG(SOURCE, publicKeyFile, outputFile);
-                            //DecryptFile(outputFile, privateKeyFile, outputFileDEC);
-                            namefile = namefile + ".xml.gpg";
-                        }
-                        else if (CryptageType.CRYPTAGE == "1")
-                        {
-                            outputFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", namefile + ".xml.pgp");
-                            publicKeyFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", directory , "RSAkeyFile.asc");// Chemin vers le fichier de sortie chiffré
-                            EncryptFile(SOURCE, publicKeyFile, outputFile);
-                            namefile = namefile + ".xml.pgp";
-                        }
-                    }
-                    catch(Exception ex)
-                    {
-                        string cheminFichierLog = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + "logErreur.txt";
-
-                        // Créer ou ouvrir le fichier de log
-                        using (StreamWriter writer = new StreamWriter(cheminFichierLog, true)) // 'true' pour ajouter au fichier existant
-                        {
-                            // Écrire l'exception dans le fichier de log
-                            writer.WriteLine("--------------------------------------------------");
-                            writer.WriteLine("Date et heure : " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                            writer.WriteLine("SOURCE : " + SOURCE);
-                            writer.WriteLine("publicKeyFile : " + publicKeyFile);
-                            writer.WriteLine("outputFile : " + outputFile);
-                            writer.WriteLine("Message : " + ex.Message);
-                            writer.WriteLine("StackTrace : " + ex.StackTrace);
-                            writer.WriteLine("--------------------------------------------------");
-                        }
-                    }
-                    try
-                    {
-                        // Créer une connexion SFTP
-                        using (var sftp = new SftpClient(HOTE, pport, USERFTP.ToString(), PWDFTP))//h2h_pact/IN
-                        {
-                            sftp.Connect();
-                            if (sftp.IsConnected)
-                            {
-                                using (var fileStream = new FileStream(outputFile, FileMode.Open))
-                                {
-                                    // Envoyer le fichier
-                                    sftp.UploadFile(fileStream, remoteFilePath + "/" + namefile, x =>
-                                    {
-                                        var az = x.ToString();
-                                    });
-                                    res = "Fichier envoyé avec succès !";
-                                }
-                            }
-
-                            sftp.Disconnect();
-                        }
-                    }
-                    catch (Renci.SshNet.Common.SftpPermissionDeniedException ex)
-                    {
-                        res = $"Erreur de permission : {ex.Message}. Assurez-vous que vous avez les permissions d'écriture sur le répertoire distant.";
-                    }
-                    catch (Exception ex)
-                    {
-                        res = $"Erreur générale : {ex.Message}";
-                    }
-                }
-
-            }
-            else
-            {//envoye sftp fichier non crypter
-                if (AgenceBanque.Contains("SG"))
-                {
-                    namefile = "049038JP." + namefile;
-                }
+                //string privateKeyPath = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + SOURCE;
+                string privateKeyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", directory, "RSAkeyFile.asc");
                 try
                 {
-                    // Créer une connexion SFTP
-                    using (var sftp = new SftpClient(HOTE, pport, USERFTP.ToString(), PWDFTP))
-                    //using (var sftp = new SftpClient("72.251.3.20", 22, "tester", "password"))
+                    using (var keyFile = new PrivateKeyFile(privateKeyPath))
+                    using (var sftp = new SftpClient(HOTE, USERFTP, new PrivateKeyFile[] { keyFile }))
                     {
                         sftp.Connect();
+                        Console.WriteLine("Connexion SFTP réussie !");
 
                         using (var fileStream = new FileStream(SOURCE, FileMode.Open))
                         {
@@ -3807,26 +3720,153 @@ namespace apptab.Controllers
                             //Console.WriteLine("Fichier envoyé avec succès !");
                             res = "Fichier envoyé avec succès !";
                         }
+                        Console.WriteLine("Fichier téléchargé avec succès.");
 
                         sftp.Disconnect();
                     }
                 }
                 catch (Exception ex)
                 {
-                    string cheminFichierLog = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + "logErreur.txt";
+                    Console.WriteLine($"Erreur : {ex.Message}");
+                }
+            }
+            else
+            {
+                if (intbasetype == 3 || intbasetype == 5)
+                {
+                    string pthkey = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + directory;
 
-                    // Créer ou ouvrir le fichier de log
-                    using (StreamWriter writer = new StreamWriter(cheminFichierLog, true)) // 'true' pour ajouter au fichier existant
+                    if (!Directory.Exists(pthkey))
                     {
-                        // Écrire l'exception dans le fichier de log
-                        writer.WriteLine("--------------------------------------------------");
-                        writer.WriteLine("Date et heure : " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                        writer.WriteLine("SOURCE : " + SOURCE);
-                        writer.WriteLine("publicKeyFile : " );
-                        writer.WriteLine("outputFile : " + outputFile);
-                        writer.WriteLine("Message : " + ex.Message);
-                        writer.WriteLine("StackTrace : " + ex.StackTrace);
-                        writer.WriteLine("--------------------------------------------------");
+                        Directory.CreateDirectory(pthkey);
+                        res = "Vous n'avez pas de fichier de cryptage!Veuillez contactez votre administrateur";
+                        return;
+                    }
+                    else
+                    {
+                        string publicKeyFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", "/RSAkeyFile.asc");//get file clé public
+                                                                                                                                    //C:\inetpub\wwwroot\SOFTSETTEST\FILERESULT\BANQUE\PACT\BOA
+                        var CryptageType = db.SI_TYPEBANQUE.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
+                        try
+                        {
+                            if (!System.IO.File.Exists(pthkey + publicKeyFile))
+                            {
+                                res = "Vous n'avez pas de fichier de cryptage!Veuillez contactez votre administrateur";
+                                //return ;
+                            }
+                            if (CryptageType.CRYPTAGE == "2")
+                            {
+                                outputFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", namefile + ".xml.gpg");
+                                publicKeyFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", directory, "RSAkeyFile.asc");// Chemin vers le fichier de sortie chiffré
+                                EncryptFileWithGPG(SOURCE, publicKeyFile, outputFile);
+                                //DecryptFile(outputFile, privateKeyFile, outputFileDEC);
+                                namefile = namefile + ".xml.gpg";
+                            }
+                            else if (CryptageType.CRYPTAGE == "1")
+                            {
+                                outputFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", namefile + ".xml.pgp");
+                                publicKeyFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", directory, "RSAkeyFile.asc");// Chemin vers le fichier de sortie chiffré
+                                EncryptFile(SOURCE, publicKeyFile, outputFile);
+                                namefile = namefile + ".xml.pgp";
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            string cheminFichierLog = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + "logErreur.txt";
+
+                            // Créer ou ouvrir le fichier de log
+                            using (StreamWriter writer = new StreamWriter(cheminFichierLog, true)) // 'true' pour ajouter au fichier existant
+                            {
+                                // Écrire l'exception dans le fichier de log
+                                writer.WriteLine("--------------------------------------------------");
+                                writer.WriteLine("Date et heure : " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                                writer.WriteLine("SOURCE : " + SOURCE);
+                                writer.WriteLine("publicKeyFile : " + publicKeyFile);
+                                writer.WriteLine("outputFile : " + outputFile);
+                                writer.WriteLine("Message : " + ex.Message);
+                                writer.WriteLine("StackTrace : " + ex.StackTrace);
+                                writer.WriteLine("--------------------------------------------------");
+                            }
+                        }
+                        try
+                        {
+                            // Créer une connexion SFTP
+                            using (var sftp = new SftpClient(HOTE, pport, USERFTP.ToString(), PWDFTP))//h2h_pact/IN
+                            {
+                                sftp.Connect();
+                                if (sftp.IsConnected)
+                                {
+                                    using (var fileStream = new FileStream(outputFile, FileMode.Open))
+                                    {
+                                        // Envoyer le fichier
+                                        sftp.UploadFile(fileStream, remoteFilePath + "/" + namefile, x =>
+                                        {
+                                            var az = x.ToString();
+                                        });
+                                        res = "Fichier envoyé avec succès !";
+                                    }
+                                }
+
+                                sftp.Disconnect();
+                            }
+                        }
+                        catch (Renci.SshNet.Common.SftpPermissionDeniedException ex)
+                        {
+                            res = $"Erreur de permission : {ex.Message}. Assurez-vous que vous avez les permissions d'écriture sur le répertoire distant.";
+                        }
+                        catch (Exception ex)
+                        {
+                            res = $"Erreur générale : {ex.Message}";
+                        }
+                    }
+
+                }
+                else
+                {//envoye sftp fichier non crypter
+                    if (AgenceBanque.Contains("SG"))
+                    {
+                        namefile = "049038JP." + namefile;
+                    }
+                    try
+                    {
+                        // Créer une connexion SFTP
+                        using (var sftp = new SftpClient(HOTE, pport, USERFTP.ToString(), PWDFTP))
+                        //using (var sftp = new SftpClient("72.251.3.20", 22, "tester", "password"))
+                        {
+                            sftp.Connect();
+
+                            using (var fileStream = new FileStream(SOURCE, FileMode.Open))
+                            {
+                                //var sss =  sftp.ListDirectory("//");
+                                // Envoyer le fichier
+                                sftp.UploadFile(fileStream, remoteFilePath + "/" + namefile + ".xml", x =>
+                                {
+                                    var az = x.ToString();
+                                });
+                                //Console.WriteLine("Fichier envoyé avec succès !");
+                                res = "Fichier envoyé avec succès !";
+                            }
+
+                            sftp.Disconnect();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        string cheminFichierLog = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + "logErreur.txt";
+
+                        // Créer ou ouvrir le fichier de log
+                        using (StreamWriter writer = new StreamWriter(cheminFichierLog, true)) // 'true' pour ajouter au fichier existant
+                        {
+                            // Écrire l'exception dans le fichier de log
+                            writer.WriteLine("--------------------------------------------------");
+                            writer.WriteLine("Date et heure : " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                            writer.WriteLine("SOURCE : " + SOURCE);
+                            writer.WriteLine("publicKeyFile : ");
+                            writer.WriteLine("outputFile : " + outputFile);
+                            writer.WriteLine("Message : " + ex.Message);
+                            writer.WriteLine("StackTrace : " + ex.StackTrace);
+                            writer.WriteLine("--------------------------------------------------");
+                        }
                     }
                 }
             }
