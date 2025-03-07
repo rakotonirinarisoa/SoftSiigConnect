@@ -123,7 +123,10 @@ function GetUsers() {
 }
 
 $(`[data-action="UpdateUser"]`).click(function () {
+<<<<<<< HEAD
 
+=======
+>>>>>>> a0982203599eb03b3ab66c742cdeb05bd5f771cc
     let ParaV0 = $("#ParaV0").val();
     let ParaV = $("#ParaV").val();
     let ParaS = $("#ParaS").val();
@@ -220,6 +223,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
         alert("Veuillez renseigner les intitulés des menus. ");
         return;
 
+<<<<<<< HEAD
         let formData = new FormData();
 
         formData.append("suser.LOGIN", User.LOGIN);
@@ -335,4 +339,120 @@ $(`[data-action="UpdateUser"]`).click(function () {
             },
         });
     }
+=======
+    let formData = new FormData();
+
+    formData.append("suser.LOGIN", User.LOGIN);
+    formData.append("suser.PWD", User.PWD);
+    formData.append("suser.ROLE", User.ROLE);
+    formData.append("suser.IDPROJET", User.IDPROJET);
+
+    formData.append("param.MTNON", $(`#ParaV0`).val());
+    formData.append("param.MT0", $(`#ParaV`).val());
+    formData.append("param.MT1", $(`#ParaS`).val());
+    //formData.append("param.MT2", $(`#ParaSiig`).val());
+    formData.append("param.MP1", $(`#ParaPe`).val());
+    formData.append("param.MP2", $(`#ParaPv`).val());
+    formData.append("param.MP3", $(`#ParaPp`).val());
+    formData.append("param.MP4", $(`#ParaPb`).val());
+
+    formData.append("param.MD0", $(`#Md0`).val());
+    formData.append("param.MD1", $(`#Md1`).val());
+    formData.append("param.MD2", $(`#Md2`).val());
+    //formData.append("param.MD3", $(`#Md3`).val());
+
+    //formData.append("param.MOP0", $(`#Mop0`).val());
+    //formData.append("param.MOP1", $(`#Mop1`).val());
+    //formData.append("param.MOP2", $(`#Mop2`).val());
+
+    formData.append("param.TDB0", $(`#Tdb0`).val());
+    formData.append("param.TDB1", $(`#Tdb1`).val());
+    formData.append("param.TDB2", $(`#Tdb2`).val());
+    formData.append("param.TDB3", $(`#Tdb3`).val());
+    formData.append("param.TDB4", $(`#Tdb4`).val());
+    formData.append("param.TDB5", $(`#Tdb5`).val());
+    formData.append("param.TDB6", $(`#Tdb6`).val());
+    formData.append("param.TDB7", $(`#Tdb7`).val());
+    formData.append("param.TDB8", $(`#Tdb8`).val());
+
+    formData.append("param.J0", $(`#J0`).val());
+    formData.append("param.J1", $(`#J1`).val());
+    formData.append("param.J2", $(`#J2`).val());
+    formData.append("param.J3", $(`#J3`).val());
+    formData.append("param.J4", $(`#J4`).val());
+    formData.append("param.J5", $(`#J5`).val());
+    formData.append("param.JR", $(`#JR`).val());
+    formData.append("param.JRA", $(`#JRA`).val());
+
+    formData.append("param.RSF", $(`#RSF`).val());
+    formData.append("param.RSFT", $(`#RSFT`).val());
+    formData.append("param.TDB9", $(`#Tdb9`).val());
+
+    formData.append("param.TDB11", $(`#Tdb11`).val());
+    formData.append("param.TDB12", $(`#Tdb12`).val());
+    formData.append("param.TDB13", $(`#Tdb13`).val());
+    formData.append("param.TDB14", $(`#Tdb14`).val());
+
+    formData.append("param.TDB9i", Tdb9CHK);
+    formData.append("param.TDB0i", Tdb0CHK);
+    formData.append("param.JRi", JRCHK);
+    formData.append("param.JRAi", JRACHK);
+    formData.append("param.TDB1i", Tdb1CHK);
+    formData.append("param.TDB2i", Tdb2CHK);
+    formData.append("param.TDB3i", Tdb3CHK);
+    formData.append("param.TDB4i", Tdb4CHK);
+    formData.append("param.TDB5i", Tdb5CHK);
+    formData.append("param.TDB6i", Tdb6CHK);
+    formData.append("param.TDB7i", Tdb7CHK);
+    formData.append("param.TDB8i", Tdb8CHK);
+    formData.append("param.TDB11i", Tdb11CHK);
+    formData.append("param.TDB12i", Tdb12CHK);
+    formData.append("param.TDB13i", Tdb13CHK);
+    formData.append("param.TDB14i", Tdb14CHK);
+
+    formData.append("param.TDB1GED", Tdb1GED);
+    formData.append("param.TDB2GED", Tdb2GED);
+    formData.append("param.TDB3GED", Tdb3GED);
+    formData.append("param.TDB4GED", Tdb4GED);
+    formData.append("param.TDB5GED", Tdb5GED);
+    formData.append("param.TDB6GED", Tdb6GED);
+
+    formData.append("param.TDB1GEDi", Tdb1GEDCHK);
+    formData.append("param.TDB2GEDi", Tdb2GEDCHK);
+    formData.append("param.TDB3GEDi", Tdb3GEDCHK);
+    formData.append("param.TDB4GEDi", Tdb4GEDCHK);
+    formData.append("param.TDB5GEDi", Tdb5GEDCHK);
+    formData.append("param.TDB6GEDi", Tdb6GEDCHK);
+
+    $.ajax({
+        type: "POST",
+        url: Origin + '/SuperAdmin/UpdateMenu',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            loader.removeClass('display-none');
+        },
+        complete: function () {
+            loader.addClass('display-none');
+        },
+        success: function (result) {
+            var Datas = JSON.parse(result);
+
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                return;
+            }
+            if (Datas.type == "success") {
+                alert(Datas.msg);
+                window.location = window.location.origin;// + '/SOFTSETFORMATION';
+            }
+            if (Datas.type == "login") {
+                alert(Datas.msg);
+                window.location = window.location.origin;// + '/SOFTSETFORMATION';
+            }
+        },
+    });
+>>>>>>> a0982203599eb03b3ab66c742cdeb05bd5f771cc
 });

@@ -1,6 +1,11 @@
 ﻿@{
+<<<<<<< HEAD
     ViewBag.Title = "Liste des dépenses à payer et des avances par rapport aux paiements";
     ViewData["Controller"] = "Liste des dépenses à payer et des avances par rapport aux paiements";
+=======
+    ViewBag.Title = "Liste des dépenses à payer, avances et des paiements";
+    ViewData["Controller"] = "Liste des dépenses à payer, avances et des paiements";
+>>>>>>> a0982203599eb03b3ab66c742cdeb05bd5f771cc
 }
 
 <meta charset="utf-8" />
@@ -208,7 +213,11 @@
 
 <script defer>
     $('#export-to-pdf-btn').on('click', () => {
+<<<<<<< HEAD
         exportTableToPdf('TBD_PROJET_ORDSEC', 'DEPENSES A PAYER ET DES AVANCES PAR RAPPORT AUX PAIEMENTS-PDF', `<p style="font-weight: bold /*text-align:center*/;">DEPENSES A PAYER ET DES AVANCES PAR RAPPORT AUX PAIEMENTS</p><p>Liste des dépenses à payer et des avances par rapport aux paiements</p>`, `<p style="font-weight: bold;">SOFT EXPENDITURES TRACKERS </p>`, [0]);
+=======
+        exportTableToPdf('TBD_PROJET_ORDSEC', 'DEPENSES A PAYER, AVANCES et PAIEMENTS-PDF', `<p style="font-weight: bold /*text-align:center*/;">DEPENSES A PAYER, AVANCES et PAIEMENTS</p><p>Liste des dépenses à payer, avances et des paiements</p>`, `<p style="font-weight: bold;">SOFT EXPENDITURES TRACKERS </p>`, [0]);
+>>>>>>> a0982203599eb03b3ab66c742cdeb05bd5f771cc
         /*exportTableToPdf('dashboard', 'SiigConnect PDF', `<h1 style="color: red; ">Modifier le header</h1>`, `<h2>Modifier le footer</h2>`, []);*/
     });
 </script>

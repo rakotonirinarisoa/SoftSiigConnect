@@ -377,8 +377,13 @@ $('[data-action="GenereLISTE"]').click(function () {
                     buttons: ['colvis',
                         {
                             extend: 'pdfHtml5',
+<<<<<<< HEAD
                             title: 'DEPENSES A PAYER ET DES AVANCES PAR RAPPORT AUX PAIEMENTS',
                             messageTop: 'Liste des dépenses à payer et des avances par rapport aux paiements',
+=======
+                            title: 'DEPENSES A PAYER, AVANCES et PAIEMENTS',
+                            messageTop: 'Liste des dépenses à payer, avances et des paiements',
+>>>>>>> a0982203599eb03b3ab66c742cdeb05bd5f771cc
                             text: '<i class="fa fa-file-pdf"> Exporter en PDF</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
@@ -401,8 +406,13 @@ $('[data-action="GenereLISTE"]').click(function () {
                         },
                         {
                             extend: 'excelHtml5',
+<<<<<<< HEAD
                             title: 'DEPENSES A PAYER ET DES AVANCES PAR RAPPORT AUX PAIEMENTS',
                             messageTop: 'Liste des dépenses à payer et des avances par rapport aux paiements',
+=======
+                            title: 'DEPENSES A PAYER, AVANCES et PAIEMENTS',
+                            messageTop: 'Liste des dépenses à payer, avances et des paiements',
+>>>>>>> a0982203599eb03b3ab66c742cdeb05bd5f771cc
                             text: '<i class="fa fa-file-excel"> Exporter en Excel</i>',
                             orientation: 'landscape',
                             pageSize: 'A4',
