@@ -420,14 +420,15 @@ $('[data-action="GenereLISTE"]').click(function () {
     }
 
     let formData = new FormData();
-
+    let ddd = $('#dateD').val();
+    let dff = $('#dateF').val();
     formData.append("suser.LOGIN", User.LOGIN);
     formData.append("suser.PWD", User.PWD);
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDSOCIETE);
 
-    formData.append("DateDebut", $('#dateD').val());
-    formData.append("DateFin", $('#dateF').val());
+    formData.append("DateDebut", ddd);
+    formData.append("DateFin", dff);
 
     //formData.append("PROJECTID", $("#proj").val());
     formData.append("PROJECTID", pr);

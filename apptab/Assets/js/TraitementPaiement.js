@@ -493,3 +493,19 @@ function emptyTable() {
         deferRender: true,
     });
 }
+
+setInterval(function () {
+    fetch('/Home/CheckSession')  // Route côté serveur pour vérifier la session
+        .then(response => {
+            console.log(response);
+            if (!response.null) {
+                // Si la réponse n'est pas OK, cela signifie que la session a expiré
+                console.log(response);
+                window.location.href = window.location.origin;  // Redirige vers la page de login
+            }
+        })
+        .catch(error => {
+            console.error('Erreur de vérification de session:', error);
+            window.location.href = window.location.origin;  // Redirige vers la page de login en cas d'erreur
+        });
+}, 900000);  // Vérifier chaque minute (60000 ms)

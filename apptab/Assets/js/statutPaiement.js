@@ -87,7 +87,7 @@ function GetSITE() {
             $("#site").select2();
         },
         error: function () {
-            alert("Problème de connexion. ");
+            alert("Veuillez verifier votre Parametrage TOMATE ");
         }
     });
 }
@@ -194,7 +194,7 @@ function GetListProjet() {
             $("#proj").val([...Datas.data.PROJET]).trigger('change');
         },
         error: function (e) {
-            alert("Problème de connexion. ");
+            alert("Veuillez verifier votre Parametrage TOMATE ");
         }
     })
 }
@@ -491,7 +491,7 @@ $('[data-action="GenereLISTE"]').click(function () {
             }
         },
         error: function () {
-            alert("Problème de connexion. ");
+            alert("Veuillez verifier votre Parametrage TOMATE ");
         }
     });
 });

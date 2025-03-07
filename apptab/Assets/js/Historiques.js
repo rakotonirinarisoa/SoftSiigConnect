@@ -559,6 +559,11 @@ function showLiquidationModal(PROJECTID,idLiquidation ) {
                 window.location = window.location.origin;
                 return;
             }
+            if (Datas.type == "success") {
+                alert(Datas.msg);
+                window.location = window.location.reload;
+                return;
+            }
         },
         error: function () {
             alert("Problème de connexion. ");

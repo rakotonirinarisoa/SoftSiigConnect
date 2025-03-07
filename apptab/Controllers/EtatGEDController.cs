@@ -672,8 +672,9 @@ namespace apptab.Controllers
                         IDsup = Guid.Parse(fournisseur); ;
                     }
                     else IDsup = new Guid();
+                    var ddoc = ged.Documents.ToList();
 
-                    var RefDoc = ged.Documents.Where(x => x.DeletionDate == null && x.CreationDate >= DateDebut && x.CreationDate <= DateFin).Join(ged.SuppliersDocumentsAcknowledgements, dcm => dcm.Id, sdal => sdal.Id, (dcm, sdal) => new
+                    var RefDoc = ged.Documents.Where(x => x.CreationDate >= DateDebut && x.CreationDate <= DateFin).Join(ged.SuppliersDocumentsAcknowledgements, dcm => dcm.Id, sdal => sdal.Id, (dcm, sdal) => new
                     {
                         ID = dcm.SenderId,
                         reference = sdal.ReferenceInterne,
@@ -755,7 +756,7 @@ namespace apptab.Controllers
                         DocumentStepID = dcm.DocumentStepID,
                         IsValidator = dcm.IsValidator,
                         //}).Where(x => x.Fournisseur == suppliersname.Name && x.Encours == status && x.IsValidator == true /*&& referenS.Contains(x.reference)*/).DistinctBy(x => x.Etape).ToList();
-                    }).Where(x => x.IsValidator == true).DistinctBy(x => x.Etape).ToList();// x.Fournisseur == suppliersname.Name && x.Encours == status &&
+                    })./*Where(x => x.IsValidator == true).*/DistinctBy(x => x.reference).ToList();// x.Fournisseur == suppliersname.Name && x.Encours == status &&
                     var links = db.SI_GEDLIEN.Where(x => x.IDPROJET == proj).Select(x => x.LIEN).FirstOrDefault();
 
                     if (RefDoc != null)
@@ -782,7 +783,7 @@ namespace apptab.Controllers
                                 });
                             }
                         }
-                        else if (status != 4 || fournisseur == "0")
+                        else if (fournisseur == "0")
                         {
                             foreach (var typD in RefDoc)
                             {

@@ -40,6 +40,7 @@ using System.Web.Services.Description;
 using System.Diagnostics;
 using Microsoft.SqlServer.Server;
 using System.Runtime.InteropServices;
+using Microsoft.CodeAnalysis;
 
 namespace apptab.Controllers
 {
@@ -231,25 +232,34 @@ namespace apptab.Controllers
 
         public XmlDocument SaveDocument(string pathchemin, string path)
         {
-            var xmlDoc = new XmlDocument();
-            xmlDoc.Load(pathchemin);
-            var address = xmlDoc.GetElementsByTagName("original");
-            using (StringWriter stringWriter = new StringWriter())
+            try
             {
-                using (XmlTextWriter xmlTextWriter = new XmlTextWriter(stringWriter))
+                var xmlDoc = new XmlDocument();
+                xmlDoc.Load(pathchemin);
+                var address = xmlDoc.GetElementsByTagName("original");
+                using (StringWriter stringWriter = new StringWriter())
                 {
-                    xmlTextWriter.Formatting = System.Xml.Formatting.Indented;
-                    xmlTextWriter.Indentation = 6; // Nombre d'espaces pour l'indentation
-                                                   //xmlDoc.WriteTo(xmlTextWriter);
-                    xmlDoc.Save(xmlTextWriter);
+                    using (XmlTextWriter xmlTextWriter = new XmlTextWriter(stringWriter))
+                    {
+                        xmlTextWriter.Formatting = System.Xml.Formatting.Indented;
+                        xmlTextWriter.Indentation = 6; // Nombre d'espaces pour l'indentation
+                                                       //xmlDoc.WriteTo(xmlTextWriter);
+                        xmlDoc.Save(xmlTextWriter);
+                    }
+                    System.IO.File.WriteAllText(pathchemin, stringWriter.ToString());
                 }
-                System.IO.File.WriteAllText(pathchemin, stringWriter.ToString());
+                //using (StreamWriter stream = new StreamWriter(pathchemin, false, Encoding.GetEncoding("UTF-8")))
+                //{
+                //    xmlDoc.Save(stream);
+                //}
+                return null;// (xmlDoc);
             }
-            //using (StreamWriter stream = new StreamWriter(pathchemin, false, Encoding.GetEncoding("UTF-8")))
-            //{
-            //    xmlDoc.Save(stream);
-            //}
-            return null;// (xmlDoc);
+            catch (Exception ex)
+            {
+                
+                throw;
+            }
+           
         }
 
         public FileResult CreateFileAFBXML(string pathchemin, string pathfiles)
@@ -539,6 +549,10 @@ namespace apptab.Controllers
                 {
                     int typeDevise = 0;
                     var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype, banqueid);
+                    if (pathfile.Fichier == null)
+                    {
+                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = pathfile.NomFichier }, settings));
+                    }
                     Anarana = pathfile.Chemin;
                     send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
@@ -643,6 +657,10 @@ namespace apptab.Controllers
             {
               
                 var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype, banqueid);
+                if (pathfile.Fichier == null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = pathfile.NomFichier }, settings));
+                }
                 Anarana = pathfile.Chemin;
                 path = pathfile.NomFichier;
                 //send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
@@ -697,6 +715,10 @@ namespace apptab.Controllers
             else if (intbasetype == 5)//mise a disposition
             {
                 var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype, banqueid);
+                if (pathfile.Fichier == null)
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = pathfile.NomFichier }, settings));
+                }
                 Anarana = pathfile.Chemin;
                 path = pathfile.NomFichier;
                 //send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
@@ -757,6 +779,10 @@ namespace apptab.Controllers
                 {
                     var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype, banqueid);
 
+                    if (pathfile.Fichier == null)
+                    {
+                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = pathfile.NomFichier }, settings));
+                    }
                     path = pathfile.NomFichier;
                     //Nomfichier = pathfile.NomFichier + ".xml";
                     if (rbanque.CODEBIC.Contains("CLMDMGMG"))
@@ -769,6 +795,13 @@ namespace apptab.Controllers
                     else if (rbanque.CODEBIC.Contains("BF"))
                     {
                         directory = "BANQUE/" + projetName + "/SG";
+                        Anarana = pathfile.Chemin;
+                        //xmlResult = SaveDocument(Anarana, Anarana);
+                        SaveDocument(Anarana, Anarana);
+                    }
+                    else if (rbanque.CODEBIC.Contains("BMOI"))
+                    {
+                        directory = "BANQUE/" + projetName + "/BMOI";
                         Anarana = pathfile.Chemin;
                         //xmlResult = SaveDocument(Anarana, Anarana);
                         SaveDocument(Anarana, Anarana);
@@ -807,6 +840,11 @@ namespace apptab.Controllers
                 {
                     var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype, banqueid);
 
+                    if (pathfile.Fichier == null)
+                    {
+                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = pathfile.NomFichier }, settings));
+                    }
+
                     path = pathfile.NomFichier;
                     //Nomfichier = pathfile.NomFichier + ".xml";
                     if (rbanque.CODEBIC.Contains("CLMDMGMG"))
@@ -815,6 +853,9 @@ namespace apptab.Controllers
                     }else if (rbanque.CODEBIC.Contains("BF"))
                     {
                         directory = "BANQUE/" + projetName + "/SG";
+                    }else if (rbanque.CODEBIC.Contains("BMOI"))
+                    {
+                        directory = "BANQUE/" + projetName + "/BMOI";
                     }
                     else
                     {
@@ -1062,10 +1103,10 @@ namespace apptab.Controllers
             if (hstSiig.Any())
             {
                 var idReglements = new HashSet<string>(hstSiig.Select(h => h.IDREGLEMENT));
-
-                foreach (var s1 in afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site)
-                    .DistinctBy(x => x.No)
-                    .ToList())
+                var tomproresult = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site)
+                    .DistinctBy(x => (x.No ,x.NUMEREG))
+                    .ToList();
+                foreach (var s1 in tomproresult)
                 {
                     // Vérifier si s1.No n'est pas dans hstSiig
                     if (!idReglements.Contains(s1.No))
@@ -1129,7 +1170,7 @@ namespace apptab.Controllers
         public JsonResult GetCODEJournal(string codeproject, SI_USERS suser)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
-            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Probléme d'accées(Votre accées ou session sont pérdu). " }, settings));
             var basename = GetTypeP(suser, codeproject);
             if (basename == null)
             {
@@ -1152,6 +1193,8 @@ namespace apptab.Controllers
             SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
+            var siteS = db.SI_SITE.Where(ST => ST.IDUSER == exist.ID && ST.IDPROJET == crpt).Select(ST => ST.SITE).FirstOrDefault();
+
             var JournalVM = tom.RJL1.Where(x => x.JLTRESOR == true && x.NATURE == "2").Select(x => new
             {
                 CODE = x.CODE,
@@ -1165,7 +1208,7 @@ namespace apptab.Controllers
         {
             int PROJECTID = int.Parse(codeproject);
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
-            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Probléme d'accées(Votre accées ou session sont pérdu)." }, settings));
             var basename = GetTypeP(suser, exist.IDPROJET.ToString());
             if (exist.IDPROJET == 0)
             {
@@ -1422,7 +1465,7 @@ namespace apptab.Controllers
 
                     string auxi1 = auxi;
                     AFB160 afb160 = new AFB160();//ty miova
-                    var hst = db.OPA_HISTORIQUEBR.Where(x => x.SITE == item).Select(x => x.NUMENREG.ToString()).ToArray();
+                    var hst = db.OPA_HISTORIQUEBR.Where(x => x.SITE == item && x.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG.ToString()).ToArray();
                     foreach (var h in list)
                     {
                         int a = int.Parse(h.Numereg);
@@ -1431,7 +1474,7 @@ namespace apptab.Controllers
                         foreach (var Lst in listA)
                         {
                             var existingRecord = db.OPA_VALIDATIONS
-                                .FirstOrDefault(x => x.IDREGLEMENT == Lst.No.ToString() && x.NUMEREG == Lst.NUMEREG);
+                                .FirstOrDefault(x => x.IDREGLEMENT == Lst.No.ToString() && x.NUMEREG == Lst.NUMEREG && x.IDPROJET == PROJECTID);
 
                             if (existingRecord != null)
                             {
@@ -1524,8 +1567,11 @@ namespace apptab.Controllers
                             smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
                             smtp.EnableSsl = true;
 
-                            try { smtp.Send(mail); }
-                            catch (Exception) { }
+                            try { smtp.Send(mail);
+                            }
+                            catch (Exception ex) {
+                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = ex.Message }, settings));
+                            }
                         }
                     }
                 }
@@ -3664,7 +3710,7 @@ namespace apptab.Controllers
                     var CryptageType = db.SI_TYPEBANQUE.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     try
                     {
-                        if (!System.IO.File.Exists(publicKeyFile))
+                        if (!System.IO.File.Exists(pthkey + publicKeyFile))
                         {
                             res = "Vous n'avez pas de fichier de cryptage!Veuillez contactez votre administrateur";
                             //return ;
@@ -4026,84 +4072,97 @@ namespace apptab.Controllers
         }
         public JsonResult SendEmailSuppliersGED(SI_USERS suser, int PROJECTID, string idLiquidation)
         {
+            // Connexion à la base de données
             SOFTCONNECTOM.connex = new Data.Extension().GetCon(PROJECTID);
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
-            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
-            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-            string MailAdresse = "";
-            string mdpMail = "";
-
-            if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).SENDMAIL != null && db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).SENDPWD != null)
+            // Vérification de l'utilisateur
+            var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null);
+            if (exist == null)
             {
-                MailAdresse = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).SENDMAIL;
-                mdpMail = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).SENDPWD;
-            }
-            else
-            {
-                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mail émetteur (Notifications et Alertes)" }, settings));
+                return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion." }));
             }
 
-            var send = db.OPA_HISTORIQUEBR.Where(x => x.NUMENREG == idLiquidation && x.IDSOCIETE == PROJECTID).FirstOrDefault();
+            // Récupération des paramètres de l'email
+            var mailConfig = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null);
+            if (mailConfig == null || string.IsNullOrEmpty(mailConfig.SENDMAIL) || string.IsNullOrEmpty(mailConfig.SENDPWD))
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez paramétrer le mail émetteur (Notifications et Alertes)." }));
+            }
+
+            string MailAdresse = mailConfig.SENDMAIL;
+            string mdpMail = mailConfig.SENDPWD;
+
+            // Récupération des informations de l'historique
+            var send = db.OPA_HISTORIQUEBR.FirstOrDefault(x => x.NUMENREG == idLiquidation && x.IDSOCIETE == PROJECTID);
+            if (send == null)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Aucune donnée trouvée pour cette liquidation." }));
+            }
+
             string email = send.LIEN;
             string Obj = send.OBJET;
             string Title = send.TITLE;
             string doc = send.DOC;
             string message = send.MESSAGE;
-            var ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == PROJECTID && a.DELETIONDATE == null).FirstOrDefault().PROJET;
-            using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
+            string ProjetIntitule = db.SI_PROJETS.Where(a => a.ID == PROJECTID && a.DELETIONDATE == null).Select(a => a.PROJET).FirstOrDefault();
+
+            try
             {
-                SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
-                smtp.UseDefaultCredentials = true;
-
-                mail.From = new MailAddress(MailAdresse);
-
-                mail.To.Add(MailAdresse);
-                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE != null)
+                using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
                 {
-                    string[] separators = { ";" };
-
-                    var Tomail = mail;
-                    if (Tomail != null)
+                    // Configuration du SMTP
+                    SmtpClient smtp = new SmtpClient("smtpauth.moov.mg")
                     {
-                        string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILTE;
-                        string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                        Port = 587,
+                        Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail),
+                        EnableSsl = true
+                    };
 
+                    mail.From = new MailAddress(MailAdresse);
+                    //mail.To.Add("fiderana.rakotonirinarisoa@softwell.mg"); // Remplacer par email si nécessaire
+                    mail.To.Add(email); // Remplacer par email si nécessaire
+
+                    // Ajout des destinataires supplémentaires
+                    if (!string.IsNullOrEmpty(mailConfig.MAILTE))
+                    {
+                        string[] mailListe = mailConfig.MAILTE.Split(';', (char)StringSplitOptions.RemoveEmptyEntries);
                         foreach (var mailto in mailListe)
                         {
                             mail.To.Add(mailto);
                         }
                     }
-                }
 
-                mail.Subject = "Avis de réglement";
-                mail.IsBodyHtml = true;
-                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que le paiement en relation avec  le document " + doc + " que vous avez transmis à " + ProjetIntitule + " a été efféctué.<br/><br>" +
-                            " <b><u>Titre du document</u></b>: " + Title + " <br/>" +
-                            " <b><u>Objet</u></b>: " + Obj + " <br/>" +
-                            " <b><u>Message</u></b>: " + message + " <br/>" +
-                            "'<br/><br>" + "Cordialement";
-                smtp.Port = 587;
-                smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
-                smtp.EnableSsl = true;
+                    // Contenu de l'email
+                    mail.Subject = "Avis de réglement";
+                    mail.IsBodyHtml = true;
+                    mail.Body = $"Madame, Monsieur,<br/><br>" +
+                                $"Nous vous informons que le paiement en relation avec le document {doc} que vous avez transmis à {ProjetIntitule} a été effectué.<br/><br>" +
+                                $"<b><u>Titre du document</u></b>: {Title} <br/>" +
+                                $"<b><u>Objet</u></b>: {Obj} <br/>" +
+                                $"<b><u>Message</u></b>: {message} <br/><br>" +
+                                "Cordialement.";
 
-                try
-                {
+                    // Envoi de l'email
                     smtp.Send(mail);
+
+                    // Mise à jour de la notification
                     send.NOTIF = true;
-                    try
-                    {
-                        db.SaveChanges();
-                    }
-                    catch
-                    {
-                        throw;
-                    }
+                    db.SaveChanges();
+
+                    return Json(JsonConvert.SerializeObject(new { type = "success" ,msg = "Email envoyé avec succès", data = "" }));
                 }
-                catch (Exception) { }
             }
-            return Json(JsonConvert.SerializeObject(new { msg = "Email envoyer avec Succes", data = "" }));
+            catch (SmtpException smtpEx)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur SMTP : " + smtpEx.Message }));
+            }
+            catch (Exception ex)
+            {
+                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Une erreur s'est produite : " + ex.Message }));
+            }
         }
+
         public string GetTypeBanque(string codeproject, SI_USERS suser)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);

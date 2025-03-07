@@ -253,7 +253,7 @@ namespace apptab.Extension
 
                     db.SaveChanges();
                 }
-                bnfcr.ETAT = "1";
+                //bnfcr.ETAT = "1";
                 db.SaveChanges();
             }
             try
@@ -354,6 +354,10 @@ namespace apptab.Extension
                 {
                     ccyiso = tom.RPROJET.Select(x => x.MONNAIEREP).FirstOrDefault();
                 }
+                else if (typeDevise == 2)
+                {
+                    ccyiso = "USD";
+                }
                 else
                 {
                     ccyiso = tom.RPROJET.Select(x => x.MONNAIERAPP).FirstOrDefault();
@@ -362,6 +366,11 @@ namespace apptab.Extension
             else
             {
                 ccyiso = tom.RPROJET.Select(x => x.MONNAIELOC).FirstOrDefault();
+            }
+            if (ccyiso == "")
+            {
+                return new ISO20022xml() { Fichier = null, Chemin = "", NomFichier = "Votre donnés sur RPROJET colonne MONNAIELOC ou MONNAIEREP ou MONNAIERAPP est vide" };
+
             }
             if (rbanque.CODEBIC != null && rbanque.CODEBIC.Contains("CLMDMGMG"))//BNI
             {
@@ -457,11 +466,15 @@ namespace apptab.Extension
                             else
                             {
                                 //Price = bnfr.MONTANT;
-                                Price = Price = tom.MOP.Where(x => x.NUMEROOP == bnfr.NUM && x.NUMENREG == bnfr.NUMEREG).FirstOrDefault().MONTANTLOC;
+                                Price = tom.MOP.Where(x => x.NUMEROOP == bnfr.NUM && x.NUMENREG == bnfr.NUMEREG).FirstOrDefault().MONTANTLOC;
                             }
+                           
+                        }
+                        if (Price == null)
+                        {
+                            return new ISO20022xml() { Fichier = null, Chemin = "", NomFichier = "Votre donnés sur " + bnfr.NUM + " MOP colonne MONTANTRAP/MONTANTDEV/MONTANTLOC  est vide" };
 
                         }
-
                         if (op.Libelle.Length > 140)
                         {
                             pmtinf.Add(
@@ -491,8 +504,9 @@ namespace apptab.Extension
                                         ),
                                 new XElement("DbtrAcct",
                                     new XElement("Id",
-                                        new XElement("Othr",
-                                            new XElement("Id", donneurOrde.CODE_BANQUE + donneurOrde.CODE_GUICHET + donneurOrde.NUM_COMPTE + donneurOrde.CLE))),
+                                        new XElement("IBAN", ibanpay.Trim(' '))),
+                                        //new XElement("Othr",
+                                        //    new XElement("Id", donneurOrde.CODE_BANQUE + donneurOrde.CODE_GUICHET + donneurOrde.NUM_COMPTE + donneurOrde.CLE))),
                                     new XElement("Ccy", ccyiso)
                                 ),
                                 new XElement("DbtrAgt",
@@ -524,8 +538,9 @@ namespace apptab.Extension
                                         ),
                                 new XElement("DbtrAcct",
                                     new XElement("Id",
-                                        new XElement("Othr",
-                                            new XElement("Id", donneurOrde.CODE_BANQUE + donneurOrde.CODE_GUICHET + donneurOrde.NUM_COMPTE + donneurOrde.CLE))),
+                                        new XElement("IBAN", ibanpay.Trim(' '))),
+                                        //new XElement("Othr",
+                                        //    new XElement("Id", donneurOrde.CODE_BANQUE + donneurOrde.CODE_GUICHET + donneurOrde.NUM_COMPTE + donneurOrde.CLE))),
                                     new XElement("Ccy", ccyiso)
                                 ),
                                 new XElement("DbtrAgt",
@@ -557,8 +572,9 @@ namespace apptab.Extension
                                             ),
                                     new XElement("DbtrAcct",
                                         new XElement("Id",
-                                            new XElement("Othr",
-                                                new XElement("Id", donneurOrde.CODE_BANQUE + donneurOrde.CODE_GUICHET + donneurOrde.NUM_COMPTE + donneurOrde.CLE))),
+                                            new XElement("IBAN", ibanpay.Trim(' '))),
+                                            //new XElement("Othr",
+                                            //    new XElement("Id", donneurOrde.CODE_BANQUE + donneurOrde.CODE_GUICHET + donneurOrde.NUM_COMPTE + donneurOrde.CLE))),
                                         new XElement("Ccy", ccyiso)
                                     ),
                                     new XElement("DbtrAgt",
@@ -592,8 +608,9 @@ namespace apptab.Extension
                                             ),
                                     new XElement("DbtrAcct",
                                         new XElement("Id",
-                                            new XElement("Othr",
-                                                new XElement("Id", donneurOrde.CODE_BANQUE + donneurOrde.CODE_GUICHET + donneurOrde.NUM_COMPTE + donneurOrde.CLE))),
+                                        new XElement("IBAN", ibanpay.Trim(' '))),
+                                            //new XElement("Othr",
+                                            //    new XElement("Id", donneurOrde.CODE_BANQUE + donneurOrde.CODE_GUICHET + donneurOrde.NUM_COMPTE + donneurOrde.CLE))),
                                         new XElement("Ccy", ccyiso)
                                     ),
                                     new XElement("DbtrAgt",
@@ -626,6 +643,10 @@ namespace apptab.Extension
                                 {
                                     ccyiso = tom.RPROJET.FirstOrDefault().MONNAIERAPP;
                                 }
+                            }
+                            if (ccyiso == null || ere == null)
+                            {
+                                return new ISO20022xml() { Fichier = null, Chemin = "", NomFichier = "Votre donnés sur " + item.NUM + " RPROJET colonne MONNAIERAPP /FOP DEVISE  est vide" };
                             }
                             //eto no miverina virment
                             if (opop.AUTREOP == true)
@@ -932,7 +953,10 @@ namespace apptab.Extension
                                 {
                                     ccyiso = tom.RPROJET.Select(x => x.MONNAIELOC).FirstOrDefault();
                                 }
-
+                                if (ccyiso == null || ere == null)
+                                {
+                                    return new ISO20022xml() { Fichier = null, Chemin = "", NomFichier = "Votre donnés sur "+item.NUM + " RPROJET colonne MONNAIERAPP /MOP MONTANTRAP  est vide" };
+                                }
                                 rswift = tom.RTIERS.Where(a => a.AUXI == item.AUXI).FirstOrDefault();
                                 if (item.BENEFICIAIRE.Length > 140)
                                 {
@@ -971,7 +995,7 @@ namespace apptab.Extension
                                             ),
                                             new XElement("CdtrAcct",
                                                 new XElement("Id",
-                                                    new XElement("Id", rswift.BQIBAN)
+                                                    new XElement("IBAN", rswift.BQIBAN.Trim(' '))
                                                     //new XElement("Othr",
                                                     //    //new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE)
                                                     //    new XElement("Id", rswift.BQIBAN)
@@ -1020,7 +1044,7 @@ namespace apptab.Extension
                                             ),
                                             new XElement("CdtrAcct",
                                                 new XElement("Id",
-                                                    new XElement("IBAN", rswift.BQIBAN)
+                                                    new XElement("IBAN", rswift.BQIBAN.Trim(' '))
                                                     //new XElement("Othr",
                                                     //    //new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE)
                                                     //)
@@ -1067,7 +1091,7 @@ namespace apptab.Extension
                                             ),
                                             new XElement("CdtrAcct",
                                                 new XElement("Id",
-                                                    new XElement("IBAN", rswift.BQIBAN)
+                                                    new XElement("IBAN", rswift.BQIBAN.Trim(' '))
                                                     //new XElement("Othr",
                                                     //    new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE)
                                                     //)
@@ -1114,9 +1138,10 @@ namespace apptab.Extension
 
                                             new XElement("CdtrAcct",
                                                 new XElement("Id",
-                                                    new XElement("Othr",
-                                                        new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE)
-                                                    )
+                                                    new XElement("IBAN", rswift.BQIBAN.Trim(' '))
+                                                    //new XElement("Othr",
+                                                    //    new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE)
+                                                    //)
                                                 )
                                             ),
                                              new XElement("RmtInf",
@@ -1145,7 +1170,8 @@ namespace apptab.Extension
                             });
                             //SaveWordVirement(item.NUM, DateTime.Now.ToString(), montant.ToString(), item.LIBELLE, item.DATE.ToString(), item.ETAT, item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE, op.Libelle, donneurOrde.NUM_COMPTE, fileName,item.BENEFICIAIRE);
                         }
-                        SaveWordVirement(fileName, Montantglob, virementInfos);
+                        string projetName = db.SI_PROJETS.Where(x => x.ID == PROJECTID).FirstOrDefault().PROJET;
+                        SaveWordVirement(fileName, Montantglob, virementInfos, projetName);
                         contacts.Add(pmtinf);
                         string sml = contacts.ToString(SaveOptions.None);
                         fs.Write(info, 0, info.Length);
@@ -1154,7 +1180,11 @@ namespace apptab.Extension
                         info = new UTF8Encoding(true).GetBytes("\r\n\t</Document>");
 
                         fs.Write(info, 0, info.Length);
-
+                        foreach (var bnfrc in beneficiaires)
+                        {
+                            bnfrc.ETAT = "1";
+                            db.SaveChanges();
+                        }
                         //xd.LoadXml(fs.ToString());
 
                     }
@@ -1256,7 +1286,10 @@ namespace apptab.Extension
                             }
 
                         }
+                        if (Price == null)
+                        {
 
+                        }
                         if (op.Libelle.Length > 140)
                         {
                             pmtinf.Add(
@@ -1268,16 +1301,23 @@ namespace apptab.Extension
 
 
                                     new XElement("PmtTpInf",
-                                    new XElement("InstrPrty", "NORM")),//a saisir selon l'utilisateur
+                                    new XElement("InstrPrty", "NORM"),
+                                    typeDevise == 1 ? new XElement("LclInstrm", new XElement("Cd", "INTL")) : null),//a saisir selon l'utilisateur
                                     new XElement("ReqdExctnDt", ddt),
                                         new XElement("Dbtr",
                                             new XElement("Nm", formaterTexte(35, donneurOrde.DONNEUR_ORDRE).TrimEnd(' ')),
                                             new XElement("PstlAdr",
                                                 //new XElement("AdrTp", formaterTexte(35, donneurOrde.ADDRESSE1).Trim(' ').TrimEnd(' ')),
                                                 new XElement("AdrTp", "ADDR"),
-                                                new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')),
-                                                new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')),
-                                                new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).Trim(' ').TrimEnd(' ')))
+                                                !string.IsNullOrEmpty(donneurOrde.VILLE) ?
+                                                new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')) :
+                                                null,
+                                                !string.IsNullOrEmpty(donneurOrde.PAYS) ?
+                                                new XElement("Ctry", formaterTexte(35, donneurOrde.PAYS).TrimEnd(' ')) :
+                                                null,
+                                                !string.IsNullOrEmpty(donneurOrde.ADDRESSE1) ?
+                                                new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).TrimEnd(' ')) :
+                                                null)
                                         ),
                                 new XElement("DbtrAcct",
                                     new XElement("Id",
@@ -1302,15 +1342,21 @@ namespace apptab.Extension
                                      new XElement("CtrlSum", Convert.ToDecimal(String.Format("{0:0.00}", Price))),
 
                                     new XElement("PmtTpInf",
-                                    new XElement("InstrPrty", "NORM")),//a saisir selon l'utilisateur
+                                    new XElement("InstrPrty", "NORM"),
+                                    typeDevise == 1 ? new XElement("LclInstrm", new XElement("Cd", "INTL")) : null),//a saisir selon l'utilisateur),//a saisir selon l'utilisateur
                                     new XElement("ReqdExctnDt", ddt),
                                         new XElement("Dbtr",
                                             new XElement("Nm", formaterTexte(35, donneurOrde.DONNEUR_ORDRE).TrimEnd(' ')),
                                             new XElement("PstlAdr",
                                                 new XElement("AdrTp", "ADDR"),
-                                                new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')),
-                                                new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')),
-                                                new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).TrimEnd(' ')))
+                                                !string.IsNullOrEmpty(donneurOrde.VILLE) ?
+                                                new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')) :
+                                                null,
+                                                !string.IsNullOrEmpty(donneurOrde.PAYS) ?
+                                                new XElement("Ctry", formaterTexte(35, donneurOrde.PAYS).TrimEnd(' ')) :
+                                                null,
+                                                !string.IsNullOrEmpty(donneurOrde.ADDRESSE1) ? new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).TrimEnd(' ')) : null
+                                                )
                                         ),
                                 new XElement("DbtrAcct",
                                     new XElement("Id",
@@ -1335,15 +1381,16 @@ namespace apptab.Extension
                                          new XElement("CtrlSum", Convert.ToDecimal(String.Format("{0:0.00}", Price))),
 
                                         new XElement("PmtTpInf",
-                                        new XElement("InstrPrty", "NORM")),//a saisir selon l'utilisateur
+                                        new XElement("InstrPrty", "NORM"), 
+                                        typeDevise == 1 ? new XElement("LclInstrm", new XElement("Cd", "INTL")) : null),//a saisir selon l'utilisateur
                                         new XElement("ReqdExctnDt", ddt),
                                             new XElement("Dbtr",
                                                 new XElement("Nm", formaterTexte(35, donneurOrde.DONNEUR_ORDRE).TrimEnd(' ')),
                                                 new XElement("PstlAdr",
                                                     new XElement("AdrTp", "ADDR"),
-                                                    new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')),
-                                                    new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')),
-                                                    new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).TrimEnd(' ')))
+                                                    !string.IsNullOrEmpty(donneurOrde.VILLE) ? new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')) : null,
+                                                    !string.IsNullOrEmpty(donneurOrde.PAYS) ? new XElement("Ctry", formaterTexte(35, donneurOrde.PAYS).TrimEnd(' ')) : null,
+                                                    !string.IsNullOrEmpty(donneurOrde.ADDRESSE1) ? new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).TrimEnd(' ')) : null)
                                             ),
                                     new XElement("DbtrAcct",
                                         new XElement("Id",
@@ -1370,15 +1417,16 @@ namespace apptab.Extension
                                         new XElement("CtrlSum", Convert.ToDecimal(String.Format("{0:0.00}", Price))),
 
                                         new XElement("PmtTpInf",
-                                        new XElement("InstrPrty", "NORM")),//a saisir selon l'utilisateur
+                                        new XElement("InstrPrty", "NORM"), 
+                                        typeDevise == 1 ? new XElement("LclInstrm", new XElement("Cd", "INTL")) : null),//a saisir selon l'utilisateur
                                         new XElement("ReqdExctnDt", ddt),
                                             new XElement("Dbtr",
                                                 new XElement("Nm", formaterTexte(35, donneurOrde.DONNEUR_ORDRE).TrimEnd(' ')),
                                                 new XElement("PstlAdr",
                                                     new XElement("AdrTp", "ADDR"),
-                                                    new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')),
+                                                    !string.IsNullOrEmpty(donneurOrde.VILLE) ? new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')) : null,
                                                     new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')),
-                                                    new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).TrimEnd(' ')))
+                                                    !string.IsNullOrEmpty(donneurOrde.ADDRESSE1) ? new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).TrimEnd(' ')) : null)
                                             ),
                                     new XElement("DbtrAcct",
                                         new XElement("Id",
@@ -1396,6 +1444,7 @@ namespace apptab.Extension
                         RTIERS rswift = new RTIERS();
                         foreach (var item in beneficiaires)
                         {
+                            ccyiso = "";
                             var opop = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.NUM && a.NUMEREG == bnfr.NUMEREG).FirstOrDefault();
 
                             var regle = (from journl in tom.RJL1
@@ -1416,6 +1465,18 @@ namespace apptab.Extension
                                 {
                                     ccyiso = tom.RPROJET.FirstOrDefault().MONNAIERAPP;
                                 }
+                                else if (typeDevise == 2)
+                                {
+                                    ccyiso = "MGA";
+                                }
+                            }
+                            else
+                            {
+                                ccyiso = "MGA";
+                            }
+                            if (ccyiso == "" || ere == null)
+                            {
+                                return new ISO20022xml() { Fichier = null, Chemin = "", NomFichier = "Veuillez vérifier votre donnée car " + item.NUM + "RPROJET colonne MONNAIERAPP /FOP colonne DEVISE sont des colonne vide " };
                             }
                             //eto no miverina virment
                             if (opop.AUTREOP == true)
@@ -1678,6 +1739,7 @@ namespace apptab.Extension
                             }
                             else
                             {
+                                string IbanPayemenUSD = "";
                                 if (devise)
                                 {
                                     if (typeDevise == 0)
@@ -1685,19 +1747,39 @@ namespace apptab.Extension
                                         //ccyiso = tom.RPROJET.Select(x => x.MONNAIELOC).FirstOrDefault();
                                         ccyiso = tom.FOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().DEVISE;
                                         ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().MONTANTDEV));
+                                        beficPrice = ere;
+                                    }//a verifier si ca marche
+                                    else if(typeDevise == 2)
+                                    {
+                                        ccyiso = "MGA";
+                                        ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().MONTANTLOC));
+                                        beficPrice = ere;
+
                                     }
                                     else
                                     {//USD USD
                                         ccyiso = tom.RPROJET.Select(x => x.MONNAIERAPP).FirstOrDefault();
                                         ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().MONTANTRAP));
+                                        beficPrice = ere;
                                     }
                                 }
                                 else
                                 {
                                     ccyiso = tom.RPROJET.Select(x => x.MONNAIELOC).FirstOrDefault();
                                 }
-
+                                if (ccyiso == "" || ere == null)
+                                {
+                                    return new ISO20022xml() { Fichier = null, Chemin = "", NomFichier = "Veuillez vérifier votre donnée car " + item.NUM + "RPROJET MONTANTDEV /MOP MONTANTRAP sont des colonne vide " };
+                                }
                                 rswift = tom.RTIERS.Where(a => a.AUXI == item.AUXI).FirstOrDefault();
+                                if (typeDevise == 1)
+                                {
+                                    IbanPayemenUSD = rswift.BQIBAN;
+                                }
+                                else
+                                {
+                                    IbanPayemenUSD = item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE;
+                                }
                                 if (item.BENEFICIAIRE.Length > 140)
                                 {
                                     pmtinf.Add(
@@ -1714,7 +1796,9 @@ namespace apptab.Extension
                                             new XElement("ChrgBr", "SHAR"),
                                             new XElement("CdtrAgt",
                                                 new XElement("FinInstnId",
-                                                    new XElement("BIC", rswift.BQSWIFT)
+                                                    new XElement("BIC", rswift.BQSWIFT),
+                                                    typeDevise == 1 ? new XElement("Nm",rswift.BQNOM) : null,
+                                                    typeDevise == 1 ? new XElement("PstlAdr",new XElement("TwnNm",rswift.BQVILLE),new XElement("Ctry",rswift.PAYS),new XElement("AdrLine",rswift.AD1)):null
                                                 )
                                             ),
                                             new XElement("Cdtr",
@@ -1730,12 +1814,9 @@ namespace apptab.Extension
                                                     )
                                             ),
                                             new XElement("CdtrAcct",
-                                                new XElement("Id",
-                                                    new XElement("Othr",
-                                                        new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE)
-                                                    )
-                                                )
-                                            ),
+                                            intbasetype == 1 ?
+                                            new XElement("Id", new XElement("IBAN", IbanPayemenUSD)) :
+                                            new XElement("Id", new XElement("Othr",new XElement("Id", IbanPayemenUSD)))),
                                              new XElement("RmtInf",
                                                 new XElement("Ustrd", formaterTexte(140, item.LIBELLE).TrimEnd(' '))
                                              )
@@ -1756,9 +1837,16 @@ namespace apptab.Extension
                                             ),
 
                                             new XElement("ChrgBr", "SHAR"),
-                                            new XElement("CdtrAgt",
+                                             //new XElement("CdtrAgt",
+                                             //    new XElement("FinInstnId",
+                                             //        new XElement("BIC", rswift.BQSWIFT)
+                                             //    )
+                                             //),
+                                             new XElement("CdtrAgt",
                                                 new XElement("FinInstnId",
-                                                    new XElement("BIC", rswift.BQSWIFT)
+                                                    new XElement("BIC", rswift.BQSWIFT),
+                                                    typeDevise == 1 ? new XElement("Nm", rswift.BQNOM) : null,
+                                                    typeDevise == 1 ? new XElement("PstlAdr", new XElement("TwnNm", rswift.BQVILLE), new XElement("Ctry", rswift.PAYS), new XElement("AdrLine", rswift.AD1)) : null
                                                 )
                                             ),
                                             new XElement("Cdtr",
@@ -1773,12 +1861,10 @@ namespace apptab.Extension
                                                     )
                                             ),
                                             new XElement("CdtrAcct",
-                                                new XElement("Id",
-                                                    new XElement("Othr",
-                                                        new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE)
-                                                    )
-                                                )
-                                            ),
+                                                 intbasetype == 1 ?
+                                                 new XElement("Id", new XElement("IBAN", IbanPayemenUSD)) :
+                                                 new XElement("Id", new XElement("Othr", new XElement("Id", IbanPayemenUSD)))),
+
                                              new XElement("RmtInf",
                                                 new XElement("Ustrd", formaterTexte(140, item.LIBELLE).TrimEnd(' '))
                                              )
@@ -1799,9 +1885,16 @@ namespace apptab.Extension
                                             ),
 
                                             new XElement("ChrgBr", "SHAR"),
-                                            new XElement("CdtrAgt",
+                                             //new XElement("CdtrAgt",
+                                             //    new XElement("FinInstnId",
+                                             //        new XElement("BIC", rswift.BQSWIFT)
+                                             //    )
+                                             //),
+                                             new XElement("CdtrAgt",
                                                 new XElement("FinInstnId",
-                                                    new XElement("BIC", rswift.BQSWIFT)
+                                                    new XElement("BIC", rswift.BQSWIFT),
+                                                    typeDevise == 1 ? new XElement("Nm", rswift.BQNOM) : null,
+                                                    typeDevise == 1 ? new XElement("PstlAdr", new XElement("TwnNm", rswift.BQVILLE), new XElement("Ctry", rswift.PAYS), new XElement("AdrLine", rswift.AD1)) : null
                                                 )
                                             ),
                                             new XElement("Cdtr",
@@ -1815,11 +1908,9 @@ namespace apptab.Extension
                                                     )
                                             ),
                                             new XElement("CdtrAcct",
-                                                new XElement("Id",
-                                                    new XElement("Othr",
-                                                        new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE)
-                                                    )
-                                                )
+                                                 intbasetype == 1 ?
+                                                 new XElement("Id", new XElement("IBAN", IbanPayemenUSD)) :
+                                                 new XElement("Id", new XElement("Othr", new XElement("Id", IbanPayemenUSD)))
                                             ),
                                              new XElement("RmtInf",
                                                 new XElement("Ustrd", formaterTexte(140, item.LIBELLE).TrimEnd(' '))
@@ -1841,9 +1932,16 @@ namespace apptab.Extension
                                             ),
 
                                             new XElement("ChrgBr", "SHAR"),
-                                            new XElement("CdtrAgt",
+                                             //new XElement("CdtrAgt",
+                                             //    new XElement("FinInstnId",
+                                             //        new XElement("BIC", rswift.BQSWIFT)
+                                             //    )
+                                             //),
+                                             new XElement("CdtrAgt",
                                                 new XElement("FinInstnId",
-                                                    new XElement("BIC", rswift.BQSWIFT)
+                                                    new XElement("BIC", rswift.BQSWIFT),
+                                                    typeDevise == 1 ? new XElement("Nm", rswift.BQNOM) : null,
+                                                    typeDevise == 1 ? new XElement("PstlAdr", new XElement("TwnNm", rswift.BQVILLE), new XElement("Ctry", rswift.PAYS), new XElement("AdrLine", rswift.AD1)) : null
                                                 )
                                             ),
                                             new XElement("Cdtr",
@@ -1857,11 +1955,9 @@ namespace apptab.Extension
                                             ),
 
                                             new XElement("CdtrAcct",
-                                                new XElement("Id",
-                                                    new XElement("Othr",
-                                                        new XElement("Id", item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE)
-                                                    )
-                                                )
+                                                intbasetype == 1 ?
+                                                new XElement("Id", new XElement("IBAN", IbanPayemenUSD)) :
+                                                new XElement("Id", new XElement("Othr", new XElement("Id", IbanPayemenUSD)))
                                             ),
                                              new XElement("RmtInf",
                                                 new XElement("Ustrd", formaterTexte(140, item.LIBELLE).TrimEnd(' '))
@@ -1881,7 +1977,7 @@ namespace apptab.Extension
                                 dateDemander = item.DATE.ToString(),
                                 etat = "Envoyer a Banque via SFTP",
                                 Compte = item.GUICHET + item.RIB + item.CLE,
-                                CompteCredit = donneurOrde.CODE_GUICHET + donneurOrde.CODE_BANQUE  + donneurOrde.NUM_COMPTE + donneurOrde.CLE,
+                                CompteCredit = donneurOrde.CODE_GUICHET + donneurOrde.CODE_BANQUE + donneurOrde.NUM_COMPTE + donneurOrde.CLE,
                                 CompteDebiteur = item.GUICHET + item.RIB + item.CLE,
                                 motif = item.LIBELLE,
                                 references = fileName,
@@ -1889,7 +1985,8 @@ namespace apptab.Extension
                             });
                             //SaveWordVirement(item.NUM, DateTime.Now.ToString(), montant.ToString(), item.LIBELLE, item.DATE.ToString(), item.ETAT, item.NUM_ETABLISSEMENT + item.GUICHET + item.RIB + item.CLE, op.Libelle, donneurOrde.NUM_COMPTE, fileName,item.BENEFICIAIRE);
                         }
-                        SaveWordVirement(fileName, Montantglob, virementInfos);
+                        string projetName = db.SI_PROJETS.Where(x => x.ID == PROJECTID).FirstOrDefault().PROJET;
+                        SaveWordVirement(fileName, Montantglob, virementInfos, projetName);
                         contacts.Add(pmtinf);
                         string sml = contacts.ToString(SaveOptions.None);
                         fs.Write(info, 0, info.Length);
@@ -1898,7 +1995,11 @@ namespace apptab.Extension
                         info = new UTF8Encoding(true).GetBytes("\r\n\t</Document>");
 
                         fs.Write(info, 0, info.Length);
-
+                        foreach (var bnfrc in beneficiaires)
+                        {
+                            bnfrc.ETAT = "1";
+                            db.SaveChanges();
+                        }
                         //xd.LoadXml(fs.ToString());
 
                     }
@@ -5371,10 +5472,10 @@ namespace apptab.Extension
             public string references { get; set; }
             public string bene { get; set; }
         }
-        public void SaveWordVirement(string reference, decimal? Montantglob, List<VirementInfo> virementInfos)
+        public void SaveWordVirement(string reference, decimal? Montantglob, List<VirementInfo> virementInfos, string projetName)
         {
             // Chemin d'accès au modèle de document
-            var pth = AppDomain.CurrentDomain.BaseDirectory + "Canvas Virements.docx";
+            var pth = AppDomain.CurrentDomain.BaseDirectory + "//FILERESULT//" + "/BANQUE/" + projetName + "/Canvas Virements.docx";
             string destinationFilePath = AppDomain.CurrentDomain.BaseDirectory + "//FILERESULT//" + reference + ".docx";
 
             try
@@ -5524,6 +5625,29 @@ namespace apptab.Extension
             return table;
         }
 
+        static void ReplaceImageInWordDocument(string documentPath, string newImagePath)
+        {
+            using (WordprocessingDocument wordDoc = WordprocessingDocument.Open(documentPath, true))
+            {
+                var mainPart = wordDoc.MainDocumentPart;
 
+                // Rechercher les images dans le document
+                var imageParts = mainPart.ImageParts.ToList();
+
+                foreach (var imagePart in imageParts)
+                {
+                    // Remplacer l'image par une nouvelle image
+                    using (FileStream stream = new FileStream(newImagePath, FileMode.Open))
+                    {
+                        imagePart.FeedData(stream);
+                    }
+                }
+
+                // Sauvegarder les modifications dans le document Word
+                wordDoc.MainDocumentPart.Document.Save();
+            }
+
+            Console.WriteLine("Image remplacée avec succès !");
+        }
     }
 }

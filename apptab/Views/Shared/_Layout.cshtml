@@ -793,6 +793,19 @@
                                             </a>
                                         </li>
                                     }
+                                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                    || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
+                                    && (int.Parse(Session["RTDB12"].ToString()) != 0 && int.Parse(Session["TDB12i"].ToString()) == 1)))
+                                    {
+                                        <li class="nav-item">
+                                            <a href="../Home/CancelHisto" class="nav-link" data-child-id="5">
+                                                <i class="nav-icon fa fa-ban" style="color: #4970cb"></i>
+                                                <p>
+                                                    @Session["TDB12"]@*Anullation de payement*@
+                                                </p>
+                                            </a>
+                                        </li>
+                                    }
 
                                 </ul>
                             </div>
@@ -1052,19 +1065,7 @@
                                         </li>
                                     }
 
-                                    @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
-                                        || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
-                                        && (int.Parse(Session["RTDB12"].ToString()) != 0 && int.Parse(Session["TDB12i"].ToString()) == 1)))
-                                    {
-                                        <li class="nav-item">
-                                            <a href="../Home/CancelHisto" class="nav-link" data-child-id="5">
-                                                <i class="nav-icon fa fa-ban" style="color: #4970cb"></i>
-                                                <p>
-                                                    @Session["TDB12"]@*Anullation de payement*@
-                                                </p>
-                                            </a>
-                                        </li>
-                                    }
+                                    @*annulation payement*@
 
                                     @if (((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
                                         || (((Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE != apptab.Role.Administrateur)
@@ -1312,21 +1313,62 @@
                    
                 }
             }
-            setInterval(function () {
-                fetch('/Home/CheckSession')  // Route côté serveur pour vérifier la session
+            let sessionCheckInterval;
+            let inactivityTimeout;
+
+            // Fonction pour vérifier la session
+            function checkSession() {
+                fetch('/Home/CheckSession')
                     .then(response => {
-                        console.log(response);
-                        if (!response.null) {
-                            // Si la réponse n'est pas OK, cela signifie que la session a expiré
-                            console.log(response);
-                            window.location.href = window.location.origin;  // Redirige vers la page de login
+                        if (!response.ok) {
+                            throw new Error('Session expirée ou problème serveur');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log(data);
+                        if (!data.isSessionActive) {
+                            window.location.href = window.location.origin; // Redirige vers la page de login
                         }
                     })
                     .catch(error => {
                         console.error('Erreur de vérification de session:', error);
-                        window.location.href = window.location.origin;  // Redirige vers la page de login en cas d'erreur
+                        window.location.href = window.location.origin;
                     });
-            }, 300000);  // Vérifier chaque minute (60000 ms)
+            }
+
+            // Fonction pour démarrer le `setInterval`
+            function startSessionCheck() {
+                
+                if (!sessionCheckInterval) {
+                    sessionCheckInterval = setInterval(checkSession, 60000); // Vérifie la session toutes les 60 secondes
+                }
+            }
+
+            // Fonction pour arrêter le `setInterval`
+            function stopSessionCheck() {
+                if (sessionCheckInterval) {
+                    clearInterval(sessionCheckInterval);
+                    sessionCheckInterval = null;
+                }
+            }
+
+            // Fonction pour détecter l'activité utilisateur
+            function userInteracted() {
+                stopSessionCheck(); // Dès qu'il y a une interaction, on stoppe le `setInterval`
+
+                // Réactive la vérification après 5 minutes d'inactivité
+                clearTimeout(inactivityTimeout);
+                inactivityTimeout = setTimeout(startSessionCheck, 300000); // 300000 ms = 5 minutes
+            }
+
+            // Ajouter les écouteurs d'événements pour détecter l'activité utilisateur
+            document.addEventListener('mousemove', userInteracted);
+            document.addEventListener('keydown', userInteracted);
+            document.addEventListener('click', userInteracted);
+
+            // Lancer la vérification de session au début
+            startSessionCheck();
 
         </script>
     </body>

@@ -542,6 +542,7 @@ namespace apptab.Controllers
                 }
 
                 var crpto = db.SI_USERS.Where(a => listeid.Contains(a.ID) && a.DELETIONDATE == null).ToList();
+                //var crpto = db.SI_USERS.Join().Where(a => listeid.Contains(a.ID) && a.DELETIONDATE == null).ToList();
 
                 if (crpto != null)
                 {

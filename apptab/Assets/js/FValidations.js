@@ -478,12 +478,17 @@ function getelementISO2022(a, list) {
             },
             success: function (result) {
                 //var Datas = JSON.parse(result);
+                if (result.type === "error") {
+                    alert(result.msg);
+                    return; // Arrêter l'exécution si c'est une erreur
+                }
                 let blobUrl = URL.createObjectURL(result);
 
                 GetFileNameAnarana(blobUrl);
                 //window.location = '/Home/GetFile?file=""';
                 $('#verification-modal').modal('toggle');
                 loader.addClass('display-none');
+               
             },
             Error: function (_, e) {
                 alert(e);
@@ -821,7 +826,7 @@ $(document).on("change", "[code-project]", () => {
     $('#commercial').html('');
     GetTypeP();
     GetListCodeJournal();
-    LoadValidate();
+    //LoadValidate();
 });
 
 $(document).on("change", "[auxi-list]", () => {
@@ -1187,7 +1192,7 @@ $('[data-action="ChargerJs"]').click(function () {
                 }
             },
             error: function () {
-                alert("Problème de connexion. ");
+                alert("Veuillez verifier votre Parametrage TOMATE ");
             }
         });
 
@@ -1397,7 +1402,7 @@ $('[data-action="ChargerJs"]').click(function () {
                 }
             },
             error: function () {
-                alert("Problème de connexion. ");
+                alert("Veuillez verifier votre Parametrage TOMATE ");
             }
         });
     }
@@ -1468,7 +1473,7 @@ $('[data-action="GetElementChecked"]').click(function () {
             }
         },
         error: function () {
-            alert("Problème de connexion. ");
+            alert("Veuillez verifier votre Parametrage TOMATE ");
         }
     });
 
@@ -1540,7 +1545,7 @@ $('[data-action="GetAnomalieListes"]').click(function () {
 
         },
         error: function () {
-            alert("Problème de connexion. ");
+            alert("Veuillez verifier votre Parametrage TOMATE ");
         }
     });
 });
@@ -1853,7 +1858,23 @@ function GetTypeBtn() {
             }
         },
         error: function () {
-            alert("Problème de connexion. ");
+            alert("Veuillez verifier votre Parametrage TOMATE ");
         }
     });
 };
+
+//setInterval(function () {
+//    fetch('/Home/CheckSession')  // Route côté serveur pour vérifier la session
+//        .then(response => {
+//            console.log(response);
+//            if (!response.null) {
+//                // Si la réponse n'est pas OK, cela signifie que la session a expiré
+//                console.log(response);
+//                window.location.href = window.location.origin;  // Redirige vers la page de login
+//            }
+//        })
+//        .catch(error => {
+//            console.error('Erreur de vérification de session:', error);
+//            window.location.href = window.location.origin;  // Redirige vers la page de login en cas d'erreur
+//        });
+//}, 900000);  // Vérifier chaque minute (60000 ms)
