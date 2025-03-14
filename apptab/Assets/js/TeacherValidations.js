@@ -1315,7 +1315,12 @@ function getelementCheckJs(){
     });
 
 }
-
+$(document).ready(function () {
+    $("#comptaG").select2({
+        placeholder: "Rechercher...",
+        allowClear: true
+    });
+});
 $('[data-action="SaveV"]').click(function () {
     let CheckList = $(`[compteg-ischecked]:checked`).closest("tr");
 

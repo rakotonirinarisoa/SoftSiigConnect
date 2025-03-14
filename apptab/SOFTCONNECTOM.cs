@@ -74,6 +74,7 @@ namespace apptab
         public virtual DbSet<RSITE> RSITE { get; set; }
         public virtual DbSet<GA_AVANCE_COMPLEMENT> GA_AVANCE_COMPLEMENT { get; set; }
         public virtual DbSet<RBANQUES> RBANQUES { get; set; }
+        public virtual DbSet<RUSER> RUSER { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CPTADMIN_FAUTREOPERATION>()
@@ -1203,6 +1204,25 @@ namespace apptab
             modelBuilder.Entity<RPLAN6>()
                 .Property(e => e.IMPORTID)
                 .HasPrecision(18, 0);
+            modelBuilder.Entity<RUSER>()
+                .Property(e => e.SITE)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RUSER>()
+                .Property(e => e.JOURNAL)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RUSER>()
+                .Property(e => e.JOURNALBROUILLARD)
+                .IsUnicode(false);
+
+            modelBuilder.Entity<RUSER>()
+                .Property(e => e.SEUILMINNUMENREG)
+                .HasPrecision(30, 0);
+
+            modelBuilder.Entity<RUSER>()
+                .Property(e => e.SEUILMINNUMENREGBUDGET)
+                .HasPrecision(30, 0);
         }
     }
 }

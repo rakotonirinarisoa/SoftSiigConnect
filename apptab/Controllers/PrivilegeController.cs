@@ -541,12 +541,16 @@ namespace apptab.Controllers
                         listeid.Add(item.IDUS.Value);
                 }
 
+                List<SI_USERS> users_si = new List<SI_USERS>();
+                var filterSite = db.SI_SITE.Where(x=>x.IDPROJET == crpt ).Select(x=> x.IDUSER).ToList();
+                users_si = db.SI_USERS.Where(a => listeid.Contains(a.ID) && a.DELETIONDATE == null && !filterSite.Contains(a.ID)).ToList();
                 var crpto = db.SI_USERS.Where(a => listeid.Contains(a.ID) && a.DELETIONDATE == null).ToList();
+
                 //var crpto = db.SI_USERS.Join().Where(a => listeid.Contains(a.ID) && a.DELETIONDATE == null).ToList();
 
-                if (crpto != null)
+                if (users_si != null)
                 {
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { etat = crpto, IDP = crpt } }, settings));
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = new { etat = users_si, IDP = crpt } }, settings));
                 }
                 else
                 {

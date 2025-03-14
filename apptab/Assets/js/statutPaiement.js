@@ -228,7 +228,12 @@ function emptyTable() {
         buttons: ['colvis']
     });
 }
-
+$(document).ready(function () {
+    $("#comptaG").select2({
+        placeholder: "Rechercher...",
+        allowClear: true
+    });
+});
 $('[data-action="GenereLISTE"]').click(function () {
     let dd = $("#dateD").val();
     let df = $("#dateF").val();

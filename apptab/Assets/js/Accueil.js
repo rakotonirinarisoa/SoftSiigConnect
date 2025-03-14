@@ -299,7 +299,12 @@ function GetListCompG() {
         }
     });
 }
-
+$(document).ready(function () {
+    $("#comptaG").select2({
+        placeholder: "Rechercher...",
+        allowClear: true
+    });
+});
 function GetListCodeJournal() {
     let formData = new FormData();
 

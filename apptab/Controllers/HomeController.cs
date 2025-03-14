@@ -43,6 +43,8 @@ using System.Runtime.InteropServices;
 using Microsoft.CodeAnalysis;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using static System.Net.WebRequestMethods;
+using DocumentFormat.OpenXml.Bibliography;
+using System.Data.SqlClient;
 
 namespace apptab.Controllers
 {
@@ -81,7 +83,7 @@ namespace apptab.Controllers
         {
             ViewBag.Controller = "Génération fichier banque";
             return View();
-        } 
+        }
         public ActionResult BanqueCreate()
         {
             ViewBag.Controller = "Creation Liste Banque";
@@ -258,10 +260,10 @@ namespace apptab.Controllers
             }
             catch (Exception ex)
             {
-                
+
                 throw;
             }
-           
+
         }
 
         public FileResult CreateFileAFBXML(string pathchemin, string pathfiles)
@@ -321,7 +323,7 @@ namespace apptab.Controllers
             //return File(source, System.Net.Mime.MediaTypeNames.Application.Octet);
         }
         [HttpPost]
-        public ActionResult CreateZipFile(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte , string journal , int banqueid)
+        public ActionResult CreateZipFile(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte, string journal, int banqueid)
         {
             AFB160 aFB160 = new AFB160();
 
@@ -412,7 +414,7 @@ namespace apptab.Controllers
                     send = CreateAFBTXT(pathfile.Chemin, pathfile.Fichier);
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID).FirstOrDefault();
                     string pport = ftp.PORT.ToString();
-                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport, intbasetype, PROJECTID, journal,ftp.BANQUE);
+                    SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, ftp.PATH, pport, intbasetype, PROJECTID, journal, ftp.BANQUE);
                     if (avalider != null)
                     {
                         foreach (var item in avalider)
@@ -624,7 +626,7 @@ namespace apptab.Controllers
             }
         }
         [HttpPost]
-        public ActionResult CreateZipFileISO2022(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte, int typeDevise , int banqueid)
+        public ActionResult CreateZipFileISO2022(SI_USERS suser, string codeproject, int intbasetype, bool devise, string codeJ, string baseName, string listCompte, int typeDevise, int banqueid)
         {
             AFB160 aFB160 = new AFB160();
             XmlDocument xmlResult = new XmlDocument();
@@ -657,7 +659,7 @@ namespace apptab.Controllers
             projetName = db.SI_PROJETS.Where(x => x.ID == PROJECTID).FirstOrDefault().PROJET;
             if (intbasetype == 3 || intbasetype == 4)//ISO crypter RSA
             {
-              
+
                 var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype, banqueid);
                 if (pathfile.Fichier == null)
                 {
@@ -668,19 +670,21 @@ namespace apptab.Controllers
                 //send = CreateAFBTXT(pathfile.Chemin, pathfile.NomFichier);
 
                 xmlResult = SaveDocument(Anarana, Anarana);
-                if (rbanque.CODEBIC.Contains("BOA"))
+                if (rbanque.CODEBIC.Contains("BOA") || rbanque.CODEBIC.Contains("AFRIMGMG"))
                 {
                     directory = "BANQUE/" + projetName + "/BOA";
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BOA").FirstOrDefault();
                     string pport = ftp.PORT.ToString();
                     SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory, ftp.BANQUE);
-                }else if (rbanque.CODEBIC.Contains("BNI"))
+                }
+                else if (rbanque.CODEBIC.Contains("CLMDMGMG"))
                 {
                     directory = "BANQUE/" + projetName + "/BNI";
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BNI").FirstOrDefault();
                     string pport = ftp.PORT.ToString();
                     SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory, ftp.BANQUE);
-                }else if(rbanque.CODEBIC.Contains("BFAV"))
+                }
+                else if (rbanque.CODEBIC.Contains("BFAV"))
                 {
                     directory = "BANQUE/" + projetName + "/SG";
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "SG").FirstOrDefault();
@@ -727,7 +731,7 @@ namespace apptab.Controllers
 
                 directory = "BANQUE/" + projetName + "/BOA";
                 xmlResult = SaveDocument(Anarana, Anarana);
-                if (rbanque.CODEBIC.Contains("BOA"))
+                if (rbanque.CODEBIC.Contains("BOA") || rbanque.CODEBIC.Contains("AFRIMGMG"))
                 {
                     var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BOA").FirstOrDefault();
                     string pport = ftp.PORT.ToString();
@@ -815,7 +819,7 @@ namespace apptab.Controllers
                         //xmlResult = SaveDocument(Anarana, Anarana);
                         SaveDocument(Anarana, Anarana);
                     }
-                  
+
                     if (avalider != null)
                     {
                         foreach (var item in avalider)
@@ -852,10 +856,12 @@ namespace apptab.Controllers
                     if (rbanque.CODEBIC.Contains("CLMDMGMG"))
                     {
                         directory = "BANQUE/" + projetName + "/BNI";
-                    }else if (rbanque.CODEBIC.Contains("BF"))
+                    }
+                    else if (rbanque.CODEBIC.Contains("BF"))
                     {
                         directory = "BANQUE/" + projetName + "/SG";
-                    }else if (rbanque.CODEBIC.Contains("BMOI"))
+                    }
+                    else if (rbanque.CODEBIC.Contains("BMOI"))
                     {
                         directory = "BANQUE/" + projetName + "/BMOI";
                     }
@@ -884,7 +890,7 @@ namespace apptab.Controllers
                             }
                         }
                     }
-                    if (rbanque.CODEBIC.Contains("BOA"))
+                    if (rbanque.CODEBIC.Contains("BOA") || rbanque.CODEBIC.Contains("AFRIMGMG"))
                     {
                         var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BOA").FirstOrDefault();
                         string pport = ftp.PORT.ToString();
@@ -895,18 +901,18 @@ namespace apptab.Controllers
                         directory = "BANQUE/" + projetName + "/BNI";
                         var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BNI").FirstOrDefault();
                         string pport = ftp.PORT.ToString();
-                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory,ftp.BANQUE);
+                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory, ftp.BANQUE);
                     }
                     else if (rbanque.CODEBIC.Contains("BFAV"))
                     {
                         directory = "BANQUE/" + projetName + "/SG";
                         var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "SG").FirstOrDefault();
                         string pport = ftp.PORT.ToString();
-                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory,ftp.BANQUE);
+                        SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory, ftp.BANQUE);
                     }
                     else if (rbanque.CODEBIC.Contains("BMOI"))
                     {
-                        
+
                         directory = "BANQUE/" + projetName + "/BMOI";
                         var ftp = db.OPA_FTP.Where(x => x.IDPROJET == PROJECTID && x.BANQUE == "BMOI").FirstOrDefault();
                         string pport = ftp.PORT.ToString();
@@ -923,14 +929,14 @@ namespace apptab.Controllers
             {
                 path = path.Replace("xml", "docx");
                 // Chemin complet du fichier
-                string pathDown =  path;
-                
+                string pathDown = path;
+
                 // Vérifier si le fichier existe
                 if (!System.IO.File.Exists(pathDown))
                 {
                     return HttpNotFound("Le fichier n'a pas été trouvé.");
                 }
-               
+
                 // Créer un objet FileInfo pour obtenir des informations supplémentaires sur le fichier
                 FileInfo fi = new FileInfo(pathDown);
                 string fileName = Path.GetFileNameWithoutExtension(fi.Name) + ".docx"; // Forcer l'extension .docx
@@ -1106,7 +1112,7 @@ namespace apptab.Controllers
             {
                 var idReglements = new HashSet<string>(hstSiig.Select(h => h.IDREGLEMENT));
                 var tomproresult = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site)
-                    .DistinctBy(x => (x.No ,x.NUMEREG))
+                    .DistinctBy(x => (x.No, x.NUMEREG))
                     .ToList();
                 foreach (var s1 in tomproresult)
                 {
@@ -1122,8 +1128,8 @@ namespace apptab.Controllers
                     else
                     {
                         // Si s1.No est dans hstSiig, vérifier si NUMEREG est différent
-                        var correspondingItem = hstSiig.FirstOrDefault(h => h.IDREGLEMENT == s1.No);
-                        if (correspondingItem != null && !correspondingItem.NUMEREG.Contains(s1.NUMEREG.ToString()))
+                        var correspondingItem = hstSiig.FirstOrDefault(h => h.IDREGLEMENT == s1.No && h.NUMEREG == s1.NUMEREG.ToString());
+                        if (correspondingItem != null && !correspondingItem.NUMEREG.Contains(s1.No) && !correspondingItem.NUMEREG.Contains(s1.NUMEREG.ToString()))
                         {
                             // Ajouter s1 à la liste s'il n'est pas déjà présent
                             if (!list.Any(dp => dp.No == s1.No && dp.NUMEREG == s1.NUMEREG))
@@ -1196,7 +1202,69 @@ namespace apptab.Controllers
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
             var siteS = db.SI_SITE.Where(ST => ST.IDUSER == exist.ID && ST.IDPROJET == crpt).Select(ST => ST.SITE).FirstOrDefault();
+            //var ruserJournalq = tom.RUSER.ToList();
+            //var ruserJournal = tom.RUSER.Where(x => siteS.Contains(x.SITE)).Select(x => x.JOURNAL).FirstOrDefault();
+            //List<RUSER> ruserJournal = new List<RUSER>();
+            //foreach (var item in siteS.Split(','))
+            //{
+            //    string a = item.ToString();
+            //    ruserJournal.AddRange(tom.RUSER.Where(x => x.SITE.Contains(a)).ToList());
+            //}
+            //ruserJournal.Where(x=> x.JOURNAL != "" && x.JOURNAL != null);
+            //ruserJournal = tom.RUSER
+            //    .Where(x => siteS.Contains(x.SITE))
+            //    .AsEnumerable() // Force l'exécution en mémoire
+            //    .Select(x => x.JOURNAL != null ? x.JOURNAL.ToString() : null)
+            //    .FirstOrDefault();
+            //List<string>jjournal = new List<string>();
+            //foreach (var item in ruserJournal)
+            //{
+            //    if (item.JOURNAL != "" && item.JOURNAL != null)
+            //    {
+            //        jjournal.Add(item.JOURNAL);
+            //    }
+            //}
+            //List<string> TempFilter = new List<string>();
+            //if (jjournal.Count != 0)
+            //{
+            //    foreach (var item in jjournal)
+            //    {
+            //        TempFilter.AddRange(item.Split(';').Distinct());
 
+            //    }
+            //    //TempFilter.Distinct();
+            //    List<JournalViewModel> journalVirtu = new List<JournalViewModel>();
+            //    foreach (var item in TempFilter)
+            //    {
+            //        journalVirtu.AddRange(tom.RJL1.Where(x => x.JLTRESOR == true && x.NATURE == "2" && x.CODE == item).Select(x => new JournalViewModel
+            //        {
+            //            CODE = x.CODE,
+            //            LIBELLE = x.LIBELLE
+            //        }).ToList());
+            //    }
+            //    journalVirtu = journalVirtu
+            //    .GroupBy(j => j.CODE) // Regroupe par CODE
+            //    .Select(g => g.First()) // Prend le premier élément de chaque groupe
+            //    .ToList();
+
+            //    //var JournalVM = tom.RJL1.Where(x => x.JLTRESOR == true && x.NATURE == "2" && TempFilter.Contains(x.CODE)).Select(x => new
+            //    //{
+            //    //    CODE = x.CODE,
+            //    //    LIBELLE = x.LIBELLE
+            //    //}).ToList();
+
+            //    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = journalVirtu }, settings));
+            //}
+            //else
+            //{
+            //    var JournalVM = tom.RJL1.Where(x => x.JLTRESOR == true && x.NATURE == "2" ).Select(x => new
+            //    {
+            //        CODE = x.CODE,
+            //        LIBELLE = x.LIBELLE
+            //    }).ToList();
+
+            //    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = JournalVM }, settings));
+            //}
             var JournalVM = tom.RJL1.Where(x => x.JLTRESOR == true && x.NATURE == "2").Select(x => new
             {
                 CODE = x.CODE,
@@ -1204,6 +1272,11 @@ namespace apptab.Controllers
             }).ToList();
 
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = JournalVM }, settings));
+        }
+        public class JournalViewModel
+        {
+            public string CODE { get; set; }
+            public string LIBELLE { get; set; }
         }
         [HttpPost]
         public JsonResult GetCompteG(SI_USERS suser, string codeproject)
@@ -1453,7 +1526,10 @@ namespace apptab.Controllers
                         smtp.EnableSsl = true;
 
                         try { smtp.Send(mail); }
-                        catch (Exception) { }
+                        catch (Exception ex)
+                        {
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez vérifier l'adresse e-mail associée à cette action! Merci" }, settings));
+                        }
                     }
                 }
             }
@@ -1535,45 +1611,56 @@ namespace apptab.Controllers
 
                     if (countTraitement > 0)
                     {
-                        using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
+                        try
                         {
-                            SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
-                            smtp.UseDefaultCredentials = true;
-
-                            mail.From = new MailAddress(MailAdresse);
-
-                            mail.To.Add(MailAdresse);
-                            if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILPE != null)
+                            using (System.Net.Mail.MailMessage mail = new System.Net.Mail.MailMessage())
                             {
-                                string[] separators = { ";" };
+                                SmtpClient smtp = new SmtpClient("smtpauth.moov.mg");
+                                smtp.UseDefaultCredentials = true;
 
-                                var Tomail = mail;
-                                if (Tomail != null)
+                                mail.From = new MailAddress(MailAdresse);
+
+                                mail.To.Add(MailAdresse);
+                                if (db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILPE != null)
                                 {
-                                    string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILPE;
-                                    string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                                    string[] separators = { ";" };
 
-                                    foreach (var mailto in mailListe)
+                                    var Tomail = mail;
+                                    if (Tomail != null)
                                     {
-                                        mail.To.Add(mailto);
+                                        string listUser = db.SI_MAIL.FirstOrDefault(a => a.IDPROJET == PROJECTID && a.DELETIONDATE == null).MAILPE;
+                                        string[] mailListe = listUser.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+                                        foreach (var mailto in mailListe)
+                                        {
+                                            mail.To.Add(mailto);
+                                        }
                                     }
                                 }
-                            }
 
-                            mail.Subject = "Attente validation paiements du projet " + ProjetIntitule;
-                            mail.IsBodyHtml = true;
-                            mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " paiements en attente validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
-                                "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
+                                mail.Subject = "Attente validation paiements du projet " + ProjetIntitule;
+                                mail.IsBodyHtml = true;
+                                mail.Body = "Madame, Monsieur,<br/><br>" + "Nous vous informons que vous avez " + countTraitement + " paiements en attente validation pour le compte du projet " + ProjetIntitule + ".<br/><br>" +
+                                    "Nous vous remercions de cliquer <a href='" + lien + "'>(ici)</a> pour accéder à la plate-forme SOFT EXPENDITURES TRACKERS.<br/><br>" + "Cordialement";
 
-                            smtp.Port = 587;
-                            smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
-                            smtp.EnableSsl = true;
+                                smtp.Port = 587;
+                                smtp.Credentials = new System.Net.NetworkCredential(MailAdresse, mdpMail);
+                                smtp.EnableSsl = true;
 
-                            try { smtp.Send(mail);
+                                try
+                                {
+                                    smtp.Send(mail);
+                                }
+                                catch (Exception ex)
+                                {
+                                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez vérifier l'adresse e-mail associée à cette action! Merci" }, settings));
+                                }
                             }
-                            catch (Exception ex) {
-                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = ex.Message }, settings));
-                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            var msg = ex.Message;
+                            throw;
                         }
                     }
                 }
@@ -3687,47 +3774,82 @@ namespace apptab.Controllers
             }
             return Json(JsonConvert.SerializeObject(new { msg = "success", data = result, datebr = resultBR }));
         }
-        public void SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE, string port, int intbasetype,int PROJECTID,string directory,string AgenceBanque)
+        public void SFTP(string HOTE, string PATH, string USERFTP, string PWDFTP, string SOURCE, string port, int intbasetype, int PROJECTID, string directory, string AgenceBanque)
         {
             int pport = int.Parse(port);
             string pth = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + SOURCE;
-            
+
             string namefile = SOURCE.Split('\\').Last().Split('.').First();
             string remoteFilePath = PATH;
             var res = "";
             string outputFile = "";
 
-            if (PWDFTP == "")
+            if (PWDFTP == null)
             {
-                //string privateKeyPath = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + SOURCE;
-                string privateKeyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", directory, "RSAkeyFile.asc");
+                string privateKeyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", directory, "Rsakeybni.txt");
+                string convertedKeyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", directory, "Rsakeybni.pem");
+
+                // Vérifier et convertir la clé si nécessaire
+                if (!System.IO.File.Exists(convertedKeyPath))
+                {
+                    Console.WriteLine("🔄 Conversion de la clé privée en format PEM...");
+                    bool success = ConvertToPem(privateKeyPath, convertedKeyPath, privateKeyPath, convertedKeyPath);
+                    if (!success)
+                    {
+                        Console.WriteLine("❌ Échec de la conversion de la clé !");
+                        return;
+                    }
+                }
+
+                // Lancer l'upload via SFTP avec la clé convertie
+                if (!System.IO.File.Exists(privateKeyPath))
+                {
+                    Console.WriteLine($"❌ Clé privée manquante : {privateKeyPath}");
+                    return;
+                }
+
+                if (!System.IO.File.Exists(SOURCE))
+                {
+                    Console.WriteLine($"❌ Erreur : Fichier source introuvable à {SOURCE}");
+                    return;
+                }
+
                 try
                 {
                     using (var keyFile = new PrivateKeyFile(privateKeyPath))
-                    using (var sftp = new SftpClient(HOTE, USERFTP, new PrivateKeyFile[] { keyFile }))
+                    using (var sftp = new SftpClient(HOTE, USERFTP, keyFile))
                     {
                         sftp.Connect();
-                        Console.WriteLine("Connexion SFTP réussie !");
+                        Console.WriteLine("✅ Connexion SFTP réussie !");
 
                         using (var fileStream = new FileStream(SOURCE, FileMode.Open))
                         {
-                            //var sss =  sftp.ListDirectory("//");
-                            // Envoyer le fichier
-                            sftp.UploadFile(fileStream, remoteFilePath + "/" + namefile + ".xml", x =>
-                            {
-                                var az = x.ToString();
-                            });
-                            //Console.WriteLine("Fichier envoyé avec succès !");
+                            string remoteFileFullPath = $"{remoteFilePath}/{namefile}.xml";
+
+                            sftp.UploadFile(fileStream, remoteFileFullPath);
+                            Console.WriteLine($"✅ Fichier '{namefile}.xml' envoyé avec succès vers {remoteFileFullPath} !");
                             res = "Fichier envoyé avec succès !";
                         }
-                        Console.WriteLine("Fichier téléchargé avec succès.");
 
                         sftp.Disconnect();
+                        Console.WriteLine("✅ Déconnexion du serveur SFTP.");
                     }
+                }
+                catch (FileNotFoundException ex)
+                {
+                    Console.WriteLine($"❌ Erreur : Fichier introuvable - {ex.Message}");
+                }
+                catch (Renci.SshNet.Common.SshAuthenticationException ex)
+                {
+                    Console.WriteLine($"❌ Erreur d'authentification SFTP : {ex.Message}");
+                }
+                catch (Renci.SshNet.Common.SshException ex)
+                {
+                    Console.WriteLine($"❌ Erreur SFTP : {ex.Message}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Erreur : {ex.Message}");
+                    Console.WriteLine($"❌ Erreur générale : {ex.Message}");
                 }
             }
             else
@@ -3872,7 +3994,7 @@ namespace apptab.Controllers
             }
         }
         [HttpPost]
-        public JsonResult AlertClient(SI_USERS suser,string codeJournal ,string codeproject,string auxi,string comptaG)
+        public JsonResult AlertClient(SI_USERS suser, string codeJournal, string codeproject, string auxi, string comptaG)
         {
             int PROJECTID = int.Parse(codeproject);
             var user = db.SI_USERS.Where(x => x.LOGIN == suser.LOGIN && x.PWD == suser.PWD && x.DELETIONDATE == null).FirstOrDefault();
@@ -3910,7 +4032,7 @@ namespace apptab.Controllers
                     Alert = true;
                 }
             }
-            return Json(JsonConvert.SerializeObject(new { type = "Success",msg = "Pourriez-vous s'il vous plaît vérifier votre Parametrage dans TOM² PRO ? Il semble qu'il manque une information importante.", data = Alert }));
+            return Json(JsonConvert.SerializeObject(new { type = "Success", msg = "Pourriez-vous s'il vous plaît vérifier votre Parametrage dans TOM² PRO ? Il semble qu'il manque une information importante.", data = Alert }));
         }
         private ConnectionInfo getSftpConnection(string hOTE, string username, int port, string sOURCE)
         {
@@ -4190,7 +4312,7 @@ namespace apptab.Controllers
                     send.NOTIF = true;
                     db.SaveChanges();
 
-                    return Json(JsonConvert.SerializeObject(new { type = "success" ,msg = "Email envoyé avec succès", data = "" }));
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Email envoyé avec succès", data = "" }));
                 }
             }
             catch (SmtpException smtpEx)
@@ -4443,13 +4565,13 @@ namespace apptab.Controllers
             }
 
         }
-        public JsonResult GetListeBanqueMAD(SI_USERS suser,string codeproject)
+        public JsonResult GetListeBanqueMAD(SI_USERS suser, string codeproject)
         {
             var PROJECTID = int.Parse(codeproject);
             var B = db.OPA_BANQUE.FirstOrDefault();
             var banque = db.OPA_BANQUE.ToList();
 
-            return Json(JsonConvert.SerializeObject(new { type = "success", data = banque , msg = "" }, settings));
+            return Json(JsonConvert.SerializeObject(new { type = "success", data = banque, msg = "" }, settings));
         }
         public string GetChoixBtn(string codeproject, SI_USERS suser)
         {
@@ -4490,6 +4612,51 @@ namespace apptab.Controllers
             }
 
             return null;  // Session toujours active, retourne un statut OK (200)
+        }
+        static bool ConvertToPem(string inputKeyPath, string outputKeyPath,string privateKeyPath,string convertedKeyPath)
+        {
+
+            try
+            {
+                // Chemin d'OpenSSL
+                string opensslPath = @"C:\Program Files\OpenSSL-Win64\bin\openssl.exe";
+
+                // Vérifier si OpenSSL est installé
+                if (!System.IO.File.Exists(opensslPath))
+                {
+                    Console.WriteLine("❌ OpenSSL n'est pas installé ou non trouvé.");
+                    return false;
+                }
+
+                // Configurer le processus OpenSSL
+                Process process = new Process();
+                process.StartInfo.FileName = opensslPath;
+                process.StartInfo.Arguments = $"rsa -in \"{privateKeyPath}\" -out \"{convertedKeyPath}\"";
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardError = true;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.CreateNoWindow = true;
+
+                // Exécuter le processus
+                process.Start();
+                process.WaitForExit();
+
+                // Lire les erreurs éventuelles
+                string error = process.StandardError.ReadToEnd();
+                if (!string.IsNullOrEmpty(error))
+                {
+                    Console.WriteLine($"❌ Erreur OpenSSL : {error}");
+                    return false;
+                }
+
+                Console.WriteLine("✅ Conversion réussie : Clé privée en format PEM.");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Erreur lors de la conversion : {ex.Message}");
+                return false;
+            }
         }
     }
 }

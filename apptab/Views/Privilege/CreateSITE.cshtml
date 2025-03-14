@@ -63,7 +63,12 @@
         tags: true,
         tokenSeparators: [',', ' ']
     })
-
+    $(document).ready(function () {
+        $("#user").select2({
+            placeholder: "Rechercher...",
+            allowClear: true
+        });
+    });
     //var issite2 = [];
     //function handleSelectAll() {
     //    var selectedValues = $("#site").val(); // Sélectionnez les valeurs actuelles

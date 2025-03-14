@@ -1,4 +1,4 @@
-namespace apptab
+﻿namespace apptab
 {
     using System;
     using System.ComponentModel.DataAnnotations;
@@ -338,7 +338,7 @@ namespace apptab
 
         public bool? LIGNEBUD { get; set; }
 
-        public bool? ParamPaie_estIndice { get; set; }
+        //public bool? ParamPaie_estIndice { get; set; }
 
         public bool? KPICONSO { get; set; }
 

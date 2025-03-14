@@ -7,6 +7,7 @@
     GetListUser();
 });
 
+
 function GetListUser() {
     let formData = new FormData();
 

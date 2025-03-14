@@ -1862,6 +1862,12 @@ function GetTypeBtn() {
         }
     });
 };
+$(document).ready(function () {
+    $("#comptaG").select2({
+        placeholder: "Rechercher...",
+        allowClear: true
+    });
+});
 
 //setInterval(function () {
 //    fetch('/Home/CheckSession')  // Route côté serveur pour vérifier la session
