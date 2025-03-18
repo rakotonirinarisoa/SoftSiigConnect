@@ -45,6 +45,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using static System.Net.WebRequestMethods;
 using DocumentFormat.OpenXml.Bibliography;
 using System.Data.SqlClient;
+using Renci.SshNet.Common;
 
 namespace apptab.Controllers
 {
@@ -3788,62 +3789,39 @@ namespace apptab.Controllers
             {
                 string privateKeyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", directory, "Rsakeybni.txt");
                 string convertedKeyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", directory, "Rsakeybni.pem");
-
-                // Vérifier et convertir la clé si nécessaire
-                if (!System.IO.File.Exists(convertedKeyPath))
-                {
-                    Console.WriteLine("🔄 Conversion de la clé privée en format PEM...");
-                    bool success = ConvertToPem(privateKeyPath, convertedKeyPath, privateKeyPath, convertedKeyPath);
-                    if (!success)
-                    {
-                        Console.WriteLine("❌ Échec de la conversion de la clé !");
-                        return;
-                    }
-                }
-
-                // Lancer l'upload via SFTP avec la clé convertie
-                if (!System.IO.File.Exists(privateKeyPath))
-                {
-                    Console.WriteLine($"❌ Clé privée manquante : {privateKeyPath}");
-                    return;
-                }
-
-                if (!System.IO.File.Exists(SOURCE))
-                {
-                    Console.WriteLine($"❌ Erreur : Fichier source introuvable à {SOURCE}");
-                    return;
-                }
-
                 try
                 {
-                    using (var keyFile = new PrivateKeyFile(privateKeyPath))
+                    if (!System.IO.File.Exists(privateKeyPath))
+                    {
+                        Console.WriteLine("❌ Clé privée OpenSSH introuvable !");
+                        return;
+                    }
+
+                    // Charger la clé OpenSSH brute (sans conversion en PEM)
+                    using (var keyStream = new FileStream(privateKeyPath, FileMode.Open, FileAccess.Read))
+                    using (var keyFile = new PrivateKeyFile(keyStream, "RsaHostoPic2025")) // Ajoutez la passphrase ici
+
                     using (var sftp = new SftpClient(HOTE, USERFTP, keyFile))
                     {
                         sftp.Connect();
                         Console.WriteLine("✅ Connexion SFTP réussie !");
 
+                        // Envoyer le fichier
                         using (var fileStream = new FileStream(SOURCE, FileMode.Open))
                         {
-                            string remoteFileFullPath = $"{remoteFilePath}/{namefile}.xml";
-
-                            sftp.UploadFile(fileStream, remoteFileFullPath);
-                            Console.WriteLine($"✅ Fichier '{namefile}.xml' envoyé avec succès vers {remoteFileFullPath} !");
-                            res = "Fichier envoyé avec succès !";
+                            sftp.UploadFile(fileStream, remoteFilePath);
+                            Console.WriteLine($"✅ Fichier '{Path.GetFileName(SOURCE)}' envoyé avec succès !");
                         }
 
                         sftp.Disconnect();
-                        Console.WriteLine("✅ Déconnexion du serveur SFTP.");
+                        Console.WriteLine("✅ Déconnexion SFTP.");
                     }
                 }
-                catch (FileNotFoundException ex)
-                {
-                    Console.WriteLine($"❌ Erreur : Fichier introuvable - {ex.Message}");
-                }
-                catch (Renci.SshNet.Common.SshAuthenticationException ex)
+                catch (SshAuthenticationException ex)
                 {
                     Console.WriteLine($"❌ Erreur d'authentification SFTP : {ex.Message}");
                 }
-                catch (Renci.SshNet.Common.SshException ex)
+                catch (SshException ex)
                 {
                     Console.WriteLine($"❌ Erreur SFTP : {ex.Message}");
                 }
@@ -4613,48 +4591,55 @@ namespace apptab.Controllers
 
             return null;  // Session toujours active, retourne un statut OK (200)
         }
-        static bool ConvertToPem(string inputKeyPath, string outputKeyPath,string privateKeyPath,string convertedKeyPath)
+        static bool ConvertToPem(string privateKeyPath, string convertedKeyPath)
         {
-
             try
             {
-                // Chemin d'OpenSSL
-                string opensslPath = @"C:\Program Files\OpenSSL-Win64\bin\openssl.exe";
-
-                // Vérifier si OpenSSL est installé
-                if (!System.IO.File.Exists(opensslPath))
+                if (!System.IO.File.Exists(privateKeyPath))
                 {
-                    Console.WriteLine("❌ OpenSSL n'est pas installé ou non trouvé.");
+                    Console.WriteLine("❌ Clé privée OpenSSH introuvable !");
                     return false;
                 }
 
-                // Configurer le processus OpenSSL
-                Process process = new Process();
-                process.StartInfo.FileName = opensslPath;
-                process.StartInfo.Arguments = $"rsa -in \"{privateKeyPath}\" -out \"{convertedKeyPath}\"";
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardError = true;
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.CreateNoWindow = true;
-
-                // Exécuter le processus
-                process.Start();
-                process.WaitForExit();
-
-                // Lire les erreurs éventuelles
-                string error = process.StandardError.ReadToEnd();
-                if (!string.IsNullOrEmpty(error))
+                // Vérifier si ssh-keygen est disponible
+                string sshKeygenPath = "ssh-keygen"; // Assurez-vous que ssh-keygen est dans le PATH
+                ProcessStartInfo psi = new ProcessStartInfo
                 {
-                    Console.WriteLine($"❌ Erreur OpenSSL : {error}");
+                    FileName = sshKeygenPath,
+                    Arguments = $"-p -m PEM -f \"{privateKeyPath}\" -N \"\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+
+                using (Process process = new Process { StartInfo = psi })
+                {
+                    process.Start();
+                    string output = process.StandardOutput.ReadToEnd();
+                    string error = process.StandardError.ReadToEnd();
+                    process.WaitForExit();
+
+                    if (!string.IsNullOrEmpty(error))
+                    {
+                        Console.WriteLine($"❌ Erreur ssh-keygen : {error}");
+                        return false;
+                    }
+                }
+
+                // Vérifier que la conversion a réussi
+                if (!System.IO.File.Exists(convertedKeyPath))
+                {
+                    Console.WriteLine("❌ Erreur : La clé convertie n'existe pas !");
                     return false;
                 }
 
-                Console.WriteLine("✅ Conversion réussie : Clé privée en format PEM.");
+                Console.WriteLine("✅ Conversion réussie en format PEM.");
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Erreur lors de la conversion : {ex.Message}");
+                Console.WriteLine($"❌ Exception lors de la conversion : {ex.Message}");
                 return false;
             }
         }
