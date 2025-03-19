@@ -46,6 +46,7 @@ using static System.Net.WebRequestMethods;
 using DocumentFormat.OpenXml.Bibliography;
 using System.Data.SqlClient;
 using Renci.SshNet.Common;
+using System.Net.Sockets;
 
 namespace apptab.Controllers
 {
@@ -1654,7 +1655,7 @@ namespace apptab.Controllers
                                 }
                                 catch (Exception ex)
                                 {
-                                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez vérifier l'adresse e-mail associée à cette action! Merci" }, settings));
+                                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Veuillez vérifier l'adresse e-mail associée à cette action! Merci Erreur sur" + ex.Message }, settings));
                                 }
                             }
                         }
@@ -3800,19 +3801,73 @@ namespace apptab.Controllers
                     // Charger la clé OpenSSH brute (sans conversion en PEM)
                     using (var keyStream = new FileStream(privateKeyPath, FileMode.Open, FileAccess.Read))
                     using (var keyFile = new PrivateKeyFile(keyStream, "RsaHostoPic2025")) // Ajoutez la passphrase ici
+                   //using (var keyFile = new PrivateKeyFile(keyStream)) // Ajoutez la passphrase ici
 
-                    using (var sftp = new SftpClient(HOTE, USERFTP, keyFile))
+                    using (var sftp = new SftpClient(HOTE, pport, USERFTP, keyFile))
                     {
-                        sftp.Connect();
-                        Console.WriteLine("✅ Connexion SFTP réussie !");
-
-                        // Envoyer le fichier
-                        using (var fileStream = new FileStream(SOURCE, FileMode.Open))
+                        try
                         {
-                            sftp.UploadFile(fileStream, remoteFilePath);
-                            Console.WriteLine($"✅ Fichier '{Path.GetFileName(SOURCE)}' envoyé avec succès !");
-                        }
+                            using (TcpClient tcpClient = new TcpClient())
+                            {
+                                tcpClient.Connect(HOTE, pport); // Test sur le port 22 (ou le port SFTP utilisé)
+                                Console.WriteLine("✅ Le serveur SFTP est joignable !");
+                                string cheminFichierLog = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + "logSuccess.txt";
 
+                                // Créer ou ouvrir le fichier de log
+                                using (StreamWriter writer = new StreamWriter(cheminFichierLog, true)) // 'true' pour ajouter au fichier existant
+                                {
+                                    // Écrire l'exception dans le fichier de log
+                                    writer.WriteLine("--------------------------------------------------");
+                                    writer.WriteLine("Date et heure : " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                                    writer.WriteLine("SOURCE : " + SOURCE);
+                                    writer.WriteLine("publicKeyFile : ");
+                                    writer.WriteLine("outputFile : " + outputFile);
+                                    writer.WriteLine("Message : " + "✅ Le serveur SFTP est joignable !");
+                                    writer.WriteLine("StackTrace : " + "✅ Le serveur SFTP est joignable !");
+                                    writer.WriteLine("--------------------------------------------------");
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"❌ Le serveur SFTP est injoignable : {ex.Message}");
+                            return;
+                        }
+                        try
+                        {
+                            sftp.ConnectionInfo.Timeout = TimeSpan.FromSeconds(30);
+                            sftp.Connect();
+
+                            Console.WriteLine("✅ Connexion SFTP réussie !");
+                            // Envoyer le fichier
+                            using (var fileStream = new FileStream(SOURCE, FileMode.Open))
+                            {
+                                sftp.UploadFile(fileStream, remoteFilePath + "/" + namefile + ".xml", x =>
+                                {
+                                    var az = x.ToString();
+                                });
+                                //sftp.UploadFile(fileStream, remoteFilePath);
+                                Console.WriteLine($"✅ Fichier '{Path.GetFileName(SOURCE)}' envoyé avec succès !");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            string cheminFichierLog = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + "logErreur.txt";
+
+                            // Créer ou ouvrir le fichier de log
+                            using (StreamWriter writer = new StreamWriter(cheminFichierLog, true)) // 'true' pour ajouter au fichier existant
+                            {
+                                // Écrire l'exception dans le fichier de log
+                                writer.WriteLine("--------------------------------------------------");
+                                writer.WriteLine("Date et heure : " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                                writer.WriteLine("SOURCE : " + SOURCE);
+                                writer.WriteLine("publicKeyFile : ");
+                                writer.WriteLine("outputFile : " + outputFile);
+                                writer.WriteLine("Message : " + ex.Message);
+                                writer.WriteLine("StackTrace : " + ex.StackTrace);
+                                writer.WriteLine("--------------------------------------------------");
+                            }
+                        }
                         sftp.Disconnect();
                         Console.WriteLine("✅ Déconnexion SFTP.");
                     }
@@ -3820,10 +3875,40 @@ namespace apptab.Controllers
                 catch (SshAuthenticationException ex)
                 {
                     Console.WriteLine($"❌ Erreur d'authentification SFTP : {ex.Message}");
+                    string cheminFichierLog = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + "logErreur.txt";
+
+                    // Créer ou ouvrir le fichier de log
+                    using (StreamWriter writer = new StreamWriter(cheminFichierLog, true)) // 'true' pour ajouter au fichier existant
+                    {
+                        // Écrire l'exception dans le fichier de log
+                        writer.WriteLine("--------------------------------------------------");
+                        writer.WriteLine("Date et heure : " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                        writer.WriteLine("SOURCE : " + SOURCE);
+                        writer.WriteLine("publicKeyFile : ");
+                        writer.WriteLine("outputFile : " + outputFile);
+                        writer.WriteLine("Message : " + ex.Message);
+                        writer.WriteLine("StackTrace : " + ex.StackTrace);
+                        writer.WriteLine("--------------------------------------------------");
+                    }
                 }
                 catch (SshException ex)
                 {
                     Console.WriteLine($"❌ Erreur SFTP : {ex.Message}");
+                    string cheminFichierLog = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + "logErreur.txt";
+
+                    // Créer ou ouvrir le fichier de log
+                    using (StreamWriter writer = new StreamWriter(cheminFichierLog, true)) // 'true' pour ajouter au fichier existant
+                    {
+                        // Écrire l'exception dans le fichier de log
+                        writer.WriteLine("--------------------------------------------------");
+                        writer.WriteLine("Date et heure : " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                        writer.WriteLine("SOURCE : " + SOURCE);
+                        writer.WriteLine("publicKeyFile : ");
+                        writer.WriteLine("outputFile : " + outputFile);
+                        writer.WriteLine("Message : " + ex.Message);
+                        writer.WriteLine("StackTrace : " + ex.StackTrace);
+                        writer.WriteLine("--------------------------------------------------");
+                    }
                 }
                 catch (Exception ex)
                 {

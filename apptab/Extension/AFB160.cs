@@ -1547,6 +1547,7 @@ namespace apptab.Extension
                                 else
                                 {
                                     ccyiso = "MGA";
+                                    ccyiso = tom.RPROJET.FirstOrDefault().MONNAIELOC;
                                 }
                             }
                             else
