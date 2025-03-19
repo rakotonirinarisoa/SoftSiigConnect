@@ -3786,7 +3786,7 @@ namespace apptab.Controllers
             var res = "";
             string outputFile = "";
 
-            if (PWDFTP == null)
+            if (AgenceBanque.Contains("BNI"))
             {
                 string privateKeyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", directory, "Rsakeybni.txt");
                 string convertedKeyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", directory, "Rsakeybni.pem");
@@ -3800,7 +3800,8 @@ namespace apptab.Controllers
 
                     // Charger la clé OpenSSH brute (sans conversion en PEM)
                     using (var keyStream = new FileStream(privateKeyPath, FileMode.Open, FileAccess.Read))
-                    using (var keyFile = new PrivateKeyFile(keyStream, "RsaHostoPic2025")) // Ajoutez la passphrase ici
+                    using (var keyFile = new PrivateKeyFile(keyStream, PWDFTP)) // Ajoutez la passphrase ici
+                    //using (var keyFile = new PrivateKeyFile(keyStream, "RsaHostoPic2025")) // Ajoutez la passphrase ici
                    //using (var keyFile = new PrivateKeyFile(keyStream)) // Ajoutez la passphrase ici
 
                     using (var sftp = new SftpClient(HOTE, pport, USERFTP, keyFile))
