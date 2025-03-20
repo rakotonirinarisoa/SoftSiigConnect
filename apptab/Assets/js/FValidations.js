@@ -480,11 +480,9 @@ function getelementISO2022(a, list) {
                 //var Datas = JSON.parse(result);
                 let blobUrl = URL.createObjectURL(result);
                 if (result.type === "error") {
-                    alert(result.msg);
+                    alert(result.NomFichier);
                     return; // Arrêter l'exécution si c'est une erreur
                 }
-                
-
                 GetFileNameAnarana(blobUrl);
                 //window.location = '/Home/GetFile?file=""';
                 $('#verification-modal').modal('toggle');

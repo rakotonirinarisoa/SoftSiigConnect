@@ -150,9 +150,19 @@ namespace apptab.Extension
                     {
                         jrnl = tom.CPTADMIN_FAUTREOPERATION.Where(x => x.NUMEROOPERATION == bnfcr.NUM).Select(x => x.JOURNALPAIEMENT).FirstOrDefault();
                     }
-                    RJL1 djournal = (from journl in tom.RJL1
-                                     where journl.CODE == jrnl && journl.JLTRESOR == true && (journl.NATURE == "2" || journl.NATURE == "1")
-                                     select journl).Single();
+                    RJL1 djournal = new RJL1();
+                    try
+                    {
+                         djournal = (from journl in tom.RJL1
+                                         where journl.CODE == jrnl && journl.JLTRESOR == true && (journl.NATURE == "2" || journl.NATURE == "1")
+                                         select journl).Single();
+                    }
+                    catch (Exception)
+                    {
+                        return new ISO20022xml() { Fichier = null, Chemin = "", NomFichier = "Votre OP est supprimer dans le Base Tom²Pro" };
+                        throw;
+                    }
+                 
                     jornalPaye = djournal;
                     ibanpay = djournal.IBAN;
                     rbanque = tom.RBANQUES.Where(x => x.CODE == djournal.BANQUE).FirstOrDefault();
@@ -1007,7 +1017,9 @@ namespace apptab.Extension
                                     {
                                         return new ISO20022xml() { Fichier = null, Chemin = "", NomFichier = "Votre donnés sur " + item.NUM + " RPROJET colonne MONNAIERAPP /MOP MONTANTRAP  est vide" };
                                     }
-                                    rswift = tom.RTIERS.Where(a => a.AUXI == item.AUXI).FirstOrDefault();
+                                    var temppp = db.OPA_VALIDATIONS.Where(x => x.IDREGLEMENT == item.NUM).FirstOrDefault();
+                                    rswift = tom.RTIERS.Where(a => a.COGEAUXI == temppp.ComptaG + " " + item.AUXI).FirstOrDefault();
+                                    //rswift = tom.RTIERS.Where(a => a.AUXI == item.AUXI).FirstOrDefault();
                                     if (rswift.BQSWIFT == null || rswift.BQIBAN == null)
                                     {
                                         return new ISO20022xml() { Fichier = null, Chemin = "", NomFichier = "Votre donnés sur " + item.NUM + " RTIERS colonne BQSWIFT / BQIBAN  est vide ou incorrecte" };
@@ -1861,7 +1873,8 @@ namespace apptab.Extension
                                 {
                                     return new ISO20022xml() { Fichier = null, Chemin = "", NomFichier = "Veuillez vérifier votre donnée car " + item.NUM + "RPROJET MONTANTDEV /MOP MONTANTRAP sont des colonne vide " };
                                 }
-                                rswift = tom.RTIERS.Where(a => a.AUXI == item.AUXI).FirstOrDefault();
+                                var temppp = db.OPA_VALIDATIONS.Where(x => x.IDREGLEMENT == item.NUM).FirstOrDefault();
+                                rswift = tom.RTIERS.Where(a => a.COGEAUXI == temppp.ComptaG + " " + item.AUXI).FirstOrDefault();
                                 if (typeDevise == 1)
                                 {
                                     IbanPayemenUSD = rswift.BQIBAN;

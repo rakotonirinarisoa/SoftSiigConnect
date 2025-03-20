@@ -3687,21 +3687,28 @@ namespace apptab.Controllers
             {
                 if (TYPE == 1)
                 {
-                    resultBR = db.OPA_HISTORIQUEBR.Where(y => y.NUMENREG == item && y.IDUSER == user.ID && y.IDSOCIETE == PROJECTID).ToList();
-                    var OPABRSAVE = db.OPA_VALIDATIONS.Where(x => x.IDREGLEMENT == item && x.IDPROJET == PROJECTID).FirstOrDefault();
-                    if (OPABRSAVE != null)
+                    resultBR = db.OPA_HISTORIQUEBR.Where(y => y.NUMENREG == item /*&& y.IDUSER == user.ID*/ && y.IDSOCIETE == PROJECTID).ToList();
+                    string numreg = "";
+                    foreach (var item2 in resultBR)
                     {
-                        db.OPA_VALIDATIONS.Remove(OPABRSAVE);
-                        try
+                        var OPABRSAVE = db.OPA_VALIDATIONS.Where(x => x.IDREGLEMENT == item && x.NUMEREG == item2.NUMREG && x.IDPROJET == PROJECTID).FirstOrDefault();
+                        var reglementBr = db.OPA_REGLEMENTBR.Where(x => x.NUM == item && x.NUMEREG == item2.NUMREG && x.IDSOCIETE == PROJECTID).FirstOrDefault();
+                        if (OPABRSAVE != null)
                         {
-                            db.SaveChanges();
-                        }
-                        catch (Exception)
-                        {
+                            db.OPA_VALIDATIONS.Remove(OPABRSAVE);
+                            db.OPA_REGLEMENTBR.Remove(reglementBr);
+                            try
+                            {
+                                db.SaveChanges();
+                            }
+                            catch (Exception)
+                            {
 
-                            throw;
+                                throw;
+                            }
                         }
                     }
+                   
                 }
                 else
                 {
@@ -3916,6 +3923,51 @@ namespace apptab.Controllers
                     Console.WriteLine($"❌ Erreur générale : {ex.Message}");
                 }
             }
+            else if(AgenceBanque.Contains("SG"))//BRED
+            {
+                namefile = "049038JP." + namefile;
+                try
+                {
+                    // Créer une connexion SFTP
+                    using (var sftp = new SftpClient(HOTE, pport, USERFTP.ToString(), PWDFTP))
+                    //using (var sftp = new SftpClient("72.251.3.20", 22, "tester", "password"))
+                    {
+                        sftp.Connect();
+
+                        using (var fileStream = new FileStream(SOURCE, FileMode.Open))
+                        {
+                            //var sss =  sftp.ListDirectory("//");
+                            // Envoyer le fichier
+                            sftp.UploadFile(fileStream, remoteFilePath + "/" + namefile + ".xml", x =>
+                            {
+                                var az = x.ToString();
+                            });
+                            //Console.WriteLine("Fichier envoyé avec succès !");
+                            res = "Fichier envoyé avec succès !";
+                        }
+
+                        sftp.Disconnect();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    string cheminFichierLog = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + "logErreur.txt";
+
+                    // Créer ou ouvrir le fichier de log
+                    using (StreamWriter writer = new StreamWriter(cheminFichierLog, true)) // 'true' pour ajouter au fichier existant
+                    {
+                        // Écrire l'exception dans le fichier de log
+                        writer.WriteLine("--------------------------------------------------");
+                        writer.WriteLine("Date et heure : " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                        writer.WriteLine("SOURCE : " + SOURCE);
+                        writer.WriteLine("publicKeyFile : ");
+                        writer.WriteLine("outputFile : " + outputFile);
+                        writer.WriteLine("Message : " + ex.Message);
+                        writer.WriteLine("StackTrace : " + ex.StackTrace);
+                        writer.WriteLine("--------------------------------------------------");
+                    }
+                }
+            }
             else
             {
                 if (intbasetype == 3 || intbasetype == 5)
@@ -4007,54 +4059,10 @@ namespace apptab.Controllers
                     }
 
                 }
-                else
-                {//envoye sftp fichier non crypter
-                    if (AgenceBanque.Contains("SG"))
-                    {
-                        namefile = "049038JP." + namefile;
-                    }
-                    try
-                    {
-                        // Créer une connexion SFTP
-                        using (var sftp = new SftpClient(HOTE, pport, USERFTP.ToString(), PWDFTP))
-                        //using (var sftp = new SftpClient("72.251.3.20", 22, "tester", "password"))
-                        {
-                            sftp.Connect();
-
-                            using (var fileStream = new FileStream(SOURCE, FileMode.Open))
-                            {
-                                //var sss =  sftp.ListDirectory("//");
-                                // Envoyer le fichier
-                                sftp.UploadFile(fileStream, remoteFilePath + "/" + namefile + ".xml", x =>
-                                {
-                                    var az = x.ToString();
-                                });
-                                //Console.WriteLine("Fichier envoyé avec succès !");
-                                res = "Fichier envoyé avec succès !";
-                            }
-
-                            sftp.Disconnect();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        string cheminFichierLog = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + "logErreur.txt";
-
-                        // Créer ou ouvrir le fichier de log
-                        using (StreamWriter writer = new StreamWriter(cheminFichierLog, true)) // 'true' pour ajouter au fichier existant
-                        {
-                            // Écrire l'exception dans le fichier de log
-                            writer.WriteLine("--------------------------------------------------");
-                            writer.WriteLine("Date et heure : " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                            writer.WriteLine("SOURCE : " + SOURCE);
-                            writer.WriteLine("publicKeyFile : ");
-                            writer.WriteLine("outputFile : " + outputFile);
-                            writer.WriteLine("Message : " + ex.Message);
-                            writer.WriteLine("StackTrace : " + ex.StackTrace);
-                            writer.WriteLine("--------------------------------------------------");
-                        }
-                    }
-                }
+                //else
+                //{//envoye sftp fichier non crypter
+                   
+                //}
             }
         }
         [HttpPost]
