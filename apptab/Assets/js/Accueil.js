@@ -1100,11 +1100,17 @@ function getelementCheckJs() {
         success: function (result) {
             var Datas = JSON.parse(result);
             loader.removeClass('display-none');
-            alert(Datas.msg);
-            for (let i = 0; i < checkList.length; i += 1) {
-                table.row($(checkList[i])).remove().draw();
+            if (Datas.type == "error") {
+                alert(Datas.msg);
+                loader.addClass('display-none');
+            } else {
+                alert(Datas.msg);
+                for (let i = 0; i < checkList.length; i += 1) {
+                    table.row($(checkList[i])).remove().draw();
+                }
+                loader.addClass('display-none');
             }
-            loader.addClass('display-none');
+           
         },
         error: function () {
             alert("Veuillez verifier votre Parametrage TOMATE ");

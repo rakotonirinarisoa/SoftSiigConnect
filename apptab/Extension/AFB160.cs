@@ -34,6 +34,7 @@ using static apptab.Controllers.EtatGEDController;
 using Org.BouncyCastle.Asn1.Utilities;
 using static apptab.Extension.AFB160;
 using DocumentFormat.OpenXml.Office.CustomUI;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
 
 namespace apptab.Extension
 {
@@ -1253,11 +1254,11 @@ namespace apptab.Extension
                         info = new UTF8Encoding(true).GetBytes("\r\n\t</Document>");
 
                         fs.Write(info, 0, info.Length);
-                        foreach (var bnfrc in beneficiaires)
-                        {
-                            bnfrc.ETAT = "1";
-                            db.SaveChanges();
-                        }
+                        //foreach (var bnfrc in beneficiaires)
+                        //{
+                        //    bnfrc.ETAT = "1";
+                        //    db.SaveChanges();
+                        //}
                         //xd.LoadXml(fs.ToString());
 
                     }
@@ -3125,7 +3126,7 @@ namespace apptab.Extension
             }
             return list;
         }
-        public List<DataListTomOP> getREGLEMENTBR(SI_USERS user, int numeroreg, int PROJECTID, List<string> site)
+        public Tuple<string, List<DataListTomOP>> getREGLEMENTBR(SI_USERS user, int numeroreg, int PROJECTID, List<string> site)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -3136,96 +3137,104 @@ namespace apptab.Extension
                                              select num).ToList();
 
             List<DataListTomOP> listEcritureSelect = new List<DataListTomOP>();
-
-
-            foreach (OPA_REGLEMENTBR num in numRegs)
+            string hasData = "OK";
+            try
             {
-                var OPAV = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == num.NUM && site.Contains(a.SITE) && a.NUMEREG == numeroreg).FirstOrDefault();
-                if (OPAV != null)
+                foreach (OPA_REGLEMENTBR num in numRegs)
                 {
-                    if (OPAV.AVANCE == true)
+                    var OPAV = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == num.NUM && site.Contains(a.SITE) && a.NUMEREG == numeroreg).FirstOrDefault();
+                    if (OPAV != null)
                     {
-                        DataListTomOP ligneRegs = tom.GA_AVANCE.Where(a => a.NUMERO == num.NUM && site.Contains(a.SITE)).Join(tom.GA_AVANCE_MOUVEMENT, ga => ga.NUMERO, av => av.NUMERO, (ga, av) => new DataListTomOP
+                        if (OPAV.AVANCE == true)
                         {
-                            No = ga.NUMERO,
-                            Date = ga.DATE.Value,
-                            NoPiece = ga.NUMERO_PIECE,
-                            Compte = ga.COGE,
-                            Libelle = ga.LIBELLE,
-                            Montant = av.MONTANT ?? 0,
-                            MontantDevise = 0,
-                            Mon = "",
-                            Rang = av.ACTI,
-                            Poste = av.POSTE,
-                            FinancementCategorie = av.CONVENTION + " " + av.CATEGORIE,
-                            Commune = av.GEO,
-                            Plan6 = av.PLAN6,
-                            Marche = "",
-                            Auxi = av.AUXI,
-                            Status = num.ETAT,
-                            SITE = av.SITE,
-                        }).FirstOrDefault();
+                            DataListTomOP ligneRegs = tom.GA_AVANCE.Where(a => a.NUMERO == num.NUM && site.Contains(a.SITE)).Join(tom.GA_AVANCE_MOUVEMENT, ga => ga.NUMERO, av => av.NUMERO, (ga, av) => new DataListTomOP
+                            {
+                                No = ga.NUMERO,
+                                Date = ga.DATE.Value,
+                                NoPiece = ga.NUMERO_PIECE,
+                                Compte = ga.COGE,
+                                Libelle = ga.LIBELLE,
+                                Montant = av.MONTANT ?? 0,
+                                MontantDevise = 0,
+                                Mon = "",
+                                Rang = av.ACTI,
+                                Poste = av.POSTE,
+                                FinancementCategorie = av.CONVENTION + " " + av.CATEGORIE,
+                                Commune = av.GEO,
+                                Plan6 = av.PLAN6,
+                                Marche = "",
+                                Auxi = av.AUXI,
+                                Status = num.ETAT,
+                                SITE = av.SITE,
+                            }).FirstOrDefault();
 
-                        listEcritureSelect.Add(ligneRegs);
-                    }
-                    else
-                    {
-                        DataListTomOP ligneRegs = (from mcpt in tom.MOP
-                                                   where mcpt.NUMEROOP == num.NUM && mcpt.NUMENREG == numeroreg && site.Contains(mcpt.SITE)
-                                                   select new DataListTomOP()
-                                                   {
-                                                       No = mcpt.NUMEROOP,
-                                                       Date = mcpt.DATEFACTURE.Value,
-                                                       NoPiece = mcpt.NUMEROFACTURE,
-                                                       Compte = mcpt.COGE,
-                                                       Libelle = mcpt.LIBELLE,
-                                                       Montant = mcpt.MONTANTLOC.Value,
-                                                       MontantDevise = mcpt.MONTANTDEV.Value,
-                                                       Mon = "",
-                                                       Rang = mcpt.ACTI,
-                                                       Poste = mcpt.POSTE,
-                                                       FinancementCategorie = mcpt.CONVENTION + " " + mcpt.CATEGORIE,
-                                                       Commune = mcpt.GEO,
-                                                       Plan6 = mcpt.PLAN6,
-                                                       Marche = "",
-                                                       Auxi = mcpt.AUXIFOURNISSEUR,
-                                                       Status = num.ETAT,
-                                                       SITE = mcpt.SITE,
-                                                   }).FirstOrDefault();
-                        //ETo tohizana 
-                        DataListTomOP ligneRegsOP = tom.CPTADMIN_FAUTREOPERATION.Where(mcpt => mcpt.NUMEROOPERATION == num.NUM && site.Contains(mcpt.SITE)).Select(x => new DataListTomOP()
-                        {
-                            No = x.NUMEROOPERATION,
-                            Date = x.DATEOPERATION.Value,
-                            NoPiece = "",
-                            Compte = "",
-                            Libelle = x.DESCRIPTION,
-                            Montant = x.MONTANTLOCAL.Value,
-                            MontantDevise = x.MONTANTDEVISE.Value,
-                            Mon = "",
-                            Rang = "",
-                            Poste = "",
-                            FinancementCategorie = x.FINANCEMENT,
-                            Commune = "",
-                            Plan6 = "",
-                            Marche = x.CODEMARCHE,
-                            Auxi = "",
-                            Status = num.ETAT,
-                            SITE = x.SITE,
-                        }).FirstOrDefault();
-
-                        if (ligneRegs != null)
-                        {
                             listEcritureSelect.Add(ligneRegs);
                         }
-                        if (ligneRegsOP != null)
+                        else
                         {
-                            listEcritureSelect.Add(ligneRegsOP);
+                            DataListTomOP ligneRegs = (from mcpt in tom.MOP
+                                                       where mcpt.NUMEROOP == num.NUM && mcpt.NUMENREG == numeroreg && site.Contains(mcpt.SITE)
+                                                       select new DataListTomOP()
+                                                       {
+                                                           No = mcpt.NUMEROOP,
+                                                           Date = mcpt.DATEFACTURE.Value,
+                                                           NoPiece = mcpt.NUMEROFACTURE,
+                                                           Compte = mcpt.COGE,
+                                                           Libelle = mcpt.LIBELLE,
+                                                           Montant = mcpt.MONTANTLOC.Value,
+                                                           MontantDevise = mcpt.MONTANTDEV.Value,
+                                                           Mon = "",
+                                                           Rang = mcpt.ACTI,
+                                                           Poste = mcpt.POSTE,
+                                                           FinancementCategorie = mcpt.CONVENTION + " " + mcpt.CATEGORIE,
+                                                           Commune = mcpt.GEO,
+                                                           Plan6 = mcpt.PLAN6,
+                                                           Marche = "",
+                                                           Auxi = mcpt.AUXIFOURNISSEUR,
+                                                           Status = num.ETAT,
+                                                           SITE = mcpt.SITE,
+                                                       }).FirstOrDefault();
+                            //ETo tohizana 
+                            DataListTomOP ligneRegsOP = tom.CPTADMIN_FAUTREOPERATION.Where(mcpt => mcpt.NUMEROOPERATION == num.NUM && site.Contains(mcpt.SITE)).Select(x => new DataListTomOP()
+                            {
+                                No = x.NUMEROOPERATION,
+                                Date = x.DATEOPERATION.Value,
+                                NoPiece = "",
+                                Compte = "",
+                                Libelle = x.DESCRIPTION,
+                                Montant = x.MONTANTLOCAL.Value,
+                                MontantDevise = x.MONTANTDEVISE.Value,
+                                Mon = "",
+                                Rang = "",
+                                Poste = "",
+                                FinancementCategorie = x.FINANCEMENT,
+                                Commune = "",
+                                Plan6 = "",
+                                Marche = x.CODEMARCHE,
+                                Auxi = "",
+                                Status = num.ETAT,
+                                SITE = x.SITE,
+                            }).FirstOrDefault();
+
+                            if (ligneRegs != null)
+                            {
+                                listEcritureSelect.Add(ligneRegs);
+                            }
+                            if (ligneRegsOP != null)
+                            {
+                                listEcritureSelect.Add(ligneRegsOP);
+                            }
                         }
                     }
                 }
             }
-            return listEcritureSelect;
+            catch (Exception ex)
+            {
+                hasData = ex.Message;
+                throw;
+            }
+            return Tuple.Create(hasData, listEcritureSelect);
+            //return listEcritureSelect;
         }
         public List<DataListTompro> getListAnomalie(SI_USERS user)
         {
@@ -4170,7 +4179,7 @@ namespace apptab.Extension
             }
             return list;
         }
-        public List<DataListTomOP> getListEcritureBR(string journal, DateTime dateD, DateTime dateF, bool devise, string compteG, string auxi, string etat, DateTime dateP, SI_USERS user, int PROJECTID, List<string> site)
+        public Tuple<string, List<DataListTomOP>> getListEcritureBR(string journal, DateTime dateD, DateTime dateF, bool devise, string compteG, string auxi, string etat, DateTime dateP, SI_USERS user, int PROJECTID, List<string> site)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
@@ -4191,461 +4200,375 @@ namespace apptab.Extension
             List<MOPFOP> lNoOPS = new List<MOPFOP>();
             List<GA_AVANCE_DETAILS> lNoOpsAV = new List<GA_AVANCE_DETAILS>();
             List<AUTRE8OPERATION> lNoOpsAOP = new List<AUTRE8OPERATION>();
-            if (compteG == "Tous")
-            {
-                DjournalAvance = tom.GA_AVANCE.Where(x => x.JOURNAL == journal).Select(x => x.NUMERO).ToList();
-            }
-            else
-            {
-                DjournalAvance = tom.GA_AVANCE.Where(x => x.JOURNAL == journal && x.COGE == compteG).Select(x => x.NUMERO).ToList();
-            }
-            if (compteG == "Autre Opérations" || compteG == "Tous")
+            string hasData = "OK";
+            try
             {
 
-                DjournalOP = tom.CPTADMIN_FAUTREOPERATION.Where(x => x.JOURNALPAIEMENT == journal).Select(x => x.NUMEROOPERATION).ToList();
-
-                foreach (string numOpr in DjournalOP)
+                if (compteG == "Tous")
                 {
-                    lNoOpsAOP.AddRange(tom.CPTADMIN_FAUTREOPERATION.Where(x => x.NUMEROOPERATION == numOpr && site.Contains(x.SITE)).Select(x => new AUTRE8OPERATION
-                    {
-                        NUMEROOPERATION = x.NUMEROOPERATION,
-                        DATEOPERATION = x.DATEOPERATION,
-                        MONTANTLOCAL = x.MONTANTLOCAL,
-                        JOURNAL = x.JOURNALPAIEMENT,
-                        NORDPAIEMENT = x.NORDPAIEMENT,
-                        DATEMAJ = x.DATEMAJ,
-                        LIBELLE = x.DESCRIPTION,
-                        MONTANTDEVISE = x.MONTANTDEVISE,
-                        MONTANTRAPPORT = x.MONTANTRAPPORT,
-                        FINANCEMENT = x.FINANCEMENT,
-                        MARCHER = x.CODEMARCHE,
-                        CATEGORIE = x.CATEGORIE,
-                        ACTIVITER = x.ACTIVITE,
-                        TYPE = x.TYPEOPERATION,
-                        NUMEROREG = null,
-                        AUTREOP = true,
-                        SITE = x.SITE,
+                    DjournalAvance = tom.GA_AVANCE.Where(x => x.JOURNAL == journal).Select(x => x.NUMERO).ToList();
+                }
+                else
+                {
+                    DjournalAvance = tom.GA_AVANCE.Where(x => x.JOURNAL == journal && x.COGE == compteG).Select(x => x.NUMERO).ToList();
+                }
+                if (compteG == "Autre Opérations" || compteG == "Tous")
+                {
 
+                    DjournalOP = tom.CPTADMIN_FAUTREOPERATION.Where(x => x.JOURNALPAIEMENT == journal).Select(x => x.NUMEROOPERATION).ToList();
+
+                    foreach (string numOpr in DjournalOP)
+                    {
+                        lNoOpsAOP.AddRange(tom.CPTADMIN_FAUTREOPERATION.Where(x => x.NUMEROOPERATION == numOpr && site.Contains(x.SITE)).Select(x => new AUTRE8OPERATION
+                        {
+                            NUMEROOPERATION = x.NUMEROOPERATION,
+                            DATEOPERATION = x.DATEOPERATION,
+                            MONTANTLOCAL = x.MONTANTLOCAL,
+                            JOURNAL = x.JOURNALPAIEMENT,
+                            NORDPAIEMENT = x.NORDPAIEMENT,
+                            DATEMAJ = x.DATEMAJ,
+                            LIBELLE = x.DESCRIPTION,
+                            MONTANTDEVISE = x.MONTANTDEVISE,
+                            MONTANTRAPPORT = x.MONTANTRAPPORT,
+                            FINANCEMENT = x.FINANCEMENT,
+                            MARCHER = x.CODEMARCHE,
+                            CATEGORIE = x.CATEGORIE,
+                            ACTIVITER = x.ACTIVITE,
+                            TYPE = x.TYPEOPERATION,
+                            NUMEROREG = null,
+                            AUTREOP = true,
+                            SITE = x.SITE,
+
+                        }).ToList());
+                    }
+                }
+
+                foreach (string num in DjournalFop)
+                {
+                    //lNoOPS.AddRange((from mo in tom.MOP
+                    //                 where mo.DATEFACTURE >= dateD.Date && mo.DATEFACTURE <= dateF.Date && mo.NUMEROOP == num
+                    //                 select mo).ToList());
+
+                    // lNoOPS.AddRange(tom.MOP.Where(a => a.DATEFACTURE >= dateD.Date && a.DATEFACTURE <= dateF.Date && a.NUMEROOP == num).Join(tom.FOP, mo => mo.NUMEROOP, fo => fo.NUMEROOP, (mo, fo) => new MOPFOP
+
+                    var c = (
+                        from mo in tom.MOP
+                        join fo in tom.FOP on mo.NUMEROOP equals fo.NUMEROOP
+                        where mo.NUMEROOP == num && mo.DATEFACTURE.Value >= dateD.Date && mo.DATEFACTURE.Value <= dateF.Date && site.Contains(mo.SITE)
+                        select new MOPFOP
+                        {
+                            NUMEROLIQUIDATION = fo.NUMEROLIQUIDATION,
+                            NUMEROOP = mo.NUMEROOP,
+                            NUMENREG = mo.NUMENREG,
+                            LIBELLE = mo.LIBELLE,
+                            DATEFACTURE = mo.DATEFACTURE.Value,
+                            NUMEROFACTURE = mo.NUMEROFACTURE,
+                            COGE = mo.COGE,
+                            AUXI = mo.AUXI,
+                            JOURNAL = fo.JOURNAL,
+                            CONVENTION = mo.CONVENTION,
+                            CATEGORIE = mo.CATEGORIE,
+                            SOUSCATEGORIE = mo.SOUSCATEGORIE,
+                            POSTE = mo.POSTE,
+                            ACTI = mo.ACTI,
+                            GEO = mo.GEO,
+                            PLAN6 = mo.PLAN6,
+                            PLAN7 = mo.PLAN7,
+                            PLAN8 = mo.PLAN8,
+                            MONTANTLOC = mo.MONTANTLOC,
+                            MONTANTDEV = mo.MONTANTDEV,
+                            MONTANTRAP = mo.MONTANTRAP,
+                            MONTANTTVA = mo.MONTANTTVA,
+                            MONTANTAUTRETAXE = mo.MONTANTTVA,
+                            COGEFOURNISSEUR = mo.COGEFOURNISSEUR,
+                            AUXIFOURNISSEUR = mo.AUXIFOURNISSEUR,
+                            NORDPEC = mo.NORDPEC,
+                            NORDPAIEMENT = mo.NORDPAIEMENT,
+                            NORDFRAISBQ = mo.NORDFRAISBQ,
+                            DATECRE = mo.DATECRE,
+                            DATEMAJ = mo.DATEMAJ,
+                            USERCRE = mo.USERCRE,
+                            USERMAJ = mo.USERMAJ,
+                            DATEREJET = mo.DATEREJET,
+                            OBSERVATIONREJET = mo.OBSERVATIONREJET,
+                            MONTANTRETENUE = mo.MONTANTRETENUE,
+                            NUMEREG = mo.NUMENREG,
+                            TYPE = fo.TYPE_OPERATION,
+                            MARCHE = fo.CODE,
+                            SITE = mo.SITE,
+                        }
+                    );
+
+                    // lNoOPS.AddRange(tom.MOP.Join(tom.FOP, mo => mo.NUMEROOP, fo => fo.NUMEROOP, (mo, fo) => )).Where(tom => tom.DATEFACTURE >= dateD.Date && a.DATEFACTURE <= dateF.Date && a.NUMEROOP == num)..ToList());
+
+                    lNoOPS.AddRange(c);
+                }
+                foreach (var item in DjournalAvance)
+                {
+                    lNoOpsAV.AddRange(tom.GA_AVANCE.Where(x => x.DATE >= dateD.Date && site.Contains(x.SITE) && x.DATE <= dateF.Date && x.NUMERO == item).Join(tom.GA_AVANCE_MOUVEMENT, a => a.NUMERO, z => z.NUMERO, (a, z) => new GA_AVANCE_DETAILS
+                    {
+                        NUMERO = a.NUMERO,
+                        MONTANT = z.MONTANT ?? 0,
+                        PLAN6 = z.PLAN6,
+                        POSTE = z.POSTE,
+                        LIBELLE = a.LIBELLE,
+                        COGE = a.COGE,
+                        MARCHE = a.MARCHE,
+                        JOURNAL = a.JOURNAL,
+                        AUXI = a.AUXI,
+                        DATE = a.DATE,
+                        CONVENTION = z.CONVENTION,
+                        CATEGORIE = z.CATEGORIE,
+                        ACTI = z.ACTI,
+                        GEO = z.GEO,
+                        TYPE = a.TYPE,
+                        SITE = a.SITE,
                     }).ToList());
                 }
-            }
 
-            foreach (string num in DjournalFop)
-            {
-                //lNoOPS.AddRange((from mo in tom.MOP
-                //                 where mo.DATEFACTURE >= dateD.Date && mo.DATEFACTURE <= dateF.Date && mo.NUMEROOP == num
-                //                 select mo).ToList());
-
-                // lNoOPS.AddRange(tom.MOP.Where(a => a.DATEFACTURE >= dateD.Date && a.DATEFACTURE <= dateF.Date && a.NUMEROOP == num).Join(tom.FOP, mo => mo.NUMEROOP, fo => fo.NUMEROOP, (mo, fo) => new MOPFOP
-
-                var c = (
-                    from mo in tom.MOP
-                    join fo in tom.FOP on mo.NUMEROOP equals fo.NUMEROOP
-                    where mo.NUMEROOP == num && mo.DATEFACTURE.Value >= dateD.Date && mo.DATEFACTURE.Value <= dateF.Date && site.Contains(mo.SITE)
-                    select new MOPFOP
-                    {
-                        NUMEROLIQUIDATION = fo.NUMEROLIQUIDATION,
-                        NUMEROOP = mo.NUMEROOP,
-                        NUMENREG = mo.NUMENREG,
-                        LIBELLE = mo.LIBELLE,
-                        DATEFACTURE = mo.DATEFACTURE.Value,
-                        NUMEROFACTURE = mo.NUMEROFACTURE,
-                        COGE = mo.COGE,
-                        AUXI = mo.AUXI,
-                        JOURNAL = fo.JOURNAL,
-                        CONVENTION = mo.CONVENTION,
-                        CATEGORIE = mo.CATEGORIE,
-                        SOUSCATEGORIE = mo.SOUSCATEGORIE,
-                        POSTE = mo.POSTE,
-                        ACTI = mo.ACTI,
-                        GEO = mo.GEO,
-                        PLAN6 = mo.PLAN6,
-                        PLAN7 = mo.PLAN7,
-                        PLAN8 = mo.PLAN8,
-                        MONTANTLOC = mo.MONTANTLOC,
-                        MONTANTDEV = mo.MONTANTDEV,
-                        MONTANTRAP = mo.MONTANTRAP,
-                        MONTANTTVA = mo.MONTANTTVA,
-                        MONTANTAUTRETAXE = mo.MONTANTTVA,
-                        COGEFOURNISSEUR = mo.COGEFOURNISSEUR,
-                        AUXIFOURNISSEUR = mo.AUXIFOURNISSEUR,
-                        NORDPEC = mo.NORDPEC,
-                        NORDPAIEMENT = mo.NORDPAIEMENT,
-                        NORDFRAISBQ = mo.NORDFRAISBQ,
-                        DATECRE = mo.DATECRE,
-                        DATEMAJ = mo.DATEMAJ,
-                        USERCRE = mo.USERCRE,
-                        USERMAJ = mo.USERMAJ,
-                        DATEREJET = mo.DATEREJET,
-                        OBSERVATIONREJET = mo.OBSERVATIONREJET,
-                        MONTANTRETENUE = mo.MONTANTRETENUE,
-                        NUMEREG = mo.NUMENREG,
-                        TYPE = fo.TYPE_OPERATION,
-                        MARCHE = fo.CODE,
-                        SITE = mo.SITE,
-                    }
-                );
-
-                // lNoOPS.AddRange(tom.MOP.Join(tom.FOP, mo => mo.NUMEROOP, fo => fo.NUMEROOP, (mo, fo) => )).Where(tom => tom.DATEFACTURE >= dateD.Date && a.DATEFACTURE <= dateF.Date && a.NUMEROOP == num)..ToList());
-
-                lNoOPS.AddRange(c);
-            }
-            foreach (var item in DjournalAvance)
-            {
-                lNoOpsAV.AddRange(tom.GA_AVANCE.Where(x => x.DATE >= dateD.Date && site.Contains(x.SITE) && x.DATE <= dateF.Date && x.NUMERO == item).Join(tom.GA_AVANCE_MOUVEMENT, a => a.NUMERO, z => z.NUMERO, (a, z) => new GA_AVANCE_DETAILS
+                if (djournal.RIB != null && djournal.RIB != "")
                 {
-                    NUMERO = a.NUMERO,
-                    MONTANT = z.MONTANT ?? 0,
-                    PLAN6 = z.PLAN6,
-                    POSTE = z.POSTE,
-                    LIBELLE = a.LIBELLE,
-                    COGE = a.COGE,
-                    MARCHE = a.MARCHE,
-                    JOURNAL = a.JOURNAL,
-                    AUXI = a.AUXI,
-                    DATE = a.DATE,
-                    CONVENTION = z.CONVENTION,
-                    CATEGORIE = z.CATEGORIE,
-                    ACTI = z.ACTI,
-                    GEO = z.GEO,
-                    TYPE = a.TYPE,
-                    SITE = a.SITE,
-                }).ToList());
-            }
-
-            if (djournal.RIB != null && djournal.RIB != "")
-            {
-                #region Chargement liste écriture
-                if (compteG == "" || compteG == "Tous")
-                {
-                    if (auxi == "" || auxi == "Tous")
+                    #region Chargement liste écriture
+                    if (compteG == "" || compteG == "Tous")
                     {
-                        List<MOPFOP> lNoOp = lNoOPS;
-                        List<GA_AVANCE_DETAILS> lnoOpAVS = lNoOpsAV;
-                        List<AUTRE8OPERATION> lNoOpsAOPS = lNoOpsAOP;
-
-                        foreach (var nord in lNoOp)
+                        if (auxi == "" || auxi == "Tous")
                         {
-                            try
-                            {
-                                //var reglement = (from mcpt in tom.MOP
-                                //                 where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.COGE == djournal.COMPTEASSOCIE
-                                //                 select mcpt).Single(); 
+                            List<MOPFOP> lNoOp = lNoOPS;
+                            List<GA_AVANCE_DETAILS> lnoOpAVS = lNoOpsAV;
+                            List<AUTRE8OPERATION> lNoOpsAOPS = lNoOpsAOP;
 
-                                var reglement = (from mcpt in tom.MOP
-                                                 where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.NUMENREG == nord.NUMENREG && site.Contains(mcpt.SITE)/*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
-                                                 select mcpt).ToList();
-                                if (reglement != null)
+                            foreach (var nord in lNoOp)
+                            {
+                                try
                                 {
-                                    foreach (var item in reglement)
+                                    //var reglement = (from mcpt in tom.MOP
+                                    //                 where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.COGE == djournal.COMPTEASSOCIE
+                                    //                 select mcpt).Single(); 
+
+                                    var reglement = (from mcpt in tom.MOP
+                                                     where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.NUMENREG == nord.NUMENREG && site.Contains(mcpt.SITE)/*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
+                                                     select mcpt).ToList();
+                                    if (reglement != null)
                                     {
-                                        list.Add(new DataListTomOP()
+                                        foreach (var item in reglement)
                                         {
-                                            No = item.NUMEROOP,
-                                            Date = item.DATEFACTURE.Value,
-                                            Auxi = item.AUXI,
-                                            NoPiece = item.NUMEROFACTURE,
-                                            Compte = item.COGE,
-                                            Libelle = item.LIBELLE,
-                                            Montant = item.MONTANTLOC.Value,
-                                            MontantDevise = item.MONTANTDEV.Value,
-                                            Mon = "",
-                                            Rang = item.ACTI,
-                                            Poste = item.POSTE,
-                                            FinancementCategorie = item.CONVENTION + " " + item.CATEGORIE,
-                                            Commune = item.GEO,
-                                            Plan6 = item.PLAN6,
-                                            Journal = journal,
-                                            Marche = nord.MARCHE,
-                                            Status = etat,
-                                            Mandat = nord.NUMEROLIQUIDATION,
-                                            Avance = nord.TYPE != null ? true : false,
-                                            NUMEREG = item.NUMENREG,
-                                            CogeFourniseur = item.COGEFOURNISSEUR,
-                                            AUTREOPERATIONS = false,
-                                            SITE = item.SITE,
-                                        });
+                                            list.Add(new DataListTomOP()
+                                            {
+                                                No = item.NUMEROOP,
+                                                Date = item.DATEFACTURE.Value,
+                                                Auxi = item.AUXI,
+                                                NoPiece = item.NUMEROFACTURE,
+                                                Compte = item.COGE,
+                                                Libelle = item.LIBELLE,
+                                                Montant = item.MONTANTLOC.Value,
+                                                MontantDevise = item.MONTANTDEV.Value,
+                                                Mon = "",
+                                                Rang = item.ACTI,
+                                                Poste = item.POSTE,
+                                                FinancementCategorie = item.CONVENTION + " " + item.CATEGORIE,
+                                                Commune = item.GEO,
+                                                Plan6 = item.PLAN6,
+                                                Journal = journal,
+                                                Marche = nord.MARCHE,
+                                                Status = etat,
+                                                Mandat = nord.NUMEROLIQUIDATION,
+                                                Avance = nord.TYPE != null ? true : false,
+                                                NUMEREG = item.NUMENREG,
+                                                CogeFourniseur = item.COGEFOURNISSEUR,
+                                                AUTREOPERATIONS = false,
+                                                SITE = item.SITE,
+                                            });
+                                        }
                                     }
                                 }
+                                catch (Exception ex)
+                                {
+                                    hasData = ex.Message;
+                                }
+
+
                             }
-                            catch (Exception) { }
 
-
-                        }
-
-                        foreach (var nordAV in lnoOpAVS)
-                        {
-                            try
+                            foreach (var nordAV in lnoOpAVS)
                             {
-                                var reglementAV = tom.GA_AVANCE.Where(a => a.NUMERO == nordAV.NUMERO && a.COGE == nordAV.COGE && site.Contains(a.SITE)).FirstOrDefault();
+                                try
+                                {
+                                    var reglementAV = tom.GA_AVANCE.Where(a => a.NUMERO == nordAV.NUMERO && a.COGE == nordAV.COGE && site.Contains(a.SITE)).FirstOrDefault();
 
 
+                                    list.Add(new DataListTomOP()
+                                    {
+                                        No = reglementAV.NUMERO,
+                                        Date = reglementAV.DATE.Value,
+                                        Auxi = reglementAV.AUXI,
+                                        NoPiece = reglementAV.NUMERO_PIECE,
+                                        Compte = nordAV.COGE,
+                                        Libelle = nordAV.LIBELLE,
+                                        Montant = nordAV.MONTANT,
+                                        MontantDevise = 0,
+                                        Mon = "",
+                                        Rang = nordAV.ACTI,
+                                        Poste = nordAV.POSTE,
+                                        FinancementCategorie = nordAV.CONVENTION + " " + nordAV.CATEGORIE,
+                                        Commune = nordAV.GEO,
+                                        Plan6 = nordAV.PLAN6,
+                                        Journal = journal,
+                                        Marche = "",
+                                        Avance = nordAV.TYPE != null ? true : false,
+                                        Status = etat,
+                                        Mandat = "",
+                                        AUTREOPERATIONS = false,
+                                        SITE = reglementAV.SITE,
+                                    });
+
+                                }
+                                catch (Exception ex)
+                                {
+                                    hasData = ex.Message;
+                                }
+
+
+                            }
+
+                            foreach (var nordAOPS in lNoOpsAOPS)
+                            {
+                                try
+                                {
+                                    list.Add(new DataListTomOP()
+                                    {
+                                        No = nordAOPS.NUMEROOPERATION,
+                                        Date = nordAOPS.DATEOPERATION.Value,
+                                        Auxi = "",
+                                        NoPiece = nordAOPS.NUMEROOPERATION,
+                                        Compte = "",
+                                        Libelle = nordAOPS.LIBELLE,
+                                        Montant = nordAOPS.MONTANTLOCAL.Value,
+                                        MontantDevise = nordAOPS.MONTANTDEVISE.Value,
+                                        Mon = "",
+                                        Rang = "",
+                                        Poste = "",
+                                        FinancementCategorie = /*nordAOPS.FINANCEMENT + " " + nordAOPS.CATEGORIE*/ "",
+                                        Commune = "",
+                                        Plan6 = "",
+                                        Journal = nordAOPS.JOURNAL,
+                                        Marche = /*nordAOPS.MARCHER*/ "",
+                                        Status = "",
+                                        Avance = nordAOPS.TYPE != null ? false : true,
+                                        Mandat = "",
+                                        NUMEREG = 0,
+                                        AUTREOPERATIONS = true,
+                                        SITE = nordAOPS.SITE,
+                                    });
+
+                                }
+                                catch (Exception ex) { hasData = ex.Message; }
+
+
+                            }
+                        }
+                        else
+                        {
+                            List<MOPFOP> lNoOp = (from m in lNoOPS
+                                                  where m.COGEFOURNISSEUR == auxi
+                                                  select m).ToList();
+                            //List<MOP> lNoOp = (from m in lNoOPS
+                            //                   where m.AUXIFOURNISSEUR == auxi
+                            //                   select m).ToList();
+                            foreach (var nord in lNoOp)
+                            {
+                                try
+                                {
+                                    //var reglement = (from mcpt in tom.MOP
+                                    //                 where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.COGE == djournal.COMPTEASSOCIE
+                                    //                 select mcpt).Single();
+                                    var reglement = (from mcpt in tom.MOP
+                                                     where mcpt.NUMEROOP == nord.NUMEROOP /*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
+                                                     select mcpt).ToList();
+                                    if (reglement != null)
+                                    {
+                                        foreach (var item in reglement)
+                                        {
+                                            list.Add(new DataListTomOP()
+                                            {
+                                                No = item.NUMEROOP,
+                                                Date = item.DATEFACTURE.Value,
+                                                Auxi = item.AUXI,
+                                                NoPiece = item.NUMEROFACTURE,
+                                                Compte = item.COGE,
+                                                Libelle = item.LIBELLE,
+                                                Montant = item.MONTANTLOC.Value,
+                                                MontantDevise = item.MONTANTDEV.Value,
+                                                Mon = "",
+                                                Rang = item.ACTI,
+                                                Poste = item.POSTE,
+                                                FinancementCategorie = item.CONVENTION + " " + item.CATEGORIE,
+                                                Commune = item.GEO,
+                                                Plan6 = item.PLAN6,
+                                                Journal = journal,
+                                                Marche = "",
+                                                Status = etat,
+                                                Mandat = nord.NUMEROLIQUIDATION
+                                            });
+                                        }
+                                    }
+                                }
+                                catch (Exception ex) { hasData = ex.Message; }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        List<MOPFOP> lOPCOGE = (from m in lNoOPS
+                                                where m.COGEFOURNISSEUR == compteG
+                                                select m).ToList();
+
+                        List<GA_AVANCE_DETAILS> lOPCOGEAV = (from m in lNoOpsAV
+                                                             where m.COGE == compteG
+                                                             select m).ToList();
+
+                        List<AUTRE8OPERATION> lNoOpsAOPS = lNoOpsAOP;
+
+                        if (auxi == "" || auxi == "Tous")
+                        {
+                            foreach (var item in lOPCOGEAV)
+                            {
+                                var reglementAV = tom.GA_AVANCE.Where(a => a.NUMERO == item.NUMERO && site.Contains(a.SITE)).FirstOrDefault();
                                 list.Add(new DataListTomOP()
                                 {
                                     No = reglementAV.NUMERO,
                                     Date = reglementAV.DATE.Value,
                                     Auxi = reglementAV.AUXI,
                                     NoPiece = reglementAV.NUMERO_PIECE,
-                                    Compte = nordAV.COGE,
-                                    Libelle = nordAV.LIBELLE,
-                                    Montant = nordAV.MONTANT,
+                                    Compte = reglementAV.COGE,
+                                    CogeFourniseur = reglementAV.COGE,
+                                    Libelle = reglementAV.LIBELLE,
+                                    Montant = item.MONTANT,
                                     MontantDevise = 0,
                                     Mon = "",
-                                    Rang = nordAV.ACTI,
-                                    Poste = nordAV.POSTE,
-                                    FinancementCategorie = nordAV.CONVENTION + " " + nordAV.CATEGORIE,
-                                    Commune = nordAV.GEO,
-                                    Plan6 = nordAV.PLAN6,
+                                    Rang = item.ACTI,
+                                    Poste = item.POSTE,
+                                    FinancementCategorie = item.CONVENTION + " " + item.CATEGORIE,
+                                    Commune = item.GEO,
+                                    Plan6 = item.PLAN6,
                                     Journal = journal,
-                                    Marche = "",
-                                    Avance = nordAV.TYPE != null ? true : false,
+                                    Marche = reglementAV.MARCHE,
                                     Status = etat,
+                                    Avance = true,
                                     Mandat = "",
                                     AUTREOPERATIONS = false,
                                     SITE = reglementAV.SITE,
                                 });
-
                             }
-                            catch (Exception) { }
-
-
-                        }
-
-                        foreach (var nordAOPS in lNoOpsAOPS)
-                        {
-                            try
-                            {
-                                list.Add(new DataListTomOP()
-                                {
-                                    No = nordAOPS.NUMEROOPERATION,
-                                    Date = nordAOPS.DATEOPERATION.Value,
-                                    Auxi = "",
-                                    NoPiece = nordAOPS.NUMEROOPERATION,
-                                    Compte = "",
-                                    Libelle = nordAOPS.LIBELLE,
-                                    Montant = nordAOPS.MONTANTLOCAL.Value,
-                                    MontantDevise = nordAOPS.MONTANTDEVISE.Value,
-                                    Mon = "",
-                                    Rang = "",
-                                    Poste = "",
-                                    FinancementCategorie = /*nordAOPS.FINANCEMENT + " " + nordAOPS.CATEGORIE*/ "",
-                                    Commune = "",
-                                    Plan6 = "",
-                                    Journal = nordAOPS.JOURNAL,
-                                    Marche = /*nordAOPS.MARCHER*/ "",
-                                    Status = "",
-                                    Avance = nordAOPS.TYPE != null ? false : true,
-                                    Mandat = "",
-                                    NUMEREG = 0,
-                                    AUTREOPERATIONS = true,
-                                    SITE = nordAOPS.SITE,
-                                });
-
-                            }
-                            catch (Exception) { }
-
-
-                        }
-                    }
-                    else
-                    {
-                        List<MOPFOP> lNoOp = (from m in lNoOPS
-                                              where m.COGEFOURNISSEUR == auxi
-                                              select m).ToList();
-                        //List<MOP> lNoOp = (from m in lNoOPS
-                        //                   where m.AUXIFOURNISSEUR == auxi
-                        //                   select m).ToList();
-                        foreach (var nord in lNoOp)
-                        {
-                            try
-                            {
-                                //var reglement = (from mcpt in tom.MOP
-                                //                 where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.COGE == djournal.COMPTEASSOCIE
-                                //                 select mcpt).Single();
-                                var reglement = (from mcpt in tom.MOP
-                                                 where mcpt.NUMEROOP == nord.NUMEROOP /*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
-                                                 select mcpt).ToList();
-                                if (reglement != null)
-                                {
-                                    foreach (var item in reglement)
-                                    {
-                                        list.Add(new DataListTomOP()
-                                        {
-                                            No = item.NUMEROOP,
-                                            Date = item.DATEFACTURE.Value,
-                                            Auxi = item.AUXI,
-                                            NoPiece = item.NUMEROFACTURE,
-                                            Compte = item.COGE,
-                                            Libelle = item.LIBELLE,
-                                            Montant = item.MONTANTLOC.Value,
-                                            MontantDevise = item.MONTANTDEV.Value,
-                                            Mon = "",
-                                            Rang = item.ACTI,
-                                            Poste = item.POSTE,
-                                            FinancementCategorie = item.CONVENTION + " " + item.CATEGORIE,
-                                            Commune = item.GEO,
-                                            Plan6 = item.PLAN6,
-                                            Journal = journal,
-                                            Marche = "",
-                                            Status = etat,
-                                            Mandat = nord.NUMEROLIQUIDATION
-                                        });
-                                    }
-                                }
-                            }
-                            catch (Exception) { }
-                        }
-                    }
-                }
-                else
-                {
-                    List<MOPFOP> lOPCOGE = (from m in lNoOPS
-                                            where m.COGEFOURNISSEUR == compteG
-                                            select m).ToList();
-
-                    List<GA_AVANCE_DETAILS> lOPCOGEAV = (from m in lNoOpsAV
-                                                         where m.COGE == compteG
-                                                         select m).ToList();
-
-                    List<AUTRE8OPERATION> lNoOpsAOPS = lNoOpsAOP;
-
-                    if (auxi == "" || auxi == "Tous")
-                    {
-                        foreach (var item in lOPCOGEAV)
-                        {
-                            var reglementAV = tom.GA_AVANCE.Where(a => a.NUMERO == item.NUMERO && site.Contains(a.SITE)).FirstOrDefault();
-                            list.Add(new DataListTomOP()
-                            {
-                                No = reglementAV.NUMERO,
-                                Date = reglementAV.DATE.Value,
-                                Auxi = reglementAV.AUXI,
-                                NoPiece = reglementAV.NUMERO_PIECE,
-                                Compte = reglementAV.COGE,
-                                CogeFourniseur = reglementAV.COGE,
-                                Libelle = reglementAV.LIBELLE,
-                                Montant = item.MONTANT,
-                                MontantDevise = 0,
-                                Mon = "",
-                                Rang = item.ACTI,
-                                Poste = item.POSTE,
-                                FinancementCategorie = item.CONVENTION + " " + item.CATEGORIE,
-                                Commune = item.GEO,
-                                Plan6 = item.PLAN6,
-                                Journal = journal,
-                                Marche = reglementAV.MARCHE,
-                                Status = etat,
-                                Avance = true,
-                                Mandat = "",
-                                AUTREOPERATIONS = false,
-                                SITE = reglementAV.SITE,
-                            });
-                        }
-                        foreach (var nord in lOPCOGE)
-                        {
-                            try
-                            {
-                                //var reglement = (from mcpt in tom.MOP
-                                //                 where mcpt.NUMEROOP == nord.NUMEROOP /*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
-                                //                 select mcpt).Single();
-                                var reglement = (from mcpt in tom.MOP
-                                                 where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.NUMENREG == nord.NUMENREG && site.Contains(mcpt.SITE) /*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
-                                                 select mcpt).FirstOrDefault();
-                                if (reglement != null)
-                                {
-                                    list.Add(new DataListTomOP()
-                                    {
-                                        No = reglement.NUMEROOP,
-                                        Date = reglement.DATEFACTURE.Value,
-                                        Auxi = reglement.AUXIFOURNISSEUR,
-                                        NoPiece = reglement.NUMEROFACTURE,
-                                        Compte = reglement.COGE,
-                                        Libelle = reglement.LIBELLE,
-                                        Montant = reglement.MONTANTLOC.Value,
-                                        MontantDevise = reglement.MONTANTDEV.Value,
-                                        Mon = "",
-                                        Rang = reglement.ACTI,
-                                        Poste = reglement.POSTE,
-                                        FinancementCategorie = reglement.CONVENTION + " " + reglement.CATEGORIE,
-                                        Commune = reglement.GEO,
-                                        Plan6 = reglement.PLAN6,
-                                        Journal = journal,
-                                        Marche = nord.MARCHE,
-                                        Status = etat,
-                                        Avance = false,
-                                        Mandat = nord.NUMEROLIQUIDATION,
-                                        NUMEREG = reglement.NUMENREG,
-                                        CogeFourniseur = reglement.COGEFOURNISSEUR,
-                                        AUTREOPERATIONS = false,
-                                        SITE = reglement.SITE,
-                                    });
-                                }
-
-                            }
-                            catch (Exception) { }
-
-
-                        }
-
-                        foreach (var nordAOPS in lNoOpsAOPS)
-                        {
-                            try
-                            {
-                                list.Add(new DataListTomOP()
-                                {
-                                    No = nordAOPS.NUMEROOPERATION,
-                                    Date = nordAOPS.DATEOPERATION.Value,
-                                    Auxi = "",
-                                    NoPiece = nordAOPS.NUMEROOPERATION,
-                                    Compte = "",
-                                    Libelle = nordAOPS.LIBELLE,
-                                    Montant = nordAOPS.MONTANTLOCAL.Value,
-                                    MontantDevise = nordAOPS.MONTANTDEVISE.Value,
-                                    Mon = "",
-                                    Rang = "",
-                                    Poste = "",
-                                    FinancementCategorie = /*nordAOPS.FINANCEMENT + " " + nordAOPS.CATEGORIE*/ "",
-                                    Commune = "",
-                                    Plan6 = "",
-                                    Journal = nordAOPS.JOURNAL,
-                                    Marche = /*nordAOPS.MARCHER*/ "",
-                                    Status = "",
-                                    Mandat = "",
-                                    NUMEREG = 0,
-                                    AUTREOPERATIONS = true,
-                                    SITE = nordAOPS.SITE,
-                                });
-
-                            }
-                            catch (Exception) { }
-
-
-                        }
-                    }
-                    else
-                    {
-                        List<MOPFOP> lNoOp = (from m in lOPCOGE
-                                              where m.AUXIFOURNISSEUR == auxi
-                                              select m).ToList();
-
-                        List<GA_AVANCE_DETAILS> lNoOpAV = (from m in lNoOpsAV
-                                                           where m.AUXI == auxi
-                                                           select m).ToList();
-
-                        if (lNoOp != null)
-                        {
-                            foreach (var nord in lNoOp)
+                            foreach (var nord in lOPCOGE)
                             {
                                 try
                                 {
-                                    var reglement = (from mcpt in tom.MOP
-                                                     where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.NUMENREG == nord.NUMENREG/*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
-                                                     select mcpt).FirstOrDefault();
-
-                                    //246610 246340  BR N°00022/01 246610
                                     //var reglement = (from mcpt in tom.MOP
-                                    //                 where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.COGE == djournal.COMPTEASSOCIE
+                                    //                 where mcpt.NUMEROOP == nord.NUMEROOP /*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
                                     //                 select mcpt).Single();
-
+                                    var reglement = (from mcpt in tom.MOP
+                                                     where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.NUMENREG == nord.NUMENREG && site.Contains(mcpt.SITE) /*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
+                                                     select mcpt).FirstOrDefault();
                                     if (reglement != null)
                                     {
                                         list.Add(new DataListTomOP()
@@ -4667,126 +4590,232 @@ namespace apptab.Extension
                                             Journal = journal,
                                             Marche = nord.MARCHE,
                                             Status = etat,
+                                            Avance = false,
                                             Mandat = nord.NUMEROLIQUIDATION,
                                             NUMEREG = reglement.NUMENREG,
                                             CogeFourniseur = reglement.COGEFOURNISSEUR,
-                                            SITE = reglement.SITE
+                                            AUTREOPERATIONS = false,
+                                            SITE = reglement.SITE,
                                         });
                                     }
 
-
                                 }
-                                catch (Exception) { }
+                                catch (Exception ex) { hasData = ex.Message; }
+
+
                             }
-                        }
-                        if (lNoOpAV != null)
-                        {
-                            foreach (var nord in lNoOpAV)
+
+                            foreach (var nordAOPS in lNoOpsAOPS)
                             {
                                 try
                                 {
-                                    var reglement = tom.GA_AVANCE.Where(a => a.NUMERO == nord.NUMERO && a.COGE == nord.COGE).FirstOrDefault();
-                                    //246610 246340  BR N°00022/01 246610
-                                    //var reglement = (from mcpt in tom.MOP
-                                    //                 where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.COGE == djournal.COMPTEASSOCIE
-                                    //                 select mcpt).Single();
-                                    if (reglement != null)
+                                    list.Add(new DataListTomOP()
                                     {
-                                        list.Add(new DataListTomOP()
-                                        {
-                                            No = reglement.NUMERO,
-                                            Date = reglement.DATE.Value,
-                                            Auxi = reglement.AUXI,
-                                            NoPiece = reglement.NUMERO_PIECE,
-                                            Compte = reglement.COGE,
-                                            Libelle = reglement.LIBELLE,
-                                            Montant = nord.MONTANT,
-                                            MontantDevise = 0,
-                                            Mon = "",
-                                            Rang = nord.ACTI,
-                                            Poste = nord.POSTE,
-                                            FinancementCategorie = nord.CONVENTION + " " + nord.CATEGORIE,
-                                            Commune = nord.GEO,
-                                            Plan6 = nord.PLAN6,
-                                            Journal = journal,
-                                            Marche = "",
-                                            Status = etat,
-                                            Avance = true,
-                                            Mandat = "",
-                                            SITE = reglement.SITE
-                                        });
-                                    }
+                                        No = nordAOPS.NUMEROOPERATION,
+                                        Date = nordAOPS.DATEOPERATION.Value,
+                                        Auxi = "",
+                                        NoPiece = nordAOPS.NUMEROOPERATION,
+                                        Compte = "",
+                                        Libelle = nordAOPS.LIBELLE,
+                                        Montant = nordAOPS.MONTANTLOCAL.Value,
+                                        MontantDevise = nordAOPS.MONTANTDEVISE.Value,
+                                        Mon = "",
+                                        Rang = "",
+                                        Poste = "",
+                                        FinancementCategorie = /*nordAOPS.FINANCEMENT + " " + nordAOPS.CATEGORIE*/ "",
+                                        Commune = "",
+                                        Plan6 = "",
+                                        Journal = nordAOPS.JOURNAL,
+                                        Marche = /*nordAOPS.MARCHER*/ "",
+                                        Status = "",
+                                        Mandat = "",
+                                        NUMEREG = 0,
+                                        AUTREOPERATIONS = true,
+                                        SITE = nordAOPS.SITE,
+                                    });
+
                                 }
-                                catch (Exception) { }
+                                catch (Exception ex) { hasData = ex.Message; }
+
+
                             }
                         }
-
-                        foreach (var nordAOPS in lNoOpsAOPS)
+                        else
                         {
-                            try
+                            List<MOPFOP> lNoOp = (from m in lOPCOGE
+                                                  where m.AUXIFOURNISSEUR == auxi
+                                                  select m).ToList();
+
+                            List<GA_AVANCE_DETAILS> lNoOpAV = (from m in lNoOpsAV
+                                                               where m.AUXI == auxi
+                                                               select m).ToList();
+
+                            if (lNoOp != null)
                             {
-                                list.Add(new DataListTomOP()
+                                foreach (var nord in lNoOp)
                                 {
-                                    No = nordAOPS.NUMEROOPERATION,
-                                    Date = nordAOPS.DATEOPERATION.Value,
-                                    Auxi = "",
-                                    NoPiece = nordAOPS.NUMEROOPERATION,
-                                    Compte = "",
-                                    Libelle = nordAOPS.LIBELLE,
-                                    Montant = nordAOPS.MONTANTLOCAL.Value,
-                                    MontantDevise = nordAOPS.MONTANTDEVISE.Value,
-                                    Mon = "",
-                                    Rang = "",
-                                    Poste = "",
-                                    FinancementCategorie = /*nordAOPS.FINANCEMENT + " " + nordAOPS.CATEGORIE*/ "",
-                                    Commune = "",
-                                    Plan6 = "",
-                                    Journal = nordAOPS.JOURNAL,
-                                    Marche = /*nordAOPS.MARCHER*/ "",
-                                    Status = "",
-                                    Mandat = "",
-                                    NUMEREG = 0,
-                                    AUTREOPERATIONS = true,
-                                    SITE = nordAOPS.SITE,
-                                });
+                                    try
+                                    {
+                                        var reglement = (from mcpt in tom.MOP
+                                                         where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.NUMENREG == nord.NUMENREG/*&& mcpt.COGE == djournal.COMPTEASSOCIE*/
+                                                         select mcpt).FirstOrDefault();
+
+                                        //246610 246340  BR N°00022/01 246610
+                                        //var reglement = (from mcpt in tom.MOP
+                                        //                 where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.COGE == djournal.COMPTEASSOCIE
+                                        //                 select mcpt).Single();
+
+                                        if (reglement != null)
+                                        {
+                                            list.Add(new DataListTomOP()
+                                            {
+                                                No = reglement.NUMEROOP,
+                                                Date = reglement.DATEFACTURE.Value,
+                                                Auxi = reglement.AUXIFOURNISSEUR,
+                                                NoPiece = reglement.NUMEROFACTURE,
+                                                Compte = reglement.COGE,
+                                                Libelle = reglement.LIBELLE,
+                                                Montant = reglement.MONTANTLOC.Value,
+                                                MontantDevise = reglement.MONTANTDEV.Value,
+                                                Mon = "",
+                                                Rang = reglement.ACTI,
+                                                Poste = reglement.POSTE,
+                                                FinancementCategorie = reglement.CONVENTION + " " + reglement.CATEGORIE,
+                                                Commune = reglement.GEO,
+                                                Plan6 = reglement.PLAN6,
+                                                Journal = journal,
+                                                Marche = nord.MARCHE,
+                                                Status = etat,
+                                                Mandat = nord.NUMEROLIQUIDATION,
+                                                NUMEREG = reglement.NUMENREG,
+                                                CogeFourniseur = reglement.COGEFOURNISSEUR,
+                                                SITE = reglement.SITE
+                                            });
+                                        }
+
+
+                                    }
+                                    catch (Exception ex) { hasData = ex.Message; }
+                                }
+                            }
+                            if (lNoOpAV != null)
+                            {
+                                foreach (var nord in lNoOpAV)
+                                {
+                                    try
+                                    {
+                                        var reglement = tom.GA_AVANCE.Where(a => a.NUMERO == nord.NUMERO && a.COGE == nord.COGE).FirstOrDefault();
+                                        //246610 246340  BR N°00022/01 246610
+                                        //var reglement = (from mcpt in tom.MOP
+                                        //                 where mcpt.NUMEROOP == nord.NUMEROOP && mcpt.COGE == djournal.COMPTEASSOCIE
+                                        //                 select mcpt).Single();
+                                        if (reglement != null)
+                                        {
+                                            list.Add(new DataListTomOP()
+                                            {
+                                                No = reglement.NUMERO,
+                                                Date = reglement.DATE.Value,
+                                                Auxi = reglement.AUXI,
+                                                NoPiece = reglement.NUMERO_PIECE,
+                                                Compte = reglement.COGE,
+                                                Libelle = reglement.LIBELLE,
+                                                Montant = nord.MONTANT,
+                                                MontantDevise = 0,
+                                                Mon = "",
+                                                Rang = nord.ACTI,
+                                                Poste = nord.POSTE,
+                                                FinancementCategorie = nord.CONVENTION + " " + nord.CATEGORIE,
+                                                Commune = nord.GEO,
+                                                Plan6 = nord.PLAN6,
+                                                Journal = journal,
+                                                Marche = "",
+                                                Status = etat,
+                                                Avance = true,
+                                                Mandat = "",
+                                                SITE = reglement.SITE
+                                            });
+                                        }
+                                    }
+                                    catch (Exception ex) { hasData = ex.Message; }
+                                }
+                            }
+
+                            foreach (var nordAOPS in lNoOpsAOPS)
+                            {
+                                try
+                                {
+                                    list.Add(new DataListTomOP()
+                                    {
+                                        No = nordAOPS.NUMEROOPERATION,
+                                        Date = nordAOPS.DATEOPERATION.Value,
+                                        Auxi = "",
+                                        NoPiece = nordAOPS.NUMEROOPERATION,
+                                        Compte = "",
+                                        Libelle = nordAOPS.LIBELLE,
+                                        Montant = nordAOPS.MONTANTLOCAL.Value,
+                                        MontantDevise = nordAOPS.MONTANTDEVISE.Value,
+                                        Mon = "",
+                                        Rang = "",
+                                        Poste = "",
+                                        FinancementCategorie = /*nordAOPS.FINANCEMENT + " " + nordAOPS.CATEGORIE*/ "",
+                                        Commune = "",
+                                        Plan6 = "",
+                                        Journal = nordAOPS.JOURNAL,
+                                        Marche = /*nordAOPS.MARCHER*/ "",
+                                        Status = "",
+                                        Mandat = "",
+                                        NUMEREG = 0,
+                                        AUTREOPERATIONS = true,
+                                        SITE = nordAOPS.SITE,
+                                    });
+
+                                }
+                                catch (Exception ex) { hasData = ex.Message; }
+
 
                             }
-                            catch (Exception) { }
 
+                        }
+                    }
+                    #endregion
+                    #region Enregistrement donneur d'ordre
 
+                    foreach (var item in list)
+                    {
+                        if (item.AUTREOPERATIONS == true)
+                        {
+                            //djournal = (from jrnl in tom.RJL1
+                            //            where jrnl.CODE == item.Journal && jrnl.JLTRESOR == true
+                            //            select jrnl).SingleOrDefault();
+
+                            bool test = saveDonneurOrdreBR(user, djournal, item.Banque, dateP, PROJECTID);
+                        }
+                        else
+                        {
+                            bool test = saveDonneurOrdreBR(user, djournal, item.Banque, dateP, PROJECTID);
                         }
 
                     }
+                    //bool test = saveDonneurOrdreBR(user, djournal, dateP, PROJECTID);
+                    #endregion
+                    /*var afficheDOrdre = (from dord in db.OPA_DONNEURORDRE
+                                         where dord.IDSOCIETE == user.IDSOCIETE
+                                         select dord).First();
+                    this.tNomDOrdre.Text = afficheDOrdre.DONNEUR_ORDRE;
+
+                    this.tRIBdordre.Text = afficheDOrdre.CODE_BANQUE + afficheDOrdre.CODE_GUICHET + afficheDOrdre.NUM_COMPTE;*/
                 }
-                #endregion
-                #region Enregistrement donneur d'ordre
-
-                foreach (var item in list)
-                {
-                    if (item.AUTREOPERATIONS == true)
-                    {
-                        //djournal = (from jrnl in tom.RJL1
-                        //            where jrnl.CODE == item.Journal && jrnl.JLTRESOR == true
-                        //            select jrnl).SingleOrDefault();
-
-                        bool test = saveDonneurOrdreBR(user, djournal, item.Banque, dateP, PROJECTID);
-                    }
-                    else
-                    {
-                        bool test = saveDonneurOrdreBR(user, djournal, item.Banque, dateP, PROJECTID);
-                    }
-
-                }
-                //bool test = saveDonneurOrdreBR(user, djournal, dateP, PROJECTID);
-                #endregion
-                /*var afficheDOrdre = (from dord in db.OPA_DONNEURORDRE
-                                     where dord.IDSOCIETE == user.IDSOCIETE
-                                     select dord).First();
-                this.tNomDOrdre.Text = afficheDOrdre.DONNEUR_ORDRE;
-
-                this.tRIBdordre.Text = afficheDOrdre.CODE_BANQUE + afficheDOrdre.CODE_GUICHET + afficheDOrdre.NUM_COMPTE;*/
             }
-            return list;
+            catch (Exception ex)
+            {
+                hasData = ex.Message;
+                throw;
+            }
+
+            //return list;
+            // Vérifie si la liste contient des données
+
+            return Tuple.Create(hasData, list);
         }
         public OPA_DONNEURORDRE getDonneurOrdre(SI_USERS user)
         {
@@ -5001,13 +5030,13 @@ namespace apptab.Extension
             string textdate = day + mounth + year;
             return this.couperText(5, textdate);
         }
-        public void SaveValideSelectEcritureBR(string numBR, string numereg, string journal, string etat, bool devise, SI_USERS user, int PROJECTID, bool avance, List<string> site)
+        public string SaveValideSelectEcritureBR(string numBR, string numereg, string journal, string etat, bool devise, SI_USERS user, int PROJECTID, bool avance, List<string> site)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
             //bool test = false;
             List<int> supprLignes = new List<int>();
-
+            string resultat = "";
             //RJL1 djournal = (from jrnl in tom.RJL1
             //                 where jrnl.CODE == journal
             //                 select jrnl).Single();
@@ -5148,9 +5177,11 @@ namespace apptab.Extension
                     }
                     #endregion
                     //test = true;
+                   return resultat = "Traitement avec Succes !";
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                  return  resultat = ex.Message;
                     //test = false;
                 }
             }
@@ -5343,10 +5374,12 @@ namespace apptab.Extension
 
                     #endregion
                     //test = true;
+                   return resultat = "Traitement avec Succes !";
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     //test = false;
+                   return resultat = ex.Message;
                 }
 
             }

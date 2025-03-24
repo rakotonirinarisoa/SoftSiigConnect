@@ -336,7 +336,7 @@
 
         public bool? SUIVIPLAN7 { get; set; }
 
-        public bool? LIGNEBUD { get; set; }
+       // public bool? LIGNEBUD { get; set; }
 
         //public bool? ParamPaie_estIndice { get; set; }
 

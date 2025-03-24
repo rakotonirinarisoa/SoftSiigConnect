@@ -644,10 +644,12 @@ namespace apptab.Controllers
 
             var pswftp = db.OPA_CRYPTO.Where(x => x.IDPROJET == PROJECTID && x.IDUSER == suser.ID && x.DELETIONDATE != null).Select(x => x.CRYPTOPWD).FirstOrDefault();
             List<OPA_VALIDATIONS> avalider = new List<OPA_VALIDATIONS>();
+            List<OPA_REGLEMENTBR> reglementValider = new List<OPA_REGLEMENTBR>();
             foreach (var item in list)
             {
                 int b = int.Parse(item.Numereg);
                 avalider.AddRange(db.OPA_VALIDATIONS.Where(a => a.IDPROJET == PROJECTID && a.ETAT == 2 && a.IDREGLEMENT == item.Id && a.NUMEREG == b).ToList());
+                reglementValider.AddRange(db.OPA_REGLEMENTBR.Where(x => x.IDSOCIETE == PROJECTID && x.ETAT == "0" && x.NUM == item.Id && x.NUMEREG == b).ToList());
             };
             var path = "";
             var Nomfichier = "";
@@ -718,6 +720,19 @@ namespace apptab.Controllers
                             throw;
                         }
                     }
+                    foreach (var item in reglementValider)
+                    {
+                        try
+                        {
+                            item.ETAT = "1";
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                            throw;
+                        }
+                    }
                 }
             }
             else if (intbasetype == 5)//mise a disposition
@@ -761,7 +776,7 @@ namespace apptab.Controllers
                     SFTP(ftp.HOTE, ftp.PATH, ftp.IDENTIFIANT, ftp.FTPPWD, pathfile.Chemin, pport, intbasetype, PROJECTID, directory, ftp.BANQUE);
                 }
 
-                if (avalider != null)
+                if (avalider != null )
                 {
                     foreach (var item in avalider)
                     {
@@ -771,6 +786,19 @@ namespace apptab.Controllers
 
                             item.IDUSTRANS = exist.ID;
                             item.ETAT = 3;
+                            db.SaveChanges();
+                        }
+                        catch (Exception ex)
+                        {
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                            throw;
+                        }
+                    }
+                    foreach (var item in reglementValider)
+                    {
+                        try
+                        {
+                            item.ETAT = "1";
                             db.SaveChanges();
                         }
                         catch (Exception ex)
@@ -839,6 +867,19 @@ namespace apptab.Controllers
                                 throw;
                             }
                         }
+                        foreach (var item in reglementValider)
+                        {
+                            try
+                            {
+                                item.ETAT = "1";
+                                db.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                                throw;
+                            }
+                        }
                     }
                 }
             }
@@ -883,6 +924,19 @@ namespace apptab.Controllers
                                 item.DATETRANS = DateTime.Now;
                                 item.IDUSTRANS = exist.ID;
                                 item.ETAT = 3;
+                                db.SaveChanges();
+                            }
+                            catch (Exception ex)
+                            {
+                                return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                                throw;
+                            }
+                        }
+                        foreach (var item in reglementValider)
+                        {
+                            try
+                            {
+                                item.ETAT = "1";
                                 db.SaveChanges();
                             }
                             catch (Exception ex)
@@ -1113,9 +1167,15 @@ namespace apptab.Controllers
             if (hstSiig.Any())
             {
                 var idReglements = new HashSet<string>(hstSiig.Select(h => h.IDREGLEMENT));
-                var tomproresult = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site)
-                    .DistinctBy(x => (x.No, x.NUMEREG))
-                    .ToList();
+                var result = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site);
+                var tomproresult = result.Item2.DistinctBy(x => (x.No, x.NUMEREG)).ToList();
+                if (result.Item1 != "OK")
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = result.Item1 }, settings));
+                }
+                //var tomproresult = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site)
+                //    .DistinctBy(x => (x.No, x.NUMEREG))
+                //    .ToList();
                 foreach (var s1 in tomproresult)
                 {
                     // Vérifier si s1.No n'est pas dans hstSiig
@@ -1144,7 +1204,12 @@ namespace apptab.Controllers
             }
             else
             {
-                list.AddRange(afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site).ToList());
+                var result = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site);
+                if (result.Item1 != "OK")
+                {
+                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = result.Item1, data = "" }, settings));
+                }
+                list.AddRange(result.Item2.ToList());
             }
 
 
@@ -1204,6 +1269,7 @@ namespace apptab.Controllers
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
             var siteS = db.SI_SITE.Where(ST => ST.IDUSER == exist.ID && ST.IDPROJET == crpt).Select(ST => ST.SITE).FirstOrDefault();
+            #region Journal par fid
             //var ruserJournalq = tom.RUSER.ToList();
             //var ruserJournal = tom.RUSER.Where(x => siteS.Contains(x.SITE)).Select(x => x.JOURNAL).FirstOrDefault();
             //List<RUSER> ruserJournal = new List<RUSER>();
@@ -1267,6 +1333,7 @@ namespace apptab.Controllers
 
             //    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = JournalVM }, settings));
             //}
+            #endregion
             var JournalVM = tom.RJL1.Where(x => x.JLTRESOR == true && x.NATURE == "2").Select(x => new
             {
                 CODE = x.CODE,
@@ -1549,8 +1616,13 @@ namespace apptab.Controllers
                     foreach (var h in list)
                     {
                         int a = int.Parse(h.Numereg);
-
-                        var listA = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site).Where(x => x.No.ToString() == h.Id && x.NUMEREG == a && x.SITE == item).ToList();
+                        var result = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site);
+                        if (result.Item1 != "OK")
+                        {
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = result.Item1, data = "" }, settings));
+                        }
+                        var listA = result.Item2.Where(x => x.No.ToString() == h.Id && x.NUMEREG == a && x.SITE == item).ToList();
+                        
                         foreach (var Lst in listA)
                         {
                             var existingRecord = db.OPA_VALIDATIONS
@@ -1669,7 +1741,7 @@ namespace apptab.Controllers
             }
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Tratement avec succès. ", data = "" }, settings));
         }
-        //=========================================================================================TeacherValidation======================================================================
+        //=========================================================================================TeacherValidation=========================================================================================
         [HttpPost]
         public JsonResult GetElementAvalider(string ChoixBase, string codeproject, DateTime datein, DateTime dateout, string comptaG, string auxi, string auxi1, DateTime dateP, string journal, string etat, bool devise, SI_USERS suser)
         {
@@ -1990,7 +2062,7 @@ namespace apptab.Controllers
             {
                 Applicable = 2;
             }
-
+            string resultat = "";
             if (Applicable == 2)
             {
                 if (basename == "2")
@@ -2001,7 +2073,11 @@ namespace apptab.Controllers
                 {
                     foreach (var item in AvaliderList)
                     {
-                        aFB160.SaveValideSelectEcritureBR(item.IDREGLEMENT, item.NUMEREG.ToString(), item.Journal, item.ETAT.ToString(), devise, suser, PROJECTID, (bool)item.AVANCE, site);
+                        resultat = aFB160.SaveValideSelectEcritureBR(item.IDREGLEMENT, item.NUMEREG.ToString(), item.Journal, item.ETAT.ToString(), devise, suser, PROJECTID, (bool)item.AVANCE, site);
+                        if (resultat != "Traitement avec Succes !")
+                        {
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = resultat }, settings));
+                        }
                     }
 
                 }
@@ -2074,7 +2150,7 @@ namespace apptab.Controllers
                             smtp.EnableSsl = true;
 
                             try { smtp.Send(mail); }
-                            catch (Exception) { }
+                            catch (Exception ex) { return Json(JsonConvert.SerializeObject(new { type = "error", msg = ex.Message, data = "" }, settings)); }
                         }
                     }
 
@@ -2149,7 +2225,7 @@ namespace apptab.Controllers
                             smtp.EnableSsl = true;
 
                             try { smtp.Send(mail); }
-                            catch (Exception) { }
+                            catch (Exception ex) { return Json(JsonConvert.SerializeObject(new { type = "error", msg = ex.Message, data = "" }, settings)); }
                         }
                     }
 
@@ -2157,6 +2233,7 @@ namespace apptab.Controllers
             }
             else
             {//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////Non applicable////////////////////////////////////////////////////////////////////////
+                
                 if (basename == "2")
                 {
                     aFB160.SaveValideSelectEcriture(list, true, suser, codeproject, site);
@@ -2165,7 +2242,11 @@ namespace apptab.Controllers
                 {
                     foreach (var item in AvaliderList)
                     {
-                        aFB160.SaveValideSelectEcritureBR(item.IDREGLEMENT, item.NUMEREG.ToString(), item.Journal, item.ETAT.ToString(), devise, suser, PROJECTID, (bool)item.AVANCE, site);
+                        resultat =  aFB160.SaveValideSelectEcritureBR(item.IDREGLEMENT, item.NUMEREG.ToString(), item.Journal, item.ETAT.ToString(), devise, suser, PROJECTID, (bool)item.AVANCE, site);
+                        if (resultat != "Traitement avec Succes !")
+                        {
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = resultat }, settings));
+                        }
                     }
 
                 }
@@ -2181,7 +2262,12 @@ namespace apptab.Controllers
                 }
                 else
                 {
-                    listRegBR = aFB160.getREGLEMENTBR(suser, numeroReg, PROJECTID, site);
+                    var resultValidation = aFB160.getREGLEMENTBR(suser, numeroReg, PROJECTID, site);
+                    if (resultValidation.Item1 != "OK")
+                    {
+                        return Json(JsonConvert.SerializeObject(new { type = "success", msg = resultValidation.Item1 }, settings));
+                    }
+                    listRegBR = resultValidation.Item2;
                 }
 
                 if (basename == "2")
@@ -2255,7 +2341,7 @@ namespace apptab.Controllers
                             smtp.EnableSsl = true;
 
                             try { smtp.Send(mail); }
-                            catch (Exception) { }
+                            catch (Exception ex) { return Json(JsonConvert.SerializeObject(new { type = "error", msg = ex.Message, data = "" }, settings)); }
                         }
                     }
                 }
@@ -2330,7 +2416,7 @@ namespace apptab.Controllers
                             smtp.EnableSsl = true;
 
                             try { smtp.Send(mail); }
-                            catch (Exception) { }
+                            catch (Exception ex) { return Json(JsonConvert.SerializeObject(new { type = "error", msg = ex.Message, data = "" }, settings)); }
                         }
                     }
                 }
@@ -2427,7 +2513,7 @@ namespace apptab.Controllers
                             smtp.EnableSsl = true;
 
                             try { smtp.Send(mail); }
-                            catch (Exception) { }
+                            catch (Exception ex) { return Json(JsonConvert.SerializeObject(new { type = "error", msg = ex.Message, data = "" }, settings)); }
                         }
                     }
                 }
@@ -2522,7 +2608,7 @@ namespace apptab.Controllers
                             smtp.EnableSsl = true;
 
                             try { smtp.Send(mail); }
-                            catch (Exception) { }
+                            catch (Exception ex) { return Json(JsonConvert.SerializeObject(new { type = "error", msg = ex.Message, data = "" }, settings)); }
                         }
                     }
 
@@ -2802,6 +2888,7 @@ namespace apptab.Controllers
                         NoPiece = item.NoPiece,
                         Compte = item.Compte,
                         Journal = item.Journal,
+                        Libelle = item.Libelle,
                         Credit = item.Credit,
                         Debit = item.Debit,
                         MONTANT = item.MONTANT,
@@ -2840,6 +2927,7 @@ namespace apptab.Controllers
                         NoPiece = item.NoPiece,
                         Compte = item.Compte,
                         Journal = item.Journal,
+                        Libelle = item.Libelle,
                         Credit = item.Credit,
                         Debit = item.Debit,
                         MONTANT = item.MONTANT,
@@ -2917,7 +3005,9 @@ namespace apptab.Controllers
             }
             else
             {
-                listRegBR = aFB160.getREGLEMENTBR(suser, numeroreg, PROJECTID, site);
+                var resultatValidation = aFB160.getREGLEMENTBR(suser, numeroreg, PROJECTID, site);
+                if (resultatValidation.Item1 != "OK") return Json(JsonConvert.SerializeObject(new { type = "error", msg = resultatValidation.Item1 }, settings));
+                listRegBR = resultatValidation.Item2;
             }
 
             var AvaliderList = new List<OPA_VALIDATIONS>();

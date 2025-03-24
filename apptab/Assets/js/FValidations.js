@@ -207,6 +207,7 @@ function GetListCompG() {
 
             FillAUXI();
             FillCompteName();
+            LoadValidate();
         },
         Error: function (_, e) {
             alert(e);
@@ -480,7 +481,7 @@ function getelementISO2022(a, list) {
                 //var Datas = JSON.parse(result);
                 let blobUrl = URL.createObjectURL(result);
                 if (result.type === "error") {
-                    alert(result.NomFichier);
+                    alert(result.msg);
                     return; // Arrêter l'exécution si c'est une erreur
                 }
                 GetFileNameAnarana(blobUrl);
