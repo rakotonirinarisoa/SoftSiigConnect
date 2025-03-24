@@ -3126,14 +3126,14 @@ namespace apptab.Extension
             }
             return list;
         }
-        public Tuple<string, List<DataListTomOP>> getREGLEMENTBR(SI_USERS user, int numeroreg, int PROJECTID, List<string> site)
+        public Tuple<string, List<DataListTomOP>> getREGLEMENTBR(SI_USERS user,string Num, int numeroreg, int PROJECTID, List<string> site)
         {
             SOFTCONNECTSIIG db = new SOFTCONNECTSIIG();
             SOFTCONNECTOM tom = new SOFTCONNECTOM();
             /**************Remplissage dataGridFactSelect*********/
 
             List<OPA_REGLEMENTBR> numRegs = (from num in db.OPA_REGLEMENTBR
-                                             where num.IDSOCIETE == PROJECTID && num.NUMEREG == numeroreg && num.ETAT == "0"
+                                             where num.IDSOCIETE == PROJECTID  && num.NUM == Num && num.NUMEREG == numeroreg && num.ETAT == "0"
                                              select num).ToList();
 
             List<DataListTomOP> listEcritureSelect = new List<DataListTomOP>();
