@@ -386,7 +386,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                 <table class="table table-hover table-striped table-bordered" display responsive nowrap" width="100%" id="TBD_PROJET_ORDSEC">
                     <thead style="position:sticky">
                         <tr class="thead-accueil2" style="white-space: nowrap;">
-                            <th colspan="4"></th>
+                            <th colspan="7"></th>
                 `;
 
                     //<th colspan=""></th> number of columns
@@ -399,9 +399,12 @@ $('[data-action="GenereLISTE"]').click(function () {
                             <th colspan="2"></th>
                         </tr>
                         <tr class="thead-accueil1" style="white-space: nowrap;">
+                            <td style="font-weight:bold; text-align:center">Projet</td>
+                            <td style="font-weight:bold; text-align:center">Site</td>
                             <td style="font-weight:bold; text-align:center">Référence</td>
                             <td style="font-weight:bold; text-align:center">Document</td>
-                            <td style="font-weight:bold; text-align:center">Fournisseur</td>
+                            <td style="font-weight:bold; text-align:center">Type expéditeur</td>
+                            <td style="font-weight:bold; text-align:center">Expéditeur</td>
                             <td style="font-weight:bold; text-align:center">Montant</td>
                 `;
 
@@ -420,9 +423,12 @@ $('[data-action="GenereLISTE"]').click(function () {
                     <tbody class="traitementORDSEC"></tbody>
                     <tfoot style="opacity:50%">
                         <tr>
+                            <th>Projet</th>
+                            <th>Site</th>
                             <th>Référence</th>
                             <th>Document</th>
-                            <th>Fournisseur</th>
+                            <th>Type expéditeur</th>
+                            <th>Expéditeur</th>
                             <th>Montant</th>
                 `;
 
@@ -463,8 +469,11 @@ $('[data-action="GenereLISTE"]').click(function () {
                         const tmp = Object.fromEntries(foo.entries())
 
                         data.push({
+                            PROJET: v.PROJET,
+                            SITE: v.SITE,
                             REFERENCE: v.REFERENCE,
                             DOCUMENT: v.DOCUMENT,
+                            TYPEEXPEDITEUR: v.TYPEEXPEDITEUR,
                             FOURNISSEUR: v.FOURNISSEUR,
                             MONTANT: v.MONTANT,
                             ARCHIVEDATE: v.ARCHIVEDATE,
@@ -474,12 +483,6 @@ $('[data-action="GenereLISTE"]').click(function () {
                         });
                     });
 
-                    console.log(data);
-                    console.log(tab);
-                    console.log(...tab);
-
-                    //console.log(data);
-
                     if (table !== undefined) {
                         table.destroy();
                     }
@@ -487,8 +490,11 @@ $('[data-action="GenereLISTE"]').click(function () {
                     table = $('#TBD_PROJET_ORDSEC').DataTable({
                         data,
                         columns: [
+                            { data: 'PROJET' },
+                            { data: 'SITE' },
                             { data: 'REFERENCE' },
                             { data: 'DOCUMENT' },
+                            { data: 'TYPEEXPEDITEUR' },
                             { data: 'FOURNISSEUR' },
                             { data: 'MONTANT' },
 
@@ -560,6 +566,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                                             if (data == null) {
                                                 return data;
                                             }
+
                                             //if (column === 3) {
                                             //    var arr = data.split(',');
                                             //    if (arr.length == 1) { return data; }
@@ -572,6 +579,19 @@ $('[data-action="GenereLISTE"]').click(function () {
                                             //    }
                                             //    return data.toString().replace(/[^\d.-]/g, "");
                                             //}
+
+                                            if (column === 6) {
+                                                var arr = data.split(',');
+                                                if (arr.length == 1) { return data; }
+
+                                                arr[0] = arr[0].toString().replace(/[\.]/g, "");
+                                                if (arr[0] > '' || arr[1] > '') {
+                                                    data = arr[0] + '.' + arr[1];
+                                                } else {
+                                                    return '';
+                                                }
+                                                return data.toString().replace(/[^\d.-]/g, "");
+                                            }
                                             return data;
                                         }
                                     }

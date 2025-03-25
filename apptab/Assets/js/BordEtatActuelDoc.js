@@ -480,6 +480,9 @@ $('[data-action="GenereLISTE"]').click(function () {
 
                 $.each(listResult, function (_, v) {
                     data.push({
+                        PROJET: v.PROJET,
+                        SITE: v.SITE,
+                        TYPEEXPEDITEUR: v.TYPEEXPEDITEUR,
                         id: v.REF,
                         Objet: v.Objet,
                         FOURNISSEUR: v.FOURNISSEUR,
@@ -499,8 +502,11 @@ $('[data-action="GenereLISTE"]').click(function () {
                 table = $('#TBD_PROJET_ORDSEC').DataTable({
                     data,
                     columns: [
+                        { data: 'PROJET', },
+                        { data: 'SITE', },
                         { data: 'id', },
                         { data: 'Objet' },
+                        { data: 'TYPEEXPEDITEUR' },
                         { data: 'FOURNISSEUR' },
                         { data: 'ACCUSE' },
                         { data: 'VALIDATEUR' },
@@ -542,9 +548,9 @@ $('[data-action="GenereLISTE"]').click(function () {
                             charset: "utf-8",
                             bom: true,
                             className: 'custombutton-collection-pdf',
-                            exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8],
-                            },
+                            //exportOptions: {
+                            //    columns: [1, 2, 3, 4, 5, 6, 7, 8],
+                            //},
                             customize: function (doc) {
                                 doc.defaultStyle.alignment = 'left';
                                 doc.content.splice(1, 0, {
@@ -567,7 +573,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                             bom: true,
                             className: 'custombutton-collection-excel',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8],
+                                //columns: [1, 2, 3, 4, 5, 6, 7, 8],
                                 format: {
                                     body: function (data, row, column, node) {
                                         if (typeof data === 'undefined') {

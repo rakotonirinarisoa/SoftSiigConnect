@@ -374,8 +374,11 @@ $('[data-action="GenereLISTE"]').click(function () {
 
                 $.each(listResult, function (_, v) {
                     data.push({
+                        PROJET: v.PROJET,
+                        SITE: v.SITE,
                         REFERENCE: v.REFERENCE,
                         DOCUMENT: v.DOCUMENT,
+                        TYPEEXPEDITEUR: v.TYPEEXPEDITEUR,
                         FOURNISSEUR: v.FOURNISSEUR,
                         MONTANT: v.MONTANT,
                         TYPE: v.TYPE,
@@ -392,8 +395,11 @@ $('[data-action="GenereLISTE"]').click(function () {
                 table = $('#TBD_PROJET_ORDSEC').DataTable({
                     data,
                     columns: [
+                        { data: 'PROJET' },
+                        { data: 'SITE' },
                         { data: 'REFERENCE' },
                         { data: 'DOCUMENT' },
+                        { data: 'TYPEEXPEDITEUR' },
                         { data: 'FOURNISSEUR' },
                         { data: 'MONTANT' },
                         { data: 'TYPE' },
@@ -464,7 +470,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                                         if (data == null) {
                                             return data;
                                         }
-                                        if (column === 3) {
+                                        if (column === 6) {
                                             var arr = data.split(',');
                                             if (arr.length == 1) { return data; }
 

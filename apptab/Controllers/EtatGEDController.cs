@@ -576,6 +576,9 @@ namespace apptab.Controllers
             public string ARCHIVEDATE { get; set; }
             public string RATTACHTOM { get; set; }
             public string COMM { get; set; }
+            public string PROJET { get; set; }
+            public string TYPEEXPEDITEUR { get; set; }
+            public string SITE { get; set; }
 
             public List<string> DATESTEP { get; set; }
         }
@@ -1084,8 +1087,10 @@ namespace apptab.Controllers
                         SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDGED == idProjet && a.DELETIONDATE == null).IDPROJET.Value);
                         SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
+                        var projetIntitule = ged.Projects.FirstOrDefault(a => a.Id == x && a.DeletionDate == null).Name;
+
                         foreach (var y in ged.Documents.Where(a => a.CreationDate >= DD && a.CreationDate <= DF && site.Contains(a.Site)
-                        && a.DocumentsSenders.Type == 1 && a.DeletionDate == null && (a.Status == 1 || a.Status == 3)
+                        /*&& a.DocumentsSenders.Type == 1*/ && a.DeletionDate == null && (a.Status == 1 || a.Status == 3)
                         && a.ProjectId == idProjet))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
                         {
                             //Document type// na tonga dia document no ijerena ny type misy azy
@@ -1103,11 +1108,25 @@ namespace apptab.Controllers
                                         var reference = ged.SuppliersDocumentsAcknowledgements.FirstOrDefault(a => a.Id == y.Id /*&& y.DeletionDate == null*/).ReferenceInterne;
                                         var document = y.Object;
 
+                                        //Site//
+                                        Guid siteId = Guid.Parse(y.Site);
+                                        var siteTest = ged.Sites.FirstOrDefault(a => a.Id == siteId);
+                                        var siteIntitule = siteTest != null ? $"{siteTest.SiteId} - {siteTest.Name}" : "";
+
+                                        //TYPE EXPEDITEUR//
+                                        var TYPEEXPEDITEUR = y.DocumentsSenders.Type == 1 ? "Fournisseur" : "Interne";
+
                                         var fournisseur = "";
-                                        //if (ged.Suppliers.Any(a => a.Id == y.DocumentsSenders.Id /*&& a.DeletionDate == null*/ && a.ProjectId == idProjet))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
-                                        //    fournisseur = ged.Suppliers.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id /*&& a.DeletionDate == null*/ && a.ProjectId == idProjet).Name;
-                                        if (ged.Suppliers.Any(a => a.Id == y.DocumentsSenders.Id))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
-                                            fournisseur = ged.Suppliers.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id).Name;
+                                        if (y.DocumentsSenders.Type == 1)
+                                        {
+                                            if (ged.Suppliers.Any(a => a.Id == y.DocumentsSenders.Id))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
+                                                fournisseur = ged.Suppliers.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id).Name;
+                                        }
+                                        else
+                                        {
+                                            var userInfo = ged.Users.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id);
+                                            fournisseur = (userInfo.Fonction != "" ? userInfo.Fonction.ToString() : "SANS FONCTION") + " : " + userInfo.Username.ToString() + " : " + userInfo.LastName.ToString() + " " + userInfo.FirstName.ToString();
+                                        }
 
                                         var montant = y.Montant != null ? Math.Round(y.Montant.Value, 2).ToString() : "0";
 
@@ -1206,7 +1225,10 @@ namespace apptab.Controllers
                                                 STEPNOW = validationHisto,
                                                 STEPNEXT = validationHistoNEXT,
                                                 VALIDATEURNEXT = validationHistoNEXTvalidateur,
-                                                DUREENEXT = validationHistoNEXTduree
+                                                DUREENEXT = validationHistoNEXTduree,
+                                                PROJET = projetIntitule,
+                                                TYPEEXPEDITEUR = TYPEEXPEDITEUR,
+                                                SITE = siteIntitule
                                             });
                                         }
                                         else
@@ -1254,7 +1276,10 @@ namespace apptab.Controllers
                                                 STEPNOW = validationHisto,
                                                 STEPNEXT = validationHistoNEXT,
                                                 VALIDATEURNEXT = validationHistoNEXTvalidateur,
-                                                DUREENEXT = validationHistoNEXTduree
+                                                DUREENEXT = validationHistoNEXTduree,
+                                                PROJET = projetIntitule,
+                                                TYPEEXPEDITEUR = TYPEEXPEDITEUR,
+                                                SITE = siteIntitule
                                             });
                                         }
                                     }
@@ -1272,6 +1297,8 @@ namespace apptab.Controllers
                         SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDGED == idProjet && a.DELETIONDATE == null).IDPROJET.Value);
                         SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
+                        var projetIntitule = ged.Projects.FirstOrDefault(a => a.Id == x && a.DeletionDate == null).Name;
+
                         //Document type//
                         Guid IdDocTypes = Guid.Parse(TypeDoc);
                         //var typedoc = ged.DocumentTypes.FirstOrDefault(a => a.Id == IdDocTypes && a.ProjectId == idProjet /*&& a.DeletionDate == null*/);
@@ -1282,7 +1309,7 @@ namespace apptab.Controllers
 
                             //Mbola misy code eto ijerena ny type de docs WHERE @io ambany io//
                             foreach (var y in ged.Documents.Where(a => a.CreationDate >= DD && a.CreationDate <= DF && site.Contains(a.Site)
-                            && a.DocumentsSenders.Type == 1 && a.DeletionDate == null && (a.Status == 1 || a.Status == 3)
+                            /*&& a.DocumentsSenders.Type == 1*/ && a.DeletionDate == null && (a.Status == 1 || a.Status == 3)
                             && a.ProjectId == idProjet))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
                             {
                                 if (ged.DocumentTypeUnion.Any(a => a.DocumentID == y.Id && a.TypeDocID == typedoc.Id))
@@ -1293,11 +1320,25 @@ namespace apptab.Controllers
                                         var reference = ged.SuppliersDocumentsAcknowledgements.FirstOrDefault(a => a.Id == y.Id /*&& y.DeletionDate == null*/).ReferenceInterne;
                                         var document = y.Object;
 
+                                        //Site//
+                                        Guid siteId = Guid.Parse(y.Site);
+                                        var siteTest = ged.Sites.FirstOrDefault(a => a.Id == siteId);
+                                        var siteIntitule = siteTest != null ? $"{siteTest.SiteId} - {siteTest.Name}" : "";
+
+                                        //TYPE EXPEDITEUR//
+                                        var TYPEEXPEDITEUR = y.DocumentsSenders.Type == 1 ? "Fournisseur" : "Interne";
+
                                         var fournisseur = "";
-                                        //if (ged.Suppliers.Any(a => a.Id == y.DocumentsSenders.Id /*&& a.DeletionDate == null*/ && a.ProjectId == idProjet))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
-                                        //    fournisseur = ged.Suppliers.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id /*&& a.DeletionDate == null*/ && a.ProjectId == idProjet).Name;
-                                        if (ged.Suppliers.Any(a => a.Id == y.DocumentsSenders.Id))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
-                                            fournisseur = ged.Suppliers.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id).Name;
+                                        if (y.DocumentsSenders.Type == 1)
+                                        {
+                                            if (ged.Suppliers.Any(a => a.Id == y.DocumentsSenders.Id))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
+                                                fournisseur = ged.Suppliers.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id).Name;
+                                        }
+                                        else
+                                        {
+                                            var userInfo = ged.Users.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id);
+                                            fournisseur = (userInfo.Fonction != "" ? userInfo.Fonction.ToString() : "SANS FONCTION") + " : " + userInfo.Username.ToString() + " : " + userInfo.LastName.ToString() + " " + userInfo.FirstName.ToString();
+                                        }
 
                                         var montant = y.Montant != null ? Math.Round(y.Montant.Value, 2).ToString() : "0";
 
@@ -1404,7 +1445,10 @@ namespace apptab.Controllers
                                                 STEPNOW = validationHisto,
                                                 STEPNEXT = validationHistoNEXT,
                                                 VALIDATEURNEXT = validationHistoNEXTvalidateur,
-                                                DUREENEXT = validationHistoNEXTduree
+                                                DUREENEXT = validationHistoNEXTduree,
+                                                PROJET = projetIntitule,
+                                                TYPEEXPEDITEUR = TYPEEXPEDITEUR,
+                                                SITE = siteIntitule
                                             });
                                         }
                                         else
@@ -1452,7 +1496,10 @@ namespace apptab.Controllers
                                                 STEPNOW = validationHisto,
                                                 STEPNEXT = validationHistoNEXT,
                                                 VALIDATEURNEXT = validationHistoNEXTvalidateur,
-                                                DUREENEXT = validationHistoNEXTduree
+                                                DUREENEXT = validationHistoNEXTduree,
+                                                PROJET = projetIntitule,
+                                                TYPEEXPEDITEUR = TYPEEXPEDITEUR,
+                                                SITE = siteIntitule
                                             });
                                         }
                                     }
@@ -1910,6 +1957,8 @@ namespace apptab.Controllers
                     SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDGED == idProjet && a.DELETIONDATE == null).IDPROJET.Value);
                     SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
+                    var projetIntitule = ged.Projects.FirstOrDefault(a => a.Id == x && a.DeletionDate == null).Name;
+
                     //nombreEtape = 0;
 
                     //Document type//
@@ -1932,7 +1981,7 @@ namespace apptab.Controllers
 
                             //Mbola misy code eto ijerena ny type de docs WHERE @io ambany io//
                             foreach (var y in ged.Documents.Where(a => a.CreationDate >= DD && a.CreationDate <= DF && site.Contains(a.Site)
-                            && a.DocumentsSenders.Type == 1 && a.DeletionDate == null && (a.Status == 1 || a.Status == 3)
+                            /*&& a.DocumentsSenders.Type == 1*/ && a.DeletionDate == null && (a.Status == 1 || a.Status == 3)
                             && a.ProjectId == idProjet))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
                             {
                                 if (ged.DocumentTypeUnion.Any(a => a.DocumentID == y.Id && a.TypeDocID == typedoc.Id))
@@ -1945,9 +1994,25 @@ namespace apptab.Controllers
                                         var reference = ged.SuppliersDocumentsAcknowledgements.FirstOrDefault(a => a.Id == y.Id /*&& y.DeletionDate == null*/).ReferenceInterne;
                                         var document = y.Object;
 
+                                        //Site//
+                                        Guid siteId = Guid.Parse(y.Site);
+                                        var siteTest = ged.Sites.FirstOrDefault(a => a.Id == siteId);
+                                        var siteIntitule = siteTest != null ? $"{siteTest.SiteId} - {siteTest.Name}" : "";
+
+                                        //TYPE EXPEDITEUR//
+                                        var TYPEEXPEDITEUR = y.DocumentsSenders.Type == 1 ? "Fournisseur" : "Interne";
+
                                         var fournisseur = "";
-                                        if (ged.Suppliers.Any(a => a.Id == y.DocumentsSenders.Id /*&& a.DeletionDate == null && a.ProjectId == idProjet*/))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
-                                            fournisseur = ged.Suppliers.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id /*&& a.DeletionDate == null && a.ProjectId == idProjet*/).Name;
+                                        if (y.DocumentsSenders.Type == 1)
+                                        {
+                                            if (ged.Suppliers.Any(a => a.Id == y.DocumentsSenders.Id))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
+                                                fournisseur = ged.Suppliers.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id).Name;
+                                        }
+                                        else
+                                        {
+                                            var userInfo = ged.Users.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id);
+                                            fournisseur = (userInfo.Fonction != "" ? userInfo.Fonction.ToString() : "SANS FONCTION") + " : " + userInfo.Username.ToString() + " : " + userInfo.LastName.ToString() + " " + userInfo.FirstName.ToString();
+                                        }
 
                                         var montant = y.Montant != null ? Math.Round(y.Montant.Value, 2).ToString() : "0";
 
@@ -1999,8 +2064,11 @@ namespace apptab.Controllers
                                             TYPE = typedoc.Title,
                                             DATESTEP = dateStep,
                                             ARCHIVEDATE = ARCHIVEDATE,//archive
-                                            RATTACHTOM = RATTACHTOM//rattachement TOMATE
-                                        });
+                                            RATTACHTOM = RATTACHTOM,//rattachement TOMATE,
+                                            TYPEEXPEDITEUR = TYPEEXPEDITEUR,
+                                            SITE = siteIntitule,
+                                            PROJET = projetIntitule
+                                    });
                                     }
                                 }
                             }
@@ -2123,6 +2191,8 @@ namespace apptab.Controllers
                         SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDGED == idProjet && a.DELETIONDATE == null).IDPROJET.Value);
                         SOFTCONNECTGED ged = new SOFTCONNECTGED();
 
+                        var projetIntitule = ged.Projects.FirstOrDefault(a => a.Id == x && a.DeletionDate == null).Name;
+
                         foreach (var y in ged.Documents.Where(a => a.CreationDate >= DD && a.CreationDate <= DF && site.Contains(a.Site)
                         && a.DocumentsSenders.Type == 1 && a.DeletionDate == null && a.Status == 2
                         && a.ProjectId == idProjet))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
@@ -2135,9 +2205,26 @@ namespace apptab.Controllers
                                 {
                                     var reference = ged.SuppliersDocumentsAcknowledgements.FirstOrDefault(a => a.Id == y.Id /*&& y.DeletionDate == null*/).ReferenceInterne;
                                     var document = y.Object;
+
+                                    /// Site//
+                                    Guid siteId = Guid.Parse(y.Site);
+                                    var siteTest = ged.Sites.FirstOrDefault(a => a.Id == siteId);
+                                    var siteIntitule = siteTest != null ? $"{siteTest.SiteId} - {siteTest.Name}" : "";
+
+                                    //TYPE EXPEDITEUR//
+                                    var TYPEEXPEDITEUR = y.DocumentsSenders.Type == 1 ? "Fournisseur" : "Interne";
+
                                     var fournisseur = "";
-                                    if (ged.Suppliers.Any(a => a.Id == y.DocumentsSenders.Id /*&& a.DeletionDate == null && a.ProjectId == idProjet*/))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
-                                        fournisseur = ged.Suppliers.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id /*&& a.DeletionDate == null && a.ProjectId == idProjet*/).Name;
+                                    if (y.DocumentsSenders.Type == 1)
+                                    {
+                                        if (ged.Suppliers.Any(a => a.Id == y.DocumentsSenders.Id))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
+                                            fournisseur = ged.Suppliers.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id).Name;
+                                    }
+                                    else
+                                    {
+                                        var userInfo = ged.Users.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id);
+                                        fournisseur = (userInfo.Fonction != "" ? userInfo.Fonction.ToString() : "SANS FONCTION") + " : " + userInfo.Username.ToString() + " : " + userInfo.LastName.ToString() + " " + userInfo.FirstName.ToString();
+                                    }
 
                                     var montant = y.Montant != null ? Math.Round(y.Montant.Value, 2).ToString() : "0";
 
@@ -2173,6 +2260,9 @@ namespace apptab.Controllers
                                     list.Add(new TDB
                                     {
                                         REFERENCE = reference,
+                                        SITE = siteIntitule,
+                                        TYPEEXPEDITEUR = TYPEEXPEDITEUR,
+                                        PROJET = projetIntitule,
                                         DOCUMENT = document,
                                         FOURNISSEUR = fournisseur,
                                         MONTANT = montant,
@@ -2191,6 +2281,11 @@ namespace apptab.Controllers
                     foreach (var x in Projet)
                     {
                         Guid idProjet = x;
+
+                        SOFTCONNECTGED.connex = new Data.Extension().GetConGED(db.SI_PROGED.FirstOrDefault(a => a.IDGED == idProjet && a.DELETIONDATE == null).IDPROJET.Value);
+                        SOFTCONNECTGED ged = new SOFTCONNECTGED();
+
+                        var projetIntitule = ged.Projects.FirstOrDefault(a => a.Id == x && a.DeletionDate == null).Name;
 
                         //Fournisseur//
                         Guid IdDocTypes = Guid.Parse(ListFournisseur);
@@ -2211,9 +2306,26 @@ namespace apptab.Controllers
                                     {
                                         var reference = ged.SuppliersDocumentsAcknowledgements.FirstOrDefault(a => a.Id == y.Id /*&& y.DeletionDate == null*/).ReferenceInterne;
                                         var document = y.Object;
+
+                                        //Site//
+                                        Guid siteId = Guid.Parse(y.Site);
+                                        var siteTest = ged.Sites.FirstOrDefault(a => a.Id == siteId);
+                                        var siteIntitule = siteTest != null ? $"{siteTest.SiteId} - {siteTest.Name}" : "";
+
+                                        //TYPE EXPEDITEUR//
+                                        var TYPEEXPEDITEUR = y.DocumentsSenders.Type == 1 ? "Fournisseur" : "Interne";
+
                                         var fournisseur = "";
-                                        if (ged.Suppliers.Any(a => a.Id == y.DocumentsSenders.Id /*&& a.DeletionDate == null && a.ProjectId == idProjet*/))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
-                                            fournisseur = ged.Suppliers.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id /*&& a.DeletionDate == null && a.ProjectId == idProjet*/).Name;
+                                        if (y.DocumentsSenders.Type == 1)
+                                        {
+                                            if (ged.Suppliers.Any(a => a.Id == y.DocumentsSenders.Id))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
+                                                fournisseur = ged.Suppliers.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id).Name;
+                                        }
+                                        else
+                                        {
+                                            var userInfo = ged.Users.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id);
+                                            fournisseur = (userInfo.Fonction != "" ? userInfo.Fonction.ToString() : "SANS FONCTION") + " : " + userInfo.Username.ToString() + " : " + userInfo.LastName.ToString() + " " + userInfo.FirstName.ToString();
+                                        }
 
                                         var montant = y.Montant != null ? Math.Round(y.Montant.Value, 2).ToString() : "0";
 
@@ -2255,7 +2367,10 @@ namespace apptab.Controllers
                                             TYPE = DescriptAnn,
                                             STEPNOW = DateAnn,
                                             STEPNEXT = UserAnn,
-                                            COMM = comm
+                                            COMM = comm,
+                                            SITE = siteIntitule,
+                                            TYPEEXPEDITEUR = TYPEEXPEDITEUR,
+                                            PROJET = projetIntitule,
                                         });
                                     }
                                 }

@@ -501,6 +501,9 @@ $('[data-action="GenereLISTE"]').click(function () {
 
                 $.each(listResult, function (_, v) {
                     data.push({
+                        PROJET: v.PROJET,
+                        SITE: v.SITE,
+                        TYPEEXPEDITEUR: v.TYPEEXPEDITEUR,
                         StepID: v.ProcessingDescription,
                         Datevalidations: formatDate(v.Datevalidations),
                         VALIDATEUR: v.UserName,
@@ -517,8 +520,11 @@ $('[data-action="GenereLISTE"]').click(function () {
                 table = $('#TBD_PROJET_ORDSEC').DataTable({
                     data,
                     columns: [
+                        { data: 'PROJET' },
+                        { data: 'SITE' },
                         { data: 'StepID' },
                         { data: 'VALIDATEUR' },
+                        { data: 'TYPEEXPEDITEUR' },
                         { data: 'Fournisseur' },
                         { data: 'Document' },
                         { data: 'Datevalidations' },
@@ -557,9 +563,9 @@ $('[data-action="GenereLISTE"]').click(function () {
                             charset: "utf-8",
                             bom: true,
                             className: 'custombutton-collection-pdf',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5],
-                            },
+                            //exportOptions: {
+                            //    columns: [0, 1, 2, 3, 4, 5],
+                            //},
                             customize: function (doc) {
                                 doc.defaultStyle.alignment = 'left';
                                 //doc.defaultStyle.margin = [12, 12, 12, 12];
@@ -586,18 +592,18 @@ $('[data-action="GenereLISTE"]').click(function () {
                                         if (data == null) {
                                             return data;
                                         }
-                                        if (column === 8 || column === 10) {
-                                            var arr = data.split(',');
-                                            if (arr.length == 1) { return data; }
+                                        //if (column === 8 || column === 10) {
+                                        //    var arr = data.split(',');
+                                        //    if (arr.length == 1) { return data; }
 
-                                            arr[0] = arr[0].toString().replace(/[\.]/g, "");
-                                            if (arr[0] > '' || arr[1] > '') {
-                                                data = arr[0] + '.' + arr[1];
-                                            } else {
-                                                return '';
-                                            }
-                                            return data.toString().replace(/[^\d.-]/g, "");
-                                        }
+                                        //    arr[0] = arr[0].toString().replace(/[\.]/g, "");
+                                        //    if (arr[0] > '' || arr[1] > '') {
+                                        //        data = arr[0] + '.' + arr[1];
+                                        //    } else {
+                                        //        return '';
+                                        //    }
+                                        //    return data.toString().replace(/[^\d.-]/g, "");
+                                        //}
                                         return data;
                                     }
                                 }
