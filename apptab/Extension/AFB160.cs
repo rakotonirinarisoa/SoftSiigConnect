@@ -1359,19 +1359,19 @@ namespace apptab.Extension
                                 else
                                 {
                                     //Price = bnfr.MONTANT;
-                                    Price = Price = tom.MOP.Where(x => x.NUMEROOP == bnfr.NUM && x.NUMENREG == bnfr.NUMEREG).FirstOrDefault().MONTANTLOC;
+                                    Price = tom.MOP.Where(x => x.NUMEROOP == bnfr.NUM && x.NUMENREG == bnfr.NUMEREG).FirstOrDefault().MONTANTLOC;
                                 }
                             }
                             else
                             {
                                 //Price = bnfr.MONTANT;
-                                Price = Price = tom.MOP.Where(x => x.NUMEROOP == bnfr.NUM && x.NUMENREG == bnfr.NUMEREG).FirstOrDefault().MONTANTLOC;
+                               Price = tom.MOP.Where(x => x.NUMEROOP == bnfr.NUM && x.NUMENREG == bnfr.NUMEREG).FirstOrDefault().MONTANTLOC;
                             }
 
                         }
                         if (Price == null)
                         {
-
+                            return new ISO20022xml() { Fichier = null, Chemin = "", NomFichier = "Veuillez vérifier votre donnée car " + bnfr.NUM + "RPROJET colonne MONTANTLOC /MOP sont des colonne vide " };
                         }
                         if (op.Libelle.Length > 140)
                         {
@@ -1403,6 +1403,8 @@ namespace apptab.Extension
                                                 null)
                                         ),
                                 new XElement("DbtrAcct",
+                                    devise == true ?
+                                    new XElement("Id", new XElement("IBAN", ibanpay)) :
                                     new XElement("Id",
                                         new XElement("Othr",
                                             new XElement("Id", jornalPaye.AGENCE + jornalPaye.GUICHET + jornalPaye.RIB + jornalPaye.CLE))),
@@ -1443,6 +1445,8 @@ namespace apptab.Extension
                                                 )
                                         ),
                                 new XElement("DbtrAcct",
+                                    devise == true ?
+                                    new XElement("Id", new XElement("IBAN", ibanpay)) :
                                     new XElement("Id",
                                         new XElement("Othr",
                                            new XElement("Id", jornalPaye.AGENCE + jornalPaye.GUICHET + jornalPaye.RIB + jornalPaye.CLE))),
@@ -1478,6 +1482,8 @@ namespace apptab.Extension
                                                     !string.IsNullOrEmpty(donneurOrde.ADDRESSE1) ? new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).TrimEnd(' ')) : null)
                                             ),
                                     new XElement("DbtrAcct",
+                                        devise == true ?
+                                        new XElement("Id", new XElement("IBAN", ibanpay)) :
                                         new XElement("Id",
                                             new XElement("Othr",
                                                 new XElement("Id", jornalPaye.AGENCE + jornalPaye.GUICHET + jornalPaye.RIB + jornalPaye.CLE))),
@@ -1515,6 +1521,8 @@ namespace apptab.Extension
                                                     !string.IsNullOrEmpty(donneurOrde.ADDRESSE1) ? new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).TrimEnd(' ')) : null)
                                             ),
                                     new XElement("DbtrAcct",
+                                        devise == true ?
+                                        new XElement("Id", new XElement("IBAN", ibanpay)) :
                                         new XElement("Id",
                                             new XElement("Othr",
                                                 new XElement("Id", jornalPaye.AGENCE + jornalPaye.GUICHET + jornalPaye.RIB + jornalPaye.CLE))),
@@ -1532,7 +1540,7 @@ namespace apptab.Extension
                         foreach (var item in beneficiaires)
                         {
                             ccyiso = "";
-                            var opop = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.NUM && a.NUMEREG == bnfr.NUMEREG).FirstOrDefault();
+                            var opop = db.OPA_VALIDATIONS.Where(a => a.IDREGLEMENT == item.NUM && a.NUMEREG == bnfr.NUMEREG && a.IDPROJET == PROJECTID).FirstOrDefault();
 
                             var regle = (from journl in tom.RJL1
                                          where journl.CODE == item.CODE_J && journl.JLTRESOR == true && journl.NATURE == "2"
@@ -1566,6 +1574,7 @@ namespace apptab.Extension
                             else
                             {
                                 ccyiso = "MGA";
+                                ccyiso = tom.RPROJET.FirstOrDefault().MONNAIELOC;
                             }
                             if (ccyiso == "" || ere == null)
                             {
