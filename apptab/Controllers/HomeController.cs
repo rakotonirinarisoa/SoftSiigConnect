@@ -668,7 +668,8 @@ namespace apptab.Controllers
                 var pathfile = aFB160.CreateISO20022(devise, codeJ, suser, codeproject, list, typeDevise, intbasetype, banqueid);
                 if (pathfile.Fichier == null)
                 {
-                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = pathfile.NomFichier }, settings));
+                    return Content(pathfile.NomFichier);
+                    //return Json(JsonConvert.SerializeObject(new { type = "error", msg = pathfile.NomFichier }, settings));
                 }
                 Anarana = pathfile.Chemin;
                 path = pathfile.NomFichier;
@@ -4057,7 +4058,7 @@ namespace apptab.Controllers
                     chiffrage = false;
                 }
                 string publicKeyFile = "";
-                if (!devise)
+                if (intbasetype == 3)
                 {
                     outputFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", namefile + ".xml.pgp");
                     publicKeyFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", directory, "RSAkeyFile.txt");// Chemin vers le fichier de sortie chiffré

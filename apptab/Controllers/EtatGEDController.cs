@@ -24,6 +24,7 @@ using System.Diagnostics.SymbolStore;
 using System.Windows.Forms;
 using System.Web.Helpers;
 using Microsoft.CodeAnalysis;
+using OpenXmlPowerTools;
 
 namespace apptab.Controllers
 {
@@ -1854,6 +1855,59 @@ namespace apptab.Controllers
                 SOFTCONNECTGED.connex = new Data.Extension().GetConGED(projId);
                 SOFTCONNECTGED ged = new SOFTCONNECTGED();
                 string links = db.SI_GEDLIEN.Where(x=> x.IDPROJET == projId).Select(x => x.LIEN).FirstOrDefault();
+                var docc = ged.Documents.Join(ged.Projects.DefaultIfEmpty(),doc => doc.ProjectId , dcm => dcm.Id , (doc,dcm) => new
+                {
+                    IDDOCUMENT = doc.Id,
+                    SenderId = doc.SenderId,
+                    CreationDate = doc.CreationDate,
+                    FileName = doc.Filename,
+                    Projet = dcm.Name,
+                })
+                .Join(ged.DocumentsSenders.DefaultIfEmpty(), doc => doc.SenderId, docsend => docsend.Id, (doc, docsend) => new
+                {
+                    IDDOCUMENT = doc.IDDOCUMENT,
+                    SenderId = doc.SenderId,
+                    CreationDate = doc.CreationDate,
+                    FileName = doc.FileName,
+                    Projet = doc.Projet,
+                    Type = docsend.Type,
+                }).Join(ged.SuppliersDocumentsAcknowledgements.DefaultIfEmpty(), doc => doc.IDDOCUMENT, ackn => ackn.Id, (doc, ackn) => new
+                {
+                    IDDOCUMENT = doc.IDDOCUMENT,
+                    SenderId = doc.SenderId,
+                    CreationDate = doc.CreationDate,
+                    FileName = doc.FileName,
+                    Projet = doc.Projet,
+                    Type = doc.Type,
+                    referenceinterne = ackn.ReferenceInterne,
+                }).Join(ged.DocumentSteps.DefaultIfEmpty(), doc => doc.IDDOCUMENT, docstep => docstep.DocumentId, (doc, docstep) => new
+                {
+                    IDDOCUMENT = doc.IDDOCUMENT,
+                    SenderId = doc.SenderId,
+                    CreationDate = doc.CreationDate,
+                    FileName = doc.FileName,
+                    StepNumber = docstep.StepNumber,
+                    ProcessingDescription = docstep.ProcessingDescription,
+                    IDDOCSTEP = docstep.Id,
+                    Projet = doc.Projet,
+                    referenceinterne = doc.referenceinterne,
+                }).Join(ged.UsersSteps.DefaultIfEmpty(), res => res.IDDOCSTEP, usrstep => usrstep.DocumentStepId, (res, usrstep) => new
+                {
+                    IDDOCUMENT = res.IDDOCUMENT,
+                    SenderId = res.SenderId,
+                    CreationDate = res.CreationDate,
+                    FileName = res.FileName,
+                    StepNumber = res.StepNumber,
+                    ProcessingDescription = res.ProcessingDescription,
+                    IDDOCSTEP = res.IDDOCSTEP,
+                    UserID = usrstep.UserId,
+                    referenceinterne = res.referenceinterne,
+                    Isvalidator = usrstep.IsValidator,
+                    Projet = res.Projet,
+                    commentaire = usrstep.Comment
+                }).ToList();
+
+
 
                 var informationsDoc = ged.Documents.Join(ged.DocumentsSenders.DefaultIfEmpty(), doc => doc.SenderId, docsend => docsend.Id, (doc, docsend) => new
                 {
@@ -1893,7 +1947,8 @@ namespace apptab.Controllers
                     referenceinterne = res.referenceinterne,
                     Isvalidator = usrstep.IsValidator,
                     commentaire = usrstep.Comment
-                }).Where(usrstep => usrstep.Isvalidator == true).Join(ged.ValidationsHistory.DefaultIfEmpty(), res => res.IDDOCUMENT, valHisto => valHisto.DocumentId, (res, valhisto) => new
+                }).Where(usrstep => usrstep.Isvalidator == true)
+                .Join(ged.ValidationsHistory.DefaultIfEmpty(), res => res.IDDOCUMENT, valHisto => valHisto.DocumentId, (res, valhisto) => new
                 {
                     IDDOCUMENT = res.IDDOCUMENT,
                     SenderId = res.SenderId,

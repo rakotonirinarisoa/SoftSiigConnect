@@ -207,28 +207,36 @@ namespace apptab.Extension
                     }
                     else
                     {
-                        var tempGet = tom.MOP.Where(x => x.NUMEROOP == bnfcr.NUM && x.NUMENREG == bnfcr.NUMEREG).FirstOrDefault();
-                        if (tempGet.LIEN != null)
+                        try
                         {
-                            LienDoc = tom.MOP.Where(x => x.NUMEROOP == bnfcr.NUM && x.NUMENREG == bnfcr.NUMEREG).FirstOrDefault().LIEN;
-                            link = LienDoc.Split('/').Last();
-                            Guid idlink = Guid.Parse(link);
-                            var s = ged.Documents.Where(x => x.Id == idlink).Join(ged.Suppliers, doc => doc.SenderId, sup => sup.Id, (doc, sup) => new
+                            var tempGet = tom.MOP.Where(x => x.NUMEROOP == bnfcr.NUM && x.NUMENREG == bnfcr.NUMEREG).FirstOrDefault();
+                            if (tempGet.LIEN != null)
                             {
-                                DocumentID = doc.Id,
-                                SenderId = sup.Id,
-                                EMAIL = sup.MAIL,
-                                Document = doc.OriginalFilename,
-                                MESSAGE = doc.Message,
-                                OBJECT = doc.Object,
-                                Title = doc.Title,
-                            }).FirstOrDefault();
-                            email = s.EMAIL;
-                            document = s.Document;
-                            objet = s.OBJECT;
-                            message = s.MESSAGE;
-                            title = s.Title;
-                        };
+                                LienDoc = tom.MOP.Where(x => x.NUMEROOP == bnfcr.NUM && x.NUMENREG == bnfcr.NUMEREG).FirstOrDefault().LIEN;
+                                link = LienDoc.Split('/').Last();
+                                Guid idlink = Guid.Parse(link);
+                                var s = ged.Documents.Where(x => x.Id == idlink).Join(ged.Suppliers, doc => doc.SenderId, sup => sup.Id, (doc, sup) => new
+                                {
+                                    DocumentID = doc.Id,
+                                    SenderId = sup.Id,
+                                    EMAIL = sup.MAIL,
+                                    Document = doc.OriginalFilename,
+                                    MESSAGE = doc.Message,
+                                    OBJECT = doc.Object,
+                                    Title = doc.Title,
+                                }).FirstOrDefault();
+                                email = s.EMAIL;
+                                document = s.Document;
+                                objet = s.OBJECT;
+                                message = s.MESSAGE;
+                                title = s.Title;
+                            };
+                        }
+                        catch (Exception ex)
+                        {
+
+                            return new ISO20022xml() { Fichier = null, Chemin = "", NomFichier = ex.Message };
+                        }
                     }
                     if (bnfcr.LIBELLE.Length > 11)
                     {
@@ -997,17 +1005,17 @@ namespace apptab.Extension
                                         {
                                             //ccyiso = tom.RPROJET.Select(x => x.MONNAIELOC).FirstOrDefault();
                                             ccyiso = tom.FOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().DEVISE;
-                                            ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().MONTANTDEV));
+                                            ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM && x.NUMENREG == item.NUMEREG).FirstOrDefault().MONTANTDEV));
                                         }
                                         else if (typeDevise == 1)
                                         {//USD USD
                                             ccyiso = tom.RPROJET.Select(x => x.MONNAIERAPP).FirstOrDefault();
-                                            ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().MONTANTRAP));
+                                            ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM && x.NUMENREG == item.NUMEREG).FirstOrDefault().MONTANTRAP));
                                         }
                                         else
                                         {
                                             ccyiso = tom.RPROJET.Select(x => x.MONNAIELOC).FirstOrDefault();
-                                            ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().MONTANTLOC));
+                                            ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM && x.NUMENREG == item.NUMEREG).FirstOrDefault().MONTANTLOC));
                                         }
                                     }
                                     else
@@ -1553,28 +1561,29 @@ namespace apptab.Extension
                             {
                                 if (typeDevise == 0)
                                 {
-                                    ccyiso = tom.FOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().DEVISE;
+                                    ccyiso = tom.FOP.Where(x => x.NUMEROOP == item.NUM).Select(a => a.DEVISE).FirstOrDefault();
 
                                 }
                                 else if (typeDevise == 1)
                                 {
-                                    ccyiso = tom.RPROJET.FirstOrDefault().MONNAIERAPP;
+                                    //ccyiso = tom.RPROJET.FirstOrDefault().MONNAIERAPP;
+                                    ccyiso = tom.RPROJET.Select(a => a.MONNAIERAPP).FirstOrDefault();
                                 }
                                 else if (typeDevise == 2)
                                 {
                                     ccyiso = "MGA";
-                                    ccyiso = tom.RPROJET.FirstOrDefault().MONNAIELOC;
+                                    ccyiso = tom.RPROJET.Select(a => a.MONNAIELOC).FirstOrDefault();
                                 }
                                 else
                                 {
                                     ccyiso = "MGA";
-                                    ccyiso = tom.RPROJET.FirstOrDefault().MONNAIELOC;
+                                    ccyiso = tom.RPROJET.Select(a => a.MONNAIELOC).FirstOrDefault();
                                 }
                             }
                             else
                             {
                                 ccyiso = "MGA";
-                                ccyiso = tom.RPROJET.FirstOrDefault().MONNAIELOC;
+                                ccyiso = tom.RPROJET.Select(a=>a.MONNAIELOC).FirstOrDefault();
                             }
                             if (ccyiso == "" || ere == null)
                             {
@@ -1857,20 +1866,20 @@ namespace apptab.Extension
                                     {
                                         //ccyiso = tom.RPROJET.Select(x => x.MONNAIELOC).FirstOrDefault();
                                         ccyiso = tom.FOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().DEVISE;
-                                        ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().MONTANTDEV));
+                                        ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM && x.NUMENREG == item.NUMEREG).FirstOrDefault().MONTANTDEV));
                                         beficPrice = ere;
                                     }//a verifier si ca marche
                                     else if(typeDevise == 2)
                                     {
                                         ccyiso = "MGA";
-                                        ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().MONTANTLOC));
+                                        ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM && x.NUMENREG == item.NUMEREG).FirstOrDefault().MONTANTLOC));
                                         beficPrice = ere;
 
                                     }
                                     else
                                     {//USD USD
                                         ccyiso = tom.RPROJET.Select(x => x.MONNAIERAPP).FirstOrDefault();
-                                        ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM).FirstOrDefault().MONTANTRAP));
+                                        ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM && x.NUMENREG == item.NUMEREG).FirstOrDefault().MONTANTRAP));
                                         beficPrice = ere;
                                     }
                                 }
