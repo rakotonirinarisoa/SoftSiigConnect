@@ -1125,7 +1125,7 @@ namespace apptab.Controllers
                                         else
                                         {
                                             var userInfo = ged.Users.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id);
-                                            fournisseur = (userInfo.Fonction != "" ? userInfo.Fonction.ToString() : "SANS FONCTION") + " : " + userInfo.Username.ToString() + " : " + userInfo.LastName.ToString() + " " + userInfo.FirstName.ToString();
+                                            fournisseur = (!String.IsNullOrEmpty(userInfo.Fonction) ? userInfo.Fonction.ToString() : "SANS FONCTION") + " : " + userInfo.Username.ToString() + " : " + userInfo.LastName.ToString() + " " + userInfo.FirstName.ToString();
                                         }
 
                                         var montant = y.Montant != null ? Math.Round(y.Montant.Value, 2).ToString() : "0";
@@ -1151,7 +1151,7 @@ namespace apptab.Controllers
                                                     {
                                                         var stepNumberFin = documentStepFin.StepNumber;
 
-                                                        validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin && a.DeletionDate == null).ProcessingDescription;
+                                                        validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin /*&& a.DeletionDate == null*/).ProcessingDescription;
                                                         validationHistoNEXT = "Terminé";
                                                         validationHistoNEXTvalidateur = "Terminé";
                                                         validationHistoNEXTduree = "0";
@@ -1162,7 +1162,7 @@ namespace apptab.Controllers
 
                                                         var stepNumberFin = documentStepFin.StepNumber;
 
-                                                        validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin && a.DeletionDate == null).ProcessingDescription;
+                                                        validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin /*&& a.DeletionDate == null*/).ProcessingDescription;
                                                         validationHistoNEXT = "Terminé";
                                                         validationHistoNEXTvalidateur = "Terminé";
                                                         validationHistoNEXTduree = "0";
@@ -1337,7 +1337,7 @@ namespace apptab.Controllers
                                         else
                                         {
                                             var userInfo = ged.Users.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id);
-                                            fournisseur = (userInfo.Fonction != "" ? userInfo.Fonction.ToString() : "SANS FONCTION") + " : " + userInfo.Username.ToString() + " : " + userInfo.LastName.ToString() + " " + userInfo.FirstName.ToString();
+                                            fournisseur = (!String.IsNullOrEmpty(userInfo.Fonction) ? userInfo.Fonction.ToString() : "SANS FONCTION") + " : " + userInfo.Username.ToString() + " : " + userInfo.LastName.ToString() + " " + userInfo.FirstName.ToString();
                                         }
 
                                         var montant = y.Montant != null ? Math.Round(y.Montant.Value, 2).ToString() : "0";
@@ -2011,7 +2011,7 @@ namespace apptab.Controllers
                                         else
                                         {
                                             var userInfo = ged.Users.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id);
-                                            fournisseur = (userInfo.Fonction != "" ? userInfo.Fonction.ToString() : "SANS FONCTION") + " : " + userInfo.Username.ToString() + " : " + userInfo.LastName.ToString() + " " + userInfo.FirstName.ToString();
+                                            fournisseur = (!String.IsNullOrEmpty(userInfo.Fonction) ? userInfo.Fonction.ToString() : "SANS FONCTION") + " : " + userInfo.Username.ToString() + " : " + userInfo.LastName.ToString() + " " + userInfo.FirstName.ToString();
                                         }
 
                                         var montant = y.Montant != null ? Math.Round(y.Montant.Value, 2).ToString() : "0";
@@ -2223,7 +2223,7 @@ namespace apptab.Controllers
                                     else
                                     {
                                         var userInfo = ged.Users.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id);
-                                        fournisseur = (userInfo.Fonction != "" ? userInfo.Fonction.ToString() : "SANS FONCTION") + " : " + userInfo.Username.ToString() + " : " + userInfo.LastName.ToString() + " " + userInfo.FirstName.ToString();
+                                        fournisseur = (!String.IsNullOrEmpty(userInfo.Fonction) ? userInfo.Fonction.ToString() : "SANS FONCTION") + " : " + userInfo.Username.ToString() + " : " + userInfo.LastName.ToString() + " " + userInfo.FirstName.ToString();
                                     }
 
                                     var montant = y.Montant != null ? Math.Round(y.Montant.Value, 2).ToString() : "0";
@@ -2324,7 +2324,7 @@ namespace apptab.Controllers
                                         else
                                         {
                                             var userInfo = ged.Users.FirstOrDefault(a => a.Id == y.DocumentsSenders.Id);
-                                            fournisseur = (userInfo.Fonction != "" ? userInfo.Fonction.ToString() : "SANS FONCTION") + " : " + userInfo.Username.ToString() + " : " + userInfo.LastName.ToString() + " " + userInfo.FirstName.ToString();
+                                            fournisseur = (!String.IsNullOrEmpty(userInfo.Fonction) ? userInfo.Fonction.ToString() : "SANS FONCTION") + " : " + userInfo.Username.ToString() + " : " + userInfo.LastName.ToString() + " " + userInfo.FirstName.ToString();
                                         }
 
                                         var montant = y.Montant != null ? Math.Round(y.Montant.Value, 2).ToString() : "0";

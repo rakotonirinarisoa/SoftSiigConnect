@@ -11,6 +11,6 @@
     }
     public enum Role
     {
-        SAdministrateur, Administrateur, Autre, Organe_de_Suivi, Validateur_paiements//, ORDSEC, Consultation, PRORDESEC
+        SAdministrateur, Administrateur, Autre, Organe_de_Suivi, Validateur_paiements, AdminSite//, ORDSEC, Consultation, PRORDESEC
     }
 }

@@ -116,7 +116,7 @@
 
             <div class="sidebar topnav">
                 <nav class="mt-2">
-                    @if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                    @if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.AdminSite)
                     {
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
                             <li class="nav-item menu-open" onclick="myFunction('1')">
@@ -226,108 +226,104 @@
                                     </li>
                                 }
 
-                                @*@if (int.Parse(Session["RMENUPAR1"].ToString()) != 0)
-                                    {
+                                @if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                {
+                                    <li class="nav-item SuperAd" data-io data-menu-accordion="2">
+                                        <a class="nav-link">
+                                            <i class="nav-icon fas fa-cogs"></i>
+                                            <p>
+                                                Paramétrages des projets
+                                            </p>
+                                        </a>
 
-                                    }*@
-                                <li class="nav-item SuperAd" data-io data-menu-accordion="2">
-                                    <a class="nav-link">
-                                        <i class="nav-icon fas fa-cogs"></i>
-                                        <p>
-                                            Paramétrages des projets
-                                        </p>
-                                    </a>
+                                        <ul style="list-style-type: none; display: block;" class="nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" data-menu-accordion-child="2">
+                                            <li class="nav-item">
+                                                <a href="../Parametre/FinanCreate" class="nav-link" data-child-id="1">
+                                                    <i class="nav-icon fa fa-credit-card"></i>
+                                                    <p>
+                                                        Financement
+                                                    </p>
+                                                </a>
+                                            </li>
 
-                                    <ul style="list-style-type: none; display: block;" class="nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" data-menu-accordion-child="2">
-                                        <li class="nav-item">
-                                            <a href="../Parametre/FinanCreate" class="nav-link" data-child-id="1">
-                                                <i class="nav-icon fa fa-credit-card"></i>
-                                                <p>
-                                                    Financement
-                                                </p>
-                                            </a>
-                                        </li>
+                                            <li class="nav-item">
+                                                <a href="../Parametre/ConvCreate" class="nav-link" data-child-id="1">
+                                                    <i class="nav-icon fas fa-handshake"></i>
+                                                    <p>
+                                                        Convention
+                                                    </p>
+                                                </a>
+                                            </li>
 
-                                        <li class="nav-item">
-                                            <a href="../Parametre/ConvCreate" class="nav-link" data-child-id="1">
-                                                <i class="nav-icon fas fa-handshake"></i>
-                                                <p>
-                                                    Convention
-                                                </p>
-                                            </a>
-                                        </li>
+                                            <li class="nav-item">
+                                                <a href="../Parametre/CatCreate" class="nav-link" data-child-id="1">
+                                                    <i class="nav-icon fas fa-th"></i>
+                                                    <p>
+                                                        Catégorie
+                                                    </p>
+                                                </a>
+                                            </li>
 
-                                        <li class="nav-item">
-                                            <a href="../Parametre/CatCreate" class="nav-link" data-child-id="1">
-                                                <i class="nav-icon fas fa-th"></i>
-                                                <p>
-                                                    Catégorie
-                                                </p>
-                                            </a>
-                                        </li>
+                                            <li class="nav-item">
+                                                <a href="../Parametre/EngaCreate" class="nav-link" data-child-id="1">
+                                                    <i class="nav-icon fas fa-book-reader"></i>
+                                                    <p>
+                                                        Types d’engagement
+                                                    </p>
+                                                </a>
+                                            </li>
 
-                                        <li class="nav-item">
-                                            <a href="../Parametre/EngaCreate" class="nav-link" data-child-id="1">
-                                                <i class="nav-icon fas fa-book-reader"></i>
-                                                <p>
-                                                    Types d’engagement
-                                                </p>
-                                            </a>
-                                        </li>
+                                            <li class="nav-item">
+                                                <a href="../Parametre/ProcCreate" class="nav-link" data-child-id="1">
+                                                    <i class="nav-icon fas fa-book-open"></i>
+                                                    <p>
+                                                        Types de procédure
+                                                    </p>
+                                                </a>
+                                            </li>
 
-                                        <li class="nav-item">
-                                            <a href="../Parametre/ProcCreate" class="nav-link" data-child-id="1">
-                                                <i class="nav-icon fas fa-book-open"></i>
-                                                <p>
-                                                    Types de procédure
-                                                </p>
-                                            </a>
-                                        </li>
+                                            <li class="nav-item">
+                                                <a href="../Parametre/MinCreate" class="nav-link" data-child-id="1">
+                                                    <i class="nav-icon fas fa-folder"></i>
+                                                    <p>
+                                                        Ministère
+                                                    </p>
+                                                </a>
+                                            </li>
 
-                                        <li class="nav-item">
-                                            <a href="../Parametre/MinCreate" class="nav-link" data-child-id="1">
-                                                <i class="nav-icon fas fa-folder"></i>
-                                                <p>
-                                                    Ministère
-                                                </p>
-                                            </a>
-                                        </li>
+                                            <li class="nav-item">
+                                                <a href="../Parametre/MisCreate" class="nav-link" data-child-id="1">
+                                                    <i class="nav-icon fas fa-folder-minus"></i>
+                                                    <p>
+                                                        Mission
+                                                    </p>
+                                                </a>
+                                            </li>
 
-                                        <li class="nav-item">
-                                            <a href="../Parametre/MisCreate" class="nav-link" data-child-id="1">
-                                                <i class="nav-icon fas fa-folder-minus"></i>
-                                                <p>
-                                                    Mission
-                                                </p>
-                                            </a>
-                                        </li>
+                                            <li class="nav-item">
+                                                <a href="../Parametre/ProgCreate" class="nav-link" data-child-id="1">
+                                                    <i class="nav-icon fas fa-calendar-minus"></i>
+                                                    <p>
+                                                        Programme
+                                                    </p>
+                                                </a>
+                                            </li>
 
-                                        <li class="nav-item">
-                                            <a href="../Parametre/ProgCreate" class="nav-link" data-child-id="1">
-                                                <i class="nav-icon fas fa-calendar-minus"></i>
-                                                <p>
-                                                    Programme
-                                                </p>
-                                            </a>
-                                        </li>
-
-                                        <li class="nav-item">
-                                            <a href="../Parametre/ActCreate" class="nav-link" data-child-id="1">
-                                                <i class="nav-icon fas fa-bookmark"></i>
-                                                <p>
-                                                    Activité
-                                                </p>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
+                                            <li class="nav-item">
+                                                <a href="../Parametre/ActCreate" class="nav-link" data-child-id="1">
+                                                    <i class="nav-icon fas fa-bookmark"></i>
+                                                    <p>
+                                                        Activité
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                }
                             </ul>
 
                             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false" style="display: block;">
-                                @*@if (int.Parse(Session["RMENUPAR2"].ToString()) != 0)
-                                    {
 
-                                    }*@
                                 <li class="nav-item" data-io>
                                     <a href="../User/List" class="nav-link" data-child-id="1">
                                         <i class="nav-icon fas fa-users"></i>
@@ -336,10 +332,6 @@
                                         </p>
                                     </a>
                                 </li>
-                                @*@if (int.Parse(Session["RMENUPAR3"].ToString()) != 0)
-                                    {
-
-                                    }*@
 
                                 <li class="nav-item" data-io>
                                     <a href="../Privilege/List" class="nav-link" data-child-id="1">
@@ -359,34 +351,27 @@
                                     </a>
                                 </li>
 
-                                @*@if (int.Parse(Session["RMENUPAR4"].ToString()) != 0)
-                                    {
+                                @if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                {
+                                    <li class="nav-item" data-io>
+                                        <a href="../Parametre/CorrEtatCreate" class="nav-link" data-child-id="1">
+                                            <i class="nav-icon fas fa-cog"></i>
+                                            <p>
+                                                Correspondance des états
+                                            </p>
+                                        </a>
+                                    </li>
 
-                                    }*@
-                                <li class="nav-item" data-io>
-                                    <a href="../Parametre/CorrEtatCreate" class="nav-link" data-child-id="1">
-                                        <i class="nav-icon fas fa-cog"></i>
-                                        <p>
-                                            Correspondance des états
-                                        </p>
-                                    </a>
-                                </li>
-                                @*@if (int.Parse(Session["RMENUPAR5"].ToString()) != 0)
-                                    {
+                                    <li class="nav-item" data-io>
+                                        <a href="../SuperAdmin/DelaisCreate" class="nav-link" data-child-id="1">
+                                            <i class="nav-icon fas fa-clock"></i>
+                                            <p>
+                                                Délais des traitements
+                                            </p>
+                                        </a>
+                                    </li>
+                                }
 
-                                    }*@
-                                <li class="nav-item" data-io>
-                                    <a href="../SuperAdmin/DelaisCreate" class="nav-link" data-child-id="1">
-                                        <i class="nav-icon fas fa-clock"></i>
-                                        <p>
-                                            Délais des traitements
-                                        </p>
-                                    </a>
-                                </li>
-                                @*@if (int.Parse(Session["RMENUPAR6"].ToString()) != 0)
-                                    {
-
-                                    }*@
                                 <li class="nav-item" data-io>
                                     <a href="../SuperAdmin/MAILCreate" class="nav-link" data-child-id="1">
                                         <i class="nav-icon fas fa-envelope"></i>
@@ -395,74 +380,62 @@
                                         </p>
                                     </a>
                                 </li>
-                                @*@if (int.Parse(Session["RMENUPAR7"].ToString()) != 0)
-                                    {
+                                @if ((Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.SAdministrateur || (Session["userSession"] as apptab.SI_USERS).ROLE == apptab.Role.Administrateur)
+                                {
+                                    <li class="nav-item" data-io>
+                                        <a href="../Crypto/CryptoCreate" class="nav-link" data-child-id="1">
+                                            <i class="nav-icon fas fa-key"></i>
+                                            <p>
+                                                Cryptages
+                                            </p>
+                                        </a>
+                                    </li>
 
-                                    }*@
-                                <li class="nav-item" data-io>
-                                    <a href="../Crypto/CryptoCreate" class="nav-link" data-child-id="1">
-                                        <i class="nav-icon fas fa-key"></i>
-                                        <p>
-                                            Cryptages
-                                        </p>
-                                    </a>
-                                </li>
-                                @*@if (int.Parse(Session["RMENUPAR8"].ToString()) != 0)
-                                    {
+                                    <li class="nav-item" data-io>
+                                        <a href="../FTP/FtpCreate" class="nav-link" data-child-id="1">
+                                            <i class="nav-icon fas fa-paper-plane"></i>
+                                            <p>
+                                                FTP
+                                            </p>
+                                        </a>
+                                    </li>
 
-                                    }*@
-                                <li class="nav-item" data-io>
-                                    <a href="../FTP/FtpCreate" class="nav-link" data-child-id="1">
-                                        <i class="nav-icon fas fa-paper-plane"></i>
-                                        <p>
-                                            FTP
-                                        </p>
-                                    </a>
-                                </li>
-                                @*@if (int.Parse(Session["RMENUPAR9"].ToString()) != 0)
-                                    {
+                                    <li class="nav-item" data-io>
+                                        <a href="../Parametre/TypeECreate" class="nav-link" data-child-id="1">
+                                            <i class="nav-icon fa fa-exclamation-triangle"></i>
+                                            <p>
+                                                Type d'écriture
+                                            </p>
+                                        </a>
+                                    </li>
 
-                                    }*@
-                                <li class="nav-item" data-io>
-                                    <a href="../Parametre/TypeECreate" class="nav-link" data-child-id="1">
-                                        <i class="nav-icon fa fa-exclamation-triangle"></i>
-                                        <p>
-                                            Type d'écriture
-                                        </p>
-                                    </a>
-                                </li>
-                                @*@if (int.Parse(Session["RMENUPAR10"].ToString()) != 0)
-                                    {*@
-                                <li class="nav-item" data-io>
-                                    <a href="../Parametre/TypeFileBanque" class="nav-link" data-child-id="1">
-                                        <i class="nav-icon fa fa-exclamation-triangle"></i>
-                                        <p>
-                                            Type Fichier Banque
-                                        </p>
-                                    </a>
-                                </li>
-                                @*@if (int.Parse(Session["RMENUPAR10"].ToString()) != 0)
-                                    {
-                                     {*@
-                                <li class="nav-item" data-io>
-                                    <a href="../Home/BanqueCreate" class="nav-link" data-child-id="1">
-                                        <i class="nav-icon fa fa-list"></i>
-                                        <p>
-                                            Ajout Liste Banque
-                                        </p>
-                                    </a>
-                                </li>
-                                @*@if (int.Parse(Session["RMENUPAR10"].ToString()) != 0)
-                                    {
-                                                                   }*@
-                                <li class="nav-item" data-io>
-                                    <a href="../Parametre/TypeFlowCreate" class="nav-link" data-child-id="1">
-                                        <i class="nav-icon fa fa-question-circle"></i>
-                                        <p>
-                                            Processus
-                                        </p>
-                                    </a>
-                                </li>
+                                    <li class="nav-item" data-io>
+                                        <a href="../Parametre/TypeFileBanque" class="nav-link" data-child-id="1">
+                                            <i class="nav-icon fa fa-exclamation-triangle"></i>
+                                            <p>
+                                                Type Fichier Banque
+                                            </p>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item" data-io>
+                                        <a href="../Home/BanqueCreate" class="nav-link" data-child-id="1">
+                                            <i class="nav-icon fa fa-list"></i>
+                                            <p>
+                                                Ajout Liste Banque
+                                            </p>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item" data-io>
+                                        <a href="../Parametre/TypeFlowCreate" class="nav-link" data-child-id="1">
+                                            <i class="nav-icon fa fa-question-circle"></i>
+                                            <p>
+                                                Processus
+                                            </p>
+                                        </a>
+                                    </li>
+                                }
                             </ul>
                         </div>
                     }
