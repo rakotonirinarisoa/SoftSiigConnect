@@ -24,8 +24,9 @@ namespace apptab.Data
                 return NoweekDay;
             }catch (Exception ex)
             {
-                var exx = ex.Message; 
-                throw; 
+                var exx = ex.Message;
+                return -0.1;
+                throw;
             }
            
         }

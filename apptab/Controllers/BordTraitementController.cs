@@ -303,7 +303,7 @@ namespace apptab.Controllers
                 return "";
             }
 
-            var agent = await db.SI_USERS.Where(user => user.ID == userId && user.DELETIONDATE == null).Select(user => user.LOGIN).FirstOrDefaultAsync();
+            var agent = await db.SI_USERS.Where(user => user.ID == userId).Select(user => user.LOGIN).FirstOrDefaultAsync();
 
             if (agent == null)
             {
@@ -1473,27 +1473,37 @@ namespace apptab.Controllers
                         SOA = s != null ? s.SOA : "",
                         TraitementPaiementDetails = new List<TraitementPaiementDetails>()
                     });
-
+                    
                     for (int j = 0; j < paielst.Count; j += 1)
                     {
-                        result[lastIndex].TraitementPaiementDetails.Add(new TraitementPaiementDetails
+                        try
                         {
-                            PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
-                            NUM_ENGAGEMENT = paielst[j].NUM,
-                            BENEFICIAIRE = paielst[j].BENEFICIAIRE,
-                            MONTENGAGEMENT = paielst[j].MONTANT.ToString(),
-                            DATETRANSFERTRAF = paielst[j].DATECREA,
-                            TRANSFERTRAFAGENT = await GetAgent(paielst[j].IDUSCREA),
-                            DATEVALORDSEC = paielst[j].DATEVAL,
-                            VALORDSECAGENT = await GetAgent(paielst[j].IDUSVAL),
-                            DATESENDSIIG = paielst[j].DATESEND,
-                            SENDSIIGAGENT = await GetAgent(paielst[j].IDUSSEND),
-                            DUREETRAITEMENTTRANSFERTRAF = Date.GetDifference(paielst[j].DATECREA, paielst[j].DATESEND),
-                            DUREETRAITEMENTVALORDSEC = Date.GetDifference(paielst[j].DATESEND, paielst[j].DATEVAL),
-                            TYPE = paielst[j].TYPE,
-                            SITE = paielst[j].SITE
-                        });
+                            result[lastIndex].TraitementPaiementDetails.Add(new TraitementPaiementDetails
+                            {
+                                PROJET = db.SI_PROJETS.FirstOrDefault(a => a.ID == projectId && a.DELETIONDATE == null).PROJET,
+                                NUM_ENGAGEMENT = paielst[j].NUM,
+                                BENEFICIAIRE = paielst[j].BENEFICIAIRE,
+                                MONTENGAGEMENT = paielst[j].MONTANT.ToString(),
+                                DATETRANSFERTRAF = paielst[j].DATECREA,
+                                TRANSFERTRAFAGENT = await GetAgent(paielst[j].IDUSCREA),
+                                DATEVALORDSEC = paielst[j].DATEVAL,
+                                VALORDSECAGENT = await GetAgent(paielst[j].IDUSVAL),
+                                DATESENDSIIG = paielst[j].DATESEND,
+                                SENDSIIGAGENT = await GetAgent(paielst[j].IDUSSEND),
+                                DUREETRAITEMENTTRANSFERTRAF = Date.GetDifference(paielst[j].DATECREA, paielst[j].DATESEND),
+                                DUREETRAITEMENTVALORDSEC = Date.GetDifference(paielst[j].DATESEND, paielst[j].DATEVAL),
+                                TYPE = paielst[j].TYPE,
+                                SITE = paielst[j].SITE
+                            });
+                            lastIndex = result.Count - 1;
+                        }
+                        catch (Exception ex)
+                        {
+                            return Json(JsonConvert.SerializeObject(new { type = "error", msg = ex.Message}, settings));
+                            //throw;
+                        }
                     }
+                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = result }, settings));
                 }
                 else
                 {
