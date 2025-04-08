@@ -25,6 +25,7 @@ using System.Windows.Forms;
 using System.Web.Helpers;
 using Microsoft.CodeAnalysis;
 using OpenXmlPowerTools;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
 
 namespace apptab.Controllers
 {
@@ -678,11 +679,13 @@ namespace apptab.Controllers
                     }
                     else IDsup = new Guid();
                     DateTime datetemp = new DateTime(DateFin.Date.Year,DateFin.Date.Month,DateFin.Date.Day,23,59,59);
+
+                    Guid xs = Guid.Empty;
                     var ddoc = ged.Documents.Where(x => x.CreationDate >= DateDebut.Date && x.CreationDate <= datetemp)
                     .Join(ged.SuppliersDocumentsAcknowledgements.DefaultIfEmpty(), dcm => dcm.Id, sdal => sdal.Id, (dcm, sdal) => new
                     {
                         ID = dcm.SenderId,
-                        reference = "",
+                        reference = sdal.ReferenceInterne,
                         Objet = dcm.Object,
                         Fournisseur = "",
                         Acusse = dcm.CreationDate,
@@ -696,11 +699,12 @@ namespace apptab.Controllers
                         DocumentID = dcm.Id,
                         ProjectId = dcm.ProjectId,
                         Project = "",
+                        SenderId = dcm.SenderId,
                     })
                     .Join(ged.Projects.DefaultIfEmpty(), dcm => dcm.ProjectId, prj => prj.Id, (dcm, prj) => new
                     {
                         ID = dcm.ID,
-                        reference = "",
+                        reference = dcm.reference,
                         Objet = dcm.Objet,
                         Fournisseur = "",
                         Acusse = dcm.Acusse,
@@ -711,12 +715,13 @@ namespace apptab.Controllers
                         ARCHIVES = "",
                         Lien = dcm.Lien,
                         Site = dcm.Site,
-                        DocumentID = dcm.ID,
+                        DocumentID = dcm.DocumentID,
                         ProjectId = dcm.ProjectId,
                         Project = prj.Name,
+                        SenderId = dcm.SenderId,
                     }).Join(ged.Sites.DefaultIfEmpty(), dcm => dcm.Site, prj => prj.Id.ToString(), (dcm, prj) => new{
                         ID = dcm.ID,
-                        reference = "",
+                        reference = dcm.reference,
                         Objet = dcm.Objet,
                         Fournisseur = "",
                         Acusse = dcm.Acusse,
@@ -730,11 +735,11 @@ namespace apptab.Controllers
                         DocumentID = dcm.DocumentID,
                         ProjectId = dcm.ProjectId,
                         Project = prj.Name,
-
-                    }).Join(ged.SuppliersDocumentsAcknowledgements.DefaultIfEmpty(), dcm => dcm.DocumentID, sdal => sdal.Id, (dcm, sdal) => new
+                        SenderId = dcm.SenderId,
+                    }).Join(ged.DocumentsSenders.DefaultIfEmpty(), dcm => dcm.ID, prj => prj.Id, (dcm, prj) => new
                     {
                         ID = dcm.ID,
-                        reference = sdal.ReferenceInterne,
+                        reference = dcm.reference,
                         Objet = dcm.Objet,
                         Fournisseur = "",
                         Acusse = dcm.Acusse,
@@ -746,186 +751,107 @@ namespace apptab.Controllers
                         Lien = dcm.Lien,
                         Site = dcm.Site,
                         DocumentID = dcm.DocumentID,
-                        ProjectId = dcm.ProjectId,
                         Project = dcm.Project,
+                        SenderId = dcm.SenderId,
+                        TYPEEXPEDITEUR = prj.Type == 1 ? "Fournisseur" : "Interne",
+                    }).Join(ged.Suppliers.DefaultIfEmpty(), dcm => dcm.ID, sup => sup.Id, (dcm, sup) => new
+                    {
+                        ID = dcm.ID,
+                        reference = dcm.reference,
+                        Objet = dcm.Objet,
+                        Fournisseur = sup.Name,
+                        Acusse = dcm.Acusse,
+                        Montant = dcm.Montant,
+                        Encours = dcm.Encours,
+                        ARCHIVES = dcm.Date.ToString(),
+                        Lien = dcm.Lien,
+                        Site = dcm.Site,
+                        DocumentID = dcm.DocumentID,
+                        Validateur = "",
+                        Project = dcm.Project,
+                        TYPEEXPEDITEUR = dcm.TYPEEXPEDITEUR,
                     }).ToList();
 
-                    var RefDoc = ged.Documents.Where(x => x.CreationDate >= DateDebut.Date && x.CreationDate <= datetemp)
-                        .Join(ged.Projects.DefaultIfEmpty(),dcm => dcm.ProjectId,prj => prj.Id,(dcm,prj) => new
-                        {
-                            ID = dcm.SenderId,
-                            reference = "",
-                            Objet = dcm.Object,
-                            Fournisseur = "",
-                            Acusse = dcm.CreationDate,
-                            Validateur = "",
-                            Montant = dcm.Montant,
-                            Date = dcm.CreationDate,
-                            Encours = dcm.Status,
-                            ARCHIVES = "",
-                            Lien = dcm.Url,
-                            Site = dcm.Site,
-                            DocumentID = dcm.Id,
-                            Project = prj.Name,
-                            SenderId = dcm.SenderId,
-                        }).Join(ged.Sites.DefaultIfEmpty(), dcm => dcm.Site, prj => prj.Id.ToString(), (dcm, prj) => new {
-                            ID = dcm.ID,
-                            reference = "",
-                            Objet = dcm.Objet,
-                            Fournisseur = "",
-                            Acusse = dcm.Acusse,
-                            Validateur = "",
-                            Montant = dcm.Montant,
-                            Date = dcm.Date,
-                            Encours = dcm.Encours,
-                            ARCHIVES = "",
-                            Lien = dcm.Lien,
-                            Site = prj.SiteId + prj.Name,
-                            DocumentID = dcm.DocumentID,
-                            Project = dcm.Project,
-                            SenderId = dcm.SenderId,
 
-                        })
-                        .Join(ged.DocumentsSenders.DefaultIfEmpty(), dcm => dcm.SenderId , prj => prj.Id , (dcm,prj)=> new
+                    //ddoc
+
+                    //var ress = ddoc.Join(ged.DocumentSteps.DefaultIfEmpty(), dcm => dcm.DocumentID, dcs => dcs.DocumentId, (dcm, dcs) => new
+                    //{
+                    //    ID = dcm.ID,
+                    //    reference = dcm.reference,
+                    //    Objet = dcm.Objet,
+                    //    Fournisseur = dcm.Fournisseur,
+                    //    Acusse = dcm.Acusse,
+                    //    Montant = dcm.Montant,
+                    //    Encours = dcm.Encours,
+                    //    ARCHIVES = dcm.ARCHIVES,
+                    //    Lien = dcm.Lien,
+                    //    Site = dcm.Site,
+                    //    DocumentID = dcm.DocumentID,
+                    //    Validateur = dcm.Validateur,
+                    //    Project = dcm.Project,
+                    //    TYPEEXPEDITEUR = dcm.TYPEEXPEDITEUR,
+                    //    DocumentStepID = dcs.Id,
+                    //    Etape = dcs.ProcessingDescription,
+                    //}).ToList();
+                    List<DocS> ress = new List<DocS>();
+
+                    if (ddoc != null )
+                    {
+                        foreach (var Do in ddoc)
                         {
-                            ID = dcm.ID,
-                            reference = "",
-                            Objet = dcm.Objet,
-                            Fournisseur = "",
-                            Acusse = dcm.Acusse,
-                            Validateur = "",
-                            Montant = dcm.Montant,
-                            Date = dcm.Date,
-                            Encours = dcm.Encours,
-                            ARCHIVES = "",
-                            Lien = dcm.Lien,
-                            Site = dcm.Site,
-                            DocumentID = dcm.DocumentID,
-                            Project = dcm.Project,
-                            SenderId = dcm.SenderId,
-                            TYPEEXPEDITEUR = prj.Type == 1 ? "Fournisseur" : "Interne",
-                        })
-                        .Join(ged.SuppliersDocumentsAcknowledgements.DefaultIfEmpty(), dcm => dcm.DocumentID, sdal => sdal.Id, (dcm, sdal) => new
-                        {
-                            ID = dcm.ID,
-                            reference = sdal.ReferenceInterne,
-                            Objet = dcm.Objet,
-                            Fournisseur = "",
-                            Acusse = dcm.Acusse,
-                            Validateur = "",
-                            Montant = dcm.Montant,
-                            Date = dcm.Date,
-                            Encours = dcm.Encours,
-                            ARCHIVES = "",
-                            Lien = dcm.Lien,
-                            Site = dcm.Site,
-                            DocumentID = dcm.DocumentID,
-                            Project = dcm.Project,
-                            TYPEEXPEDITEUR = dcm.TYPEEXPEDITEUR,
-                        })
-                        .Join(ged.Suppliers.DefaultIfEmpty(), dcm => dcm.ID, sup => sup.Id, (dcm, sup) => new
-                        {
-                            ID = dcm.ID,
-                            reference = dcm.reference,
-                            Objet = dcm.Objet,
-                            Fournisseur = sup.Name,
-                            Acusse = dcm.Acusse,
-                            Montant = dcm.Montant,
-                            Encours = dcm.Encours,
-                            ARCHIVES = dcm.Date.ToString(),
-                            Lien = dcm.Lien,
-                            Site = dcm.Site,
-                            DocumentID = dcm.DocumentID,
-                            Validateur = "",
-                            Project = dcm.Project,
-                            TYPEEXPEDITEUR = dcm.TYPEEXPEDITEUR,
-                        })
-                        .Join(ged.DocumentSteps.DefaultIfEmpty(), dcm => dcm.DocumentID, docstep => docstep.DocumentId, (dcm, docstep) => new
-                        {
-                            ID = dcm.ID,
-                            reference = dcm.reference,
-                            Objet = dcm.Objet,
-                            Fournisseur = dcm.Fournisseur,
-                            Acusse = dcm.Acusse,
-                            Montant = dcm.Montant,
-                            Encours = dcm.Encours,
-                            Etape = docstep.ProcessingDescription,
-                            ARCHIVES = dcm.Encours == 3 ? dcm.ARCHIVES.ToString() : "",
-                            Lien = dcm.Lien,
-                            Site = dcm.Site,
-                            DocumentID = dcm.DocumentID,
-                            Validateur = "",
-                            DocumentStepID = docstep.Id,
-                            Project = dcm.Project,
-                            TYPEEXPEDITEUR = dcm.TYPEEXPEDITEUR,
-                        })
-                        .Join(ged.UsersSteps.DefaultIfEmpty(), dcm => dcm.DocumentStepID, userStep => userStep.DocumentStepId, (dcm, userStep) => new
-                        {
-                            ID = dcm.ID,
-                            reference = dcm.reference,
-                            Objet = dcm.Objet,
-                            Fournisseur = dcm.Fournisseur,
-                            Acusse = dcm.Acusse,
-                            Montant = dcm.Montant,
-                            Encours = dcm.Encours,
-                            Etape = dcm.Etape,
-                            ARCHIVES = dcm.Encours == 3 ? dcm.ARCHIVES.ToString() : "",
-                            Lien = dcm.Lien,
-                            Site = dcm.Site,
-                            DocumentID = dcm.DocumentID,
-                            IDvalidateur = userStep.UserId,
-                            Validateur = "",
-                            DocumentStepID = dcm.DocumentStepID,
-                            IsValidator = userStep.IsValidator,
-                            Project = dcm.Project,
-                            TYPEEXPEDITEUR = dcm.TYPEEXPEDITEUR,
-                        })
-                        .Join(ged.Users.DefaultIfEmpty(), dcm => dcm.IDvalidateur, us => us.Id, (dcm, us) => new
-                        {
-                            ID = dcm.ID,
-                            reference = dcm.reference,
-                            Objet = dcm.Objet,
-                            Fournisseur = dcm.Fournisseur,
-                            Acusse = dcm.Acusse,
-                            Montant = dcm.Montant,
-                            Encours = dcm.Encours,
-                            Etape = dcm.Etape,
-                            ARCHIVES = dcm.Encours == 3 ? dcm.ARCHIVES.ToString() : "",
-                            Lien = dcm.Lien,
-                            Site = dcm.Site,
-                            DocumentID = dcm.DocumentID,
-                            IDvalidateur = dcm.IDvalidateur,
-                            Validateur = us.FirstName,
-                            DocumentStepID = dcm.DocumentStepID,
-                            IsValidator = dcm.IsValidator,
-                            Project = dcm.Project,
-                            TYPEEXPEDITEUR = dcm.TYPEEXPEDITEUR,
-                            //}).Where(x => x.Fournisseur == suppliersname.Name && x.Encours == status && x.IsValidator == true /*&& referenS.Contains(x.reference)*/).DistinctBy(x => x.Etape).ToList();
-                        })./*Where(x => x.IsValidator == true).*/DistinctBy(x => x.DocumentID).ToList();// x.Fournisseur == suppliersname.Name && x.Encours == status &&
+                            var DocsStep = ged.DocumentSteps.Where(x => x.DocumentId == Do.DocumentID).FirstOrDefault();
+
+                            if (DocsStep != null)
+                            {
+                                var userEtapeLast = ged.UsersSteps.Where(x => x.DocumentStepId == DocsStep.Id && x.IsValidator == true).OrderBy(x => x.ProcessingDate).FirstOrDefault();
+                                if (userEtapeLast != null)
+                                {
+                                    var userVal = ged.Users.Where(x => x.Id == userEtapeLast.UserId).FirstOrDefault();
+                                    ress.Add( new DocS
+                                    {
+                                        REF = Do.reference,
+                                        Objet = Do.Objet,
+                                        FOURNISSEUR = Do.Fournisseur,
+                                        ACCUSE = Do.Acusse,
+                                        VALIDATEUR = userVal.Email,
+                                        Montant = Do.Montant.ToString(),
+                                        Encours = Do.Encours.ToString(),//DocsStep.ProcessingDescription
+                                        ARCHIVES = Do.ARCHIVES.ToString(),
+                                        Lien =  Do.Lien.ToString(),
+                                        PROJET = Do.Project,
+                                        SITE = Do.Site,
+                                        TYPEEXPEDITEUR = Do.TYPEEXPEDITEUR,
+                                        //Etape = DocsStep.ProcessingDescription,
+                                    });
+                                }
+                            }
+                        }
+                    }
                     var links = db.SI_GEDLIEN.Where(x => x.IDPROJET == proj).Select(x => x.LIEN).FirstOrDefault();
 
-                    if (RefDoc != null)
+                    if (ress != null)
                     {
                         if (status != 4 || fournisseur != "0")
                         {
                             var suppliersname = ged.Suppliers.Where(x => x.Id == IDsup).FirstOrDefault(); ;
-                            foreach (var typD in RefDoc.Where(x => x.Encours == status && x.Fournisseur == suppliersname.Name))
+                            foreach (var typD in ress.Where(x => x.Encours == status.ToString() && x.FOURNISSEUR == suppliersname.Name))
                             {
                                 string uservalidateur = "";
-                                string SSITE = typD.Site;
+                                string SSITE = typD.SITE;
                                 documentF.Add(new DocS
                                 {
-                                    REF = typD.reference,
+                                    REF = typD.REF,
                                     Objet = typD.Objet,
-                                    FOURNISSEUR = typD.Fournisseur,
-                                    ACCUSE = typD.Acusse,
-                                    VALIDATEUR = typD.Validateur,
+                                    FOURNISSEUR = typD.FOURNISSEUR,
+                                    ACCUSE = typD.ACCUSE,
+                                    VALIDATEUR = typD.VALIDATEUR,
                                     Montant = typD.Montant.ToString(),
-                                    Encours = typD.Etape.ToString(),
+                                    Encours = typD.Encours.ToString(),
                                     ARCHIVES = typD.ARCHIVES.ToString(),
                                     Lien = links + "/" + typD.Lien.ToString(),
-                                    PROJET = typD.Project,
-                                    SITE = typD.Site,
+                                    PROJET = typD.PROJET,
+                                    SITE = typD.SITE,
                                     TYPEEXPEDITEUR = typD.TYPEEXPEDITEUR,
                                     //Validations = uservalidateur != null ? uservalidateur : "",
                                 });
@@ -933,23 +859,23 @@ namespace apptab.Controllers
                         }
                         else if (fournisseur == "0")
                         {
-                            foreach (var typD in RefDoc)
+                            foreach (var typD in ress)
                             {
                                 string uservalidateur = "";
-                                string SSITE = typD.Site;
+                                string SSITE = typD.SITE;
                                 documentF.Add(new DocS
                                 {
-                                    REF = typD.reference,
+                                    REF = typD.REF,
                                     Objet = typD.Objet,
-                                    FOURNISSEUR = typD.Fournisseur,
-                                    ACCUSE = typD.Acusse,
-                                    VALIDATEUR = typD.Validateur,
+                                    FOURNISSEUR = typD.FOURNISSEUR,
+                                    ACCUSE = typD.ACCUSE,
+                                    VALIDATEUR = typD.VALIDATEUR,
                                     Montant = typD.Montant.ToString(),
-                                    Encours = typD.Etape.ToString(),
+                                    Encours = typD.Encours.ToString(),
                                     ARCHIVES = typD.ARCHIVES.ToString(),
                                     Lien = links + "/" + typD.Lien.ToString(),
-                                    PROJET = typD.Project,
-                                    SITE = typD.Site,
+                                    PROJET = typD.PROJET,
+                                    SITE = typD.SITE,
                                     TYPEEXPEDITEUR = typD.TYPEEXPEDITEUR,
                                     //Validations = uservalidateur != null ? uservalidateur : "",
                                 });
@@ -958,23 +884,23 @@ namespace apptab.Controllers
                         else if (status == 4 || fournisseur != "0")
                         {
                             var suppliersname = ged.Suppliers.Where(x => x.Id == IDsup).FirstOrDefault(); ;
-                            foreach (var typD in RefDoc.Where(x => x.Fournisseur == suppliersname.Name))
+                            foreach (var typD in ress.Where(x => x.FOURNISSEUR == suppliersname.Name))
                             {
                                 string uservalidateur = "";
-                                string SSITE = typD.Site;
+                                string SSITE = typD.SITE;
                                 documentF.Add(new DocS
                                 {
-                                    REF = typD.reference,
+                                    REF = typD.REF,
                                     Objet = typD.Objet,
-                                    FOURNISSEUR = typD.Fournisseur,
-                                    ACCUSE = typD.Acusse,
-                                    VALIDATEUR = typD.Validateur,
+                                    FOURNISSEUR = typD.FOURNISSEUR,
+                                    ACCUSE = typD.ACCUSE,
+                                    VALIDATEUR = typD.VALIDATEUR,
                                     Montant = typD.Montant.ToString(),
-                                    Encours = typD.Etape.ToString(),
+                                    Encours = typD.Encours.ToString(),
                                     ARCHIVES = typD.ARCHIVES.ToString(),
                                     Lien = links + "/" + typD.Lien.ToString(),
-                                    PROJET = typD.Project,
-                                    SITE = typD.Site,
+                                    PROJET = typD.PROJET,
+                                    SITE = typD.SITE,
                                     TYPEEXPEDITEUR = typD.TYPEEXPEDITEUR,
                                     //Validations = uservalidateur != null ? uservalidateur : "",
                                 });
@@ -982,23 +908,23 @@ namespace apptab.Controllers
                         }
                         else
                         {
-                            foreach (var typD in RefDoc)
+                            foreach (var typD in ress)
                             {
                                 string uservalidateur = "";
-                                string SSITE = typD.Site;
+                                string SSITE = typD.SITE;
                                 documentF.Add(new DocS
                                 {
-                                    REF = typD.reference,
+                                    REF = typD.REF,
                                     Objet = typD.Objet,
-                                    FOURNISSEUR = typD.Fournisseur,
-                                    ACCUSE = typD.Acusse,
-                                    VALIDATEUR = typD.Validateur,
+                                    FOURNISSEUR = typD.FOURNISSEUR,
+                                    ACCUSE = typD.ACCUSE,
+                                    VALIDATEUR = typD.VALIDATEUR,
                                     Montant = typD.Montant.ToString(),
-                                    Encours = typD.Etape.ToString(),
+                                    Encours = typD.Encours.ToString(),
                                     ARCHIVES = typD.ARCHIVES.ToString(),
                                     Lien = links + "/" + typD.Lien.ToString(),
-                                    PROJET = typD.Project,
-                                    SITE = typD.Site,
+                                    PROJET = typD.PROJET,
+                                    SITE = typD.SITE,
                                     TYPEEXPEDITEUR = typD.TYPEEXPEDITEUR,
                                     //Validations = uservalidateur != null ? uservalidateur : "",
                                 });
@@ -1006,14 +932,17 @@ namespace apptab.Controllers
                         }
                     }
 
-                    return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = documentF }, settings));
+                    //return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = documentF }, settings));
                 }
                 catch (Exception e)
                 {
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = e.Message }, settings));
                 }
             }
-            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = documentF }, settings));
+
+            List<DocS> list = documentF.DistinctBy(x => x.REF).ToList();
+
+            return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = list }, settings));
         }
 
         [HttpPost]

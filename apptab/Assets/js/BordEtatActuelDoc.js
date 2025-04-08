@@ -475,7 +475,7 @@ $('[data-action="GenereLISTE"]').click(function () {
             }
             if (Datas.type == "success") {
                 listResult = Datas.data
-
+                console.log(listResult);
                 const data = [];
 
                 $.each(listResult, function (_, v) {
@@ -582,7 +582,7 @@ $('[data-action="GenereLISTE"]').click(function () {
                                         if (data == null) {
                                             return data;
                                         }
-                                        if (column === 8 || column === 10) {
+                                        if (column === 8) {
                                             var arr = data.split(',');
                                             if (arr.length == 1) { return data; }
 
@@ -649,11 +649,11 @@ $('[data-action="GenereLISTE"]').click(function () {
                     }
                 });
 
-                $('#TBD_PROJET_ORDSEC tfoot th').each(function (i) {
-                    //if (i == 0) {
-                    //    $(this).addClass("NOTVISIBLE");
-                    //}
-                });
+                //$('#TBD_PROJET_ORDSEC tfoot th').each(function (i) {
+                //    //if (i == 0) {
+                //    //    $(this).addClass("NOTVISIBLE");
+                //    //}
+                //});
             }
         },
         error: function () {
