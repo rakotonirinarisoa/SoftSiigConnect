@@ -1231,7 +1231,8 @@ namespace apptab.Controllers
                                                     {
                                                         var stepNumberFin = documentStepFin.StepNumber;
 
-                                                        validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin /*&& a.DeletionDate == null*/).ProcessingDescription;
+                                                        //validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin /*&& a.DeletionDate == null*/).ProcessingDescription;
+                                                        validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.Where(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin /*&& a.DeletionDate == null*/).OrderByDescending(a => a.CreationDate).FirstOrDefault().ProcessingDescription;
                                                         validationHistoNEXT = "Terminé";
                                                         validationHistoNEXTvalidateur = "Terminé";
                                                         validationHistoNEXTduree = "0";
@@ -1242,7 +1243,8 @@ namespace apptab.Controllers
 
                                                         var stepNumberFin = documentStepFin.StepNumber;
 
-                                                        validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin /*&& a.DeletionDate == null*/).ProcessingDescription;
+                                                        //validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin /*&& a.DeletionDate == null*/).ProcessingDescription;
+                                                        validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.Where(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin /*&& a.DeletionDate == null*/).OrderByDescending(a => a.CreationDate).FirstOrDefault().ProcessingDescription;
                                                         validationHistoNEXT = "Terminé";
                                                         validationHistoNEXTvalidateur = "Terminé";
                                                         validationHistoNEXTduree = "0";
@@ -1443,7 +1445,8 @@ namespace apptab.Controllers
                                                     {
                                                         var stepNumberFin = documentStepFin.StepNumber;
 
-                                                        validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin && a.DeletionDate == null).ProcessingDescription;
+                                                        //validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin && a.DeletionDate == null).ProcessingDescription;
+                                                        validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.Where(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin /*&& a.DeletionDate == null*/).OrderByDescending(a => a.CreationDate).FirstOrDefault().ProcessingDescription;
                                                         validationHistoNEXT = "Terminé";
                                                         validationHistoNEXTvalidateur = "Terminé";
                                                         validationHistoNEXTduree = "0";
@@ -1454,20 +1457,13 @@ namespace apptab.Controllers
 
                                                         var stepNumberFin = documentStepFin.StepNumber;
 
-                                                        validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin && a.DeletionDate == null).ProcessingDescription;
+                                                        //validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin && a.DeletionDate == null).ProcessingDescription;
+                                                        validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.Where(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin /*&& a.DeletionDate == null*/).OrderByDescending(a => a.CreationDate).FirstOrDefault().ProcessingDescription;
                                                         validationHistoNEXT = "Terminé";
                                                         validationHistoNEXTvalidateur = "Terminé";
                                                         validationHistoNEXTduree = "0";
                                                     }
                                                 }
-
-                                                //var documentStepFin = ged.DocumentSteps.FirstOrDefault(a => a.Id == validationInProgressFin.ToDocumentStepId /*&& a.DeletionDate == null*/);
-                                                //var stepNumberFin = documentStepFin.StepNumber;
-
-                                                //validationHisto = "Etape " + stepNumberFin + " : " + ged.DocumentTypesSteps.FirstOrDefault(a => a.DocumentTypeId == typedoc.Id && a.StepNumber == stepNumberFin /*&& a.DeletionDate == null*/).ProcessingDescription;
-                                                //validationHistoNEXT = "Terminé";
-                                                //validationHistoNEXTvalidateur = "Terminé";
-                                                //validationHistoNEXTduree = "0";
                                             }
                                             else
                                             {
@@ -2202,7 +2198,7 @@ namespace apptab.Controllers
                                             TYPEEXPEDITEUR = TYPEEXPEDITEUR,
                                             SITE = siteIntitule,
                                             PROJET = projetIntitule
-                                    });
+                                        });
                                     }
                                 }
                             }
@@ -2227,7 +2223,7 @@ namespace apptab.Controllers
         }
 
         [HttpPost]
-        public JsonResult GenereLISTEREFUS(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin, string listSite, string ListFournisseur)
+        public JsonResult GenereLISTEREFUS(SI_USERS suser, string listProjet, DateTime DateDebut, DateTime DateFin, string listSite, string listFournisseur)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
@@ -2316,7 +2312,7 @@ namespace apptab.Controllers
             try
             {
                 //Tous//
-                if (String.IsNullOrEmpty(ListFournisseur))
+                if (String.IsNullOrEmpty(listFournisseur))
                 {
                     foreach (var x in Projet)
                     {
@@ -2422,21 +2418,21 @@ namespace apptab.Controllers
                         var projetIntitule = ged.Projects.FirstOrDefault(a => a.Id == x && a.DeletionDate == null).Name;
 
                         //Fournisseur//
-                        Guid IdDocTypes = Guid.Parse(ListFournisseur);
+                        Guid IdDocTypes = Guid.Parse(listFournisseur);
 
                         if (ged.Suppliers.Any(a => a.Id == IdDocTypes/* && a.ProjectId == idProjet && a.DeletionDate == null*/))
                         {
                             var Idfournisseur = ged.Suppliers.FirstOrDefault(a => a.Id == IdDocTypes/* && a.ProjectId == idProjet && a.DeletionDate == null*/);
 
-                            foreach (var y in ged.Documents.Where(a => a.CreationDate >= DD && a.CreationDate <= DF && site.Contains(a.Site)
-                            && a.SenderId == Idfournisseur.Id && a.DocumentsSenders.Type == 1 && a.DeletionDate == null && a.Status == 2
+                            foreach (var y in ged.Documents.Where(a => a.CreationDate >= DD && a.CreationDate <= DF && site.Contains(a.Site) && a.SenderId == Idfournisseur.Id
+                            && a.DocumentsSenders.Type == 1 && a.DeletionDate == null && a.Status == 2
                             && a.ProjectId == idProjet))//PARTIE PROJET : rattachement d'un doc à un projet : à modifier après affectation doc à des projets//
                             {
                                 //Document type// na tonga dia document no ijerena ny type misy azy
                                 if (ged.DocumentTypeUnion.Any(a => a.DocumentID == y.Id))
                                 {
                                     //Accusé de récéption//
-                                    if (ged.SuppliersDocumentsAcknowledgements.Any(a => a.Id == y.Id) && y.Status == 1 /*&& y.DeletionDate == null*/) //Status == 1 => Création circuit : OK
+                                    if (ged.SuppliersDocumentsAcknowledgements.Any(a => a.Id == y.Id) /*&& y.Status == 1 && y.DeletionDate == null*/) //Status == 1 => Création circuit : OK
                                     {
                                         var reference = ged.SuppliersDocumentsAcknowledgements.FirstOrDefault(a => a.Id == y.Id /*&& y.DeletionDate == null*/).ReferenceInterne;
                                         var document = y.Object;

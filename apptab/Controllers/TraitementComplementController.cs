@@ -515,7 +515,7 @@ namespace apptab.Controllers
                             var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
                             var isComplement = tom.GA_AVANCE_COMPLEMENT.FirstOrDefault(a => a.NUMERO_AVANCE == isPiece.NUMERO && a.NUMERO == isPiece.NUMERO_COMPLEMENT);
 
-                            var newT = new SI_TRAITJUSTIF()
+                            var newT = new SI_TRAITCOMPLEMENT()
                             {
                                 IDPROJET = crpt,
                                 No = elem,
@@ -543,7 +543,7 @@ namespace apptab.Controllers
                                 newT.IDUSERVALIDATE = exist.ID;
                             }
 
-                            db.SI_TRAITJUSTIF.Add(newT);
+                            db.SI_TRAITCOMPLEMENT.Add(newT);
                             db.SaveChanges();
                             countTraitement++;
                         }

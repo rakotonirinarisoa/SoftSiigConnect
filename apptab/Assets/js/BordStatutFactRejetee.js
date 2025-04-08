@@ -329,7 +329,7 @@ $('[data-action="GenereLISTE"]').click(function () {
 
     formData.append("listProjet", $("#proj").val());
     formData.append("listSite", $("#site").val());
-    formData.append("fournisseur", $("#ListFournisseur").val());
+    formData.append("listFournisseur", $("#fournisseur").val());
 
     $.ajax({
         type: "POST",

@@ -1473,7 +1473,7 @@ namespace apptab.Controllers
                         SOA = s != null ? s.SOA : "",
                         TraitementPaiementDetails = new List<TraitementPaiementDetails>()
                     });
-                    
+
                     for (int j = 0; j < paielst.Count; j += 1)
                     {
                         try
