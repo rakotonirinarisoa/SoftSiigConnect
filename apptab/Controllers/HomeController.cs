@@ -3923,6 +3923,7 @@ namespace apptab.Controllers
             {
                 string privateKeyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", directory, "Rsakeybni.txt");
                 string convertedKeyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", directory, "Rsakeybni.pem");
+                //namefile = namefile + 
                 try
                 {
                     if (!System.IO.File.Exists(privateKeyPath))
