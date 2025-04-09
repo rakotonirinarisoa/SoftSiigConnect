@@ -1378,7 +1378,6 @@ namespace apptab.Controllers
                                     });
                                 }
                             }
-                        
                         }
                     }
                 }

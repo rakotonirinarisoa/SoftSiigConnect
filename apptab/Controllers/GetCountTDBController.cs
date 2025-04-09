@@ -151,6 +151,8 @@ namespace apptab.Controllers
                             foreach (var x in tom.CPTADMIN_FLIQUIDATION.OrderBy(a => a.DATELIQUIDATION).ToList())
                             {
                                 decimal MTN = 0;
+                                decimal MTNRAPPORT = 0;
+                                decimal MTNDEVISE = 0;
                                 decimal MTNPJ = 0;
                                 var PCOP = "";
 
@@ -160,6 +162,8 @@ namespace apptab.Controllers
                                     foreach (var y in tom.CPTADMIN_MLIQUIDATION.Where(a => a.IDLIQUIDATION == x.ID).ToList())
                                     {
                                         MTN += y.MONTANTLOCAL.Value;
+                                        MTNRAPPORT += y.MONTANTRAPPORT.Value;
+                                        MTNDEVISE += y.MONTANTDEVISE.Value;
 
                                         if (String.IsNullOrEmpty(PCOP))
                                             PCOP = y.POSTE;
@@ -177,7 +181,7 @@ namespace apptab.Controllers
                                 }
 
                                 //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
-                                if (Math.Truncate(MTN) == Math.Truncate(MTNPJ))
+                                if (Math.Truncate(MTN) == Math.Truncate(MTNPJ) || Math.Truncate(MTNRAPPORT) == Math.Truncate(MTNPJ) || Math.Truncate(MTNDEVISE) == Math.Truncate(MTNPJ))
                                 {
                                     //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
                                     var canBeDEF = true;
@@ -210,6 +214,8 @@ namespace apptab.Controllers
                             foreach (var x in tom.CPTADMIN_FAVANCE.OrderBy(a => a.DATEAVANCE).ToList())
                             {
                                 decimal MTN = 0;
+                                decimal MTNRAPPORT = 0;
+                                decimal MTNDEVISE = 0;
                                 decimal MTNPJ = 0;
                                 var PCOP = "";
 
@@ -219,6 +225,8 @@ namespace apptab.Controllers
                                     foreach (var y in tom.CPTADMIN_MAVANCE.Where(a => a.IDAVANCE == x.ID).ToList())
                                     {
                                         MTN += y.MONTANTLOCAL.Value;
+                                        MTNRAPPORT += y.MONTANTRAPPORT.Value;
+                                        MTNDEVISE += y.MONTANTDEVISE.Value;
 
                                         if (String.IsNullOrEmpty(PCOP))
                                             PCOP = y.POSTE;
@@ -236,7 +244,7 @@ namespace apptab.Controllers
                                 }
 
                                 //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
-                                if (Math.Truncate(MTN) == Math.Truncate(MTNPJ))
+                                if (Math.Truncate(MTN) == Math.Truncate(MTNPJ) || Math.Truncate(MTNRAPPORT) == Math.Truncate(MTNPJ) || Math.Truncate(MTNDEVISE) == Math.Truncate(MTNPJ))
                                 {
                                     //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
                                     var canBeDEFA = true;
@@ -402,6 +410,8 @@ namespace apptab.Controllers
                                 foreach (var x in tom.CPTADMIN_FLIQUIDATION.OrderBy(a => a.DATELIQUIDATION).ToList())
                                 {
                                     decimal MTN = 0;
+                                    decimal MTNRAPPORT = 0;
+                                    decimal MTNDEVISE = 0;
                                     decimal MTNPJ = 0;
                                     var PCOP = "";
 
@@ -411,6 +421,8 @@ namespace apptab.Controllers
                                         foreach (var y in tom.CPTADMIN_MLIQUIDATION.Where(a => a.IDLIQUIDATION == x.ID).ToList())
                                         {
                                             MTN += y.MONTANTLOCAL.Value;
+                                            MTNRAPPORT += y.MONTANTRAPPORT.Value;
+                                            MTNDEVISE += y.MONTANTDEVISE.Value;
 
                                             if (String.IsNullOrEmpty(PCOP))
                                                 PCOP = y.POSTE;
@@ -428,7 +440,7 @@ namespace apptab.Controllers
                                     }
 
                                     //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
-                                    if (Math.Truncate(MTN) == Math.Truncate(MTNPJ))
+                                    if (Math.Truncate(MTN) == Math.Truncate(MTNPJ) || Math.Truncate(MTNRAPPORT) == Math.Truncate(MTNPJ) || Math.Truncate(MTNDEVISE) == Math.Truncate(MTNPJ))
                                     {
                                         //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
                                         var canBeDEF = true;
@@ -461,6 +473,8 @@ namespace apptab.Controllers
                                 foreach (var x in tom.CPTADMIN_FAVANCE.OrderBy(a => a.DATEAVANCE).ToList())
                                 {
                                     decimal MTN = 0;
+                                    decimal MTNRAPPORT = 0;
+                                    decimal MTNDEVISE = 0;
                                     decimal MTNPJ = 0;
                                     var PCOP = "";
 
@@ -470,6 +484,8 @@ namespace apptab.Controllers
                                         foreach (var y in tom.CPTADMIN_MAVANCE.Where(a => a.IDAVANCE == x.ID).ToList())
                                         {
                                             MTN += y.MONTANTLOCAL.Value;
+                                            MTNRAPPORT += y.MONTANTRAPPORT.Value;
+                                            MTNDEVISE += y.MONTANTDEVISE.Value;
 
                                             if (String.IsNullOrEmpty(PCOP))
                                                 PCOP = y.POSTE;
@@ -487,7 +503,7 @@ namespace apptab.Controllers
                                     }
 
                                     //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
-                                    if (Math.Truncate(MTN) == Math.Truncate(MTNPJ))
+                                    if (Math.Truncate(MTN) == Math.Truncate(MTNPJ) || Math.Truncate(MTNRAPPORT) == Math.Truncate(MTNPJ) || Math.Truncate(MTNDEVISE) == Math.Truncate(MTNPJ))
                                     {
                                         //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
                                         var canBeDEFA = true;
@@ -656,6 +672,8 @@ namespace apptab.Controllers
                                 foreach (var x in tom.CPTADMIN_FLIQUIDATION.OrderBy(a => a.DATELIQUIDATION).ToList())
                                 {
                                     decimal MTN = 0;
+                                    decimal MTNRAPPORT = 0;
+                                    decimal MTNDEVISE = 0;
                                     decimal MTNPJ = 0;
                                     var PCOP = "";
 
@@ -665,6 +683,8 @@ namespace apptab.Controllers
                                         foreach (var y in tom.CPTADMIN_MLIQUIDATION.Where(a => a.IDLIQUIDATION == x.ID).ToList())
                                         {
                                             MTN += y.MONTANTLOCAL.Value;
+                                            MTNRAPPORT += y.MONTANTRAPPORT.Value;
+                                            MTNDEVISE += y.MONTANTDEVISE.Value;
 
                                             if (String.IsNullOrEmpty(PCOP))
                                                 PCOP = y.POSTE;
@@ -682,7 +702,7 @@ namespace apptab.Controllers
                                     }
 
                                     //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
-                                    if (Math.Truncate(MTN) == Math.Truncate(MTNPJ))
+                                    if (Math.Truncate(MTN) == Math.Truncate(MTNPJ) || Math.Truncate(MTNRAPPORT) == Math.Truncate(MTNPJ) || Math.Truncate(MTNDEVISE) == Math.Truncate(MTNPJ))
                                     {
                                         //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
                                         var canBeDEF = true;
@@ -715,6 +735,8 @@ namespace apptab.Controllers
                                 foreach (var x in tom.CPTADMIN_FAVANCE.OrderBy(a => a.DATEAVANCE).ToList())
                                 {
                                     decimal MTN = 0;
+                                    decimal MTNRAPPORT = 0;
+                                    decimal MTNDEVISE = 0;
                                     decimal MTNPJ = 0;
                                     var PCOP = "";
 
@@ -724,6 +746,8 @@ namespace apptab.Controllers
                                         foreach (var y in tom.CPTADMIN_MAVANCE.Where(a => a.IDAVANCE == x.ID).ToList())
                                         {
                                             MTN += y.MONTANTLOCAL.Value;
+                                            MTNRAPPORT += y.MONTANTRAPPORT.Value;
+                                            MTNDEVISE += y.MONTANTDEVISE.Value;
 
                                             if (String.IsNullOrEmpty(PCOP))
                                                 PCOP = y.POSTE;
@@ -741,7 +765,7 @@ namespace apptab.Controllers
                                     }
 
                                     //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
-                                    if (Math.Truncate(MTN) == Math.Truncate(MTNPJ))
+                                    if (Math.Truncate(MTN) == Math.Truncate(MTNPJ) || Math.Truncate(MTNRAPPORT) == Math.Truncate(MTNPJ) || Math.Truncate(MTNDEVISE) == Math.Truncate(MTNPJ))
                                     {
                                         //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
                                         var canBeDEFA = true;
