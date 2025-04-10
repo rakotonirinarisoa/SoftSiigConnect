@@ -1874,7 +1874,6 @@ namespace apptab.Extension
                                         ccyiso = "MGA";
                                         ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM && x.NUMENREG == item.NUMEREG).FirstOrDefault().MONTANTLOC));
                                         beficPrice = ere;
-
                                     }
                                     else
                                     {//USD USD
