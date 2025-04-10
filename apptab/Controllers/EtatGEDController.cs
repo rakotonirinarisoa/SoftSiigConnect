@@ -1770,26 +1770,6 @@ namespace apptab.Controllers
                 SOFTCONNECTGED.connex = new Data.Extension().GetConGED(projId);
                 SOFTCONNECTGED ged = new SOFTCONNECTGED();
                 string links = db.SI_GEDLIEN.Where(x=> x.IDPROJET == projId).Select(x => x.LIEN).FirstOrDefault();
-                //.Join(ged.DocumentsSenders.DefaultIfEmpty(), dcm => dcm.ID, prj => prj.Id, (dcm, prj) => new
-                // {
-                //     ID = dcm.ID,
-                //     reference = dcm.reference,
-                //     Objet = dcm.Objet,
-                //     Fournisseur = "",
-                //     Acusse = dcm.Acusse,
-                //     Validateur = "",
-                //     Montant = dcm.Montant,
-                //     Date = dcm.Date,
-                //     Encours = dcm.Encours,
-                //     ARCHIVES = "",
-                //     Lien = dcm.Lien,
-                //     idSite = dcm.idSite,
-                //     Site = dcm.Site,
-                //     DocumentID = dcm.DocumentID,
-                //     Project = dcm.Project,
-                //     SenderId = dcm.SenderId,
-                //     TYPEEXPEDITEUR = prj.Type == 1 ? "Fournisseur" : "Interne",
-                // })
                 var docc = ged.Documents.Join(ged.Projects.DefaultIfEmpty(),doc => doc.ProjectId , dcm => dcm.Id , (doc,dcm) => new
                 {
                     IDDOCUMENT = doc.Id,
