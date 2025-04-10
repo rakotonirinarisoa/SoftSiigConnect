@@ -719,7 +719,8 @@ namespace apptab.Controllers
                         ProjectId = dcm.ProjectId,
                         Project = prj.Name,
                         SenderId = dcm.SenderId,
-                    }).Join(ged.Sites.DefaultIfEmpty(), dcm => dcm.Site, prj => prj.Id.ToString(), (dcm, prj) => new{
+                    })
+                    .Join(ged.Sites.DefaultIfEmpty(), dcm => dcm.Site, prj => prj.Id.ToString(), (dcm, prj) => new{
                         ID = dcm.ID,
                         reference = dcm.reference,
                         Objet = dcm.Objet,
@@ -731,12 +732,14 @@ namespace apptab.Controllers
                         Encours = dcm.Encours,
                         ARCHIVES = "",
                         Lien = dcm.Lien,
+                        idSite = dcm.Site,
                         Site = prj.SiteId + prj.Name,
                         DocumentID = dcm.DocumentID,
                         ProjectId = dcm.ProjectId,
                         Project = prj.Name,
                         SenderId = dcm.SenderId,
-                    }).Join(ged.DocumentsSenders.DefaultIfEmpty(), dcm => dcm.ID, prj => prj.Id, (dcm, prj) => new
+                    })
+                    .Join(ged.DocumentsSenders.DefaultIfEmpty(), dcm => dcm.ID, prj => prj.Id, (dcm, prj) => new
                     {
                         ID = dcm.ID,
                         reference = dcm.reference,
@@ -749,12 +752,14 @@ namespace apptab.Controllers
                         Encours = dcm.Encours,
                         ARCHIVES = "",
                         Lien = dcm.Lien,
+                        idSite = dcm.idSite,
                         Site = dcm.Site,
                         DocumentID = dcm.DocumentID,
                         Project = dcm.Project,
                         SenderId = dcm.SenderId,
                         TYPEEXPEDITEUR = prj.Type == 1 ? "Fournisseur" : "Interne",
-                    }).Join(ged.Suppliers.DefaultIfEmpty(), dcm => dcm.ID, sup => sup.Id, (dcm, sup) => new
+                    })
+                    .Join(ged.Suppliers.DefaultIfEmpty(), dcm => dcm.ID, sup => sup.Id, (dcm, sup) => new
                     {
                         ID = dcm.ID,
                         reference = dcm.reference,
@@ -765,6 +770,7 @@ namespace apptab.Controllers
                         Encours = dcm.Encours,
                         ARCHIVES = dcm.Date.ToString(),
                         Lien = dcm.Lien,
+                        idSite = dcm.idSite,
                         Site = dcm.Site,
                         DocumentID = dcm.DocumentID,
                         Validateur = "",
@@ -772,28 +778,6 @@ namespace apptab.Controllers
                         TYPEEXPEDITEUR = dcm.TYPEEXPEDITEUR,
                     }).ToList();
 
-
-                    //ddoc
-
-                    //var ress = ddoc.Join(ged.DocumentSteps.DefaultIfEmpty(), dcm => dcm.DocumentID, dcs => dcs.DocumentId, (dcm, dcs) => new
-                    //{
-                    //    ID = dcm.ID,
-                    //    reference = dcm.reference,
-                    //    Objet = dcm.Objet,
-                    //    Fournisseur = dcm.Fournisseur,
-                    //    Acusse = dcm.Acusse,
-                    //    Montant = dcm.Montant,
-                    //    Encours = dcm.Encours,
-                    //    ARCHIVES = dcm.ARCHIVES,
-                    //    Lien = dcm.Lien,
-                    //    Site = dcm.Site,
-                    //    DocumentID = dcm.DocumentID,
-                    //    Validateur = dcm.Validateur,
-                    //    Project = dcm.Project,
-                    //    TYPEEXPEDITEUR = dcm.TYPEEXPEDITEUR,
-                    //    DocumentStepID = dcs.Id,
-                    //    Etape = dcs.ProcessingDescription,
-                    //}).ToList();
                     List<DocS> ress = new List<DocS>();
 
                     if (ddoc != null )
@@ -820,6 +804,7 @@ namespace apptab.Controllers
                                         ARCHIVES = Do.ARCHIVES.ToString(),
                                         Lien =  Do.Lien.ToString(),
                                         PROJET = Do.Project,
+                                        idSite = Do.idSite,
                                         SITE = Do.Site,
                                         TYPEEXPEDITEUR = Do.TYPEEXPEDITEUR,
                                         //Etape = DocsStep.ProcessingDescription,
@@ -851,6 +836,7 @@ namespace apptab.Controllers
                                     ARCHIVES = typD.ARCHIVES.ToString(),
                                     Lien = links + "/" + typD.Lien.ToString(),
                                     PROJET = typD.PROJET,
+                                    idSite = typD.idSite,
                                     SITE = typD.SITE,
                                     TYPEEXPEDITEUR = typD.TYPEEXPEDITEUR,
                                     //Validations = uservalidateur != null ? uservalidateur : "",
@@ -875,6 +861,7 @@ namespace apptab.Controllers
                                     ARCHIVES = typD.ARCHIVES.ToString(),
                                     Lien = links + "/" + typD.Lien.ToString(),
                                     PROJET = typD.PROJET,
+                                    idSite = typD.idSite,
                                     SITE = typD.SITE,
                                     TYPEEXPEDITEUR = typD.TYPEEXPEDITEUR,
                                     //Validations = uservalidateur != null ? uservalidateur : "",
@@ -900,6 +887,7 @@ namespace apptab.Controllers
                                     ARCHIVES = typD.ARCHIVES.ToString(),
                                     Lien = links + "/" + typD.Lien.ToString(),
                                     PROJET = typD.PROJET,
+                                    idSite = typD.idSite,
                                     SITE = typD.SITE,
                                     TYPEEXPEDITEUR = typD.TYPEEXPEDITEUR,
                                     //Validations = uservalidateur != null ? uservalidateur : "",
@@ -924,6 +912,7 @@ namespace apptab.Controllers
                                     ARCHIVES = typD.ARCHIVES.ToString(),
                                     Lien = links + "/" + typD.Lien.ToString(),
                                     PROJET = typD.PROJET,
+                                    idSite = typD.idSite,
                                     SITE = typD.SITE,
                                     TYPEEXPEDITEUR = typD.TYPEEXPEDITEUR,
                                     //Validations = uservalidateur != null ? uservalidateur : "",
@@ -940,7 +929,7 @@ namespace apptab.Controllers
                 }
             }
 
-            List<DocS> list = documentF.DistinctBy(x => x.REF).ToList();
+            List<DocS> list = documentF.Where(x=> site.Contains(x.idSite)).DistinctBy(x => x.REF).ToList();
 
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = list }, settings));
         }
@@ -1058,6 +1047,7 @@ namespace apptab.Controllers
             public string PROJET { get; set; }
             public string SITE { get; set; }
             public string TYPEEXPEDITEUR { get; set; }
+            public string idSite { get; set; }
         }
 
         //TB2: Situation des étapes par type de document (état d'avancement)//
@@ -1787,6 +1777,7 @@ namespace apptab.Controllers
                     CreationDate = doc.CreationDate,
                     FileName = doc.Filename,
                     Projet = dcm.Name,
+                    IdSite = doc.Site,
                 })
                 .Join(ged.DocumentsSenders.DefaultIfEmpty(), doc => doc.SenderId, docsend => docsend.Id, (doc, docsend) => new
                 {
@@ -1796,6 +1787,8 @@ namespace apptab.Controllers
                     FileName = doc.FileName,
                     Projet = doc.Projet,
                     Type = docsend.Type,
+                    IdSite = doc.IdSite,
+                    TYPEEXPEDITEUR = docsend.Type == 1 ? "Fournisseur" : "Interne",
                 }).Join(ged.SuppliersDocumentsAcknowledgements.DefaultIfEmpty(), doc => doc.IDDOCUMENT, ackn => ackn.Id, (doc, ackn) => new
                 {
                     IDDOCUMENT = doc.IDDOCUMENT,
@@ -1805,6 +1798,8 @@ namespace apptab.Controllers
                     Projet = doc.Projet,
                     Type = doc.Type,
                     referenceinterne = ackn.ReferenceInterne,
+                    IdSite = doc.IdSite,
+                    TYPEEXPEDITEUR = doc.TYPEEXPEDITEUR,
                 }).Join(ged.DocumentSteps.DefaultIfEmpty(), doc => doc.IDDOCUMENT, docstep => docstep.DocumentId, (doc, docstep) => new
                 {
                     IDDOCUMENT = doc.IDDOCUMENT,
@@ -1816,6 +1811,8 @@ namespace apptab.Controllers
                     IDDOCSTEP = docstep.Id,
                     Projet = doc.Projet,
                     referenceinterne = doc.referenceinterne,
+                    IdSite = doc.IdSite,
+                    TYPEEXPEDITEUR = doc.TYPEEXPEDITEUR,
                 }).Join(ged.UsersSteps.DefaultIfEmpty(), res => res.IDDOCSTEP, usrstep => usrstep.DocumentStepId, (res, usrstep) => new
                 {
                     IDDOCUMENT = res.IDDOCUMENT,
@@ -1829,51 +1826,10 @@ namespace apptab.Controllers
                     referenceinterne = res.referenceinterne,
                     Isvalidator = usrstep.IsValidator,
                     Projet = res.Projet,
-                    commentaire = usrstep.Comment
-                }).ToList();
-
-
-
-                var informationsDoc = ged.Documents.Join(ged.DocumentsSenders.DefaultIfEmpty(), doc => doc.SenderId, docsend => docsend.Id, (doc, docsend) => new
-                {
-                    IDDOCUMENT = doc.Id,
-                    SenderId = doc.SenderId,
-                    CreationDate = doc.CreationDate,
-                    FileName = doc.Filename,
-                    Type = docsend.Type,
-                }).Join(ged.SuppliersDocumentsAcknowledgements.DefaultIfEmpty(), doc => doc.IDDOCUMENT, ackn => ackn.Id, (doc, ackn) => new
-                {
-                    IDDOCUMENT = doc.IDDOCUMENT,
-                    SenderId = doc.SenderId,
-                    CreationDate = doc.CreationDate,
-                    FileName = doc.FileName,
-                    Type = doc.Type,
-                    referenceinterne = ackn.ReferenceInterne,
-                }).Join(ged.DocumentSteps.DefaultIfEmpty(), doc => doc.IDDOCUMENT, docstep => docstep.DocumentId, (doc, docstep) => new
-                {
-                    IDDOCUMENT = doc.IDDOCUMENT,
-                    SenderId = doc.SenderId,
-                    CreationDate = doc.CreationDate,
-                    FileName = doc.FileName,
-                    StepNumber = docstep.StepNumber,
-                    ProcessingDescription = docstep.ProcessingDescription,
-                    IDDOCSTEP = docstep.Id,
-                    referenceinterne = doc.referenceinterne,
-                }).Join(ged.UsersSteps.DefaultIfEmpty(), res => res.IDDOCSTEP, usrstep => usrstep.DocumentStepId, (res, usrstep) => new
-                {
-                    IDDOCUMENT = res.IDDOCUMENT,
-                    SenderId = res.SenderId,
-                    CreationDate = res.CreationDate,
-                    FileName = res.FileName,
-                    StepNumber = res.StepNumber,
-                    ProcessingDescription = res.ProcessingDescription,
-                    IDDOCSTEP = res.IDDOCSTEP,
-                    UserID = usrstep.UserId,
-                    referenceinterne = res.referenceinterne,
-                    Isvalidator = usrstep.IsValidator,
-                    commentaire = usrstep.Comment
-                }).Where(usrstep => usrstep.Isvalidator == true)
-                .Join(ged.ValidationsHistory.DefaultIfEmpty(), res => res.IDDOCUMENT, valHisto => valHisto.DocumentId, (res, valhisto) => new
+                    commentaire = usrstep.Comment,
+                    IdSite = res.IdSite,
+                    TYPEEXPEDITEUR = res.TYPEEXPEDITEUR,
+                }).Join(ged.ValidationsHistory.DefaultIfEmpty(), res => res.IDDOCUMENT, valHisto => valHisto.DocumentId, (res, valhisto) => new
                 {
                     IDDOCUMENT = res.IDDOCUMENT,
                     SenderId = res.SenderId,
@@ -1888,7 +1844,10 @@ namespace apptab.Controllers
                     Comment = res.commentaire,
                     DATEValidations = valhisto.CreationDate,
                     referenceinterne = res.referenceinterne,
-                    Isvalidator = res.Isvalidator
+                    Isvalidator = res.Isvalidator,
+                    Projet = res.Projet,
+                    IdSite = res.IdSite,
+                    TYPEEXPEDITEUR = res.TYPEEXPEDITEUR,
                 }).Join(ged.Users.DefaultIfEmpty(), res => res.FromUserID, usr => usr.Id, (res, usr) => new
                 {
                     IDDOCUMENT = res.IDDOCUMENT,
@@ -1904,8 +1863,32 @@ namespace apptab.Controllers
                     DATEValidations = res.CreationDate,
                     UserName = usr.Username,
                     referenceinterne = res.referenceinterne,
-                    Isvalidator = res.Isvalidator
-                }).Join(ged.Suppliers.DefaultIfEmpty(), res => res.SenderId, supl => supl.Id, (res, supl) => new documentFdR
+                    Isvalidator = res.Isvalidator,
+                    Projet = res.Projet,
+                    IdSite = res.IdSite,
+                    TYPEEXPEDITEUR = res.TYPEEXPEDITEUR,
+                }).Join(ged.Sites.DefaultIfEmpty(),res => res.IdSite,st => st.Id.ToString() , (res,st) => new
+                {
+                    IDDOCUMENT = res.IDDOCUMENT,
+                    SenderId = res.SenderId,
+                    CreationDate = res.CreationDate,
+                    FileName = res.FileName,
+                    StepNumber = res.StepNumber,
+                    ProcessingDescription = res.ProcessingDescription,
+                    IDDOCSTEP = res.IDDOCSTEP,
+                    UserID = res.UserID,
+                    FromUserID = res.FromUserID,
+                    Comment = res.Comment,
+                    DATEValidations = res.CreationDate,
+                    UserName = res.UserName,
+                    referenceinterne = res.referenceinterne,
+                    Isvalidator = res.Isvalidator,
+                    Projet = res.Projet,
+                    IdSite = res.IdSite,
+                    SITE = st.Name,
+                    TYPEEXPEDITEUR = res.TYPEEXPEDITEUR,
+                })
+                .Join(ged.Suppliers.DefaultIfEmpty(), res => res.SenderId, supl => supl.Id, (res, supl) => new documentFdR
                 {
                     IDDOCUMENT = res.IDDOCUMENT,
                     SenderId = res.SenderId,
@@ -1921,13 +1904,23 @@ namespace apptab.Controllers
                     UserName = res.UserName,
                     referenceinterne = res.referenceinterne,
                     Fournisseur = supl.Name,
-                    Isvalidator = res.Isvalidator
-                }).Where(x => x.referenceinterne == referenS.ReferenceInterne && x.Isvalidator == true).DistinctBy(x => new
+                    Isvalidator = res.Isvalidator,
+                    PROJET = res.Projet,
+                    SITE = res.SITE,
+                    TYPEEXPEDITEUR = res.TYPEEXPEDITEUR,
+                }).DistinctBy(x => new
                 {
                     ProcessingDescription = x.ProcessingDescription,
                     Comment = x.Comment
                 }).ToList();
-                resultat.AddRange(informationsDoc);
+                //Guid idds = Guid.Parse("21FDA949-750A-4AD5-835A-B24901300664");
+
+               // var docos = docc.Where(x => x.IDDOCUMENT == idds).FirstOrDefault();
+
+                 var doccref = docc.Where(x=> referenS.ReferenceInterne.Contains(x.referenceinterne)).FirstOrDefault();
+
+                //resultat.AddRange(docc);
+                resultat.Add(doccref);
             }
 
             return Json(JsonConvert.SerializeObject(new { type = "success", data = resultat }));
@@ -1959,6 +1952,9 @@ namespace apptab.Controllers
             public DateTime? DATEValidations { get; set; }
             public string UserName { get; set; }
             public string referenceinterne { get; set; }
+            public string PROJET { get; set; }
+            public string SITE { get; set; }
+            public string TYPEEXPEDITEUR { get; set; }
             public string Fournisseur { get; set; }
             public bool? Isvalidator { get; set; }
         }

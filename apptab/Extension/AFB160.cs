@@ -1874,7 +1874,6 @@ namespace apptab.Extension
                                         ccyiso = "MGA";
                                         ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM && x.NUMENREG == item.NUMEREG).FirstOrDefault().MONTANTLOC));
                                         beficPrice = ere;
-
                                     }
                                     else
                                     {//USD USD
@@ -1936,7 +1935,7 @@ namespace apptab.Extension
                                                     )
                                             ),
                                             new XElement("CdtrAcct",
-                                            intbasetype == 1 ?
+                                            intbasetype == 1 || intbasetype == 0 ?
                                             new XElement("Id", new XElement("IBAN", IbanPayemenUSD)) :
                                             new XElement("Id", new XElement("Othr",new XElement("Id", IbanPayemenUSD)))),
                                              new XElement("RmtInf",
@@ -1968,7 +1967,7 @@ namespace apptab.Extension
                                                 new XElement("FinInstnId",
                                                     new XElement("BIC", rswift.BQSWIFT),
                                                     typeDevise == 1 ? new XElement("Nm", rswift.BQNOM) : null,
-                                                    typeDevise == 1 ? new XElement("PstlAdr", new XElement("TwnNm", rswift.BQVILLE), new XElement("Ctry", rswift.PAYS), new XElement("AdrLine", rswift.AD1)) : null
+                                                    typeDevise == 1  ? new XElement("PstlAdr", new XElement("TwnNm", rswift.BQVILLE), new XElement("Ctry", rswift.PAYS), new XElement("AdrLine", rswift.AD1)) : null
                                                 )
                                             ),
                                             new XElement("Cdtr",
@@ -1983,7 +1982,7 @@ namespace apptab.Extension
                                                     )
                                             ),
                                             new XElement("CdtrAcct",
-                                                 intbasetype == 1 ?
+                                                 intbasetype == 1 || intbasetype == 0 ?
                                                  new XElement("Id", new XElement("IBAN", IbanPayemenUSD)) :
                                                  new XElement("Id", new XElement("Othr", new XElement("Id", IbanPayemenUSD)))),
 
@@ -2015,8 +2014,8 @@ namespace apptab.Extension
                                              new XElement("CdtrAgt",
                                                 new XElement("FinInstnId",
                                                     new XElement("BIC", rswift.BQSWIFT),
-                                                    typeDevise == 1 ? new XElement("Nm", rswift.BQNOM) : null,
-                                                    typeDevise == 1 ? new XElement("PstlAdr", new XElement("TwnNm", rswift.BQVILLE), new XElement("Ctry", rswift.PAYS), new XElement("AdrLine", rswift.AD1)) : null
+                                                    typeDevise == 1  ? new XElement("Nm", rswift.BQNOM) : null,
+                                                    typeDevise == 1  ? new XElement("PstlAdr", new XElement("TwnNm", rswift.BQVILLE), new XElement("Ctry", rswift.PAYS), new XElement("AdrLine", rswift.AD1)) : null
                                                 )
                                             ),
                                             new XElement("Cdtr",
@@ -2030,7 +2029,7 @@ namespace apptab.Extension
                                                     )
                                             ),
                                             new XElement("CdtrAcct",
-                                                 intbasetype == 1 ?
+                                                 intbasetype == 1 || intbasetype == 0 ?
                                                  new XElement("Id", new XElement("IBAN", IbanPayemenUSD)) :
                                                  new XElement("Id", new XElement("Othr", new XElement("Id", IbanPayemenUSD)))
                                             ),
@@ -2077,7 +2076,7 @@ namespace apptab.Extension
                                             ),
 
                                             new XElement("CdtrAcct",
-                                                intbasetype == 1 ?
+                                                intbasetype == 1 || intbasetype == 0 ?
                                                 new XElement("Id", new XElement("IBAN", IbanPayemenUSD)) :
                                                 new XElement("Id", new XElement("Othr", new XElement("Id", IbanPayemenUSD)))
                                             ),
