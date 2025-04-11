@@ -71,10 +71,12 @@ namespace apptab.Extension
             /***********************NOM de fichier************************/
 
             string nom2 = tom.RPROJET.Select(x => x.SIGLE).FirstOrDefault();
+            string tempNom = db.SI_PROJETS.Where(x => x.ID == PROJECTID).Select(x => x.PROJET).FirstOrDefault();
             //string nom2 = "test test/test.test;";
-            nom2 = this.traitementNomFichier(nom2);
+            nom2 = this.traitementNomFichier(tempNom);
+            //nom2 = this.traitementNomFichier(nom2);
             DateTime dateAFB = DateTime.Now;
-            string fileName = nom2 + codeJ + recupDate((DateTime)donneurOrde.DATE_PAIEMENT) + "_" + this.formatTime(dateAFB.Hour) + this.formatTime(dateAFB.Minute) + this.formatTime(dateAFB.Second);
+            string fileName = /*nom2*/ tempNom + codeJ + recupDate((DateTime)donneurOrde.DATE_PAIEMENT) + "_" + this.formatTime(dateAFB.Hour) + this.formatTime(dateAFB.Minute) + this.formatTime(dateAFB.Second);
             fileName = fileName.Replace("'", "");
             fileName = Regex.Replace(fileName, @"[^a-zA-Z0-9\s]", "");
             int i = 0;
@@ -1885,6 +1887,7 @@ namespace apptab.Extension
                                 else
                                 {
                                     ccyiso = tom.RPROJET.Select(x => x.MONNAIELOC).FirstOrDefault();
+                                    ere = Convert.ToDecimal(String.Format("{0:0.00}", tom.MOP.Where(x => x.NUMEROOP == item.NUM && x.NUMENREG == item.NUMEREG).FirstOrDefault().MONTANTLOC));
                                     beficPrice = ere;
                                 }
                                 if (ccyiso == "" || ere == null)
@@ -1893,7 +1896,7 @@ namespace apptab.Extension
                                 }
                                 var temppp = db.OPA_VALIDATIONS.Where(x => x.IDREGLEMENT == item.NUM).FirstOrDefault();
                                 rswift = tom.RTIERS.Where(a => a.COGEAUXI == temppp.ComptaG + " " + item.AUXI).FirstOrDefault();
-                                if (typeDevise == 1)
+                                if (typeDevise == 1 || typeDevise == 0 || typeDevise == 2)
                                 {
                                     IbanPayemenUSD = rswift.BQIBAN;
                                 }
@@ -1935,7 +1938,7 @@ namespace apptab.Extension
                                                     )
                                             ),
                                             new XElement("CdtrAcct",
-                                            intbasetype == 1 || intbasetype == 0 ?
+                                            devise ?
                                             new XElement("Id", new XElement("IBAN", IbanPayemenUSD)) :
                                             new XElement("Id", new XElement("Othr",new XElement("Id", IbanPayemenUSD)))),
                                              new XElement("RmtInf",
@@ -1982,7 +1985,7 @@ namespace apptab.Extension
                                                     )
                                             ),
                                             new XElement("CdtrAcct",
-                                                 intbasetype == 1 || intbasetype == 0 ?
+                                                 typeDevise == 1 || typeDevise == 0 || typeDevise == 2 ?
                                                  new XElement("Id", new XElement("IBAN", IbanPayemenUSD)) :
                                                  new XElement("Id", new XElement("Othr", new XElement("Id", IbanPayemenUSD)))),
 
@@ -2029,7 +2032,7 @@ namespace apptab.Extension
                                                     )
                                             ),
                                             new XElement("CdtrAcct",
-                                                 intbasetype == 1 || intbasetype == 0 ?
+                                                 typeDevise == 1 || typeDevise == 0 || typeDevise == 2 ?
                                                  new XElement("Id", new XElement("IBAN", IbanPayemenUSD)) :
                                                  new XElement("Id", new XElement("Othr", new XElement("Id", IbanPayemenUSD)))
                                             ),
@@ -2076,7 +2079,7 @@ namespace apptab.Extension
                                             ),
 
                                             new XElement("CdtrAcct",
-                                                intbasetype == 1 || intbasetype == 0 ?
+                                                typeDevise == 1 || typeDevise == 0 || typeDevise == 2 ?
                                                 new XElement("Id", new XElement("IBAN", IbanPayemenUSD)) :
                                                 new XElement("Id", new XElement("Othr", new XElement("Id", IbanPayemenUSD)))
                                             ),
@@ -5367,6 +5370,17 @@ namespace apptab.Extension
                             {
                                 db.OPA_REGLEMENTBR.Add(preg);
                                 db.SaveChanges();
+
+                                db.OPA_ENGAGEMENT.Add(new OPA_ENGAGEMENT
+                                {
+                                    NUMEROOP = ecriture.No,
+                                    NUMEROREG = ecriture.NUMEREG,
+                                    MONTANTVAL = ecriture.Montant,
+                                    DATEVALRAF = DateTime.Now,
+                                    USERVAL = user.LOGIN,
+                                    PROJECTID = PROJECTID,
+                                });
+                                db.SaveChanges();
                             }
                             catch (Exception ex)
                             {
@@ -5375,7 +5389,7 @@ namespace apptab.Extension
                         }
                         else
                         {
-                            Console.WriteLine($"L'écriture avec NUM={preg.NUM} et NUMEREG={preg.NUMEREG} existe déjà.");
+                            return resultat = "L'écriture avec NUM={preg.NUM} et NUMEREG={preg.NUMEREG} existe déjà.";
                         }
 
                         //try

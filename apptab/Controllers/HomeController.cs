@@ -1174,7 +1174,7 @@ namespace apptab.Controllers
 
             if (hstSiig.Any())
             {
-                var idReglements = new HashSet<string>(hstSiig.Select(h => h.IDREGLEMENT));
+                var idReglements = new HashSet<string>(hstSiig.Select(h => h.IDREGLEMENT ));
                 var result = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site);
                 var tomproresult = result.Item2.DistinctBy(x => (x.No, x.NUMEREG)).ToList();
                 if (result.Item1 != "OK")
@@ -1194,6 +1194,18 @@ namespace apptab.Controllers
                         {
                             list.Add(s1);
                         }
+                        else
+                        {
+                            var correspondingItem = hstSiig.FirstOrDefault(h => h.IDREGLEMENT == s1.No && h.NUMEREG == s1.NUMEREG.ToString());
+                            if (correspondingItem != null && !correspondingItem.NUMEREG.Contains(s1.No) && !correspondingItem.NUMEREG.Contains(s1.NUMEREG.ToString()))
+                            {
+                                // Ajouter s1 à la liste s'il n'est pas déjà présent
+                                if (!list.Any(dp => dp.No == s1.No && dp.NUMEREG == s1.NUMEREG))
+                                {
+                                    list.Add(s1);
+                                }
+                            }
+                        }
                     }
                     else
                     {
@@ -1206,6 +1218,10 @@ namespace apptab.Controllers
                             {
                                 list.Add(s1);
                             }
+                        }
+                        else
+                        {
+                            list.Add(s1);
                         }
                     }
                 }
@@ -3823,6 +3839,14 @@ namespace apptab.Controllers
                         {
                             db.OPA_VALIDATIONS.Remove(OPABRSAVE);
                             db.OPA_REGLEMENTBR.Remove(reglementBr);
+                            db.OPA_DELETE.Add(new OPA_DELETE
+                            {
+                                NUMEROOP = OPABRSAVE.IDREGLEMENT,
+                                NUMEREG = (int)OPABRSAVE.NUMEREG,
+                                USERMAIL = user.LOGIN,
+                                DATEDELETE = DateTime.Now,
+                                PROJETID = PROJECTID,
+                            });
                             try
                             {
                                 db.SaveChanges();
@@ -3834,7 +3858,6 @@ namespace apptab.Controllers
                             }
                         }
                     }
-                   
                 }
                 else
                 {

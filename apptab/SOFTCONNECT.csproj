@@ -368,6 +368,8 @@
     <Compile Include="Models\MBUDALLOC.cs" />
     <Compile Include="Models\MBUDGET.cs" />
     <Compile Include="Models\MCOMPTA.cs" />
+    <Compile Include="Models\Model1.cs" />
+    <Compile Include="Models\Model2.cs" />
     <Compile Include="Models\MOP.cs" />
     <Compile Include="Models\OPA_ANOMALIE.cs" />
     <Compile Include="Models\OPA_ANOMALIEBR.cs" />
@@ -375,8 +377,10 @@
     <Compile Include="Models\OPA_BASE.cs" />
     <Compile Include="Models\OPA_CRYPTO.cs" />
     <Compile Include="Models\OPA_DATABASE.cs" />
+    <Compile Include="Models\OPA_DELETE.cs" />
     <Compile Include="Models\OPA_DONNEURORDRE.cs" />
     <Compile Include="Models\OPA_DROITS.cs" />
+    <Compile Include="Models\OPA_ENGAGEMENT.cs" />
     <Compile Include="Models\OPA_FTP.cs" />
     <Compile Include="Models\OPA_HCANCEL.cs" />
     <Compile Include="Models\OPA_HISTORIQUE.cs" />
