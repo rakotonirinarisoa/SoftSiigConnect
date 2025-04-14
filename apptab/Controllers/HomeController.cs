@@ -48,6 +48,10 @@ using System.Data.SqlClient;
 using Renci.SshNet.Common;
 using System.Net.Sockets;
 using System.Web.UI;
+using System.Security.Cryptography.Pkcs;
+using System.Security.Cryptography.X509Certificates;
+using MimeKit;
+using MimeKit.Cryptography;
 
 namespace apptab.Controllers
 {
@@ -4945,5 +4949,52 @@ namespace apptab.Controllers
                 return false;
             }
         }
+        public static void EncryptXmlFile(string xmlFilePath, string certFilePath, string outputEncryptedFile)
+        {
+            // Lire le contenu XML
+            string xmlContent = System.IO.File.ReadAllText(xmlFilePath);
+
+            // Construire le corps MIME avec le XML
+            var builder = new BodyBuilder();
+            // Joindre le fichier XML comme pièce jointe
+            var attachment = new MimeKit.MimePart("application", "xml")
+            {
+                FileName = Path.GetFileName(xmlFilePath),
+                Content = new MimeContent(System.IO.File.OpenRead(xmlFilePath)),
+                ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+                ContentTransferEncoding = ContentEncoding.Base64
+            };
+
+            builder.Attachments.Add(attachment);
+            var body = builder.ToMessageBody(); // MimeEntity
+
+            // Créer le MimeMessage avec le corps et un sujet
+            var message = new MimeMessage();
+            message.Subject = "Message XML chiffré";
+            message.Body = body; // Associer le corps à un MimeMessage complet
+
+            // Charger le certificat (clé publique RSA)
+            var cert = new X509Certificate2(certFilePath);
+
+            // Créer un CmsRecipient à partir du certificat
+            var recipient = new MimeKit.Cryptography.CmsRecipient(cert);
+            // Créer une CmsRecipientCollection pour le chiffrement
+            var recipientCollection = new MimeKit.Cryptography.CmsRecipientCollection { recipient };
+            // Créer le contexte de chiffrement
+            using (var context = new TemporarySecureMimeContext())
+            {
+                // Chiffrer le message complet avec les bons arguments
+                var encrypted = ApplicationPkcs7Mime.Encrypt(recipientCollection, body);
+
+                // Sauvegarder le fichier chiffré .p7m.
+                using (var output = System.IO.File.Create(outputEncryptedFile))
+                {
+                    encrypted.WriteTo(output);
+                }
+
+                Console.WriteLine("✅ Fichier XML chiffré avec succès !");
+            }
+        }
+
     }
 }
