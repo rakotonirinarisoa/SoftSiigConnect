@@ -22,6 +22,7 @@
         public string Comment { get; set; }
 
         public bool? IsValidator { get; set; }
+        public bool? IsPotential { get; set; }
 
         public virtual DocumentSteps DocumentSteps { get; set; }
 

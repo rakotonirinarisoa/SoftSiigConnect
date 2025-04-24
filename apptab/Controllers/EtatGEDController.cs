@@ -784,31 +784,63 @@ namespace apptab.Controllers
                     {
                         foreach (var Do in ddoc)
                         {
-                            var DocsStep = ged.DocumentSteps.Where(x => x.DocumentId == Do.DocumentID).FirstOrDefault();
+                            var DocsStep = ged.DocumentSteps.Where(x => x.DocumentId == Do.DocumentID).Join(ged.UsersSteps , Docstep => Docstep.Id , usStep => usStep.DocumentStepId , (Docstep, usStep)=> new
+                            {
+                                idDocStep = Docstep.Id,
+                                Processeig = Docstep.ProcessingDescription,
+                                userValidation = usStep.UserId,
+                            }).ToList();
 
                             if (DocsStep != null)
                             {
-                                var userEtapeLast = ged.UsersSteps.Where(x => x.DocumentStepId == DocsStep.Id && x.IsValidator == true).OrderBy(x => x.ProcessingDate).FirstOrDefault();
-                                if (userEtapeLast != null)
+                                foreach (var Doc in DocsStep)
                                 {
-                                    var userVal = ged.Users.Where(x => x.Id == userEtapeLast.UserId).FirstOrDefault();
-                                    ress.Add( new DocS
+                                   // var userEtapeLast = ged.UsersSteps.Where(x => x.DocumentStepId == Doc.idDocStep && x.IsPotential == true && x.ProcessingDate != null).OrderBy(x => x.ProcessingDate).FirstOrDefault();
+
+                                    if (Doc != null)
                                     {
-                                        REF = Do.reference,
-                                        Objet = Do.Objet,
-                                        FOURNISSEUR = Do.Fournisseur,
-                                        ACCUSE = Do.Acusse,
-                                        VALIDATEUR = userVal.Email,
-                                        Montant = Do.Montant.ToString(),
-                                        Encours = Do.Encours.ToString(),//DocsStep.ProcessingDescription
-                                        ARCHIVES = Do.ARCHIVES.ToString(),
-                                        Lien =  Do.Lien.ToString(),
-                                        PROJET = Do.Project,
-                                        idSite = Do.idSite,
-                                        SITE = Do.Site,
-                                        TYPEEXPEDITEUR = Do.TYPEEXPEDITEUR,
-                                        //Etape = DocsStep.ProcessingDescription,
-                                    });
+                                        var userVal = ged.Users.Where(x => x.Id == Doc.userValidation).FirstOrDefault();
+                                        ress.Add(new DocS
+                                        {
+                                            REF = Do.reference,
+                                            Objet = Do.Objet,
+                                            FOURNISSEUR = Do.Fournisseur,
+                                            ACCUSE = Do.Acusse,
+                                            VALIDATEUR = userVal.Email,
+                                            Montant = Do.Montant.ToString(),
+                                            Status = Do.Encours.ToString(),
+                                            Encours = Doc.Processeig,//Do.Encours.ToString(),
+                                            ARCHIVES = Do.ARCHIVES.ToString(),
+                                            Lien = Do.Lien.ToString(),
+                                            PROJET = Do.Project,
+                                            idSite = Do.idSite,
+                                            SITE = Do.Site,
+                                            TYPEEXPEDITEUR = Do.TYPEEXPEDITEUR,
+                                            //Etape = DocsStep.ProcessingDescription,
+                                        });
+                                    }
+                                    else
+                                    {
+                                        //var userVal = ged.Users.Where(x => x.Id == userEtapeLast.UserId).FirstOrDefault();
+                                        ress.Add(new DocS
+                                        {
+                                            REF = Do.reference,
+                                            Objet = Do.Objet,
+                                            FOURNISSEUR = Do.Fournisseur,
+                                            ACCUSE = Do.Acusse,
+                                            VALIDATEUR = "",
+                                            Montant = Do.Montant.ToString(),
+                                            Status = Do.Encours.ToString(),
+                                            Encours = Doc.Processeig,
+                                            ARCHIVES = Do.ARCHIVES.ToString(),
+                                            Lien = Do.Lien.ToString(),
+                                            PROJET = Do.Project,
+                                            idSite = Do.idSite,
+                                            SITE = Do.Site,
+                                            TYPEEXPEDITEUR = Do.TYPEEXPEDITEUR,
+                                            //Etape = DocsStep.ProcessingDescription,
+                                        });
+                                    }
                                 }
                             }
                         }
@@ -817,12 +849,11 @@ namespace apptab.Controllers
 
                     if (ress != null)
                     {
-                        if (status != 4 || fournisseur != "0")
+                        if (status == -1)
                         {
-                            var suppliersname = ged.Suppliers.Where(x => x.Id == IDsup).FirstOrDefault(); ;
-                            foreach (var typD in ress.Where(x => x.Encours == status.ToString() && x.FOURNISSEUR == suppliersname.Name))
+                            foreach (var typD in ress.Where(x => x.Encours != "2").DistinctBy(x=>x.REF))
                             {
-                                string uservalidateur = "";
+
                                 string SSITE = typD.SITE;
                                 documentF.Add(new DocS
                                 {
@@ -832,6 +863,7 @@ namespace apptab.Controllers
                                     ACCUSE = typD.ACCUSE,
                                     VALIDATEUR = typD.VALIDATEUR,
                                     Montant = typD.Montant.ToString(),
+                                    Status = typD.Status.ToString(),
                                     Encours = typD.Encours.ToString(),
                                     ARCHIVES = typD.ARCHIVES.ToString(),
                                     Lien = links + "/" + typD.Lien.ToString(),
@@ -839,9 +871,66 @@ namespace apptab.Controllers
                                     idSite = typD.idSite,
                                     SITE = typD.SITE,
                                     TYPEEXPEDITEUR = typD.TYPEEXPEDITEUR,
-                                    //Validations = uservalidateur != null ? uservalidateur : "",
                                 });
                             }
+                        }else if (status != 2 || fournisseur != "0")
+                        {
+                            var suppliersname = ged.Suppliers.Where(x => x.Id == IDsup).FirstOrDefault(); ;
+                            if (suppliersname == null)
+                            {
+                                var aver = ress.Where(x => x.Status == status.ToString()).ToList();
+
+                                foreach (var typD in aver)
+                                {
+                                    string uservalidateur = "";
+                                    string SSITE = typD.SITE;
+                                    documentF.Add(new DocS
+                                    {
+                                        REF = typD.REF,
+                                        Objet = typD.Objet,
+                                        FOURNISSEUR = typD.FOURNISSEUR,
+                                        ACCUSE = typD.ACCUSE,
+                                        VALIDATEUR = typD.VALIDATEUR,
+                                        Montant = typD.Montant.ToString(),
+                                        Status = typD.Status.ToString(),
+                                        Encours = typD.Encours.ToString(),
+                                        ARCHIVES = typD.ARCHIVES.ToString(),
+                                        Lien = links + "/" + typD.Lien.ToString(),
+                                        PROJET = typD.PROJET,
+                                        idSite = typD.idSite,
+                                        SITE = typD.SITE,
+                                        TYPEEXPEDITEUR = typD.TYPEEXPEDITEUR,
+                                        //Validations = uservalidateur != null ? uservalidateur : "",
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                foreach (var typD in ress.Where(x => x.Status == status.ToString() && x.FOURNISSEUR == suppliersname.Name))
+                                {
+                                    string uservalidateur = "";
+                                    string SSITE = typD.SITE;
+                                    documentF.Add(new DocS
+                                    {
+                                        REF = typD.REF,
+                                        Objet = typD.Objet,
+                                        FOURNISSEUR = typD.FOURNISSEUR,
+                                        ACCUSE = typD.ACCUSE,
+                                        VALIDATEUR = typD.VALIDATEUR,
+                                        Montant = typD.Montant.ToString(),
+                                        Status = typD.Status.ToString(),
+                                        Encours = typD.Encours.ToString(),
+                                        ARCHIVES = typD.ARCHIVES.ToString(),
+                                        Lien = links + "/" + typD.Lien.ToString(),
+                                        PROJET = typD.PROJET,
+                                        idSite = typD.idSite,
+                                        SITE = typD.SITE,
+                                        TYPEEXPEDITEUR = typD.TYPEEXPEDITEUR,
+                                        //Validations = uservalidateur != null ? uservalidateur : "",
+                                    });
+                                }
+                            }
+                          
                         }
                         else if (fournisseur == "0")
                         {
@@ -857,6 +946,7 @@ namespace apptab.Controllers
                                     ACCUSE = typD.ACCUSE,
                                     VALIDATEUR = typD.VALIDATEUR,
                                     Montant = typD.Montant.ToString(),
+                                    Status = typD.Status.ToString(),
                                     Encours = typD.Encours.ToString(),
                                     ARCHIVES = typD.ARCHIVES.ToString(),
                                     Lien = links + "/" + typD.Lien.ToString(),
@@ -864,34 +954,59 @@ namespace apptab.Controllers
                                     idSite = typD.idSite,
                                     SITE = typD.SITE,
                                     TYPEEXPEDITEUR = typD.TYPEEXPEDITEUR,
-                                    //Validations = uservalidateur != null ? uservalidateur : "",
                                 });
                             }
                         }
-                        else if (status == 4 || fournisseur != "0")
+                        else if (status == 3 || fournisseur != "0")
                         {
                             var suppliersname = ged.Suppliers.Where(x => x.Id == IDsup).FirstOrDefault(); ;
-                            foreach (var typD in ress.Where(x => x.FOURNISSEUR == suppliersname.Name))
+                            if (suppliersname == null)
                             {
-                                string uservalidateur = "";
-                                string SSITE = typD.SITE;
-                                documentF.Add(new DocS
+                                foreach (var typD in ress.Where(x => x.Status == "3"))
                                 {
-                                    REF = typD.REF,
-                                    Objet = typD.Objet,
-                                    FOURNISSEUR = typD.FOURNISSEUR,
-                                    ACCUSE = typD.ACCUSE,
-                                    VALIDATEUR = typD.VALIDATEUR,
-                                    Montant = typD.Montant.ToString(),
-                                    Encours = typD.Encours.ToString(),
-                                    ARCHIVES = typD.ARCHIVES.ToString(),
-                                    Lien = links + "/" + typD.Lien.ToString(),
-                                    PROJET = typD.PROJET,
-                                    idSite = typD.idSite,
-                                    SITE = typD.SITE,
-                                    TYPEEXPEDITEUR = typD.TYPEEXPEDITEUR,
-                                    //Validations = uservalidateur != null ? uservalidateur : "",
-                                });
+                                    string SSITE = typD.SITE;
+                                    documentF.Add(new DocS
+                                    {
+                                        REF = typD.REF,
+                                        Objet = typD.Objet,
+                                        FOURNISSEUR = typD.FOURNISSEUR,
+                                        ACCUSE = typD.ACCUSE,
+                                        VALIDATEUR = typD.VALIDATEUR,
+                                        Montant = typD.Montant.ToString(),
+                                        Status = typD.Status.ToString(),
+                                        Encours = typD.Encours.ToString(),
+                                        ARCHIVES = typD.ARCHIVES.ToString(),
+                                        Lien = links + "/" + typD.Lien.ToString(),
+                                        PROJET = typD.PROJET,
+                                        idSite = typD.idSite,
+                                        SITE = typD.SITE,
+                                        TYPEEXPEDITEUR = typD.TYPEEXPEDITEUR,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                foreach (var typD in ress.Where(x => x.FOURNISSEUR == suppliersname.Name))
+                                {
+                                    string SSITE = typD.SITE;
+                                    documentF.Add(new DocS
+                                    {
+                                        REF = typD.REF,
+                                        Objet = typD.Objet,
+                                        FOURNISSEUR = typD.FOURNISSEUR,
+                                        ACCUSE = typD.ACCUSE,
+                                        VALIDATEUR = typD.VALIDATEUR,
+                                        Montant = typD.Montant.ToString(),
+                                        Status = typD.Status.ToString(),
+                                        Encours = typD.Encours.ToString(),
+                                        ARCHIVES = typD.ARCHIVES.ToString(),
+                                        Lien = links + "/" + typD.Lien.ToString(),
+                                        PROJET = typD.PROJET,
+                                        idSite = typD.idSite,
+                                        SITE = typD.SITE,
+                                        TYPEEXPEDITEUR = typD.TYPEEXPEDITEUR,
+                                    });
+                                }
                             }
                         }
                         else
@@ -909,6 +1024,7 @@ namespace apptab.Controllers
                                     VALIDATEUR = typD.VALIDATEUR,
                                     Montant = typD.Montant.ToString(),
                                     Encours = typD.Encours.ToString(),
+                                    Status = typD.Status.ToString(),
                                     ARCHIVES = typD.ARCHIVES.ToString(),
                                     Lien = links + "/" + typD.Lien.ToString(),
                                     PROJET = typD.PROJET,
@@ -929,7 +1045,8 @@ namespace apptab.Controllers
                 }
             }
 
-            List<DocS> list = documentF.Where(x=> site.Contains(x.idSite)).DistinctBy(x => x.REF).ToList();
+            List<DocS> list = new List<DocS>();
+            list.AddRange(documentF.Where(x => site.Contains(x.idSite)).DistinctBy(x => x.REF).ToList());
 
             return Json(JsonConvert.SerializeObject(new { type = "success", msg = "message", data = list }, settings));
         }
@@ -1041,6 +1158,7 @@ namespace apptab.Controllers
             public string VALIDATEUR { get; set; }
             public string Montant { get; set; }
             public string Encours { get; set; }
+            public string Status { get; set; }
             public string ARCHIVES { get; set; }
             public string Lien { get; set; }
             public string Validations { get; set; }

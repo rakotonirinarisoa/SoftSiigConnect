@@ -1180,7 +1180,8 @@ namespace apptab.Controllers
             {
                 var idReglements = new HashSet<string>(hstSiig.Select(h => h.IDREGLEMENT ));
                 var result = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site);
-                var tomproresult = result.Item2.DistinctBy(x => (x.No, x.NUMEREG)).ToList();
+                //var tomproresult = result.Item2.DistinctBy(x => (x.No, x.NUMEREG)).ToList();
+                var tomproresult = result.Item2.ToList();
                 if (result.Item1 != "OK")
                 {
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = result.Item1 }, settings));

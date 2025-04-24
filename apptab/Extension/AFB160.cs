@@ -4325,7 +4325,8 @@ namespace apptab.Extension
                 }
                 foreach (var item in DjournalAvance)
                 {
-                    lNoOpsAV.AddRange(tom.GA_AVANCE.Where(x => x.DATE >= dateD.Date && site.Contains(x.SITE) && x.DATE <= dateF.Date && x.NUMERO == item).Join(tom.GA_AVANCE_MOUVEMENT, a => a.NUMERO, z => z.NUMERO, (a, z) => new GA_AVANCE_DETAILS
+                    lNoOpsAV.AddRange(tom.GA_AVANCE.Where(x => x.DATE >= dateD.Date && site.Contains(x.SITE) && x.DATE <= dateF.Date && x.NUMERO == item)
+                    .Join(tom.GA_AVANCE_MOUVEMENT, a => a.NUMERO, z => z.NUMERO, (a, z) => new GA_AVANCE_DETAILS
                     {
                         NUMERO = a.NUMERO,
                         MONTANT = z.MONTANT ?? 0,
