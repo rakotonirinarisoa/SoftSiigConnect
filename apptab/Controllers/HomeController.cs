@@ -1180,8 +1180,8 @@ namespace apptab.Controllers
             {
                 var idReglements = new HashSet<string>(hstSiig.Select(h => h.IDREGLEMENT ));
                 var result = afb160.getListEcritureBR(journal, datein, dateout, devise, comptaG, auxi, etat, dateP, suser, PROJECTID, site);
-                //var tomproresult = result.Item2.DistinctBy(x => (x.No, x.NUMEREG)).ToList();
-                var tomproresult = result.Item2.ToList();
+                var tomproresult = result.Item2.DistinctBy(x => (x.No, x.NUMEREG)).ToList();
+                //var tomproresult = result.Item2.ToList();
                 if (result.Item1 != "OK")
                 {
                     return Json(JsonConvert.SerializeObject(new { type = "error", msg = result.Item1 }, settings));
@@ -1202,32 +1202,15 @@ namespace apptab.Controllers
                         else
                         {
                             var correspondingItem = hstSiig.FirstOrDefault(h => h.IDREGLEMENT == s1.No && h.NUMEREG == s1.NUMEREG.ToString());
-                            if (correspondingItem != null && !correspondingItem.NUMEREG.Contains(s1.No) && !correspondingItem.NUMEREG.Contains(s1.NUMEREG.ToString()))
+                            if (correspondingItem != null && correspondingItem.IDREGLEMENT.Contains(s1.No) && !correspondingItem.NUMEREG.Contains(s1.NUMEREG.ToString()))
                             {
-                                // Ajouter s1 à la liste s'il n'est pas déjà présent
-                                if (!list.Any(dp => dp.No == s1.No && dp.NUMEREG == s1.NUMEREG))
-                                {
-                                    list.Add(s1);
-                                }
+                                list.Add(s1);
                             }
                         }
                     }
                     else
                     {
-                        // Si s1.No est dans hstSiig, vérifier si NUMEREG est différent
-                        var correspondingItem = hstSiig.FirstOrDefault(h => h.IDREGLEMENT == s1.No && h.NUMEREG == s1.NUMEREG.ToString());
-                        if (correspondingItem != null && !correspondingItem.NUMEREG.Contains(s1.No) && !correspondingItem.NUMEREG.Contains(s1.NUMEREG.ToString()))
-                        {
-                            // Ajouter s1 à la liste s'il n'est pas déjà présent
-                            if (!list.Any(dp => dp.No == s1.No && dp.NUMEREG == s1.NUMEREG))
-                            {
-                                list.Add(s1);
-                            }
-                        }
-                        else
-                        {
-                            list.Add(s1);
-                        }
+                        list.Add(s1);
                     }
                 }
             }

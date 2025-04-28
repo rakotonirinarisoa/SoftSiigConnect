@@ -2035,7 +2035,7 @@ namespace apptab.Controllers
 
                // var docos = docc.Where(x => x.IDDOCUMENT == idds).FirstOrDefault();
 
-                 var doccref = docc.Where(x=> referenS.ReferenceInterne.Contains(x.referenceinterne)).FirstOrDefault();
+                 var doccref = docc.Where(x=> x.referenceinterne == referenS.ReferenceInterne).FirstOrDefault();
 
                 //resultat.AddRange(docc);
                 resultat.Add(doccref);
