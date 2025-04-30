@@ -35,6 +35,7 @@ using Org.BouncyCastle.Asn1.Utilities;
 using static apptab.Extension.AFB160;
 using DocumentFormat.OpenXml.Office.CustomUI;
 using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using System.Globalization;
 
 namespace apptab.Extension
 {
@@ -118,14 +119,14 @@ namespace apptab.Extension
                                         where dordre.IDSOCIETE == PROJECTID && dordre.NUM == item.Id && dordre.NUMEREG == numeroreg && dordre.APPLICATION == "BR" && dordre.ETAT == "0"
                                         select dordre).ToList());
             }
-
+            string fileNameBNI = "";
             var nums_2 = beneficiaires;
             RBANQUES rbanque = new RBANQUES();
             string ibanpay = "";
             decimal? Montantglob;
             foreach (var bnfcr in beneficiaires)
             {
-
+                fileNameBNI = tempNom + codeJ + bnfcr.NUM + this.formatTime(dateAFB.Hour) + this.formatTime(dateAFB.Minute) + this.formatTime(dateAFB.Second);
                 var opp = db.OPA_VALIDATIONS.Where(e => e.IDREGLEMENT == bnfcr.NUM && e.NUMEREG == bnfcr.NUMEREG).FirstOrDefault();
                 historique = new OPA_HISTORIQUEBR();
                 if (opp != null)
@@ -405,6 +406,8 @@ namespace apptab.Extension
             }
             if (rbanque.CODEBIC != null && rbanque.CODEBIC.Contains("CLMDMGMG"))//BNI
             {
+                fileName = Regex.Replace(fileNameBNI, @"[^a-zA-Z0-9\s]", "");
+                path = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + fileName + ".xml";
                 try
                 {
                     // Create the file, or overwrite if the file exists.
@@ -1409,8 +1412,8 @@ namespace apptab.Extension
                                                 new XElement("Ctry", formaterTexte(35, donneurOrde.PAYS).TrimEnd(' ')) :
                                                 null,
                                                 !string.IsNullOrEmpty(donneurOrde.ADDRESSE1) ?
-                                                new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).TrimEnd(' ')) :
-                                                null)
+                                                new XElement("AdrLine", formaterTexte(35, RemoveAccentsAndSpecialChars(donneurOrde.ADDRESSE1)).TrimEnd(' ')) :
+                                                null)// Regex.Replace(withoutAccents, @"[^a-zA-Z0-9\s]", "")
                                         ),
                                 new XElement("DbtrAcct",
                                     devise == true ?
@@ -1451,7 +1454,7 @@ namespace apptab.Extension
                                                 !string.IsNullOrEmpty(donneurOrde.PAYS) ?
                                                 new XElement("Ctry", formaterTexte(35, donneurOrde.PAYS).TrimEnd(' ')) :
                                                 null,
-                                                !string.IsNullOrEmpty(donneurOrde.ADDRESSE1) ? new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).TrimEnd(' ')) : null
+                                                !string.IsNullOrEmpty(donneurOrde.ADDRESSE1) ? new XElement("AdrLine", formaterTexte(35, RemoveAccentsAndSpecialChars(donneurOrde.ADDRESSE1)).TrimEnd(' ')) : null
                                                 )
                                         ),
                                 new XElement("DbtrAcct",
@@ -1489,7 +1492,7 @@ namespace apptab.Extension
                                                     new XElement("AdrTp", "ADDR"),
                                                     !string.IsNullOrEmpty(donneurOrde.VILLE) ? new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')) : null,
                                                     !string.IsNullOrEmpty(donneurOrde.PAYS) ? new XElement("Ctry", formaterTexte(35, donneurOrde.PAYS).TrimEnd(' ')) : null,
-                                                    !string.IsNullOrEmpty(donneurOrde.ADDRESSE1) ? new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).TrimEnd(' ')) : null)
+                                                    !string.IsNullOrEmpty(donneurOrde.ADDRESSE1) ? new XElement("AdrLine", formaterTexte(35, RemoveAccentsAndSpecialChars(donneurOrde.ADDRESSE1)).TrimEnd(' ')) : null)
                                             ),
                                     new XElement("DbtrAcct",
                                         devise == true ?
@@ -1528,7 +1531,7 @@ namespace apptab.Extension
                                                     new XElement("AdrTp", "ADDR"),
                                                     !string.IsNullOrEmpty(donneurOrde.VILLE) ? new XElement("TwnNm", formaterTexte(35, donneurOrde.VILLE).TrimEnd(' ')) : null,
                                                     new XElement("Ctry", donneurOrde.PAYS.TrimEnd(' ').Trim(' ')),
-                                                    !string.IsNullOrEmpty(donneurOrde.ADDRESSE1) ? new XElement("AdrLine", formaterTexte(35, donneurOrde.ADDRESSE1).TrimEnd(' ')) : null)
+                                                    !string.IsNullOrEmpty(donneurOrde.ADDRESSE1) ? new XElement("AdrLine", formaterTexte(35, RemoveAccentsAndSpecialChars(donneurOrde.ADDRESSE1)).TrimEnd(' ')) : null)
                                             ),
                                     new XElement("DbtrAcct",
                                         devise == true ?
@@ -1922,7 +1925,7 @@ namespace apptab.Extension
                                                 new XElement("FinInstnId",
                                                     new XElement("BIC", rswift.BQSWIFT),
                                                     typeDevise == 1 ? new XElement("Nm",rswift.BQNOM) : null,
-                                                    typeDevise == 1 ? new XElement("PstlAdr",new XElement("TwnNm",rswift.BQVILLE),new XElement("Ctry",rswift.PAYS),new XElement("AdrLine",rswift.AD1)):null
+                                                    typeDevise == 1 ? new XElement("PstlAdr",new XElement("TwnNm",rswift.BQVILLE),new XElement("Ctry",rswift.PAYS),new XElement("AdrLine", RemoveAccentsAndSpecialChars(rswift.AD1))):null
                                                 )
                                             ),
                                             new XElement("Cdtr",
@@ -1933,8 +1936,8 @@ namespace apptab.Extension
                                                     //adresse beneficiaire
                                                     new XElement("PstlAdr",
                                                         new XElement("Ctry", item.PAYS != null ? item.PAYS.TrimEnd(' ').Trim(' ') : " "),
-                                                        new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')),
-                                                        new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' '))
+                                                        new XElement("AdrLine", formaterTexte(35, RemoveAccentsAndSpecialChars(item.AD1)).TrimEnd(' ')),
+                                                        new XElement("AdrLine", formaterTexte(35, RemoveAccentsAndSpecialChars(item.AD2)).TrimEnd(' '))
                                                     )
                                             ),
                                             new XElement("CdtrAcct",
@@ -1970,7 +1973,7 @@ namespace apptab.Extension
                                                 new XElement("FinInstnId",
                                                     new XElement("BIC", rswift.BQSWIFT),
                                                     typeDevise == 1 ? new XElement("Nm", rswift.BQNOM) : null,
-                                                    typeDevise == 1  ? new XElement("PstlAdr", new XElement("TwnNm", rswift.BQVILLE), new XElement("Ctry", rswift.PAYS), new XElement("AdrLine", rswift.AD1)) : null
+                                                    typeDevise == 1  ? new XElement("PstlAdr", new XElement("TwnNm", rswift.BQVILLE), new XElement("Ctry", rswift.PAYS), new XElement("AdrLine", RemoveAccentsAndSpecialChars(rswift.AD1))) : null
                                                 )
                                             ),
                                             new XElement("Cdtr",
@@ -1980,8 +1983,8 @@ namespace apptab.Extension
                                                     //adresse beneficiaire
                                                     new XElement("PstlAdr",
                                                         new XElement("Ctry", item.PAYS != null ? item.PAYS.TrimEnd(' ').Trim(' ') : " "),
-                                                        new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')),
-                                                        new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' '))
+                                                        new XElement("AdrLine", formaterTexte(35, RemoveAccentsAndSpecialChars(item.AD1)).TrimEnd(' ')),
+                                                        new XElement("AdrLine", formaterTexte(35, RemoveAccentsAndSpecialChars(item.AD2)).TrimEnd(' '))
                                                     )
                                             ),
                                             new XElement("CdtrAcct",
@@ -2018,7 +2021,7 @@ namespace apptab.Extension
                                                 new XElement("FinInstnId",
                                                     new XElement("BIC", rswift.BQSWIFT),
                                                     typeDevise == 1  ? new XElement("Nm", rswift.BQNOM) : null,
-                                                    typeDevise == 1  ? new XElement("PstlAdr", new XElement("TwnNm", rswift.BQVILLE), new XElement("Ctry", rswift.PAYS), new XElement("AdrLine", rswift.AD1)) : null
+                                                    typeDevise == 1  ? new XElement("PstlAdr", new XElement("TwnNm", rswift.BQVILLE), new XElement("Ctry", rswift.PAYS), new XElement("AdrLine", RemoveAccentsAndSpecialChars(rswift.AD1))) : null
                                                 )
                                             ),
                                             new XElement("Cdtr",
@@ -2065,7 +2068,7 @@ namespace apptab.Extension
                                                 new XElement("FinInstnId",
                                                     new XElement("BIC", rswift.BQSWIFT),
                                                     typeDevise == 1 ? new XElement("Nm", rswift.BQNOM) : null,
-                                                    typeDevise == 1 ? new XElement("PstlAdr", new XElement("TwnNm", rswift.BQVILLE), new XElement("Ctry", rswift.PAYS), new XElement("AdrLine", rswift.AD1)) : null
+                                                    typeDevise == 1 ? new XElement("PstlAdr", new XElement("TwnNm", rswift.BQVILLE), new XElement("Ctry", rswift.PAYS), new XElement("AdrLine", RemoveAccentsAndSpecialChars(rswift.AD1))) : null
                                                 )
                                             ),
                                             new XElement("Cdtr",
@@ -2073,8 +2076,8 @@ namespace apptab.Extension
                                                     //adresse beneficiaire
                                                     new XElement("PstlAdr",
                                                         new XElement("Ctry", item.PAYS != null ? item.PAYS.TrimEnd(' ').Trim(' ') : " "),
-                                                        new XElement("AdrLine", formaterTexte(35, item.AD1).TrimEnd(' ')),
-                                                        new XElement("AdrLine", formaterTexte(35, item.AD2).TrimEnd(' '))
+                                                        new XElement("AdrLine", formaterTexte(35, RemoveAccentsAndSpecialChars(item.AD1)).TrimEnd(' ')),
+                                                        new XElement("AdrLine", formaterTexte(35, RemoveAccentsAndSpecialChars(item.AD2)).TrimEnd(' '))
                                                     )
                                             ),
 
@@ -5882,6 +5885,31 @@ namespace apptab.Extension
             }
 
             Console.WriteLine("Image remplacée avec succès !");
+        }
+        public static string RemoveAccentsAndSpecialChars(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
+
+            // Étape 1 : normalisation en FormD (décompose les lettres et les diacritiques)
+            string normalized = input.Normalize(NormalizationForm.FormD);
+
+            // Étape 2 : supprimer les diacritiques (accents)
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in normalized)
+            {
+                UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (uc != UnicodeCategory.NonSpacingMark)
+                {
+                    sb.Append(c);
+                }
+            }
+
+            // Étape 3 : supprimer ou remplacer les caractères spéciaux
+            string withoutAccents = sb.ToString().Normalize(NormalizationForm.FormC);
+            string cleaned = Regex.Replace(withoutAccents, @"[^a-zA-Z0-9\s]", ""); // garde lettres, chiffres, espaces
+
+            return cleaned;
         }
     }
 }

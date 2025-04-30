@@ -257,7 +257,7 @@ namespace apptab.Controllers
                                                        //xmlDoc.WriteTo(xmlTextWriter);
                         xmlDoc.Save(xmlTextWriter);
                     }
-                    System.IO.File.WriteAllText(pathchemin, stringWriter.ToString());
+                    System.IO.File.WriteAllText(pathchemin, stringWriter.ToString(),new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
                 }
                 //using (StreamWriter stream = new StreamWriter(pathchemin, false, Encoding.GetEncoding("UTF-8")))
                 //{
