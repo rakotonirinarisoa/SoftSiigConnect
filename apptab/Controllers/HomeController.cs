@@ -1192,10 +1192,10 @@ namespace apptab.Controllers
                 foreach (var s1 in tomproresult)
                 {
                     // Vérifier si s1.No n'est pas dans hstSiig
-                    if (!idReglements.Contains(s1.No))
+                    if (idReglements.Contains(s1.No))
                     {
                         // Ajouter s1 à la liste s'il n'est pas déjà présent
-                        if (!list.Any(dp => dp.No == s1.No && dp.NUMEREG == s1.NUMEREG))
+                        if (list.Any(dp => dp.No == s1.No && dp.NUMEREG == s1.NUMEREG))
                         {
                             list.Add(s1);
                         }
