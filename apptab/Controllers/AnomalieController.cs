@@ -13,6 +13,7 @@ using System.Xml.Linq;
 using Extensions.DateTime;
 using Newtonsoft.Json;
 using static apptab.Controllers.RSFController;
+using System.Diagnostics;
 
 namespace apptab.Controllers
 {
@@ -286,22 +287,31 @@ namespace apptab.Controllers
                         SOFTCONNECTOM.connex = new Data.Extension().GetCon(crpt);
                         SOFTCONNECTOM tom = new SOFTCONNECTOM();
 
-                        //Check si la correspondance des états est OK//
-                        var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
-                        if (numCaEtapAPP == null) return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
-                        //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
-                        if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEF) == null)
-                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 1 n'est pas paramétré sur TOM²PRO (Liquidation). " }, settings));
-                        if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEF) == null)
-                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 2 n'est pas paramétré sur TOM²PRO (Liquidation). " }, settings));
-                        if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
-                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO (Liquidation). " }, settings));
-                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEFA) == null)
-                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 1 n'est pas paramétré sur TOM²PRO (Avance). " }, settings));
-                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEFA) == null)
-                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 2 n'est pas paramétré sur TOM²PRO (Avance). " }, settings));
-                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.BEA) == null)
-                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO (Avance). " }, settings));
+                        SI_PARAMETAT numCaEtapAPP = new SI_PARAMETAT();
+
+                        var isProcess = db.SI_TYPEPROCESSUS.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                        if (isProcess != null)
+                        {
+                            if (isProcess.VALTOM == 1)
+                            {
+                                //Check si la correspondance des états est OK//
+                                numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                                if (numCaEtapAPP == null) return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
+                                //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
+                                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEF) == null)
+                                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 1 n'est pas paramétré sur TOM²PRO (Liquidation). " }, settings));
+                                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEF) == null)
+                                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 2 n'est pas paramétré sur TOM²PRO (Liquidation). " }, settings));
+                                if (tom.CPTADMIN_CHAINETRAITEMENT.FirstOrDefault(a => a.NUM == numCaEtapAPP.BE) == null)
+                                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO (Liquidation). " }, settings));
+                                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEFA) == null)
+                                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 1 n'est pas paramétré sur TOM²PRO (Avance). " }, settings));
+                                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEFA) == null)
+                                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 2 n'est pas paramétré sur TOM²PRO (Avance). " }, settings));
+                                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.BEA) == null)
+                                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO (Avance). " }, settings));
+                            }
+                        }
                     }
 
                     foreach (var idP in lst)
@@ -314,6 +324,8 @@ namespace apptab.Controllers
                             foreach (var x in tom.CPTADMIN_FLIQUIDATION.Where(a => a.DATELIQUIDATION >= DateDebut && a.DATELIQUIDATION <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATELIQUIDATION).ToList())
                             {
                                 decimal MTN = 0;
+                                decimal MTNRAPPORT = 0;
+                                decimal MTNDEVISE = 0;
                                 decimal MTNPJ = 0;
                                 var PCOP = "";
 
@@ -326,6 +338,8 @@ namespace apptab.Controllers
                                     foreach (var y in tom.CPTADMIN_MLIQUIDATION.Where(a => a.IDLIQUIDATION == x.ID).ToList())
                                     {
                                         MTN += y.MONTANTLOCAL.Value;
+                                        MTNRAPPORT += y.MONTANTRAPPORT.Value;
+                                        MTNDEVISE += y.MONTANTDEVISE.Value;
 
                                         if (String.IsNullOrEmpty(PCOP))
                                             PCOP = y.POSTE;
@@ -349,61 +363,115 @@ namespace apptab.Controllers
                                 }
 
                                 //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
-                                if (Math.Truncate(MTN) != Math.Truncate(MTNPJ))
+                                //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
+                                if (Math.Truncate(MTN) == Math.Truncate(MTNPJ) || Math.Truncate(MTNRAPPORT) == Math.Truncate(MTNPJ) || Math.Truncate(MTNDEVISE) == Math.Truncate(MTNPJ))
+                                //if (Math.Truncate(MTN) != Math.Truncate(MTNPJ))
                                 {
-                                    //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
-                                    var canBe = true;
-                                    if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF && site.Contains(a.CODE_SITE)) == null)
-                                        canBe = false;
-                                    if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF && site.Contains(a.CODE_SITE)) == null)
-                                        canBe = false;
-                                    if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE && site.Contains(a.CODE_SITE)) == null)
-                                        canBe = false;
-
-                                    //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
-                                    if (canBe)
+                                    var isProcess = db.SI_TYPEPROCESSUS.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                                    if (isProcess != null)
                                     {
-                                        if (!db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.IDPROJET == crpt && site.Contains(a.SITE)) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt && site.Contains(a.SITE)))
+                                        if (isProcess.VALTOM == 1)
                                         {
-                                            var titulaire = "";
-                                            if (tom.RTIERS.Any(a => a.COGE == COGEBENEFICIAIRE && a.AUXI == AUXIBENEFICIAIRE))
-                                                titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == COGEBENEFICIAIRE && a.AUXI == AUXIBENEFICIAIRE).NOM;
+                                            //Check si F a déjà passé les 3 étapes (DEF, TEF et BE) pour avoir les dates => BE étape finale//
+                                            var canBe = true;
+                                            if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF && site.Contains(a.CODE_SITE)) == null)
+                                                canBe = false;
+                                            if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF && site.Contains(a.CODE_SITE)) == null)
+                                                canBe = false;
+                                            if (tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE && site.Contains(a.CODE_SITE)) == null)
+                                                canBe = false;
 
-                                            var soa = (from soas in db.SI_SOAS
-                                                       join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
-                                                       where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
-                                                       select new
-                                                       {
-                                                           soas.SOA
-                                                       }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
-                                                                                      join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
-                                                                                      where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
-                                                                                      select new
-                                                                                      {
-                                                                                          soas.SOA
-                                                                                      }).FirstOrDefault().SOA : "MULTIPLE";
-
-                                            list.Add(new TxLISTETRAIT
+                                            //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
+                                            if (canBe)
                                             {
-                                                No = x.ID,
-                                                SOA = soa,//SOA
-                                                PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,//Projet
-                                                TYPE = "Dépenses à payer",//Type
-                                                SITE = x.SITE,//Site
-                                                REF = x.NUMEROCA,//Référence
-                                                OBJ = x.DESCRIPTION,//Objet
-                                                TITUL = titulaire,//Titulaire
-                                                DATENGAGEMENT = x.DATELIQUIDATION.Value.Date,//Date mandat
-                                                COMPTE = COGEBENEFICIAIRE,//Compte bénéficiaire
-                                                PCOP = PCOP,//PCOP
+                                                if (!db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.IDPROJET == crpt && site.Contains(a.SITE)) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt && site.Contains(a.SITE)))
+                                                {
+                                                    var titulaire = "";
+                                                    if (tom.RTIERS.Any(a => a.COGE == COGEBENEFICIAIRE && a.AUXI == AUXIBENEFICIAIRE))
+                                                        titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == COGEBENEFICIAIRE && a.AUXI == AUXIBENEFICIAIRE).NOM;
 
-                                                MONT = Math.Round(MTN, 2).ToString(),//Montant imputations
-                                                MONTi = Math.Round(MTNPJ, 2).ToString(),//Montant pièces justificatives
+                                                    var soa = (from soas in db.SI_SOAS
+                                                               join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                               where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                               select new
+                                                               {
+                                                                   soas.SOA
+                                                               }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                                              join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                                              where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                                              select new
+                                                                                              {
+                                                                                                  soas.SOA
+                                                                                              }).FirstOrDefault().SOA : "MULTIPLE";
 
-                                                DATEDEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF && site.Contains(a.CODE_SITE)).DATECA,//Date STATUT 1
-                                                DATETEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF && site.Contains(a.CODE_SITE)).DATECA,//Date STATUT 2
-                                                DATEBE = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE && site.Contains(a.CODE_SITE)).DATECA,//Date STATUT 3
-                                            });
+                                                    list.Add(new TxLISTETRAIT
+                                                    {
+                                                        No = x.ID,
+                                                        SOA = soa,//SOA
+                                                        PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,//Projet
+                                                        TYPE = "Dépenses à payer",//Type
+                                                        SITE = x.SITE,//Site
+                                                        REF = x.NUMEROCA,//Référence
+                                                        OBJ = x.DESCRIPTION,//Objet
+                                                        TITUL = titulaire,//Titulaire
+                                                        DATENGAGEMENT = x.DATELIQUIDATION.Value.Date,//Date mandat
+                                                        COMPTE = COGEBENEFICIAIRE,//Compte bénéficiaire
+                                                        PCOP = PCOP,//PCOP
+
+                                                        MONT = Math.Round(MTN, 2).ToString(),//Montant imputations
+                                                        MONTi = Math.Round(MTNPJ, 2).ToString(),//Montant pièces justificatives
+
+                                                        DATEDEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF && site.Contains(a.CODE_SITE)).DATECA,//Date STATUT 1
+                                                        DATETEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF && site.Contains(a.CODE_SITE)).DATECA,//Date STATUT 2
+                                                        DATEBE = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE && site.Contains(a.CODE_SITE)).DATECA,//Date STATUT 3
+                                                    });
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (!db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.IDPROJET == crpt && site.Contains(a.SITE)) || db.SI_TRAITPROJET.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt && site.Contains(a.SITE)))
+                                            {
+                                                var titulaire = "";
+                                                if (tom.RTIERS.Any(a => a.COGE == COGEBENEFICIAIRE && a.AUXI == AUXIBENEFICIAIRE))
+                                                    titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == COGEBENEFICIAIRE && a.AUXI == AUXIBENEFICIAIRE).NOM;
+
+                                                var soa = (from soas in db.SI_SOAS
+                                                           join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                           where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                           select new
+                                                           {
+                                                               soas.SOA
+                                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                                          select new
+                                                                                          {
+                                                                                              soas.SOA
+                                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
+
+                                                list.Add(new TxLISTETRAIT
+                                                {
+                                                    No = x.ID,
+                                                    SOA = soa,//SOA
+                                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,//Projet
+                                                    TYPE = "Dépenses à payer",//Type
+                                                    SITE = x.SITE,//Site
+                                                    REF = x.NUMEROCA,//Référence
+                                                    OBJ = x.DESCRIPTION,//Objet
+                                                    TITUL = titulaire,//Titulaire
+                                                    DATENGAGEMENT = x.DATELIQUIDATION.Value.Date,//Date mandat
+                                                    COMPTE = COGEBENEFICIAIRE,//Compte bénéficiaire
+                                                    PCOP = PCOP,//PCOP
+
+                                                    MONT = Math.Round(MTN, 2).ToString(),//Montant imputations
+                                                    MONTi = Math.Round(MTNPJ, 2).ToString(),//Montant pièces justificatives
+
+                                                    DATEDEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.DEF && site.Contains(a.CODE_SITE)).DATECA,//Date STATUT 1
+                                                    DATETEF = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.TEF && site.Contains(a.CODE_SITE)).DATECA,//Date STATUT 2
+                                                    DATEBE = tom.CPTADMIN_TRAITEMENT.FirstOrDefault(a => a.NUMEROCA == x.NUMEROCA && a.NUMCAETAPE == numCaEtapAPP.BE && site.Contains(a.CODE_SITE)).DATECA,//Date STATUT 3
+                                                });
+                                            }
                                         }
                                     }
                                 }
@@ -422,6 +490,8 @@ namespace apptab.Controllers
                             {
                                 decimal MTN = 0;
                                 decimal MTNPJ = 0;
+                                decimal MTNRAPPORT = 0;
+                                decimal MTNDEVISE = 0;
                                 var PCOP = "";
 
                                 //Get total MTN dans CPTADMIN_MLIQUIDATION pour vérification du SOMMES MTN M = SOMMES MTN MPJ//
@@ -430,6 +500,8 @@ namespace apptab.Controllers
                                     foreach (var y in tom.CPTADMIN_MAVANCE.Where(a => a.IDAVANCE == x.ID).ToList())
                                     {
                                         MTN += y.MONTANTLOCAL.Value;
+                                        MTNRAPPORT += y.MONTANTRAPPORT.Value;
+                                        MTNDEVISE += y.MONTANTDEVISE.Value;
 
                                         if (String.IsNullOrEmpty(PCOP))
                                             PCOP = y.POSTE;
@@ -447,61 +519,113 @@ namespace apptab.Controllers
                                 }
 
                                 //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
-                                if (Math.Truncate(MTN) != Math.Truncate(MTNPJ))
+                                if (Math.Truncate(MTN) == Math.Truncate(MTNPJ) || Math.Truncate(MTNRAPPORT) == Math.Truncate(MTNPJ) || Math.Truncate(MTNDEVISE) == Math.Truncate(MTNPJ))
                                 {
-                                    //Check si F a déjà passé les 3 étapes (DEFA, TEFA et BEA) pour avoir les dates => BEA étape finale//
-                                    var canBe = true;
-                                    if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.DEFA && site.Contains(a.CODE_SITE)) == null)
-                                        canBe = false;
-                                    if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.TEFA && site.Contains(a.CODE_SITE)) == null)
-                                        canBe = false;
-                                    if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)) == null)
-                                        canBe = false;
-
-                                    //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
-                                    if (canBe)
+                                    var isProcess = db.SI_TYPEPROCESSUS.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                                    if (isProcess != null)
                                     {
-                                        if (!db.SI_TRAITAVANCE.Any(a => a.No == x.ID && a.IDPROJET == crpt && site.Contains(a.SITE)) || db.SI_TRAITAVANCE.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt && site.Contains(a.SITE)))
+                                        if (isProcess.VALTOM == 1)
                                         {
-                                            var titulaire = "";
-                                            if (tom.RTIERS.Any(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE))
-                                                titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE).NOM;
+                                            //Check si F a déjà passé les 3 étapes (DEFA, TEFA et BEA) pour avoir les dates => BEA étape finale//
+                                            var canBe = true;
+                                            if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.DEFA && site.Contains(a.CODE_SITE)) == null)
+                                                canBe = false;
+                                            if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.TEFA && site.Contains(a.CODE_SITE)) == null)
+                                                canBe = false;
+                                            if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)) == null)
+                                                canBe = false;
 
-                                            var soa = (from soas in db.SI_SOAS
-                                                       join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
-                                                       where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
-                                                       select new
-                                                       {
-                                                           soas.SOA
-                                                       }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
-                                                                                      join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
-                                                                                      where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
-                                                                                      select new
-                                                                                      {
-                                                                                          soas.SOA
-                                                                                      }).FirstOrDefault().SOA : "MULTIPLE";
-
-                                            list.Add(new TxLISTETRAIT
+                                            //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
+                                            if (canBe)
                                             {
-                                                No = x.ID,
-                                                SOA = soa,//SOA
-                                                PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,//Projet
-                                                TYPE = "Dépenses à payer",//Type
-                                                SITE = x.SITE,//Site
-                                                REF = x.NUMEROAVANCE,//Référence
-                                                OBJ = x.DESCRIPTION,//Objet
-                                                TITUL = titulaire,//Titulaire
-                                                DATENGAGEMENT = x.DATEAVANCE.Value.Date,//Date mandat
-                                                COMPTE = x.COGEBENEFICIAIRE,//Compte bénéficiaire
-                                                PCOP = PCOP,//PCOP
+                                                if (!db.SI_TRAITAVANCE.Any(a => a.No == x.ID && a.IDPROJET == crpt && site.Contains(a.SITE)) || db.SI_TRAITAVANCE.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt && site.Contains(a.SITE)))
+                                                {
+                                                    var titulaire = "";
+                                                    if (tom.RTIERS.Any(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE))
+                                                        titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE).NOM;
 
-                                                MONT = Math.Round(MTN, 2).ToString(),//Montant imputations
-                                                MONTi = Math.Round(MTNPJ, 2).ToString(),//Montant pièces justificatives
+                                                    var soa = (from soas in db.SI_SOAS
+                                                               join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                               where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                               select new
+                                                               {
+                                                                   soas.SOA
+                                                               }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                                              join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                                              where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                                              select new
+                                                                                              {
+                                                                                                  soas.SOA
+                                                                                              }).FirstOrDefault().SOA : "MULTIPLE";
 
-                                                DATEDEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.DEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,//Date STATUT 1
-                                                DATETEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.TEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,//Date STATUT 2
-                                                DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,//Date STATUT 3
-                                            });
+                                                    list.Add(new TxLISTETRAIT
+                                                    {
+                                                        No = x.ID,
+                                                        SOA = soa,//SOA
+                                                        PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,//Projet
+                                                        TYPE = "Dépenses à payer",//Type
+                                                        SITE = x.SITE,//Site
+                                                        REF = x.NUMEROAVANCE,//Référence
+                                                        OBJ = x.DESCRIPTION,//Objet
+                                                        TITUL = titulaire,//Titulaire
+                                                        DATENGAGEMENT = x.DATEAVANCE.Value.Date,//Date mandat
+                                                        COMPTE = x.COGEBENEFICIAIRE,//Compte bénéficiaire
+                                                        PCOP = PCOP,//PCOP
+
+                                                        MONT = Math.Round(MTN, 2).ToString(),//Montant imputations
+                                                        MONTi = Math.Round(MTNPJ, 2).ToString(),//Montant pièces justificatives
+
+                                                        DATEDEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.DEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,//Date STATUT 1
+                                                        DATETEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.TEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,//Date STATUT 2
+                                                        DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,//Date STATUT 3
+                                                    });
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (!db.SI_TRAITAVANCE.Any(a => a.No == x.ID && a.IDPROJET == crpt && site.Contains(a.SITE)) || db.SI_TRAITAVANCE.Any(a => a.No == x.ID && a.ETAT == 2 && a.IDPROJET == crpt && site.Contains(a.SITE)))
+                                            {
+                                                var titulaire = "";
+                                                if (tom.RTIERS.Any(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE))
+                                                    titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == x.COGEBENEFICIAIRE && a.AUXI == x.AUXIBENEFICIAIRE).NOM;
+
+                                                var soa = (from soas in db.SI_SOAS
+                                                           join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                           where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                           select new
+                                                           {
+                                                               soas.SOA
+                                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                                          select new
+                                                                                          {
+                                                                                              soas.SOA
+                                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
+
+                                                list.Add(new TxLISTETRAIT
+                                                {
+                                                    No = x.ID,
+                                                    SOA = soa,//SOA
+                                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,//Projet
+                                                    TYPE = "Dépenses à payer",//Type
+                                                    SITE = x.SITE,//Site
+                                                    REF = x.NUMEROAVANCE,//Référence
+                                                    OBJ = x.DESCRIPTION,//Objet
+                                                    TITUL = titulaire,//Titulaire
+                                                    DATENGAGEMENT = x.DATEAVANCE.Value.Date,//Date mandat
+                                                    COMPTE = x.COGEBENEFICIAIRE,//Compte bénéficiaire
+                                                    PCOP = PCOP,//PCOP
+
+                                                    MONT = Math.Round(MTN, 2).ToString(),//Montant imputations
+                                                    MONTi = Math.Round(MTNPJ, 2).ToString(),//Montant pièces justificatives
+
+                                                    DATEDEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.DEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,//Date STATUT 1
+                                                    DATETEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.TEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,//Date STATUT 2
+                                                    DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,//Date STATUT 3
+                                                });
+                                            }
                                         }
                                     }
                                 }

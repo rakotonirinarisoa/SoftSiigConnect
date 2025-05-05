@@ -143,8 +143,8 @@ function GetListLOADOTHER() {
                         projet: v.PROJET,
                         utilisateur: v.REF,
                         statut: v.isLATE,
-                        dateDEF: formatDate(v.DATEDEF),
-                        dateTEF: formatDate(v.DATETEF)
+                        dateDEF: v.DATEDEF ? formatDate(v.DATEDEF) : "",
+                        dateTEF: v.DATETEF ? formatDate(v.DATETEF) : "",
                     });
                 });
 

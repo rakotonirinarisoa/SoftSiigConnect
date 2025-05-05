@@ -1563,9 +1563,10 @@ namespace apptab.Controllers
 
                 if (SExist != null)
                 {
-                    if (SExist.VALDEPENSES != param.VALDEPENSES || SExist.VALPAIEMENTS != param.VALPAIEMENTS
+                    if (SExist.VALTOM != param.VALTOM || SExist.VALDEPENSES != param.VALDEPENSES || SExist.VALPAIEMENTS != param.VALPAIEMENTS
                         || SExist.PAD != param.PAD || SExist.PCOP != param.PCOP || SExist.INTITULE != param.INTITULE)
                     {
+                        SExist.VALTOM = param.VALTOM;
                         SExist.VALDEPENSES = param.VALDEPENSES;
                         SExist.VALPAIEMENTS = param.VALPAIEMENTS;
                         SExist.PAD = param.PAD;
@@ -1582,6 +1583,7 @@ namespace apptab.Controllers
                 {
                     var newPara = new SI_TYPEPROCESSUS()
                     {
+                        VALTOM = param.VALTOM,
                         VALDEPENSES = param.VALDEPENSES,
                         VALPAIEMENTS = param.VALPAIEMENTS,
                         PAD = param.PAD,
