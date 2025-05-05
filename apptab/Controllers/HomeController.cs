@@ -1619,6 +1619,7 @@ namespace apptab.Controllers
                 bool compteur = false;
                 foreach (var item in siteS.Split(','))
                 {
+
                     if (!compteur)
                     {
                         int countTraitement = 0;
@@ -1628,7 +1629,6 @@ namespace apptab.Controllers
                         string auxi1 = auxi;
                         AFB160 afb160 = new AFB160();//ty miova
                         var hst = db.OPA_HISTORIQUEBR.Where(x => x.SITE == item && x.IDSOCIETE == PROJECTID).Select(x => x.NUMENREG.ToString()).ToArray();
-                        
                         if (list.Count > 1)
                         {
                             compteur = false;
@@ -1647,65 +1647,67 @@ namespace apptab.Controllers
                                 return Json(JsonConvert.SerializeObject(new { type = "error", msg = result.Item1, data = "" }, settings));
                             }
 
-                            var listA = result.Item2.Where(x => x.No.ToString() == h.Id && x.NUMEREG == a && x.SITE == item).ToList();
+                            var listA = result.Item2.Where(x => x.No.ToString() == h.Id && x.NUMEREG == a /*&& item.Contains(x.SITE)*/).ToList();
 
-                            foreach (var Lst in listA)
+                            if (listA.Count != 0)
                             {
-                                var existingRecord = db.OPA_VALIDATIONS
-                                    .FirstOrDefault(x => x.IDREGLEMENT == Lst.No.ToString() && x.NUMEREG == Lst.NUMEREG && x.IDPROJET == PROJECTID);
-
-                                if (existingRecord != null)
+                                foreach (var Lst in listA)
                                 {
-                                    // Si un enregistrement existe déjà, retourner un message d'erreur
-                                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = $"L'enregistrement avec IDREGLEMENT = {Lst.No.ToString()} et NUMREG = {Lst.NUMEREG} existe déjà.", data = "" }, settings));
-                                }
+                                    var existingRecord = db.OPA_VALIDATIONS
+                                        .FirstOrDefault(x => x.IDREGLEMENT == Lst.No.ToString() && x.NUMEREG == Lst.NUMEREG && x.IDPROJET == PROJECTID);
 
-                                avalider.IDREGLEMENT = Lst.No;
-                                avalider.ETAT = 0;
-                                avalider.IDPROJET = PROJECTID;
-                                avalider.DateIn = datein;
-                                avalider.DateOut = dateout;
-                                avalider.ComptaG = Lst.CogeFourniseur;
-                                avalider.auxi = Lst.Auxi;
-                                avalider.DateP = dateP;
-                                avalider.Journal = Lst.Journal;
-                                avalider.dateOrdre = Lst.Date;
-                                avalider.NoPiece = Lst.NoPiece;
-                                avalider.Compte = Lst.Compte;
-                                avalider.Libelle = Lst.Libelle;
-                                //avalider.MONTANT = Convert.ToDecimal(couperText(18, Lst.Montant.ToString()));
-                                avalider.MONTANT = Convert.ToDecimal(Lst.Montant.ToString());
-                                avalider.MontantDevise = Lst.MontantDevise;
-                                avalider.Mon = Lst.Mon;
-                                avalider.Rang = Lst.Rang;
-                                avalider.Poste = Lst.Poste;
-                                avalider.FinancementCategorie = Lst.FinancementCategorie;
-                                avalider.Commune = Lst.Commune;
-                                avalider.Plan6 = Lst.Plan6;
-                                avalider.Marche = Lst.Marche;
-                                avalider.Statut = Lst.Status;
-                                avalider.DATECREA = DateTime.Now;
-                                avalider.IDUSCREA = exist.ID;
-                                avalider.AVANCE = Lst.Avance;
-                                avalider.NUMEROLIQUIDATION = Lst.Mandat;
-                                avalider.NUMEREG = Lst.NUMEREG;
-                                avalider.AUTREOP = Lst.AUTREOPERATIONS;
-                                avalider.SITE = Lst.SITE;
-                                try
-                                {
-                                    db.OPA_VALIDATIONS.Add(avalider);
+                                    if (existingRecord != null)
+                                    {
+                                        // Si un enregistrement existe déjà, retourner un message d'erreur
+                                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = $"L'enregistrement avec IDREGLEMENT = {Lst.No.ToString()} et NUMREG = {Lst.NUMEREG} existe déjà.", data = "" }, settings));
+                                    }
 
-                                    db.SaveChanges();
+                                    avalider.IDREGLEMENT = Lst.No;
+                                    avalider.ETAT = 0;
+                                    avalider.IDPROJET = PROJECTID;
+                                    avalider.DateIn = datein;
+                                    avalider.DateOut = dateout;
+                                    avalider.ComptaG = Lst.CogeFourniseur;
+                                    avalider.auxi = Lst.Auxi;
+                                    avalider.DateP = dateP;
+                                    avalider.Journal = Lst.Journal;
+                                    avalider.dateOrdre = Lst.Date;
+                                    avalider.NoPiece = Lst.NoPiece;
+                                    avalider.Compte = Lst.Compte;
+                                    avalider.Libelle = Lst.Libelle;
+                                    //avalider.MONTANT = Convert.ToDecimal(couperText(18, Lst.Montant.ToString()));
+                                    avalider.MONTANT = Convert.ToDecimal(Lst.Montant.ToString());
+                                    avalider.MontantDevise = Lst.MontantDevise;
+                                    avalider.Mon = Lst.Mon;
+                                    avalider.Rang = Lst.Rang;
+                                    avalider.Poste = Lst.Poste;
+                                    avalider.FinancementCategorie = Lst.FinancementCategorie;
+                                    avalider.Commune = Lst.Commune;
+                                    avalider.Plan6 = Lst.Plan6;
+                                    avalider.Marche = Lst.Marche;
+                                    avalider.Statut = Lst.Status;
+                                    avalider.DATECREA = DateTime.Now;
+                                    avalider.IDUSCREA = exist.ID;
+                                    avalider.AVANCE = Lst.Avance;
+                                    avalider.NUMEROLIQUIDATION = Lst.Mandat;
+                                    avalider.NUMEREG = Lst.NUMEREG;
+                                    avalider.AUTREOP = Lst.AUTREOPERATIONS;
+                                    avalider.SITE = Lst.SITE;
+                                    try
+                                    {
+                                        db.OPA_VALIDATIONS.Add(avalider);
+
+                                        db.SaveChanges();
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
+                                        throw;
+                                    }
                                 }
-                                catch (Exception ex)
-                                {
-                                    return Json(JsonConvert.SerializeObject(new { type = "error", msg = "Erreur de connexion", data = ex.Message }, settings));
-                                    throw;
-                                }
+                                countTraitement++;
+                                isa = isa - 1;
                             }
-                            countTraitement++;
-                            isa = isa - 1;
-
                             if (isa == 0)
                             {
                                 compteur = true;
@@ -4008,7 +4010,7 @@ namespace apptab.Controllers
                                 writer.WriteLine("Date et heure : " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                                 writer.WriteLine("SOURCE : " + SOURCE);
                                 writer.WriteLine("publicKeyFile : ");
-                                writer.WriteLine("outputFile : " + outputFile);
+                                writer.WriteLine("outputFile : "+ remoteFilePath + "/" + namefile + ".xml");
                                 writer.WriteLine("Message : " + ex.Message);
                                 writer.WriteLine("StackTrace : " + ex.StackTrace);
                                 writer.WriteLine("--------------------------------------------------");
