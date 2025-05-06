@@ -321,9 +321,9 @@ $('[data-action="GenereR"]').click(function () {
                         MONT: formatCurrency(String(v.MONT).replace(",", ".")),
                         MONTi: formatCurrency(String(v.MONTi).replace(",", ".")),
 
-                        DATEDEF: formatDate(v.DATEDEF),
-                        DATETEF: formatDate(v.DATETEF),
-                        DATEBE: formatDate(v.DATEBE),
+                        DATEDEF: v.DATEDEF ? formatDate(v.DATEDEF) : "",
+                        DATETEF: v.DATETEF ? formatDate(v.DATETEF) : "",
+                        DATEBE: v.DATEBE ? formatDate(v.DATEBE) : "",
                         imputation: '',
                         piecesJustificatives: '',
                         document: '',

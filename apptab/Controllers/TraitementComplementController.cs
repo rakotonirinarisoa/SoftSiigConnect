@@ -129,16 +129,25 @@ namespace apptab.Controllers
 
                 List<DATATRPROJET> list = new List<DATATRPROJET>();
 
-                //Check si la correspondance des états est OK//
-                var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
-                if (numCaEtapAPP == null) return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
-                //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
-                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEFA) == null)
-                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 1 n'est pas paramétré sur TOM²PRO. " }, settings));
-                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEFA) == null)
-                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 2 n'est pas paramétré sur TOM²PRO. " }, settings));
-                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.BEA) == null)
-                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO. " }, settings));
+                SI_PARAMETAT numCaEtapAPP = new SI_PARAMETAT();
+
+                var isProcess = db.SI_TYPEPROCESSUS.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                if (isProcess != null)
+                {
+                    if (isProcess.VALTOM == 1)
+                    {
+                        //Check si la correspondance des états est OK//
+                        numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                        if (numCaEtapAPP == null) return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
+                        //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
+                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEFA) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 1 n'est pas paramétré sur TOM²PRO. " }, settings));
+                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEFA) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 2 n'est pas paramétré sur TOM²PRO. " }, settings));
+                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.BEA) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO. " }, settings));
+                    }
+                }
 
                 if (tom.CPTADMIN_FAVANCE.Any(a => site.Contains(a.SITE)))
                 {
@@ -177,80 +186,155 @@ namespace apptab.Controllers
                         //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
                         if (Math.Truncate(MTN) == Math.Truncate(MTNPJ) || Math.Truncate(MTNRAPPORT) == Math.Truncate(MTNPJ) || Math.Truncate(MTNDEVISE) == Math.Truncate(MTNPJ))
                         {
-                            //Check si F a déjà passé les 3 étapes (DEFA, TEFA et BEA) pour avoir les dates => BEA étape finale//
-                            var canBe = true;
-                            if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.DEFA && site.Contains(a.CODE_SITE)) == null)
-                                canBe = false;
-                            if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.TEFA && site.Contains(a.CODE_SITE)) == null)
-                                canBe = false;
-                            if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)) == null)
-                                canBe = false;
-
-                            //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
-                            if (canBe)
+                            if (isProcess != null)
                             {
-                                if (tom.GA_AVANCE_MOUVEMENT.Any(a => a.NUMERO == x.NUMEROAVANCE && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null))
+                                if (isProcess.VALTOM == 1)
                                 {
-                                    foreach (var y in tom.GA_AVANCE_MOUVEMENT.Where(a => a.NUMERO == x.NUMEROAVANCE && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null).OrderBy(a => a.NUMERO_COMPLEMENT).ToList())
+                                    //Check si F a déjà passé les 3 étapes (DEFA, TEFA et BEA) pour avoir les dates => BEA étape finale//
+                                    var canBe = true;
+                                    if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.DEFA && site.Contains(a.CODE_SITE)) == null)
+                                        canBe = false;
+                                    if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.TEFA && site.Contains(a.CODE_SITE)) == null)
+                                        canBe = false;
+                                    if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)) == null)
+                                        canBe = false;
+
+                                    //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
+                                    if (canBe)
                                     {
-                                        if (tom.GA_AVANCE_COMPLEMENT.Any(a => a.NUMERO_AVANCE == y.NUMERO && a.NUMERO == y.NUMERO_COMPLEMENT))
+                                        if (tom.GA_AVANCE_MOUVEMENT.Any(a => a.NUMERO == x.NUMEROAVANCE && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null))
                                         {
-                                            var isComplement = tom.GA_AVANCE_COMPLEMENT.FirstOrDefault(a => a.NUMERO_AVANCE == y.NUMERO && a.NUMERO == y.NUMERO_COMPLEMENT);
-
-                                            Guid idJustif = Guid.Parse(y.IDENTIFIANT);
-                                            if (!db.SI_TRAITCOMPLEMENT.Any(a => a.No == idJustif /*&& a.NPIECE == y.NUMERO_COMPLEMENT.ToString() */&& a.IDPROJET == crpt && site.Contains(a.SITE)) || db.SI_TRAITCOMPLEMENT.Any(a => a.No == idJustif && a.ETAT == 2 && a.IDPROJET == crpt && site.Contains(a.SITE)))
+                                            foreach (var y in tom.GA_AVANCE_MOUVEMENT.Where(a => a.NUMERO == x.NUMEROAVANCE && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null).OrderBy(a => a.NUMERO_COMPLEMENT).ToList())
                                             {
-                                                var titulaire = "";
-
-                                                var isGA = tom.GA_AVANCE.FirstOrDefault(a => a.NUMERO == y.NUMERO && site.Contains(a.SITE));
-
-                                                if (isGA != null)
+                                                if (tom.GA_AVANCE_COMPLEMENT.Any(a => a.NUMERO_AVANCE == y.NUMERO && a.NUMERO == y.NUMERO_COMPLEMENT))
                                                 {
-                                                    if (tom.GA_AVANCE.FirstOrDefault(a => a.NUMERO == y.NUMERO && site.Contains(a.SITE)).COGE != null && tom.GA_AVANCE.FirstOrDefault(a => a.NUMERO == y.NUMERO && site.Contains(a.SITE)).AUXI != null)
+                                                    var isComplement = tom.GA_AVANCE_COMPLEMENT.FirstOrDefault(a => a.NUMERO_AVANCE == y.NUMERO && a.NUMERO == y.NUMERO_COMPLEMENT);
+
+                                                    Guid idJustif = Guid.Parse(y.IDENTIFIANT);
+                                                    if (!db.SI_TRAITCOMPLEMENT.Any(a => a.No == idJustif /*&& a.NPIECE == y.NUMERO_COMPLEMENT.ToString() */&& a.IDPROJET == crpt && site.Contains(a.SITE)) || db.SI_TRAITCOMPLEMENT.Any(a => a.No == idJustif && a.ETAT == 2 && a.IDPROJET == crpt && site.Contains(a.SITE)))
                                                     {
-                                                        if (tom.RTIERS.Any(a => a.COGE == isGA.COGE && a.AUXI == isGA.AUXI))
-                                                            titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == isGA.COGE && a.AUXI == isGA.AUXI).NOM;
+                                                        var titulaire = "";
+
+                                                        var isGA = tom.GA_AVANCE.FirstOrDefault(a => a.NUMERO == y.NUMERO && site.Contains(a.SITE));
+
+                                                        if (isGA != null)
+                                                        {
+                                                            if (tom.GA_AVANCE.FirstOrDefault(a => a.NUMERO == y.NUMERO && site.Contains(a.SITE)).COGE != null && tom.GA_AVANCE.FirstOrDefault(a => a.NUMERO == y.NUMERO && site.Contains(a.SITE)).AUXI != null)
+                                                            {
+                                                                if (tom.RTIERS.Any(a => a.COGE == isGA.COGE && a.AUXI == isGA.AUXI))
+                                                                    titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == isGA.COGE && a.AUXI == isGA.AUXI).NOM;
+                                                            }
+                                                        }
+
+                                                        var soa = (from soas in db.SI_SOAS
+                                                                   join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                   where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                   select new
+                                                                   {
+                                                                       soas.SOA
+                                                                   }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                                                  join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                                                  where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                                                  select new
+                                                                                                  {
+                                                                                                      soas.SOA
+                                                                                                  }).FirstOrDefault().SOA : "MULTIPLE";
+
+                                                        bool isLate = false;
+                                                        DateTime DD = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)).DATETRAITEMENT.Value.Date;
+                                                        if (DD.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                                                            isLate = true;
+
+                                                        list.Add(new DATATRPROJET
+                                                        {
+                                                            No = idJustif,
+                                                            REF = y.NUMERO,
+                                                            NPIECE = y.NUMERO_COMPLEMENT.ToString(),
+                                                            OBJ = isGA != null ? isGA.LIBELLE : "",
+                                                            TITUL = titulaire,
+                                                            MONT = Math.Round(y.MONTANT.Value, 2).ToString(),
+                                                            COMPTE = isGA != null ? isGA.COGE : "",
+                                                            DATE = isComplement.DEBUT_ECHEANCE.Value.Date,
+                                                            PCOP = tom.GA_AVANCE_MOUVEMENT.Any(a => a.IDENTIFIANT == y.IDENTIFIANT && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null) ? tom.GA_AVANCE_MOUVEMENT.FirstOrDefault(a => a.IDENTIFIANT == y.IDENTIFIANT && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null).POSTE : "",
+                                                            DATEDEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO && a.NUMEROETAPE == numCaEtapAPP.DEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
+                                                            DATETEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO && a.NUMEROETAPE == numCaEtapAPP.TEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
+                                                            DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
+                                                            SOA = soa,
+                                                            PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                                            isLATE = isLate,
+                                                            SITE = y.SITE
+                                                        });
                                                     }
                                                 }
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (tom.GA_AVANCE_MOUVEMENT.Any(a => a.NUMERO == x.NUMEROAVANCE && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null))
+                                    {
+                                        foreach (var y in tom.GA_AVANCE_MOUVEMENT.Where(a => a.NUMERO == x.NUMEROAVANCE && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null).OrderBy(a => a.NUMERO_COMPLEMENT).ToList())
+                                        {
+                                            if (tom.GA_AVANCE_COMPLEMENT.Any(a => a.NUMERO_AVANCE == y.NUMERO && a.NUMERO == y.NUMERO_COMPLEMENT))
+                                            {
+                                                var isComplement = tom.GA_AVANCE_COMPLEMENT.FirstOrDefault(a => a.NUMERO_AVANCE == y.NUMERO && a.NUMERO == y.NUMERO_COMPLEMENT);
 
-                                                var soa = (from soas in db.SI_SOAS
-                                                           join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
-                                                           where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
-                                                           select new
-                                                           {
-                                                               soas.SOA
-                                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
-                                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
-                                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
-                                                                                          select new
-                                                                                          {
-                                                                                              soas.SOA
-                                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
-
-                                                bool isLate = false;
-                                                DateTime DD = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)).DATETRAITEMENT.Value.Date;
-                                                if (DD.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
-                                                    isLate = true;
-
-                                                list.Add(new DATATRPROJET
+                                                Guid idJustif = Guid.Parse(y.IDENTIFIANT);
+                                                if (!db.SI_TRAITCOMPLEMENT.Any(a => a.No == idJustif /*&& a.NPIECE == y.NUMERO_COMPLEMENT.ToString() */&& a.IDPROJET == crpt && site.Contains(a.SITE)) || db.SI_TRAITCOMPLEMENT.Any(a => a.No == idJustif && a.ETAT == 2 && a.IDPROJET == crpt && site.Contains(a.SITE)))
                                                 {
-                                                    No = idJustif,
-                                                    REF = y.NUMERO,
-                                                    NPIECE = y.NUMERO_COMPLEMENT.ToString(),
-                                                    OBJ = isGA != null ? isGA.LIBELLE : "",
-                                                    TITUL = titulaire,
-                                                    MONT = Math.Round(y.MONTANT.Value, 2).ToString(),
-                                                    COMPTE = isGA != null ? isGA.COGE : "",
-                                                    DATE = isComplement.DEBUT_ECHEANCE.Value.Date,
-                                                    PCOP = tom.GA_AVANCE_MOUVEMENT.Any(a => a.IDENTIFIANT == y.IDENTIFIANT && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null) ? tom.GA_AVANCE_MOUVEMENT.FirstOrDefault(a => a.IDENTIFIANT == y.IDENTIFIANT && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null).POSTE : "",
-                                                    DATEDEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO && a.NUMEROETAPE == numCaEtapAPP.DEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
-                                                    DATETEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO && a.NUMEROETAPE == numCaEtapAPP.TEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
-                                                    DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
-                                                    SOA = soa,
-                                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                                    isLATE = isLate,
-                                                    SITE = y.SITE
-                                                });
+                                                    var titulaire = "";
+
+                                                    var isGA = tom.GA_AVANCE.FirstOrDefault(a => a.NUMERO == y.NUMERO && site.Contains(a.SITE));
+
+                                                    if (isGA != null)
+                                                    {
+                                                        if (tom.GA_AVANCE.FirstOrDefault(a => a.NUMERO == y.NUMERO && site.Contains(a.SITE)).COGE != null && tom.GA_AVANCE.FirstOrDefault(a => a.NUMERO == y.NUMERO && site.Contains(a.SITE)).AUXI != null)
+                                                        {
+                                                            if (tom.RTIERS.Any(a => a.COGE == isGA.COGE && a.AUXI == isGA.AUXI))
+                                                                titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == isGA.COGE && a.AUXI == isGA.AUXI).NOM;
+                                                        }
+                                                    }
+
+                                                    var soa = (from soas in db.SI_SOAS
+                                                               join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                               where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                               select new
+                                                               {
+                                                                   soas.SOA
+                                                               }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                                              join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                                              where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                                              select new
+                                                                                              {
+                                                                                                  soas.SOA
+                                                                                              }).FirstOrDefault().SOA : "MULTIPLE";
+
+                                                    bool isLate = false;
+                                                    //DateTime DD = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)).DATETRAITEMENT.Value.Date;
+                                                    //if (DD.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                                                    //    isLate = true;
+
+                                                    list.Add(new DATATRPROJET
+                                                    {
+                                                        No = idJustif,
+                                                        REF = y.NUMERO,
+                                                        NPIECE = y.NUMERO_COMPLEMENT.ToString(),
+                                                        OBJ = isGA != null ? isGA.LIBELLE : "",
+                                                        TITUL = titulaire,
+                                                        MONT = Math.Round(y.MONTANT.Value, 2).ToString(),
+                                                        COMPTE = isGA != null ? isGA.COGE : "",
+                                                        DATE = isComplement.DEBUT_ECHEANCE.Value.Date,
+                                                        PCOP = tom.GA_AVANCE_MOUVEMENT.Any(a => a.IDENTIFIANT == y.IDENTIFIANT && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null) ? tom.GA_AVANCE_MOUVEMENT.FirstOrDefault(a => a.IDENTIFIANT == y.IDENTIFIANT && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null).POSTE : "",
+                                                        DATEDEF = null,
+                                                        DATETEF = null,
+                                                        DATEBE = null,
+                                                        SOA = soa,
+                                                        PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                                        isLATE = isLate,
+                                                        SITE = y.SITE
+                                                    });
+                                                }
                                             }
                                         }
                                     }
@@ -300,16 +384,25 @@ namespace apptab.Controllers
 
                 List<DATATRPROJET> list = new List<DATATRPROJET>();
 
-                //Check si la correspondance des états est OK//
-                var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
-                if (numCaEtapAPP == null) return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
-                //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
-                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEFA) == null)
-                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 1 n'est pas paramétré sur TOM²PRO. " }, settings));
-                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEFA) == null)
-                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 2 n'est pas paramétré sur TOM²PRO. " }, settings));
-                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.BEA) == null)
-                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO. " }, settings));
+                SI_PARAMETAT numCaEtapAPP = new SI_PARAMETAT();
+
+                var isProcess = db.SI_TYPEPROCESSUS.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                if (isProcess != null)
+                {
+                    if (isProcess.VALTOM == 1)
+                    {
+                        //Check si la correspondance des états est OK//
+                        numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                        if (numCaEtapAPP == null) return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
+                        //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
+                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEFA) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 1 n'est pas paramétré sur TOM²PRO. " }, settings));
+                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEFA) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 2 n'est pas paramétré sur TOM²PRO. " }, settings));
+                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.BEA) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO. " }, settings));
+                    }
+                }
 
                 if (tom.CPTADMIN_FAVANCE.Any(a => site.Contains(a.SITE)))
                 {
@@ -348,82 +441,159 @@ namespace apptab.Controllers
                         //MathRound 3 satria kely kokoa ny marge d'erreur no le 2//
                         if (Math.Truncate(MTN) == Math.Truncate(MTNPJ) || Math.Truncate(MTNRAPPORT) == Math.Truncate(MTNPJ) || Math.Truncate(MTNDEVISE) == Math.Truncate(MTNPJ))
                         {
-                            //Check si F a déjà passé les 3 étapes (DEFA, TEFA et BEA) pour avoir les dates => BEA étape finale//
-                            var canBe = true;
-                            if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.DEFA && site.Contains(a.CODE_SITE)) == null)
-                                canBe = false;
-                            if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.TEFA && site.Contains(a.CODE_SITE)) == null)
-                                canBe = false;
-                            if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)) == null)
-                                canBe = false;
-
-                            //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
-                            if (canBe)
+                            if (isProcess != null)
                             {
-                                if (tom.GA_AVANCE_MOUVEMENT.Any(a => a.NUMERO == x.NUMEROAVANCE && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null))
+                                if (isProcess.VALTOM == 1)
                                 {
-                                    foreach (var y in tom.GA_AVANCE_MOUVEMENT.Where(a => a.NUMERO == x.NUMEROAVANCE && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null).OrderBy(a => a.NUMERO_COMPLEMENT).ToList())
-                                    //foreach (var y in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.NUMERO_AVANCE == x.NUMEROAVANCE && a.DATE >= DateDebut && a.DATE <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATE).OrderBy(a => a.NUMERO_PIECE).ToList())
+                                    //Check si F a déjà passé les 3 étapes (DEFA, TEFA et BEA) pour avoir les dates => BEA étape finale//
+                                    var canBe = true;
+                                    if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.DEFA && site.Contains(a.CODE_SITE)) == null)
+                                        canBe = false;
+                                    if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.TEFA && site.Contains(a.CODE_SITE)) == null)
+                                        canBe = false;
+                                    if (tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)) == null)
+                                        canBe = false;
+
+                                    //TEST que F n'est pas encore traité ou F a été annulé// ETAT annulé = 2//
+                                    if (canBe)
                                     {
-                                        if (tom.GA_AVANCE_COMPLEMENT.Any(a => a.NUMERO_AVANCE == y.NUMERO && a.NUMERO == y.NUMERO_COMPLEMENT && a.ECHEANCE >= DateDebut && a.ECHEANCE <= DateFin))
+                                        if (tom.GA_AVANCE_MOUVEMENT.Any(a => a.NUMERO == x.NUMEROAVANCE && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null))
                                         {
-                                            var isComplement = tom.GA_AVANCE_COMPLEMENT.FirstOrDefault(a => a.NUMERO_AVANCE == y.NUMERO && a.NUMERO == y.NUMERO_COMPLEMENT);
-
-                                            Guid idJustif = Guid.Parse(y.IDENTIFIANT);
-
-                                            if (!db.SI_TRAITCOMPLEMENT.Any(a => a.No == idJustif && a.IDPROJET == crpt && site.Contains(a.SITE)) || db.SI_TRAITJUSTIF.Any(a => a.No == idJustif && a.ETAT == 2 && a.IDPROJET == crpt && site.Contains(a.SITE)))
+                                            foreach (var y in tom.GA_AVANCE_MOUVEMENT.Where(a => a.NUMERO == x.NUMEROAVANCE && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null).OrderBy(a => a.NUMERO_COMPLEMENT).ToList())
+                                            //foreach (var y in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.NUMERO_AVANCE == x.NUMEROAVANCE && a.DATE >= DateDebut && a.DATE <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATE).OrderBy(a => a.NUMERO_PIECE).ToList())
                                             {
-                                                var titulaire = "";
-
-                                                var isGA = tom.GA_AVANCE.FirstOrDefault(a => a.NUMERO == y.NUMERO && site.Contains(a.SITE));
-
-                                                if (isGA != null)
+                                                if (tom.GA_AVANCE_COMPLEMENT.Any(a => a.NUMERO_AVANCE == y.NUMERO && a.NUMERO == y.NUMERO_COMPLEMENT && a.ECHEANCE >= DateDebut && a.ECHEANCE <= DateFin))
                                                 {
-                                                    if (tom.GA_AVANCE.FirstOrDefault(a => a.NUMERO == y.NUMERO && site.Contains(a.SITE)).COGE != null && tom.GA_AVANCE.FirstOrDefault(a => a.NUMERO == y.NUMERO && site.Contains(a.SITE)).AUXI != null)
+                                                    var isComplement = tom.GA_AVANCE_COMPLEMENT.FirstOrDefault(a => a.NUMERO_AVANCE == y.NUMERO && a.NUMERO == y.NUMERO_COMPLEMENT);
+
+                                                    Guid idJustif = Guid.Parse(y.IDENTIFIANT);
+
+                                                    if (!db.SI_TRAITCOMPLEMENT.Any(a => a.No == idJustif && a.IDPROJET == crpt && site.Contains(a.SITE)) || db.SI_TRAITJUSTIF.Any(a => a.No == idJustif && a.ETAT == 2 && a.IDPROJET == crpt && site.Contains(a.SITE)))
                                                     {
-                                                        if (tom.RTIERS.Any(a => a.COGE == isGA.COGE && a.AUXI == isGA.AUXI))
-                                                            titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == isGA.COGE && a.AUXI == isGA.AUXI).NOM;
+                                                        var titulaire = "";
+
+                                                        var isGA = tom.GA_AVANCE.FirstOrDefault(a => a.NUMERO == y.NUMERO && site.Contains(a.SITE));
+
+                                                        if (isGA != null)
+                                                        {
+                                                            if (tom.GA_AVANCE.FirstOrDefault(a => a.NUMERO == y.NUMERO && site.Contains(a.SITE)).COGE != null && tom.GA_AVANCE.FirstOrDefault(a => a.NUMERO == y.NUMERO && site.Contains(a.SITE)).AUXI != null)
+                                                            {
+                                                                if (tom.RTIERS.Any(a => a.COGE == isGA.COGE && a.AUXI == isGA.AUXI))
+                                                                    titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == isGA.COGE && a.AUXI == isGA.AUXI).NOM;
+                                                            }
+                                                        }
+
+                                                        var soa = (from soas in db.SI_SOAS
+                                                                   join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                   where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                   select new
+                                                                   {
+                                                                       soas.SOA
+                                                                   }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                                                  join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                                                  where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                                                  select new
+                                                                                                  {
+                                                                                                      soas.SOA
+                                                                                                  }).FirstOrDefault().SOA : "MULTIPLE";
+
+                                                        bool isLate = false;
+                                                        DateTime DD = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)).DATETRAITEMENT.Value.Date;
+                                                        if (DD.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                                                            isLate = true;
+
+                                                        list.Add(new DATATRPROJET
+                                                        {
+                                                            No = idJustif,
+                                                            REF = y.NUMERO,
+                                                            NPIECE = y.NUMERO_COMPLEMENT.ToString(),
+                                                            OBJ = isGA != null ? isGA.LIBELLE : "",
+                                                            TITUL = titulaire,
+                                                            MONT = Math.Round(y.MONTANT.Value, 2).ToString(),
+                                                            COMPTE = isGA != null ? isGA.COGE : "",
+                                                            DATE = isComplement.DEBUT_ECHEANCE.Value.Date,
+                                                            PCOP = tom.GA_AVANCE_MOUVEMENT.Any(a => a.IDENTIFIANT == y.IDENTIFIANT && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null) ? tom.GA_AVANCE_MOUVEMENT.FirstOrDefault(a => a.IDENTIFIANT == y.IDENTIFIANT && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null).POSTE : "",
+                                                            DATEDEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO && a.NUMEROETAPE == numCaEtapAPP.DEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
+                                                            DATETEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO && a.NUMEROETAPE == numCaEtapAPP.TEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
+                                                            DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
+                                                            SOA = soa,
+                                                            PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                                            isLATE = isLate,
+                                                            SITE = y.SITE
+                                                        });
                                                     }
                                                 }
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (tom.GA_AVANCE_MOUVEMENT.Any(a => a.NUMERO == x.NUMEROAVANCE && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null))
+                                    {
+                                        foreach (var y in tom.GA_AVANCE_MOUVEMENT.Where(a => a.NUMERO == x.NUMEROAVANCE && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null).OrderBy(a => a.NUMERO_COMPLEMENT).ToList())
+                                        //foreach (var y in tom.GA_AVANCE_JUSTIFICATIF.Where(a => a.NUMERO_AVANCE == x.NUMEROAVANCE && a.DATE >= DateDebut && a.DATE <= DateFin && site.Contains(a.SITE)).OrderBy(a => a.DATE).OrderBy(a => a.NUMERO_PIECE).ToList())
+                                        {
+                                            if (tom.GA_AVANCE_COMPLEMENT.Any(a => a.NUMERO_AVANCE == y.NUMERO && a.NUMERO == y.NUMERO_COMPLEMENT && a.ECHEANCE >= DateDebut && a.ECHEANCE <= DateFin))
+                                            {
+                                                var isComplement = tom.GA_AVANCE_COMPLEMENT.FirstOrDefault(a => a.NUMERO_AVANCE == y.NUMERO && a.NUMERO == y.NUMERO_COMPLEMENT);
 
-                                                var soa = (from soas in db.SI_SOAS
-                                                           join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
-                                                           where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
-                                                           select new
-                                                           {
-                                                               soas.SOA
-                                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
-                                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
-                                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
-                                                                                          select new
-                                                                                          {
-                                                                                              soas.SOA
-                                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
+                                                Guid idJustif = Guid.Parse(y.IDENTIFIANT);
 
-                                                bool isLate = false;
-                                                DateTime DD = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)).DATETRAITEMENT.Value.Date;
-                                                if (DD.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
-                                                    isLate = true;
-
-                                                list.Add(new DATATRPROJET
+                                                if (!db.SI_TRAITCOMPLEMENT.Any(a => a.No == idJustif && a.IDPROJET == crpt && site.Contains(a.SITE)) || db.SI_TRAITJUSTIF.Any(a => a.No == idJustif && a.ETAT == 2 && a.IDPROJET == crpt && site.Contains(a.SITE)))
                                                 {
-                                                    No = idJustif,
-                                                    REF = y.NUMERO,
-                                                    NPIECE = y.NUMERO_COMPLEMENT.ToString(),
-                                                    OBJ = isGA != null ? isGA.LIBELLE : "",
-                                                    TITUL = titulaire,
-                                                    MONT = Math.Round(y.MONTANT.Value, 2).ToString(),
-                                                    COMPTE = isGA != null ? isGA.COGE : "",
-                                                    DATE = isComplement.DEBUT_ECHEANCE.Value.Date,
-                                                    PCOP = tom.GA_AVANCE_MOUVEMENT.Any(a => a.IDENTIFIANT == y.IDENTIFIANT && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null) ? tom.GA_AVANCE_MOUVEMENT.FirstOrDefault(a => a.IDENTIFIANT == y.IDENTIFIANT && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null).POSTE : "",
-                                                    DATEDEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO && a.NUMEROETAPE == numCaEtapAPP.DEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
-                                                    DATETEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO && a.NUMEROETAPE == numCaEtapAPP.TEFA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
-                                                    DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == y.NUMERO && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)).DATETRAITEMENT,
-                                                    SOA = soa,
-                                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                                                    isLATE = isLate,
-                                                    SITE = y.SITE
-                                                });
+                                                    var titulaire = "";
+
+                                                    var isGA = tom.GA_AVANCE.FirstOrDefault(a => a.NUMERO == y.NUMERO && site.Contains(a.SITE));
+
+                                                    if (isGA != null)
+                                                    {
+                                                        if (tom.GA_AVANCE.FirstOrDefault(a => a.NUMERO == y.NUMERO && site.Contains(a.SITE)).COGE != null && tom.GA_AVANCE.FirstOrDefault(a => a.NUMERO == y.NUMERO && site.Contains(a.SITE)).AUXI != null)
+                                                        {
+                                                            if (tom.RTIERS.Any(a => a.COGE == isGA.COGE && a.AUXI == isGA.AUXI))
+                                                                titulaire = tom.RTIERS.FirstOrDefault(a => a.COGE == isGA.COGE && a.AUXI == isGA.AUXI).NOM;
+                                                        }
+                                                    }
+
+                                                    var soa = (from soas in db.SI_SOAS
+                                                               join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                               where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                               select new
+                                                               {
+                                                                   soas.SOA
+                                                               }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                                              join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                                              where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                                              select new
+                                                                                              {
+                                                                                                  soas.SOA
+                                                                                              }).FirstOrDefault().SOA : "MULTIPLE";
+
+                                                    bool isLate = false;
+                                                    //DateTime DD = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == x.NUMEROAVANCE && a.NUMEROETAPE == numCaEtapAPP.BEA && site.Contains(a.CODE_SITE)).DATETRAITEMENT.Value.Date;
+                                                    //if (DD.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                                                    //    isLate = true;
+
+                                                    list.Add(new DATATRPROJET
+                                                    {
+                                                        No = idJustif,
+                                                        REF = y.NUMERO,
+                                                        NPIECE = y.NUMERO_COMPLEMENT.ToString(),
+                                                        OBJ = isGA != null ? isGA.LIBELLE : "",
+                                                        TITUL = titulaire,
+                                                        MONT = Math.Round(y.MONTANT.Value, 2).ToString(),
+                                                        COMPTE = isGA != null ? isGA.COGE : "",
+                                                        DATE = isComplement.DEBUT_ECHEANCE.Value.Date,
+                                                        PCOP = tom.GA_AVANCE_MOUVEMENT.Any(a => a.IDENTIFIANT == y.IDENTIFIANT && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null) ? tom.GA_AVANCE_MOUVEMENT.FirstOrDefault(a => a.IDENTIFIANT == y.IDENTIFIANT && site.Contains(a.SITE) && a.NUMERO_COMPLEMENT != null).POSTE : "",
+                                                        DATEDEF = null,
+                                                        DATETEF = null,
+                                                        DATEBE = null,
+                                                        SOA = soa,
+                                                        PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                                        isLATE = isLate,
+                                                        SITE = y.SITE
+                                                    });
+                                                }
                                             }
                                         }
                                     }
@@ -520,40 +690,82 @@ namespace apptab.Controllers
                                 }
                             }
 
-                            var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
                             var isComplement = tom.GA_AVANCE_COMPLEMENT.FirstOrDefault(a => a.NUMERO_AVANCE == isPiece.NUMERO && a.NUMERO == isPiece.NUMERO_COMPLEMENT);
 
-                            var newT = new SI_TRAITCOMPLEMENT()
+                            var isProcess = db.SI_TYPEPROCESSUS.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                            if (isProcess != null)
                             {
-                                IDPROJET = crpt,
-                                No = elem,
-                                REF = isPiece.NUMERO,
-                                NPIECE = isPiece.NUMERO_COMPLEMENT.ToString(),
-                                OBJ = isGA != null ? isGA.LIBELLE : "",
-                                TITUL = titulaire,
-                                MONT = Data.Cipher.Encrypt((Math.Round(isPiece.MONTANT.Value, 2)).ToString(), "Oppenheimer"),
-                                COMPTE = isGA != null ? isGA.COGE : "",
-                                DATEMANDAT = isComplement.DEBUT_ECHEANCE.Value.Date,
-                                PCOP = tom.GA_AVANCE_MOUVEMENT.Any(a => a.IDENTIFIANT == isPiece.IDENTIFIANT && a.SITE == item && a.NUMERO_COMPLEMENT != null) ? tom.GA_AVANCE_MOUVEMENT.FirstOrDefault(a => a.IDENTIFIANT == isPiece.IDENTIFIANT && a.SITE == item && a.NUMERO_COMPLEMENT != null).POSTE : "",
-                                DATEDEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == isPiece.NUMERO && a.NUMEROETAPE == numCaEtapAPP.DEFA && a.CODE_SITE == item).DATETRAITEMENT,
-                                DATETEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == isPiece.NUMERO && a.NUMEROETAPE == numCaEtapAPP.TEFA && a.CODE_SITE == item).DATETRAITEMENT,
-                                DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == isPiece.NUMERO && a.NUMEROETAPE == numCaEtapAPP.BEA && a.CODE_SITE == item).DATETRAITEMENT,
-                                DATECRE = DateTime.Now,
-                                ETAT = 0,
-                                IDUSERCREATE = exist.ID,
-                                SITE = isGA.SITE
-                            };
+                                if (isProcess.VALTOM == 1)
+                                {
+                                    var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
 
-                            if (ordsec == 1)
-                            {
-                                newT.ETAT = 1;
-                                newT.DATEVALIDATION = DateTime.Now;
-                                newT.IDUSERVALIDATE = exist.ID;
+                                    var newT = new SI_TRAITCOMPLEMENT()
+                                    {
+                                        IDPROJET = crpt,
+                                        No = elem,
+                                        REF = isPiece.NUMERO,
+                                        NPIECE = isPiece.NUMERO_COMPLEMENT.ToString(),
+                                        OBJ = isGA != null ? isGA.LIBELLE : "",
+                                        TITUL = titulaire,
+                                        MONT = Data.Cipher.Encrypt((Math.Round(isPiece.MONTANT.Value, 2)).ToString(), "Oppenheimer"),
+                                        COMPTE = isGA != null ? isGA.COGE : "",
+                                        DATEMANDAT = isComplement.DEBUT_ECHEANCE.Value.Date,
+                                        PCOP = tom.GA_AVANCE_MOUVEMENT.Any(a => a.IDENTIFIANT == isPiece.IDENTIFIANT && a.SITE == item && a.NUMERO_COMPLEMENT != null) ? tom.GA_AVANCE_MOUVEMENT.FirstOrDefault(a => a.IDENTIFIANT == isPiece.IDENTIFIANT && a.SITE == item && a.NUMERO_COMPLEMENT != null).POSTE : "",
+                                        DATEDEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == isPiece.NUMERO && a.NUMEROETAPE == numCaEtapAPP.DEFA && a.CODE_SITE == item).DATETRAITEMENT,
+                                        DATETEF = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == isPiece.NUMERO && a.NUMEROETAPE == numCaEtapAPP.TEFA && a.CODE_SITE == item).DATETRAITEMENT,
+                                        DATEBE = tom.CPTADMIN_TRAITEMENT_AVANCE.FirstOrDefault(a => a.NUMEROAVANCE == isPiece.NUMERO && a.NUMEROETAPE == numCaEtapAPP.BEA && a.CODE_SITE == item).DATETRAITEMENT,
+                                        DATECRE = DateTime.Now,
+                                        ETAT = 0,
+                                        IDUSERCREATE = exist.ID,
+                                        SITE = isGA.SITE
+                                    };
+
+                                    if (ordsec == 1)
+                                    {
+                                        newT.ETAT = 1;
+                                        newT.DATEVALIDATION = DateTime.Now;
+                                        newT.IDUSERVALIDATE = exist.ID;
+                                    }
+
+                                    db.SI_TRAITCOMPLEMENT.Add(newT);
+                                    db.SaveChanges();
+                                    countTraitement++;
+                                }
+                                else
+                                {
+                                    var newT = new SI_TRAITCOMPLEMENT()
+                                    {
+                                        IDPROJET = crpt,
+                                        No = elem,
+                                        REF = isPiece.NUMERO,
+                                        NPIECE = isPiece.NUMERO_COMPLEMENT.ToString(),
+                                        OBJ = isGA != null ? isGA.LIBELLE : "",
+                                        TITUL = titulaire,
+                                        MONT = Data.Cipher.Encrypt((Math.Round(isPiece.MONTANT.Value, 2)).ToString(), "Oppenheimer"),
+                                        COMPTE = isGA != null ? isGA.COGE : "",
+                                        DATEMANDAT = isComplement.DEBUT_ECHEANCE.Value.Date,
+                                        PCOP = tom.GA_AVANCE_MOUVEMENT.Any(a => a.IDENTIFIANT == isPiece.IDENTIFIANT && a.SITE == item && a.NUMERO_COMPLEMENT != null) ? tom.GA_AVANCE_MOUVEMENT.FirstOrDefault(a => a.IDENTIFIANT == isPiece.IDENTIFIANT && a.SITE == item && a.NUMERO_COMPLEMENT != null).POSTE : "",
+                                        DATEDEF = null,
+                                        DATETEF = null,
+                                        DATEBE = null,
+                                        DATECRE = DateTime.Now,
+                                        ETAT = 0,
+                                        IDUSERCREATE = exist.ID,
+                                        SITE = isGA.SITE
+                                    };
+
+                                    if (ordsec == 1)
+                                    {
+                                        newT.ETAT = 1;
+                                        newT.DATEVALIDATION = DateTime.Now;
+                                        newT.IDUSERVALIDATE = exist.ID;
+                                    }
+
+                                    db.SI_TRAITCOMPLEMENT.Add(newT);
+                                    db.SaveChanges();
+                                    countTraitement++;
+                                }
                             }
-
-                            db.SI_TRAITCOMPLEMENT.Add(newT);
-                            db.SaveChanges();
-                            countTraitement++;
                         }
                     }
                     catch (Exception e)
@@ -943,62 +1155,120 @@ namespace apptab.Controllers
 
                 List<DATATRPROJET> list = new List<DATATRPROJET>();
 
-                //Check si la correspondance des états est OK//
-                var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
-                if (numCaEtapAPP == null) return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
-                //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
-                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEFA) == null)
-                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 1 n'est pas paramétré sur TOM²PRO. " }, settings));
-                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEFA) == null)
-                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 2 n'est pas paramétré sur TOM²PRO. " }, settings));
-                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.BEA) == null)
-                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO. " }, settings));
+                SI_PARAMETAT numCaEtapAPP = new SI_PARAMETAT();
 
-                if (db.SI_TRAITCOMPLEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 0 && site.Contains(a.SITE)) != null)
+                var isProcess = db.SI_TYPEPROCESSUS.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                if (isProcess != null)
                 {
-                    foreach (var x in db.SI_TRAITCOMPLEMENT.Where(a => a.IDPROJET == crpt && a.ETAT == 0 && site.Contains(a.SITE)).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                    if (isProcess.VALTOM == 1)
                     {
-                        var soa = (from soas in db.SI_SOAS
-                                   join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
-                                   where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
-                                   select new
-                                   {
-                                       soas.SOA
-                                   }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
-                                                                  join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
-                                                                  where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
-                                                                  select new
-                                                                  {
-                                                                      soas.SOA
-                                                                  }).FirstOrDefault().SOA : "MULTIPLE";
+                        //Check si la correspondance des états est OK//
+                        numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                        if (numCaEtapAPP == null) return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
+                        //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
+                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEFA) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 1 n'est pas paramétré sur TOM²PRO. " }, settings));
+                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEFA) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 2 n'est pas paramétré sur TOM²PRO. " }, settings));
+                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.BEA) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO. " }, settings));
 
-                        bool isLate = false;
-                        if (x.DATECRE.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
-                            isLate = true;
-
-                        list.Add(new DATATRPROJET
+                        if (db.SI_TRAITCOMPLEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 0 && site.Contains(a.SITE)) != null)
                         {
-                            No = x.No,
-                            REF = x.REF,
-                            NPIECE = x.NPIECE,
-                            OBJ = x.OBJ,
-                            TITUL = x.TITUL,
-                            MONT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
-                            COMPTE = x.COMPTE,
-                            DATE = x.DATEMANDAT.Value.Date,
-                            PCOP = x.PCOP,
-                            DATEDEF = x.DATEDEF.Value.Date,
-                            DATETEF = x.DATETEF.Value.Date,
-                            DATEBE = x.DATEBE.Value.Date,
-                            LIEN = db.SI_USERS.FirstOrDefault(a => a.ID == x.IDUSERCREATE).LOGIN,
-                            DATECREATION = x.DATECRE.Value.Date,
-                            SOA = soa,
-                            PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                            isLATE = isLate,
-                            SITE = x.SITE
-                        });
+                            foreach (var x in db.SI_TRAITCOMPLEMENT.Where(a => a.IDPROJET == crpt && a.ETAT == 0 && site.Contains(a.SITE)).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                            {
+                                var soa = (from soas in db.SI_SOAS
+                                           join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                           where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                           select new
+                                           {
+                                               soas.SOA
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
+
+                                bool isLate = false;
+                                if (x.DATECRE.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                                    isLate = true;
+
+                                list.Add(new DATATRPROJET
+                                {
+                                    No = x.No,
+                                    REF = x.REF,
+                                    NPIECE = x.NPIECE,
+                                    OBJ = x.OBJ,
+                                    TITUL = x.TITUL,
+                                    MONT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                    COMPTE = x.COMPTE,
+                                    DATE = x.DATEMANDAT.Value.Date,
+                                    PCOP = x.PCOP,
+                                    DATEDEF = x.DATEDEF.Value.Date,
+                                    DATETEF = x.DATETEF.Value.Date,
+                                    DATEBE = x.DATEBE.Value.Date,
+                                    LIEN = db.SI_USERS.FirstOrDefault(a => a.ID == x.IDUSERCREATE).LOGIN,
+                                    DATECREATION = x.DATECRE.Value.Date,
+                                    SOA = soa,
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    isLATE = isLate,
+                                    SITE = x.SITE
+                                });
+                            }
+                            //listORDER = list.OrderByDescending(a => a.isLATE).ToList();
+                        }
                     }
-                    //listORDER = list.OrderByDescending(a => a.isLATE).ToList();
+                    else
+                    {
+                        if (db.SI_TRAITCOMPLEMENT.FirstOrDefault(a => a.IDPROJET == crpt && a.ETAT == 0 && site.Contains(a.SITE)) != null)
+                        {
+                            foreach (var x in db.SI_TRAITCOMPLEMENT.Where(a => a.IDPROJET == crpt && a.ETAT == 0 && site.Contains(a.SITE)).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                            {
+                                var soa = (from soas in db.SI_SOAS
+                                           join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                           where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                           select new
+                                           {
+                                               soas.SOA
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
+
+                                bool isLate = false;
+                                if (x.DATECRE.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                                    isLate = true;
+
+                                list.Add(new DATATRPROJET
+                                {
+                                    No = x.No,
+                                    REF = x.REF,
+                                    NPIECE = x.NPIECE,
+                                    OBJ = x.OBJ,
+                                    TITUL = x.TITUL,
+                                    MONT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                    COMPTE = x.COMPTE,
+                                    DATE = x.DATEMANDAT.Value.Date,
+                                    PCOP = x.PCOP,
+                                    DATEDEF = null,
+                                    DATETEF = null,
+                                    DATEBE = null,
+                                    LIEN = db.SI_USERS.FirstOrDefault(a => a.ID == x.IDUSERCREATE).LOGIN,
+                                    DATECREATION = x.DATECRE.Value.Date,
+                                    SOA = soa,
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    isLATE = isLate,
+                                    SITE = x.SITE
+                                });
+                            }
+                            //listORDER = list.OrderByDescending(a => a.isLATE).ToList();
+                        }
+                    }
                 }
 
                 return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Connexion avec succès. ", data = list.ToList() }, settings));
@@ -1041,60 +1311,117 @@ namespace apptab.Controllers
 
                 List<DATATRPROJET> list = new List<DATATRPROJET>();
 
-                //Check si la correspondance des états est OK//
-                var numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
-                if (numCaEtapAPP == null) return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
-                //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
-                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEFA) == null)
-                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 1 n'est pas paramétré sur TOM²PRO. " }, settings));
-                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEFA) == null)
-                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 2 n'est pas paramétré sur TOM²PRO. " }, settings));
-                if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.BEA) == null)
-                    return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO. " }, settings));
+                SI_PARAMETAT numCaEtapAPP = new SI_PARAMETAT();
 
-                if (db.SI_TRAITCOMPLEMENT.Any(a => a.IDPROJET == crpt && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 0 && site.Contains(a.SITE)))
+                var isProcess = db.SI_TYPEPROCESSUS.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                if (isProcess != null)
                 {
-                    foreach (var x in db.SI_TRAITCOMPLEMENT.Where(a => a.IDPROJET == crpt && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 0 && site.Contains(a.SITE)).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                    if (isProcess.VALTOM == 1)
                     {
-                        var soa = (from soas in db.SI_SOAS
-                                   join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
-                                   where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
-                                   select new
-                                   {
-                                       soas.SOA
-                                   }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
-                                                                  join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
-                                                                  where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
-                                                                  select new
-                                                                  {
-                                                                      soas.SOA
-                                                                  }).FirstOrDefault().SOA : "MULTIPLE";
+                        //Check si la correspondance des états est OK//
+                        numCaEtapAPP = db.SI_PARAMETAT.FirstOrDefault(a => a.IDPROJET == crpt && a.DELETIONDATE == null);
+                        if (numCaEtapAPP == null) return Json(JsonConvert.SerializeObject(new { type = "PEtat", msg = "Veuillez paramétrer la correspondance des états. " }, settings));
+                        //TEST si les états dans les paramètres dans cohérents avec ceux de TOM²PRO//
+                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.DEFA) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 1 n'est pas paramétré sur TOM²PRO. " }, settings));
+                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.TEFA) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 2 n'est pas paramétré sur TOM²PRO. " }, settings));
+                        if (tom.CPTADMIN_CHAINETRAITEMENT_AVANCE.FirstOrDefault(a => a.NUM == numCaEtapAPP.BEA) == null)
+                            return Json(JsonConvert.SerializeObject(new { type = "Prese", msg = "L'état du STATUT 3 n'est pas paramétré sur TOM²PRO. " }, settings));
 
-                        bool isLate = false;
-                        if (x.DATECRE.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
-                            isLate = true;
-
-                        list.Add(new DATATRPROJET
+                        if (db.SI_TRAITCOMPLEMENT.Any(a => a.IDPROJET == crpt && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 0 && site.Contains(a.SITE)))
                         {
-                            No = x.No,
-                            REF = x.REF,
-                            NPIECE = x.NPIECE,
-                            OBJ = x.OBJ,
-                            TITUL = x.TITUL,
-                            MONT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
-                            COMPTE = x.COMPTE,
-                            DATE = x.DATEMANDAT.Value.Date,
-                            PCOP = x.PCOP,
-                            DATEDEF = x.DATEDEF.Value.Date,
-                            DATETEF = x.DATETEF.Value.Date,
-                            DATEBE = x.DATEBE.Value.Date,
-                            LIEN = db.SI_USERS.FirstOrDefault(a => a.ID == x.IDUSERCREATE).LOGIN,
-                            DATECREATION = x.DATECRE.Value.Date,
-                            SOA = soa,
-                            PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
-                            isLATE = isLate,
-                            SITE = x.SITE
-                        });
+                            foreach (var x in db.SI_TRAITCOMPLEMENT.Where(a => a.IDPROJET == crpt && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 0 && site.Contains(a.SITE)).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                            {
+                                var soa = (from soas in db.SI_SOAS
+                                           join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                           where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                           select new
+                                           {
+                                               soas.SOA
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
+
+                                bool isLate = false;
+                                if (x.DATECRE.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                                    isLate = true;
+
+                                list.Add(new DATATRPROJET
+                                {
+                                    No = x.No,
+                                    REF = x.REF,
+                                    NPIECE = x.NPIECE,
+                                    OBJ = x.OBJ,
+                                    TITUL = x.TITUL,
+                                    MONT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                    COMPTE = x.COMPTE,
+                                    DATE = x.DATEMANDAT.Value.Date,
+                                    PCOP = x.PCOP,
+                                    DATEDEF = x.DATEDEF.Value.Date,
+                                    DATETEF = x.DATETEF.Value.Date,
+                                    DATEBE = x.DATEBE.Value.Date,
+                                    LIEN = db.SI_USERS.FirstOrDefault(a => a.ID == x.IDUSERCREATE).LOGIN,
+                                    DATECREATION = x.DATECRE.Value.Date,
+                                    SOA = soa,
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    isLATE = isLate,
+                                    SITE = x.SITE
+                                });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (db.SI_TRAITCOMPLEMENT.Any(a => a.IDPROJET == crpt && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 0 && site.Contains(a.SITE)))
+                        {
+                            foreach (var x in db.SI_TRAITCOMPLEMENT.Where(a => a.IDPROJET == crpt && a.DATEMANDAT >= DateDebut && a.DATEMANDAT <= DateFin && a.ETAT == 0 && site.Contains(a.SITE)).OrderBy(a => a.DATECRE).OrderBy(a => a.DATEMANDAT).ToList())
+                            {
+                                var soa = (from soas in db.SI_SOAS
+                                           join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                           where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                           select new
+                                           {
+                                               soas.SOA
+                                           }).FirstOrDefault() != null ? (from soas in db.SI_SOAS
+                                                                          join prj in db.SI_PROSOA on soas.ID equals prj.IDSOA
+                                                                          where prj.IDPROJET == crpt && prj.DELETIONDATE == null && soas.DELETIONDATE == null
+                                                                          select new
+                                                                          {
+                                                                              soas.SOA
+                                                                          }).FirstOrDefault().SOA : "MULTIPLE";
+
+                                bool isLate = false;
+                                if (x.DATECRE.Value.AddBusinessDays(retarDate).Date < DateTime.Now/* && ((int)DateTime.Now.DayOfWeek) != 6 && ((int)DateTime.Now.DayOfWeek) != 0*/)
+                                    isLate = true;
+
+                                list.Add(new DATATRPROJET
+                                {
+                                    No = x.No,
+                                    REF = x.REF,
+                                    NPIECE = x.NPIECE,
+                                    OBJ = x.OBJ,
+                                    TITUL = x.TITUL,
+                                    MONT = Data.Cipher.Decrypt(x.MONT, "Oppenheimer").ToString(),
+                                    COMPTE = x.COMPTE,
+                                    DATE = x.DATEMANDAT.Value.Date,
+                                    PCOP = x.PCOP,
+                                    DATEDEF = null,
+                                    DATETEF = null,
+                                    DATEBE = null,
+                                    LIEN = db.SI_USERS.FirstOrDefault(a => a.ID == x.IDUSERCREATE).LOGIN,
+                                    DATECREATION = x.DATECRE.Value.Date,
+                                    SOA = soa,
+                                    PROJET = db.SI_PROJETS.Where(a => a.ID == crpt && a.DELETIONDATE == null).FirstOrDefault().PROJET,
+                                    isLATE = isLate,
+                                    SITE = x.SITE
+                                });
+                            }
+                        }
                     }
                 }
 

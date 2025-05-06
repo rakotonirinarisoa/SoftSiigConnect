@@ -11,6 +11,7 @@
         public int? VALDEPENSES { get; set; }
 
         public int? VALPAIEMENTS { get; set; }
+        public int? VALTOM { get; set; }
 
         public int? IDPROJET { get; set; }
 

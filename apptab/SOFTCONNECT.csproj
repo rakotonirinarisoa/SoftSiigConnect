@@ -371,8 +371,6 @@
     <Compile Include="Models\MBUDALLOC.cs" />
     <Compile Include="Models\MBUDGET.cs" />
     <Compile Include="Models\MCOMPTA.cs" />
-    <Compile Include="Models\Model1.cs" />
-    <Compile Include="Models\Model2.cs" />
     <Compile Include="Models\MOP.cs" />
     <Compile Include="Models\OPA_ANOMALIE.cs" />
     <Compile Include="Models\OPA_ANOMALIEBR.cs" />

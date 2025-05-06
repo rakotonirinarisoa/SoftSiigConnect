@@ -49,6 +49,7 @@ function GetUsers() {
                 return;
             }
 
+            $(`input[data-id1="${Datas.data.VALTOM}"]`).click();
             $(`input[data-id1="${Datas.data.VALDEPENSES}"]`).click();
             $(`input[data-id2="${Datas.data.VALPAIEMENTS}"]`).click();
 
@@ -123,6 +124,7 @@ $(`[data-action="UpdateUser"]`).click(function () {
     formData.append("suser.ROLE", User.ROLE);
     formData.append("suser.IDPROJET", User.IDPROJET);
 
+    formData.append("param.VALTOM", $("input[name='options3']:checked").attr("data-id3"));
     formData.append("param.VALDEPENSES", $("input[name='options1']:checked").attr("data-id1"));
     formData.append("param.VALPAIEMENTS", $("input[name='options2']:checked").attr("data-id2"));
 
