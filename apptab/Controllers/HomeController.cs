@@ -4843,32 +4843,58 @@ namespace apptab.Controllers
 
             return Json(JsonConvert.SerializeObject(new { type = "success", data = banque, msg = "" }, settings));
         }
-        public string GetChoixBtn(string codeproject, SI_USERS suser)
+
+        public class boutonProjet
+        {
+           public string Type { get; set; }
+           public string TypeBtn { get; set; }
+            public string BtnVitement { get; set; }
+        }
+        public JsonResult GetChoixBtn(string codeproject, SI_USERS suser)
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             int PROJECTid = int.Parse(codeproject);
-            if (exist == null) return "";
+            if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "success", msg = "", data = "" })); ;
 
-            if (exist.IDPROJET != 0)
+            if (PROJECTid == 0)
             {
                 var TypeBtn = db.SI_TYPEBANQUE.FirstOrDefault(a => a.IDPROJET == PROJECTid).TypeBtn;
-                return TypeBtn.ToString();
+                //return TypeBtn.ToString();
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "", data = TypeBtn }));
             }
             else
             {
                 //var mapuser = db.SI_MAPUSERPROJET.Where(a => a.IDUS == exist.ID).ToList();
                 int PROJECTID = int.Parse(codeproject);
                 var ii = db.SI_TYPECRITURE.FirstOrDefault(a => a.IDPROJET == PROJECTID);
-                var TypeBtn = "";
+                var btn = db.SI_TYPEBANQUE.FirstOrDefault(a => a.IDPROJET == PROJECTID);
+                List<boutonProjet> TypeBtn = new List<boutonProjet>();
+                //var TypeBtn = "";
                 if (ii != null)
                 {
-                    TypeBtn = ii.TYPE.ToString();
+                    //TypeBtn = ii.TYPE.ToString();
+                    TypeBtn.Add( new boutonProjet()
+                    {
+                       Type =  btn.TYPE.ToString(),
+                       TypeBtn = btn.TypeBtn.ToString(),
+                       BtnVitement = btn.BtnVirement.ToString(),
+
+                    });
+
                 }
                 else
                 {
-                    TypeBtn = "Veuillez parametrer votre type de fichier";
+                    //TypeBtn = "Veuillez parametrer votre type de fichier";
+                    TypeBtn.Add(new boutonProjet()
+                    {
+                        Type = "Veuillez parametrer votre type de fichier",
+                        TypeBtn ="",
+                        BtnVitement = "",
+
+                    });
                 }
-                return TypeBtn.ToString();
+                //return TypeBtn.ToString();
+                return Json(JsonConvert.SerializeObject(new { type = "success", msg = "", data = TypeBtn }));
             }
             //return TypeFileBQ;
         }

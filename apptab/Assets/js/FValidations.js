@@ -1832,21 +1832,33 @@ function GetTypeBtn() {
         },
         success: function (result) {
             var Datas = JSON.parse(result);
-            TypeBtn = Datas;
-            if (TypeBanque == 1) {
-                if (TypeBtn == 0) {
-                    $(".createfileAFB").removeClass('display-none');
-                } else {
-                    $(".createfileAFB").addClass('display-none');
-                }
-            } else {
-                if (TypeBtn == 0) {
-                    $(".createfileISO").removeClass('display-none');
-                } else {
-                    $(".createfileISO").addClass('display-none');
-                }
-            }
+            TypeBtn = Datas.data;
+            $.each(TypeBtn, function (_, v) {
+                console.log(TypeBtn);
+                $(".createfileISO, .createfileAFB, .Afb160HS, .ISO20022HS").addClass('display-none');
+                $('#blockVirementISO, #blockEnvoieISO').removeClass('col-6 col-12').addClass('col-6');
 
+                // Afficher AFB si Type != 1
+                if (v.Type == "1") {
+                    $(".createfileAFB").removeClass('display-none');
+                    $(".Afb160HS").removeClass('display-none');
+                } else
+                {
+                    $(".createfileISO, .ISO20022HS").removeClass('display-none');
+                    if (v.TypeBtn == "0") {
+                        $('.createfileISO').removeClass('display-none');
+                    } else {
+                        $('.createfileISO').addClass('display-none');
+                    }
+                    if (v.BtnVitement == "3") {
+                        $('#blockVirementISO').addClass('display-none');
+
+                    } else if (v.BtnVitement == "2") {
+                        $('#blockEnvoieISO').addClass('display-none');
+                    }
+
+                }
+            });
             if (Datas.type == "error") {
                 alert(Datas.msg);
                 return;

@@ -1988,7 +1988,7 @@ namespace apptab.Extension
                                                     )
                                             ),
                                             new XElement("CdtrAcct",
-                                                 typeDevise == 1 || typeDevise == 0 || typeDevise == 2 ?
+                                                 devise ?
                                                  new XElement("Id", new XElement("IBAN", IbanPayemenUSD)) :
                                                  new XElement("Id", new XElement("Othr", new XElement("Id", IbanPayemenUSD)))),
 
@@ -2035,7 +2035,7 @@ namespace apptab.Extension
                                                     )
                                             ),
                                             new XElement("CdtrAcct",
-                                                 typeDevise == 1 || typeDevise == 0 || typeDevise == 2 ?
+                                                  devise ?
                                                  new XElement("Id", new XElement("IBAN", IbanPayemenUSD)) :
                                                  new XElement("Id", new XElement("Othr", new XElement("Id", IbanPayemenUSD)))
                                             ),
@@ -2082,7 +2082,7 @@ namespace apptab.Extension
                                             ),
 
                                             new XElement("CdtrAcct",
-                                                typeDevise == 1 || typeDevise == 0 || typeDevise == 2 ?
+                                                devise ?
                                                 new XElement("Id", new XElement("IBAN", IbanPayemenUSD)) :
                                                 new XElement("Id", new XElement("Othr", new XElement("Id", IbanPayemenUSD)))
                                             ),

@@ -1,4 +1,4 @@
-namespace apptab.Models
+﻿namespace apptab.Models
 {
     using System;
     using System.Collections.Generic;
@@ -22,5 +22,6 @@ namespace apptab.Models
         public string CRYPTAGE { get; set; }
 
         public int? TypeBtn { get; set; }
+        public int? BtnVirement { get; set; }
     }
 }

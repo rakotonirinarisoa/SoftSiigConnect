@@ -1473,7 +1473,7 @@ namespace apptab.Controllers
         {
             var exist = db.SI_USERS.FirstOrDefault(a => a.LOGIN == suser.LOGIN && a.PWD == suser.PWD && a.DELETIONDATE == null/* && a.IDSOCIETE == suser.IDSOCIETE*/);
             if (exist == null) return Json(JsonConvert.SerializeObject(new { type = "login", msg = "Problème de connexion. " }, settings));
-
+            bool virement = false;
             try
             {
                 int IdS = iProjet;
@@ -1481,16 +1481,16 @@ namespace apptab.Controllers
 
                 if (SExist != null)
                 {
-                    if (SExist.TYPE != param.TYPE || SExist.CRYPTAGE != param.CRYPTAGE || SExist.TypeBtn != param.TypeBtn)
+                    if (SExist.TYPE != param.TYPE || SExist.CRYPTAGE != param.CRYPTAGE || SExist.TypeBtn != param.TypeBtn || SExist.BtnVirement != param.BtnVirement)
                     {
                         SExist.TYPE = param.TYPE;
                         SExist.IDUSER = exist.ID;
                         SExist.CREATIONDATE = DateTime.Now;
                         SExist.CRYPTAGE = param.CRYPTAGE;
                         SExist.TypeBtn = param.TypeBtn;
+                        SExist.BtnVirement = param.BtnVirement;
                         db.SaveChanges();
                     }
-                   
                     return Json(JsonConvert.SerializeObject(new { type = "success", msg = "Enregistrement avec succès. ", data = param }, settings));
                 }
                 else
@@ -1503,6 +1503,7 @@ namespace apptab.Controllers
                         IDUSER = exist.ID,
                         CRYPTAGE = param.CRYPTAGE,
                         TypeBtn = param.TypeBtn,
+                        BtnVirement = param.BtnVirement,
                     };
 
                     db.SI_TYPEBANQUE.Add(newPara);
