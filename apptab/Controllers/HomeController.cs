@@ -52,6 +52,7 @@ using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
 using MimeKit;
 using MimeKit.Cryptography;
+using Outils;
 
 namespace apptab.Controllers
 {
@@ -3924,6 +3925,7 @@ namespace apptab.Controllers
         }
         public void SFTP(string HOTE, string PATH, string USERFTP,bool devise, string PWDFTP, string SOURCE, string port, int intbasetype, int PROJECTID, string directory, string AgenceBanque)
         {
+            
             int pport = int.Parse(port);
             string pth = AppDomain.CurrentDomain.BaseDirectory + "\\FILERESULT\\" + SOURCE;
 
@@ -3934,6 +3936,7 @@ namespace apptab.Controllers
 
             if (AgenceBanque.Contains("BNI"))
             {
+                
                 string privateKeyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", directory, "Rsakeybni.txt");
                 string convertedKeyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", directory, "Rsakeybni.pem");
                 //namefile = namefile + 
@@ -4191,10 +4194,12 @@ namespace apptab.Controllers
                                 res = "Vous n'avez pas de fichier de cryptage!Veuillez contactez votre administrateur";
                                 //return ;
                             }
+                           
                             if (CryptageType.CRYPTAGE == "2")
                             {
                                 outputFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", namefile + ".xml.gpg");
                                 publicKeyFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FILERESULT", directory, "RSAkeyFile.asc");// Chemin vers le fichier de sortie chiffré
+                                Cryptage.rencisCryptage(namefile, outputFile, publicKeyFile);
                                 EncryptFileWithGPG(SOURCE, publicKeyFile, outputFile);
                                 //DecryptFile(outputFile, privateKeyFile, outputFileDEC);
                                 namefile = namefile + ".xml.gpg";
